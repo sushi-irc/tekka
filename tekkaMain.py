@@ -24,7 +24,8 @@ class tekkaMain(tekkaCom, tekkaMisc):
 		self.gladefile = "interface1.glade"
 		self.widgets = gtk.glade.XML(self.gladefile, "tekkaMainwindow")
 
-		self.outputs = {  }
+		self.serverOutputs = {  } # { "server":buf, ... }
+		self.channelOutputs = {  } # { "server":{"channel1":buf,"channel2":buf},.. }
 		
 		self.servertree = self.widgets.get_widget("tekkaServertree")
 		self._setupServertree()
@@ -34,7 +35,6 @@ class tekkaMain(tekkaCom, tekkaMisc):
 
 		# retreive the servers we're connected to
 		self.addServers()
-
 		
 		self.textbox = self.widgets.get_widget("tekkaOutput")
 		#self.textbox.set_buffer(self.output)
@@ -60,19 +60,21 @@ class tekkaMain(tekkaCom, tekkaMisc):
 		name = None
 		if len(tuple)==1: # server activated
 			name = self.servertreeStore[tuple[0]][0]
+			self.textbox.set_buffer(self.serverOutputs[name])
 		else: # channel activated
-			rows = self.servertreeStore[tuple[0]].iterchildren()
+			server = self.servertreeStore[tuple[0]]
+			rows = server.iterchildren()
 			rowcount = 0
 			for row in rows:
 				if rowcount == tuple[1]:
 					name = row[0]
+					self.textbox.set_buffer(self.channelOutputs[server[0]][name])
 					break
 				rowcount+=1
 		if not name:
 			print "not activated or not found or something similar :/"
 			return
 		print name
-		self.textbox.set_buffer(self.outputs[name])
 		#self.textbox.scroll_to_mark(self.textbox.get_buffer().get_mark("insert"), 0.2)
 
 	def _setupServertree(self):
@@ -90,7 +92,8 @@ class tekkaMain(tekkaCom, tekkaMisc):
 	def addServer(self, servername):
 		iter = self.servertreeStore.append(None)
 		self.servertreeStore.set(iter, 0, servername)
-		self.outputs[servername] = gtk.TextBuffer()
+		self.serverOutputs[servername] = gtk.TextBuffer()
+		self.channelOutputs[servername] = {}
 
 	def findRow(self, name, store=None):
 		if not store:
@@ -105,31 +108,56 @@ class tekkaMain(tekkaCom, tekkaMisc):
 		if row:
 			iter = self.servertreeStore.append(row.iter)
 			self.servertreeStore.set(iter,0,channelname)
+			self.channelOutputs[servername][channelname] = gtk.TextBuffer()
 
+	def channelPrint(self, server, channel, message):
+		pass
+	
 	def removeChannel(self, servername, channelname):
 		row = self.findRow(servername)
 		if row:
 			crow = self.findRow(channelname, row.iterchildren())
 			if crow:
+				del self.channelOutputs[servername][channelname]
 				self.servertreeStore.remove(crow.iter)
 
 	def removeServer(self, servername):
 		row = self.findRow(servername)
 		if row:
-			del self.outputs[servername]
+			del self.serverOutputs[servername]
 			citer = row.iterchildren()
 			if citer:
 				for child in citer:
-					del self.outputs[child]
+					del self.channelOutputs[servername][child]
 			self.servertreeStore.remove(row.iter)
-			
 
-	def myPrint(self, string):
-		output = self.textbox.get_buffer()
+	def channelPrint(self, server, channel, string):
+		output = self.channelOutputs[server][channel]
+		if not output:
+			print "no such output buffer"
+			return
 		output.insert(output.get_end_iter(), string+"\n")
 		iMark = output.get_mark("insert")
-		self.textbox.scroll_to_mark(output.get_mark("insert"), 0.2)
+		self.textbox.scroll_to_mark(iMark, 0.2)
+
+	def serverPrint(self, server, string):
+		output = self.serverOutputs[server]
+		if not output:
+			print "no such serveroutput buffer"
+			return
+		output.insert(output.get_end_iter(), string+"\n")
+		iMark = output.get_mark("insert")
+		self.textbox.scroll_to_mark(iMark, 0.2)
 	
+	def myPrint(self, string):
+		output = self.textbox.get_buffer()
+		if not output:
+			print "no output buffer here!"
+			return
+		output.insert(output.get_end_iter(), string+"\n")
+		iMark = output.get_mark("insert")
+		self.textbox.scroll_to_mark(iMark, 0.2)
+
 	def quit(self):
 		print "quitting"
 		gtk.main_quit()

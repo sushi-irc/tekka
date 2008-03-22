@@ -51,6 +51,12 @@ class tekkaCom(object):
 			if self.proxy:
 				self.proxy.say("localhost","#test",text)
 
+	def channelPrint(self, server, channel, string):
+		print "%s@%s: %s" % (channel, server, string)
+
+	def serverPrint(self, server, string):
+		print "%s: %s" % (server,string)
+
 	def myPrint(self, string):
 		print string
 
@@ -64,9 +70,18 @@ class tekkaCom(object):
 		for server in servers:
 			# addServer in tekkaMain
 			self.addServer(server)
+			self.addChannels(server)
+
+	def addChannels(self, server):
+		print "querying %s" % server
+		channels = self.proxy.channels(server)
+		print channels
+		for channel in channels:
+			print channel
+			self.addChannel(server, channel)
 
 	def readText(self, timestamp, server, channel, nick, message):
-		self.myPrint("[%s|%s] <%s> %s" % (server, channel, nick, message))
+		self.channelPrint(server, channel, "<%s> %s" % (nick, message))
 
 	def connectServer(self, widget):
 		print "would connect"
