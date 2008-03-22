@@ -1,6 +1,7 @@
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
 
+import time
 """
 
 Rausfinden auf welchem Server wir senden
@@ -21,31 +22,98 @@ class tekkaCom(object):
 			print e
 			print "Is maki running?"
 		if self.proxy:
-			self.bus.add_signal_receiver(self.readText, "message", "de.ikkoku.sushi.maki", "de.ikkoku.sushi", "/de/ikkoku/sushi")
+			self.bus.add_signal_receiver(self.readText, "message", "de.ikkoku.sushi", "de.ikkoku.sushi", "/de/ikkoku/sushi")
+
+		self.commands = { 
+			"nick" : self.makiNick,
+			"part" : self.makiPart,
+			"join" : self.makiJoin,
+			"me"   : self.makiAction,
+			"kick" : self.makiKick,
+			"mode" : self.makiMode,
+			"topic": self.makiTopic,
+			"quit" : self.makiQuit,
+		"usermode" : self.makeUsermode,
+			"ctcp" : self.tekkaCTCP,
+			"dcc"  : self.tekkaDCC
+		}
+
 
 	def sendText(self, widget):
-		print "sendText: received from widget."
-		print widget.get_text()
+		print "text received from widget"
 		
-		if not self.proxy:
-			print "No connection to maki. Aborting."
-			widget.set_text("")
-			return
-
 		text = widget.get_text()
+		widget.set_text("")
 
 		if text[0] == "/" and text[1] != "/":
 			self.parseCommand(text[1:])
 		else:
-			self.proxy.say("")
-		widget.set_text("")
+			if self.proxy:
+				self.proxy.say("localhost","#test",text)
 
-	def readText(self, text):
-		print "received"
-		print text
-	
+	def myPrint(self, string):
+		print string
+
+	def quit(self):
+		return
+
+	def addServers(self):
+		servers = self.proxy.servers()
+		if not servers:
+			return
+		for server in servers:
+			# addServer in tekkaMain
+			self.addServer(server)
+
+	def readText(self, timestamp, server, channel, nick, message):
+		self.myPrint("[%s|%s] <%s> %s" % (server, channel, nick, message))
+
 	def connectServer(self, widget):
 		print "would connect"
 
 	def newServer(self, newServer):
 		print "adding new server to maki"
+
+	def parseCommand(self, command):
+		cmd = command.split(" ")
+		if not self.commands.has_key(cmd[0]):
+			self.myPrint("> Unknown command %s" % cmd[0])
+			return
+		xargs = None
+		if len(cmd)>1:
+			xargs = cmd[1:]
+		self.commands[cmd[0]](xargs)
+
+	def makiQuit(self, xargs):
+		self.quit()
+
+	def makiNick(self, xargs):
+		return
+
+	def makiPart(self, xargs):
+		return
+
+	def makiJoin(self, xargs):
+		return
+
+	def makiAction(self, xargs):
+		return
+
+	def makiKick(self, xargs):
+		return
+
+	def makiMode(self, xargs):
+		return
+
+	def makiTopic(self, xargs):
+		return
+
+	def makeUsermode(self, xargs):
+		return
+
+	def tekkaCTCP(self, xargs):
+		return
+
+	def tekkaDCC(self, xargs):
+		return
+

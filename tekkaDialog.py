@@ -16,6 +16,7 @@ class addServerDialog(tekkaConfig):
 	def __init__(self):
 		tekkaConfig.__init__(self)
 		self.widgets = None
+		self.servername = None
 		self.RESPONSE_ADD = 1
 
 	def run(self):
@@ -27,18 +28,58 @@ class addServerDialog(tekkaConfig):
 		servername_input = self.widgets.get_widget("serverAdd_Servername")
 		serveradress_input = self.widgets.get_widget("serverAdd_Serveradress")
 		serverport_input = self.widgets.get_widget("serverAdd_Serverport")
+		serverautoconnect_input = self.widgets.get_widget("serverAdd_Autoconnect")
 
 		serverport_input.set_text("6667")
 
 		result = dialog.run()
 		if result == self.RESPONSE_ADD:
-			data = {}
+			data = {"autoconnect":0}
 			data["name"] = servername_input.get_text()
 			data["adress"] = serveradress_input.get_text()
 			data["port"] = serveradress_input.get_text()
+			if serverautoconnect_input.toggled():
+				data["autoconnect"] = 1
 		dialog.destroy()
 
 		return result,data
+
+class editServerDialog(tekkaConfig):
+	def __init__(self, servername, tekkaComInterface):
+		tekkaConfig.__init__(self)
+		self.widgets = None
+		self.servername = servername
+		self.tekkaComInt = tekkaComInterface
+		
+	def run(self):
+		newServer = None
+		self.widgets = gtk.glade.XML(self.gladefile, "serverEdit")
+
+		if not self.widgets:
+			return 0,None
+
+		servername_input = self.widgets.get_widget("serverEdit_Servername")
+		servername_input.set_text(self.servername)
+		
+		# TODO: retreive options from server and load fields with data.
+		
+		dialog = self.widgets.get_widget("serverEdit")
+		result = dialog.run()
+
+		dialog.destroy()
+
+		return result,newServer
+
+class deleteServerDialog(tekkaConfig):
+	def __init__(self):
+		tekkaConfig.__init__(self)
+	
+	def run(self):
+		widgets = gtk.glade.XML(self.gladefile, "serverDelete")
+		dialog = widgets.get_widget("serverDelete")
+		result = dialog.run()
+		dialog.destroy()
+		return result
 
 class serverDialog(tekkaConfig):
 	def __init__(self, tekkaComInterface):
@@ -75,7 +116,7 @@ class serverDialog(tekkaConfig):
 		self.serverList = gtk.ListStore(str)
 		self.serverView.set_model(self.serverList)
 
-		self.addServer({"name":"Placeholder","adress":"foo","port":"54"},1)
+		self.addServer({"name":"Placeholder","adress":"foo","port":"54","autoconnect":0},1)
 
 		server = None # the server we want to connect to
 		result = dialog.run()
@@ -84,6 +125,7 @@ class serverDialog(tekkaConfig):
 			result = dialog.run()
 		else:
 			if result == self.RESPONSE_CONNECT:
+				# look for servername
 				id = self.serverView.get_cursor()[0]
 				if id:
 					if len(id) > 1:
@@ -95,7 +137,7 @@ class serverDialog(tekkaConfig):
 		return result,server
 
 	def addServer(self, newServer, noDBus=0):
-		if not newServer.has_key("name") or not newServer.has_key("adress") or not newServer.has_key("port"):
+		if not newServer.has_key("name") or not newServer.has_key("adress") or not newServer.has_key("port") or not newServer.has_key("autoconnect"):
 			print "Wrong data to addServer."
 			return
 		if self.serverList:
@@ -103,10 +145,6 @@ class serverDialog(tekkaConfig):
 			if not noDBus:
 				self.tekkaComInt.newServer(newServer)
 
-
-	def listselect(self, widget):
-		print "selected!"
-		print widget
 
 	def openAddDialog(self, widget):
 		dialog = addServerDialog()
@@ -116,10 +154,49 @@ class serverDialog(tekkaConfig):
 			self.addServer(newServer)
 
 	def openEditDialog(self, widget):
-		print "would open edit dialog"
+		if not self.serverView:
+			return
+
+		sID = self.serverView.get_cursor()[0]
+		servername = None
+		if not sID:
+			print "No server selected."
+			return
+		else:
+			servername = self.serverList[sID[0]][0]
+
+		if not servername:
+			print "Error in retrieving the servername"
+			return
+
+		dialog = editServerDialog(servername, self.tekkaComInt)
+		result,newServer = dialog.run()
+		if result == gtk.RESPONSE_OK:
+			print "User edited server"
+			# TODO: send changes over tekkaCom to server
 
 	def openDeleteDialog(self, widget):
-		print "rly delete? :]"
+		if not self.serverView:
+			return
+
+		sID = self.serverView.get_cursor()[0]
+		servername = None
+
+		if not sID:
+			print "No server selected."
+			return
+		else:
+			servername = self.serverList[sID[0]][0]
+
+		if not servername:
+			print "Error in retrieving the servername"
+			return
+
+		dialog = deleteServerDialog()
+		result = dialog.run()
+		if result == gtk.RESPONSE_YES:
+			print "Deleting server %s" % servername
+			# TODO: send a delete of the server to maki
 
 	def setActiveRow(self, widget):
 		print "setting active row"
