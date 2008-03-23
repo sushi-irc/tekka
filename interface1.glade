@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.3 on Sat Mar 22 21:28:18 2008 -->
+<!--Generated with glade3 3.4.3 on Sun Mar 23 04:11:37 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="tekkaMainwindow">
     <property name="width_request">450</property>
@@ -27,6 +27,15 @@
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <signal name="activate" handler="tekkaMainwindow_Connect_activate_cb"/>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="tekkaMainWindow_MenuTekka_Shutdown">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">gtk-disconnect</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="tekkaMainwindow_Shutdown_activate_cb"/>
                       </widget>
                     </child>
                     <child>
@@ -292,29 +301,37 @@
               <placeholder/>
             </child>
             <child>
-              <widget class="GtkLabel" id="label1">
+              <widget class="GtkEntry" id="serverEdit_Port">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Servername</property>
-              </widget>
-            </child>
-            <child>
-              <widget class="GtkLabel" id="label4">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Adress</property>
+                <property name="can_focus">True</property>
               </widget>
               <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">2</property>
+                <property name="bottom_attach">3</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkEntry" id="serverEdit_Adress">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+              </widget>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="label5">
+              <widget class="GtkEntry" id="serverEdit_Servername">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Port</property>
+                <property name="can_focus">True</property>
               </widget>
               <packing>
-                <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
               </packing>
             </child>
             <child>
@@ -333,38 +350,30 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkEntry" id="serverEdit_Servername">
+              <widget class="GtkLabel" id="label5">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="label" translatable="yes">Port</property>
               </widget>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
+                <property name="top_attach">2</property>
+                <property name="bottom_attach">3</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkEntry" id="serverEdit_Adress">
+              <widget class="GtkLabel" id="label4">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="label" translatable="yes">Adress</property>
               </widget>
               <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkEntry" id="serverEdit_Port">
+              <widget class="GtkLabel" id="label1">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="label" translatable="yes">Servername</property>
               </widget>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
-              </packing>
             </child>
           </widget>
           <packing>
@@ -426,51 +435,18 @@
               <placeholder/>
             </child>
             <child>
-              <widget class="GtkLabel" id="label2">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Servername</property>
-              </widget>
-            </child>
-            <child>
-              <widget class="GtkLabel" id="label9">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Adress</property>
-              </widget>
-              <packing>
-                <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkLabel" id="label10">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Port</property>
-              </widget>
-              <packing>
-                <property name="top_attach">2</property>
-                <property name="bottom_attach">3</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkEntry" id="serverAdd_Servername">
+              <widget class="GtkCheckButton" id="serverAdd_Autoconnect">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="label" translatable="yes">Autoconnect</property>
+                <property name="response_id">0</property>
+                <property name="draw_indicator">True</property>
               </widget>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkEntry" id="serverAdd_Serveradress">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-              </widget>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="top_attach">1</property>
-                <property name="bottom_attach">2</property>
+                <property name="top_attach">3</property>
+                <property name="bottom_attach">4</property>
               </packing>
             </child>
             <child>
@@ -486,19 +462,52 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="serverAdd_Autoconnect">
+              <widget class="GtkEntry" id="serverAdd_Serveradress">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">Autoconnect</property>
-                <property name="response_id">0</property>
-                <property name="draw_indicator">True</property>
               </widget>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
-                <property name="top_attach">3</property>
-                <property name="bottom_attach">4</property>
+                <property name="top_attach">1</property>
+                <property name="bottom_attach">2</property>
               </packing>
+            </child>
+            <child>
+              <widget class="GtkEntry" id="serverAdd_Servername">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+              </widget>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="label10">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Port</property>
+              </widget>
+              <packing>
+                <property name="top_attach">2</property>
+                <property name="bottom_attach">3</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="label9">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Adress</property>
+              </widget>
+              <packing>
+                <property name="top_attach">1</property>
+                <property name="bottom_attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="label2">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Servername</property>
+              </widget>
             </child>
           </widget>
           <packing>

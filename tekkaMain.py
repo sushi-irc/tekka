@@ -43,6 +43,7 @@ class tekkaMain(tekkaCom, tekkaMisc):
 		sigdic = { "tekkaInput_activate_cb" : self.sendText,
 				   "tekkaServertree_cursor_changed_cb" : self.rowActivated,
 				   "tekkaServertree_realize_cb" : lambda w: w.expand_all(),
+				   "tekkaMainwindow_Shutdown_activate_cb" : self.makiShutdown,
 		           "tekkaMainwindow_Connect_activate_cb" : self.showServerDialog,
 				   "tekkaMainwindow_Quit_activate_cb" : gtk.main_quit}
 
@@ -87,9 +88,21 @@ class tekkaMain(tekkaCom, tekkaMisc):
 
 	def getServers(self):
 		slist = []
-		for server in servertreeStore:
-			slist.append(server)
+		for server in self.servertreeStore:
+			slist.append(server[0])
 		return slist
+
+	def getChannels(self, userver):
+		server = self.findRow(userver)
+		if not server:
+			return None
+		channels = server.iterchildren()
+		if not channels:
+			return None
+		clist = []
+		for channel in channels:
+			clist.append(channel[0])
+		return clist
 
 	def getCurrentServer(self,widget=None,store=None):
 		if not widget:
@@ -156,20 +169,24 @@ class tekkaMain(tekkaCom, tekkaMisc):
 			citer = row.iterchildren()
 			if citer:
 				for child in citer:
-					del self.channelOutputs[servername][child]
+					del self.channelOutputs[servername][child[0]]
 			self.servertreeStore.remove(row.iter)
 
 	def channelPrint(self, server, channel, string):
 		if not self.channelOutputs.has_key(server):
 			self.myPrint("no such server '%s'" % (server))
 			return
+		if not self.channelOutputs[server].has_key(channel):
+			return
+
 		output = self.channelOutputs[server][channel]
 		if not output:
 			print "no such output buffer"
 			return
 		output.insert(output.get_end_iter(), string+"\n")
-		iMark = output.get_mark("insert")
-		self.textbox.scroll_to_mark(iMark, 0.2)
+		if channel == self.getCurrentChannel(server):
+			iMark = output.get_mark("insert")
+			self.textbox.scroll_to_mark(iMark, 0.2)
 
 	def serverPrint(self, server, string):
 		output = self.serverOutputs[server]
@@ -197,9 +214,9 @@ class tekkaMain(tekkaCom, tekkaMisc):
 		serverlist = tekkaDialog.serverDialog(self)
 		result,server = serverlist.run()
 		if result == serverlist.RESPONSE_CONNECT:
-			print "User clicked connect"
 			print "we want to connect to server %s" % server
-			self.addServer(server)
+			if server:
+				self.addServer(server)
 
 if __name__ == "__main__":
 	tekka = tekkaMain()
