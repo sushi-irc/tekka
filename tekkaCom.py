@@ -1,3 +1,4 @@
+import sys
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
 
@@ -21,6 +22,8 @@ class tekkaCom(object):
 		except dbus.exceptions.DBusException, e:
 			print e
 			print "Is maki running?"
+			if not self.proxy:
+				sys.exit(1)
 		if self.proxy:
 			self.bus.add_signal_receiver(self.readText, "message", "de.ikkoku.sushi", "de.ikkoku.sushi", "/de/ikkoku/sushi")
 
@@ -49,7 +52,15 @@ class tekkaCom(object):
 			self.parseCommand(text[1:])
 		else:
 			if self.proxy:
-				self.proxy.say("localhost","#test",text)
+				server = self.getCurrentServer()
+				if not server:
+					self.myPrint("can't determine server.")
+					return
+				channel = self.getCurrentChannel(server)
+				if not channel:
+					self.myPrint("would send to server directly.")
+				else:
+					self.proxy.say(server,channel,text)
 
 	def channelPrint(self, server, channel, string):
 		print "%s@%s: %s" % (channel, server, string)
@@ -100,7 +111,13 @@ class tekkaCom(object):
 		self.commands[cmd[0]](xargs)
 
 	def makiQuit(self, xargs):
-		self.quit()
+		if not xargs:
+			list = self.getServers()
+			for server in list:
+				self.proxy.quit(server)
+			self.quit()
+		else:
+			self.proxy.quit(xargs)
 
 	def makiNick(self, xargs):
 		return
@@ -109,7 +126,13 @@ class tekkaCom(object):
 		return
 
 	def makiJoin(self, xargs):
-		return
+		if not self.proxy:
+			self.myPrint("no connection to maki.")
+			return
+		server = self.getCurrentServer()
+		if not server:
+			self.myPrint("can't determine server.")
+		self.addChannel(server,xargs)
 
 	def makiAction(self, xargs):
 		return

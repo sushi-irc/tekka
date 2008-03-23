@@ -85,9 +85,38 @@ class tekkaMain(tekkaCom, tekkaMisc):
 		self.servertree.append_column(column)
 		self.servertree.set_headers_visible(False)
 
-		self.addServer("test1")
-		self.addChannel("test1","testc1")
-		self.addChannel("test1","testc2")
+	def getServers(self):
+		slist = []
+		for server in servertreeStore:
+			slist.append(server)
+		return slist
+
+	def getCurrentServer(self,widget=None,store=None):
+		if not widget:
+			widget = self.servertree
+		if not store:
+			store = self.servertreeStore
+		coord = widget.get_cursor()[0]
+		if not coord:
+			return None
+		return self.servertreeStore[coord[0]][0]
+
+	def getCurrentChannel(self, server, widget=None, store=None):
+		if not widget:
+			widget = self.servertree
+		if not store:
+			store = self.servertreeStore
+		coord = widget.get_cursor()[0]
+		if not coord or len(coord) < 2:
+			return None
+		server = store[coord[0]]
+		channels = server.iterchildren()
+		i = 0
+		for channel in channels:
+			if i == coord[1]:
+				return channel[0]
+			i+=1
+		return None
 
 	def addServer(self, servername):
 		iter = self.servertreeStore.append(None)
@@ -110,9 +139,6 @@ class tekkaMain(tekkaCom, tekkaMisc):
 			self.servertreeStore.set(iter,0,channelname)
 			self.channelOutputs[servername][channelname] = gtk.TextBuffer()
 
-	def channelPrint(self, server, channel, message):
-		pass
-	
 	def removeChannel(self, servername, channelname):
 		row = self.findRow(servername)
 		if row:
@@ -132,6 +158,9 @@ class tekkaMain(tekkaCom, tekkaMisc):
 			self.servertreeStore.remove(row.iter)
 
 	def channelPrint(self, server, channel, string):
+		if not self.channelOutputs.has_key(server):
+			self.myPrint("no such server '%s'" % (server))
+			return
 		output = self.channelOutputs[server][channel]
 		if not output:
 			print "no such output buffer"
