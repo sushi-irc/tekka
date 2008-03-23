@@ -135,6 +135,8 @@ class tekkaMain(tekkaCom, tekkaMisc):
 	def addChannel(self, servername, channelname):
 		row = self.findRow(servername)
 		if row:
+			if self.findRow(channelname,store=row.iterchildren()):
+				return
 			iter = self.servertreeStore.append(row.iter)
 			self.servertreeStore.set(iter,0,channelname)
 			self.channelOutputs[servername][channelname] = gtk.TextBuffer()

@@ -132,7 +132,9 @@ class tekkaCom(object):
 		server = self.getCurrentServer()
 		if not server:
 			self.myPrint("can't determine server.")
-		self.addChannel(server,xargs)
+		self.proxy.join(server,xargs[0])
+		self.addChannel(server,xargs[0])
+
 
 	def makiAction(self, xargs):
 		return
