@@ -76,7 +76,6 @@ class tekkaMain(tekkaCom, tekkaMisc):
 			print "not activated or not found or something similar :/"
 			return
 		print name
-		#self.textbox.scroll_to_mark(self.textbox.get_buffer().get_mark("insert"), 0.2)
 
 	def _setupServertree(self):
 		renderer = gtk.CellRendererText()
@@ -114,22 +113,24 @@ class tekkaMain(tekkaCom, tekkaMisc):
 			return None
 		return self.servertreeStore[coord[0]][0]
 
-	def getCurrentChannel(self, server, widget=None, store=None):
+	def getCurrentChannel(self, widget=None, store=None):
 		if not widget:
 			widget = self.servertree
 		if not store:
 			store = self.servertreeStore
 		coord = widget.get_cursor()[0]
-		if not coord or len(coord) < 2:
-			return None
+		if not coord:
+			return (None,None)
+		elif len(coord)==1:
+			return (store[coord[0]][0],None)
 		server = store[coord[0]]
 		channels = server.iterchildren()
 		i = 0
 		for channel in channels:
 			if i == coord[1]:
-				return channel[0]
+				return (server[0],channel[0])
 			i+=1
-		return None
+		return (server[0],None)
 
 	def addServer(self, servername):
 		iter = self.servertreeStore.append(None)
@@ -174,7 +175,7 @@ class tekkaMain(tekkaCom, tekkaMisc):
 
 	def channelPrint(self, server, channel, string):
 		if not self.channelOutputs.has_key(server):
-			self.myPrint("no such server '%s'" % (server))
+			self.myPrint("No such server '%s'" % (server))
 			return
 		if not self.channelOutputs[server].has_key(channel):
 			return
@@ -184,27 +185,30 @@ class tekkaMain(tekkaCom, tekkaMisc):
 			print "no such output buffer"
 			return
 		output.insert(output.get_end_iter(), string+"\n")
-		if channel == self.getCurrentChannel(server):
-			iMark = output.get_mark("insert")
-			self.textbox.scroll_to_mark(iMark, 0.2)
+		
+		if channel == self.getCurrentChannel()[1]:
+			print "scrolling"
+			self.scrollOutput(output)
 
 	def serverPrint(self, server, string):
 		output = self.serverOutputs[server]
 		if not output:
-			print "no such serveroutput buffer"
+			print "No such serveroutput buffer"
 			return
 		output.insert(output.get_end_iter(), string+"\n")
-		iMark = output.get_mark("insert")
-		self.textbox.scroll_to_mark(iMark, 0.2)
+		self.scrollOutput(output)
+
+	def scrollOutput(self, output):
+		mark = output.get_mark("insert")
+		self.textbox.scroll_to_mark(mark, 0.0)
 	
 	def myPrint(self, string):
 		output = self.textbox.get_buffer()
 		if not output:
-			print "no output buffer here!"
+			print "No output buffer here!"
 			return
 		output.insert(output.get_end_iter(), string+"\n")
-		iMark = output.get_mark("insert")
-		self.textbox.scroll_to_mark(iMark, 0.2)
+		self.scrollOutput(output)
 
 	def quit(self):
 		print "quitting"

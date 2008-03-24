@@ -30,6 +30,7 @@ class tekkaCom(object):
 			self.bus.add_signal_receiver(self.userJoin, "join", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userQuit, "quit", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userKick, "kick", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.userNick, "nick", dbus_interface="de.ikkoku.sushi")
 
 		self.commands = { 
 			"nick" : self.makiNick,
@@ -53,17 +54,18 @@ class tekkaCom(object):
 		print "text received from widget"
 		
 		text = widget.get_text()
+		if not text:
+			return
 		widget.set_text("")
 
 		if text[0] == "/" and text[1] != "/":
 			self.parseCommand(text[1:])
 		else:
 			if self.proxy:
-				server = self.getCurrentServer()
+				server,channel = self.getCurrentChannel()
 				if not server:
-					self.myPrint("can't determine server.")
+					self.myPrint("could not determine server.")
 					return
-				channel = self.getCurrentChannel(server)
 				if not channel:
 					self.myPrint("would send to server directly.")
 				else:
@@ -94,9 +96,20 @@ class tekkaCom(object):
 		channels = self.proxy.channels(server)
 		print channels
 		for channel in channels:
-			print channel
+			print "got channel: %s" % channel
 			self.addChannel(server, channel)
 
+	def userNick(self, time, server, nick, new_nick):
+		nickchange = "%s is now known as %s." % (nick, new_nick)
+		self.serverPrint(server, nickchange)
+		"""
+		else:
+			for channel in self.getChannels(server):
+				nickiter = findNick(server, channel, nick)
+				if nickiter:
+					self.channelPrint(server, channel, nickchange)
+					nickiter.magicdostuff()
+		"""
 	def userKick(self, time, server, channel, nick, who):
 		self.channelPrint(server, channel, "%s was kicked from %s by %s" % (who,channel,nick))
 
@@ -120,6 +133,7 @@ class tekkaCom(object):
 		print "adding new server to maki"
 
 	def parseCommand(self, command):
+		if not command: return
 		cmd = command.split(" ")
 		if not self.commands.has_key(cmd[0]):
 			self.myPrint("Unknown command %s" % cmd[0])
@@ -143,28 +157,32 @@ class tekkaCom(object):
 
 	def makiPart(self, xargs):
 		if not self.proxy:
-			self.myPrint("no connection to maki.")
+			self.myPrint("No connection to maki.")
 			return
-		server = self.getCurrentServer()
+		server,channel = self.getCurrentChannel()
 		if not server:
-			self.myPrint("could not determine my current server.")
+			self.myPrint("Could not determine my current server.")
 			return
 		if xargs and len(xargs) == 1:
 			self.proxy.part(server, xargs[0])
 			self.removeChannel(server, xargs[0])
 		else:
-			channel = self.getCurrentChannel(server)
 			if channel:
 				self.proxy.part(server, channel)
 				self.removeChannel(server, channel)
+			else:
+				self.myPrint("No channel given for /part")
 
 	def makiJoin(self, xargs):
 		if not self.proxy:
-			self.myPrint("no connection to maki.")
+			self.myPrint("No connection to maki.")
 			return
 		server = self.getCurrentServer()
 		if not server:
-			self.myPrint("can't determine server.")
+			self.myPrint("Can't determine server.")
+			return
+		if not xargs:
+			self.myPrint("Where you want to join to?")
 			return
 		self.proxy.join(server,xargs[0])
 		self.addChannel(server,xargs[0])
@@ -180,7 +198,14 @@ class tekkaCom(object):
 		return
 
 	def makiTopic(self, xargs):
-		return
+		if not xargs or len(xargs) == 0:
+			topic = ""
+		else:
+			topic = xargs.join(" ")
+		server,channel = getCurrentChannel()
+		if not server or not channel:
+			return
+		self.proxy.topic(server, channel, topic)
 
 	def makiUsermode(self, xargs):
 		return
