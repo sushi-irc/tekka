@@ -8,6 +8,7 @@ try:
 	import gtk
 	import gtk.glade
 	import gobject
+	import pango
 	import time
 except:
 	sys.exit(1)
@@ -52,6 +53,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		self.servertree.expand_all()
 		
 		self.textbox = self.widgets.get_widget("tekkaOutput")
+		self.setOutputFont("Monospace")
 		#self.textbox.set_buffer(self.output)
 		
 	def _setupSignals(self, widgets):
@@ -77,6 +79,14 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		self.servertree.set_model(self.servertreeStore)
 		self.servertree.append_column(column)
 		self.servertree.set_headers_visible(False)
+
+	def setOutputFont(self, fontname):
+		tb = self.textbox
+		fd = pango.FontDescription()
+		fd.set_family(fontname)
+		if not fd:
+			return
+		tb.modify_font(fd)
 
 	def rowActivated(self, w):
 		store = self.servertreeStore

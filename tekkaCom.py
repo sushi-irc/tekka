@@ -73,7 +73,7 @@ class tekkaCom(object):
 				else:
 					self.proxy.say(server,channel,text)
 
-	def channelPrint(self, server, channel, string):
+	def channelPrint(self, timestamp, server, channel, string):
 		print "%s@%s: %s" % (channel, server, string)
 
 	def serverPrint(self, server, string):
@@ -102,34 +102,34 @@ class tekkaCom(object):
 			self.addChannel(server, channel)
 
 	def userAction(self, time, server, channel, nick, action):
-		self.channelPrint(server, channel, "%s %s" % (nick,action))
+		self.channelPrint(time, server, channel, "%s %s" % (nick,action))
 
 	def userNick(self, time, server, nick, new_nick):
 		nickchange = "%s is now known as %s." % (nick, new_nick)
-		self.serverPrint(server, nickchange)
+		self.serverPrint(time, server, nickchange)
 		"""
 		else:
 			for channel in self.getChannels(server):
 				nickiter = findNick(server, channel, nick)
 				if nickiter:
-					self.channelPrint(server, channel, nickchange)
+					self.channelPrint(time, server, channel, nickchange)
 					nickiter.magicdostuff()
 		"""
 	def userKick(self, time, server, channel, nick, who):
-		self.channelPrint(server, channel, "%s was kicked from %s by %s" % (who,channel,nick))
+		self.channelPrint(time, server, channel, "%s was kicked from %s by %s" % (who,channel,nick))
 
 	def userQuit(self, time, server, nick):
 		channels = self.getChannels(server)
 		if not channels:
 			return
 		for channel in channels:
-			self.channelPrint(server, channel, "%s has quit." % nick)
+			self.channelPrint(time, server, channel, "%s has quit." % nick)
 	
 	def userJoin(self, timestamp, server, channel, nick):
-		self.channelPrint(server, channel, "%s has joined %s." % (nick, channel))
+		self.channelPrint(timestamp, server, channel, "%s has joined %s." % (nick, channel))
 
 	def userPart(self, timestamp, server, channel, nick):
-		self.channelPrint(server, channel, "%s has left %s." % (nick, channel))
+		self.channelPrint(timestamp, server, channel, "%s has left %s." % (nick, channel))
 
 	def connectServer(self, widget):
 		print "would connect"
@@ -199,10 +199,10 @@ class tekkaCom(object):
 			return
 		if not xargs:
 			self.myPrint("Usage: /me <text>")
-		server,channel = getCurrentChannel()
+		server,channel = self.getCurrentChannel()
 		if not server or not channel:
 			self.myPrint("No channel joined.")
-		self.proxy.action(server,channel,xargs.join(" "))
+		self.proxy.action(server,channel," ".join(xargs))
 
 	def makiKick(self, xargs):
 		return
@@ -214,7 +214,7 @@ class tekkaCom(object):
 		if not xargs or len(xargs) == 0:
 			topic = ""
 		else:
-			topic = xargs.join(" ")
+			topic = " ".join(xargs)
 		server,channel = getCurrentChannel()
 		if not server or not channel:
 			return
