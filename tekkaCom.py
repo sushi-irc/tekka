@@ -1,23 +1,13 @@
 import sys
 import dbus
-import time
 from dbus.mainloop.glib import DBusGMainLoop
-
-import time
-"""
-
-Rausfinden auf welchem Server wir senden
-Rausfinden auf welchem Channel wir senden
-Rausfinden was wir senden wollen
-
-
-"""
 
 class tekkaCom(object):
 	def __init__(self):
 		dbus_loop = DBusGMainLoop()
 		self.bus = dbus.SessionBus(mainloop=dbus_loop)
 		self.proxy = None
+
 		try:
 			self.proxy = self.bus.get_object("de.ikkoku.sushi", "/de/ikkoku/sushi")
 		except dbus.exceptions.DBusException, e:
@@ -25,6 +15,8 @@ class tekkaCom(object):
 			print "Is maki running?"
 			if not self.proxy:
 				sys.exit(1)
+
+		# setup signals
 		if self.proxy:
 			self.bus.add_signal_receiver(self.readText, "message", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userPart, "part", dbus_interface="de.ikkoku.sushi")
@@ -44,9 +36,12 @@ class tekkaCom(object):
 			"topic": self.makiTopic,
 			"quit" : self.makiQuit,
 		"usermode" : self.makiUsermode,
+			"clear": self.tekkaClear,
 			"ctcp" : self.tekkaCTCP,
 			"dcc"  : self.tekkaDCC
 		}
+
+		self.myNick = {}
 
 
 	def readText(self, timestamp, server, channel, nick, message):
@@ -71,6 +66,8 @@ class tekkaCom(object):
 				if not channel:
 					self.myPrint("would send to server directly.")
 				else:
+					if text[0:2] == "//":
+						text = text[1:]
 					self.proxy.say(server,channel,text)
 
 	def channelPrint(self, timestamp, server, channel, string):
@@ -85,6 +82,23 @@ class tekkaCom(object):
 	def quit(self):
 		return
 
+	def getNicksFromMaki(self, server, channel):
+		if not self.proxy: return None
+		return self.proxy.nicks(server,channel)
+
+	def getNickFromMaki(self, server):
+		if not self.proxy:
+			return None
+		return self.proxy.own_nick(server)
+
+	def getNick(self, server):
+		if self.myNick.has_key(server):
+			return self.myNick[server]
+		return None
+
+	def setNick(self, server, nickname):
+		self.myNick[server] = nickname
+
 	def addServers(self):
 		servers = self.proxy.servers()
 		if not servers:
@@ -93,6 +107,7 @@ class tekkaCom(object):
 			# addServer in tekkaMain
 			self.addServer(server)
 			self.addChannels(server)
+			self.setNick(server, self.getNickFromMaki(server))
 
 	def addChannels(self, server):
 		channels = self.proxy.channels(server)
@@ -105,16 +120,17 @@ class tekkaCom(object):
 		self.channelPrint(time, server, channel, "%s %s" % (nick,action))
 
 	def userNick(self, time, server, nick, new_nick):
-		nickchange = "%s is now known as %s." % (nick, new_nick)
-		self.serverPrint(time, server, nickchange)
-		"""
+		print "comparing %s with %s" % (nick, self.getNick(server))
+		if nick == self.getNick(server):
+			nickwrap = "You are"
+			self.setNick(server,self.getNickFromMaki(server))
 		else:
-			for channel in self.getChannels(server):
-				nickiter = findNick(server, channel, nick)
-				if nickiter:
-					self.channelPrint(time, server, channel, nickchange)
-					nickiter.magicdostuff()
-		"""
+			nickwrap = "%s is" % nick
+		
+		nickchange = "%s now known as %s." % (nickwrap, new_nick)
+		for channel in self.getChannels(server):
+			self.channelPrint(time, server, channel, nickchange)
+
 	def userKick(self, time, server, channel, nick, who):
 		self.channelPrint(time, server, channel, "%s was kicked from %s by %s" % (who,channel,nick))
 
@@ -131,8 +147,10 @@ class tekkaCom(object):
 	def userPart(self, timestamp, server, channel, nick):
 		self.channelPrint(timestamp, server, channel, "%s has left %s." % (nick, channel))
 
-	def connectServer(self, widget):
-		print "would connect"
+	def connectServer(self, server):
+		if not self.proxy: return
+		self.proxy.connect(server)
+		self.addServer(server)
 
 	def newServer(self, newServer):
 		print "adding new server to maki"
@@ -158,7 +176,17 @@ class tekkaCom(object):
 			self.proxy.quit(xargs)
 
 	def makiNick(self, xargs):
-		return
+		server = self.getCurrentServer()
+		if not self.proxy:
+			self.myPrint("No connection to maki.")
+			return
+		if not xargs:
+			self.myPrint("Usage: /nick <new nick>")
+			return
+		if not server:
+			self.myPrint("Can't determine my server.")
+			return
+		self.proxy.nick(server, xargs[0])
 
 	def makiPart(self, xargs):
 		if not self.proxy:
@@ -231,9 +259,15 @@ class tekkaCom(object):
 				print "removing %s" % server
 				self.removeServer(server)
 
+	def tekkaClear(self, xargs):
+		pass
+
 	def tekkaCTCP(self, xargs):
 		return
 
 	def tekkaDCC(self, xargs):
 		return
 
+if __name__ == "__main__":
+	print "testing"
+	test = tekkaCom()

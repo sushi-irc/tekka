@@ -13,15 +13,11 @@ try:
 except:
 	sys.exit(1)
 
-try:
-	from tekkaConfig import tekkaConfig
-	from tekkaCom import tekkaCom
-	from tekkaMisc import tekkaMisc
-	from tekkaPlugins import tekkaPlugins
-	import tekkaDialog
-except:
-	print "Failure while importing essential parts of tekka."
-	sys.exit(1)
+from tekkaConfig import tekkaConfig
+from tekkaCom import tekkaCom
+from tekkaMisc import tekkaMisc
+from tekkaPlugins import tekkaPlugins
+import tekkaDialog
 
 # tekkaMisc -> inputHistory and similar things
 # tekkaCom -> communication to mika via dbus
@@ -42,7 +38,11 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		self.servertree = self.widgets.get_widget("tekkaServertree")
 		self._setupServertree()
 
+		# determine the tekkaOutput scrolledwindow
 		self.scrolledWindow = self.widgets.get_widget("scrolledwindow1")
+
+		self.nicklist = self.widgets.get_widget("tekkaNicklist")
+		self._setupNicklist()
 
 		# setup gtk signals
 		self._setupSignals(self.widgets)
@@ -54,7 +54,8 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		
 		self.textbox = self.widgets.get_widget("tekkaOutput")
 		self.setOutputFont("Monospace")
-		#self.textbox.set_buffer(self.output)
+
+
 		
 	def _setupSignals(self, widgets):
 		sigdic = { "tekkaInput_activate_cb" : self.sendText,
@@ -71,7 +72,9 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		widget = widgets.get_widget("tekkaMainwindow_MenuTekka_Quit")
 		if widget:
 			widget.connect("activate", gtk.main_quit)
-	
+
+	""" SETUP ROUTINES """
+
 	def _setupServertree(self):
 		renderer = gtk.CellRendererText()
 		column = gtk.TreeViewColumn("Server",renderer,text=0)
@@ -79,6 +82,14 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		self.servertree.set_model(self.servertreeStore)
 		self.servertree.append_column(column)
 		self.servertree.set_headers_visible(False)
+
+	def _setupNicklist(self):
+		renderer = gtk.CellRendererText()
+		column = gtk.TreeViewColumn("Nicks", renderer, text=0)
+		self.nicklistStore = gtk.ListStore(gobject.TYPE_STRING)
+		self.nicklist.set_model(self.nicklistStore)
+		self.nicklist.append_column(column)
+		self.nicklist.set_headers_visible(False)
 
 	def setOutputFont(self, fontname):
 		tb = self.textbox
@@ -88,6 +99,17 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			return
 		tb.modify_font(fd)
 
+	def refreshNicklist(self, server, channel):
+		self.nicklistStore.clear()
+		if not channel: return
+		nicks = self.getNicksFromMaki(server,channel)
+		if not nicks: return
+		for nick in nicks:
+			iter = self.nicklistStore.append(None)
+			self.nicklistStore.set(iter, 0, nick)
+
+	""" SERVER TREE SIGNALS """
+
 	def rowActivated(self, w):
 		store = self.servertreeStore
 		tuple = w.get_cursor()[0]
@@ -96,6 +118,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			name = self.servertreeStore[tuple[0]][0]
 			self.textbox.set_buffer(self.serverOutputs[name])
 			self.scrollOutput(self.serverOutputs[name])
+			self.refreshNicklist(name,None) # clear the nicklist if servertab is activated
 		else: # channel activated
 			server = self.servertreeStore[tuple[0]]
 			rows = server.iterchildren()
@@ -105,12 +128,15 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 					name = row[0]
 					self.textbox.set_buffer(self.channelOutputs[server[0]][name])
 					self.scrollOutput(self.channelOutputs[server[0]][name])
+					self.refreshNicklist(server[0],name) # fill nicklist
 					break
 				rowcount+=1
 		if not name:
 			print "not activated or not found or something similar :/"
 			return
 		print name
+
+	""" SERVER TREE HANDLING """
 
 	def getServers(self):
 		slist = []
@@ -201,6 +227,13 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 					del self.channelOutputs[servername][child[0]]
 			self.servertreeStore.remove(row.iter)
 
+	""" PRINTING ROUTINES """
+
+	def scrollOutput(self, output):
+		adj = self.scrolledWindow.get_vadjustment()
+		adj.set_value(adj.props.upper)
+	
+
 	def channelPrint(self, timestamp, server, channel, string):
 		if not self.channelOutputs.has_key(server):
 			self.myPrint("No such server '%s'" % (server))
@@ -225,12 +258,10 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			return
 		timestamp = time.strftime("%H:%M", time.localtime(timestamp))
 		output.insert(output.get_end_iter(), "[%s] %s\n" % (timestamp,string))
-		self.scrollOutput(output)
+		cserver,cchannel = self.getCurrentChannel()
+		if not cchannel and cserver and cserver == server:
+			self.scrollOutput(output)
 
-	def scrollOutput(self, output):
-		adj = self.scrolledWindow.get_vadjustment()
-		adj.set_value(adj.props.upper)
-	
 	def myPrint(self, string):
 		output = self.textbox.get_buffer()
 		if not output:
@@ -238,6 +269,22 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			return
 		output.insert(output.get_end_iter(), string+"\n")
 		self.scrollOutput(output)
+
+	# tekkaClear command method from tekkaCom:
+	# clears the output of the tekkaOutput widget
+	def tekkaClear(self, args):
+		server,channel = self.getCurrentChannel()
+		if not server:
+			return
+		if not channel:
+			if self.serverOutputs.has_key(server):
+				self.serverOutputs[server].set_text("")
+		else:
+			if self.channelOutputs.has_key(server):
+				if self.channelOutputs[server].has_key(channel):
+					self.channelOutputs[server][channel].set_text("")
+	
+	""" MISC STUFF """
 
 	def quit(self):
 		print "quitting"
@@ -249,7 +296,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		if result == serverlist.RESPONSE_CONNECT:
 			print "we want to connect to server %s" % server
 			if server:
-				self.addServer(server)
+				self.connectServer(server)
 
 if __name__ == "__main__":
 	tekka = tekkaMain()
