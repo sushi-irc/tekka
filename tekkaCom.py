@@ -26,7 +26,8 @@ class tekkaCom(object):
 			self.bus.add_signal_receiver(self.userNick, "nick", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userAction, "action", dbus_interface="de.ikkoku.sushi")
 
-		self.commands = { 
+		self.commands = {
+		"connect"  : self.makiConnect,
 			"nick" : self.makiNick,
 			"part" : self.makiPart,
 			"join" : self.makiJoin,
@@ -70,17 +71,7 @@ class tekkaCom(object):
 						text = text[1:]
 					self.proxy.say(server,channel,text)
 
-	def channelPrint(self, timestamp, server, channel, string):
-		print "%s@%s: %s" % (channel, server, string)
 
-	def serverPrint(self, server, string):
-		print "%s: %s" % (server,string)
-
-	def myPrint(self, string):
-		print string
-
-	def quit(self):
-		return
 
 	def getNicksFromMaki(self, server, channel):
 		if not self.proxy: return None
@@ -142,10 +133,15 @@ class tekkaCom(object):
 			self.channelPrint(time, server, channel, "%s has quit." % nick)
 	
 	def userJoin(self, timestamp, server, channel, nick):
-		self.channelPrint(timestamp, server, channel, "%s has joined %s." % (nick, channel))
+		if nick == self.getNick(server):
+			self.addChannel(server, channel)
+			nickwrap = "You"
+		else:
+			nickwrap = nick
+		self.channelPrint(timestamp, server, channel, "%s joined %s." % (nickwrap, channel))
 
 	def userPart(self, timestamp, server, channel, nick):
-		self.channelPrint(timestamp, server, channel, "%s has left %s." % (nick, channel))
+		self.channelPrint(timestamp, server, channel, "%s left %s." % (nick, channel))
 
 	def connectServer(self, server):
 		if not self.proxy: return
@@ -166,14 +162,25 @@ class tekkaCom(object):
 			xargs = cmd[1:]
 		self.commands[cmd[0]](xargs)
 
+	""" COMMAND METHODS """
+
+	def makiConnect(self, xargs):
+		if not xargs:
+			self.myPrint("Usage: /connect <servername>")
+			return
+		self.connectServer(xargs[0])
+
 	def makiQuit(self, xargs):
 		if not xargs:
+			print "global quit"
 			list = self.getServers()
 			for server in list:
 				self.proxy.quit(server)
 			self.quit()
 		else:
-			self.proxy.quit(xargs)
+			print "quit local %s" % xargs[0]
+			self.proxy.quit(xargs[0])
+			self.removeServer(xargs[0])
 
 	def makiNick(self, xargs):
 		server = self.getCurrentServer()
@@ -266,6 +273,20 @@ class tekkaCom(object):
 		return
 
 	def tekkaDCC(self, xargs):
+		return
+
+	""" PLACEHOLDER TO OVERLOAD """
+
+	def channelPrint(self, timestamp, server, channel, string):
+		print "%s@%s: %s" % (channel, server, string)
+
+	def serverPrint(self, server, string):
+		print "%s: %s" % (server,string)
+
+	def myPrint(self, string):
+		print string
+
+	def quit(self):
 		return
 
 if __name__ == "__main__":
