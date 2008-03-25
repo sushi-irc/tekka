@@ -8,21 +8,32 @@ try:
 	import gtk
 	import gtk.glade
 	import gobject
+	import time
 except:
 	sys.exit(1)
 
-from tekkaCom import tekkaCom
-from tekkaMisc import tekkaMisc
-import tekkaDialog
+try:
+	from tekkaConfig import tekkaConfig
+	from tekkaCom import tekkaCom
+	from tekkaMisc import tekkaMisc
+	from tekkaPlugins import tekkaPlugins
+	import tekkaDialog
+except:
+	print "Failure while importing essential parts of tekka."
+	sys.exit(1)
 
 # tekkaMisc -> inputHistory and similar things
 # tekkaCom -> communication to mika via dbus
-class tekkaMain(tekkaCom, tekkaMisc):
+# tekkaConfig -> Configparser, Configvariables
+# tekkaPlugins -> Plugin-interface (TODO)
+class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 	def __init__(self):
 		tekkaCom.__init__(self)
 		tekkaMisc.__init__(self)
-		self.gladefile = "interface1.glade"
-		self.widgets = gtk.glade.XML(self.gladefile, "tekkaMainwindow")
+		tekkaConfig.__init__(self)
+		tekkaPlugins.__init__(self)
+		
+		self.widgets = gtk.glade.XML(self.gladefiles["mainwindow"], "tekkaMainwindow")
 
 		self.serverOutputs = {  } # { "server":buf, ... }
 		self.channelOutputs = {  } # { "server":{"channel1":buf,"channel2":buf},.. }
@@ -30,11 +41,15 @@ class tekkaMain(tekkaCom, tekkaMisc):
 		self.servertree = self.widgets.get_widget("tekkaServertree")
 		self._setupServertree()
 
+		self.scrolledWindow = self.widgets.get_widget("scrolledwindow1")
+
 		# setup gtk signals
 		self._setupSignals(self.widgets)
 
 		# retreive the servers we're connected to
 		self.addServers()
+
+		self.servertree.expand_all()
 		
 		self.textbox = self.widgets.get_widget("tekkaOutput")
 		#self.textbox.set_buffer(self.output)
@@ -54,6 +69,14 @@ class tekkaMain(tekkaCom, tekkaMisc):
 		widget = widgets.get_widget("tekkaMainwindow_MenuTekka_Quit")
 		if widget:
 			widget.connect("activate", gtk.main_quit)
+	
+	def _setupServertree(self):
+		renderer = gtk.CellRendererText()
+		column = gtk.TreeViewColumn("Server",renderer,text=0)
+		self.servertreeStore = gtk.TreeStore(gobject.TYPE_STRING)
+		self.servertree.set_model(self.servertreeStore)
+		self.servertree.append_column(column)
+		self.servertree.set_headers_visible(False)
 
 	def rowActivated(self, w):
 		store = self.servertreeStore
@@ -62,6 +85,7 @@ class tekkaMain(tekkaCom, tekkaMisc):
 		if len(tuple)==1: # server activated
 			name = self.servertreeStore[tuple[0]][0]
 			self.textbox.set_buffer(self.serverOutputs[name])
+			self.scrollOutput(self.serverOutputs[name])
 		else: # channel activated
 			server = self.servertreeStore[tuple[0]]
 			rows = server.iterchildren()
@@ -70,20 +94,13 @@ class tekkaMain(tekkaCom, tekkaMisc):
 				if rowcount == tuple[1]:
 					name = row[0]
 					self.textbox.set_buffer(self.channelOutputs[server[0]][name])
+					self.scrollOutput(self.channelOutputs[server[0]][name])
 					break
 				rowcount+=1
 		if not name:
 			print "not activated or not found or something similar :/"
 			return
 		print name
-
-	def _setupServertree(self):
-		renderer = gtk.CellRendererText()
-		column = gtk.TreeViewColumn("Server",renderer,text=0)
-		self.servertreeStore = gtk.TreeStore(gobject.TYPE_STRING)
-		self.servertree.set_model(self.servertreeStore)
-		self.servertree.append_column(column)
-		self.servertree.set_headers_visible(False)
 
 	def getServers(self):
 		slist = []
@@ -154,6 +171,7 @@ class tekkaMain(tekkaCom, tekkaMisc):
 			iter = self.servertreeStore.append(row.iter)
 			self.servertreeStore.set(iter,0,channelname)
 			self.channelOutputs[servername][channelname] = gtk.TextBuffer()
+			self.servertree.expand_row(row.path,True)
 
 	def removeChannel(self, servername, channelname):
 		row = self.findRow(servername)
@@ -173,7 +191,7 @@ class tekkaMain(tekkaCom, tekkaMisc):
 					del self.channelOutputs[servername][child[0]]
 			self.servertreeStore.remove(row.iter)
 
-	def channelPrint(self, server, channel, string):
+	def channelPrint(self, timestamp, server, channel, string):
 		if not self.channelOutputs.has_key(server):
 			self.myPrint("No such server '%s'" % (server))
 			return
@@ -184,23 +202,24 @@ class tekkaMain(tekkaCom, tekkaMisc):
 		if not output:
 			print "no such output buffer"
 			return
-		output.insert(output.get_end_iter(), string+"\n")
+		timestamp = time.strftime("%H:%M", time.localtime(timestamp))
+		output.insert(output.get_end_iter(), "[%s] %s\n" % (timestamp,string))
 		
 		if channel == self.getCurrentChannel()[1]:
-			print "scrolling"
 			self.scrollOutput(output)
 
-	def serverPrint(self, server, string):
+	def serverPrint(self, timestamp, server, string):
 		output = self.serverOutputs[server]
 		if not output:
 			print "No such serveroutput buffer"
 			return
-		output.insert(output.get_end_iter(), string+"\n")
+		timestamp = time.strftime("%H:%M", time.localtime(timestamp))
+		output.insert(output.get_end_iter(), "[%s] %s\n" % (timestamp,string))
 		self.scrollOutput(output)
 
 	def scrollOutput(self, output):
-		mark = output.get_mark("insert")
-		self.textbox.scroll_to_mark(mark, 0.0)
+		adj = self.scrolledWindow.get_vadjustment()
+		adj.set_value(adj.props.upper)
 	
 	def myPrint(self, string):
 		output = self.textbox.get_buffer()

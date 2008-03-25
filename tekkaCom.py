@@ -1,5 +1,6 @@
 import sys
 import dbus
+import time
 from dbus.mainloop.glib import DBusGMainLoop
 
 import time
@@ -31,6 +32,7 @@ class tekkaCom(object):
 			self.bus.add_signal_receiver(self.userQuit, "quit", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userKick, "kick", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userNick, "nick", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.userAction, "action", dbus_interface="de.ikkoku.sushi")
 
 		self.commands = { 
 			"nick" : self.makiNick,
@@ -48,7 +50,7 @@ class tekkaCom(object):
 
 
 	def readText(self, timestamp, server, channel, nick, message):
-		self.channelPrint(server, channel, "<%s> %s" % (nick, message))
+		self.channelPrint(timestamp, server, channel, "<%s> %s" % (nick, message))
 
 	def sendText(self, widget):
 		print "text received from widget"
@@ -98,6 +100,9 @@ class tekkaCom(object):
 		for channel in channels:
 			print "got channel: %s" % channel
 			self.addChannel(server, channel)
+
+	def userAction(self, time, server, channel, nick, action):
+		self.channelPrint(server, channel, "%s %s" % (nick,action))
 
 	def userNick(self, time, server, nick, new_nick):
 		nickchange = "%s is now known as %s." % (nick, new_nick)
@@ -189,7 +194,15 @@ class tekkaCom(object):
 
 
 	def makiAction(self, xargs):
-		return
+		if not self.proxy:
+			self.myPrint("No connection to maki.")
+			return
+		if not xargs:
+			self.myPrint("Usage: /me <text>")
+		server,channel = getCurrentChannel()
+		if not server or not channel:
+			self.myPrint("No channel joined.")
+		self.proxy.action(server,channel,xargs.join(" "))
 
 	def makiKick(self, xargs):
 		return
