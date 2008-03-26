@@ -53,7 +53,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		self.servertree.expand_all()
 		
 		self.textbox = self.widgets.get_widget("tekkaOutput")
-		self.setOutputFont("Monospace")
+		self.setOutputFont(self.outputFont)
 
 
 		
@@ -61,6 +61,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		sigdic = { "tekkaInput_activate_cb" : self.sendText,
 				   "tekkaServertree_cursor_changed_cb" : self.rowActivated,
 				   "tekkaServertree_realize_cb" : lambda w: w.expand_all(),
+				   "tekkaNicklist_row_activated_cb" : self.nicklistActivateRow,
 				   "tekkaMainwindow_Shutdown_activate_cb" : self.makiShutdown,
 		           "tekkaMainwindow_Connect_activate_cb" : self.showServerDialog,
 				   "tekkaMainwindow_Quit_activate_cb" : gtk.main_quit}
@@ -136,6 +137,16 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			return
 		print name
 
+	""" NICKLIST SIGNALS """
+
+	def nicklistActivateRow(self, treeview, path, parm1):
+		server = self.getCurrentServer()
+		if not server: return
+		nick = self.nicklistStore[path[0]][0]
+		if nick[0] in ("@","+","!","*","%"):
+			nick = nick[1:]
+		self.addChannel(server, nick)
+
 	""" SERVER TREE HANDLING """
 
 	def getServers(self):
@@ -199,6 +210,14 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 				return row
 		return None
 
+	def findRowI(self, name, store=None):
+		if not store:
+			store = self.servertreeStore
+		for row in store:
+			if row[0].lower() == name.lower():
+				return row
+		return None
+
 	def addChannel(self, servername, channelname):
 		row = self.findRow(servername)
 		if row:
@@ -208,6 +227,16 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			self.servertreeStore.set(iter,0,channelname)
 			self.channelOutputs[servername][channelname] = gtk.TextBuffer()
 			self.servertree.expand_row(row.path,True)
+
+	def renameChannel(self, servername, channelname, new_channelname):
+		row = self.findRow(servername)
+		if row:
+			crow = self.findRow(channelname, row.iterchildren())
+			if crow:
+				self.servertreeStore.set_value(crow.iter, 0, new_channelname)
+				tmp = self.channelOutputs[servername][channelname]
+				del self.channelOutputs[servername][channelname]
+				self.channelOutputs[servername][new_channelname] = tmp
 
 	def removeChannel(self, servername, channelname):
 		row = self.findRow(servername)
@@ -233,21 +262,44 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		adj = self.scrolledWindow.get_vadjustment()
 		adj.set_value(adj.props.upper)
 	
+	def channelPrint(self, timestamp, server, channel, message, nick=""):
+		timestring = time.strftime("%H:%M", time.localtime(timestamp))
 
-	def channelPrint(self, timestamp, server, channel, string):
+		outputstring = "[%s] %s" % (timestring, message)
+
+		# the server which is speaking to us, doesn't exist
 		if not self.channelOutputs.has_key(server):
-			self.myPrint("No such server '%s'" % (server))
-			return
+			self.addServer(server)
+		
 		if not self.channelOutputs[server].has_key(channel):
-			return
+			print "output not found :/, chan: %s, nick: %s, my: %s" % (channel,nick,self.getNick(server))
+			# we have a query, target is nick, not channel (we)?
+			if self.getNick(server).lower() == channel.lower(): 
+				if not nick:
+					print "Wrong data."
+					return
+				
+				simfound=0
+				for schannel in self.getChannels(server):
+					if schannel.lower() == nick.lower():
+						self.renameChannel(server, schannel, nick)
+						simfound=1
+				if not simfound:
+					self.addChannel(server,nick)
+				channel = nick
+			else:
+				print "adding server %s" % channel
+				# a channel speaks to us but we hadn't joined yet
+				self.addChannel(server,channel)
 
 		output = self.channelOutputs[server][channel]
 		if not output:
-			print "no such output buffer"
+			print "channelPrint(): no output buffer"
 			return
-		timestamp = time.strftime("%H:%M", time.localtime(timestamp))
-		output.insert(output.get_end_iter(), "[%s] %s\n" % (timestamp,string))
-		
+
+		output.insert(output.get_end_iter(), outputstring+"\n")
+	
+		# if channel is "activated"
 		if channel == self.getCurrentChannel()[1]:
 			self.scrollOutput(output)
 

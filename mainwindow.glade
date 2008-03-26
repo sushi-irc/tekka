@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.3 on Tue Mar 25 17:06:14 2008 -->
+<!--Generated with glade3 3.4.3 on Wed Mar 26 02:38:11 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="tekkaMainwindow">
     <property name="width_request">450</property>
@@ -32,9 +32,8 @@
                     <child>
                       <widget class="GtkImageMenuItem" id="tekkaMainWindow_MenuTekka_Shutdown">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">gtk-disconnect</property>
+                        <property name="label" translatable="yes">Close maki</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
                         <signal name="activate" handler="tekkaMainwindow_Shutdown_activate_cb"/>
                       </widget>
                     </child>
@@ -155,6 +154,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="headers_clickable">True</property>
+                        <signal name="row_activated" handler="tekkaNicklist_row_activated_cb"/>
                       </widget>
                     </child>
                   </widget>
