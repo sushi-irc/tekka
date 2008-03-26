@@ -167,6 +167,16 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			clist.append(channel[0])
 		return clist
 
+	def getChannel(self, userver, cname, sens=True):
+		for channel in self.getChannels(userver):
+			if not sens:
+				if channel.lower() == cname.lower():
+					return channel
+			else:
+				if channel == cname:
+					return channel
+		return None
+
 	def getCurrentServer(self,widget=None,store=None):
 		if not widget:
 			widget = self.servertree

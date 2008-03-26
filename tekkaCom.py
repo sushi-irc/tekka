@@ -144,7 +144,8 @@ class tekkaCom(object):
 		if not channels:
 			return
 		for channel in channels:
-			self.channelPrint(time, server, channel, "%s has quit." % nick)
+			if nick in self.getNicksFromMaki(server,channel):
+				self.channelPrint(time, server, channel, "%s has quit." % nick)
 	
 	# user joined
 	def userJoin(self, timestamp, server, channel, nick):
@@ -288,7 +289,8 @@ class tekkaCom(object):
 		if not server:
 			self.myPrint("query who on which server?")
 			return
-		self.addChannel(server, xargs[0])
+		if not self.getChannel(server,xargs[0],sens=False):
+			self.addChannel(server, xargs[0])
 
 	def tekkaClear(self, xargs):
 		pass
