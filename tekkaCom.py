@@ -207,8 +207,11 @@ class tekkaCom(object):
 				self.proxy.quit(server)
 			self.quit()
 		else:
+			reason = ""
+			if len(xargs) == 2:
+				reason = xargs[1]
 			print "quit local %s" % xargs[0]
-			self.proxy.quit(xargs[0])
+			self.proxy.quit(xargs[0], reason)
 			self.removeServer(xargs[0])
 
 	def makiNick(self, xargs):
@@ -228,19 +231,28 @@ class tekkaCom(object):
 		if not self.proxy:
 			self.myPrint("No connection to maki.")
 			return
-		server,channel = self.getCurrentChannel()
+		server,cchannel = self.getCurrentChannel()
 		if not server:
 			self.myPrint("Could not determine my current server.")
 			return
-		if xargs and len(xargs) == 1:
-			self.proxy.part(server, xargs[0])
-			self.removeChannel(server, xargs[0])
-		else:
-			if channel:
-				self.proxy.part(server, channel)
-				self.removeChannel(server, channel)
+
+		channel = ""
+		reason = ""
+
+		if not xargs:
+			if not cchannel:
+				self.myPrint("No channel given.")
+				return
 			else:
-				self.myPrint("No channel given for /part")
+				channel = cchannel
+		elif len(xargs) == 1:
+			channel = xargs[0]
+			reason = ""
+		elif len(xargs) == 2:
+			channel = xargs[0]
+			reason = xargs[1]
+		self.proxy.part(server, channel, reason)
+		self.removeChannel(server,channel)
 
 	def makiJoin(self, xargs):
 		if not self.proxy:
@@ -284,7 +296,10 @@ class tekkaCom(object):
 		if not channel:
 			self.myPrint("You're not on a channel")
 			return
-		self.proxy.kick(server, channel, xargs[0])
+		reason = ""
+		if len(xargs) == 2:
+			reason = xargs[1]
+		self.proxy.kick(server, channel, xargs[0], xargs[1])
 
 	def makiMode(self, xargs):
 		return

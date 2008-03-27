@@ -319,6 +319,8 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			print "channelPrint(): no output buffer"
 			return
 		
+		output.insert(output.get_end_iter(), outputstring+"\n")
+
 		# if channel is "activated"
 		if channel == self.getCurrentChannel()[1]:
 			self.scrollOutput(output)
