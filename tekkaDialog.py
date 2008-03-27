@@ -66,7 +66,7 @@ class editServerDialog(object):
 		servername_input = self.widgets.get_widget("serverEdit_Servername")
 		servername_input.set_text(self.servername)
 		
-		# TODO: retreive options from server and load fields with data.
+		# TODO: retrieve options from server and load fields with data.
 		
 		dialog = self.widgets.get_widget("serverEdit")
 		result = dialog.run()
