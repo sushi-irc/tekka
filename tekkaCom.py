@@ -209,7 +209,7 @@ class tekkaCom(object):
 		else:
 			reason = ""
 			if len(xargs) >= 2:
-				reason = " ".join(xargs[1])
+				reason = " ".join(xargs[1:])
 			print "quit local %s" % xargs[0]
 			self.proxy.quit(xargs[0], reason)
 			self.removeServer(xargs[0])
@@ -250,7 +250,7 @@ class tekkaCom(object):
 			reason = ""
 		elif len(xargs) >= 2:
 			channel = xargs[0]
-			reason = " ".join(xargs[1])
+			reason = " ".join(xargs[1:])
 		self.proxy.part(server, channel, reason)
 		self.removeChannel(server,channel)
 
