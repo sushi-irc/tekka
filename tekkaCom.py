@@ -208,8 +208,8 @@ class tekkaCom(object):
 			self.quit()
 		else:
 			reason = ""
-			if len(xargs) == 2:
-				reason = xargs[1]
+			if len(xargs) >= 2:
+				reason = " ".join(xargs[1])
 			print "quit local %s" % xargs[0]
 			self.proxy.quit(xargs[0], reason)
 			self.removeServer(xargs[0])
@@ -248,9 +248,9 @@ class tekkaCom(object):
 		elif len(xargs) == 1:
 			channel = xargs[0]
 			reason = ""
-		elif len(xargs) == 2:
+		elif len(xargs) >= 2:
 			channel = xargs[0]
-			reason = xargs[1]
+			reason = " ".join(xargs[1])
 		self.proxy.part(server, channel, reason)
 		self.removeChannel(server,channel)
 
@@ -297,9 +297,9 @@ class tekkaCom(object):
 			self.myPrint("You're not on a channel")
 			return
 		reason = ""
-		if len(xargs) == 2:
-			reason = xargs[1]
-		self.proxy.kick(server, channel, xargs[0], xargs[1])
+		if len(xargs) >= 2:
+			reason = " ".join(xargs[1:])
+		self.proxy.kick(server, channel, xargs[0], reason)
 
 	def makiMode(self, xargs):
 		return
