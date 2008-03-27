@@ -79,6 +79,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 	def _setupServertree(self):
 		renderer = gtk.CellRendererText()
 		column = gtk.TreeViewColumn("Server",renderer,text=0)
+		column.set_cell_data_func(renderer, self.dataColumn)
 		self.servertreeStore = gtk.TreeStore(gobject.TYPE_STRING)
 		self.servertree.set_model(self.servertreeStore)
 		self.servertree.append_column(column)
@@ -91,6 +92,9 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		self.nicklist.set_model(self.nicklistStore)
 		self.nicklist.append_column(column)
 		self.nicklist.set_headers_visible(False)
+
+	def dataColumn(self, column, cell, model, iter):
+		pass
 
 	def setOutputFont(self, fontname):
 		tb = self.textbox
@@ -176,6 +180,14 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 				if channel == cname:
 					return channel
 		return None
+	
+	def getChannelData(self, server, channel):
+		s = self.findRow(server)
+		if not s:
+			return None
+		channels = s.iterchildren()
+		c = self.findRow(channel, store=channels)
+		return c
 
 	def getCurrentServer(self,widget=None,store=None):
 		if not widget:
@@ -306,9 +318,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		if not output:
 			print "channelPrint(): no output buffer"
 			return
-
-		output.insert(output.get_end_iter(), outputstring+"\n")
-	
+		
 		# if channel is "activated"
 		if channel == self.getCurrentChannel()[1]:
 			self.scrollOutput(output)

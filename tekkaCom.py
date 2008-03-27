@@ -26,9 +26,10 @@ class tekkaCom(object):
 			self.bus.add_signal_receiver(self.userNick, "nick", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userAction, "action", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.connectSignal, "connect", dbus_interface="de.ikkoku.sushi")
+			#self.bus.add_signal_receiver(self.userAway, "away", dbus_interface="de.ikkoku.sushi")
 
 		self.commands = {
-		"connect"  : self.makiConnect,
+		 "connect" : self.makiConnect,
 			"nick" : self.makiNick,
 			"part" : self.makiPart,
 			"join" : self.makiJoin,
@@ -123,7 +124,10 @@ class tekkaCom(object):
 
 	# user changed his nick
 	def userNick(self, time, server, nick, new_nick):
-		print "comparing %s with %s" % (nick, self.getNick(server))
+		channel =  self.getChannel(server, nick)
+		if channel:
+			self.renameChannel(server, channel, new_nick)
+		
 		if nick == self.getNick(server):
 			nickwrap = "You are"
 			self.setNick(server,self.getNickFromMaki(server))
@@ -132,20 +136,28 @@ class tekkaCom(object):
 		
 		nickchange = "%s now known as %s." % (nickwrap, new_nick)
 		for channel in self.getChannels(server):
-			self.channelPrint(time, server, channel, nickchange)
+			if nick in self.getNicksFromMaki(server,channel) or channel == nick:
+				self.channelPrint(time, server, channel, nickchange)
 
 	# user was kicked
-	def userKick(self, time, server, channel, nick, who):
-		self.channelPrint(time, server, channel, "%s was kicked from %s by %s" % (who,channel,nick))
+	def userKick(self, time, server, channel, nick, who, reason):
+		if reason:
+			reason = "(%s)" % reason
+		self.channelPrint(time, server, channel, "%s was kicked from %s by %s %s" % (who,channel,nick,reason))
 
 	# user quit
-	def userQuit(self, time, server, nick):
-		channels = self.getChannels(server)
-		if not channels:
-			return
-		for channel in channels:
-			if nick in self.getNicksFromMaki(server,channel):
-				self.channelPrint(time, server, channel, "%s has quit." % nick)
+	def userQuit(self, time, server, nick, reason):
+		print "userquit"
+		if nick == self.getNick(server):
+			self.removeServer(server)
+		else:
+			if reason: reason = " (%s)" % reason
+			channels = self.getChannels(server)
+			if not channels:
+				return
+			for channel in channels:
+				if nick in self.getNicksFromMaki(server,channel) or nick == channel:
+					self.channelPrint(time, server, channel, "%s has quit%s." % (nick,reason))
 	
 	# user joined
 	def userJoin(self, timestamp, server, channel, nick):
@@ -157,8 +169,12 @@ class tekkaCom(object):
 		self.channelPrint(timestamp, server, channel, "%s joined %s." % (nickwrap, channel))
 
 	# user parted
-	def userPart(self, timestamp, server, channel, nick):
-		self.channelPrint(timestamp, server, channel, "%s left %s." % (nick, channel))
+	def userPart(self, timestamp, server, channel, nick, reason):
+		if nick == self.getNick(server):
+			self.removeChannel(server,channel)
+			return
+		if reason: reason = " (%s)" % reason
+		self.channelPrint(timestamp, server, channel, "%s left %s%s." % (nick, channel,reason))
 
 
 
@@ -237,7 +253,10 @@ class tekkaCom(object):
 		if not xargs:
 			self.myPrint("Where you want to join to?")
 			return
-		self.proxy.join(server,xargs[0])
+		key = ""
+		if len(xargs) == 2:
+			key = xargs[1]
+		self.proxy.join(server,xargs[0],key)
 		self.addChannel(server,xargs[0])
 
 
@@ -253,7 +272,19 @@ class tekkaCom(object):
 		self.proxy.action(server,channel," ".join(xargs))
 
 	def makiKick(self, xargs):
-		return
+		if not self.proxy:
+			return
+		if not xargs:
+			self.myPrint("Usage: /kick <who>")
+			return
+		server,channel = self.getCurrentChannel()
+		if not server:
+			self.myPrint("Can't determine server")
+			return
+		if not channel:
+			self.myPrint("You're not on a channel")
+			return
+		self.proxy.kick(server, channel, xargs[0])
 
 	def makiMode(self, xargs):
 		return
