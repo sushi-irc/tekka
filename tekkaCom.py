@@ -42,7 +42,7 @@ class tekkaCom(object):
 
 		# setup signals
 		if self.proxy:
-			self.bus.add_signal_receiver(self.readText, "message", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.userMessage, "message", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userPart, "part", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userJoin, "join", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userQuit, "quit", dbus_interface="de.ikkoku.sushi")
@@ -53,6 +53,7 @@ class tekkaCom(object):
 			#self.bus.add_signal_receiver(self.userBack, "back", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userCTCP, "ctcp", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userNotice, "notice", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.userMode, "mode", dbus_interface="de.ikkoku.sushi")
 
 			# Server-Signals
 			self.bus.add_signal_receiver(self.serverConnect, "connect", dbus_interface="de.ikkoku.sushi")
@@ -65,7 +66,7 @@ class tekkaCom(object):
 
 
 	# privmessages are received here
-	def readText(self, timestamp, server, channel, nick, message):
+	def userMessage(self, timestamp, server, nick, channel, message):
 		self.channelPrint(timestamp, server, channel, "<%s> %s" % (nick,message), nick=nick)
 
 	# signal connected to the gtk.entry
@@ -160,14 +161,17 @@ class tekkaCom(object):
 
 	""" USER SIGNALS """
 
-	def userCTCP(self, time, server, target, nick, message):
+	def userMode(self, time, server, nick, target, mode, param):
 		pass
 
-	def userNotice(self, time, server, target, nick, message):
+	def userCTCP(self, time, server,  nick, target, message):
+		pass
+
+	def userNotice(self, time, server, nick, target, message):
 		pass
 
 	# user sent an /me
-	def userAction(self, time, server, channel, nick, action):
+	def userAction(self, time, server, nick, channel, action):
 		self.channelPrint(time, server, channel, "%s %s" % (nick,action))
 
 	# user changed his nick
@@ -188,7 +192,7 @@ class tekkaCom(object):
 				self.channelPrint(time, server, channel, nickchange)
 
 	# user was kicked
-	def userKick(self, time, server, channel, nick, who, reason):
+	def userKick(self, time, server, nick, channel, who, reason):
 		if reason:
 			reason = "(%s)" % reason
 		self.channelPrint(time, server, channel, "%s was kicked from %s by %s %s" % (who,channel,nick,reason))
@@ -208,7 +212,7 @@ class tekkaCom(object):
 					self.channelPrint(time, server, channel, "%s has quit%s." % (nick,reason))
 	
 	# user joined
-	def userJoin(self, timestamp, server, channel, nick):
+	def userJoin(self, timestamp, server, nick, channel):
 		if nick == self.getNick(server):
 			self.addChannel(server, channel)
 			nickwrap = "You"
@@ -217,7 +221,7 @@ class tekkaCom(object):
 		self.channelPrint(timestamp, server, channel, "%s joined %s." % (nickwrap, channel))
 
 	# user parted
-	def userPart(self, timestamp, server, channel, nick, reason):
+	def userPart(self, timestamp, server, nick, channel, reason):
 		if nick == self.getNick(server):
 			self.removeChannel(server,channel)
 			return

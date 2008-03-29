@@ -323,8 +323,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 	""" PRINTING ROUTINES """
 
 	def scrollOutput(self, output):
-		adj = self.scrolledWindow.get_vadjustment()
-		adj.set_value(adj.props.upper)
+		self.textbox.scroll_mark_onscreen(output.get_insert())
 	
 	def channelPrint(self, timestamp, server, channel, message, nick=""):
 		timestring = time.strftime("%H:%M", time.localtime(timestamp))
