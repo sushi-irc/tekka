@@ -47,6 +47,9 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		# setup gtk signals
 		self._setupSignals(self.widgets)
 
+		self.tagtable = gtk.TextTagTable()
+		self._setupTags()
+
 		# retreive the servers we're connected to
 		self.addServers()
 
@@ -54,7 +57,6 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		
 		self.textbox = self.widgets.get_widget("tekkaOutput")
 		self.setOutputFont(self.outputFont)
-
 
 		
 	def _setupSignals(self, widgets):
@@ -74,13 +76,40 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		if widget:
 			widget.connect("activate", gtk.main_quit)
 
+	def _setupTags(self):
+		tag = gtk.TextTag(name="link")
+		tag.set_property("foreground", "blue")
+		self.tagtable.add(tag)
+
 	""" SETUP ROUTINES """
+
+	"""
+
+	The server tree store looks in the GUI like this:
+
+	server0
+	|-- channel0
+	|-- channel1
+	server1
+	|-- channel0
+	|-- channel1
+
+	in the code it looks like this:
+
+	every row has two values (strings). The first
+	is the description of the server/channel. 
+	In this strings can be pango markups like <b>.
+	The second value is the identifiyng name without
+	such markups.
+
+	To search in the tree use findRow()
+	"""
 
 	def _setupServertree(self):
 		renderer = gtk.CellRendererText()
-		column = gtk.TreeViewColumn("Server",renderer,text=0)
+		column = gtk.TreeViewColumn("Server",renderer,markup=0)
 		column.set_cell_data_func(renderer, self.dataColumn)
-		self.servertreeStore = gtk.TreeStore(gobject.TYPE_STRING)
+		self.servertreeStore = gtk.TreeStore(gobject.TYPE_STRING,gobject.TYPE_STRING)
 		self.servertree.set_model(self.servertreeStore)
 		self.servertree.append_column(column)
 		self.servertree.set_headers_visible(False)
@@ -120,20 +149,22 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		tuple = w.get_cursor()[0]
 		name = None
 		if len(tuple)==1: # server activated
-			name = self.servertreeStore[tuple[0]][0]
+			name = self.servertreeStore[tuple[0]][1]
 			self.textbox.set_buffer(self.serverOutputs[name])
 			self.scrollOutput(self.serverOutputs[name])
 			self.refreshNicklist(name,None) # clear the nicklist if servertab is activated
+			self.serverDescription(name, name)
 		else: # channel activated
-			server = self.servertreeStore[tuple[0]]
+			server = self.servertreeStore[tuple[0]] # treestorerow
 			rows = server.iterchildren()
 			rowcount = 0
 			for row in rows:
 				if rowcount == tuple[1]:
-					name = row[0]
-					self.textbox.set_buffer(self.channelOutputs[server[0]][name])
-					self.scrollOutput(self.channelOutputs[server[0]][name])
-					self.refreshNicklist(server[0],name) # fill nicklist
+					name = row[1]
+					self.textbox.set_buffer(self.channelOutputs[server[1]][name])
+					self.scrollOutput(self.channelOutputs[server[1]][name])
+					self.refreshNicklist(server[1],name) # fill nicklist
+					self.channelDescription(server[1], name, name)
 					break
 				rowcount+=1
 		if not name:
@@ -147,8 +178,6 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		server = self.getCurrentServer()
 		if not server: return
 		nick = self.nicklistStore[path[0]][0]
-		if nick[0] in ("@","+","!","*","%"):
-			nick = nick[1:]
 		self.addChannel(server, nick)
 
 	""" SERVER TREE HANDLING """
@@ -156,7 +185,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 	def getServers(self):
 		slist = []
 		for server in self.servertreeStore:
-			slist.append(server[0])
+			slist.append(server[1])
 		return slist
 
 	def getChannels(self, userver):
@@ -168,7 +197,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			return None
 		clist = []
 		for channel in channels:
-			clist.append(channel[0])
+			clist.append(channel[1])
 		return clist
 
 	def getChannel(self, userver, cname, sens=True):
@@ -197,7 +226,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		coord = widget.get_cursor()[0]
 		if not coord:
 			return None
-		return self.servertreeStore[coord[0]][0]
+		return self.servertreeStore[coord[0]][1]
 
 	def getCurrentChannel(self, widget=None, store=None):
 		if not widget:
@@ -208,27 +237,27 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		if not coord:
 			return (None,None)
 		elif len(coord)==1:
-			return (store[coord[0]][0],None)
+			return (store[coord[0]][1],None)
 		server = store[coord[0]]
 		channels = server.iterchildren()
 		i = 0
 		for channel in channels:
 			if i == coord[1]:
-				return (server[0],channel[0])
+				return (server[1],channel[1])
 			i+=1
-		return (server[0],None)
+		return (server[1],None)
 
 	def addServer(self, servername):
 		iter = self.servertreeStore.append(None)
-		self.servertreeStore.set(iter, 0, servername)
-		self.serverOutputs[servername] = gtk.TextBuffer()
+		self.servertreeStore.set(iter, 0, servername, 1, servername)
+		self.serverOutputs[servername] = gtk.TextBuffer(self.tagtable)
 		self.channelOutputs[servername] = {}
 
 	def findRow(self, name, store=None):
 		if not store:
 			store = self.servertreeStore
 		for row in store:
-			if row[0] == name:
+			if row[1] == name:
 				return row
 		return None
 
@@ -236,7 +265,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		if not store:
 			store = self.servertreeStore
 		for row in store:
-			if row[0].lower() == name.lower():
+			if row[1].lower() == name.lower():
 				return row
 		return None
 
@@ -246,8 +275,8 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			if self.findRow(channelname,store=row.iterchildren()):
 				return
 			iter = self.servertreeStore.append(row.iter)
-			self.servertreeStore.set(iter,0,channelname)
-			self.channelOutputs[servername][channelname] = gtk.TextBuffer()
+			self.servertreeStore.set(iter,0,channelname,1,channelname)
+			self.channelOutputs[servername][channelname] = gtk.TextBuffer(self.tagtable)
 			self.servertree.expand_row(row.path,True)
 
 	def renameChannel(self, servername, channelname, new_channelname):
@@ -256,9 +285,22 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			crow = self.findRow(channelname, row.iterchildren())
 			if crow:
 				self.servertreeStore.set_value(crow.iter, 0, new_channelname)
+				self.servertreeStore.set_value(crow.iter, 1, new_channelname)
 				tmp = self.channelOutputs[servername][channelname]
 				del self.channelOutputs[servername][channelname]
 				self.channelOutputs[servername][new_channelname] = tmp
+
+	def serverDescription(self, servername, desc):
+		row = self.findRow(servername)
+		if row:
+			self.servertreeStore.set_value(row.iter, 0, desc)
+
+	def channelDescription(self, servername, channel, desc):
+		row = self.findRow(servername)
+		if row:
+			crow = self.findRow(channel, row.iterchildren())
+			if crow:
+				self.servertreeStore.set_value(crow.iter, 0, desc)
 
 	def removeChannel(self, servername, channelname):
 		row = self.findRow(servername)
@@ -319,22 +361,32 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			print "channelPrint(): no output buffer"
 			return
 		
-		output.insert(output.get_end_iter(), outputstring+"\n")
+		enditer = output.get_end_iter()
+		if outputstring.find("http://") >= 0:
+			output.insert_with_tags_by_name(enditer, outputstring+"\n", "link")
+		else:
+			output.insert(enditer, outputstring+"\n")
 
 		# if channel is "activated"
 		if channel == self.getCurrentChannel()[1]:
 			self.scrollOutput(output)
+		else:
+			self.channelDescription(server, channel, "<b>"+channel+"</b>")
 
 	def serverPrint(self, timestamp, server, string):
 		output = self.serverOutputs[server]
+		# if the server doesn't exist we add it
+		# because we trust the sender =)
 		if not output:
-			print "No such serveroutput buffer"
-			return
+			self.addServer(server)
+			output = self.serverOutputs[server]
 		timestamp = time.strftime("%H:%M", time.localtime(timestamp))
 		output.insert(output.get_end_iter(), "[%s] %s\n" % (timestamp,string))
 		cserver,cchannel = self.getCurrentChannel()
 		if not cchannel and cserver and cserver == server:
 			self.scrollOutput(output)
+		else:
+			self.serverDescription(server, "<b>"+server+"</b>")
 
 	def myPrint(self, string):
 		output = self.textbox.get_buffer()

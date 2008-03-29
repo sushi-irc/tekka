@@ -6,27 +6,8 @@ class tekkaCom(object):
 	def __init__(self):
 		dbus_loop = DBusGMainLoop()
 		self.bus = dbus.SessionBus(mainloop=dbus_loop)
-		self.proxy = None
 
-		try:
-			self.proxy = self.bus.get_object("de.ikkoku.sushi", "/de/ikkoku/sushi")
-		except dbus.exceptions.DBusException, e:
-			print e
-			print "Is maki running?"
-			if not self.proxy:
-				sys.exit(1)
-
-		# setup signals
-		if self.proxy:
-			self.bus.add_signal_receiver(self.readText, "message", dbus_interface="de.ikkoku.sushi")
-			self.bus.add_signal_receiver(self.userPart, "part", dbus_interface="de.ikkoku.sushi")
-			self.bus.add_signal_receiver(self.userJoin, "join", dbus_interface="de.ikkoku.sushi")
-			self.bus.add_signal_receiver(self.userQuit, "quit", dbus_interface="de.ikkoku.sushi")
-			self.bus.add_signal_receiver(self.userKick, "kick", dbus_interface="de.ikkoku.sushi")
-			self.bus.add_signal_receiver(self.userNick, "nick", dbus_interface="de.ikkoku.sushi")
-			self.bus.add_signal_receiver(self.userAction, "action", dbus_interface="de.ikkoku.sushi")
-			self.bus.add_signal_receiver(self.connectSignal, "connect", dbus_interface="de.ikkoku.sushi")
-			#self.bus.add_signal_receiver(self.userAway, "away", dbus_interface="de.ikkoku.sushi")
+		self._connectMaki()
 
 		self.commands = {
 		 "connect" : self.makiConnect,
@@ -47,10 +28,47 @@ class tekkaCom(object):
 
 		self.myNick = {}
 
+	# connect to maki over dbus
+	def _connectMaki(self):
+		self.proxy = None
 
+		try:
+			self.proxy = self.bus.get_object("de.ikkoku.sushi", "/de/ikkoku/sushi")
+		except dbus.exceptions.DBusException, e:
+			print e
+			print "Is maki running?"
+			if not self.proxy:
+				sys.exit(1)
+
+		# setup signals
+		if self.proxy:
+			self.bus.add_signal_receiver(self.readText, "message", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.userPart, "part", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.userJoin, "join", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.userQuit, "quit", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.userKick, "kick", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.userNick, "nick", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.userAction, "action", dbus_interface="de.ikkoku.sushi")
+			#self.bus.add_signal_receiver(self.userAway, "away", dbus_interface="de.ikkoku.sushi")
+			#self.bus.add_signal_receiver(self.userBack, "back", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.userCTCP, "ctcp", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.userNotice, "notice", dbus_interface="de.ikkoku.sushi")
+
+			# Server-Signals
+			self.bus.add_signal_receiver(self.serverConnect, "connect", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.serverConnected, "connected", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.serverReconnect, "reconnect", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.serverMOTD, "motd", dbus_interface="de.ikkoku.sushi")
+
+			# Maki signals
+			self.bus.add_signal_receiver(self.makiShutdownSignal, "shutdown", dbus_interface="de.ikkoku.sushi")
+
+
+	# privmessages are received here
 	def readText(self, timestamp, server, channel, nick, message):
 		self.channelPrint(timestamp, server, channel, "<%s> %s" % (nick,message), nick=nick)
 
+	# signal connected to the gtk.entry
 	def sendText(self, widget):
 		print "text received from widget"
 		
@@ -114,9 +132,39 @@ class tekkaCom(object):
 	""" SIGNALS """
 
 
-	# maki connected to a server
-	def connectSignal(self, server):
+	""" SERVER SIGNALS """
+
+	def serverConnect(self, time, server):
 		self.addServer(server)
+		self.serverPrint(time, server, "Connecting...")
+
+	# maki connected to a server
+	def serverConnected(self, time, server, nick):
+		self.setNick(server, nick)
+
+	# maki is reconnecting to a server
+	def serverReconnect(self, time, server):
+		self.serverPrint(time, server, "Reconnecting to %s" % server)
+
+	# the server is sending a MOTD
+	def serverMOTD(self, time, server, message):
+		self.serverPrint(time, server, "Message of the Day:\n%s" % message)
+
+	""" MAKI SIGNALS """
+
+	def makiShutdownSignal(self, time):
+		self.myPrint("Maki is shutting down!")
+		for server in self.getServers():
+			self.removeServer(server)
+		self.proxy = None
+
+	""" USER SIGNALS """
+
+	def userCTCP(self, time, server, target, nick, message):
+		pass
+
+	def userNotice(self, time, server, target, nick, message):
+		pass
 
 	# user sent an /me
 	def userAction(self, time, server, channel, nick, action):
@@ -145,7 +193,7 @@ class tekkaCom(object):
 			reason = "(%s)" % reason
 		self.channelPrint(time, server, channel, "%s was kicked from %s by %s %s" % (who,channel,nick,reason))
 
-	# user quit
+	# user has quit
 	def userQuit(self, time, server, nick, reason):
 		print "userquit"
 		if nick == self.getNick(server):
@@ -309,7 +357,7 @@ class tekkaCom(object):
 			topic = ""
 		else:
 			topic = " ".join(xargs)
-		server,channel = getCurrentChannel()
+		server,channel = self.getCurrentChannel()
 		if not server or not channel:
 			return
 		self.proxy.topic(server, channel, topic)
