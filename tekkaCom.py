@@ -1,3 +1,30 @@
+"""
+Copyright (c) 2008 Marian Tietz
+All rights reserved.
+ 
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+ 
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+ 
+THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+"""
+
 import sys
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
@@ -67,7 +94,11 @@ class tekkaCom(object):
 
 	# privmessages are received here
 	def userMessage(self, timestamp, server, nick, channel, message):
-		self.channelPrint(timestamp, server, channel, "<%s> %s" % (nick,message), nick=nick)
+		if nick == self.getNick(server):
+			color = self.getColor("ownNick")
+		else:
+			color = self.getColor("nick")
+		self.channelPrint(timestamp, server, channel, "<font foreground='%s'>&lt;%s&gt;</font> <msg>%s</msg>" % (color,nick,message), nick=nick)
 
 	# signal connected to the gtk.entry
 	def sendText(self, widget):
@@ -91,7 +122,7 @@ class tekkaCom(object):
 				else:
 					if text[0:2] == "//":
 						text = text[1:]
-					self.proxy.say(server,channel,text)
+					self.proxy.message(server,channel,text)
 
 
 
@@ -199,7 +230,6 @@ class tekkaCom(object):
 
 	# user has quit
 	def userQuit(self, time, server, nick, reason):
-		print "userquit"
 		if nick == self.getNick(server):
 			self.removeServer(server)
 		else:

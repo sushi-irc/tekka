@@ -1,3 +1,30 @@
+"""
+Copyright (c) 2008 Marian Tietz
+All rights reserved.
+ 
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+ 
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+ 
+THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+"""
+
 import sys
 try:
 	import pygtk
@@ -10,7 +37,9 @@ try:
 	import gobject
 	import pango
 	import time
+	import htmlbuffer
 except:
+	print "Error while importing essential modules"
 	sys.exit(1)
 
 from tekkaConfig import tekkaConfig
@@ -56,6 +85,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		self.servertree.expand_all()
 		
 		self.textbox = self.widgets.get_widget("tekkaOutput")
+		self.textbox.set_cursor_visible(True)
 		self.setOutputFont(self.outputFont)
 
 		
@@ -247,12 +277,6 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			i+=1
 		return (server[1],None)
 
-	def addServer(self, servername):
-		iter = self.servertreeStore.append(None)
-		self.servertreeStore.set(iter, 0, servername, 1, servername)
-		self.serverOutputs[servername] = gtk.TextBuffer(self.tagtable)
-		self.channelOutputs[servername] = {}
-
 	def findRow(self, name, store=None):
 		if not store:
 			store = self.servertreeStore
@@ -268,6 +292,11 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			if row[1].lower() == name.lower():
 				return row
 		return None
+	def addServer(self, servername):
+		iter = self.servertreeStore.append(None)
+		self.servertreeStore.set(iter, 0, servername, 1, servername)
+		self.serverOutputs[servername] = htmlbuffer.htmlbuffer()
+		self.channelOutputs[servername] = {}
 
 	def addChannel(self, servername, channelname):
 		row = self.findRow(servername)
@@ -276,7 +305,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 				return
 			iter = self.servertreeStore.append(row.iter)
 			self.servertreeStore.set(iter,0,channelname,1,channelname)
-			self.channelOutputs[servername][channelname] = gtk.TextBuffer(self.tagtable)
+			self.channelOutputs[servername][channelname] = htmlbuffer.htmlbuffer()
 			self.servertree.expand_row(row.path,True)
 
 	def renameChannel(self, servername, channelname, new_channelname):
@@ -323,12 +352,23 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 	""" PRINTING ROUTINES """
 
 	def scrollOutput(self, output):
-		self.textbox.scroll_mark_onscreen(output.get_insert())
+		output.place_cursor(output.get_end_iter())
+		mark = output.get_insert()
+		print "scrolling\n----------"
+		print "mark: ",
+		print mark
+		print "offset: ",
+		print output.get_iter_at_mark(mark).get_offset()
+		print "marks at iter: ",
+		for mark in output.get_iter_at_mark(mark).get_marks():
+			print mark.get_name(),
+		print "------"
+		self.textbox.scroll_mark_onscreen(mark)
 	
 	def channelPrint(self, timestamp, server, channel, message, nick=""):
 		timestring = time.strftime("%H:%M", time.localtime(timestamp))
 
-		outputstring = "[%s] %s" % (timestring, message)
+		outputstring = "<msg>[%s] %s<br/></msg>" % (timestring, message)
 
 		# the server which is speaking to us, doesn't exist
 		if not self.channelOutputs.has_key(server):
@@ -361,10 +401,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			return
 		
 		enditer = output.get_end_iter()
-		if outputstring.find("http://") >= 0:
-			output.insert_with_tags_by_name(enditer, outputstring+"\n", "link")
-		else:
-			output.insert(enditer, outputstring+"\n")
+		output.insert_html(enditer, outputstring)
 
 		# if channel is "activated"
 		if channel == self.getCurrentChannel()[1]:
