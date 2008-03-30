@@ -293,6 +293,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 				return row
 		return None
 	def addServer(self, servername):
+		if self.findRow(servername): return
 		iter = self.servertreeStore.append(None)
 		self.servertreeStore.set(iter, 0, servername, 1, servername)
 		self.serverOutputs[servername] = htmlbuffer.htmlbuffer()

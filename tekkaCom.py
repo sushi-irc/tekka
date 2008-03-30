@@ -172,10 +172,12 @@ class tekkaCom(object):
 
 	# maki connected to a server
 	def serverConnected(self, time, server, nick):
-		self.setNick(server, nick)
+		self.addChannels(server)
+		self.setNick(server, self.getNickFromMaki(server))
 
 	# maki is reconnecting to a server
 	def serverReconnect(self, time, server):
+		self.addServer(server)
 		self.serverPrint(time, server, "Reconnecting to %s" % server)
 
 	# the server is sending a MOTD
