@@ -98,6 +98,7 @@ class tekkaCom(object):
 			color = self.getColor("ownNick")
 		else:
 			color = self.getColor("nick")
+		message = self.escapeHTML(message)
 		self.channelPrint(timestamp, server, channel, "<font foreground='%s'>&lt;%s&gt;</font> <msg>%s</msg>" % (color,nick,message), nick=nick)
 
 	# signal connected to the gtk.entry
@@ -173,7 +174,7 @@ class tekkaCom(object):
 	# maki connected to a server
 	def serverConnected(self, time, server, nick):
 		self.addChannels(server)
-		self.setNick(server, self.getNickFromMaki(server))
+		self.setNick(server, nick)
 
 	# maki is reconnecting to a server
 	def serverReconnect(self, time, server):

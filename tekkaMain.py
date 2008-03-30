@@ -365,6 +365,12 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			print mark.get_name(),
 		print "------"
 		self.textbox.scroll_mark_onscreen(mark)
+
+	def escapeHTML(self, msg):
+		msg = msg.replace("&","&amp;")
+		msg = msg.replace("<","&lt;")
+		msg = msg.replace(">","&gt;")
+		return msg
 	
 	def channelPrint(self, timestamp, server, channel, message, nick=""):
 		timestring = time.strftime("%H:%M", time.localtime(timestamp))
