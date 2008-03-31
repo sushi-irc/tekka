@@ -91,15 +91,7 @@ class tekkaCom(object):
 			# Maki signals
 			self.bus.add_signal_receiver(self.makiShutdownSignal, "shutdown", dbus_interface="de.ikkoku.sushi")
 
-
-	# privmessages are received here
-	def userMessage(self, timestamp, server, nick, channel, message):
-		if nick == self.getNick(server):
-			color = self.getColor("ownNick")
-		else:
-			color = self.getColor("nick")
-		message = self.escapeHTML(message)
-		self.channelPrint(timestamp, server, channel, "<font foreground='%s'>&lt;%s&gt;</font> <msg>%s</msg>" % (color,nick,message), nick=nick)
+	
 
 	# signal connected to the gtk.entry
 	def sendText(self, widget):
@@ -128,6 +120,7 @@ class tekkaCom(object):
 
 
 	def getNicksFromMaki(self, server, channel):
+		print "NICKRETRIEVING"
 		if not self.proxy: return None
 		return self.proxy.nicks(server,channel)
 
@@ -143,6 +136,30 @@ class tekkaCom(object):
 
 	def setNick(self, server, nickname):
 		self.myNick[server] = nickname
+
+	def createServer(self, smap):
+		domain = "servers/%s" % smap["name"]
+		self.proxy.sushi_set_string(domain, "server", "address", smap["address"])
+		self.proxy.sushi_set_string(domain, "server", "port", smap["port"])
+		self.proxy.sushi_set_string(domain, "server", "name", smap["realname"])
+		self.proxy.sushi_set_string(domain, "server", "nick", smap["nick"])
+		if smap.has_key("nickserv"):
+			self.proxy.sushi_set_string(domain, "server","nickserv",smap["nickserv"])
+
+	def retrieveServerlist(self):
+		return self.proxy.sushi_list("servers")
+	
+	def retrieveServerinfo(self, server):
+		map = {}
+		domain = "servers/%s" % server
+		map["name"] = server
+		map["address"] = self.proxy.sushi_get_string(domain, "server", "address")
+		map["port"] = self.proxy.sushi_get_string(domain, "server", "port")
+		map["realname"] = self.proxy.sushi_get_string(domain, "server", "name")
+		map["nick"] = self.proxy.sushi_get_string(domain, "server", "nick")
+		map["nickserv"] = self.proxy.sushi_get_string(domain, "server", "nickserv")
+		map["autoconnect"] = self.proxy.sushi_get_string(domain, "server", "autoconnect")
+		return map
 
 	def addServers(self):
 		servers = self.proxy.servers()
@@ -195,6 +212,15 @@ class tekkaCom(object):
 
 	""" USER SIGNALS """
 
+	# privmessages are received here
+	def userMessage(self, timestamp, server, nick, channel, message):
+		if nick == self.getNick(server):
+			color = self.getColor("ownNick")
+		else:
+			color = self.getColor("nick")
+		message = self.escapeHTML(message)
+		self.channelPrint(timestamp, server, channel, "<font foreground='%s'>&lt;%s&gt;</font> <msg>%s</msg>" % (color,nick,message), nick=nick)
+
 	def userMode(self, time, server, nick, target, mode, param):
 		pass
 
@@ -222,6 +248,7 @@ class tekkaCom(object):
 		
 		nickchange = "%s now known as %s." % (nickwrap, new_nick)
 		for channel in self.getChannels(server):
+			self.modifyNick(server, channel, nick, new_nick)
 			if nick in self.getNicksFromMaki(server,channel) or channel == nick:
 				self.channelPrint(time, server, channel, nickchange)
 
@@ -241,6 +268,7 @@ class tekkaCom(object):
 			if not channels:
 				return
 			for channel in channels:
+				self.removeNick(server,channel,nick)
 				if nick in self.getNicksFromMaki(server,channel) or nick == channel:
 					self.channelPrint(time, server, channel, "%s has quit%s." % (nick,reason))
 	
@@ -248,9 +276,11 @@ class tekkaCom(object):
 	def userJoin(self, timestamp, server, nick, channel):
 		if nick == self.getNick(server):
 			self.addChannel(server, channel)
+			self.refreshNicklist(server,channel)
 			nickwrap = "You"
 		else:
 			nickwrap = nick
+			self.appendNick(server,channel,nick)
 		self.channelPrint(timestamp, server, channel, "%s joined %s." % (nickwrap, channel))
 
 	# user parted
@@ -259,6 +289,7 @@ class tekkaCom(object):
 			self.removeChannel(server,channel)
 			return
 		if reason: reason = " (%s)" % reason
+		self.removeNick(server,channel,nick)
 		self.channelPrint(timestamp, server, channel, "%s left %s%s." % (nick, channel,reason))
 
 

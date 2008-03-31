@@ -163,7 +163,13 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			return
 		tb.modify_font(fd)
 
+
+	""" NICKLIST METHODS """
+
 	def refreshNicklist(self, server, channel):
+		cserver,cchannel = self.getCurrentChannel()
+		if server != cserver and channel != cchannel:
+			return
 		self.nicklistStore.clear()
 		if not channel: return
 		nicks = self.getNicksFromMaki(server,channel)
@@ -171,6 +177,29 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		for nick in nicks:
 			iter = self.nicklistStore.append(None)
 			self.nicklistStore.set(iter, 0, nick)
+
+	def appendNick(self, server, channel, nick):
+		cserver,cchannel = self.getCurrentChannel()
+		if server != cserver and channel != cchannel:
+			return
+		iter = self.nicklistStore.append(None)
+		self.nicklistStore.set(iter, 0, nick)
+
+	def modifyNick(self, server, channel, nick, newnick):
+		cserver,cchannel = self.getCurrentChannel()
+		if server != cserver and channel != cchannel:
+			return
+		row = self.findRow(nick, store=self.nicklistStore, col=0)
+		if not row: return
+		self.nicklistStore.set(row.iter, 0, newnick)
+	
+	def removeNick(self, server, channel, nick):
+		cserver,cchannel = self.getCurrentChannel()
+		if server != cserver and channel != cchannel:
+			return
+		row = self.findRow(nick, store=self.nicklistStore, col=0)
+		if not row: return
+		self.nicklistStore.remove(row.iter)
 
 	""" SERVER TREE SIGNALS """
 
@@ -277,19 +306,19 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			i+=1
 		return (server[1],None)
 
-	def findRow(self, name, store=None):
+	def findRow(self, name, store=None, col=1):
 		if not store:
 			store = self.servertreeStore
 		for row in store:
-			if row[1] == name:
+			if row[col] == name:
 				return row
 		return None
 
-	def findRowI(self, name, store=None):
+	def findRowI(self, name, store=None, col=1):
 		if not store:
 			store = self.servertreeStore
 		for row in store:
-			if row[1].lower() == name.lower():
+			if row[col].lower() == name.lower():
 				return row
 		return None
 	def addServer(self, servername):
@@ -465,7 +494,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		if result == serverlist.RESPONSE_CONNECT:
 			print "we want to connect to server %s" % server
 			if server:
-				self.connectServer(server)
+				self.makiConnect([server])
 
 if __name__ == "__main__":
 	tekka = tekkaMain()
