@@ -66,6 +66,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		
 		self.servertree = self.widgets.get_widget("tekkaServertree")
 		self._setupServertree()
+		self.servertree.connect("button-press-event", self.servertreeKP)
 
 		# determine the tekkaOutput scrolledwindow
 		self.scrolledWindow = self.widgets.get_widget("scrolledwindow1")
@@ -91,7 +92,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		
 	def _setupSignals(self, widgets):
 		sigdic = { "tekkaInput_activate_cb" : self.sendText,
-				   "tekkaServertree_cursor_changed_cb" : self.rowActivated,
+				   #"tekkaServertree_cursor_changed_cb" : self.rowActivated,
 				   "tekkaServertree_realize_cb" : lambda w: w.expand_all(),
 				   "tekkaNicklist_row_activated_cb" : self.nicklistActivateRow,
 				   "tekkaMainwindow_Shutdown_activate_cb" : self.makiShutdown,
@@ -105,11 +106,39 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		widget = widgets.get_widget("tekkaMainwindow_MenuTekka_Quit")
 		if widget:
 			widget.connect("activate", gtk.main_quit)
-
+		
 	def _setupTags(self):
 		tag = gtk.TextTag(name="link")
 		tag.set_property("foreground", "blue")
 		self.tagtable.add(tag)
+
+	def servertreeKP(self, widget, event):
+		path = self.servertree.get_path_at_pos(int(event.x), int(event.y))
+		server,channel = self.getChannelFromPath(path[0])
+
+		# left click -> activate tab
+		if event.button == 1:
+			if server and not channel:
+				self.textbox.set_buffer(self.serverOutputs[server]) # set output buffer
+				self.scrollOutput(self.serverOutputs[server]) # scroll to the bottom
+				self.refreshNicklist(server,None) 	# clear the nicklist if servertab is activated
+				self.serverDescription(server, server) 	# reset the highlighting
+			elif server and channel:
+				self.textbox.set_buffer(self.channelOutputs[server][channel])
+				self.scrollOutput(self.channelOutputs[server][channel])
+				self.refreshNicklist(server,channel) # fill nicklist
+				self.channelDescription(server, channel, channel)
+			else:
+				print "Activation failed due to wrong path in servertreeKP"
+
+		# right click -> menu for tab
+		elif event.button == 3:
+			label = gtk.MenuItem(label="Close Tab")
+			label.connect("activate", self.menuRemoveTab, *(server,channel))
+			menu = gtk.Menu()
+			menu.append(label)
+			label.show()
+			menu.popup(None, None, None, button=event.button, activate_time=event.time)
 
 	""" SETUP ROUTINES """
 
@@ -138,7 +167,6 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 	def _setupServertree(self):
 		renderer = gtk.CellRendererText()
 		column = gtk.TreeViewColumn("Server",renderer,markup=0)
-		column.set_cell_data_func(renderer, self.dataColumn)
 		self.servertreeStore = gtk.TreeStore(gobject.TYPE_STRING,gobject.TYPE_STRING)
 		self.servertree.set_model(self.servertreeStore)
 		self.servertree.append_column(column)
@@ -151,9 +179,6 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		self.nicklist.set_model(self.nicklistStore)
 		self.nicklist.append_column(column)
 		self.nicklist.set_headers_visible(False)
-
-	def dataColumn(self, column, cell, model, iter):
-		pass
 
 	def setOutputFont(self, fontname):
 		tb = self.textbox
@@ -201,18 +226,22 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		if not row: return
 		self.nicklistStore.remove(row.iter)
 
+
+
 	""" SERVER TREE SIGNALS """
 
 	def rowActivated(self, w):
+		return
 		store = self.servertreeStore
 		tuple = w.get_cursor()[0]
 		name = None
 		if len(tuple)==1: # server activated
 			name = self.servertreeStore[tuple[0]][1]
-			self.textbox.set_buffer(self.serverOutputs[name])
-			self.scrollOutput(self.serverOutputs[name])
-			self.refreshNicklist(name,None) # clear the nicklist if servertab is activated
-			self.serverDescription(name, name)
+
+			self.textbox.set_buffer(self.serverOutputs[name]) # set output buffer
+			self.scrollOutput(self.serverOutputs[name]) # scroll to the bottom
+			self.refreshNicklist(name,None) 	# clear the nicklist if servertab is activated
+			self.serverDescription(name, name) 	# reset the highlighting
 		else: # channel activated
 			server = self.servertreeStore[tuple[0]] # treestorerow
 			rows = server.iterchildren()
@@ -220,6 +249,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			for row in rows:
 				if rowcount == tuple[1]:
 					name = row[1]
+
 					self.textbox.set_buffer(self.channelOutputs[server[1]][name])
 					self.scrollOutput(self.channelOutputs[server[1]][name])
 					self.refreshNicklist(server[1],name) # fill nicklist
@@ -240,6 +270,29 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		self.addChannel(server, nick)
 
 	""" SERVER TREE HANDLING """
+
+	def menuRemoveTab(self, w, server, channel):
+		if not server and not channel: 
+			return
+		elif server and not channel:
+			self.makiQuit([server,""])
+		elif server and channel:
+			self.makiPart((channel,""),server=server)
+
+	def getChannelFromPath(self, path, store=None):
+		if not store:
+			store = self.servertreeStore
+		if not path or len(path) == 0:
+			return (None,None)
+		server = store[path[0]]
+		if len(path) == 1:
+			return (server[1],None)
+		channels = server.iterchildren()
+		rc = 0
+		for channel in channels:
+			if rc == path[1]:
+				return (server[1],channel[1])
+		return (server[1],None)
 
 	def getServers(self):
 		slist = []
@@ -322,7 +375,9 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 				return row
 		return None
 	def addServer(self, servername):
-		if self.findRow(servername): return
+		if self.findRow(servername):
+			self.serverDescription(servername, servername)
+			return
 		iter = self.servertreeStore.append(None)
 		self.servertreeStore.set(iter, 0, servername, 1, servername)
 		self.serverOutputs[servername] = htmlbuffer.htmlbuffer()
@@ -332,6 +387,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		row = self.findRow(servername)
 		if row:
 			if self.findRow(channelname,store=row.iterchildren()):
+				self.channelDescription(servername, channelname, channelname)
 				return
 			iter = self.servertreeStore.append(row.iter)
 			self.servertreeStore.set(iter,0,channelname,1,channelname)
@@ -384,15 +440,6 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 	def scrollOutput(self, output):
 		output.place_cursor(output.get_end_iter())
 		mark = output.get_insert()
-		print "scrolling\n----------"
-		print "mark: ",
-		print mark
-		print "offset: ",
-		print output.get_iter_at_mark(mark).get_offset()
-		print "marks at iter: ",
-		for mark in output.get_iter_at_mark(mark).get_marks():
-			print mark.get_name(),
-		print "------"
 		self.textbox.scroll_mark_onscreen(mark)
 
 	def escapeHTML(self, msg):
