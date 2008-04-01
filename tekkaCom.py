@@ -106,7 +106,7 @@ class tekkaCom(object):
 			self.parseCommand(text[1:])
 		else:
 			if self.proxy:
-				server,channel = self.getCurrentChannel()
+				server,channel = self.servertree.getCurrentChannel()
 				if not server:
 					self.myPrint("could not determine server.")
 					return
@@ -166,7 +166,7 @@ class tekkaCom(object):
 			return
 		for server in servers:
 			# addServer in tekkaMain
-			self.addServer(server)
+			self.servertree.addServer(server)
 			self.addChannels(server)
 			self.setNick(server, self.getNickFromMaki(server))
 
@@ -175,7 +175,7 @@ class tekkaCom(object):
 		print channels
 		for channel in channels:
 			print "got channel: %s" % channel
-			self.addChannel(server, channel)
+			self.servertree.addChannel(server, channel)
 
 
 	""" SIGNALS """
@@ -184,7 +184,7 @@ class tekkaCom(object):
 	""" SERVER SIGNALS """
 
 	def serverConnect(self, time, server):
-		self.addServer(server)
+		self.servertree.addServer(server)
 		self.serverPrint(time, server, "Connecting...")
 
 	# maki connected to a server
@@ -194,7 +194,7 @@ class tekkaCom(object):
 
 	# maki is reconnecting to a server
 	def serverReconnect(self, time, server):
-		self.addServer(server)
+		self.servertree.addServer(server)
 		self.serverPrint(time, server, "Reconnecting to %s" % server)
 
 	# the server is sending a MOTD
@@ -206,7 +206,7 @@ class tekkaCom(object):
 	def makiShutdownSignal(self, time):
 		self.myPrint("Maki is shutting down!")
 		for server in self.getServers():
-			self.removeServer(server)
+			self.servertree.removeServer(server)
 		self.proxy = None
 
 	""" USER SIGNALS """
@@ -263,24 +263,24 @@ class tekkaCom(object):
 	# user has quit
 	def userQuit(self, time, server, nick, reason):
 		if nick == self.getNick(server):
-			#self.removeServer(server)
-			self.serverDescription(server, "("+server+")")
-			for channel in self.getChannels(server):
-				self.channelDescription(server, channel, "("+channel+")")
+			self.servertree.serverDescription(server, "("+server+")")
+			for channel in self.servertree.getChannels(server):
+				self.servertree.channelDescription(server, channel, "("+channel+")")
 		else:
 			if reason: reason = " (%s)" % reason
-			channels = self.getChannels(server)
+			channels = self.servertree.getChannels(server)
 			if not channels:
 				return
 			for channel in channels:
 				self.removeNick(server,channel,nick)
-				if nick in self.getNicksFromMaki(server,channel) or nick == channel:
+				nicks = self.getNicksFromMaki(server,channel)
+				if nick in nicks or nick == channel:
 					self.channelPrint(time, server, channel, "%s has quit%s." % (nick,reason))
 	
 	# user joined
 	def userJoin(self, timestamp, server, nick, channel):
 		if nick == self.getNick(server):
-			self.addChannel(server, channel)
+			self.servertree.addChannel(server, channel)
 			self.refreshNicklist(server,channel)
 			nickwrap = "You"
 		else:
@@ -291,8 +291,7 @@ class tekkaCom(object):
 	# user parted
 	def userPart(self, timestamp, server, nick, channel, reason):
 		if nick == self.getNick(server):
-			#self.removeChannel(server,channel)
-			self.channelDescription(server, channel, "("+channel+")")
+			self.servertree.channelDescription(server, channel, "("+channel+")")
 			return
 		if reason: reason = " (%s)" % reason
 		self.removeNick(server,channel,nick)
@@ -334,10 +333,10 @@ class tekkaCom(object):
 				reason = " ".join(xargs[1:])
 			print "quit local %s" % xargs[0]
 			self.proxy.quit(xargs[0], reason)
-			self.removeServer(xargs[0])
+			self.servertree.removeServer(xargs[0])
 
 	def makiNick(self, xargs):
-		server = self.getCurrentServer()
+		server = self.servertree.getCurrentServer()
 		if not self.proxy:
 			self.myPrint("No connection to maki.")
 			return
@@ -353,7 +352,7 @@ class tekkaCom(object):
 		if not self.proxy:
 			self.myPrint("No connection to maki.")
 			return
-		cserver,cchannel = self.getCurrentChannel()
+		cserver,cchannel = self.servertree.getCurrentChannel()
 		if not server:
 			if not cserver:
 				self.myPrint("Could not determine my current server.")
@@ -381,7 +380,7 @@ class tekkaCom(object):
 		if not self.proxy:
 			self.myPrint("No connection to maki.")
 			return
-		server = self.getCurrentServer()
+		server = self.servertree.getCurrentServer()
 		if not server:
 			self.myPrint("Can't determine server.")
 			return
@@ -399,7 +398,7 @@ class tekkaCom(object):
 			return
 		if not xargs:
 			self.myPrint("Usage: /me <text>")
-		server,channel = self.getCurrentChannel()
+		server,channel = self.servertree.getCurrentChannel()
 		if not server or not channel:
 			self.myPrint("No channel joined.")
 		self.proxy.action(server,channel," ".join(xargs))
@@ -410,7 +409,7 @@ class tekkaCom(object):
 		if not xargs:
 			self.myPrint("Usage: /kick <who>")
 			return
-		server,channel = self.getCurrentChannel()
+		server,channel = self.servertree.getCurrentChannel()
 		if not server:
 			self.myPrint("Can't determine server")
 			return
@@ -430,7 +429,7 @@ class tekkaCom(object):
 			topic = ""
 		else:
 			topic = " ".join(xargs)
-		server,channel = self.getCurrentChannel()
+		server,channel = self.servertree.getCurrentChannel()
 		if not server or not channel:
 			return
 		self.proxy.topic(server, channel, topic)
@@ -444,7 +443,7 @@ class tekkaCom(object):
 			self.myPrint("Maki shutted down.")
 			for server in self.getServers():
 				print "removing %s" % server
-				self.removeServer(server)
+				self.servertree.removeServer(server)
 
 	""" TEKKA USER COMMANDS """
 
@@ -452,7 +451,7 @@ class tekkaCom(object):
 		if not xargs:
 			self.myPrint("Usage: /query <nick>")
 			return
-		server, channel = self.getCurrentChannel()
+		server, channel = self.servertree.getCurrentChannel()
 		if not server:
 			self.myPrint("query who on which server?")
 			return

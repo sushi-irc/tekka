@@ -129,14 +129,6 @@
                     <property name="can_focus">True</property>
                     <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                     <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                    <child>
-                      <widget class="GtkTreeView" id="tekkaServertree">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="headers_clickable">True</property>
-                        <signal name="cursor_changed" handler="tekkaServertree_cursor_changed_cb"/>
-                      </widget>
-                    </child>
                   </widget>
                   <packing>
                     <property name="resize">True</property>
