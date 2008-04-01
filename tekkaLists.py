@@ -223,3 +223,117 @@ class tekkaServertree(tekkaLists, gtk.TreeView):
 					del self.channelOutputs[servername][child[1]]
 			self.get_model().remove(row.iter)
 
+class tekkaHistory(object):
+	def __init__(self):
+		self.serverHistory = {}
+		self.channelHistory = {}
+
+		self.MAX_HISTORY = 20
+
+		self.index = 0
+		self.lastentry = None
+
+	def append(self, server, channel, text):
+		if not server and not channel:
+			print "No connection data"
+			return
+		if self.__genCheck(server,channel) == self.lastentry:
+			self.lastentry = "..."
+		if server and not channel:
+			if not self.serverHistory.has_key(server):
+				self.serverHistory[server] = [text]
+			else:
+				history = self.serverHistory[server]
+				if len(history) == self.MAX_HISTORY:
+					del history[0]
+				history.append(text)
+		else:
+			if not self.channelHistory.has_key(server):
+				self.channelHistory[server] = {}
+			if not self.channelHistory[server].has_key(channel):
+				self.channelHistory[server][channel] = [text]
+			else:
+				history = self.channelHistory[server][channel]
+				if len(history) == self.MAX_HISTORY:
+					del history[0]
+				history.append(text)
+
+	def getUp(self, server, channel):
+		gencheck = self.__genCheck(server,channel)
+		if self.lastentry != gencheck:
+			# hoechster index
+			self.index = self.getMax(server,channel)-1
+			print "GETUP: HINDEX NOW %d" % self.index
+			if self.index >= 0:
+				self.lastentry = gencheck
+				return self.getHistory(server, channel, self.index)
+		else:
+			print "GETUP: MAXSIZE = %d" % (int(self.getMax(server,channel))-1)
+			print "GETUP: INDEX IS %d!" % self.index
+			if self.index > 0:
+				self.index -= 1
+				print "GETUP: INDEX DECREASED: %d" % self.index
+				return self.getHistory(server, channel, self.index)
+			else:
+				return self.getHistory(server, channel, self.index)
+		return ""
+
+	def getDown(self, server, channel):
+		gencheck = self.__genCheck(server,channel)
+		if self.lastentry != gencheck:
+			self.index = self.getMax(server,channel)
+			print "GETDOWN: HINDEX NOW %d" % self.index
+			if self.index >= 0:	
+				self.lastentry = gencheck
+				return self.getHistory(server, channel, self.index)
+		else:
+			print "GETDOWN: MAXSIZE = %d" % (int(self.getMax(server,channel))-1)
+			print "GETDOWN: INDEX IS %d!" % self.index			
+			if self.index < self.getMax(server, channel)-1:
+				self.index += 1
+				print "GETDOWN: INDEX INCREASED: %d" % self.index				
+				return self.getHistory(server, channel, self.index)
+		print "NOT HIGHER SRY"
+		self.index = self.getMax(server,channel)
+		return ""
+
+	def getHistory(self, server, channel, i):
+		print "getHistory(%s,%s,%d)" % (server,channel,i)
+		if not server and not channel:
+			print "No channel/server."
+			return ""
+		if server and not channel:
+			if self.serverHistory.has_key(server):
+				if i >= len(self.serverHistory[server]) \
+					or i < 0:
+					return ""
+				return self.serverHistory[server][i]
+		else:
+			if self.channelHistory.has_key(server):
+				if self.channelHistory[server].has_key(channel):
+					if i >= len(self.channelHistory[server][channel]) \
+						or i < 0:
+						return ""
+					return self.channelHistory[server][channel][i]
+		return ""
+
+	def getMax(self, server, channel):
+		if not server and not channel:
+			print "No channel/server."
+			return -1
+		if server and not channel:
+			if self.serverHistory.has_key(server):
+				return len(self.serverHistory[server])
+		else:
+			if self.channelHistory.has_key(server):
+				if self.channelHistory[server].has_key(channel):
+					return len(self.channelHistory[server][channel])
+		return -1
+
+	def __genCheck(self, server, channel):
+		if not server and not channel:
+			return ":"
+		elif server and not channel:
+			return "%s:" % server
+		else:
+			return "%s:%s" % (server,channel)

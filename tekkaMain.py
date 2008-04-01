@@ -65,7 +65,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 
 		self.servertree = tekkaLists.tekkaServertree()
 		self._setupServertree()
-		self.servertree.connect("button-press-event", self.servertree_button)
+		
 		SW = self.widgets.get_widget("scrolledwindow2")
 		SW.add(self.servertree)
 		SW.show_all()
@@ -88,6 +88,8 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		self.textbox.set_cursor_visible(True)
 		self.setOutputFont(self.outputFont)
 
+		self.history = tekkaLists.tekkaHistory()
+
 		
 	def _setupSignals(self, widgets):
 		sigdic = { "tekkaInput_activate_cb" : self.sendText,
@@ -105,8 +107,33 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		widget = widgets.get_widget("tekkaMainwindow_MenuTekka_Quit")
 		if widget:
 			widget.connect("activate", gtk.main_quit)
+
+		self.servertree.connect("button-press-event", self.servertree_button)
+		self.entry = widgets.get_widget("tekkaInput")
+		self.entry.connect("key-press-event", self.inputevent)
 		
 	""" SETUP ROUTINES """
+
+	def sendText(self, widget):
+		server,channel = self.servertree.getCurrentChannel()
+		self.history.append(server, channel, widget.get_text())
+		tekkaCom.sendText(self,widget)
+
+	def inputevent(self, widget, event):
+		server,channel = self.servertree.getCurrentChannel()
+		name = gtk.gdk.keyval_name( event.keyval )
+		
+		if name == "Up":
+			text = self.history.getUp(server,channel)
+			widget.set_text(text)
+			widget.set_position(len(text))
+			return True
+		elif name == "Down":
+			text = self.history.getDown(server,channel)
+			widget.set_text(text)
+			widget.set_position(len(text))
+			return True
+		return False
 
 	def _setupServertree(self):
 		renderer = gtk.CellRendererText()
@@ -140,9 +167,6 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 
 		# left click -> activate tab
 		if event.button == 1:
-			print "left!"
-			print path
-			print "%s,%s" % (server,channel)
 			if server and not channel:
 				output = self.servertree.getOutput(server)
 				if not output:
@@ -212,7 +236,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		self.nicklistStore.set(row.iter, 0, newnick)
 	
 	def removeNick(self, server, channel, nick):
-		cserver,cchannel = self.getCurrentChannel()
+		cserver,cchannel = self.servertree.getCurrentChannel()
 		if server != cserver and channel != cchannel:
 			return
 		row = self.findRow(nick, store=self.nicklistStore, col=0)

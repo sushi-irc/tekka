@@ -205,7 +205,7 @@ class tekkaCom(object):
 
 	def makiShutdownSignal(self, time):
 		self.myPrint("Maki is shutting down!")
-		for server in self.getServers():
+		for server in self.servertree.getServers():
 			self.servertree.removeServer(server)
 		self.proxy = None
 
