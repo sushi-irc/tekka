@@ -76,6 +76,8 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		self.nicklist = self.widgets.get_widget("tekkaNicklist")
 		self._setupNicklist()
 
+
+		
 		# setup gtk signals
 		self._setupSignals(self.widgets)
 
@@ -114,31 +116,10 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		
 	""" SETUP ROUTINES """
 
-	def sendText(self, widget):
-		server,channel = self.servertree.getCurrentChannel()
-		self.history.append(server, channel, widget.get_text())
-		tekkaCom.sendText(self,widget)
-
-	def inputevent(self, widget, event):
-		server,channel = self.servertree.getCurrentChannel()
-		name = gtk.gdk.keyval_name( event.keyval )
-		
-		if name == "Up":
-			text = self.history.getUp(server,channel)
-			widget.set_text(text)
-			widget.set_position(len(text))
-			return True
-		elif name == "Down":
-			text = self.history.getDown(server,channel)
-			widget.set_text(text)
-			widget.set_position(len(text))
-			return True
-		return False
-
 	def _setupServertree(self):
 		renderer = gtk.CellRendererText()
 		column = gtk.TreeViewColumn("Server",renderer,markup=0)
-		self.servertreeStore = gtk.TreeStore(gobject.TYPE_STRING,gobject.TYPE_STRING)
+		self.servertreeStore = gtk.TreeStore(str, str, tekkaLists.tekkaNicklistStore)
 		self.servertree.set_model(self.servertreeStore)
 		self.servertree.append_column(column)
 		self.servertree.set_headers_visible(False)
@@ -163,33 +144,45 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 	
 	def servertree_button(self, widget, event):
 		path = widget.get_path_at_pos(int(event.x), int(event.y))
-		server,channel = self.servertree.getChannelFromPath(path[0])
-
+		if not path or not len(path): return
+		srow,crow = self.servertree.getRowFromPath(path[0])
+		
 		# left click -> activate tab
 		if event.button == 1:
-			if server and not channel:
+			if srow and not crow:
+				server = srow[1]
+
 				output = self.servertree.getOutput(server)
 				if not output:
 					print "No output!"
 					return
+
 				self.textbox.set_buffer(output) # set output buffer
 				self.scrollOutput(output) # scroll to the bottom
-				self.refreshNicklist(server,None) 	# clear the nicklist if servertab is activated
 				self.servertree.serverDescription(server, server) 	# reset the highlighting
-			elif server and channel:
+				
+				self.nicklist.set_model(None)
+			elif srow and crow:
+				server = srow[1]
+				channel = crow[1]
+
 				output = self.servertree.getOutput(server, channel)
 				if not output:
 					print "No output!"
 					return
+
 				self.textbox.set_buffer(output)
 				self.scrollOutput(output)
-				self.refreshNicklist(server,channel) # fill nicklist
 				self.servertree.channelDescription(server, channel, channel)
+		
+				self.nicklist.set_model(crow[2])
 			else:
 				print "Activation failed due to wrong path in servertree_button"
 
 		# right click -> menu for tab
 		elif event.button == 3:
+			if srow: server = srow[1]
+			if crow: channel = crow[1]
 			label = gtk.MenuItem(label="Close Tab")
 			label.connect("activate", self.menuRemoveTab, *(server,channel))
 			menu = gtk.Menu()
@@ -204,55 +197,41 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			self.makiQuit([server,""])
 		elif server and channel:
 			self.makiPart((channel,""),server=server)
-
-
-	""" NICKLIST METHODS """
-
-	def refreshNicklist(self, server, channel):
-		cserver,cchannel = self.servertree.getCurrentChannel()
-		if server != cserver and channel != cchannel:
-			return
-		self.nicklistStore.clear()
-		if not channel: return
-		nicks = self.getNicksFromMaki(server,channel)
-		if not nicks: return
-		for nick in nicks:
-			iter = self.nicklistStore.append(None)
-			self.nicklistStore.set(iter, 0, nick)
-
-	def appendNick(self, server, channel, nick):
-		cserver,cchannel = self.getCurrentChannel()
-		if server != cserver and channel != cchannel:
-			return
-		iter = self.nicklistStore.append(None)
-		self.nicklistStore.set(iter, 0, nick)
-
-	def modifyNick(self, server, channel, nick, newnick):
-		cserver,cchannel = self.getCurrentChannel()
-		if server != cserver and channel != cchannel:
-			return
-		row = tekkaLists.findRow(nick, store=self.nicklistStore, col=0)
-		if not row: return
-		self.nicklistStore.set(row.iter, 0, newnick)
-	
-	def removeNick(self, server, channel, nick):
-		cserver,cchannel = self.servertree.getCurrentChannel()
-		if server != cserver and channel != cchannel:
-			return
-		row = self.findRow(nick, store=self.nicklistStore, col=0)
-		if not row: return
-		self.nicklistStore.remove(row.iter)
-
+		self.servertree.removeChannel(server,channel)
+		self.nicklist.set_model(None)
+		self.textbox.get_buffer().set_text("")
 
 
 	""" NICKLIST SIGNALS """
 
 	def nicklistActivateRow(self, treeview, path, parm1):
-		server = self.getCurrentServer()
+		server = self.servertree.getCurrentServer()
 		if not server: return
-		nick = self.nicklistStore[path[0]][0]
+		nick = self.nicklist.get_model()[path[0]][0]
 		self.servertree.addChannel(server, nick)
 
+	""" INPUT HISTORY / KEYPRESSEVENT """
+
+	def sendText(self, widget):
+		server,channel = self.servertree.getCurrentChannel()
+		self.history.append(server, channel, widget.get_text())
+		tekkaCom.sendText(self,widget)
+
+	def inputevent(self, widget, event):
+		server,channel = self.servertree.getCurrentChannel()
+		name = gtk.gdk.keyval_name( event.keyval )
+		print name
+		if name == "Up":
+			text = self.history.getUp(server,channel)
+			widget.set_text(text)
+			widget.set_position(len(text))
+			return True
+		elif name == "Down":
+			text = self.history.getDown(server,channel)
+			widget.set_text(text)
+			widget.set_position(len(text))
+			return True
+		return False
 
 	""" PRINTING ROUTINES """
 
@@ -276,18 +255,20 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 
 		if not output:
 			# we have a query, target is nick, not channel (we)?
-			if self.getNick(server).lower() == channel.lower(): 
+			if self.getNick(server).lower() == channel.lower():
+				print "There's a nickchannel!"
 				if not nick:
 					print "Wrong data."
 					return
 				
 				simfound=0
-				for schannel in self.getChannels(server):
+				for schannel in self.servertree.getChannels(server):
 					if schannel.lower() == nick.lower():
-						self.renameChannel(server, schannel, nick)
+						self.servertree.renameChannel(server, schannel, nick)
+						output = self.servertree.getOutput(server,nick)
 						simfound=1
 				if not simfound:
-					self.addChannel(server,nick)
+					output = self.servertree.addChannel(server,nick)[1]
 				channel = nick
 			else:
 				# a channel speaks to us but we hadn't joined yet

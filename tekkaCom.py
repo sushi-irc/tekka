@@ -175,7 +175,7 @@ class tekkaCom(object):
 		print channels
 		for channel in channels:
 			print "got channel: %s" % channel
-			self.servertree.addChannel(server, channel)
+			self.servertree.addChannel(server, channel, nicks=self.getNicksFromMaki(server, channel))
 
 
 	""" SIGNALS """
@@ -222,7 +222,23 @@ class tekkaCom(object):
 		self.channelPrint(timestamp, server, channel, "<font foreground='%s'>&lt;%s&gt;</font> <msg>%s</msg>" % (color,nick,message), nick=nick)
 
 	def userMode(self, time, server, nick, target, mode, param):
-		pass
+		myNick = self.getNick(server)
+
+		actnick = "<font foreground='#999922'>"+nick+"</font>"
+		if nick == myNick:
+			actnick = "You"
+
+		if target == myNick:
+			self.myPrint("<font foreground='#AA2222'>%s</font> set <b>%s</b> on you." % (actnick, mode))
+		else:
+			if param:
+				nickwrap = "<font foreground='#2222AA'>"+param+"</font>"
+				if param == myNick:
+					nickwrap = "you"
+				msg = "%s set <b>%s</b> to %s." % (actnick,mode,nickwrap)
+			else:
+				msg = "%s set <b>%s</b> on %s." % (actnick,mode,target)
+			self.channelPrint(time, server, target, msg)
 
 	def userCTCP(self, time, server,  nick, target, message):
 		pass
@@ -237,9 +253,9 @@ class tekkaCom(object):
 
 	# user changed his nick
 	def userNick(self, time, server, nick, new_nick):
-		channel =  self.getChannel(server, nick)
+		channel =  self.servertree.getChannel(server, nick)
 		if channel:
-			self.renameChannel(server, channel, new_nick)
+			self.servertree.renameChannel(server, channel, new_nick)
 		
 		if nick == self.getNick(server):
 			nickwrap = "You are"
@@ -249,16 +265,22 @@ class tekkaCom(object):
 		
 		nickchange = "%s now known as %s." % (nickwrap, new_nick)
 		nickchange = self.escapeHTML(nickchange)
-		for channel in self.getChannels(server):
-			self.modifyNick(server, channel, nick, new_nick)
-			if nick in self.getNicksFromMaki(server,channel) or channel == nick:
+		for (desc,channel,nicklist) in self.servertree.getChannels(server,row=True):
+			print nicklist.getNicks()
+			if nick in nicklist.getNicks() or channel == nick:
+				nicklist.modifyNick(nick, new_nick)
 				self.channelPrint(time, server, channel, nickchange)
 
 	# user was kicked
 	def userKick(self, time, server, nick, channel, who, reason):
 		if reason:
 			reason = "(%s)" % reason
-		self.channelPrint(time, server, channel, self.escapeHTML("%s was kicked from %s by %s %s" % (who,channel,nick,reason)))
+
+		if who == self.getNick(server):
+			self.servertree.channelDescription(server, channel, "("+channel+")")
+			self.channelPrint(time, server, channel, self.escapeHTML("You have been kicked from %s by %s %s" % (channel,nick,reason)))
+		else:
+			self.channelPrint(time, server, channel, self.escapeHTML("%s was kicked from %s by %s %s" % (who,channel,nick,reason)))
 
 	# user has quit
 	def userQuit(self, time, server, nick, reason):
@@ -272,20 +294,20 @@ class tekkaCom(object):
 			if not channels:
 				return
 			for channel in channels:
-				self.removeNick(server,channel,nick)
-				nicks = self.getNicksFromMaki(server,channel)
+				srow,crow = self.servertree.getRow(server,channel)
+				if crow: nicks = crow[2].getNicks() or []
 				if nick in nicks or nick == channel:
 					self.channelPrint(time, server, channel, "%s has quit%s." % (nick,reason))
 	
 	# user joined
 	def userJoin(self, timestamp, server, nick, channel):
 		if nick == self.getNick(server):
-			self.servertree.addChannel(server, channel)
-			self.refreshNicklist(server,channel)
+			self.servertree.addChannel(server, channel, nicks=self.getNicksFromMaki(server,channel))
 			nickwrap = "You"
 		else:
 			nickwrap = nick
-			self.appendNick(server,channel,nick)
+			srow,crow = self.servertree.getRow(server,channel)
+			if crow: crow[2].appendNick(nick)
 		self.channelPrint(timestamp, server, channel, "%s joined %s." % (nickwrap, channel))
 
 	# user parted
@@ -294,7 +316,8 @@ class tekkaCom(object):
 			self.servertree.channelDescription(server, channel, "("+channel+")")
 			return
 		if reason: reason = " (%s)" % reason
-		self.removeNick(server,channel,nick)
+		srow,crow = self.servertree.getRow(server,channel)
+		if crow: crow[2].removeNick(server,channel,nick)
 		self.channelPrint(timestamp, server, channel, "%s left %s%s." % (nick, channel,reason))
 
 
@@ -388,8 +411,8 @@ class tekkaCom(object):
 			self.myPrint("Where you want to join to?")
 			return
 		key = ""
-		if len(xargs) == 2:
-			key = xargs[1]
+		if len(xargs) >= 2:
+			key = " ".join(xargs[1:])
 		self.proxy.join(server,xargs[0],key)
 
 	def makiAction(self, xargs):

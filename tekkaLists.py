@@ -7,7 +7,7 @@ import gtk
 import htmlbuffer
 import gobject
 
-class tekkaLists(object):
+class tekkaList(object):
 	def __init__(self):
 		pass
 
@@ -32,6 +32,47 @@ class tekkaLists(object):
 				return row
 		return None
 
+class tekkaNicklistStore(tekkaList, gtk.ListStore):
+	def __init__(self, nicks=None):
+		gtk.ListStore.__init__(self,str)
+		if nicks:
+			self.addNicks(nicks)
+
+	""" NICKLIST METHODS """
+
+	def get_model(self):
+		return self
+
+	def addNicks(self, nicks):
+		print "addNicks: ",
+		print nicks
+		if not nicks or len(nicks) == 0:
+			return
+		for nick in nicks:
+			self.appendNick(nick)
+
+	def getNicks(self): 
+		return [l[0] for l in self if l is not None ]
+
+	def appendNick(self, nick):
+		store = self.get_model()
+		iter = store.append(None)
+		store.set(iter, 0, nick)
+
+	def modifyNick(self, nick, newnick):
+		store = self.get_model()
+		row = self.findRow(nick, store=store, col=0)
+		if not row: return
+		store.set(row.iter, 0, newnick)
+	
+	def removeNick(self, server, channel, nick):
+		store = self.get_model()
+		row = self.findRow(nick, store=store, col=0)
+		if not row: return
+		store.remove(row.iter)
+
+
+
 """
 	The server tree store looks in the GUI like this:
 
@@ -53,7 +94,7 @@ class tekkaLists(object):
 	To search in the tree use findRow()
 """
 
-class tekkaServertree(tekkaLists, gtk.TreeView):
+class tekkaServertree(tekkaList, gtk.TreeView):
 	def __init__(self,w=None):
 		print "servertree init"
 		#if w: self.set_flags(w.flags())
@@ -78,21 +119,30 @@ class tekkaServertree(tekkaLists, gtk.TreeView):
 
 	""" SERVER TREE HANDLING """
 
-	def getChannelFromPath(self, path, store=None):
+	def getRowFromPath(self, path, store=None):
 		if not store:
 			store = self.get_model()
 		if not path or len(path) == 0:
 			return (None,None)
 		server = store[path[0]]
 		if len(path) == 1:
-			return (server[1],None)
+			return (server,None)
 		channels = server.iterchildren()
 		rc = 0
 		for channel in channels:
 			if rc == path[1]:
-				return (server[1],channel[1])
+				return (server,channel)
 			rc+=1
-		return (server[1],None)
+		return (server,None)
+
+
+	def getChannelFromPath(self, path, store=None):
+		srow,crow = self.getRowFromPath(path,store)
+		if srow and crow:
+			return srow[1],crow[1]
+		elif srow and not crow:
+			return srow[1],None
+		return None,None
 
 	def getServers(self):
 		slist = []
@@ -100,7 +150,7 @@ class tekkaServertree(tekkaLists, gtk.TreeView):
 			slist.append(server[1])
 		return slist
 
-	def getChannels(self, userver):
+	def getChannels(self, userver, row=False):
 		server = self.findRow(userver)
 		if not server:
 			return None
@@ -109,7 +159,10 @@ class tekkaServertree(tekkaLists, gtk.TreeView):
 			return None
 		clist = []
 		for channel in channels:
-			clist.append(channel[1])
+			if row:
+				clist.append(channel)
+			else:
+				clist.append(channel[1])
 		return clist
 
 	def getChannel(self, userver, cname, sens=True):
@@ -122,13 +175,15 @@ class tekkaServertree(tekkaLists, gtk.TreeView):
 					return channel
 		return None
 	
-	def getChannelData(self, server, channel):
+	def getRow(self, server, channel):
 		s = self.findRow(server)
 		if not s:
-			return None
+			return None,None
 		channels = s.iterchildren()
+		if not channels:
+			return s,None
 		c = self.findRow(channel, store=channels)
-		return c
+		return s,c
 
 	def getCurrentServer(self,widget=None,store=None):
 		if not widget:
@@ -140,25 +195,23 @@ class tekkaServertree(tekkaLists, gtk.TreeView):
 			return None
 		return self.get_model()[coord[0]][1]
 
-	def getCurrentChannel(self, widget=None, store=None):
+	def getCurrentRow(self, widget=None, store=None):
 		if not widget:
 			widget = self
 		if not store:
-			store = self.get_model()
-		coord = widget.get_cursor()[0]
-		if not coord:
+			store = widget.get_model()
+		path = widget.get_cursor()[0]
+		if not path:
 			return (None,None)
-		elif len(coord)==1:
-			return (store[coord[0]][1],None)
-		server = store[coord[0]]
-		channels = server.iterchildren()
-		i = 0
-		for channel in channels:
-			if i == coord[1]:
-				return (server[1],channel[1])
-			i+=1
-		return (server[1],None)
+		return self.getRowFromPath(path,store)
 
+	def getCurrentChannel(self, widget=None, store=None):
+		srow,crow = self.getCurrentRow(widget,store)
+		if not srow and not crow:
+			return None,None
+		elif srow and not crow:
+			return srow[1],None
+		return srow[1],crow[1]
 
 	def addServer(self, servername):
 		if self.findRow(servername):
@@ -170,16 +223,23 @@ class tekkaServertree(tekkaLists, gtk.TreeView):
 		self.channelOutputs[servername] = {}
 		return iter,self.serverOutputs[servername]
 
-	def addChannel(self, servername, channelname):
+	def addChannel(self, servername, channelname, nicks=None):
+		store = self.get_model()
 		row = self.findRow(servername)
 		if row:
-			if self.findRow(channelname,store=row.iterchildren()):
+			crow = self.findRow(channelname,store=row.iterchildren())
+			if crow:
 				self.channelDescription(servername, channelname, channelname)
+				store.set(crow.iter,2,tekkaNicklistStore(nicks))
 				return None,None
-			iter = self.get_model().append(row.iter)
-			self.get_model().set(iter,0,channelname,1,channelname)
+
+			iter = store.append(row.iter)
+			nicklist = tekkaNicklistStore(nicks)
+
+			store.set(iter,0,channelname,1,channelname,2,nicklist)
 			self.channelOutputs[servername][channelname] = htmlbuffer.htmlbuffer()
 			self.expand_row(row.path,True)
+	
 			return iter,self.channelOutputs[servername][channelname]
 
 	def renameChannel(self, servername, channelname, new_channelname):
