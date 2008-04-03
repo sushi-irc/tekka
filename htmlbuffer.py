@@ -44,25 +44,22 @@ def rindex(l, i):
 		print " (%s)" % i
 		return (-1)
 
-class htmlbuffer(xml.sax.handler.ContentHandler, gtk.TextBuffer):
-	def __init__(self):
-		self.tagtable = gtk.TextTagTable()
-		gtk.TextBuffer.__init__(self, self.tagtable)
+class htmlhandler(xml.sax.handler.ContentHandler):
+	def __init__(self,textbuffer):
 		xml.sax.handler.ContentHandler.__init__(self)
-
+		self.textbuffer = textbuffer
 		self.elms = []
 		self.tags = []
-
 		self.ignoreableEndTags = ["msg","br"]
 
 	def characters(self, text):
 		if len(self.tags):
-			self.insert_with_tags(self.get_end_iter(), text, *self.tags)
+			self.textbuffer.insert_with_tags(self.textbuffer.get_end_iter(), text, *self.tags)
 		else:
-			self.insert(self.get_end_iter(), text)
+			self.textbuffer.insert(self.textbuffer.get_end_iter(), text)
 
 	def startElement(self, name, attrs):
-		tag = self.create_tag(None)
+		tag = self.textbuffer.create_tag(None)
 
 		if name == "b":
 			tag.set_property("weight", pango.WEIGHT_BOLD)
@@ -71,7 +68,7 @@ class htmlbuffer(xml.sax.handler.ContentHandler, gtk.TextBuffer):
 			tag.set_property("style", pango.STYLE_ITALIC)
 			print "set property style"
 		elif name == "br":
-			self.insert(self.get_end_iter(), "\n")
+			self.textbuffer.insert(self.textbuffer.get_end_iter(), "\n")
 			return
 		elif name == "u":
 			tag.set_property("underline", pango.UNDERLINE_SINGLE)
@@ -93,15 +90,6 @@ class htmlbuffer(xml.sax.handler.ContentHandler, gtk.TextBuffer):
 			del self.elms[i]
 			del self.tags[i]
 
-	def insert_html(self, iter, text):
-		self.insertiter = iter
-		parser = xml.sax.make_parser()
-		parser.setContentHandler(self)
-		try:
-			parser.parse(StringIO(str(text)))
-		except Exception, ex:
-			print ex
-
 	""" PARSING HELPER """
 
 	def _parse_font(self, tag, attrs):
@@ -111,6 +99,30 @@ class htmlbuffer(xml.sax.handler.ContentHandler, gtk.TextBuffer):
 				tag.set_property(name, attrs[name])
 			except Exception, ex:
 				print ex
+
+
+class htmlbuffer(gtk.TextBuffer):
+	def __init__(self,tagtable=None):
+		if tagtable:
+			self.tagtable = tagtable
+		else:
+			self.tagtable = gtk.TextTagTable()
+		gtk.TextBuffer.__init__(self, self.tagtable)
+
+	def cleartags(self, test, bums):
+		self.tagcount += 1
+
+	def insert_html(self, iter, text):
+		self.insertiter = iter
+		self.tagcount = 0
+		parser = xml.sax.make_parser()
+		parser.setContentHandler(htmlhandler(self))
+		try:
+			parser.parse(StringIO(str(text)))
+		except Exception, ex:
+			print ex
+		self.tagtable.foreach(self.cleartags)
+		print "NOW %d TAGS!" % self.tagcount
 
 if __name__ == "__main__":
 	class servertab(object):

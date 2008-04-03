@@ -117,8 +117,6 @@ class tekkaCom(object):
 						text = text[1:]
 					self.proxy.message(server,channel,text)
 
-
-
 	def getNicksFromMaki(self, server, channel):
 		if not self.proxy: return None
 		return self.proxy.nicks(server,channel)
@@ -297,6 +295,7 @@ class tekkaCom(object):
 				srow,crow = self.servertree.getRow(server,channel)
 				if crow: nicks = crow[2].getNicks() or []
 				if nick in nicks or nick == channel:
+					crow[2].removeNick(nick)
 					self.channelPrint(time, server, channel, "%s has quit%s." % (nick,reason))
 	
 	# user joined
@@ -346,7 +345,7 @@ class tekkaCom(object):
 	def makiQuit(self, xargs):
 		if not xargs:
 			print "global quit"
-			list = self.getServers()
+			list = self.servertree.getServers()
 			for server in list:
 				self.proxy.quit(server,"")
 			self.quit()

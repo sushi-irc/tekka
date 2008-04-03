@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.3 on Wed Apr  2 16:38:11 2008 -->
+<!--Generated with glade3 3.4.3 on Thu Apr  3 22:19:26 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="tekkaMainwindow">
     <property name="width_request">450</property>

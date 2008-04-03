@@ -218,15 +218,16 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		tekkaCom.sendText(self,widget)
 
 	def inputevent(self, widget, event):
-		server,channel = self.servertree.getCurrentChannel()
 		name = gtk.gdk.keyval_name( event.keyval )
-		print name
+		
 		if name == "Up":
+			server,channel = self.servertree.getCurrentChannel()
 			text = self.history.getUp(server,channel)
 			widget.set_text(text)
 			widget.set_position(len(text))
 			return True
 		elif name == "Down":
+			server,channel = self.servertree.getCurrentChannel()
 			text = self.history.getDown(server,channel)
 			widget.set_text(text)
 			widget.set_position(len(text))
@@ -316,16 +317,16 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 	# tekkaClear command method from tekkaCom:
 	# clears the output of the tekkaOutput widget
 	def tekkaClear(self, args):
-		server,channel = self.getCurrentChannel()
-		if not server:
-			return
-		if not channel:
-			serveroutput = self.servertree.getOutput(server)
-			if serveroutput: serveroutput.set_text("")
+		server,channel = self.servertree.getCurrentChannel()
+		if not server: return
+		elif server and not channel:
+			output = self.servertree.getOutput(server)
 		else:
-			channeloutput = self.servertree.getOutput(server, channel)
-			if channeloutput: channeloutput.set_text("")
-	
+			output = self.servertree.getOutput(server,channel)
+		output.set_text("")
+		tt = output.get_tag_table()
+		if tt: tt.foreach(lambda tag,data: data.remove(tag), tt)
+
 	""" MISC STUFF """
 
 	def quit(self):
