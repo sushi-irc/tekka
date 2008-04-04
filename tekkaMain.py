@@ -162,6 +162,8 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 				self.servertree.serverDescription(server, server) # reset hightlight
 	
 				self.nicklist.set_model(None)
+				self.topicbar.set_property("visible",False)
+
 			elif srow and crow:
 				server = srow[1]
 				channel = crow[1]
@@ -176,7 +178,9 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 				self.servertree.channelDescription(server, channel, channel)
 		
 				self.nicklist.set_model(crow[2])
-				self.setTopicInBar()
+				self.topicbar.set_text("")
+				self.setTopicInBar(server=server,channel=channel)
+				self.topicbar.set_property("visible",True)
 			else:
 				print "Activation failed due to wrong path in servertree_button"
 
@@ -191,8 +195,12 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 			menu = gtk.Menu()
 
 			if crow:
+				label = gtk.MenuItem(label="Join")
+				label.connect("activate", lambda w: self.makiJoin([channel],server=server))
+				menu.append( label )
+
 				label = gtk.MenuItem(label="Part")
-				label.connect("activate", self.makiPart, *([channel],server))
+				label.connect("activate", lambda w: self.makiPart([channel],server=server))
 				menu.append( label )
 
 			label = gtk.MenuItem(label="Close Tab")
@@ -227,14 +235,21 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 	""" TOPIC BAR SIGNALS """
 
 	def setTopicFromBar(self, widget):
-		self.makiTopic(widget.get_text())
+		self.makiTopic(widget.get_text().split(" "))
 
 	""" TOPIC BAR METHODS """
 
-	def setTopicInBar(self):
-		srow,crow = self.getCurrentRow()
+	def setTopicInBar(self, server=None, channel=None):
+		if not server and not channel:
+			srow,crow = self.servertree.getCurrentRow()
+		else:
+			srow,crow = self.servertree.getRow(server,channel)
 		if not crow: return
-		self.topicbar.set_text(crow[3][0])
+
+		tl = crow[3]
+		print tl
+		if not tl: return
+		self.topicbar.set_text(tl[0])
 
 	""" INPUT HISTORY / KEYPRESSEVENT """
 

@@ -100,7 +100,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		#if w: self.set_flags(w.flags())
 		gtk.TreeView.__init__(self)
 
-		model = gtk.TreeStore(str, str, tekkaNicklistStore, list)
+		model = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING, tekkaNicklistStore, gobject.TYPE_PYOBJECT)
 		self.set_model(model)
 
 		self.serverOutputs = {  } # { "server":buf, ... }
@@ -219,7 +219,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 	def setTopic(self, server, channel, topic, topicsetter=None):
 		sr,cr = self.getRow(server,channel)
 		if not cr: return
-		self.get_model().set(cr.iter, 2, [topic,topicsetter or ""])
+		self.get_model().set(cr.iter, 3, [topic,topicsetter or ""])
 
 	def addServer(self, servername):
 		if self.findRow(servername):

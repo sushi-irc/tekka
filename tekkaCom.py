@@ -179,7 +179,8 @@ class tekkaCom(object):
 		print channels
 		for channel in channels:
 			print "got channel: %s" % channel
-			self.servertree.addChannel(server, channel, nicks=self.getNicksFromMaki(server, channel))
+			topic = self.proxy.topic(server, channel, "")
+			self.servertree.addChannel(server, channel, nicks=self.getNicksFromMaki(server, channel), topic=[topic,""])
 
 
 	""" SIGNALS """
@@ -208,7 +209,8 @@ class tekkaCom(object):
 	""" CHANNEL SIGNALS """
 
 	def channelTopic(self, time, server, nick, channel, topic):
-		self.servertree.setTopic(server,channel,[topic,nick])
+		self.servertree.setTopic(server,channel,topic,nick)
+		self.setTopicInBar(server,channel)
 
 	""" MAKI SIGNALS """
 
@@ -409,14 +411,15 @@ class tekkaCom(object):
 			reason = " ".join(xargs[1:])
 		self.proxy.part(server, channel, reason)
 
-	def makiJoin(self, xargs):
+	def makiJoin(self, xargs, server=None):
 		if not self.proxy:
 			self.myPrint("No connection to maki.")
 			return
-		server = self.servertree.getCurrentServer()
 		if not server:
-			self.myPrint("Can't determine server.")
-			return
+			server = self.servertree.getCurrentServer()
+			if not server:
+				self.myPrint("Can't determine server.")
+				return
 		if not xargs:
 			self.myPrint("Where you want to join to?")
 			return
