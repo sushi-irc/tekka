@@ -70,11 +70,11 @@ class addServerDialog(object):
 		result = dialog.run()
 		if result == self.RESPONSE_ADD:
 			data = {}
-			data["name"] = servername_input.get_text()
+			data["servername"] = servername_input.get_text()
 			data["address"] = serveraddress_input.get_text()
 			data["port"] = serverport_input.get_text()
 			data["nick"] = nickname_input.get_text()
-			data["realname"] = realname_input.get_text()
+			data["name"] = realname_input.get_text()
 			data["nickserv"] = nickserv_input.get_text()
 			if serverautoconnect_input.toggled():
 				data["autoconnect"] = 1
@@ -90,7 +90,11 @@ class editServerDialog(object):
 		self.widgets = None
 		self.serverdata = serverdata
 		self.tekkaMainobject = tekkaMainobject
+		self.deleteServer = 0 # if the server name is changed, delete the old
 		
+	def servernameChanged(self,widget):
+		self.deleteServer = 1
+
 	def run(self):
 		newServer = None
 		self.widgets = gtk.glade.XML(self.gladefile, "serverEdit")
@@ -98,14 +102,16 @@ class editServerDialog(object):
 		if not self.widgets:
 			return 0,None
 
-		servername_input = self.widgets.get_widget("serverEdit_Servername")
-		servername_input.set_text(self.serverdata["name"])
+		serverservername_input = self.widgets.get_widget("serverEdit_Servername")
+		serverservername_input.set_text(self.serverdata["servername"])
+		serverservername_input.connect("changed",self.servernameChanged)
+		self.org_servername = self.serverdata["servername"]
 		serveraddress_input = self.widgets.get_widget("serverEdit_Address")
 		serveraddress_input.set_text(self.serverdata["address"])
 		serverport_input = self.widgets.get_widget("serverEdit_Port")
 		serverport_input.set_text(self.serverdata["port"])
-		serverrealname_input = self.widgets.get_widget("serverEdit_Realname")
-		serverrealname_input.set_text(self.serverdata["realname"])
+		servername_input = self.widgets.get_widget("serverEdit_Realname")
+		servername_input.set_text(self.serverdata["name"])
 		servernick_input = self.widgets.get_widget("serverEdit_Nick")
 		servernick_input.set_text(self.serverdata["nick"])
 		servernickserv_input = self.widgets.get_widget("serverEdit_Nickserv")
@@ -121,8 +127,10 @@ class editServerDialog(object):
 		result = dialog.run()
 
 		if result == gtk.RESPONSE_OK:
+			if self.deleteServer:
+				self.tekkaMainobject.deleteServer(self.org_servername)
 			newServer = {}
-			for i in ("name","address","port","realname","nick","nickserv"):
+			for i in ("servername","address","port","name","nick","nickserv"):
 				newServer[i] = eval("server%s_input.get_text()" % (i))
 
 		dialog.destroy()
@@ -178,9 +186,7 @@ class serverDialog(object):
 		# a dict containing detailed data of servers
 		self.serverDict = {}
 
-		serverlist = self.tekkaMainobject.retrieveServerlist()
-		for s in serverlist:
-			self.addServer(self.tekkaMainobject.retrieveServerinfo(s))
+		self._retrieve_serverlist()
 
 		server = None # the server we want to connect to
 		result = dialog.run()
@@ -201,16 +207,33 @@ class serverDialog(object):
 
 		return result,server
 
+	def _retrieve_serverlist(self):
+		self.serverView.get_model().clear()
+		serverlist = self.tekkaMainobject.retrieveServerlist()
+		for s in serverlist:
+			self.addServer(self.tekkaMainobject.retrieveServerinfo(s))
+
+
 	def addServer(self, newServer):
-		if not newServer.has_key("name") or not newServer.has_key("address") or not newServer.has_key("port") or not newServer.has_key("autoconnect") or not newServer.has_key("nick") or not newServer.has_key("realname"):
+		if not newServer.has_key("servername") \
+			or not newServer.has_key("address") \
+			or not newServer.has_key("port") \
+			or not newServer.has_key("autoconnect") \
+			or not newServer.has_key("nick") \
+			or not newServer.has_key("name"):
 			print "Wrong data to addServer."
 			return
 		if self.serverList:
-			self.serverList.append([newServer["name"]])
-		self.serverDict[newServer["name"]]=newServer
+			self.serverList.append([newServer["servername"]])
+		self.serverDict[newServer["servername"]]=newServer
 			
 	def createServer(self, newServer):
-		if not newServer.has_key("name") or not newServer.has_key("address") or not newServer.has_key("port") or not newServer.has_key("autoconnect") or not newServer.has_key("nick") or not newServer.has_key("realname"):
+		if not newServer.has_key("servername") \
+			or not newServer.has_key("address") \
+			or not newServer.has_key("port") \
+			or not newServer.has_key("autoconnect") \
+			or not newServer.has_key("nick") \
+			or not newServer.has_key("name"):
 			print "wrong data to createserver"
 			return
 		self.tekkaMainobject.createServer(newServer)
@@ -219,6 +242,7 @@ class serverDialog(object):
 		for server in self.serverList:
 			if server[0] == servername:
 				self.serverList.remove(server.iter)
+				self.tekkaMainobject.deleteServer(servername)
 
 
 	def openAddDialog(self, widget):
@@ -251,6 +275,8 @@ class serverDialog(object):
 			print "User edited server"
 			print newServer
 			self.tekkaMainobject.createServer(newServer)
+			self._retrieve_serverlist()
+
 
 	def openDeleteDialog(self, widget):
 		if not self.serverView:

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Copyright (c) 2008 Marian Tietz
 All rights reserved.
@@ -76,8 +77,8 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		self.nicklist = self.widgets.get_widget("tekkaNicklist")
 		self._setupNicklist()
 
+		self.topicbar = self.widgets.get_widget("tekkaTopic")
 
-		
 		# setup gtk signals
 		self._setupSignals(self.widgets)
 
@@ -96,6 +97,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 	def _setupSignals(self, widgets):
 		sigdic = { "tekkaInput_activate_cb" : self.sendText,
 				   #"tekkaServertree_cursor_changed_cb" : self.rowActivated,
+				   "tekkaTopic_activate_cb" : self.setTopicFromBar,
 				   "tekkaServertree_realize_cb" : lambda w: w.expand_all(),
 				   "tekkaNicklist_row_activated_cb" : self.nicklistActivateRow,
 				   "tekkaMainwindow_Shutdown_activate_cb" : self.makiShutdown,
@@ -119,8 +121,6 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 	def _setupServertree(self):
 		renderer = gtk.CellRendererText()
 		column = gtk.TreeViewColumn("Server",renderer,markup=0)
-		self.servertreeStore = gtk.TreeStore(str, str, tekkaLists.tekkaNicklistStore)
-		self.servertree.set_model(self.servertreeStore)
 		self.servertree.append_column(column)
 		self.servertree.set_headers_visible(False)
 
@@ -159,8 +159,8 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 
 				self.textbox.set_buffer(output) # set output buffer
 				self.scrollOutput(output) # scroll to the bottom
-				self.servertree.serverDescription(server, server) 	# reset the highlighting
-				
+				self.servertree.serverDescription(server, server) # reset hightlight
+	
 				self.nicklist.set_model(None)
 			elif srow and crow:
 				server = srow[1]
@@ -176,18 +176,32 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 				self.servertree.channelDescription(server, channel, channel)
 		
 				self.nicklist.set_model(crow[2])
+				self.setTopicInBar()
 			else:
 				print "Activation failed due to wrong path in servertree_button"
 
 		# right click -> menu for tab
 		elif event.button == 3:
+			server = None
+			channel = None
 			if srow: server = srow[1]
 			if crow: channel = crow[1]
+			if not crow and not srow: return
+			
+			menu = gtk.Menu()
+
+			if crow:
+				label = gtk.MenuItem(label="Part")
+				label.connect("activate", self.makiPart, *([channel],server))
+				menu.append( label )
+
 			label = gtk.MenuItem(label="Close Tab")
 			label.connect("activate", self.menuRemoveTab, *(server,channel))
-			menu = gtk.Menu()
-			menu.append(label)
-			label.show()
+
+			menu.append( label )
+
+			menu.show_all()
+
 			menu.popup(None, None, None, button=event.button, activate_time=event.time)
 	
 	def menuRemoveTab(self, w, server, channel):
@@ -209,6 +223,18 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		if not server: return
 		nick = self.nicklist.get_model()[path[0]][0]
 		self.servertree.addChannel(server, nick)
+
+	""" TOPIC BAR SIGNALS """
+
+	def setTopicFromBar(self, widget):
+		self.makiTopic(widget.get_text())
+
+	""" TOPIC BAR METHODS """
+
+	def setTopicInBar(self):
+		srow,crow = self.getCurrentRow()
+		if not crow: return
+		self.topicbar.set_text(crow[3][0])
 
 	""" INPUT HISTORY / KEYPRESSEVENT """
 

@@ -65,7 +65,7 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 		if not row: return
 		store.set(row.iter, 0, newnick)
 	
-	def removeNick(self, server, channel, nick):
+	def removeNick(self, nick):
 		store = self.get_model()
 		row = self.findRow(nick, store=store, col=0)
 		if not row: return
@@ -99,6 +99,9 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		print "servertree init"
 		#if w: self.set_flags(w.flags())
 		gtk.TreeView.__init__(self)
+
+		model = gtk.TreeStore(str, str, tekkaNicklistStore, list)
+		self.set_model(model)
 
 		self.serverOutputs = {  } # { "server":buf, ... }
 		self.channelOutputs = {  } # { "server":{"channel1":buf,"channel2":buf},.. }
@@ -213,6 +216,11 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 			return srow[1],None
 		return srow[1],crow[1]
 
+	def setTopic(self, server, channel, topic, topicsetter=None):
+		sr,cr = self.getRow(server,channel)
+		if not cr: return
+		self.get_model().set(cr.iter, 2, [topic,topicsetter or ""])
+
 	def addServer(self, servername):
 		if self.findRow(servername):
 			self.serverDescription(servername, servername)
@@ -223,7 +231,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		self.channelOutputs[servername] = {}
 		return iter,self.serverOutputs[servername]
 
-	def addChannel(self, servername, channelname, nicks=None):
+	def addChannel(self, servername, channelname, nicks=None, topic=None):
 		store = self.get_model()
 		row = self.findRow(servername)
 		if row:
@@ -236,11 +244,12 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 			iter = store.append(row.iter)
 			nicklist = tekkaNicklistStore(nicks)
 
-			store.set(iter,0,channelname,1,channelname,2,nicklist)
+			store.set(iter,0,channelname,1,channelname,2,nicklist,3,topic)
 			self.channelOutputs[servername][channelname] = htmlbuffer.htmlbuffer()
 			self.expand_row(row.path,True)
 	
 			return iter,self.channelOutputs[servername][channelname]
+
 
 	def renameChannel(self, servername, channelname, new_channelname):
 		row = self.findRow(servername)

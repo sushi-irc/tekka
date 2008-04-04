@@ -88,6 +88,9 @@ class tekkaCom(object):
 			self.bus.add_signal_receiver(self.serverReconnect, "reconnect", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.serverMOTD, "motd", dbus_interface="de.ikkoku.sushi")
 
+			# Channel-Signals
+			self.bus.add_signal_receiver(self.channelTopic, "topic", dbus_interface="de.ikkoku.sushi")
+
 			# Maki signals
 			self.bus.add_signal_receiver(self.makiShutdownSignal, "shutdown", dbus_interface="de.ikkoku.sushi")
 
@@ -135,27 +138,30 @@ class tekkaCom(object):
 		self.myNick[server] = nickname
 
 	def createServer(self, smap):
-		domain = "servers/%s" % smap["name"]
-		self.proxy.sushi_set_string(domain, "server", "address", smap["address"])
-		self.proxy.sushi_set_string(domain, "server", "port", smap["port"])
-		self.proxy.sushi_set_string(domain, "server", "name", smap["realname"])
-		self.proxy.sushi_set_string(domain, "server", "nick", smap["nick"])
-		if smap.has_key("nickserv"):
-			self.proxy.sushi_set_string(domain, "server","nickserv",smap["nickserv"])
+		domain = "servers/%s" % smap["servername"]
+		for (k,v) in smap.items():
+			if not v:
+				self.proxy.sushi_remove(domain, "server", k)
+			else:
+				self.proxy.sushi_set(domain, "server", k, v)
+
+	def deleteServer(self, name):
+		domain = "servers/%s" % name
+		self.proxy.sushi_remove(domain, "", "")
 
 	def retrieveServerlist(self):
-		return self.proxy.sushi_list("servers")
+		return self.proxy.sushi_list("servers","","")
 	
 	def retrieveServerinfo(self, server):
 		map = {}
 		domain = "servers/%s" % server
-		map["name"] = server
-		map["address"] = self.proxy.sushi_get_string(domain, "server", "address")
-		map["port"] = self.proxy.sushi_get_string(domain, "server", "port")
-		map["realname"] = self.proxy.sushi_get_string(domain, "server", "name")
-		map["nick"] = self.proxy.sushi_get_string(domain, "server", "nick")
-		map["nickserv"] = self.proxy.sushi_get_string(domain, "server", "nickserv")
-		map["autoconnect"] = self.proxy.sushi_get_string(domain, "server", "autoconnect")
+		map["servername"] = server
+		map["address"] = self.proxy.sushi_get(domain, "server", "address")
+		map["port"] = self.proxy.sushi_get(domain, "server", "port")
+		map["name"] = self.proxy.sushi_get(domain, "server", "name")
+		map["nick"] = self.proxy.sushi_get(domain, "server", "nick")
+		map["nickserv"] = self.proxy.sushi_get(domain, "server", "nickserv")
+		map["autoconnect"] = self.proxy.sushi_get(domain, "server", "autoconnect")
 		return map
 
 	def addServers(self):
@@ -198,6 +204,11 @@ class tekkaCom(object):
 	# the server is sending a MOTD
 	def serverMOTD(self, time, server, message):
 		self.serverPrint(time, server, "%s" % message)
+
+	""" CHANNEL SIGNALS """
+
+	def channelTopic(self, time, server, nick, channel, topic):
+		self.servertree.setTopic(server,channel,[topic,nick])
 
 	""" MAKI SIGNALS """
 
@@ -454,7 +465,7 @@ class tekkaCom(object):
 		server,channel = self.servertree.getCurrentChannel()
 		if not server or not channel:
 			return
-		self.proxy.topic(server, channel, topic)
+		return self.proxy.topic(server, channel, topic)
 
 	def makiUsermode(self, xargs):
 		return
