@@ -45,7 +45,6 @@ except:
 
 from tekkaConfig import tekkaConfig
 from tekkaCom import tekkaCom
-from tekkaMisc import tekkaMisc
 from tekkaPlugins import tekkaPlugins
 import tekkaDialog
 
@@ -55,10 +54,9 @@ import tekkaLists
 # tekkaCom -> communication to mika via dbus
 # tekkaConfig -> Configparser, Configvariables
 # tekkaPlugins -> Plugin-interface (TODO)
-class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
+class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 	def __init__(self):
 		tekkaCom.__init__(self)
-		tekkaMisc.__init__(self)
 		tekkaConfig.__init__(self)
 		tekkaPlugins.__init__(self)
 		
@@ -92,6 +90,8 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		self.setOutputFont(self.outputFont)
 
 		self.history = tekkaLists.tekkaHistory()
+
+		self.inputChains = {}
 
 		
 	def _setupSignals(self, widgets):
@@ -247,8 +247,8 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		if not crow: return
 
 		tl = crow[3]
-		print tl
-		if not tl: return
+
+		if not tl or not tl[0]: return
 		self.topicbar.set_text(tl[0])
 
 	""" INPUT HISTORY / KEYPRESSEVENT """
@@ -296,27 +296,6 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		output = self.servertree.getOutput(server,channel)
 
 		if not output:
-			# we have a query, target is nick, not channel (we)?
-			if self.getNick(server).lower() == channel.lower():
-				print "There's a nickchannel!"
-				if not nick:
-					print "Wrong data."
-					return
-				
-				simfound=0
-				for schannel in self.servertree.getChannels(server):
-					if schannel.lower() == nick.lower():
-						self.servertree.renameChannel(server, schannel, nick)
-						output = self.servertree.getOutput(server,nick)
-						simfound=1
-				if not simfound:
-					output = self.servertree.addChannel(server,nick)[1]
-				channel = nick
-			else:
-				# a channel speaks to us but we hadn't joined yet
-				output = self.servertree.addChannel(server,channel)[1]
-
-		if not output:
 			print "channelPrint(): no output buffer"
 			return
 		
@@ -329,6 +308,8 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		else:
 			self.servertree.channelDescription(server, channel, "<b>"+channel+"</b>")
 
+	# prints 'string' with "%H:%M' formatted 'timestamp' to the server-output
+	# identified by 'server'
 	def serverPrint(self, timestamp, server, string):
 		output = self.servertree.getOutput(server)
 
@@ -337,14 +318,15 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 
 		timestamp = time.strftime("%H:%M", time.localtime(timestamp))
 
-		output.insert(output.get_end_iter(), "[%s] %s\n" % (timestamp,string))
+		output.insert_html(output.get_end_iter(), "[%s] %s\n" % (timestamp,self.escapeHTML(string)))
 
 		cserver,cchannel = self.servertree.getCurrentChannel()
 		if not cchannel and cserver and cserver == server:
 			self.scrollOutput(output)
 		else:
-			self.serverDescription(server, "<b>"+server+"</b>")
+			self.servertree.serverDescription(server, "<b>"+server+"</b>")
 
+	# prints 'string' to the current output
 	def myPrint(self, string):
 		output = self.textbox.get_buffer()
 
@@ -365,6 +347,7 @@ class tekkaMain(tekkaCom, tekkaMisc, tekkaConfig, tekkaPlugins):
 		else:
 			output = self.servertree.getOutput(server,channel)
 		output.set_text("")
+		# clear the tagtable
 		tt = output.get_tag_table()
 		if tt: tt.foreach(lambda tag,data: data.remove(tag), tt)
 

@@ -36,15 +36,24 @@ class tekkaConfig(object):
 
 		self.colors = {}
 		self.colors["ownNick"] = "#AA0000"
-		self.colors["nick"] = "#0000AA"
+		self.colors["nick"] = "#2222AA"
+		self.colors["joinNick"] = "#004444"
+		self.colors["partNick"] = "#004444"
+		self.colors["modeActNick"] = "#AA2222"
+		self.colors["modeParam"] = "#2222AA"
 
 		self.outputFont = "Monospace"
 		# TODO: parse config file ~/.sushi/tekka.conf
 
 	def getColor(self, name):
 		if not self.colors.has_key(name):
-			return "#000000"
+			return "#FFFFFF"
 		return self.colors[name]
+
+	def getShortcuts(self, startkey):
+		if self.shortcuts.has_key(startkey):
+			return self.shortcuts[startkey]
+		return None
 
 class tekkaConfigDialog(object):
 	def __init__(self):

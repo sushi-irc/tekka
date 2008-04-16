@@ -69,7 +69,12 @@ class tekkaCom(object):
 
 		# setup signals
 		if self.proxy:
+			# Message-Signals
 			self.bus.add_signal_receiver(self.userMessage, "message", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.ownMessage, "own_message", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.ownQuery, "own_query", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.userQuery, "query", dbus_interface="de.ikkoku.sushi")
+
 			self.bus.add_signal_receiver(self.userPart, "part", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userJoin, "join", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userQuit, "quit", dbus_interface="de.ikkoku.sushi")
@@ -77,6 +82,7 @@ class tekkaCom(object):
 			self.bus.add_signal_receiver(self.userNick, "nick", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userAction, "action", dbus_interface="de.ikkoku.sushi")
 			#self.bus.add_signal_receiver(self.userAway, "away", dbus_interface="de.ikkoku.sushi")
+			#self.bus.add_signal_receiver(self.userAwayMsg, "away_message", dbus_interface="de.ikkoku.sushi")
 			#self.bus.add_signal_receiver(self.userBack, "back", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userCTCP, "ctcp", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userNotice, "notice", dbus_interface="de.ikkoku.sushi")
@@ -211,6 +217,11 @@ class tekkaCom(object):
 	def channelTopic(self, time, server, nick, channel, topic):
 		self.servertree.setTopic(server,channel,topic,nick)
 		self.setTopicInBar(server,channel)
+		if not nick: return
+		nickwrap = nick
+		if nick == self.getNick(server):
+			nickwrap = "You"
+		self.channelPrint(time, server, channel, "%s changed the topic to '%s'" % (nickwrap,topic))
 
 	""" MAKI SIGNALS """
 
@@ -224,29 +235,50 @@ class tekkaCom(object):
 
 	# privmessages are received here
 	def userMessage(self, timestamp, server, nick, channel, message):
-		if nick == self.getNick(server):
-			color = self.getColor("ownNick")
-		else:
-			color = self.getColor("nick")
-
+		color = self.getColor("nick")
 		message = self.escapeHTML(message)
-		self.channelPrint(timestamp, server, channel, "<font foreground='%s'>&lt;%s&gt;</font> <msg>%s</msg>" % (color,nick,message), nick=nick)
+		self.channelPrint(timestamp, server, channel, \
+		"<font foreground='%s'>&lt;%s&gt;</font> <msg>%s</msg>" % (color,nick,message))
+
+	def ownMessage(self, timestamp, server, channel, message):
+		self.channelPrint(timestamp, server, channel, "<font foreground='%s'>&lt;%s&gt;</font> <msg>%s</msg>" \
+		% (self.getColor("ownNick"), self.getNick(server), message))
+	
+	def ownQuery(self, timestamp, server, channel, message):
+		self.ownMessage(timestamp,server,channel,message)
+	
+	def userQuery(self, timestamp, server, nick, message):
+		check = self.servertree.getChannel(server,nick)
+		if not check:
+			simfound=0
+			for schannel in self.servertree.getChannels(server):
+				if schannel.lower() == nick.lower():
+					self.servertree.renameChannel(server, schannel, nick)
+					simfound=1
+			if not simfound:
+				self.servertree.addChannel(server,nick)
+		self.userMessage(timestamp,server,nick,nick,message)
 
 	def userMode(self, time, server, nick, target, mode, param):
 		myNick = self.getNick(server)
 
-		actnick = "<font foreground='#999922'>"+nick+"</font>"
+		act_color=self.getColor("modeActNick")
+		param_color=self.getColor("modeParam")
+
+		actnick = "<font foreground='%s'>%s</font>" % (act_color, self.escapeHTML(nick))
 		if nick == myNick:
 			actnick = "You"
 
 		if target == myNick:
-			self.myPrint("<font foreground='#AA2222'>%s</font> set <b>%s</b> on you." % (actnick, mode))
+			self.myPrint("%s set <b>%s</b> on you." % (actnick, mode))
 		else:
+			# if param a user mode is set
 			if param:
-				nickwrap = "<font foreground='#2222AA'>"+param+"</font>"
+				nickwrap = "<font foreground='%s'>%s</font>" % (param_color, self.escapeHTML(param))
 				if param == myNick:
-					nickwrap = "you"
+					nickwrap = "You"
 				msg = "%s set <b>%s</b> to %s." % (actnick,mode,nickwrap)
+			# else a channel is the target
 			else:
 				msg = "%s set <b>%s</b> on %s." % (actnick,mode,target)
 			self.channelPrint(time, server, target, msg)
@@ -276,7 +308,7 @@ class tekkaCom(object):
 		
 		nickchange = "%s now known as %s." % (nickwrap, new_nick)
 		nickchange = self.escapeHTML(nickchange)
-		for (desc,channel,nicklist) in self.servertree.getChannels(server,row=True):
+		for (desc,channel,nicklist,topic) in self.servertree.getChannels(server,row=True):
 			print nicklist.getNicks()
 			if nick in nicklist.getNicks() or channel == nick:
 				nicklist.modifyNick(nick, new_nick)
@@ -317,7 +349,7 @@ class tekkaCom(object):
 			self.servertree.addChannel(server, channel, nicks=self.getNicksFromMaki(server,channel))
 			nickwrap = "You"
 		else:
-			nickwrap = nick
+			nickwrap = "<font foreground='%s'>%s</font>" % (self.getColor("joinNick"), self.escapeHTML(nick))
 			srow,crow = self.servertree.getRow(server,channel)
 			if crow: crow[2].appendNick(nick)
 		self.channelPrint(timestamp, server, channel, "%s joined %s." % (nickwrap, channel))
@@ -329,8 +361,8 @@ class tekkaCom(object):
 			return
 		if reason: reason = " (%s)" % reason
 		srow,crow = self.servertree.getRow(server,channel)
-		if crow: crow[2].removeNick(server,channel,nick)
-		self.channelPrint(timestamp, server, channel, "%s left %s%s." % (nick, channel,reason))
+		if crow: crow[2].removeNick(nick)
+		self.channelPrint(timestamp, server, channel, "<font foreground='%s'>%s</font> left %s%s." % (self.getColor("partNick"), nick, channel,reason))
 
 
 
@@ -491,8 +523,8 @@ class tekkaCom(object):
 		if not server:
 			self.myPrint("query who on which server?")
 			return
-		if not self.getChannel(server,xargs[0],sens=False):
-			self.addChannel(server, xargs[0])
+		if not self.servertree.getChannel(server,xargs[0],sens=False):
+			self.servertree.addChannel(server, xargs[0])
 
 	def tekkaClear(self, xargs):
 		pass
