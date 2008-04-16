@@ -238,10 +238,10 @@ class tekkaCom(object):
 		color = self.getColor("nick")
 		message = self.escapeHTML(message)
 		self.channelPrint(timestamp, server, channel, \
-		"<font foreground='%s'>&lt;%s&gt;</font> <msg>%s</msg>" % (color,nick,message))
+		"&lt;<font foreground='%s'>%s</font>&gt; <msg>%s</msg>" % (color,nick,message))
 
 	def ownMessage(self, timestamp, server, channel, message):
-		self.channelPrint(timestamp, server, channel, "<font foreground='%s'>&lt;%s&gt;</font> <msg>%s</msg>" \
+		self.channelPrint(timestamp, server, channel, "&lt;<font foreground='%s'>%s</font>&gt; <msg>%s</msg>" \
 		% (self.getColor("ownNick"), self.getNick(server), message))
 	
 	def ownQuery(self, timestamp, server, channel, message):
