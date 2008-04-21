@@ -221,7 +221,7 @@ class tekkaCom(object):
 		nickwrap = nick
 		if nick == self.getNick(server):
 			nickwrap = "You"
-		self.channelPrint(time, server, channel, "%s changed the topic to '%s'" % (nickwrap,topic))
+		self.channelPrint(time, server, channel, "%s changed the topic to '%s'" % (nickwrap,self.escapeHTML(topic)))
 
 	""" MAKI SIGNALS """
 

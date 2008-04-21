@@ -106,6 +106,9 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		self.serverOutputs = {  } # { "server":buf, ... }
 		self.channelOutputs = {  } # { "server":{"channel1":buf,"channel2":buf},.. }
 
+		self.currentRow = None,None
+		self.connect("button-press-event", self._cacheCurrentRow)
+
 	def get_model(self):
 		return gtk.TreeView.get_model(self)
 
@@ -119,8 +122,28 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 			return self.serverOutputs[server]
 		return None
 
+	""" CACHING """
+
+	def _cacheCurrentRow(self, widget, event):
+		path = widget.get_path_at_pos(int(event.x), int(event.y))
+		if not path or not len(path): 
+			self.currentRow = None
+			return
+
+		self.currentRow = self.getRowFromPath(path[0])
+
 
 	""" SERVER TREE HANDLING """
+
+	def getRow(self, server, channel):
+		s = self.findRow(server)
+		if not s:
+			return None,None
+		channels = s.iterchildren()
+		if not channels:
+			return s,None
+		c = self.findRow(channel, store=channels)
+		return s,c
 
 	def getRowFromPath(self, path, store=None):
 		if not store:
@@ -137,15 +160,6 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 				return (server,channel)
 			rc+=1
 		return (server,None)
-
-
-	def getChannelFromPath(self, path, store=None):
-		srow,crow = self.getRowFromPath(path,store)
-		if srow and crow:
-			return srow[1],crow[1]
-		elif srow and not crow:
-			return srow[1],None
-		return None,None
 
 	def getServers(self):
 		slist = []
@@ -178,43 +192,23 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 					return channel
 		return None
 	
-	def getRow(self, server, channel):
-		s = self.findRow(server)
-		if not s:
-			return None,None
-		channels = s.iterchildren()
-		if not channels:
-			return s,None
-		c = self.findRow(channel, store=channels)
-		return s,c
 
-	def getCurrentServer(self,widget=None,store=None):
-		if not widget:
-			widget = self
-		if not store:
-			store = self.get_model()
-		coord = widget.get_cursor()[0]
-		if not coord:
-			return None
-		return self.get_model()[coord[0]][1]
+	def getCurrentServer(self):
+		if self.currentRow and self.currentRow[0]:
+			return (self.currentRow[0])[0]
+		return None
 
 	def getCurrentRow(self, widget=None, store=None):
-		if not widget:
-			widget = self
-		if not store:
-			store = widget.get_model()
-		path = widget.get_cursor()[0]
-		if not path:
-			return (None,None)
-		return self.getRowFromPath(path,store)
-
-	def getCurrentChannel(self, widget=None, store=None):
-		srow,crow = self.getCurrentRow(widget,store)
-		if not srow and not crow:
+		return self.currentRow
+	
+	def getCurrentChannel(self):
+		if not self.currentRow: 
 			return None,None
-		elif srow and not crow:
-			return srow[1],None
-		return srow[1],crow[1]
+		if self.currentRow[0] and self.currentRow[1]:
+			return self.currentRow[0][0],self.currentRow[1][0]
+		if self.currentRow[0]:
+			return self.currentRow[0][0],None
+		return None,None
 
 	def setTopic(self, server, channel, topic, topicsetter=None):
 		sr,cr = self.getRow(server,channel)
@@ -262,11 +256,13 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 				del self.channelOutputs[servername][channelname]
 				self.channelOutputs[servername][new_channelname] = tmp
 
+	# Sets the description (field 0) to the server "servername"
 	def serverDescription(self, servername, desc):
 		row = self.findRow(servername)
 		if row:
 			self.get_model().set_value(row.iter, 0, desc)
 
+	# Sets the description (field 0) to the channel "channel" in "servername"-Servertab
 	def channelDescription(self, servername, channel, desc):
 		row = self.findRow(servername)
 		if row:
@@ -274,6 +270,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 			if crow:
 				self.get_model().set_value(crow.iter, 0, desc)
 
+	# Removes the channel "channelname" from the servertree "servername"
 	def removeChannel(self, servername, channelname):
 		row = self.findRow(servername)
 		if row:
@@ -282,6 +279,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 				del self.channelOutputs[servername][channelname]
 				self.get_model().remove(crow.iter)
 
+	# Removes the server "servername"
 	def removeServer(self, servername):
 		row = self.findRow(servername)
 		if row:
@@ -292,6 +290,35 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 					del self.channelOutputs[servername][child[1]]
 			self.get_model().remove(row.iter)
 
+
+"""
+Class to provide input history.
+
+Constants: MAX_HISTORY (=20) - max history entries per output
+Methods:
+  - append(server,channel,text)
+	Append the text to the channel "channel" in server "server".
+	If the MAX_HISTORY limit is reached, pop the first and add the
+	new entry at the bottom.
+
+  - getUp(server,channel)
+	Scrolls up in the history and returns the string.
+
+  - getDown(server,channel)
+	Scrolls down in the history and returns the string or "".
+
+  - getHistory(server,channel,i)
+	Returns the input history for channel "channel" in server "server" 
+	for index i. If not existant the function returns "".
+
+  - getMax(server,channel)
+	Returns the number of history entries for the channel "channel"
+	in the server "server".
+
+  - __genCheck(server,channel)
+	Creates an unique string to identify the current scrolling
+	output. (FIXME: wtf?)
+"""
 class tekkaHistory(object):
 	def __init__(self):
 		self.serverHistory = {}
@@ -309,6 +336,8 @@ class tekkaHistory(object):
 		if self.__genCheck(server,channel) == self.lastentry:
 			self.lastentry = "..."
 		if server and not channel:
+			print "SERRVER",
+			print server
 			if not self.serverHistory.has_key(server):
 				self.serverHistory[server] = [text]
 			else:

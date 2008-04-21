@@ -109,9 +109,6 @@ class htmlbuffer(gtk.TextBuffer):
 			self.tagtable = gtk.TextTagTable()
 		gtk.TextBuffer.__init__(self, self.tagtable)
 
-	def cleartags(self, test, bums):
-		self.tagcount += 1
-
 	def insert_html(self, iter, text):
 		self.insertiter = iter
 		self.tagcount = 0
@@ -121,8 +118,6 @@ class htmlbuffer(gtk.TextBuffer):
 			parser.parse(StringIO(str(text)))
 		except Exception, ex:
 			print ex
-		self.tagtable.foreach(self.cleartags)
-		print "NOW %d TAGS!" % self.tagcount
 
 if __name__ == "__main__":
 	class servertab(object):
