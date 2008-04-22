@@ -119,7 +119,11 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 	def getOutput(self, server, channel=None):
 		row = self.getRow(server,channel)
 		if not row: return None
-		return row[-1][self.COLUMN_BUFFER]
+		if row[0]:
+			return row[0][self.COLUMN_BUFFER]
+		elif len(row) == 2 and row[1]:
+			return row[1][self.COLUMN_BUFFER]
+		return None
 
 	""" CACHING """
 

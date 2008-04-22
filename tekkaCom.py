@@ -212,7 +212,7 @@ class tekkaCom(object):
 
 	# the server is sending a MOTD
 	def serverMOTD(self, time, server, message):
-		self.serverPrint(time, server, "%s" % message)
+		self.serverPrint(time, server, message, raw=True)
 
 	""" CHANNEL SIGNALS """
 
@@ -310,8 +310,10 @@ class tekkaCom(object):
 		
 		nickchange = "%s now known as %s." % (nickwrap, new_nick)
 		nickchange = self.escapeHTML(nickchange)
-		for (desc,channel,nicklist,topic) in self.servertree.getChannels(server,row=True):
-			print nicklist.getNicks()
+
+		for row in self.servertree.getChannels(server,row=True):
+			channel = row[self.servertree.COLUMN_NAME]
+			nicklist = row[self.servertree.COLUMN_NICKLIST]
 			if nick in nicklist.getNicks() or channel == nick:
 				nicklist.modifyNick(nick, new_nick)
 				self.channelPrint(time, server, channel, nickchange)
@@ -331,19 +333,29 @@ class tekkaCom(object):
 	def userQuit(self, time, server, nick, reason):
 		if nick == self.getNick(server):
 			self.servertree.serverDescription(server, "("+server+")")
-			for channel in self.servertree.getChannels(server):
-				self.servertree.channelDescription(server, channel, "("+channel+")")
-		else:
-			if reason: reason = " (%s)" % reason
 			channels = self.servertree.getChannels(server)
-			if not channels:
+			if not channels: 
 				return
 			for channel in channels:
-				srow,crow = self.servertree.getRow(server,channel)
-				if crow: nicks = crow[2].getNicks() or []
+				self.servertree.channelDescription(server, channel, "("+channel+")")
+		else:
+			reasonwrap = ""
+			if reason: 
+				reasonwrap = " (%s)" % reason
+
+			channels = self.servertree.getChannels(server,row=True)
+
+			if not channels:
+				print "No channels but quit reported.. Hum wtf? o.0"
+				return
+
+			for channel in channels:
+				channelname = channel[self.servertree.COLUMN_NAME]
+				nicklist = channel[self.servertree.COLUMN_NICKLIST]
+				nicks = nicklist.getNicks() or []
 				if nick in nicks or nick == channel:
-					crow[2].removeNick(nick)
-					self.channelPrint(time, server, channel, "%s has quit%s." % (nick,reason))
+					nicklist.removeNick(nick)
+					self.channelPrint(time, server, channelname, "%s has quit%s." % (nick,reasonwrap))
 	
 	# user joined
 	def userJoin(self, timestamp, server, nick, channel):

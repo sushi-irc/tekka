@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.3 on Thu Apr  3 22:33:01 2008 -->
+<!--Generated with glade3 3.4.3 on Tue Apr 22 20:45:45 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="tekkaMainwindow">
     <property name="width_request">550</property>
     <property name="height_request">450</property>
     <property name="visible">True</property>
+    <property name="title">tekka</property>
     <child>
       <widget class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
@@ -180,6 +181,16 @@
           </widget>
           <packing>
             <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkStatusbar" id="statusbar">
+            <property name="visible">True</property>
+            <property name="spacing">2</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </widget>

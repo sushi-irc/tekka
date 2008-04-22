@@ -76,6 +76,8 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		self._setupNicklist()
 
 		self.topicbar = self.widgets.get_widget("tekkaTopic")
+		self.statusbar = self.widgets.get_widget("statusbar")
+		self.statusbar.push(1,"Acting as IRC-client")
 
 		# setup gtk signals
 		self._setupSignals(self.widgets)
@@ -86,13 +88,10 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		self.servertree.expand_all()
 		
 		self.textbox = self.widgets.get_widget("tekkaOutput")
-		self.textbox.set_cursor_visible(True)
+		self.textbox.set_cursor_visible(False)
 		self.setOutputFont(self.outputFont)
 
 		self.history = tekkaLists.tekkaHistory()
-
-		self.inputChains = {}
-
 		
 	def _setupSignals(self, widgets):
 		sigdic = { "tekkaInput_activate_cb" : self.sendText,
@@ -139,6 +138,16 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		if not fd:
 			return
 		tb.modify_font(fd)
+
+	""" tekkaCom SIGNALS """
+
+	def serverConnect(self, time, server):
+		self.statusbar.push(2,"Connecting to %s" % server)
+		tekkaCom.serverConnect(self,time,server)
+
+	def serverConnected(self, time, server, nick):
+		self.statusbar.pop(2)
+		tekkaCom.serverConnected(self,time,server,nick)
 
 	""" SERVERTREE SIGNALS """
 	
@@ -310,7 +319,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 
 	# prints 'string' with "%H:%M' formatted 'timestamp' to the server-output
 	# identified by 'server'
-	def serverPrint(self, timestamp, server, string):
+	def serverPrint(self, timestamp, server, string, raw=False):
 		output = self.servertree.getOutput(server)
 
 		if not output:
@@ -318,7 +327,10 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 
 		timestamp = time.strftime("%H:%M", time.localtime(timestamp))
 
-		output.insert_html(output.get_end_iter(), "[%s] %s\n" % (timestamp,self.escapeHTML(string)))
+		if not raw:
+			output.insert_html(output.get_end_iter(), "[%s] %s\n" % (timestamp,self.escapeHTML(string)))
+		else:
+			output.insert(output.get_end_iter(), "[%s] [%s]\n" % (timestamp, string))
 
 		cserver,cchannel = self.servertree.getCurrentChannel()
 		if not cchannel and cserver and cserver == server:
