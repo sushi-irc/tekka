@@ -124,11 +124,17 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		self.servertree.set_headers_visible(False)
 
 	def _setupNicklist(self):
-		renderer = gtk.CellRendererText()
-		column = gtk.TreeViewColumn("Nicks", renderer, text=0)
 		self.nicklistStore = gtk.ListStore(gobject.TYPE_STRING)
 		self.nicklist.set_model(self.nicklistStore)
+
+		renderer = gtk.CellRendererText()
+		column = gtk.TreeViewColumn("Prefix", renderer, text=0)
 		self.nicklist.append_column(column)
+		
+		renderer = gtk.CellRendererText()
+		column = gtk.TreeViewColumn("Nicks", renderer, text=1)
+		self.nicklist.append_column(column)
+
 		self.nicklist.set_headers_visible(False)
 
 	def setOutputFont(self, fontname):
@@ -176,6 +182,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 			elif srow and crow:
 				server = srow[self.servertree.COLUMN_NAME]
 				channel = crow[self.servertree.COLUMN_NAME]
+				desc = crow[self.servertree.COLUMN_DESCRIPTION]
 
 				output = crow[self.servertree.COLUMN_BUFFER]
 				if not output:
@@ -184,7 +191,13 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 
 				self.textbox.set_buffer(output)
 				self.scrollOutput(output)
-				self.servertree.channelDescription(server, channel, channel)
+			
+				# check if this channel is parted (FIXME: QND)
+				if desc[0] == '(':
+					unbold = "("+channel+")"
+				else:
+					unbold = channel
+				self.servertree.channelDescription(server, channel, unbold)
 		
 				self.nicklist.set_model(crow[self.servertree.COLUMN_NICKLIST])
 				self.topicbar.set_text("")

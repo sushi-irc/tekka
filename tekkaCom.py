@@ -82,7 +82,7 @@ class tekkaCom(object):
 			self.bus.add_signal_receiver(self.userNick, "nick", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userAction, "action", dbus_interface="de.ikkoku.sushi")
 			#self.bus.add_signal_receiver(self.userAway, "away", dbus_interface="de.ikkoku.sushi")
-			#self.bus.add_signal_receiver(self.userAwayMsg, "away_message", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.userAwayMessage, "away_message", dbus_interface="de.ikkoku.sushi")
 			#self.bus.add_signal_receiver(self.userBack, "back", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userCTCP, "ctcp", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userNotice, "notice", dbus_interface="de.ikkoku.sushi")
@@ -126,6 +126,8 @@ class tekkaCom(object):
 						text = text[1:]
 					self.proxy.message(server,channel,text)
 
+	""" GENERIC CONNECTION STUFF """
+
 	def getNicksFromMaki(self, server, channel):
 		if not self.proxy: return None
 		return self.proxy.nicks(server,channel)
@@ -142,6 +144,75 @@ class tekkaCom(object):
 
 	def setNick(self, server, nickname):
 		self.myNick[server] = nickname
+
+	def addServers(self):
+		servers = self.proxy.servers()
+		if not servers:
+			return
+		for server in servers:
+			# addServer in tekkaMain
+			self.servertree.addServer(server)
+			self.addChannels(server)
+			self.setNick(server, self.getNickFromMaki(server))
+
+	def addChannels(self, server):
+		channels = self.proxy.channels(server)
+		
+		for channel in channels:
+			nicks = self.getNicksFromMaki(server, channel)
+
+			iter,output = self.servertree.addChannel(server, channel, nicks=nicks, \
+			topic=[self.getTopic(server,channel),""])
+
+			if not iter:
+				continue
+
+			self._iterPrefixFetch(server,iter,nicks)
+	
+	def getTopic(self, server, channel):
+		return self.proxy.topic(server,channel,"")
+
+	def userChannelPrefix(self, server, channel, nick):
+		if not self.proxy: return ""
+		return self.proxy.user_channel_prefix(server,channel,nick) 
+
+	# solution to set the prefixes in the nicklist of a new
+	# added server. The iter returned by addChannel() is
+	# passed to this function (chaniter) like the nicks
+	# and prefixes for the nicks were fetched and added to
+	# the channel-nicklist
+	def _iterPrefixFetch(self, server, chaniter, nicks):
+		if not chaniter: 
+			return
+		model = self.servertree.get_model()
+		channel = model.get(chaniter, self.servertree.COLUMN_NAME)
+		nicklist = model.get(chaniter,self.servertree.COLUMN_NICKLIST)
+		if channel:
+			channel = channel[0]
+		if nicklist:
+			nicklist = nicklist[0]
+
+		for nick in nicks:
+			prefix = self.userChannelPrefix(server,channel,nick)
+			if not prefix: 
+				continue
+			nicklist.setPrefix(nick, prefix)
+
+	# checks if the mode is a prefix-mode. if a prefix mode is
+	# given the prefix-char is added.
+	def _prefixMode(self, server, channel, nick, mode):
+		if mode[1] not in ("q","a","o","h","v"):
+			return
+		row = self.servertree.getRow(server,channel)
+		if not row and len(row) != 2:
+			return
+		nicklist = row[1][self.servertree.COLUMN_NICKLIST]
+		if not nicklist:
+			return
+		nicklist.setPrefix(nick, self.userChannelPrefix(server,channel,nick))
+
+
+	""" SERVER CREATION """
 
 	def createServer(self, smap):
 		domain = "servers/%s" % smap["servername"]
@@ -169,26 +240,6 @@ class tekkaCom(object):
 		map["nickserv"] = self.proxy.sushi_get(domain, "server", "nickserv")
 		map["autoconnect"] = self.proxy.sushi_get(domain, "server", "autoconnect")
 		return map
-
-	def addServers(self):
-		servers = self.proxy.servers()
-		if not servers:
-			return
-		for server in servers:
-			# addServer in tekkaMain
-			self.servertree.addServer(server)
-			self.addChannels(server)
-			self.setNick(server, self.getNickFromMaki(server))
-
-	def addChannels(self, server):
-		channels = self.proxy.channels(server)
-		print channels
-		for channel in channels:
-			print "got channel: %s" % channel
-			self.servertree.addChannel(server, channel, nicks=self.getNicksFromMaki(server, channel), topic=[self.getTopic(server,channel),""])
-
-	def getTopic(self, server, channel):
-		return self.proxy.topic(server,channel,"")
 
 
 	""" SIGNALS """
@@ -235,6 +286,9 @@ class tekkaCom(object):
 
 	""" USER SIGNALS """
 
+	def userAwayMessage(self, timestamp, server, nick, message):
+		self.servertree.channelPrint(timestamp, server, nick, "%s is away: %s" % (nick,message))
+
 	# privmessages are received here
 	def userMessage(self, timestamp, server, nick, channel, message):
 		color = self.getColor("nick")
@@ -280,6 +334,8 @@ class tekkaCom(object):
 				if param == myNick:
 					nickwrap = "You"
 				msg = "%s set <b>%s</b> to %s." % (actnick,mode,nickwrap)
+
+				self._prefixMode(server,target,param,mode)
 			# else a channel is the target
 			else:
 				msg = "%s set <b>%s</b> on %s." % (actnick,mode,target)
@@ -360,23 +416,33 @@ class tekkaCom(object):
 	# user joined
 	def userJoin(self, timestamp, server, nick, channel):
 		if nick == self.getNick(server):
-			self.servertree.addChannel(server, channel, nicks=self.getNicksFromMaki(server,channel))
+			nicks = self.getNicksFromMaki(server,channel)
+			iter,output = self.servertree.addChannel(server, channel, nicks=nicks)
+			self._iterPrefixFetch(server,iter,nicks)
 			nickwrap = "You"
 		else:
 			nickwrap = "<font foreground='%s'>%s</font>" % (self.getColor("joinNick"), self.escapeHTML(nick))
 			srow,crow = self.servertree.getRow(server,channel)
 			if crow: crow[2].appendNick(nick)
-		self.channelPrint(timestamp, server, channel, "%s joined %s." % (nickwrap, channel))
+		self.channelPrint(timestamp, server, channel, "%s have joined %s." % (nickwrap, channel))
 
 	# user parted
 	def userPart(self, timestamp, server, nick, channel, reason):
+
 		if nick == self.getNick(server):
+			rwrap = ""
+			if reason:
+				rwrap = " (%s)" % reason
+			self.channelPrint(timestamp, server, channel, "You have left %s%s." % (channel,rwrap))
+
+			# FIXME: QND
 			self.servertree.channelDescription(server, channel, "("+channel+")")
 			return
+
 		if reason: reason = " (%s)" % reason
 		srow,crow = self.servertree.getRow(server,channel)
 		if crow: crow[2].removeNick(nick)
-		self.channelPrint(timestamp, server, channel, "<font foreground='%s'>%s</font> left %s%s." % (self.getColor("partNick"), nick, channel,reason))
+		self.channelPrint(timestamp, server, channel, "<font foreground='%s'>%s</font> has left %s%s." % (self.getColor("partNick"), nick, channel,reason))
 
 
 

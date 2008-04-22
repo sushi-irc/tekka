@@ -34,10 +34,15 @@ class tekkaList(object):
 
 class tekkaNicklistStore(tekkaList, gtk.ListStore):
 	def __init__(self, nicks=None):
-		gtk.ListStore.__init__(self,str)
+		gtk.ListStore.__init__(self, gobject.TYPE_STRING, gobject.TYPE_STRING)
+
+		self.COLUMN_PREFIX=0
+		self.COLUMN_NICK=1
+
 		if nicks:
 			self.addNicks(nicks)
 
+	
 	""" NICKLIST METHODS """
 
 	def get_model(self):
@@ -57,19 +62,28 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 	def appendNick(self, nick):
 		store = self.get_model()
 		iter = store.append(None)
-		store.set(iter, 0, nick)
+		store.set(iter, self.COLUMN_NICK, nick)
 
 	def modifyNick(self, nick, newnick):
 		store = self.get_model()
 		row = self.findRow(nick, store=store, col=0)
-		if not row: return
-		store.set(row.iter, 0, newnick)
+		if not row: 
+			return
+		store.set(row.iter, self.COLUMN_NICK, newnick)
 	
 	def removeNick(self, nick):
 		store = self.get_model()
-		row = self.findRow(nick, store=store, col=0)
-		if not row: return
+		row = self.findRow(nick, store=store, col=self.COLUMN_NICK)
+		if not row: 
+			return
 		store.remove(row.iter)
+
+	def setPrefix(self, nick, prefix):
+		store = self.get_model()
+		row = self.findRow(nick, store=store, col=self.COLUMN_NICK)
+		if not row:
+			return
+		row[self.COLUMN_PREFIX] = prefix
 
 
 
