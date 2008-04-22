@@ -91,6 +91,9 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		self.textbox.set_cursor_visible(False)
 		self.setOutputFont(self.outputFont)
 
+		self.textentry = self.widgets.get_widget("tekkaInput")
+		self.textentry.set_property("can-focus",True)
+
 		self.history = tekkaLists.tekkaHistory()
 		
 	def _setupSignals(self, widgets):
@@ -122,6 +125,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		column = gtk.TreeViewColumn("Server",renderer,markup=0)
 		self.servertree.append_column(column)
 		self.servertree.set_headers_visible(False)
+		self.servertree.set_property("can-focus",False)
 
 	def _setupNicklist(self):
 		self.nicklistStore = gtk.ListStore(gobject.TYPE_STRING)

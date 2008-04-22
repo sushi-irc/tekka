@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.3 on Tue Apr 22 20:45:45 2008 -->
+<!--Generated with glade3 3.4.3 on Wed Apr 23 00:47:39 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="tekkaMainwindow">
     <property name="width_request">550</property>
@@ -97,14 +97,14 @@
                   <widget class="GtkScrolledWindow" id="scrolledwindow1">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                    <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
                     <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                     <child>
                       <widget class="GtkTextView" id="tekkaOutput">
                         <property name="width_request">400</property>
                         <property name="visible">True</property>
                         <property name="editable">False</property>
-                        <property name="wrap_mode">GTK_WRAP_WORD</property>
+                        <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
                         <property name="cursor_visible">False</property>
                       </widget>
                     </child>
@@ -118,6 +118,8 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="has_focus">True</property>
+                    <property name="is_focus">True</property>
+                    <property name="extension_events">GDK_EXTENSION_EVENTS_ALL</property>
                     <signal name="activate" handler="tekkaInput_activate_cb"/>
                   </widget>
                   <packing>
