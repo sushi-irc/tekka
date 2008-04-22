@@ -150,9 +150,9 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		# left click -> activate tab
 		if event.button == 1:
 			if srow and not crow:
-				server = srow[1]
+				server = srow[self.servertree.COLUMN_NAME]
 
-				output = self.servertree.getOutput(server)
+				output = srow[self.servertree.COLUMN_BUFFER]
 				if not output:
 					print "No output!"
 					return
@@ -165,10 +165,10 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 				self.topicbar.set_property("visible",False)
 
 			elif srow and crow:
-				server = srow[1]
-				channel = crow[1]
+				server = srow[self.servertree.COLUMN_NAME]
+				channel = crow[self.servertree.COLUMN_NAME]
 
-				output = self.servertree.getOutput(server, channel)
+				output = crow[self.servertree.COLUMN_BUFFER]
 				if not output:
 					print "No output!"
 					return
@@ -177,7 +177,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 				self.scrollOutput(output)
 				self.servertree.channelDescription(server, channel, channel)
 		
-				self.nicklist.set_model(crow[2])
+				self.nicklist.set_model(crow[self.servertree.COLUMN_NICKLIST])
 				self.topicbar.set_text("")
 				self.setTopicInBar(server=server,channel=channel)
 				self.topicbar.set_property("visible",True)
@@ -188,8 +188,8 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		elif event.button == 3:
 			server = None
 			channel = None
-			if srow: server = srow[1]
-			if crow: channel = crow[1]
+			if srow: server = srow[self.servertree.COLUMN_NAME]
+			if crow: channel = crow[self.servertree.COLUMN_NAME]
 			if not crow and not srow: return
 			
 			menu = gtk.Menu()
@@ -246,7 +246,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 			srow,crow = self.servertree.getRow(server,channel)
 		if not crow: return
 
-		tl = crow[3]
+		tl = crow[self.servertree.COLUMN_TOPIC]
 
 		if not tl or not tl[0]: return
 		self.topicbar.set_text(tl[0])
@@ -296,9 +296,9 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		output = self.servertree.getOutput(server,channel)
 
 		if not output:
-			print "channelPrint(): no output buffer"
-			return
-		
+			print "channelPrint(): no output buffer, adding channel"
+			return 
+
 		enditer = output.get_end_iter()
 		output.insert_html(enditer, outputstring)
 

@@ -100,11 +100,15 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		#if w: self.set_flags(w.flags())
 		gtk.TreeView.__init__(self)
 
-		model = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING, tekkaNicklistStore, gobject.TYPE_PYOBJECT)
+		# descr. (str), name (str), nickliststore, topic(list), htmlbuffer
+		model = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING, tekkaNicklistStore, gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT)
 		self.set_model(model)
 
-		self.serverOutputs = {  } # { "server":buf, ... }
-		self.channelOutputs = {  } # { "server":{"channel1":buf,"channel2":buf},.. }
+		self.COLUMN_DESCRIPTION=0
+		self.COLUMN_NAME=1
+		self.COLUMN_NICKLIST=2
+		self.COLUMN_TOPIC=3
+		self.COLUMN_BUFFER = 4
 
 		self.currentRow = None,None
 		self.connect("button-press-event", self._cacheCurrentRow)
@@ -113,14 +117,9 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		return gtk.TreeView.get_model(self)
 
 	def getOutput(self, server, channel=None):
-		if server and channel \
-			and self.channelOutputs.has_key(server) \
-			and self.channelOutputs[server].has_key(channel):
-			return self.channelOutputs[server][channel]
-		elif server and not channel \
-			and self.serverOutputs.has_key(server):
-			return self.serverOutputs[server]
-		return None
+		row = self.getRow(server,channel)
+		if not row: return None
+		return row[-1][self.COLUMN_BUFFER]
 
 	""" CACHING """
 
@@ -156,7 +155,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		channels = server.iterchildren()
 		rc = 0
 		for channel in channels:
-			if rc == path[1]:
+			if rc == path[self.COLUMN_NAME]:
 				return (server,channel)
 			rc+=1
 		return (server,None)
@@ -164,7 +163,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 	def getServers(self):
 		slist = []
 		for server in self.get_model():
-			slist.append(server[1])
+			slist.append(server[self.COLUMN_NAME])
 		return slist
 
 	def getChannels(self, userver, row=False):
@@ -179,7 +178,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 			if row:
 				clist.append(channel)
 			else:
-				clist.append(channel[1])
+				clist.append(channel[self.COLUMN_NAME])
 		return clist
 
 	def getChannel(self, userver, cname, sens=True):
@@ -212,18 +211,18 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 
 	def setTopic(self, server, channel, topic, topicsetter=None):
 		sr,cr = self.getRow(server,channel)
-		if not cr: return
-		self.get_model().set(cr.iter, 3, [topic,topicsetter or ""])
+		if not cr: 
+			return
+		self.get_model().set(cr.iter, self.COLUMN_TOPIC, [topic,topicsetter or ""])
 
 	def addServer(self, servername):
 		if self.findRow(servername):
 			self.serverDescription(servername, servername)
 			return None,None
 		iter = self.get_model().append(None)
-		self.get_model().set(iter, 0, servername, 1, servername)
-		self.serverOutputs[servername] = htmlbuffer.htmlbuffer()
-		self.channelOutputs[servername] = {}
-		return iter,self.serverOutputs[servername]
+		buffer = htmlbuffer.htmlbuffer()
+		self.get_model().set(iter, self.COLUMN_DESCRIPTION, servername, self.COLUMN_NAME, servername, self.COLUMN_BUFFER, buffer)
+		return iter,buffer
 
 	def addChannel(self, servername, channelname, nicks=None, topic=None):
 		store = self.get_model()
@@ -232,17 +231,19 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 			crow = self.findRow(channelname,store=row.iterchildren())
 			if crow:
 				self.channelDescription(servername, channelname, channelname)
-				store.set(crow.iter,2,tekkaNicklistStore(nicks))
+				store.set(crow.iter, self.COLUMN_NICKLIST, tekkaNicklistStore(nicks))
 				return None,None
 
 			iter = store.append(row.iter)
 			nicklist = tekkaNicklistStore(nicks)
 
-			store.set(iter,0,channelname,1,channelname,2,nicklist,3,topic)
-			self.channelOutputs[servername][channelname] = htmlbuffer.htmlbuffer()
+			buffer = htmlbuffer.htmlbuffer()
+			
+			store.set(iter,self.COLUMN_DESCRIPTION,channelname,self.COLUMN_NAME,channelname,self.COLUMN_NICKLIST,nicklist,self.COLUMN_TOPIC,topic,self.COLUMN_BUFFER,buffer)
+
 			self.expand_row(row.path,True)
 	
-			return iter,self.channelOutputs[servername][channelname]
+			return iter,buffer
 
 
 	def renameChannel(self, servername, channelname, new_channelname):
@@ -250,17 +251,14 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		if row:
 			crow = self.findRow(channelname, row.iterchildren())
 			if crow:
-				self.get_model().set_value(crow.iter, 0, new_channelname)
-				self.get_model().set_value(crow.iter, 1, new_channelname)
-				tmp = self.channelOutputs[servername][channelname]
-				del self.channelOutputs[servername][channelname]
-				self.channelOutputs[servername][new_channelname] = tmp
+				self.get_model().set_value(crow.iter, self.COLUMN_DESCRIPTION, new_channelname)
+				self.get_model().set_value(crow.iter, self.COLUMN_NAME, new_channelname)
 
 	# Sets the description (field 0) to the server "servername"
 	def serverDescription(self, servername, desc):
 		row = self.findRow(servername)
 		if row:
-			self.get_model().set_value(row.iter, 0, desc)
+			self.get_model().set_value(row.iter, self.COLUMN_DESCRIPTION, desc)
 
 	# Sets the description (field 0) to the channel "channel" in "servername"-Servertab
 	def channelDescription(self, servername, channel, desc):
@@ -268,7 +266,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		if row:
 			crow = self.findRow(channel, row.iterchildren())
 			if crow:
-				self.get_model().set_value(crow.iter, 0, desc)
+				self.get_model().set_value(crow.iter, self.COLUMN_DESCRIPTION, desc)
 
 	# Removes the channel "channelname" from the servertree "servername"
 	def removeChannel(self, servername, channelname):
@@ -276,18 +274,12 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		if row:
 			crow = self.findRow(channelname, row.iterchildren())
 			if crow:
-				del self.channelOutputs[servername][channelname]
 				self.get_model().remove(crow.iter)
 
 	# Removes the server "servername"
 	def removeServer(self, servername):
 		row = self.findRow(servername)
 		if row:
-			del self.serverOutputs[servername]
-			citer = row.iterchildren()
-			if citer:
-				for child in citer:
-					del self.channelOutputs[servername][child[1]]
 			self.get_model().remove(row.iter)
 
 

@@ -185,8 +185,10 @@ class tekkaCom(object):
 		print channels
 		for channel in channels:
 			print "got channel: %s" % channel
-			topic = self.proxy.topic(server, channel, "")
-			self.servertree.addChannel(server, channel, nicks=self.getNicksFromMaki(server, channel), topic=[topic,""])
+			self.servertree.addChannel(server, channel, nicks=self.getNicksFromMaki(server, channel), topic=[self.getTopic(server,channel),""])
+
+	def getTopic(self, server, channel):
+		return self.proxy.topic(server,channel,"")
 
 
 	""" SIGNALS """
@@ -291,7 +293,7 @@ class tekkaCom(object):
 
 	# user sent an /me
 	def userAction(self, time, server, nick, channel, action):
-		message = self.escapeHTML(message)
+		action = self.escapeHTML(action)
 		self.channelPrint(time, server, channel, "%s %s" % (nick,action))
 
 	# user changed his nick
