@@ -405,10 +405,13 @@ class tekkaCom(object):
 				print "No channels but quit reported.. Hum wtf? o.0"
 				return
 
+			# print in all channels where nick joined a message
 			for channel in channels:
 				channelname = channel[self.servertree.COLUMN_NAME]
 				nicklist = channel[self.servertree.COLUMN_NICKLIST]
+
 				nicks = nicklist.getNicks() or []
+
 				if nick in nicks or nick == channel:
 					nicklist.removeNick(nick)
 					self.channelPrint(time, server, channelname, "%s has quit%s." % (nick,reasonwrap))

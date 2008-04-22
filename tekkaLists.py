@@ -57,7 +57,7 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 			self.appendNick(nick)
 
 	def getNicks(self): 
-		return [l[0] for l in self if l is not None ]
+		return [l[self.COLUMN_NICK] for l in self if l is not None ]
 
 	def appendNick(self, nick):
 		store = self.get_model()
@@ -66,7 +66,7 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 
 	def modifyNick(self, nick, newnick):
 		store = self.get_model()
-		row = self.findRow(nick, store=store, col=0)
+		row = self.findRow(nick, store=store, col=self.COLUMN_NICK)
 		if not row: 
 			return
 		store.set(row.iter, self.COLUMN_NICK, newnick)
