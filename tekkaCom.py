@@ -422,12 +422,12 @@ class tekkaCom(object):
 			nicks = self.getNicksFromMaki(server,channel)
 			iter,output = self.servertree.addChannel(server, channel, nicks=nicks, topic=[self.getTopic(server, channel), ""])
 			self._iterPrefixFetch(server,iter,nicks)
-			nickwrap = "You"
+			nickwrap = "You have"
 		else:
-			nickwrap = "<font foreground='%s'>%s</font>" % (self.getColor("joinNick"), self.escapeHTML(nick))
+			nickwrap = "<font foreground='%s'>%s</font> has" % (self.getColor("joinNick"), self.escapeHTML(nick))
 			srow,crow = self.servertree.getRow(server,channel)
 			if crow: crow[2].appendNick(nick)
-		self.channelPrint(timestamp, server, channel, "%s have joined %s." % (nickwrap, channel))
+		self.channelPrint(timestamp, server, channel, "%s joined %s." % (nickwrap, channel))
 
 	# user parted
 	def userPart(self, timestamp, server, nick, channel, reason):
