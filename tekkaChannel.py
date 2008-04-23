@@ -39,8 +39,11 @@ class tekkaTab(object):
 class tekkaServer(tekkaTab):
 	def __init__(self, name, buffer=None):
 		tekkaTab.__init__(self, name, buffer)
+
 		self.connected = False
-	
+		self.away = False
+		self.awaymessage = ""
+
 	# is the server connected
 	def getConnected(self):
 		return self.connected
@@ -48,12 +51,27 @@ class tekkaServer(tekkaTab):
 	def setConnected(self,switch):
 		self.connected = switch
 
+	# we're away
+	def getAway(self):
+		return self.away
+
+	def setAway(self, switch):
+		self.away = switch
+
+	def getAwayMessage(self):
+		return self.awayMessage
+
+	def setAwayMessage(self, msg):
+		self.awayMessage = msg
+
 	def markup(self):
 		base = self.name
 		if not self.connected:
 			base = "("+base+")"
 		if self.newMessage:
 			base = "<b>"+base+"</b>"
+		if self.away:
+			base = "<i>"+base+"</i>"
 		return base
 
 class tekkaChannel(tekkaTab):

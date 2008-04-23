@@ -50,8 +50,6 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 		return self
 
 	def addNicks(self, nicks):
-		print "addNicks: ",
-		print nicks
 		if not nicks or len(nicks) == 0:
 			return
 		for nick in nicks:
@@ -155,10 +153,12 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 
 	""" SERVER TREE HANDLING """
 
-	def getRow(self, server, channel):
+	def getRow(self, server, channel=None):
 		s = self.findRow(server)
 		if not s:
 			return None,None
+		if not channel:
+			return s,None
 		channels = s.iterchildren()
 		if not channels:
 			return s,None
@@ -170,16 +170,9 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 			store = self.get_model()
 		if not path or len(path) == 0:
 			return (None,None)
-		server = store[path[0]]
-		if len(path) == 1:
-			return (server,None)
-		channels = server.iterchildren()
-		rc = 0
-		for channel in channels:
-			if rc == path[self.COLUMN_NAME]:
-				return (server,channel)
-			rc+=1
-		return (server,None)
+		if len(path)==2:
+			return store[path[0]],store[path]
+		return store[path],None
 
 	def getServers(self):
 		slist = []
@@ -215,7 +208,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 
 	def getCurrentServer(self):
 		if self.currentRow and self.currentRow[0]:
-			return (self.currentRow[0])[0]
+			return (self.currentRow[0])[self.COLUMN_NAME]
 		return None
 
 	def getCurrentRow(self, widget=None, store=None):
@@ -225,9 +218,9 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		if not self.currentRow: 
 			return None,None
 		if self.currentRow[0] and self.currentRow[1]:
-			return self.currentRow[0][0],self.currentRow[1][0]
+			return self.currentRow[0][self.COLUMN_NAME],self.currentRow[1][self.COLUMN_NAME]
 		if self.currentRow[0]:
-			return self.currentRow[0][0],None
+			return self.currentRow[0][self.COLUMN_NAME],None
 		return None,None
 
 	def setTopic(self, server, channel, topic, topicsetter=None):

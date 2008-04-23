@@ -47,6 +47,8 @@ class tekkaCom(object):
 			"topic": self.makiTopic,
 			"quit" : self.makiQuit,
 		"usermode" : self.makiUsermode,
+			"away" : self.makiAway,
+			"back" : self.makiBack,
 			"query": self.tekkaQuery,
 			"clear": self.tekkaClear,
 			"ctcp" : self.tekkaCTCP,
@@ -81,9 +83,9 @@ class tekkaCom(object):
 			self.bus.add_signal_receiver(self.userKick, "kick", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userNick, "nick", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userAction, "action", dbus_interface="de.ikkoku.sushi")
-			#self.bus.add_signal_receiver(self.userAway, "away", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.userAway, "away", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userAwayMessage, "away_message", dbus_interface="de.ikkoku.sushi")
-			#self.bus.add_signal_receiver(self.userBack, "back", dbus_interface="de.ikkoku.sushi")
+			self.bus.add_signal_receiver(self.userBack, "back", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userCTCP, "ctcp", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userNotice, "notice", dbus_interface="de.ikkoku.sushi")
 			self.bus.add_signal_receiver(self.userMode, "mode", dbus_interface="de.ikkoku.sushi")
@@ -214,7 +216,7 @@ class tekkaCom(object):
 		row = self.servertree.getRow(server,channel)
 		if not row and len(row) != 2:
 			return
-		nicklist = row[1][self.servertree.COLUMN_NICKLIST]
+		nicklist = row[1][self.servertree.COLUMN_OBJECT].getNicklist()
 		if not nicklist:
 			return
 		nicklist.setPrefix(nick, self.userChannelPrefix(server,channel,nick))
@@ -294,6 +296,18 @@ class tekkaCom(object):
 		self.proxy = None
 
 	""" USER SIGNALS """
+
+	def userAway(self, time, server):
+		srow,crow = self.servertree.getRow(server)
+		obj = srow[self.servertree.COLUMN_OBJECT]
+		obj.setAway(True)
+		self.servertree.serverDescription(server, obj.markup())
+
+	def userBack(self, time, server):
+		srow,crow = self.servertree.getRow(server)
+		obj = srow[self.servertree.COLUMN_OBJECT]
+		obj.setAway(False)
+		self.servertree.serverDescription(server, obj.markup())
 
 	def userAwayMessage(self, timestamp, server, nick, message):
 		self.servertree.channelPrint(timestamp, server, nick, "%s is away: %s" % (nick,message))
@@ -417,13 +431,15 @@ class tekkaCom(object):
 			# print in all channels where nick joined a message
 			for channel in channels:
 				channelname = channel[self.servertree.COLUMN_NAME]
-				nicklist = channel[self.servertree.COLUMN_NICKLIST]
+				obj = channel[self.servertree.COLUMN_OBJECT]
+				nicklist = obj.getNicklist()
 
 				nicks = nicklist.getNicks() or []
 
 				if nick in nicks or nick == channel:
 					nicklist.removeNick(nick)
-					self.channelPrint(time, server, channelname, "%s has quit%s." % (nick,reasonwrap))
+					self.channelPrint(time, server, channelname, \
+					"%s has quit%s." % (nick,reasonwrap))
 	
 	# user joined
 	def userJoin(self, timestamp, server, nick, channel):
@@ -431,11 +447,13 @@ class tekkaCom(object):
 			nicks = self.getNicksFromMaki(server,channel)
 			topic = self.getTopic(server, channel)
 
-			# returns the iter if added (ret=0) or if already existent (ret=1)
+			# returns the iter if added (ret=0) or if already 
+			# existent (ret=1)
 			ret,iter = self.servertree.addChannel(server, channel, nicks=nicks, topic=topic)
 
 			if not iter:
-				print "userJoin(%s,%s,%s): No Server!" % (server,channel,nick)
+				print "userJoin(%s,%s,%s): No Server!" % \
+					(server,channel,nick)
 				return
 
 			# not added, already existent
@@ -446,16 +464,19 @@ class tekkaCom(object):
 				nicklist.clear()
 				nicklist.addNicks(nicks)
 			
-				self._iterPrefixFetch(server,iter,nicks)
-
 				obj.setTopic(topic)
 				obj.setJoined(True)
+				self.servertree.channelDescription(server, channel, obj.markup())
+			# fetch the prefixes	
+			self._iterPrefixFetch(server,iter,nicks)
 
 			nickwrap = "You have"
 		else:
 			nickwrap = "<font foreground='%s'>%s</font> has" % (self.getColor("joinNick"), self.escapeHTML(nick))
 			srow,crow = self.servertree.getRow(server,channel)
-			if crow: crow[2].appendNick(nick)
+			if not crow:
+				return
+			crow[self.servertree.COLUMN_OBJECT].getNicklist().appendNick(nick)
 		self.channelPrint(timestamp, server, channel, "%s joined %s." % (nickwrap, channel))
 
 	# user parted
@@ -620,6 +641,21 @@ class tekkaCom(object):
 
 	def makiUsermode(self, xargs):
 		return
+
+	def makiAway(self, xargs):
+		if len(xargs) < 1:
+			self.myPrint("Usage: /away <message>")
+			return
+		s = self.servertree.getCurrentServer()
+		if not s:
+			return
+		self.proxy.away(s," ".join(xargs))
+
+	def makiBack(self, xargs):
+		s = self.servertree.getCurrentServer()
+		if not s:
+			return
+		self.proxy.back(s)
 
 	def makiShutdown(self, w):
 		if self.proxy:

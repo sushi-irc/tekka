@@ -167,6 +167,7 @@
                         <property name="can_focus">False</property>
                         <property name="headers_clickable">True</property>
                         <signal name="row_activated" handler="tekkaNicklist_row_activated_cb"/>
+						<signal name="button_press_event" handler="tekkaNicklist_button_press_event_cb"/>
                       </widget>
                     </child>
                   </widget>

@@ -63,10 +63,8 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 
 		if name == "b":
 			tag.set_property("weight", pango.WEIGHT_BOLD)
-			print "set property weight"
 		elif name == "i":
 			tag.set_property("style", pango.STYLE_ITALIC)
-			print "set property style"
 		elif name == "br":
 			self.textbuffer.insert(self.textbuffer.get_end_iter(), "\n")
 			return

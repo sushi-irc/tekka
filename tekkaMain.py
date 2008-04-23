@@ -102,6 +102,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 				   "tekkaTopic_activate_cb" : self.setTopicFromBar,
 				   "tekkaServertree_realize_cb" : lambda w: w.expand_all(),
 				   "tekkaNicklist_row_activated_cb" : self.nicklistActivateRow,
+				   "tekkaNicklist_button_press_event_cb" : self.nicklistButtonPress,
 				   "tekkaMainwindow_Shutdown_activate_cb" : self.makiShutdown,
 		           "tekkaMainwindow_Connect_activate_cb" : self.showServerDialog,
 				   "tekkaMainwindow_Quit_activate_cb" : gtk.main_quit}
@@ -258,6 +259,26 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		if not server: return
 		nick = self.nicklist.get_model()[path[0]][tekkaLists.tekkaNicklistStore.COLUMN_NICK]
 		self.servertree.addChannel(server, nick)
+
+	def nicklistButtonPress(self, widget, event):
+		path = widget.get_path_at_pos(int(event.x), int(event.y))
+		if not path or not len(path): 
+			return
+		srow,crow = self.servertree.getCurrentRow()
+
+		if not crow:
+			return
+
+		nicklist = crow[self.servertree.COLUMN_OBJECT].getNicklist()
+		nick = nicklist[path[0]]
+
+		# left click -> activate tab
+		if event.button == 1:
+			print "Would do any left-click action"
+			pass
+		elif event.button == 3:
+			print "Would display context menu"
+			pass
 
 	""" TOPIC BAR SIGNALS """
 
