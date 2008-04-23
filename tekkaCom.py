@@ -50,9 +50,7 @@ class tekkaCom(object):
 			"away" : self.makiAway,
 			"back" : self.makiBack,
 			"query": self.tekkaQuery,
-			"clear": self.tekkaClear,
-			"ctcp" : self.tekkaCTCP,
-			"dcc"  : self.tekkaDCC
+			"clear": self.tekkaClear
 		}
 
 		self.myNick = {}
@@ -318,12 +316,12 @@ class tekkaCom(object):
 		color = self.getColor("nick")
 		message = self.escapeHTML(message)
 		self.channelPrint(timestamp, server, channel, \
-		"&lt;<font foreground='%s'>%s</font>&gt; <msg>%s</msg>" % (color,nick,message))
+		"&lt;<font foreground='%s'>%s</font>&gt; <msg>%s</msg>" % (color,nick,self.escapeHTML(message)))
 
 	def ownMessage(self, timestamp, server, channel, message):
 		self.channelPrint(timestamp, server, channel, "&lt;<font foreground='%s'>%s</font>&gt; <msg>%s</msg>" \
 		% (self.getColor("ownNick"), self.getNick(server), self.escapeHTML(message)))
-	
+
 	def ownQuery(self, timestamp, server, channel, message):
 		self.ownMessage(timestamp,server,channel,message)
 	
@@ -369,7 +367,9 @@ class tekkaCom(object):
 		pass
 
 	def userNotice(self, time, server, nick, target, message):
-		pass
+		if target == self.getNick(server):
+			self.servertree.addChannel(server,nick)
+			self.userMessage(time, server, nick, nick, message)
 
 	# user sent an /me
 	def userAction(self, time, server, nick, channel, action):
@@ -500,7 +500,7 @@ class tekkaCom(object):
 		else:
 			obj.getNicklist().removeNick(nick)
 			self.channelPrint(timestamp, server, channel, \
-			"<font foreground='%s'>%s</font> has left %s%s." % (self.getColor("partNick"), nick, channel,reason))
+			"<font foreground='%s'>%s</font> has left %s%s." % (self.getColor("partNick"), self.escapeHTML(nick), self.escapeHTML(channel), self.escapeHTML(reason)))
 
 
 
@@ -644,8 +644,8 @@ class tekkaCom(object):
 		return
 
 	def makiAway(self, xargs):
-		if len(xargs) < 1:
-			self.myPrint("Usage: /away <message>")
+		if len(xargs) == 0:
+			self.makiBack(xargs)
 			return
 		s = self.servertree.getCurrentServer()
 		if not s:
@@ -681,12 +681,6 @@ class tekkaCom(object):
 
 	def tekkaClear(self, xargs):
 		pass
-
-	def tekkaCTCP(self, xargs):
-		return
-
-	def tekkaDCC(self, xargs):
-		return
 
 
 	""" PLACEHOLDER TO OVERLOAD """
