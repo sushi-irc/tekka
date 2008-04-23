@@ -420,7 +420,7 @@ class tekkaCom(object):
 	def userJoin(self, timestamp, server, nick, channel):
 		if nick == self.getNick(server):
 			nicks = self.getNicksFromMaki(server,channel)
-			iter,output = self.servertree.addChannel(server, channel, nicks=nicks)
+			iter,output = self.servertree.addChannel(server, channel, nicks=nicks, topic=[self.getTopic(server, channel), ""])
 			self._iterPrefixFetch(server,iter,nicks)
 			nickwrap = "You"
 		else:
