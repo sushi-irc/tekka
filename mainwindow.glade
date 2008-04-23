@@ -103,6 +103,7 @@
                       <widget class="GtkTextView" id="tekkaOutput">
                         <property name="width_request">400</property>
                         <property name="visible">True</property>
+						<property name="can_focus">False</property>
                         <property name="editable">False</property>
                         <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
                         <property name="cursor_visible">False</property>
@@ -163,7 +164,7 @@
                     <child>
                       <widget class="GtkTreeView" id="tekkaNicklist">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
+                        <property name="can_focus">False</property>
                         <property name="headers_clickable">True</property>
                         <signal name="row_activated" handler="tekkaNicklist_row_activated_cb"/>
                       </widget>

@@ -256,7 +256,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 	def nicklistActivateRow(self, treeview, path, parm1):
 		server = self.servertree.getCurrentServer()
 		if not server: return
-		nick = self.nicklist.get_model()[path[0]][0]
+		nick = self.nicklist.get_model()[path[0]][tekkaLists.tekkaNicklistStore.COLUMN_NICK]
 		self.servertree.addChannel(server, nick)
 
 	""" TOPIC BAR SIGNALS """

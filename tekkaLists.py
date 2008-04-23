@@ -34,11 +34,11 @@ class tekkaList(object):
 		return None
 
 class tekkaNicklistStore(tekkaList, gtk.ListStore):
+	COLUMN_PREFIX=0
+	COLUMN_NICK=1
+
 	def __init__(self, nicks=None):
 		gtk.ListStore.__init__(self, gobject.TYPE_STRING, gobject.TYPE_STRING)
-
-		self.COLUMN_PREFIX=0
-		self.COLUMN_NICK=1
 
 		if nicks:
 			self.addNicks(nicks)
@@ -110,6 +110,10 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 """
 
 class tekkaServertree(tekkaList, gtk.TreeView):
+	COLUMN_DESCRIPTION=0
+	COLUMN_NAME=1
+	COLUMN_OBJECT=2
+	
 	def __init__(self,w=None):
 		print "servertree init"
 		#if w: self.set_flags(w.flags())
@@ -122,10 +126,6 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		gobject.TYPE_PYOBJECT)
 
 		self.set_model(model)
-
-		self.COLUMN_DESCRIPTION=0
-		self.COLUMN_NAME=1
-		self.COLUMN_OBJECT=2
 
 		self.currentRow = None,None
 		self.connect("button-press-event", self._cacheCurrentRow)
