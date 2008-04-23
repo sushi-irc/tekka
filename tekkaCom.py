@@ -160,12 +160,20 @@ class tekkaCom(object):
 		
 		for channel in channels:
 			nicks = self.getNicksFromMaki(server, channel)
-
-			iter,output = self.servertree.addChannel(server, channel, nicks=nicks, \
-			topic=[self.getTopic(server,channel),""])
+			topic = self.getTopic(server,channel)
+			
+			ret,iter = self.servertree.addChannel(server, channel, nicks=nicks, topic=topic)
 
 			if not iter:
 				continue
+
+			if ret == 1:
+				obj = self.servertree.get_model().get_value(iter, self.servertree.COLUMN_OBJECT)
+				nicklist = obj.getNicklist()
+				nicklist.clear()
+				nicklist.addNicks(nicks)
+				obj.setTopic(topic)
+				obj.setJoined(True)
 
 			self._iterPrefixFetch(server,iter,nicks)
 	
@@ -186,11 +194,11 @@ class tekkaCom(object):
 			return
 		model = self.servertree.get_model()
 		channel = model.get(chaniter, self.servertree.COLUMN_NAME)
-		nicklist = model.get(chaniter,self.servertree.COLUMN_NICKLIST)
+		obj = model.get(chaniter, self.servertree.COLUMN_OBJECT)[0]
+
+		nicklist = obj.getNicklist()
 		if channel:
 			channel = channel[0]
-		if nicklist:
-			nicklist = nicklist[0]
 
 		for nick in nicks:
 			prefix = self.userChannelPrefix(server,channel,nick)
@@ -270,7 +278,8 @@ class tekkaCom(object):
 	def channelTopic(self, time, server, nick, channel, topic):
 		self.servertree.setTopic(server,channel,topic,nick)
 		self.setTopicInBar(server,channel)
-		if not nick: return
+		if not nick: 
+			return
 		nickwrap = nick
 		if nick == self.getNick(server):
 			nickwrap = "You"
@@ -420,8 +429,28 @@ class tekkaCom(object):
 	def userJoin(self, timestamp, server, nick, channel):
 		if nick == self.getNick(server):
 			nicks = self.getNicksFromMaki(server,channel)
-			iter,output = self.servertree.addChannel(server, channel, nicks=nicks, topic=[self.getTopic(server, channel), ""])
-			self._iterPrefixFetch(server,iter,nicks)
+			topic = self.getTopic(server, channel)
+
+			# returns the iter if added (ret=0) or if already existent (ret=1)
+			ret,iter = self.servertree.addChannel(server, channel, nicks=nicks, topic=topic)
+
+			if not iter:
+				print "userJoin(%s,%s,%s): No Server!" % (server,channel,nick)
+				return
+
+			# not added, already existent
+			if ret == 1:
+				obj = self.servertree.get_model().get_value(iter, self.servertree.COLUMN_OBJECT)
+			
+				nicklist = obj.getNicklist()
+				nicklist.clear()
+				nicklist.addNicks(nicks)
+			
+				self._iterPrefixFetch(server,iter,nicks)
+
+				obj.setTopic(topic)
+				obj.setJoined(True)
+
 			nickwrap = "You have"
 		else:
 			nickwrap = "<font foreground='%s'>%s</font> has" % (self.getColor("joinNick"), self.escapeHTML(nick))
@@ -431,21 +460,25 @@ class tekkaCom(object):
 
 	# user parted
 	def userPart(self, timestamp, server, nick, channel, reason):
-
-		if nick == self.getNick(server):
-			rwrap = ""
-			if reason:
-				rwrap = " (%s)" % reason
-			self.channelPrint(timestamp, server, channel, "You have left %s%s." % (channel,rwrap))
-
-			# FIXME: QND
-			self.servertree.channelDescription(server, channel, "("+channel+")")
+		srow,crow = self.servertree.getRow(server,channel)
+		if not crow:
 			return
 
-		if reason: reason = " (%s)" % reason
-		srow,crow = self.servertree.getRow(server,channel)
-		if crow: crow[2].removeNick(nick)
-		self.channelPrint(timestamp, server, channel, "<font foreground='%s'>%s</font> has left %s%s." % (self.getColor("partNick"), nick, channel,reason))
+		obj = crow[self.servertree.COLUMN_OBJECT]
+
+		if reason: 
+			reason = " (%s)" % reason
+
+		if nick == self.getNick(server):
+			self.channelPrint(timestamp, server, channel, "You have left %s%s." % (channel,reason))
+			
+			obj.setJoined(False)
+			self.servertree.channelDescription(server, channel, obj.markup())
+
+		else:
+			obj.getNicklist().removeNick(nick)
+			self.channelPrint(timestamp, server, channel, \
+			"<font foreground='%s'>%s</font> has left %s%s." % (self.getColor("partNick"), nick, channel,reason))
 
 
 

@@ -170,15 +170,19 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		if event.button == 1:
 			if srow and not crow:
 				server = srow[self.servertree.COLUMN_NAME]
+				obj = srow[self.servertree.COLUMN_OBJECT]
 
-				output = srow[self.servertree.COLUMN_BUFFER]
+				output = obj.getBuffer()
 				if not output:
 					print "No output!"
 					return
 
 				self.textbox.set_buffer(output) # set output buffer
 				self.scrollOutput(output) # scroll to the bottom
-				self.servertree.serverDescription(server, server) # reset hightlight
+
+				# reset hightlight
+				obj.setNewMessage(False)
+				self.servertree.serverDescription(server, obj.markup()) 
 	
 				self.nicklist.set_model(None)
 				self.topicbar.set_property("visible",False)
@@ -187,23 +191,20 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 				server = srow[self.servertree.COLUMN_NAME]
 				channel = crow[self.servertree.COLUMN_NAME]
 				desc = crow[self.servertree.COLUMN_DESCRIPTION]
+				obj = crow[self.servertree.COLUMN_OBJECT]
 
-				output = crow[self.servertree.COLUMN_BUFFER]
+				output = obj.getBuffer()
 				if not output:
 					print "No output!"
 					return
 
 				self.textbox.set_buffer(output)
 				self.scrollOutput(output)
-			
-				# check if this channel is parted (FIXME: QND)
-				if desc[0] == '(':
-					unbold = "("+channel+")"
-				else:
-					unbold = channel
-				self.servertree.channelDescription(server, channel, unbold)
-		
-				self.nicklist.set_model(crow[self.servertree.COLUMN_NICKLIST])
+
+				obj.setNewMessage(False)
+				self.servertree.channelDescription(server, channel, obj.markup())
+
+				self.nicklist.set_model(obj.getNicklist())
 				self.topicbar.set_text("")
 				self.setTopicInBar(server=server,channel=channel)
 				self.topicbar.set_property("visible",True)
@@ -217,7 +218,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 			if srow: server = srow[self.servertree.COLUMN_NAME]
 			if crow: channel = crow[self.servertree.COLUMN_NAME]
 			if not crow and not srow: return
-			
+
 			menu = gtk.Menu()
 
 			if crow:
@@ -237,7 +238,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 			menu.show_all()
 
 			menu.popup(None, None, None, button=event.button, activate_time=event.time)
-	
+
 	def menuRemoveTab(self, w, server, channel):
 		if not server and not channel: 
 			return
@@ -270,12 +271,12 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 			srow,crow = self.servertree.getCurrentRow()
 		else:
 			srow,crow = self.servertree.getRow(server,channel)
-		if not crow: return
+		if not crow: 
+			return
 
-		tl = crow[self.servertree.COLUMN_TOPIC]
+		obj = crow[self.servertree.COLUMN_OBJECT]
 
-		if not tl or not tl[0]: return
-		self.topicbar.set_text(tl[0])
+		self.topicbar.set_text(obj.getTopic())
 
 	""" INPUT HISTORY / KEYPRESSEVENT """
 

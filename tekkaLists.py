@@ -6,6 +6,7 @@ import gtk
 
 import htmlbuffer
 import gobject
+import tekkaChannel
 
 class tekkaList(object):
 	def __init__(self):
@@ -114,15 +115,17 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		#if w: self.set_flags(w.flags())
 		gtk.TreeView.__init__(self)
 
-		# descr. (str), name (str), nickliststore, topic(list), htmlbuffer
-		model = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING, tekkaNicklistStore, gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT)
+		# descr. (str), name (str), server/channel object
+		model = gtk.TreeStore(\
+		gobject.TYPE_STRING, \
+		gobject.TYPE_STRING, \
+		gobject.TYPE_PYOBJECT)
+
 		self.set_model(model)
 
 		self.COLUMN_DESCRIPTION=0
 		self.COLUMN_NAME=1
-		self.COLUMN_NICKLIST=2
-		self.COLUMN_TOPIC=3
-		self.COLUMN_BUFFER = 4
+		self.COLUMN_OBJECT=2
 
 		self.currentRow = None,None
 		self.connect("button-press-event", self._cacheCurrentRow)
@@ -134,9 +137,9 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		row = self.getRow(server,channel)
 		if not row: return None
 		if row[0] and not row[1]:
-			return row[0][self.COLUMN_BUFFER]
+			return row[0][self.COLUMN_OBJECT].getBuffer()
 		elif row[0] and row[1]:
-			return row[1][self.COLUMN_BUFFER]
+			return row[1][self.COLUMN_OBJECT].getBuffer()
 		return None
 
 	""" CACHING """
@@ -229,39 +232,57 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 
 	def setTopic(self, server, channel, topic, topicsetter=None):
 		sr,cr = self.getRow(server,channel)
-		if not cr: 
-			return
-		self.get_model().set(cr.iter, self.COLUMN_TOPIC, [topic,topicsetter or ""])
+		if not cr: # no channel
+			return 
+		tab = cr[self.COLUMN_OBJECT]
+		tab.setTopic(topic)
+		tab.setTopicsetter(topicsetter)
 
 	def addServer(self, servername):
-		if self.findRow(servername):
-			self.serverDescription(servername, servername)
-			return None,None
-		iter = self.get_model().append(None)
-		buffer = htmlbuffer.htmlbuffer()
-		self.get_model().set(iter, self.COLUMN_DESCRIPTION, servername, self.COLUMN_NAME, servername, self.COLUMN_BUFFER, buffer)
-		return iter,buffer
+		row = self.findRow(servername)
+		if row:
+			return row.iter
+		
+		model = self.get_model()
+		obj = tekkaChannel.tekkaServer(servername)
+		obj.setConnected(True)
 
-	def addChannel(self, servername, channelname, nicks=None, topic=None):
+		iter = model.append(None)
+		model.set(iter, self.COLUMN_DESCRIPTION, servername, self.COLUMN_NAME, servername, self.COLUMN_OBJECT, obj)
+
+		return iter
+
+	def addChannel(self, servername, channelname, nicks=None, topic=None, topicsetter=None):
 		store = self.get_model()
+
 		row = self.findRow(servername)
 		if row:
 			crow = self.findRow(channelname,store=row.iterchildren())
-			if crow:
-				self.channelDescription(servername, channelname, channelname)
-				store.set(crow.iter, self.COLUMN_NICKLIST, tekkaNicklistStore(nicks))
-				return None,None
-
-			iter = store.append(row.iter)
-			nicklist = tekkaNicklistStore(nicks)
-
-			buffer = htmlbuffer.htmlbuffer()
+			if crow: # already added
+				return 1,crow.iter
+		else: # no server-row
+			return 2,None
 			
-			store.set(iter,self.COLUMN_DESCRIPTION,channelname,self.COLUMN_NAME,channelname,self.COLUMN_NICKLIST,nicklist,self.COLUMN_TOPIC,topic,self.COLUMN_BUFFER,buffer)
+		iter = store.append(row.iter)
+			
+		obj = tekkaChannel.tekkaChannel(channelname)
+		if nicks:
+			obj.getNicklist().addNicks(nicks)
+		if topic:
+			obj.setTopic(topic)
+		if topicsetter:
+			obj.setTopicsetter(topicsetter)
 
-			self.expand_row(row.path,True)
+		obj.setJoined(True)
+		
+		store.set(iter, \
+		self.COLUMN_DESCRIPTION, channelname, \
+		self.COLUMN_NAME, channelname,\
+		self.COLUMN_OBJECT, obj)
+
+		self.expand_row(row.path,True)
 	
-			return iter,buffer
+		return 0,iter
 
 
 	def renameChannel(self, servername, channelname, new_channelname):
@@ -269,8 +290,11 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		if row:
 			crow = self.findRow(channelname, row.iterchildren())
 			if crow:
-				self.get_model().set_value(crow.iter, self.COLUMN_DESCRIPTION, new_channelname)
-				self.get_model().set_value(crow.iter, self.COLUMN_NAME, new_channelname)
+				model = self.get_model()
+				model.set_value(crow.iter, self.COLUMN_DESCRIPTION, new_channelname)
+				model.set_value(crow.iter, self.COLUMN_NAME, new_channelname)
+				obj = model.get_value(crow.iter, self.COLUMN_OBJECT)
+				obj.setName(new_channelname)
 
 	# Sets the description (field 0) to the server "servername"
 	def serverDescription(self, servername, desc):
