@@ -206,7 +206,8 @@ class tekkaCom(object):
 			prefix = self.userChannelPrefix(server,channel,nick)
 			if not prefix: 
 				continue
-			nicklist.setPrefix(nick, prefix)
+			nicklist.setPrefix(nick, prefix, mass=True)
+		nicklist.sortNicks()
 
 	# checks if the mode is a prefix-mode. if a prefix mode is
 	# given the prefix-char is added.
@@ -392,7 +393,7 @@ class tekkaCom(object):
 
 		for row in self.servertree.getChannels(server,row=True):
 			channel = row[self.servertree.COLUMN_NAME]
-			nicklist = row[self.servertree.COLUMN_NICKLIST]
+			nicklist = row[self.servertree.COLUMN_OBJECT].getNicklist()
 			if nick in nicklist.getNicks() or channel == nick:
 				nicklist.modifyNick(nick, new_nick)
 				self.channelPrint(time, server, channel, nickchange)

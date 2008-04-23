@@ -36,12 +36,13 @@ class tekkaList(object):
 class tekkaNicklistStore(tekkaList, gtk.ListStore):
 	COLUMN_PREFIX=0
 	COLUMN_NICK=1
-
+	
 	def __init__(self, nicks=None):
 		gtk.ListStore.__init__(self, gobject.TYPE_STRING, gobject.TYPE_STRING)
 
 		if nicks:
 			self.addNicks(nicks)
+		self.modes = ("*","!","@","%","+"," ")
 
 	
 	""" NICKLIST METHODS """
@@ -53,15 +54,19 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 		if not nicks or len(nicks) == 0:
 			return
 		for nick in nicks:
-			self.appendNick(nick)
+			self.appendNick(nick,mass=True)
+		self.sortNicks()
 
 	def getNicks(self): 
 		return [l[self.COLUMN_NICK] for l in self if l is not None ]
 
-	def appendNick(self, nick):
+	def appendNick(self, nick,mass=False):
 		store = self.get_model()
 		iter = store.append(None)
 		store.set(iter, self.COLUMN_NICK, nick)
+
+		if not mass:
+			self.sortNicks()
 
 	def modifyNick(self, nick, newnick):
 		store = self.get_model()
@@ -69,6 +74,8 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 		if not row: 
 			return
 		store.set(row.iter, self.COLUMN_NICK, newnick)
+
+		self.sortNicks()
 	
 	def removeNick(self, nick):
 		store = self.get_model()
@@ -77,13 +84,48 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 			return
 		store.remove(row.iter)
 
-	def setPrefix(self, nick, prefix):
+	def setPrefix(self, nick, prefix, mass=False):
 		store = self.get_model()
 		row = self.findRow(nick, store=store, col=self.COLUMN_NICK)
 		if not row:
 			return
 		row[self.COLUMN_PREFIX] = prefix
 
+		if not mass:
+			self.sortNicks()
+
+	def sortNicks(self):
+		store = self
+		ul = {}
+		modes = self.modes
+
+		for mode in modes:
+			ul[mode] = {"list":[],"relation":{}}
+		
+		for row in store:	
+			prefix = row[0] or " "
+			nick = row[1]
+
+			mfield = ul[prefix]
+			mfield["relation"][nick] = row.path[0]
+			mfield["list"].append(nick)
+
+		store.clear()
+		for mi in range(len(modes)):
+			l = ul[modes[mi]]
+
+			if mi == 0:
+				bi = 0 # begin index
+			else:
+				bi = len(ul[modes[mi-1]]["list"])+1
+
+			l["list"].sort( lambda a,b: cmp(a.lower(),b.lower()) )
+			
+			mode = modes[mi]
+
+			for i in range(bi,len(l["list"])+bi):
+				iter = store.append(None)
+				store.set(iter, 0, mode, 1, l["list"][i-bi])
 
 
 """
