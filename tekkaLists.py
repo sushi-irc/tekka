@@ -42,7 +42,7 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 
 		if nicks:
 			self.addNicks(nicks)
-		self.modes = ("*","!","@","%","+"," ")
+		self.modes = ["*","!","@","%","+"," "]
 
 	
 	""" NICKLIST METHODS """
@@ -96,6 +96,26 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 
 	def sortNicks(self):
 		store = self
+		modes = self.modes
+		nl = []
+		
+		for row in store:
+			prefix = row[0] or " "
+			nick = row[1]
+			try:
+				i = modes.index(prefix)
+			except ValueError:
+				print "sortNicks: i < 0"
+				continue
+			nl.append([i,nick])
+		nl.sort(cmp=lambda a,b: cmp(a[0],b[0]) or cmp(a[1].lower(),b[1].lower()))
+		store.clear()
+		for (prefix,nick) in nl:
+			iter = store.append(None)
+			prefix = modes[prefix]
+			store.set(iter, 0, prefix, 1, nick)
+		"""
+		store = self
 		ul = {}
 		modes = self.modes
 
@@ -126,7 +146,7 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 			for i in range(bi,len(l["list"])+bi):
 				iter = store.append(None)
 				store.set(iter, 0, mode, 1, l["list"][i-bi])
-
+		"""
 
 """
 	The server tree store looks in the GUI like this:

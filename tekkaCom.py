@@ -184,42 +184,6 @@ class tekkaCom(object):
 		if not self.proxy: return ""
 		return self.proxy.user_channel_prefix(server,channel,nick) 
 
-	# solution to set the prefixes in the nicklist of a new
-	# added server. The iter returned by addChannel() is
-	# passed to this function (chaniter) like the nicks
-	# and prefixes for the nicks were fetched and added to
-	# the channel-nicklist
-	def _iterPrefixFetch(self, server, chaniter, nicks):
-		if not chaniter: 
-			return
-		model = self.servertree.get_model()
-		channel = model.get(chaniter, self.servertree.COLUMN_NAME)
-		obj = model.get(chaniter, self.servertree.COLUMN_OBJECT)[0]
-
-		nicklist = obj.getNicklist()
-		if channel:
-			channel = channel[0]
-
-		for nick in nicks:
-			prefix = self.userChannelPrefix(server,channel,nick)
-			if not prefix: 
-				continue
-			nicklist.setPrefix(nick, prefix, mass=True)
-		nicklist.sortNicks()
-
-	# checks if the mode is a prefix-mode. if a prefix mode is
-	# given the prefix-char is added.
-	def _prefixMode(self, server, channel, nick, mode):
-		if mode[1] not in ("q","a","o","h","v"):
-			return
-		row = self.servertree.getRow(server,channel)
-		if not row and len(row) != 2:
-			return
-		nicklist = row[1][self.servertree.COLUMN_OBJECT].getNicklist()
-		if not nicklist:
-			return
-		nicklist.setPrefix(nick, self.userChannelPrefix(server,channel,nick))
-
 
 	""" SERVER CREATION """
 
@@ -262,6 +226,7 @@ class tekkaCom(object):
 
 	# maki connected to a server
 	def serverConnected(self, time, server, nick):
+		self.serverPrint(time, server, "Connected.")
 		self.addChannels(server)
 		self.setNick(server, nick)
 
@@ -276,6 +241,11 @@ class tekkaCom(object):
 
 	""" CHANNEL SIGNALS """
 
+	"""
+	The topic was set on server "server" in channel "channel" by
+	user "nick" to "topic".
+	Apply this!
+	"""
 	def channelTopic(self, time, server, nick, channel, topic):
 		self.servertree.setTopic(server,channel,topic,nick)
 		self.setTopicInBar(server,channel)
@@ -296,18 +266,28 @@ class tekkaCom(object):
 
 	""" USER SIGNALS """
 
+	"""
+	maki says that we are away.
+	"""
 	def userAway(self, time, server):
 		srow,crow = self.servertree.getRow(server)
 		obj = srow[self.servertree.COLUMN_OBJECT]
 		obj.setAway(True)
 		self.servertree.serverDescription(server, obj.markup())
 
+	"""
+	maki says that we are back from away being.
+	"""
 	def userBack(self, time, server):
 		srow,crow = self.servertree.getRow(server)
 		obj = srow[self.servertree.COLUMN_OBJECT]
 		obj.setAway(False)
 		self.servertree.serverDescription(server, obj.markup())
 
+	"""
+	The user is away and the server gives us the message he left
+	for us to see why he is away and probably when he's back again.
+	"""
 	def userAwayMessage(self, timestamp, server, nick, message):
 		self.servertree.channelPrint(timestamp, server, nick, "%s is away: %s" % (nick,message))
 
@@ -316,25 +296,18 @@ class tekkaCom(object):
 		color = self.getColor("nick")
 		message = self.escapeHTML(message)
 		self.channelPrint(timestamp, server, channel, \
-		"&lt;<font foreground='%s'>%s</font>&gt; <msg>%s</msg>" % (color,nick,self.escapeHTML(message)))
+		"&lt;<font foreground='%s'>%s</font>&gt; %s" % (color,nick,message))
 
 	def ownMessage(self, timestamp, server, channel, message):
-		self.channelPrint(timestamp, server, channel, "&lt;<font foreground='%s'>%s</font>&gt; <msg>%s</msg>" \
+		self.channelPrint(timestamp, server, channel, \
+		"&lt;<font foreground='%s'>%s</font>&gt; <msg>%s</msg>" \
 		% (self.getColor("ownNick"), self.getNick(server), self.escapeHTML(message)))
 
 	def ownQuery(self, timestamp, server, channel, message):
 		self.ownMessage(timestamp,server,channel,message)
-	
+
 	def userQuery(self, timestamp, server, nick, message):
-		check = self.servertree.getChannel(server,nick)
-		if not check:
-			simfound=0
-			for schannel in self.servertree.getChannels(server):
-				if schannel.lower() == nick.lower():
-					self.servertree.renameChannel(server, schannel, nick)
-					simfound=1
-			if not simfound:
-				self.servertree.addChannel(server,nick)
+		self._simCheck(server,nick)
 		self.userMessage(timestamp,server,nick,nick,message)
 
 	def userMode(self, time, server, nick, target, mode, param):
@@ -368,7 +341,7 @@ class tekkaCom(object):
 
 	def userNotice(self, time, server, nick, target, message):
 		if target == self.getNick(server):
-			self.servertree.addChannel(server,nick)
+			self._simCheck(server,nick)
 			self.userMessage(time, server, nick, nick, message)
 
 	# user sent an /me
@@ -409,15 +382,29 @@ class tekkaCom(object):
 		else:
 			self.channelPrint(time, server, channel, self.escapeHTML("%s was kicked from %s by %s %s" % (who,channel,nick,reason)))
 
-	# user has quit
+	"""
+	The user identified by nick quit on the server "server" with
+	the reason "reason". "reason" can be empty ("").
+	If we are the user all channels were set to joined=False and
+	the server's connected-flag is set to False.
+	If another user quits on all channels on which the user was on
+	a message is generated.
+	"""
 	def userQuit(self, time, server, nick, reason):
 		if nick == self.getNick(server):
-			self.servertree.serverDescription(server, "("+server+")")
-			channels = self.servertree.getChannels(server)
+			# set the connected flag to False on the server
+			obj = self.servertree.getRow(server)[self.servertree.COLUMN_OBJECT]
+			obj.setConnected(False)
+			self.servertree.serverDescription(server, obj.markup())
+
+			# walk through all channels and set joined = False on them
+			channels = self.servertree.getChannels(server,row=True)
 			if not channels: 
 				return
 			for channel in channels:
-				self.servertree.channelDescription(server, channel, "("+channel+")")
+				obj = channel[self.servertree.COLUMN_OBJECT]
+				obj.setJoined(False)
+				self.servertree.channelDescription(server, channel, obj.markup())
 		else:
 			reasonwrap = ""
 			if reason: 
@@ -442,14 +429,22 @@ class tekkaCom(object):
 					self.channelPrint(time, server, channelname, \
 					"%s has quit%s." % (nick,reasonwrap))
 	
-	# user joined
+	"""
+	A user identified by "nick" joins the channel "channel" on 
+	server "server.
+
+	If the nick is our we add the channeltab and set properties
+	on it, else we generate messages and stuff.
+	"""
 	def userJoin(self, timestamp, server, nick, channel):
 		if nick == self.getNick(server):
 			nicks = self.getNicksFromMaki(server,channel)
 			topic = self.getTopic(server, channel)
 
-			# returns the iter if added (ret=0) or if already 
-			# existent (ret=1)
+			# returns the iter of the channel if added (ret=0) 
+			# or if it's already existent (ret=1) if ret is 0 
+			# the nicks and the topic are already applied, else
+			# we set them manually.
 			ret,iter = self.servertree.addChannel(server, channel, nicks=nicks, topic=topic)
 
 			if not iter:
@@ -457,7 +452,11 @@ class tekkaCom(object):
 					(server,channel,nick)
 				return
 
-			# not added, already existent
+			# not added, already existent.
+			# set nicks to nicklist of the channel,
+			# set the topic and set the "joined"-flag
+			# on the channel. Then generate and set the
+			# description.
 			if ret == 1:
 				obj = self.servertree.get_model().get_value(iter, self.servertree.COLUMN_OBJECT)
 			
@@ -468,7 +467,10 @@ class tekkaCom(object):
 				obj.setTopic(topic)
 				obj.setJoined(True)
 				self.servertree.channelDescription(server, channel, obj.markup())
-			# fetch the prefixes	
+
+			# fetch the prefixes and apply
+			# them to the nicklist of the channel
+			# identified by "iter"
 			self._iterPrefixFetch(server,iter,nicks)
 
 			nickwrap = "You have"
@@ -682,6 +684,69 @@ class tekkaCom(object):
 	def tekkaClear(self, xargs):
 		pass
 
+	""" HELPER """
+
+	"""
+	solution to set the prefixes in the nicklist of a new
+	added server. The iter returned by addChannel() is
+	passed to this function (chaniter) like the nicks
+	and prefixes for the nicks were fetched and added to
+	the channel-nicklist
+	"""
+	def _iterPrefixFetch(self, server, chaniter, nicks):
+		if not chaniter: 
+			return
+		model = self.servertree.get_model()
+		channel = model.get(chaniter, self.servertree.COLUMN_NAME)
+		obj = model.get(chaniter, self.servertree.COLUMN_OBJECT)[0]
+
+		nicklist = obj.getNicklist()
+		if channel:
+			channel = channel[0]
+
+		for nick in nicks:
+			prefix = self.userChannelPrefix(server,channel,nick)
+			if not prefix: 
+				continue
+			nicklist.setPrefix(nick, prefix, mass=True)
+		nicklist.sortNicks()
+	
+	"""
+	Check for a similar to "nick" named channel (case-insensitive) 
+	and rename it to "nick"
+	User: /query Nemo -> a new channel with Nemo opened
+	nemo: Is answering to User
+	The problem now is that there is no channel-tab named
+	like "nemo". _simCheck() searches for a tab similar to
+	nemo (Nemo) and renames it to "nemo".
+	"""
+	def _simCheck(self, server, nick):
+		check = self.servertree.getChannel(server, nick)
+		if not check:
+			simfound = False
+			for schannel in self.servertree.getChannels(server):
+				if schannel.lower() == nick.lower():
+					self.servertree.renameChannel(server, schannel, nick)
+					simfound = True
+			if not simfound:
+				self.servertree.addChannel(server,nick)
+
+	"""
+	checks if the mode is a prefix-mode. if a prefix mode is
+	given the prefix-char is added.
+	"""
+	def _prefixMode(self, server, channel, nick, mode):
+		if mode[1] not in ("q","a","o","h","v"):
+			return
+		row = self.servertree.getRow(server,channel)
+		if not row and len(row) != 2:
+			return
+		nicklist = row[1][self.servertree.COLUMN_OBJECT].getNicklist()
+		if not nicklist:
+			return
+		nicklist.setPrefix(nick, self.userChannelPrefix(server,channel,nick))
+
+
 
 	""" PLACEHOLDER TO OVERLOAD """
 
@@ -692,7 +757,7 @@ class tekkaCom(object):
 	def serverPrint(self, server, string):
 		print "%s: %s" % (server,string)
 
-	def myPrint(self, string):
+	def myPrint(self, string, html=False):
 		print string
 
 	def quit(self):

@@ -2,6 +2,11 @@
 import tekkaLists
 import htmlbuffer
 
+"""
+Provides basic attributes like the outputbuffer 
+(default a htmlbuffer), the name of the tab and
+a flag if a new message is received.
+"""
 class tekkaTab(object):
 	def __init__(self, name, buffer=None):
 		self.buffer = buffer or htmlbuffer.htmlbuffer()

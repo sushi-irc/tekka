@@ -334,6 +334,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		msg = msg.replace("&","&amp;")
 		msg = msg.replace("<","&lt;")
 		msg = msg.replace(">","&gt;")
+		msg = msg.replace(chr(2), "") # ^B
 		return msg
 	
 	def channelPrint(self, timestamp, server, channel, message, nick=""):
@@ -367,7 +368,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		timestamp = time.strftime("%H:%M", time.localtime(timestamp))
 
 		if not raw:
-			output.insert_html(output.get_end_iter(), "[%s] %s\n" % (timestamp,self.escapeHTML(string)))
+			output.insert_html(output.get_end_iter(), "<msg>[%s] %s<br/></msg>" % (timestamp,string))
 		else:
 			output.insert(output.get_end_iter(), "[%s] [%s]\n" % (timestamp, string))
 
@@ -378,14 +379,16 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 			self.servertree.serverDescription(server, "<b>"+server+"</b>")
 
 	# prints 'string' to the current output
-	def myPrint(self, string):
+	def myPrint(self, string, html=False):
 		output = self.textbox.get_buffer()
 
 		if not output:
 			print "No output buffer here!"
 			return
-
-		output.insert(output.get_end_iter(), string+"\n")
+		if not html:
+			output.insert(output.get_end_iter(), string+"\n")
+		else:
+			output.insert_html(output.get_end_iter(), "<msg>"+string+"<br/></msg>")
 		self.scrollOutput(output)
 
 	# tekkaClear command method from tekkaCom:
