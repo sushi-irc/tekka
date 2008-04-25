@@ -390,6 +390,9 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 
 	#################################################################
 	
+	def getNickColors(self):
+		return tekkaConfig.getNickColors(self)
+
 	def setTopic(self, time, server, channel, nick, topic):
 		self.servertree.setTopic(server,channel,topic,nick)
 		self.setTopicInBar(server,channel)

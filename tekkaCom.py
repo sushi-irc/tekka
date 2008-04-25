@@ -26,6 +26,7 @@ SUCH DAMAGE.
 """
 
 import sys
+import os
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
 
@@ -176,6 +177,8 @@ class tekkaCom(object):
 
 			self._prefixFetch(server,channel,nicklist,nicks)
 
+			self.__lastLogHack(server,channel,20)
+
 	def isAway(self, server, nick):
 		return self.proxy.user_away(server, nick)
 	
@@ -297,7 +300,7 @@ class tekkaCom(object):
 
 	# privmessages are received here
 	def userMessage(self, timestamp, server, nick, channel, message):
-		color = self.getColor("nick")
+		color = self.getNickColor(nick)
 		message = self.escape(message)
 		self.channelPrint(timestamp, server, channel, \
 		"&lt;<font foreground='%s'>%s</font>&gt; %s" % (color,nick,message))
@@ -710,6 +713,24 @@ class tekkaCom(object):
 
 	""" HELPER """
 
+	def __lastLogHack(self, server, channel, lines):
+		obj = self.getObject(server,channel)
+		buffer = obj.getBuffer()
+		path = os.environ["HOME"]+"/.sushi/logs/%s/%s.txt" % (server,channel)
+		try:
+			f = file(path)
+		except:
+			return
+		if not f: 
+			return
+		try:
+			lines = f.readlines()[-lines:]
+		except:
+			return
+		for line in lines:
+			buffer.insert_html(buffer.get_end_iter(), "<font foreground=\"#DDDDDD\">%s<br/></font>" % self.escape(line))
+
+
 	"""
 	solution to set the prefixes in the nicklist of a new
 	added server. The iter returned by addChannel() is
@@ -760,6 +781,12 @@ class tekkaCom(object):
 
 
 	""" PLACEHOLDER TO OVERLOAD """
+
+	def getNickColor(self, nick):
+		colors = self.getNickColors()
+		if not colors:
+			return "#2222AA"
+		return colors[ord(nick[0])%len(colors)]
 
 	# escapes all incoming strings
 	def escape(self, str):

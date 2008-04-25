@@ -34,6 +34,10 @@ class tekkaConfig(object):
 		self.gladefiles["mainwindow"] = "mainwindow.glade"
 		self.gladefiles["dialogs"] = "dialogs.glade"
 
+		# TODO: implement saving the window size after resizing
+		# x,y
+		self.windowSize = [400,500]
+
 		self.colors = {}
 		self.colors["ownNick"] = "#AA0000"
 		self.colors["nick"] = "#2222AA"
@@ -41,6 +45,8 @@ class tekkaConfig(object):
 		self.colors["partNick"] = "#004444"
 		self.colors["modeActNick"] = "#AA2222"
 		self.colors["modeParam"] = "#2222AA"
+
+		# random nick colors
 		self.nickColors=["#2222AA","#44AA44","#123456","#987654"]
 
 		self.outputFont = "Monospace"
@@ -50,6 +56,9 @@ class tekkaConfig(object):
 		if not self.colors.has_key(name):
 			return "#FFFFFF"
 		return self.colors[name]
+
+	def getNickColors(self):
+		return self.nickColors
 
 	def getShortcuts(self, startkey):
 		if self.shortcuts.has_key(startkey):
