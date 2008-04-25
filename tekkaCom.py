@@ -191,6 +191,7 @@ class tekkaCom(object):
 
 	def createServer(self, smap):
 		domain = "servers/%s" % smap["servername"]
+		del smap["servername"]
 		for (k,v) in smap.items():
 			if not v:
 				self.proxy.sushi_remove(domain, "server", k)
@@ -244,7 +245,7 @@ class tekkaCom(object):
 
 	# the server is sending a MOTD
 	def serverMOTD(self, time, server, message):
-		self.serverPrint(time, server, message, raw=True)
+		self.serverPrint(time, server, message)
 
 	""" CHANNEL SIGNALS """
 
@@ -263,7 +264,7 @@ class tekkaCom(object):
 		if nick == self.getNick(server):
 			nick = "You"
 
-		self.channelPrint(time, server, channel, "%s changed the topic to '%s'" % (nick,self.escapeHTML(topic)))
+		self.channelPrint(time, server, channel, "%s changed the topic to '%s'" % (nick,self.escape(topic)))
 
 	""" MAKI SIGNALS """
 
@@ -297,14 +298,14 @@ class tekkaCom(object):
 	# privmessages are received here
 	def userMessage(self, timestamp, server, nick, channel, message):
 		color = self.getColor("nick")
-		message = self.escapeHTML(message)
+		message = self.escape(message)
 		self.channelPrint(timestamp, server, channel, \
 		"&lt;<font foreground='%s'>%s</font>&gt; %s" % (color,nick,message))
 
 	def ownMessage(self, timestamp, server, channel, message):
 		self.channelPrint(timestamp, server, channel, \
 		"&lt;<font foreground='%s'>%s</font>&gt; <msg>%s</msg>" \
-		% (self.getColor("ownNick"), self.getNick(server), self.escapeHTML(message)))
+		% (self.getColor("ownNick"), self.getNick(server), self.escape(message)))
 
 	def ownQuery(self, timestamp, server, channel, message):
 		self.ownMessage(timestamp,server,channel,message)
@@ -319,7 +320,7 @@ class tekkaCom(object):
 		act_color=self.getColor("modeActNick")
 		param_color=self.getColor("modeParam")
 
-		actnick = "<font foreground='%s'>%s</font>" % (act_color, self.escapeHTML(nick))
+		actnick = "<font foreground='%s'>%s</font>" % (act_color, self.escape(nick))
 		if nick == myNick:
 			actnick = "You"
 
@@ -328,7 +329,7 @@ class tekkaCom(object):
 		else:
 			# if param a user mode is set
 			if param:
-				nickwrap = "<font foreground='%s'>%s</font>" % (param_color, self.escapeHTML(param))
+				nickwrap = "<font foreground='%s'>%s</font>" % (param_color, self.escape(param))
 				if param == myNick:
 					nickwrap = "You"
 				msg = "%s set <b>%s</b> to %s." % (actnick,mode,nickwrap)
@@ -349,7 +350,7 @@ class tekkaCom(object):
 
 	# user sent an /me
 	def userAction(self, time, server, nick, channel, action):
-		action = self.escapeHTML(action)
+		action = self.escape(action)
 		self.channelPrint(time, server, channel, "%s %s" % (nick,action))
 
 	# user changed his nick
@@ -365,10 +366,10 @@ class tekkaCom(object):
 			nickwrap = "%s is" % nick
 		
 		nickchange = "%s now known as %s." % (nickwrap, new_nick)
-		nickchange = self.escapeHTML(nickchange)
+		nickchange = self.escape(nickchange)
 
 		for channel in self.getChannels(server):
-			nicklist = self.getObject(server,channel)
+			nicklist = self.getObject(server,channel).getNicklist()
 			if nick in nicklist.getNicks() or channel == nick:
 				nicklist.modifyNick(nick, new_nick)
 				self.channelPrint(time, server, channel, nickchange)
@@ -381,10 +382,10 @@ class tekkaCom(object):
 		if who == self.getNick(server):
 			self.getObject(server,channel).setJoined(False)
 			self.updateDescription()
-			self.channelPrint(time, server, channel, self.escapeHTML(\
+			self.channelPrint(time, server, channel, self.escape(\
 				"You have been kicked from %s by %s %s" % (channel,nick,reason)))
 		else:
-			self.channelPrint(time, server, channel, self.escapeHTML("%s was kicked from %s by %s %s" % (who,channel,nick,reason)))
+			self.channelPrint(time, server, channel, self.escape("%s was kicked from %s by %s %s" % (who,channel,nick,reason)))
 
 	"""
 	The user identified by nick quit on the server "server" with
@@ -429,7 +430,7 @@ class tekkaCom(object):
 
 				if nick in nicks or nick == channel:
 					nicklist.removeNick(nick)
-					self.channelPrint(time, server, channelname, \
+					self.channelPrint(time, server, channel, \
 					"%s has quit%s." % (nick,reasonwrap))
 	
 	"""
@@ -456,6 +457,9 @@ class tekkaCom(object):
 				return
 
 			obj = self.getObject(server,channel)
+			if not obj:
+				print "Could not get object"
+				return
 			nicklist = obj.getNicklist()
 
 			# not added, already existent.
@@ -478,13 +482,15 @@ class tekkaCom(object):
 
 			nickwrap = "You have"
 		else:
-			nickwrap = "<font foreground='%s'>%s</font> has" % (self.getColor("joinNick"), self.escapeHTML(nick))
+			nickwrap = "<font foreground='%s'>%s</font> has" % (self.getColor("joinNick"), self.escape(nick))
 			self.getObject(server,channel).getNicklist().appendNick(nick)
 		self.channelPrint(timestamp, server, channel, "%s joined %s." % (nickwrap, channel))
 
 	# user parted
 	def userPart(self, timestamp, server, nick, channel, reason):
 		obj = self.getObject(server,channel)
+		if not obj:
+			return
 
 		if reason: 
 			reason = " (%s)" % reason
@@ -498,12 +504,10 @@ class tekkaCom(object):
 		else:
 			obj.getNicklist().removeNick(nick)
 			self.channelPrint(timestamp, server, channel, \
-			"<font foreground='%s'>%s</font> has left %s%s." % (self.getColor("partNick"), self.escapeHTML(nick), self.escapeHTML(channel), self.escapeHTML(reason)))
-
+			"<font foreground='%s'>%s</font> has left %s%s." % (self.getColor("partNick"), self.escape(nick), self.escape(channel), self.escape(reason)))
 
 
 	""" COMMAND METHODS """
-
 
 	# Method to parse the userinput
 	def parseCommand(self, command):
@@ -757,15 +761,20 @@ class tekkaCom(object):
 
 	""" PLACEHOLDER TO OVERLOAD """
 
-	def escapeHTML(self, str):
+	# escapes all incoming strings
+	def escape(self, str):
 		pass
 
+	# prints the string "string" to the channel output of channel "channel"
+	# on server "server"
 	def channelPrint(self, timestamp, server, channel, string):
 		print "%s@%s: %s" % (channel, server, string)
 
+	# prints the string "string" to the server output of "server"
 	def serverPrint(self, server, string):
 		print "%s: %s" % (server,string)
 
+	# prints the string "string" to the current output
 	def myPrint(self, string, html=False):
 		print string
 
@@ -775,21 +784,27 @@ class tekkaCom(object):
 	def setTopic(self, time, server, channel, nick, topic):
 		pass
 
+	# set away status on server "server"
 	def setAway(self, time, server):
 		pass
 
+	# unset away status on server "server"
 	def setBack(self, time, server):
 		pass
 
+	# updates the server or channel description
 	def updateDescription(server=None, channel=None, obj=None):
 		pass
 
+	# return a server or (if channel is given) a channel object
 	def getObject(self, server, channel=None):
 		pass
 
+	# return a list of all servers maki is connected to
 	def getServers(self):
 		pass
 
+	# return a list of all channels maki joined on server "server"
 	def getChannels(self, server):
 		pass
 

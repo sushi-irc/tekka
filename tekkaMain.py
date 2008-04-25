@@ -312,7 +312,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		mark = output.get_insert()
 		self.textbox.scroll_mark_onscreen(mark)
 
-	def escapeHTML(self, msg):
+	def escape(self, msg):
 		msg = msg.replace("&","&amp;")
 		msg = msg.replace("<","&lt;")
 		msg = msg.replace(">","&gt;")
@@ -348,12 +348,12 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		if not output:
 			iter,output = self.servertree.addServer(server)
 
-		timestamp = time.strftime("%H:%M", time.localtime(timestamp))
+		timestr = time.strftime("%H:%M", time.localtime(timestamp))
 
 		if not raw:
-			output.insert_html(output.get_end_iter(), "<msg>[%s] %s<br/></msg>" % (timestamp,string))
+			output.insert_html(output.get_end_iter(), "<msg>[%s] %s<br/></msg>" % (timestr,string))
 		else:
-			output.insert(output.get_end_iter(), "[%s] [%s]\n" % (timestamp, string))
+			output.insert(output.get_end_iter(), "[%s] [%s]\n" % (timestr, string))
 
 		cserver,cchannel = self.servertree.getCurrentChannel()
 		if not cchannel and cserver and cserver == server:
@@ -421,7 +421,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 
 	def getObject(self, server, channel=None):
 		s,c = self.servertree.getRow(server,channel)
-		if s and not c:
+		if s and not c and not channel:
 			return s[self.servertree.COLUMN_OBJECT]
 		if s and c:
 			return c[self.servertree.COLUMN_OBJECT]

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.3 on Wed Apr 23 00:47:39 2008 -->
+<!--Generated with glade3 3.4.3 on Fri Apr 25 21:53:11 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="tekkaMainwindow">
     <property name="width_request">550</property>
@@ -103,7 +103,6 @@
                       <widget class="GtkTextView" id="tekkaOutput">
                         <property name="width_request">400</property>
                         <property name="visible">True</property>
-						<property name="can_focus">False</property>
                         <property name="editable">False</property>
                         <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
                         <property name="cursor_visible">False</property>
@@ -164,15 +163,14 @@
                     <child>
                       <widget class="GtkTreeView" id="tekkaNicklist">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="headers_clickable">True</property>
+                        <signal name="button_press_event" handler="tekkaNicklist_button_press_event_cb"/>
                         <signal name="row_activated" handler="tekkaNicklist_row_activated_cb"/>
-						<signal name="button_press_event" handler="tekkaNicklist_button_press_event_cb"/>
                       </widget>
                     </child>
                   </widget>
                   <packing>
-                    <property name="resize">True</property>
+                    <property name="resize">False</property>
                     <property name="shrink">True</property>
                   </packing>
                 </child>

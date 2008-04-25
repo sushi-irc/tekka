@@ -41,6 +41,7 @@ class tekkaConfig(object):
 		self.colors["partNick"] = "#004444"
 		self.colors["modeActNick"] = "#AA2222"
 		self.colors["modeParam"] = "#2222AA"
+		self.nickColors=["#2222AA","#44AA44","#123456","#987654"]
 
 		self.outputFont = "Monospace"
 		# TODO: parse config file ~/.sushi/tekka.conf
