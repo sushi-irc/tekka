@@ -50,8 +50,7 @@ import tekkaDialog
 
 import tekkaLists
 
-# tekkaMisc -> inputHistory and similar things
-# tekkaCom -> communication to mika via dbus
+# tekkaCom -> communication to maki via dbus
 # tekkaConfig -> Configparser, Configvariables
 # tekkaPlugins -> Plugin-interface (TODO)
 class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
@@ -65,12 +64,9 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		self.servertree = tekkaLists.tekkaServertree()
 		self._setupServertree()
 		
-		SW = self.widgets.get_widget("scrolledwindow2")
+		SW = self.widgets.get_widget("sw_servertree")
 		SW.add(self.servertree)
 		SW.show_all()
-
-		# determine the tekkaOutput scrolledwindow
-		self.scrolledWindow = self.widgets.get_widget("scrolledwindow1")
 
 		self.nicklist = self.widgets.get_widget("tekkaNicklist")
 		self._setupNicklist()
@@ -97,14 +93,13 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		self.history = tekkaLists.tekkaHistory()
 		
 	def _setupSignals(self, widgets):
-		sigdic = { "tekkaInput_activate_cb" : self.sendText,
-				   #"tekkaServertree_cursor_changed_cb" : self.rowActivated,
-				   "tekkaTopic_activate_cb" : self.setTopicFromBar,
+		sigdic = { "tekkaInput_activate_cb" : self.userInput,
+				   "tekkaTopic_activate_cb" : self.topicbarActivate,
 				   "tekkaServertree_realize_cb" : lambda w: w.expand_all(),
 				   "tekkaNicklist_row_activated_cb" : self.nicklistActivateRow,
 				   "tekkaNicklist_button_press_event_cb" : self.nicklistButtonPress,
 				   "tekkaMainwindow_Shutdown_activate_cb" : self.makiShutdown,
-		           "tekkaMainwindow_Connect_activate_cb" : self.showServerDialog,
+		           "tekkaMainwindow_Connect_activate_cb" : self._showServerDialog,
 				   "tekkaMainwindow_Quit_activate_cb" : gtk.main_quit}
 
 		self.widgets.signal_autoconnect(sigdic)
@@ -117,7 +112,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 
 		self.servertree.connect("button-press-event", self.servertree_button)
 		self.entry = widgets.get_widget("tekkaInput")
-		self.entry.connect("key-press-event", self.inputevent)
+		self.entry.connect("key-press-event", self.userInputEvent)
 		
 	""" SETUP ROUTINES """
 
@@ -150,7 +145,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 			return
 		tb.modify_font(fd)
 
-	""" tekkaCom SIGNALS """
+	""" tekkaCom METHODS """
 
 	def serverConnect(self, time, server):
 		self.statusbar.push(2,"Connecting to %s" % server)
@@ -160,7 +155,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		self.statusbar.pop(2)
 		tekkaCom.serverConnected(self,time,server,nick)
 
-	""" SERVERTREE SIGNALS """
+	""" SIGNALS """
 	
 	def servertree_button(self, widget, event):
 		path = widget.get_path_at_pos(int(event.x), int(event.y))
@@ -232,7 +227,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 				menu.append( label )
 
 			label = gtk.MenuItem(label="Close Tab")
-			label.connect("activate", self.menuRemoveTab, *(server,channel))
+			label.connect("activate", self._menuRemoveTab, *(server,channel))
 
 			menu.append( label )
 
@@ -240,19 +235,6 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 
 			menu.popup(None, None, None, button=event.button, activate_time=event.time)
 
-	def menuRemoveTab(self, w, server, channel):
-		if not server and not channel: 
-			return
-		elif server and not channel:
-			self.makiQuit([server,""])
-		elif server and channel:
-			self.makiPart((channel,""),server=server)
-		self.servertree.removeChannel(server,channel)
-		self.nicklist.set_model(None)
-		self.textbox.get_buffer().set_text("")
-
-
-	""" NICKLIST SIGNALS """
 
 	def nicklistActivateRow(self, treeview, path, parm1):
 		server = self.servertree.getCurrentServer()
@@ -280,10 +262,25 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 			print "Would display context menu"
 			pass
 
-	""" TOPIC BAR SIGNALS """
-
-	def setTopicFromBar(self, widget):
+	def topicbarActivate(self, widget):
 		self.makiTopic(widget.get_text().split(" "))
+
+	def userInputEvent(self, widget, event):
+		name = gtk.gdk.keyval_name( event.keyval )
+		
+		if name == "Up":
+			server,channel = self.servertree.getCurrentChannel()
+			text = self.history.getUp(server,channel)
+			widget.set_text(text)
+			widget.set_position(len(text))
+			return True
+		elif name == "Down":
+			server,channel = self.servertree.getCurrentChannel()
+			text = self.history.getDown(server,channel)
+			widget.set_text(text)
+			widget.set_position(len(text))
+			return True
+		return False
 
 	""" TOPIC BAR METHODS """
 
@@ -301,27 +298,13 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 
 	""" INPUT HISTORY / KEYPRESSEVENT """
 
-	def sendText(self, widget):
+	def userInput(self, widget):
+		text =  widget.get_text()
 		server,channel = self.servertree.getCurrentChannel()
-		self.history.append(server, channel, widget.get_text())
-		tekkaCom.sendText(self,widget)
+		self.history.append(server, channel,text)
+		self.sendText(text)
 
-	def inputevent(self, widget, event):
-		name = gtk.gdk.keyval_name( event.keyval )
-		
-		if name == "Up":
-			server,channel = self.servertree.getCurrentChannel()
-			text = self.history.getUp(server,channel)
-			widget.set_text(text)
-			widget.set_position(len(text))
-			return True
-		elif name == "Down":
-			server,channel = self.servertree.getCurrentChannel()
-			text = self.history.getDown(server,channel)
-			widget.set_text(text)
-			widget.set_position(len(text))
-			return True
-		return False
+
 
 	""" PRINTING ROUTINES """
 
@@ -405,19 +388,106 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		tt = output.get_tag_table()
 		if tt: tt.foreach(lambda tag,data: data.remove(tag), tt)
 
+	#################################################################
+	
+	def setTopic(self, time, server, channel, nick, topic):
+		self.servertree.setTopic(server,channel,topic,nick)
+		self.setTopicInBar(server,channel)
+	
+	def setAway(self, time, server):
+		srow,crow = self.servertree.getRow(server)
+		obj = srow[self.servertree.COLUMN_OBJECT]
+		obj.setAway(True)
+		self.servertree.serverDescription(server, obj.markup())
+
+	def setBack(self, time, server):
+		srow,crow = self.servertree.getRow(server)
+		obj = srow[self.servertree.COLUMN_OBJECT]
+		obj.setAway(False)
+		self.servertree.serverDescription(server, obj.markup())
+
+	def updateDescription(server=None, channel=None, obj=None):
+		if server and obj:
+			if channel:
+				self.servertree.channelDescription(server,channel,obj.markup())
+			else:
+				self.servertree.serverDescription(server, obj.markup)
+		elif server and not obj:
+			obj = self.getObject(server,channel)
+			if channel:
+				self.servertree.channelDescription(server,channel,obj.markup())
+			else:
+				self.servertree.serverDescription(server, obj.markup())
+
+	def getObject(self, server, channel=None):
+		s,c = self.servertree.getRow(server,channel)
+		if s and not c:
+			return s[self.servertree.COLUMN_OBJECT]
+		if s and c:
+			return c[self.servertree.COLUMN_OBJECT]
+		return None
+
+	def getServers(self):
+		return self.servertree.getServers()
+
+	def getChannels(self, server):
+		return self.servertree.getChannels(server)
+
+	def getRow(self, server, channel=None):
+		return self.servertree.getRow(server, channel)
+
+	def getChannel(self, server, channel,sens=True):
+		return self.servertree.getChannel(server, channel, sens)
+
+	def getCurrentServer(self):
+		return self.servertree.getCurrentServer()
+
+	def getCurrentChannel(self):
+		return self.servertree.getCurrentChannel()
+
+	def getCurrentRow(self):
+		return self.servertree.getCurrentRow()
+
+	def addServer(self, server):
+		return self.servertree.addServer(server)
+
+	def addChannel(self, server, channel, nicks=[], topic="", topicsetter=""):
+		return self.servertree.addChannel(server,channel,nicks,topic,topicsetter)
+
+	def removeServer(self, server):
+		self.servertree.removeServer(server)
+
+	def removeChannel(self, server, channel):
+		self.servertree.removeChannel(server,channel)
+
+	def renameChannel(self, server, channel, newName):
+		self.servertree.renameChannel(server,channel,newName)
+
+
 	""" MISC STUFF """
 
 	def quit(self):
 		print "quitting"
 		gtk.main_quit()
 
-	def showServerDialog(self, widget):
+	def _showServerDialog(self, widget):
 		serverlist = tekkaDialog.serverDialog(self)
 		result,server = serverlist.run()
 		if result == serverlist.RESPONSE_CONNECT:
 			print "we want to connect to server %s" % server
 			if server:
 				self.makiConnect([server])
+
+	def _menuRemoveTab(self, w, server, channel):
+		if not server and not channel: 
+			return
+		elif server and not channel:
+			self.makiQuit([server,""])
+		elif server and channel:
+			self.makiPart((channel,""),server=server)
+		self.servertree.removeChannel(server,channel)
+		self.nicklist.set_model(None)
+		self.textbox.get_buffer().set_text("")
 
 if __name__ == "__main__":
 	tekka = tekkaMain()

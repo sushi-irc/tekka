@@ -94,7 +94,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkScrolledWindow" id="scrolledwindow1">
+                  <widget class="GtkScrolledWindow" id="sw_output">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
@@ -140,7 +140,7 @@
                 <property name="can_focus">True</property>
                 <property name="position_set">True</property>
                 <child>
-                  <widget class="GtkScrolledWindow" id="scrolledwindow2">
+                  <widget class="GtkScrolledWindow" id="sw_servertree">
                     <property name="width_request">180</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
