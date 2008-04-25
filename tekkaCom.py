@@ -254,7 +254,11 @@ class tekkaCom(object):
 	Apply this!
 	"""
 	def channelTopic(self, time, server, nick, channel, topic):
+		
 		self.setTopic(time, server, channel, nick, topic)
+		
+		if not nick:
+			return
 
 		if nick == self.getNick(server):
 			nick = "You"
