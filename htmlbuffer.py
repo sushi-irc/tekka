@@ -50,7 +50,9 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 		self.textbuffer = textbuffer
 		self.elms = []
 		self.tags = []
-		self.ignoreableEndTags = ["msg","br"]
+		self.ignoreableEndTags = ["msg","br","su","sb"]
+		self.sucount = 0
+		self.sbcount = 0
 
 	def characters(self, text):
 		if len(self.tags):
@@ -70,6 +72,18 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 			return
 		elif name == "u":
 			tag.set_property("underline", pango.UNDERLINE_SINGLE)
+		elif name == "su":
+			self.sucount += 1
+			if self.sucount % 2 != 0:
+				tag.set_property("underline", pango.UNDERLINE_SINGLE)
+			else:
+				tag.set_property("underline", pango.UNDERLINE_NONE)
+		elif name == "sb":
+			self.sbcount += 1
+			if self.sbcount % 2 != 0:
+				tag.set_property("weight", pango.WEIGHT_BOLD)
+			else:
+				tag.set_property("weight", pango.WEIGHT_NORMAL)
 		elif name == "font":
 			self._parse_font(tag, attrs)
 		elif name == "msg":
@@ -82,7 +96,8 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 		self.tags.append(tag)
 
 	def endElement(self, name):
-		if name in self.ignoreableEndTags: return
+		if name in self.ignoreableEndTags: 
+			return
 		i = rindex(self.elms, name)
 		if i >= 0:
 			del self.elms[i]

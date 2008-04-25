@@ -303,8 +303,7 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		server,channel = self.servertree.getCurrentChannel()
 		self.history.append(server, channel,text)
 		self.sendText(text)
-
-
+		widget.set_text("")
 
 	""" PRINTING ROUTINES """
 
@@ -317,7 +316,8 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		msg = msg.replace("&","&amp;")
 		msg = msg.replace("<","&lt;")
 		msg = msg.replace(">","&gt;")
-		msg = msg.replace(chr(2), "") # ^B
+		msg = msg.replace(chr(2), "<sb/>") # bold-char
+		msg = msg.replace(chr(31), "<su/>") # underline-char
 		return msg
 	
 	def channelPrint(self, timestamp, server, channel, message, nick=""):
@@ -406,12 +406,12 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 		obj.setAway(False)
 		self.servertree.serverDescription(server, obj.markup())
 
-	def updateDescription(server=None, channel=None, obj=None):
+	def updateDescription(self, server=None, channel=None, obj=None):
 		if server and obj:
 			if channel:
 				self.servertree.channelDescription(server,channel,obj.markup())
 			else:
-				self.servertree.serverDescription(server, obj.markup)
+				self.servertree.serverDescription(server, obj.markup())
 		elif server and not obj:
 			obj = self.getObject(server,channel)
 			if channel:
@@ -430,8 +430,8 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 	def getServers(self):
 		return self.servertree.getServers()
 
-	def getChannels(self, server):
-		return self.servertree.getChannels(server)
+	def getChannels(self, server,row=False):
+		return self.servertree.getChannels(server,row)
 
 	def getRow(self, server, channel=None):
 		return self.servertree.getRow(server, channel)

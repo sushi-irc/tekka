@@ -131,7 +131,7 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 			mfield["list"].append(nick)
 
 		store.clear()
-		for mi in range(len(modes)):
+		for mi in xrange(len(modes)):
 			l = ul[modes[mi]]
 
 			if mi == 0:
@@ -143,7 +143,7 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 			
 			mode = modes[mi]
 
-			for i in range(bi,len(l["list"])+bi):
+			for i in xrange(bi,len(l["list"])+bi):
 				iter = store.append(None)
 				store.set(iter, 0, mode, 1, l["list"][i-bi])
 		"""

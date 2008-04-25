@@ -152,7 +152,7 @@ class tekkaCom(object):
 			self.setNick(server, self.getNickFromMaki(server))
 			
 			if self.isAway(server, self.getNick(server)):
-				self.getObject(server,channel).setAway(True)
+				self.getObject(server).setAway(True)
 
 	def addChannels(self, server):
 		channels = self.proxy.channels(server)
@@ -161,7 +161,7 @@ class tekkaCom(object):
 			nicks = self.getNicksFromMaki(server, channel)
 			topic = self.getTopic(server,channel)
 			
-			ret,iter = self.servertree.addChannel(server, channel, nicks=nicks, topic=topic)
+			ret,iter = self.addChannel(server, channel, nicks=nicks, topic=topic)
 
 			obj = self.getObject(server,channel)
 			nicklist = obj.getNicklist()
@@ -223,18 +223,23 @@ class tekkaCom(object):
 	""" SERVER SIGNALS """
 
 	def serverConnect(self, time, server):
-		self.servertree.addServer(server)
+		self.addServer(server)
 		self.serverPrint(time, server, "Connecting...")
 
 	# maki connected to a server
 	def serverConnected(self, time, server, nick):
 		self.serverPrint(time, server, "Connected.")
+
+		obj = self.getObject(server)
+		obj.setConnected(True)
+		self.updateDescription(server,obj=obj)
+
 		self.addChannels(server)
 		self.setNick(server, nick)
 
 	# maki is reconnecting to a server
 	def serverReconnect(self, time, server):
-		self.servertree.addServer(server)
+		self.addServer(server)
 		self.serverPrint(time, server, "Reconnecting to %s" % server)
 
 	# the server is sending a MOTD
@@ -283,7 +288,7 @@ class tekkaCom(object):
 	for us to see why he is away and probably when he's back again.
 	"""
 	def userAwayMessage(self, timestamp, server, nick, message):
-		self.servertree.channelPrint(timestamp, server, nick, "%s is away: %s" % (nick,message))
+		self.channelPrint(timestamp, server, nick, "%s is away: %s" % (nick,message))
 
 	# privmessages are received here
 	def userMessage(self, timestamp, server, nick, channel, message):
@@ -315,7 +320,7 @@ class tekkaCom(object):
 			actnick = "You"
 
 		if target == myNick:
-			self.myPrint("%s set <b>%s</b> on you." % (actnick, mode))
+			self.serverPrint(time, server,"%s set <b>%s</b> on you." % (actnick, mode))
 		else:
 			# if param a user mode is set
 			if param:
@@ -345,9 +350,9 @@ class tekkaCom(object):
 
 	# user changed his nick
 	def userNick(self, time, server, nick, new_nick):
-		channel =  self.servertree.getChannel(server, nick)
+		channel = self.getChannel(server, nick)
 		if channel:
-			self.servertree.renameChannel(server, channel, new_nick)
+			self.renameChannel(server, channel, new_nick)
 		
 		if nick == self.getNick(server):
 			nickwrap = "You are"
@@ -358,9 +363,8 @@ class tekkaCom(object):
 		nickchange = "%s now known as %s." % (nickwrap, new_nick)
 		nickchange = self.escapeHTML(nickchange)
 
-		for row in self.servertree.getChannels(server,row=True):
-			channel = row[self.servertree.COLUMN_NAME]
-			nicklist = row[self.servertree.COLUMN_OBJECT].getNicklist()
+		for channel in self.getChannels(server):
+			nicklist = self.getObject(server,channel)
 			if nick in nicklist.getNicks() or channel == nick:
 				nicklist.modifyNick(nick, new_nick)
 				self.channelPrint(time, server, channel, nickchange)
@@ -371,8 +375,10 @@ class tekkaCom(object):
 			reason = "(%s)" % reason
 
 		if who == self.getNick(server):
-			self.servertree.channelDescription(server, channel, "("+channel+")")
-			self.channelPrint(time, server, channel, self.escapeHTML("You have been kicked from %s by %s %s" % (channel,nick,reason)))
+			self.getObject(server,channel).setJoined(False)
+			self.updateDescription()
+			self.channelPrint(time, server, channel, self.escapeHTML(\
+				"You have been kicked from %s by %s %s" % (channel,nick,reason)))
 		else:
 			self.channelPrint(time, server, channel, self.escapeHTML("%s was kicked from %s by %s %s" % (who,channel,nick,reason)))
 
@@ -387,24 +393,24 @@ class tekkaCom(object):
 	def userQuit(self, time, server, nick, reason):
 		if nick == self.getNick(server):
 			# set the connected flag to False on the server
-			obj = self.servertree.getRow(server)[self.servertree.COLUMN_OBJECT]
+			obj = self.getObject(server)
 			obj.setConnected(False)
-			self.servertree.serverDescription(server, obj.markup())
+			self.updateDescription(server,obj=obj)
 
 			# walk through all channels and set joined = False on them
-			channels = self.servertree.getChannels(server,row=True)
-			if not channels: 
+			channels = self.getChannels(server)
+			if not channels:
 				return
 			for channel in channels:
-				obj = channel[self.servertree.COLUMN_OBJECT]
+				obj = self.getObject(server,channel)
 				obj.setJoined(False)
-				self.servertree.channelDescription(server, channel, obj.markup())
+				self.updateDescription(server,channel,obj=obj)
 		else:
 			reasonwrap = ""
 			if reason: 
 				reasonwrap = " (%s)" % reason
 
-			channels = self.servertree.getChannels(server,row=True)
+			channels = self.getChannels(server)
 
 			if not channels:
 				print "No channels but quit reported.. Hum wtf? o.0"
@@ -412,8 +418,7 @@ class tekkaCom(object):
 
 			# print in all channels where nick joined a message
 			for channel in channels:
-				channelname = channel[self.servertree.COLUMN_NAME]
-				obj = channel[self.servertree.COLUMN_OBJECT]
+				obj = self.getObject(server,channel)
 				nicklist = obj.getNicklist()
 
 				nicks = nicklist.getNicks() or []
@@ -517,17 +522,15 @@ class tekkaCom(object):
 	def makiQuit(self, xargs):
 		if not xargs:
 			print "global quit"
-			list = self.servertree.getServers()
+			list = self.getServers()
 			for server in list:
 				self.proxy.quit(server,"")
-			self.quit()
 		else:
 			reason = ""
 			if len(xargs) >= 2:
 				reason = " ".join(xargs[1:])
 			print "quit local %s" % xargs[0]
 			self.proxy.quit(xargs[0], reason)
-			self.servertree.removeServer(xargs[0])
 
 	def makiNick(self, xargs):
 		server = self.getCurrentServer()
@@ -750,6 +753,8 @@ class tekkaCom(object):
 
 	""" PLACEHOLDER TO OVERLOAD """
 
+	def escapeHTML(self, str):
+		pass
 
 	def channelPrint(self, timestamp, server, channel, string):
 		print "%s@%s: %s" % (channel, server, string)
