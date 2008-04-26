@@ -174,10 +174,10 @@ class tekkaCom(object):
 				nicklist.addNicks(nicks)
 				obj.setTopic(topic)
 				obj.setJoined(True)
+			else:
+				self.__lastLogHack(server,channel,10)
 
 			self._prefixFetch(server,channel,nicklist,nicks)
-
-			self.__lastLogHack(server,channel,20)
 
 	def isAway(self, server, nick):
 		return self.proxy.user_away(server, nick)
@@ -189,6 +189,16 @@ class tekkaCom(object):
 		if not self.proxy: return ""
 		return self.proxy.user_channel_prefix(server,channel,nick) 
 
+
+	def getChannelAutojoin(self, server, channel):
+		domain = "servers/%s" % server
+		return self.proxy.sushi_get(domain, channel, "autojoin")
+
+	def setAutojoin(self, server, channel, switch):
+		domain = "servers/%s" % server
+		if switch: switch = "true"
+		else: switch = "false"
+		self.proxy.sushi_set(domain, channel, "autojoin", switch)
 
 	""" SERVER CREATION """
 
@@ -402,6 +412,10 @@ class tekkaCom(object):
 		if nick == self.getNick(server):
 			# set the connected flag to False on the server
 			obj = self.getObject(server)
+
+			if not obj: # this happens if the tab is closed
+				return
+
 			obj.setConnected(False)
 			self.updateDescription(server,obj=obj)
 
@@ -477,6 +491,8 @@ class tekkaCom(object):
 				obj.setTopic(topic)
 				obj.setJoined(True)
 				self.updateDescription(server,channel,obj=obj)
+			else:
+				self.__lastLogHack(server,channel,10)
 
 			# fetch the prefixes and apply
 			# them to the nicklist of the channel
@@ -728,7 +744,7 @@ class tekkaCom(object):
 		except:
 			return
 		for line in lines:
-			buffer.insert_html(buffer.get_end_iter(), "<font foreground=\"#DDDDDD\">%s<br/></font>" % self.escape(line))
+			buffer.insert_html(buffer.get_end_iter(), "<font foreground=\"#DDDDDD\">%s</font>" % self.escape(line))
 
 
 	"""

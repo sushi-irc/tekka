@@ -218,13 +218,33 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 			menu = gtk.Menu()
 
 			if crow:
-				label = gtk.MenuItem(label="Join")
-				label.connect("activate", lambda w: self.makiJoin([channel],server=server))
-				menu.append( label )
+				obj = self.getObject(server,channel)
 
-				label = gtk.MenuItem(label="Part")
-				label.connect("activate", lambda w: self.makiPart([channel],server=server))
+				if not obj.getJoined():
+					label = gtk.MenuItem(label="Join")
+					label.connect("activate", lambda w: self.makiJoin([channel],server=server))
+					menu.append( label )
+				else:
+					label = gtk.MenuItem(label="Part")
+					label.connect("activate", lambda w: self.makiPart([channel],server=server))
+					menu.append( label )
+
+				label = gtk.MenuItem()
+				chkbutton = gtk.CheckButton(label="Autojoin")
+				if self.getChannelAutojoin(server,channel) == "true":
+					chkbutton.set_active(True)
+				label.add(chkbutton)
+				label.connect("activate", lambda w: self.channelMenuAutojoin(server,channel,w))
 				menu.append( label )
+			elif srow:
+				if not srow[self.servertree.COLUMN_OBJECT].getConnected():
+					label = gtk.MenuItem(label="Connect")
+					label.connect("activate",lambda w: self.makiConnect([server]))
+					menu.append( label )
+				else:
+					label = gtk.MenuItem(label="Disconnect")
+					label.connect("activate",lambda w: self.makiQuit([server]))
+					menu.append( label )
 
 			label = gtk.MenuItem(label="Close Tab")
 			label.connect("activate", self._menuRemoveTab, *(server,channel))
@@ -235,6 +255,9 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 
 			menu.popup(None, None, None, button=event.button, activate_time=event.time)
 
+	def channelMenuAutojoin(self, server, channel, w):
+		btn = w.get_children()[0]
+		self.setAutojoin(server,channel,not btn.get_active())
 
 	def nicklistActivateRow(self, treeview, path, parm1):
 		server = self.servertree.getCurrentServer()
@@ -482,15 +505,21 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 				self.makiConnect([server])
 
 	def _menuRemoveTab(self, w, server, channel):
+		cs,cc = self.servertree.getCurrentChannel()
 		if not server and not channel: 
 			return
 		elif server and not channel:
 			self.makiQuit([server,""])
+			self.servertree.removeServer(server)
+			if server == cs:
+				self.textbox.get_buffer().set_text("")
 		elif server and channel:
 			self.makiPart((channel,""),server=server)
-		self.servertree.removeChannel(server,channel)
-		self.nicklist.set_model(None)
-		self.textbox.get_buffer().set_text("")
+			self.servertree.removeChannel(server,channel)
+			if cc == channel:
+				self.textbox.get_buffer().set_text("")
+				self.topicbar.set_text("")
+				self.nicklist.set_model(None)
 
 if __name__ == "__main__":
 	tekka = tekkaMain()
