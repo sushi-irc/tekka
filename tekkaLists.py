@@ -94,6 +94,9 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 		if not mass:
 			self.sortNicks()
 
+	def searchNick(self, needle):
+		return [l[self.COLUMN_NICK] for l in self if l and l[self.COLUMN_NICK][0:len(needle)].lower()==needle]
+
 	def sortNicks(self):
 		store = self
 		modes = self.modes

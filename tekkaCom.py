@@ -253,6 +253,7 @@ class tekkaCom(object):
 
 	# maki is reconnecting to a server
 	def serverReconnect(self, time, server):
+		# TODO: clear nicklists of server if existant
 		self.addServer(server)
 		self.serverPrint(time, server, "Reconnecting to %s" % server)
 
@@ -663,8 +664,17 @@ class tekkaCom(object):
 		self.proxy.kick(server, channel, xargs[0], reason)
 
 	def makiMode(self, xargs):
-		# TODO: send modes!
-		return
+		if not xargs or len(xargs) < 2:
+			self.myPrint("Usage: /mode <target> (+|-)<mode> [param]")
+			return
+		server = self.getCurrentServer()
+		if not server:
+			self.myPrint("could not determine server.")
+			return
+		param = ""
+		if len(xargs)==3:
+			param = xargs[2]
+		self.proxy.mode(server, xargs[0], "%s %s" % (xargs[1],param))
 
 	def makiTopic(self, xargs):
 		if not xargs:

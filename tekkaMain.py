@@ -303,6 +303,30 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 			widget.set_text(text)
 			widget.set_position(len(text))
 			return True
+		if name == "Tab":
+			s,c = self.getCurrentRow()
+			if not c: 
+				print "Server keyword tabcompletion."
+			else:
+				obj = c[self.servertree.COLUMN_OBJECT]
+				if not obj:
+					return True
+
+				nicklist = obj.getNicklist()
+				text = widget.get_text()
+				text = text.split(" ")
+
+				needle = text[-1]
+				if not needle:
+					return True
+
+				nicks = nicklist.searchNick(needle.lower())
+				if nicks:
+					text[-1] = nicks[0]
+					text = " ".join(text)
+					widget.set_text(text)
+					widget.set_position(len(text))
+			return True
 		return False
 
 	""" TOPIC BAR METHODS """
