@@ -47,9 +47,10 @@ class tekkaCom(object):
 			"mode" : self.makiMode,
 			"topic": self.makiTopic,
 			"quit" : self.makiQuit,
-		"usermode" : self.makiUsermode,
 			"away" : self.makiAway,
 			"back" : self.makiBack,
+			"oper" : self.makiOper,
+			"kill" : self.makiKill,
 			"query": self.tekkaQuery,
 			"clear": self.tekkaClear
 		}
@@ -691,9 +692,6 @@ class tekkaCom(object):
 
 		return self.proxy.topic(server, channel, topic)
 
-	def makiUsermode(self, xargs):
-		return
-
 	def makiAway(self, xargs):
 		if not xargs:
 			self.makiBack(xargs)
@@ -712,6 +710,12 @@ class tekkaCom(object):
 			self.myPrint("Can't determine server.")
 			return
 		self.proxy.back(s)
+
+	def makiOper(self, xargs):
+		pass
+
+	def makiKill(self, xargs):
+		pass
 
 	def makiShutdown(self, w):
 		if self.proxy:

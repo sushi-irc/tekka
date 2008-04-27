@@ -193,6 +193,10 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		self.currentRow = None,None
 		self.connect("button-press-event", self._cacheCurrentRow)
 
+	
+	def searchTab(self, treeiter, needle):
+		return [l[self.COLUMN_NAME] for l in treeiter if l and l[self.COLUMN_NAME][0:len(needle)].lower()==needle]
+
 	def get_model(self):
 		return gtk.TreeView.get_model(self)
 

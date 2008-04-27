@@ -312,21 +312,37 @@ class tekkaMain(tekkaCom, tekkaConfig, tekkaPlugins):
 				if not obj:
 					return True
 
-				nicklist = obj.getNicklist()
 				text = widget.get_text()
 				text = text.split(" ")
 
 				needle = text[-1]
+
 				if not needle:
 					return True
 
-				nicks = nicklist.searchNick(needle.lower())
-				if nicks:
-					text[-1] = nicks[0]
+				result = None
+				
+				if needle[0] == "#": # channel completion
+					channels = self.servertree.searchTab(s.iterchildren(),needle.lower())
+					if channels:
+						result = channels[0]
+				elif needle[0] == "/": # command completion
+					needle = needle[1:]
+					commands = [l for l in self.commands.iterkeys() if l and l[0:len(needle)].lower() == needle.lower()]
+					if commands:
+						result = "/%s" % commands[0]
+				else: # nick completion
+					nicks = obj.getNicklist().searchNick(needle.lower())
+					if nicks:
+						result = nicks[0]
+
+				if result:
+					text[-1] = result+" "
 					text = " ".join(text)
 					widget.set_text(text)
 					widget.set_position(len(text))
-			return True
+
+				return True
 		return False
 
 	""" TOPIC BAR METHODS """
