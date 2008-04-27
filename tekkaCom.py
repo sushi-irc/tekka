@@ -73,7 +73,6 @@ class tekkaCom(object):
 		# Message-Signals
 		self.bus.add_signal_receiver(self.userMessage, "message")
 		self.bus.add_signal_receiver(self.ownMessage, "own_message")
-		self.bus.add_signal_receiver(self.ownQuery, "own_query")
 		self.bus.add_signal_receiver(self.userQuery, "query")
 		self.bus.add_signal_receiver(self.userNotice, "notice")
 		self.bus.add_signal_receiver(self.userAction, "action")
@@ -321,9 +320,6 @@ class tekkaCom(object):
 		self.channelPrint(timestamp, server, channel, \
 		"&lt;<font foreground='%s'>%s</font>&gt; <msg>%s</msg>" \
 		% (self.getColor("ownNick"), self.getNick(server), self.escape(message)))
-
-	def ownQuery(self, timestamp, server, channel, message):
-		self.ownMessage(timestamp,server,channel,message)
 
 	def userQuery(self, timestamp, server, nick, message):
 		self._simCheck(server,nick)
