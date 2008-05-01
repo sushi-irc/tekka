@@ -1,5 +1,5 @@
 
-import tekkaLists
+import tekkaGUI
 import htmlbuffer
 
 """
@@ -83,7 +83,7 @@ class tekkaChannel(tekkaTab):
 	def __init__(self, name, buffer=None, nicklist=None, topic=None, topicsetter=None):
 		tekkaTab.__init__(self, name, buffer)
 		
-		self.nicklist = nicklist or tekkaLists.tekkaNicklistStore()
+		self.nicklist = nicklist or tekkaGUI.tekkaNicklistStore()
 		self.topic = topic or ""
 		self.topicsetter = topicsetter or ""
 

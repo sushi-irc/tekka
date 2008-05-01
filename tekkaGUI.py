@@ -1,13 +1,47 @@
-# servertree / nicklist handling
+"""
+Copyright (c) 2008 Marian Tietz
+All rights reserved.
+ 
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+ 
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+ 
+THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+"""
 
 import pygtk
 pygtk.require("2.0")
-import gtk
+
+import gtk		
+import gtk.glade
+import pango
+import gobject
+
+import time
 
 import htmlbuffer
-import gobject
 import tekkaChannel
 
+"""
+Generic list with crappy class functions.
+TODO: replace, delete or overhaul this
+"""
 class tekkaList(object):
 	def __init__(self):
 		pass
@@ -47,6 +81,7 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 	
 	""" NICKLIST METHODS """
 
+	# hack for tekkaList <.<
 	def get_model(self):
 		return self
 
@@ -117,39 +152,6 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 			iter = store.append(None)
 			prefix = modes[prefix]
 			store.set(iter, 0, prefix, 1, nick)
-		"""
-		store = self
-		ul = {}
-		modes = self.modes
-
-		for mode in modes:
-			ul[mode] = {"list":[],"relation":{}}
-		
-		for row in store:	
-			prefix = row[0] or " "
-			nick = row[1]
-
-			mfield = ul[prefix]
-			mfield["relation"][nick] = row.path[0]
-			mfield["list"].append(nick)
-
-		store.clear()
-		for mi in xrange(len(modes)):
-			l = ul[modes[mi]]
-
-			if mi == 0:
-				bi = 0 # begin index
-			else:
-				bi = len(ul[modes[mi-1]]["list"])+1
-
-			l["list"].sort( lambda a,b: cmp(a.lower(),b.lower()) )
-			
-			mode = modes[mi]
-
-			for i in xrange(bi,len(l["list"])+bi):
-				iter = store.append(None)
-				store.set(iter, 0, mode, 1, l["list"][i-bi])
-		"""
 
 """
 	The server tree store looks in the GUI like this:
@@ -273,7 +275,14 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 				if channel == cname:
 					return channel
 		return None
-	
+
+	def getObject(self, server, channel=None):
+		s,c = self.getRow(server,channel)
+		if s and not c and not channel:
+			return s[self.COLUMN_OBJECT]
+		if s and c:
+			return c[self.COLUMN_OBJECT]
+		return None
 
 	def getCurrentServer(self):
 		if self.currentRow and self.currentRow[0]:
@@ -346,6 +355,18 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 	
 		return 0,iter
 
+	def updateDescription(self, server=None, channel=None, obj=None):
+		if server and obj:
+			if channel:
+				self.channelDescription(server,channel,obj.markup())
+			else:
+				self.serverDescription(server, obj.markup())
+		elif server and not obj:
+			obj = self.getObject(server,channel)
+			if channel:
+				self.channelDescription(server,channel,obj.markup())
+			else:
+				self.serverDescription(server, obj.markup())
 
 	def renameChannel(self, servername, channelname, new_channelname):
 		row = self.findRow(servername)
@@ -531,3 +552,236 @@ class tekkaHistory(object):
 			return "%s:" % server
 		else:
 			return "%s:%s" % (server,channel)
+			
+	
+
+class tekkaGUI(object):
+	def __init__(self, config):
+		self.config = config
+
+		self.widgets = gtk.glade.XML(self.config.gladefiles["mainwindow"], "tekkaMainwindow")
+		
+		self.servertree = tekkaServertree()
+		self._setupServertree()
+		
+		SW = self.widgets.get_widget("sw_servertree")
+		SW.add(self.servertree)
+		SW.show_all()
+
+		self.nicklist = self.widgets.get_widget("tekkaNicklist")
+		self._setupNicklist()
+
+		self.topicbar = self.widgets.get_widget("tekkaTopic")
+		self.statusbar = self.widgets.get_widget("statusbar")
+		self.statusbar.push(1,"Acting as IRC-client")
+
+		self.servertree.expand_all()
+		
+		self.textbox = self.widgets.get_widget("tekkaOutput")
+		self.textbox.set_cursor_visible(False)
+		self.setOutputFont(self.config.outputFont)
+
+		self.textentry = self.widgets.get_widget("tekkaInput")
+		self.textentry.set_property("can-focus",True)
+
+		self.history = tekkaHistory()
+
+	def get_config(self):
+		return self.config
+
+	def get_widgets(self):
+		return self.widgets
+
+	def get_servertree(self):
+		return self.servertree
+
+	def get_nicklist(self):
+		return self.nicklist
+
+	def get_output(self):
+		return self.textbox
+
+	def get_input(self):
+		return self.textentry
+
+	def get_topicbar(self):
+		return self.topicbar
+
+	def get_history(self):
+		return self.history
+	
+	""" SETUP ROUTINES """
+
+	def _setupServertree(self):
+		renderer = gtk.CellRendererText()
+		column = gtk.TreeViewColumn("Server",renderer,markup=0)
+		self.servertree.append_column(column)
+		self.servertree.set_headers_visible(False)
+		self.servertree.set_property("can-focus",False)
+
+	def _setupNicklist(self):
+		self.nicklistStore = gtk.ListStore(gobject.TYPE_STRING)
+		self.nicklist.set_model(self.nicklistStore)
+
+		renderer = gtk.CellRendererText()
+		column = gtk.TreeViewColumn("Prefix", renderer, text=0)
+		self.nicklist.append_column(column)
+		
+		renderer = gtk.CellRendererText()
+		column = gtk.TreeViewColumn("Nicks", renderer, text=1)
+		self.nicklist.append_column(column)
+
+		self.nicklist.set_headers_visible(False)
+
+	def setOutputFont(self, fontname):
+		tb = self.textbox
+		fd = pango.FontDescription()
+		fd.set_family(fontname)
+		if not fd:
+			return
+		tb.modify_font(fd)
+
+	""" tekkaCom METHODS """
+
+	def serverConnect(self, time, server):
+		self.statusbar.push(2,"Connecting to %s" % server)
+		tekkaCom.serverConnect(self,time,server)
+
+	def serverConnected(self, time, server, nick):
+		self.statusbar.pop(2)
+		tekkaCom.serverConnected(self,time,server,nick)
+
+
+
+	""" TOPIC BAR METHODS """
+
+	def setTopicInBar(self, server=None, channel=None):
+		if not server and not channel:
+			srow,crow = self.servertree.getCurrentRow()
+		else:
+			srow,crow = self.servertree.getRow(server,channel)
+		if not crow: 
+			return
+
+		obj = crow[self.servertree.COLUMN_OBJECT]
+
+		self.topicbar.set_text(obj.getTopic())
+
+	""" INPUT HISTORY / KEYPRESSEVENT """
+
+
+
+	""" PRINTING ROUTINES """
+
+	def scrollOutput(self, output):
+		output.place_cursor(output.get_end_iter())
+		mark = output.get_insert()
+		self.textbox.scroll_mark_onscreen(mark)
+
+	def escape(self, msg):
+		msg = msg.replace("&","&amp;")
+		msg = msg.replace("<","&lt;")
+		msg = msg.replace(">","&gt;")
+		msg = msg.replace(chr(2), "<sb/>") # bold-char
+		msg = msg.replace(chr(31), "<su/>") # underline-char
+		return msg
+	
+	def channelPrint(self, timestamp, server, channel, message, nick=""):
+		timestring = time.strftime("%H:%M", time.localtime(timestamp))
+
+		outputstring = "<msg>[%s] %s<br/></msg>" % (timestring, message)
+
+		output = self.servertree.getOutput(server,channel)
+
+		if not output:
+			print "channelPrint(): no output buffer, adding channel"
+			return 
+
+		enditer = output.get_end_iter()
+		output.insert_html(enditer, outputstring)
+
+		# if channel is "activated"
+		if channel == self.servertree.getCurrentChannel()[1]:
+			self.scrollOutput(output)
+		else:
+			self.servertree.channelDescription(server, channel, "<b>"+channel+"</b>")
+
+	# prints 'string' with "%H:%M' formatted 'timestamp' to the server-output
+	# identified by 'server'
+	def serverPrint(self, timestamp, server, string, raw=False):
+		output = self.servertree.getOutput(server)
+
+		if not output:
+			iter,output = self.servertree.addServer(server)
+
+		timestr = time.strftime("%H:%M", time.localtime(timestamp))
+
+		if not raw:
+			output.insert_html(output.get_end_iter(), "<msg>[%s] %s<br/></msg>" % (timestr,string))
+		else:
+			output.insert(output.get_end_iter(), "[%s] [%s]\n" % (timestr, string))
+
+		cserver,cchannel = self.servertree.getCurrentChannel()
+		if not cchannel and cserver and cserver == server:
+			self.scrollOutput(output)
+		else:
+			self.servertree.serverDescription(server, "<b>"+server+"</b>")
+
+	# prints 'string' to the current output
+	def myPrint(self, string, html=False):
+		output = self.textbox.get_buffer()
+
+		if not output:
+			print "No output buffer here!"
+			return
+		if not html:
+			output.insert(output.get_end_iter(), string+"\n")
+		else:
+			output.insert_html(output.get_end_iter(), "<msg>"+string+"<br/></msg>")
+		self.scrollOutput(output)
+
+	# tekkaClear command method from tekkaCom:
+	# clears the output of the tekkaOutput widget
+	def tekkaClear(self, args):
+		server,channel = self.servertree.getCurrentChannel()
+		if not server: return
+		elif server and not channel:
+			output = self.servertree.getOutput(server)
+		else:
+			output = self.servertree.getOutput(server,channel)
+		output.set_text("")
+		# clear the tagtable
+		tt = output.get_tag_table()
+		if tt: tt.foreach(lambda tag,data: data.remove(tag), tt)
+
+	#################################################################
+	
+	def getNickColors(self):
+		return tekkaConfig.getNickColors(self)
+
+	def setTopic(self, time, server, channel, nick, topic):
+		self.servertree.setTopic(server,channel,topic,nick)
+		self.setTopicInBar(server,channel)
+	
+	def setAway(self, time, server):
+		srow,crow = self.servertree.getRow(server)
+		obj = srow[self.servertree.COLUMN_OBJECT]
+		obj.setAway(True)
+		self.servertree.serverDescription(server, obj.markup())
+
+	def setBack(self, time, server):
+		srow,crow = self.servertree.getRow(server)
+		obj = srow[self.servertree.COLUMN_OBJECT]
+		obj.setAway(False)
+		self.servertree.serverDescription(server, obj.markup())
+
+	""" MISC STUFF """
+
+	def quit(self):
+		print "quitting"
+		gtk.main_quit()
+
+
+if __name__ == "__main__":
+	gui = tekkaGUI()
+	gtk.main()

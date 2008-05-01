@@ -46,7 +46,7 @@ class in tekkaMain and pass it to the dialogs.
 
 class addServerDialog(object):
 	def __init__(self,tekkaMainobject):
-		self.gladefile = tekkaMainobject.gladefiles["dialogs"]
+		self.gladefile = tekkaMainobject.get_config().gladefiles["dialogs"]
 		self.widgets = None
 		self.servername = None
 		self.RESPONSE_ADD = 1
@@ -86,7 +86,7 @@ class addServerDialog(object):
 
 class editServerDialog(object):
 	def __init__(self, serverdata, tekkaMainobject):
-		self.gladefile = tekkaMainobject.gladefiles["dialogs"]
+		self.gladefile = tekkaMainobject.get_config().gladefiles["dialogs"]
 		self.widgets = None
 		self.serverdata = serverdata
 		self.tekkaMainobject = tekkaMainobject
@@ -139,7 +139,7 @@ class editServerDialog(object):
 
 class deleteServerDialog(object):
 	def __init__(self,tekkaMainobject):
-		self.gladefile = tekkaMainobject.gladefiles["dialogs"]
+		self.gladefile = tekkaMainobject.get_config().gladefiles["dialogs"]
 	
 	def run(self):
 		widgets = gtk.glade.XML(self.gladefile, "serverDelete")
@@ -150,7 +150,7 @@ class deleteServerDialog(object):
 
 class serverDialog(object):
 	def __init__(self, tekkaMainobject):
-		self.gladefile = tekkaMainobject.gladefiles["dialogs"]
+		self.gladefile = tekkaMainobject.get_config().gladefiles["dialogs"]
 		self.serverView = None
 		self.serverList = None
 		self.tekkaMainobject = tekkaMainobject
@@ -208,10 +208,12 @@ class serverDialog(object):
 		return result,server
 
 	def _retrieve_serverlist(self):
+		com = self.tekkaMainobject.get_com()
+
 		self.serverView.get_model().clear()
-		serverlist = self.tekkaMainobject.retrieveServerlist()
+		serverlist = com.fetch_serverlist()
 		for s in serverlist:
-			self.addServer(self.tekkaMainobject.retrieveServerinfo(s))
+			self.addServer(com.fetch_serverinfo(s))
 
 
 	def addServer(self, newServer):
@@ -236,13 +238,13 @@ class serverDialog(object):
 			or not newServer.has_key("name"):
 			print "wrong data to createserver"
 			return
-		self.tekkaMainobject.createServer(newServer)
+		self.tekkaMainobject.get_com().create_server(newServer)
 
 	def deleteServer(self, servername):
 		for server in self.serverList:
 			if server[0] == servername:
 				self.serverList.remove(server.iter)
-				self.tekkaMainobject.deleteServer(servername)
+				self.tekkaMainobject.get_com().delete_server(servername)
 
 
 	def openAddDialog(self, widget):
