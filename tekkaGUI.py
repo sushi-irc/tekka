@@ -707,7 +707,13 @@ class tekkaGUI(object):
 		if channel == self.servertree.getCurrentChannel()[1]:
 			self.scrollOutput(output)
 		else:
-			self.servertree.channelDescription(server, channel, "<b>"+channel+"</b>")
+			obj = self.servertree.getObject(server,channel)
+			if not obj:
+				print "No such server %s / %s\n" % (server,channel)
+			if obj.getNewMessage():
+				return
+			obj.setNewMessage(True)
+			self.servertree.updateDescription(server,channel,obj=obj)
 
 	# prints 'string' with "%H:%M' formatted 'timestamp' to the server-output
 	# identified by 'server'
@@ -725,10 +731,14 @@ class tekkaGUI(object):
 			output.insert(output.get_end_iter(), "[%s] [%s]\n" % (timestr, string))
 
 		cserver,cchannel = self.servertree.getCurrentChannel()
-		if not cchannel and cserver and cserver == server:
+		if cserver == server and not cchannel:
 			self.scrollOutput(output)
 		else:
-			self.servertree.serverDescription(server, "<b>"+server+"</b>")
+			obj = self.servertree.getObject(server)
+			if obj.getNewMessage(): # don't need to repeat setting
+				return
+			obj.setNewMessage(True)
+			self.servertree.updateDescription(server,obj=obj)
 
 	# prints 'string' to the current output
 	def myPrint(self, string, html=False):
@@ -764,7 +774,12 @@ class tekkaGUI(object):
 
 	def setTopic(self, time, server, channel, nick, topic):
 		self.servertree.setTopic(server,channel,topic,nick)
-		self.setTopicInBar(server,channel)
+		
+		cs,cc = self.servertree.getCurrentChannel()
+		if not cs or not cc:
+			return
+		if cs == server and cc == channel:
+			self.setTopicInBar(server,channel)
 	
 	def setAway(self, time, server):
 		srow,crow = self.servertree.getRow(server)

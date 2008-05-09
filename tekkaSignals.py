@@ -309,13 +309,26 @@ class tekkaSignals(object):
 			self.gui.channelPrint(time, server, target, msg)
 
 	def userCTCP(self, time, server,  nick, target, message):
-		self.userMessage(time,server, nick, nick, message)
+		self.gui.channelPrint(time, server, target, \
+			"<font foreground='#00DD33'>CTCP from %s to Channel:</font> %s" % (nick, message))
 
 	def ownCTCP(self, time, server, target, message):
-		pass
+		channel = self.gui.get_servertree().getChannel(server,target)
+		if channel:
+			self.channelPrint(time, server, channel, \
+				"CTCP request from you: %s" % (message))
+		else:
+			self.serverPrint(time, server, "CTCP request from you to %s: %s" \
+					% (target, message))
 
 	def queryCTCP(time, server, nick, message):
-		self.userMessage(time, server, nick, nick, message)
+		channel = self.gui.get_servertree().getChannel(server,target)
+		if channel:
+			self.gui.channelPrint(time, server, channel, \
+					"CTCP request from %s: %s" % (nick, message))
+		else:
+			self.gui.serverPrint(time, server, \
+					"CTCP reqiest from %s to you: %s" % (nick, message))
 
 	def userNotice(self, time, server, nick, target, message):
 		if target == self.com.get_own_nick(server):
