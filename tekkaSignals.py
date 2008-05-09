@@ -46,6 +46,9 @@ class tekkaSignals(object):
 		self.bus.add_signal_receiver(self.userNotice, "notice")
 		self.bus.add_signal_receiver(self.userAction, "action")
 		self.bus.add_signal_receiver(self.userAwayMessage, "away_message")
+		self.bus.add_signal_receiver(self.userCTCP, "ctcp")
+		self.bus.add_signal_receiver(self.ownCTCP, "own_ctcp")
+		self.bus.add_signal_receiver(self.queryCTCP, "query_ctcp")
 
 		# action signals
 		self.bus.add_signal_receiver(self.userPart, "part")
@@ -55,7 +58,6 @@ class tekkaSignals(object):
 		self.bus.add_signal_receiver(self.userNick, "nick")
 		self.bus.add_signal_receiver(self.userAway, "away")
 		self.bus.add_signal_receiver(self.userBack, "back")
-		self.bus.add_signal_receiver(self.userCTCP, "ctcp")
 		self.bus.add_signal_receiver(self.userMode, "mode")
 
 		# Server-Signals
@@ -188,11 +190,10 @@ class tekkaSignals(object):
 	def serverConnect(self, time, server):
 		self.gui.get_servertree().addServer(server)
 		self.gui.serverPrint(time, server, "Connecting...")
+		self.gui.get_statusbar().push(2,"Connecting to %s" % server)
 
 	# maki connected to a server
 	def serverConnected(self, time, server, nick):
-		self.gui.serverPrint(time, server, "Connected.")
-
 		servertree = self.gui.get_servertree()
 
 		obj = servertree.getObject(server)
@@ -200,6 +201,9 @@ class tekkaSignals(object):
 		servertree.updateDescription(server,obj=obj)
 
 		self.addChannels(server)
+
+		self.gui.get_statusbar().pop(2)
+		self.gui.serverPrint(time, server, "Connected.")
 
 	# maki is reconnecting to a server
 	def serverReconnect(self, time, server):
@@ -305,7 +309,13 @@ class tekkaSignals(object):
 			self.gui.channelPrint(time, server, target, msg)
 
 	def userCTCP(self, time, server,  nick, target, message):
+		self.userMessage(time,server, nick, nick, message)
+
+	def ownCTCP(self, time, server, target, message):
 		pass
+
+	def queryCTCP(time, server, nick, message):
+		self.userMessage(time, server, nick, nick, message)
 
 	def userNotice(self, time, server, nick, target, message):
 		if target == self.com.get_own_nick(server):
@@ -372,7 +382,7 @@ class tekkaSignals(object):
 				return
 
 			obj.setConnected(False)
-			self.updateDescription(server,obj=obj)
+			servertree.updateDescription(server,obj=obj)
 
 			# walk through all channels and set joined = False on them
 			channels = servertree.getChannels(server)
@@ -383,7 +393,7 @@ class tekkaSignals(object):
 			for channel in channels:
 				obj = servertree.getObject(server,channel)
 				obj.setJoined(False)
-				self.updateDescription(server,channel,obj=obj)
+				servertree.updateDescription(server,channel,obj=obj)
 		else:
 			reasonwrap = ""
 			if reason: 

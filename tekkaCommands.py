@@ -20,6 +20,7 @@ class tekkaCommands(object):
 			"quit" : self.makiQuit,
 			"away" : self.makiAway,
 			"back" : self.makiBack,
+			"ctcp" : self.makiCTCP,
 			"oper" : self.makiOper,
 			"kill" : self.makiKill,
 			"query": self.tekkaQuery,
@@ -231,6 +232,16 @@ class tekkaCommands(object):
 			self.gui.myPrint("Can't determine server.")
 			return
 		self.proxy.back(s)
+
+	def makiCTCP(self, xargs):
+		if not xargs or len(xargs) < 2:
+			self.gui.myPrint("Usage: /ctcp <target> <message>")
+			return
+		server = self.gui.get_servertree().getCurrentServer()
+		if not server:
+			self.gui.myPrint("Could not determine server.")
+			return
+		self.proxy.ctcp(server, xargs[1], xargs[2])
 
 	def makiOper(self, xargs):
 		pass

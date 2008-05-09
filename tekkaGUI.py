@@ -607,6 +607,9 @@ class tekkaGUI(object):
 	def get_topicbar(self):
 		return self.topicbar
 
+	def get_statusbar(self):
+		return self.statusbar
+
 	def get_history(self):
 		return self.history
 	
