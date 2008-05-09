@@ -49,6 +49,7 @@ class tekkaSignals(object):
 		self.bus.add_signal_receiver(self.userCTCP, "ctcp")
 		self.bus.add_signal_receiver(self.ownCTCP, "own_ctcp")
 		self.bus.add_signal_receiver(self.queryCTCP, "query_ctcp")
+		self.bus.add_signal_receiver(self.queryNotice, "query_notice")
 
 		# action signals
 		self.bus.add_signal_receiver(self.userPart, "part")
@@ -213,7 +214,7 @@ class tekkaSignals(object):
 
 	# the server is sending a MOTD
 	def serverMOTD(self, time, server, message):
-		self.gui.serverPrint(time, server, message)
+		self.gui.serverPrint(time, server, self.gui.escape(message))
 
 	""" CHANNEL SIGNALS """
 
@@ -310,25 +311,41 @@ class tekkaSignals(object):
 
 	def userCTCP(self, time, server,  nick, target, message):
 		self.gui.channelPrint(time, server, target, \
-			"<font foreground='#00DD33'>CTCP from %s to Channel:</font> %s" % (nick, message))
+			"<font foreground='#00DD33'>CTCP from %s to Channel:</font> %s" % \
+				(self.gui.escape(nick), self.gui.escape(message)))
 
 	def ownCTCP(self, time, server, target, message):
 		channel = self.gui.get_servertree().getChannel(server,target)
 		if channel:
-			self.channelPrint(time, server, channel, \
-				"CTCP request from you: %s" % (message))
+			nick_color = self.gui.get_config().getColor("ownNick")
+			self.gui.channelPrint(time, server, channel, \
+				"&lt;CTCP:<font foreground='%s'>%s</foreground>&gt; %s" % \
+					(nick_color, self.com.get_own_nick(server), self.gui.escape(message)))
 		else:
-			self.serverPrint(time, server, "CTCP request from you to %s: %s" \
-					% (target, message))
+			self.gui.serverPrint(time, server, "CTCP request from you to %s: %s" \
+					% (self.gui.escape(target), self.gui.escape(message)))
 
-	def queryCTCP(time, server, nick, message):
-		channel = self.gui.get_servertree().getChannel(server,target)
+	def queryCTCP(self, time, server, nick, message):
+		channel = self.gui.get_servertree().getChannel(server,nick)
 		if channel:
 			self.gui.channelPrint(time, server, channel, \
-					"CTCP request from %s: %s" % (nick, message))
+					"&lt;CTCP:<font foreground='%s'>%s</font>&gt; %s" % \
+					(self.getNickColor(nick), self.gui.escape(nick), self.gui.escape(message)))
 		else:
 			self.gui.serverPrint(time, server, \
-					"CTCP reqiest from %s to you: %s" % (nick, message))
+					"&lt;CTCP:<font foreground='%s'>%s</font>&gt; %s" % \
+					(self.getNickColor(nick), self.gui.escape(nick), self.gui.escape(message)))
+
+	def queryNotice(self, time, server, nick, message):
+		channel = self.gui.get_servertree().getChannel(server,nick)
+		if channel:
+			self.gui.channelPrint(time, server, channel, \
+					"&lt;Notice:<font foreground='%s'>%s</font>&gt; %s" % \
+					(self.getNickColor(nick), self.gui.escape(nick), self.gui.escape(message)))
+		else:
+			self.gui.serverPrint(time, server, \
+					"&lt;Notice:<font foreground='%s'>%s</font>&gt; %s" % \
+					(self.getNickColor(nick), self.gui.escape(nick), self.gui.escape(message)))
 
 	def userNotice(self, time, server, nick, target, message):
 		if target == self.com.get_own_nick(server):

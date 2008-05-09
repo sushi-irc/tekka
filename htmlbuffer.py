@@ -130,6 +130,10 @@ class htmlbuffer(gtk.TextBuffer):
 		try:
 			parser.parse(StringIO(str(text)))
 		except Exception, ex:
+			if str(ex).find(":"):
+				error = str(ex).split(":")
+				print "STRING: " + text
+				print "CHAR: " + text[int(error[1])]
 			print ex
 
 if __name__ == "__main__":

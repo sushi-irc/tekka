@@ -241,7 +241,7 @@ class tekkaCommands(object):
 		if not server:
 			self.gui.myPrint("Could not determine server.")
 			return
-		self.proxy.ctcp(server, xargs[1], xargs[2])
+		self.proxy.ctcp(server, xargs[0], xargs[1])
 
 	def makiOper(self, xargs):
 		pass

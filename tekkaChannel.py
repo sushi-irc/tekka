@@ -31,7 +31,7 @@ class tekkaTab(object):
 	def getNewMessage(self):
 		return self.newMessage
 
-	def setNewMessage(self, switch):
+	def setNewMessage(self, switch, type=None):
 		self.newMessage = switch
 
 	# markup the string in due to the 
