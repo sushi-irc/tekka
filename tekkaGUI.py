@@ -192,10 +192,13 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 
 		self.set_model(model)
 
+		self.shortcut_ids = {}
+
 		self.currentRow = None,None
 		self.connect("button-press-event", self._cacheCurrentRow)
 
-	
+		self.shortcut_ids={}
+
 	def searchTab(self, treeiter, needle):
 		return [l[self.COLUMN_NAME] for l in treeiter if l and l[self.COLUMN_NAME][0:len(needle)].lower()==needle]
 
@@ -211,6 +214,25 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 			return row[1][self.COLUMN_OBJECT].getBuffer()
 		return None
 
+
+	""" SHORTCUTS """
+
+	def get_shortcut(self,i):
+		return self.shortcut_ids[i]
+
+	def _makeShortcuts(self, treeview, path, iter, data):
+		if data[1] > 9:
+			return
+		data[1]+=1
+		self.shortcut_ids["%d" % data[1]] = path
+
+	def updateShortcuts(self):
+		print "updating shortcuts"
+		model = self.get_model()
+		count = 0
+		data = [model,count]
+		model.foreach(self._makeShortcuts, data)
+
 	""" CACHING """
 
 	def _cacheCurrentRow(self, widget, event):
@@ -221,6 +243,10 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 
 		self.currentRow = self.getRowFromPath(path[0])
 
+	def updateCurrentRowFromPath(self, path):
+		if not path:
+			return
+		self.currentRow = self.getRowFromPath(path)
 
 	""" SERVER TREE HANDLING """
 
@@ -321,6 +347,8 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		iter = model.append(None)
 		model.set(iter, self.COLUMN_DESCRIPTION, servername, self.COLUMN_NAME, servername, self.COLUMN_OBJECT, obj)
 
+		self.updateShortcuts()
+
 		return iter
 
 	def addChannel(self, servername, channelname, nicks=None, topic=None, topicsetter=None):
@@ -352,7 +380,9 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		self.COLUMN_OBJECT, obj)
 
 		self.expand_row(row.path,True)
-	
+
+		self.updateShortcuts()
+
 		return 0,iter
 
 	def updateDescription(self, server=None, channel=None, obj=None):
@@ -400,12 +430,14 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 			crow = self.findRow(channelname, row.iterchildren())
 			if crow:
 				self.get_model().remove(crow.iter)
+				self.updateShortcuts()
 
 	# Removes the server "servername"
 	def removeServer(self, servername):
 		row = self.findRow(servername)
 		if row:
 			self.get_model().remove(row.iter)
+			self.updateShortcuts()
 
 
 """
@@ -556,14 +588,20 @@ class tekkaHistory(object):
 	
 
 class tekkaGUI(object):
+	STATUSBAR_IDLE=1
+	STATUSBAR_CONNECTING=2
+
 	def __init__(self, config):
 		self.config = config
 
 		self.widgets = gtk.glade.XML(self.config.gladefiles["mainwindow"], "tekkaMainwindow")
-		
+	
+		self.accelGroup = gtk.AccelGroup()
+		self._setupAccelGroup()
+
 		self.servertree = tekkaServertree()
 		self._setupServertree()
-		
+	
 		SW = self.widgets.get_widget("sw_servertree")
 		SW.add(self.servertree)
 		SW.show_all()
@@ -573,7 +611,7 @@ class tekkaGUI(object):
 
 		self.topicbar = self.widgets.get_widget("tekkaTopic")
 		self.statusbar = self.widgets.get_widget("statusbar")
-		self.statusbar.push(1,"Acting as IRC-client")
+		self.statusbar.push(self.STATUSBAR_IDLE,"Acting as IRC-client")
 
 		self.servertree.expand_all()
 		
@@ -612,13 +650,22 @@ class tekkaGUI(object):
 
 	def get_history(self):
 		return self.history
-	
+
+	def get_accel_group(self):
+		return self.accelGroup
+
 	""" SETUP ROUTINES """
+
+	def _setupAccelGroup(self):
+		window = self.widgets.get_widget("tekkaMainwindow")
+		window.add_accel_group(self.accelGroup)
 
 	def _setupServertree(self):
 		renderer = gtk.CellRendererText()
 		column = gtk.TreeViewColumn("Server",renderer,markup=0)
+		
 		self.servertree.append_column(column)
+
 		self.servertree.set_headers_visible(False)
 		self.servertree.set_property("can-focus",False)
 
@@ -644,18 +691,6 @@ class tekkaGUI(object):
 			return
 		tb.modify_font(fd)
 
-	""" tekkaCom METHODS """
-
-	def serverConnect(self, time, server):
-		self.statusbar.push(2,"Connecting to %s" % server)
-		tekkaCom.serverConnect(self,time,server)
-
-	def serverConnected(self, time, server, nick):
-		self.statusbar.pop(2)
-		tekkaCom.serverConnected(self,time,server,nick)
-
-
-
 	""" TOPIC BAR METHODS """
 
 	def setTopicInBar(self, server=None, channel=None):
@@ -669,9 +704,6 @@ class tekkaGUI(object):
 		obj = crow[self.servertree.COLUMN_OBJECT]
 
 		self.topicbar.set_text(obj.getTopic())
-
-	""" INPUT HISTORY / KEYPRESSEVENT """
-
 
 
 	""" PRINTING ROUTINES """

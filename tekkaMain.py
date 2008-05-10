@@ -29,6 +29,7 @@ SUCH DAMAGE.
 import sys
 
 import gtk
+import gobject
 
 from tekkaConfig import tekkaConfig
 from tekkaCom import tekkaCom
@@ -57,6 +58,8 @@ class tekkaMain(object):
 		self._setup_signals(self.gui.get_widgets())
 
 		self.gui.get_servertree().expand_all()
+
+		self.initShortcuts()
 
 	def get_config(self):
 		return self.config
@@ -108,6 +111,46 @@ class tekkaMain(object):
 	Widget-Signals
 	"""
 	
+	""" SHORTCUTS """
+
+	def switch_tab(self, path):
+		servertree = self.gui.get_servertree()
+		servertree.set_cursor(path)
+		event = gtk.gdk.Event(gtk.gdk.BUTTON_PRESS)
+		rect = servertree.get_cell_area(path, servertree.get_column(0))
+		event.x = float(rect.x)
+		event.y = float(rect.y)
+		event.button = 1
+		servertree.updateCurrentRowFromPath(path)
+		self.servertree_button_press(servertree, event)
+
+	def shortcut_1(self,w):
+		self.switch_tab(self.gui.get_servertree().get_shortcut("1"))
+	def shortcut_2(self,w):
+		self.switch_tab(self.gui.get_servertree().get_shortcut("2"))
+	def shortcut_3(self,w):
+		self.switch_tab(self.gui.get_servertree().get_shortcut("3"))
+	def shortcut_4(self,w):
+		self.switch_tab(self.gui.get_servertree().get_shortcut("4"))
+	def shortcut_5(self,w):
+		self.switch_tab(self.gui.get_servertree().get_shortcut("5"))
+	def shortcut_6(self,w):
+		self.switch_tab(self.gui.get_servertree().get_shortcut("6"))
+	def shortcut_7(self,w):
+		self.switch_tab(self.gui.get_servertree().get_shortcut("7"))
+	def shortcut_8(self,w):
+		self.switch_tab(self.gui.get_servertree().get_shortcut("8"))
+	def shortcut_9(self,w):
+		self.switch_tab(self.gui.get_servertree().get_shortcut("9"))
+
+	def initShortcuts(self):
+		servertree = self.gui.get_servertree()
+		accel_group = self.gui.get_accel_group()
+		for i in range(1,10):
+			gobject.signal_new("shortcut_%d" % i, tekkaGUI.tekkaServertree, gobject.SIGNAL_ACTION, None, ())
+			servertree.add_accelerator("shortcut_%d" % i, accel_group, ord("%d" % i), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
+			servertree.connect("shortcut_%d" % i, eval("self.shortcut_%d" % i))
+			
 
 	"""
 	A button in the servertree was pressed.

@@ -191,7 +191,7 @@ class tekkaSignals(object):
 	def serverConnect(self, time, server):
 		self.gui.get_servertree().addServer(server)
 		self.gui.serverPrint(time, server, "Connecting...")
-		self.gui.get_statusbar().push(2,"Connecting to %s" % server)
+		self.gui.get_statusbar().push(self.gui.STATUSBAR_CONNECTING, "Connecting to %s" % server)
 
 	# maki connected to a server
 	def serverConnected(self, time, server, nick):
@@ -203,7 +203,7 @@ class tekkaSignals(object):
 
 		self.addChannels(server)
 
-		self.gui.get_statusbar().pop(2)
+		self.gui.get_statusbar().pop(self.gui.STATUSBAR_CONNECTING)
 		self.gui.serverPrint(time, server, "Connected.")
 
 	# maki is reconnecting to a server

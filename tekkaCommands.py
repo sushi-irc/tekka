@@ -42,6 +42,9 @@ class tekkaCommands(object):
 	""" COMMAND METHODS """
 
 	def send_message(self, server, channel, text):
+		if not text:
+			self.gui.get_servertree().setupShortcuts()
+			return
 		if text[0] == "/" and text[1] != "/":
 			self.parseCommand(text[1:])
 		else:
