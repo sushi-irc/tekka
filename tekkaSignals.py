@@ -25,6 +25,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+import dbus
 import os
 
 class tekkaSignals(object):
@@ -105,29 +106,18 @@ class tekkaSignals(object):
 				nicklist.addNicks(nicks)
 				obj.setJoined(True)
 			else:
-				self.__lastLogHack(server,channel,10)
+				self.lastLog(server,channel,10)
 
 			self._prefixFetch(server,channel,nicklist,nicks)
 
 
 	""" HELPER """
 
-	def __lastLogHack(self, server, channel, lines):
+	def lastLog(self, server, channel, lines):
 		obj = self.gui.get_servertree().getObject(server,channel)
 		buffer = obj.getBuffer()
-		path = os.environ["HOME"]+"/.sushi/logs/%s/%s.txt" % (server,channel)
-		try:
-			f = file(path)
-		except:
-			return
-		if not f: 
-			return
-		try:
-			lines = f.readlines()[-lines:]
-		except:
-			return
-		for line in lines:
-			buffer.insert_html(buffer.get_end_iter(), "<font foreground=\"#DDDDDD\">%s</font>" % self.gui.escape(line))
+		for line in self.com.proxy.log(server, channel, dbus.UInt64(lines)):
+			buffer.insert_html(buffer.get_end_iter(), "<msg><font foreground=\"#DDDDDD\">%s</font><br/></msg>" % self.gui.escape(line))
 
 
 	"""
@@ -488,7 +478,7 @@ class tekkaSignals(object):
 				obj.setJoined(True)
 				servertree.updateDescription(server,channel,obj=obj)
 			else:
-				self.__lastLogHack(server,channel,10)
+				self.lastLog(server,channel,10)
 
 			# fetch the prefixes and apply
 			# them to the nicklist of the channel
