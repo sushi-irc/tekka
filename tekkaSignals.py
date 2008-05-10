@@ -364,7 +364,7 @@ class tekkaSignals(object):
 		if channel:
 			servertree.renameChannel(server, channel, new_nick)
 		
-		if nick == self.com.get_own_nick(server):
+		if new_nick == self.com.get_own_nick(server):
 			nickwrap = "You are"
 		else:
 			nickwrap = "%s is" % nick

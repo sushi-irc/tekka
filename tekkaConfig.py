@@ -38,6 +38,8 @@ class tekkaConfig(object):
 		# x,y
 		self.windowSize = [400,500]
 
+		self.servertabShortcuts = True
+
 		self.colors = {}
 		self.colors["ownNick"] = "#AA0000"
 		self.colors["nick"] = "#2222AA"

@@ -684,12 +684,11 @@ class tekkaGUI(object):
 		self.nicklist.set_headers_visible(False)
 
 	def setOutputFont(self, fontname):
-		tb = self.textbox
 		fd = pango.FontDescription()
 		fd.set_family(fontname)
 		if not fd:
 			return
-		tb.modify_font(fd)
+		self.textbox.modify_font(fd)
 
 	""" TOPIC BAR METHODS """
 
