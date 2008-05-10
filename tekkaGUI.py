@@ -716,7 +716,7 @@ class tekkaGUI(object):
 		msg = msg.replace("&","&amp;")
 		msg = msg.replace("<","&lt;")
 		msg = msg.replace(">","&gt;")
-		msg = msg.replace(chr(2), "<sb/>") # bold-char
+#		msg = msg.replace(chr(2), "<sb/>") # bold-char
 		msg = msg.replace(chr(31), "<su/>") # underline-char
 		msg = msg.replace(chr(1), "")
 		return msg

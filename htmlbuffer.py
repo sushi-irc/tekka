@@ -121,29 +121,43 @@ class htmlbuffer(gtk.TextBuffer):
 		else:
 			self.tagtable = gtk.TextTagTable()
 		gtk.TextBuffer.__init__(self, self.tagtable)
+		self.errorcount = 0
 
 	def insert_html(self, iter, text):
 		startoffset = iter.get_offset()
 		parser = xml.sax.make_parser()
 		parser.setContentHandler(htmlhandler(self))
+
 		try:
 			parser.parse(StringIO(str(text)))
 		except Exception, ex:
 			print ex
+
 			if str(ex).find(":"):
 				error = str(ex).split(":")
+
 				print "STRING: " + text
 				fchar = text[int(error[2])]
 				print "CHAR: " + fchar
+				
 				if not fchar:
 					return
+				
 				print "retrying with replacing faulty char."
-				self.delete(self.get_iter_at_offset(startoffset), self.get_end_iter())
-				try:
-					parser.parse(StringIO(str(text.replace(fchar,""))))
-				except Exception, ex:
-					print "Failed with retrying!"
-					print ex
+	
+				self.errorcount += 1
+				if self.errorcount < 5:
+					oldend = self.get_iter_at_offset(startoffset)
+					self.delete(oldend, self.get_end_iter())
+
+					self.insert_html(oldend, text.replace(fchar,""))
+				else:
+					self.errorcount = 0
+					print "Too many faulty chars."
+					self.insert(self.get_end_iter(), "\n");
+					return
+		self.errorcount = 0
+
 
 if __name__ == "__main__":
 	class servertab(object):
