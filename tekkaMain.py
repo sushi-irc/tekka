@@ -107,41 +107,63 @@ class tekkaMain(object):
 			if server:
 				self.makiConnect([server])
 
-	""" 
-	Widget-Signals
-	"""
-	
-	""" SHORTCUTS """
+	""" Change the current tab to the tab identified by "path" """				
+	def switch_tree_tab(self, path):
+		servertree = self.gui.get_servertree()
+		srow,crow = servertree.getRowFromPath(path)
 
-	def switch_tab(self, path):
+		if srow and not crow:
+			server = srow[servertree.COLUMN_NAME]
+			obj = srow[servertree.COLUMN_OBJECT]
+
+			output = obj.getBuffer()
+
+			if not output:
+				print "No output!"
+				return
+
+			self.gui.get_output().set_buffer(output) # set output buffer
+			self.gui.scrollOutput(output) # scroll to the bottom
+
+			# reset hightlight
+			obj.setNewMessage(False)
+			servertree.serverDescription(server, obj.markup()) 
+
+			self.gui.get_nicklist().set_model(None)
+			self.gui.get_topicbar().set_property("visible",False)
+
+		elif srow and crow:
+			server = srow[servertree.COLUMN_NAME]
+			channel = crow[servertree.COLUMN_NAME]
+			desc = crow[servertree.COLUMN_DESCRIPTION]
+			obj = crow[servertree.COLUMN_OBJECT]
+
+			output = obj.getBuffer()
+			if not output:
+				print "No output!"
+				return
+
+			self.gui.get_output().set_buffer(output)
+			self.gui.scrollOutput(output)
+
+			obj.setNewMessage(False)
+			servertree.channelDescription(server, channel, obj.markup())
+
+			self.gui.get_nicklist().set_model(obj.getNicklist())
+			
+			topicbar = self.gui.get_topicbar()
+			topicbar.set_text("")
+			self.gui.setTopicInBar(server=server,channel=channel)
+			topicbar.set_property("visible",True)
+		else:
+			print "Activation failed due to wrong path."
+
+	""" Wrapper for shortcut functionality """
+	def switch_tab_by_key(self, path):
 		servertree = self.gui.get_servertree()
 		servertree.set_cursor(path)
-		event = gtk.gdk.Event(gtk.gdk.BUTTON_PRESS)
-		rect = servertree.get_cell_area(path, servertree.get_column(0))
-		event.x = float(rect.x)
-		event.y = float(rect.y)
-		event.button = 1
 		servertree.updateCurrentRowFromPath(path)
-		self.servertree_button_press(servertree, event)
-
-	def shortcut_1(self,w):
-		self.switch_tab(self.gui.get_servertree().get_shortcut("1"))
-	def shortcut_2(self,w):
-		self.switch_tab(self.gui.get_servertree().get_shortcut("2"))
-	def shortcut_3(self,w):
-		self.switch_tab(self.gui.get_servertree().get_shortcut("3"))
-	def shortcut_4(self,w):
-		self.switch_tab(self.gui.get_servertree().get_shortcut("4"))
-	def shortcut_5(self,w):
-		self.switch_tab(self.gui.get_servertree().get_shortcut("5"))
-	def shortcut_6(self,w):
-		self.switch_tab(self.gui.get_servertree().get_shortcut("6"))
-	def shortcut_7(self,w):
-		self.switch_tab(self.gui.get_servertree().get_shortcut("7"))
-	def shortcut_8(self,w):
-		self.switch_tab(self.gui.get_servertree().get_shortcut("8"))
-	def shortcut_9(self,w):
-		self.switch_tab(self.gui.get_servertree().get_shortcut("9"))
+		self.switch_tree_tab(path)
 
 	def initShortcuts(self):
 		servertree = self.gui.get_servertree()
@@ -150,64 +172,47 @@ class tekkaMain(object):
 			gobject.signal_new("shortcut_%d" % i, tekkaGUI.tekkaServertree, gobject.SIGNAL_ACTION, None, ())
 			servertree.add_accelerator("shortcut_%d" % i, accel_group, ord("%d" % i), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 			servertree.connect("shortcut_%d" % i, eval("self.shortcut_%d" % i))
-			
+
+
+	""" 
+	Widget-Signals
+	"""
+	
+	""" Keyboard shortcut signals (alt+[1-9]) """
+	def shortcut_1(self,w):
+		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("1"))
+	def shortcut_2(self,w):
+		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("2"))
+	def shortcut_3(self,w):
+		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("3"))
+	def shortcut_4(self,w):
+		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("4"))
+	def shortcut_5(self,w):
+		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("5"))
+	def shortcut_6(self,w):
+		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("6"))
+	def shortcut_7(self,w):
+		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("7"))
+	def shortcut_8(self,w):
+		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("8"))
+	def shortcut_9(self,w):
+		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("9"))
 
 	"""
 	A button in the servertree was pressed.
 	"""
 	def servertree_button_press(self, widget, event):
 		path = widget.get_path_at_pos(int(event.x), int(event.y))
+
 		if not path or not len(path): 
 			return
+
 		servertree = self.gui.get_servertree()
 		srow,crow = servertree.getRowFromPath(path[0])
 		
 		# left click -> activate tab
 		if event.button == 1:
-			if srow and not crow:
-				server = srow[servertree.COLUMN_NAME]
-				obj = srow[servertree.COLUMN_OBJECT]
-
-				output = obj.getBuffer()
-				if not output:
-					print "No output!"
-					return
-
-				self.gui.get_output().set_buffer(output) # set output buffer
-				self.gui.scrollOutput(output) # scroll to the bottom
-
-				# reset hightlight
-				obj.setNewMessage(False)
-				servertree.serverDescription(server, obj.markup()) 
-	
-				self.gui.get_nicklist().set_model(None)
-				self.gui.get_topicbar().set_property("visible",False)
-
-			elif srow and crow:
-				server = srow[servertree.COLUMN_NAME]
-				channel = crow[servertree.COLUMN_NAME]
-				desc = crow[servertree.COLUMN_DESCRIPTION]
-				obj = crow[servertree.COLUMN_OBJECT]
-
-				output = obj.getBuffer()
-				if not output:
-					print "No output!"
-					return
-
-				self.gui.get_output().set_buffer(output)
-				self.gui.scrollOutput(output)
-
-				obj.setNewMessage(False)
-				servertree.channelDescription(server, channel, obj.markup())
-
-				self.gui.get_nicklist().set_model(obj.getNicklist())
-				
-				topicbar = self.gui.get_topicbar()
-				topicbar.set_text("")
-				self.gui.setTopicInBar(server=server,channel=channel)
-				topicbar.set_property("visible",True)
-			else:
-				print "Activation failed due to wrong path in servertree_button"
+			self.switch_tree_tab(path[0])
 
 		# right click -> menu for tab
 		elif event.button == 3:
