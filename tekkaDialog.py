@@ -1,17 +1,17 @@
 """
 Copyright (c) 2008 Marian Tietz
 All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
- 
+
 1. Redistributions of source code must retain the above copyright
    notice, this list of conditions and the following disclaimer.
 2. Redistributions in binary form must reproduce the above copyright
    notice, this list of conditions and the following disclaimer in the
    documentation and/or other materials provided with the distribution.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -53,10 +53,10 @@ class addServerDialog(object):
 
 	def run(self):
 		data = None
-		
+
 		self.widgets = gtk.glade.XML(self.gladefile, "serverAdd")
 		dialog = self.widgets.get_widget("serverAdd")
-	
+
 		servername_input = self.widgets.get_widget("serverAdd_Servername")
 		serveraddress_input = self.widgets.get_widget("serverAdd_Serveradress")
 		serverport_input = self.widgets.get_widget("serverAdd_Serverport")
@@ -91,7 +91,7 @@ class editServerDialog(object):
 		self.serverdata = serverdata
 		self.tekkaMainobject = tekkaMainobject
 		self.deleteServer = 0 # if the server name is changed, delete the old
-		
+
 	def servernameChanged(self,widget):
 		self.deleteServer = 1
 
@@ -140,7 +140,7 @@ class editServerDialog(object):
 class deleteServerDialog(object):
 	def __init__(self,tekkaMainobject):
 		self.gladefile = tekkaMainobject.get_config().gladefiles["dialogs"]
-	
+
 	def run(self):
 		widgets = gtk.glade.XML(self.gladefile, "serverDelete")
 		dialog = widgets.get_widget("serverDelete")
@@ -157,13 +157,13 @@ class serverDialog(object):
 		self.RESPONSE_CONNECT = 3
 
 	def run(self):
-		sigdic = { "serverDialog_Add_clicked_cb" : self.openAddDialog, 
+		sigdic = { "serverDialog_Add_clicked_cb" : self.openAddDialog,
 		           "serverDialog_Edit_clicked_cb" : self.openEditDialog,
 				   "serverDialog_Delete_clicked_cb" : self.openDeleteDialog }
-		
+
 		self.widgets = gtk.glade.XML(self.gladefile, "serverDialog")
 		self.widgets.signal_autoconnect(sigdic)
-		
+
 		dialog = self.widgets.get_widget("serverDialog")
 
 		# get the treeview
@@ -172,13 +172,13 @@ class serverDialog(object):
 		if not self.serverView:
 			print "Failed to get serverView."
 			return gtk.RESPONSE_CANCEL
-		
+
 		# add servercolumn
 		column = gtk.TreeViewColumn("Server",gtk.CellRendererText(), text=0)
 		column.set_resizable(False)
 		column.set_sort_column_id(0)
 		self.serverView.append_column(column)
-	
+
 		# setup the serverList
 		self.serverList = gtk.ListStore(str)
 		self.serverView.set_model(self.serverList)
@@ -228,7 +228,7 @@ class serverDialog(object):
 		if self.serverList:
 			self.serverList.append([newServer["servername"]])
 		self.serverDict[newServer["servername"]]=newServer
-			
+
 	def createServer(self, newServer):
 		if not newServer.has_key("servername") \
 			or not newServer.has_key("address") \

@@ -131,7 +131,7 @@ class tekkaCommands(object):
 
 	def makiJoin(self, xargs, server=None):
 		if not self.check_proxy(): return
-		
+
 		if not server:
 			server = self.gui.get_servertree().getCurrentServer()
 			if not server:

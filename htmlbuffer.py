@@ -11,7 +11,7 @@ are met:
 2. Redistributions in binary form must reproduce the above copyright
    notice, this list of conditions and the following disclaimer in the
    documentation and/or other materials provided with the distribution.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -96,7 +96,7 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 		self.tags.append(tag)
 
 	def endElement(self, name):
-		if name in self.ignoreableEndTags: 
+		if name in self.ignoreableEndTags:
 			return
 		i = rindex(self.elms, name)
 		if i >= 0:
@@ -139,12 +139,12 @@ class htmlbuffer(gtk.TextBuffer):
 				print "STRING: " + text
 				fchar = text[int(error[2])]
 				print "CHAR: " + fchar
-				
+
 				if not fchar:
 					return
-				
+
 				print "retrying with replacing faulty char."
-	
+
 				self.errorcount += 1
 				if self.errorcount < 5:
 					oldend = self.get_iter_at_offset(startoffset)
@@ -166,7 +166,7 @@ if __name__ == "__main__":
 
 			widgets.get_widget("button1").connect("clicked",lambda w: gtk.main_quit())
 			widgets.get_widget("window1").connect("destroy",lambda w: gtk.main_quit())
-		
+
 			textview = widgets.get_widget("textview1")
 			buf = htmlbuffer()
 			textview.set_buffer(buf)

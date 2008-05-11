@@ -3,7 +3,7 @@ import tekkaGUI
 import htmlbuffer
 
 """
-Provides basic attributes like the outputbuffer 
+Provides basic attributes like the outputbuffer
 (default a htmlbuffer), the name of the tab and
 a flag if a new message is received.
 """
@@ -16,7 +16,7 @@ class tekkaTab(object):
 	# the output buffer
 	def getBuffer(self):
 		return self.buffer
-	
+
 	def setBuffer(self, buffer):
 		self.buffer = buffer
 
@@ -34,7 +34,7 @@ class tekkaTab(object):
 	def setNewMessage(self, switch, type=None):
 		self.newMessage = switch
 
-	# markup the string in due to the 
+	# markup the string in due to the
 	# set properties
 	def markup(self):
 		if self.newMessage:
@@ -82,7 +82,7 @@ class tekkaServer(tekkaTab):
 class tekkaChannel(tekkaTab):
 	def __init__(self, name, buffer=None, nicklist=None, topic=None, topicsetter=None):
 		tekkaTab.__init__(self, name, buffer)
-		
+
 		self.nicklist = nicklist or tekkaGUI.tekkaNicklistStore()
 		self.topic = topic or ""
 		self.topicsetter = topicsetter or ""

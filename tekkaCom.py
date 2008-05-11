@@ -1,17 +1,17 @@
 """
 Copyright (c) 2008 Marian Tietz
 All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
- 
+
 1. Redistributions of source code must retain the above copyright
    notice, this list of conditions and the following disclaimer.
 2. Redistributions in binary form must reproduce the above copyright
    notice, this list of conditions and the following disclaimer in the
    documentation and/or other materials provided with the distribution.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -41,13 +41,13 @@ class tekkaCom(object):
 
 	# connect to maki over dbus
 	def connect_maki(self):
-		
+
 		try:
 			self.proxy = self.bus.get_object("de.ikkoku.sushi", "/de/ikkoku/sushi")
 		except dbus.exceptions.DBusException, e:
 			print e
 			print "Is maki running?"
-			
+
 		if not self.proxy:
 			return False
 
@@ -104,7 +104,7 @@ class tekkaCom(object):
 	# sends a PRIVMSG to channel @channel on server @server
 	def send_message(self, server, channel, text):
 		self.proxy.message(server, channel, text)
-	
+
 	# fetch all nicks in @channel on server @server
 	def fetch_nicks(self, server, channel):
 		return self.proxy.nicks(server,channel) or []
@@ -115,7 +115,7 @@ class tekkaCom(object):
 			self.__no_proxy_message()
 			return None
 		return self.proxy.own_nick(server)
-	
+
 	# caches the nick @nickname for server @server.
 	def cache_own_nick(self, server, nickname):
 		self.myNick[server] = nickname
@@ -167,7 +167,7 @@ class tekkaCom(object):
 
 	def fetch_serverlist(self):
 		return self.proxy.sushi_list("servers","","")
-	
+
 	def fetch_serverinfo(self, server):
 		map = {}
 		domain = "servers/%s" % server

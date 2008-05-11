@@ -2,17 +2,17 @@
 """
 Copyright (c) 2008 Marian Tietz
 All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
- 
+
 1. Redistributions of source code must retain the above copyright
    notice, this list of conditions and the following disclaimer.
 2. Redistributions in binary form must reproduce the above copyright
    notice, this list of conditions and the following disclaimer in the
    documentation and/or other materials provided with the distribution.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -42,7 +42,7 @@ import tekkaDialog
 class tekkaMain(object):
 	def __init__(self):
 		self.config = tekkaConfig()
-		
+
 		#self.config.read_config()
 
 		self.com = tekkaCom(self.config)
@@ -77,17 +77,17 @@ class tekkaMain(object):
 		return self.signals
 
 	def _setup_signals(self, widgets):
-		sigdic = { 
+		sigdic = {
 				   "tekkaMainwindow_Quit_activate_cb" : gtk.main_quit,
 				   "tekkaInput_activate_cb" : self.userInput,
 				   "tekkaTopic_activate_cb" : self.topicbarActivate,
 				   "tekkaServertree_realize_cb" : lambda w: w.expand_all(),
 				   "tekkaNicklist_row_activated_cb" : self.nicklistActivateRow,
 				   "tekkaNicklist_button_press_event_cb" : self.nicklistButtonPress,
-		           "tekkaMainwindow_Connect_activate_cb" : self.show_server_dialog,				   
+		           "tekkaMainwindow_Connect_activate_cb" : self.show_server_dialog,
 				   "tekkaMainwindow_Shutdown_activate_cb" : self.commands.makiShutdown
 		         }
-		           				  
+
 		widgets.signal_autoconnect(sigdic)
 		widget = widgets.get_widget("tekkaMainwindow")
 		if widget:
@@ -107,7 +107,7 @@ class tekkaMain(object):
 			if server:
 				self.makiConnect([server])
 
-	""" Change the current tab to the tab identified by "path" """				
+	""" Change the current tab to the tab identified by "path" """
 	def switch_tree_tab(self, path):
 		servertree = self.gui.get_servertree()
 		srow,crow = servertree.getRowFromPath(path)
@@ -127,7 +127,7 @@ class tekkaMain(object):
 
 			# reset hightlight
 			obj.setNewMessage(False)
-			servertree.serverDescription(server, obj.markup()) 
+			servertree.serverDescription(server, obj.markup())
 
 			self.gui.get_nicklist().set_model(None)
 			self.gui.get_topicbar().set_property("visible",False)
@@ -150,7 +150,7 @@ class tekkaMain(object):
 			servertree.channelDescription(server, channel, obj.markup())
 
 			self.gui.get_nicklist().set_model(obj.getNicklist())
-			
+
 			topicbar = self.gui.get_topicbar()
 			topicbar.set_text("")
 			self.gui.setTopicInBar(server=server,channel=channel)
@@ -174,10 +174,10 @@ class tekkaMain(object):
 			servertree.connect("shortcut_%d" % i, eval("self.shortcut_%d" % i))
 
 
-	""" 
+	"""
 	Widget-Signals
 	"""
-	
+
 	""" Keyboard shortcut signals (alt+[1-9]) """
 	def shortcut_1(self,w):
 		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("1"))
@@ -204,12 +204,12 @@ class tekkaMain(object):
 	def servertree_button_press(self, widget, event):
 		path = widget.get_path_at_pos(int(event.x), int(event.y))
 
-		if not path or not len(path): 
+		if not path or not len(path):
 			return
 
 		servertree = self.gui.get_servertree()
 		srow,crow = servertree.getRowFromPath(path[0])
-		
+
 		# left click -> activate tab
 		if event.button == 1:
 			self.switch_tree_tab(path[0])
@@ -219,12 +219,12 @@ class tekkaMain(object):
 			server = None
 			channel = None
 
-			if srow: 
+			if srow:
 				server = srow[servertree.COLUMN_NAME]
-			if crow: 
+			if crow:
 				channel = crow[servertree.COLUMN_NAME]
 
-			if not crow and not srow: 
+			if not crow and not srow:
 				return
 
 			menu = gtk.Menu()
@@ -300,7 +300,7 @@ class tekkaMain(object):
 	"""
 	def nicklistButtonPress(self, widget, event):
 		path = widget.get_path_at_pos(int(event.x), int(event.y))
-		if not path or not len(path): 
+		if not path or not len(path):
 			return
 		srow,crow = self.gui.get_servertree().getCurrentRow()
 
@@ -329,7 +329,7 @@ class tekkaMain(object):
 	"""
 	def userInputEvent(self, widget, event):
 		name = gtk.gdk.keyval_name( event.keyval )
-		
+
 		if name == "Up":
 			server,channel = self.gui.get_servertree().getCurrentChannel()
 			text = self.gui.get_history().getUp(server,channel)
@@ -346,7 +346,7 @@ class tekkaMain(object):
 			return True
 		if name == "Tab":
 			s,c = self.gui.get_servertree().getCurrentRow()
-			if not c: 
+			if not c:
 				print "Server keyword tabcompletion."
 			else:
 				obj = c[self.gui.get_servertree().COLUMN_OBJECT]
@@ -362,7 +362,7 @@ class tekkaMain(object):
 					return True
 
 				result = None
-				
+
 				if needle[0] == "#": # channel completion
 					channels = self.gui.get_servertree().searchTab(s.iterchildren(),needle.lower())
 					if channels:
@@ -393,7 +393,7 @@ class tekkaMain(object):
 		servertree = self.gui.get_servertree()
 		cs,cc = servertree.getCurrentChannel()
 
-		if not server and not channel: 
+		if not server and not channel:
 			return
 		elif server and not channel:
 			self.commands.makiQuit([server,""])
@@ -403,7 +403,7 @@ class tekkaMain(object):
 		elif server and channel:
 			self.commands.makiPart((channel,""),server=server)
 			servertree.removeChannel(server,channel)
-			
+
 			if cc == channel:
 				self.gui.get_output().get_buffer().set_text("")
 				self.gui.get_topicbar().set_text("")

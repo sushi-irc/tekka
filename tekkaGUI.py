@@ -1,17 +1,17 @@
 """
 Copyright (c) 2008 Marian Tietz
 All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
- 
+
 1. Redistributions of source code must retain the above copyright
    notice, this list of conditions and the following disclaimer.
 2. Redistributions in binary form must reproduce the above copyright
    notice, this list of conditions and the following disclaimer in the
    documentation and/or other materials provided with the distribution.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -28,7 +28,7 @@ SUCH DAMAGE.
 import pygtk
 pygtk.require("2.0")
 
-import gtk		
+import gtk
 import gtk.glade
 import pango
 import gobject
@@ -48,7 +48,7 @@ class tekkaList(object):
 
 	def get_model(self):
 		return None
-	
+
 	def findRow(self, name, store=None, col=1):
 		if not store:
 			store = self.get_model()
@@ -70,7 +70,7 @@ class tekkaList(object):
 class tekkaNicklistStore(tekkaList, gtk.ListStore):
 	COLUMN_PREFIX=0
 	COLUMN_NICK=1
-	
+
 	def __init__(self, nicks=None):
 		gtk.ListStore.__init__(self, gobject.TYPE_STRING, gobject.TYPE_STRING)
 
@@ -78,7 +78,7 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 			self.addNicks(nicks)
 		self.modes = ["*","!","@","%","+"," "]
 
-	
+
 	""" NICKLIST METHODS """
 
 	# hack for tekkaList <.<
@@ -92,7 +92,7 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 			self.appendNick(nick,mass=True)
 		self.sortNicks()
 
-	def getNicks(self): 
+	def getNicks(self):
 		return [l[self.COLUMN_NICK] for l in self if l is not None ]
 
 	def appendNick(self, nick,mass=False):
@@ -106,16 +106,16 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 	def modifyNick(self, nick, newnick):
 		store = self.get_model()
 		row = self.findRow(nick, store=store, col=self.COLUMN_NICK)
-		if not row: 
+		if not row:
 			return
 		store.set(row.iter, self.COLUMN_NICK, newnick)
 
 		self.sortNicks()
-	
+
 	def removeNick(self, nick):
 		store = self.get_model()
 		row = self.findRow(nick, store=store, col=self.COLUMN_NICK)
-		if not row: 
+		if not row:
 			return
 		store.remove(row.iter)
 
@@ -136,7 +136,7 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 		store = self
 		modes = self.modes
 		nl = []
-		
+
 		for row in store:
 			prefix = row[0] or " "
 			nick = row[1]
@@ -166,7 +166,7 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 	in the code it looks like this:
 
 	every row has two values (strings). The first
-	is the description of the server/channel. 
+	is the description of the server/channel.
 	In this strings can be pango markups like <b>.
 	The second value is the identifiyng name without
 	such markups.
@@ -178,7 +178,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 	COLUMN_DESCRIPTION=0
 	COLUMN_NAME=1
 	COLUMN_OBJECT=2
-	
+
 	def __init__(self,w=None):
 		print "servertree init"
 		#if w: self.set_flags(w.flags())
@@ -237,7 +237,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 
 	def _cacheCurrentRow(self, widget, event):
 		path = widget.get_path_at_pos(int(event.x), int(event.y))
-		if not path or not len(path): 
+		if not path or not len(path):
 			#self.currentRow = None
 			return
 
@@ -317,9 +317,9 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 
 	def getCurrentRow(self, widget=None, store=None):
 		return self.currentRow
-	
+
 	def getCurrentChannel(self):
-		if not self.currentRow: 
+		if not self.currentRow:
 			return None,None
 		if self.currentRow[0] and self.currentRow[1]:
 			return self.currentRow[0][self.COLUMN_NAME],self.currentRow[1][self.COLUMN_NAME]
@@ -330,7 +330,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 	def setTopic(self, server, channel, topic, topicsetter=None):
 		sr,cr = self.getRow(server,channel)
 		if not cr: # no channel
-			return 
+			return
 		tab = cr[self.COLUMN_OBJECT]
 		tab.setTopic(topic)
 		tab.setTopicsetter(topicsetter)
@@ -339,7 +339,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		row = self.findRow(servername)
 		if row:
 			return row.iter
-		
+
 		model = self.get_model()
 		obj = tekkaChannel.tekkaServer(servername)
 		obj.setConnected(True)
@@ -361,9 +361,9 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 				return 1,crow.iter
 		else: # no server-row
 			return 2,None
-			
+
 		iter = store.append(row.iter)
-			
+
 		obj = tekkaChannel.tekkaChannel(channelname)
 		if nicks:
 			obj.getNicklist().addNicks(nicks)
@@ -373,7 +373,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 			obj.setTopicsetter(topicsetter)
 
 		obj.setJoined(True)
-		
+
 		store.set(iter, \
 		self.COLUMN_DESCRIPTION, channelname, \
 		self.COLUMN_NAME, channelname,\
@@ -457,7 +457,7 @@ Methods:
 	Scrolls down in the history and returns the string or "".
 
   - getHistory(server,channel,i)
-	Returns the input history for channel "channel" in server "server" 
+	Returns the input history for channel "channel" in server "server"
 	for index i. If not existant the function returns "".
 
   - getMax(server,channel)
@@ -530,15 +530,15 @@ class tekkaHistory(object):
 		if self.lastentry != gencheck:
 			self.index = self.getMax(server,channel)
 			print "GETDOWN: HINDEX NOW %d" % self.index
-			if self.index >= 0:	
+			if self.index >= 0:
 				self.lastentry = gencheck
 				return self.getHistory(server, channel, self.index)
 		else:
 			print "GETDOWN: MAXSIZE = %d" % (int(self.getMax(server,channel))-1)
-			print "GETDOWN: INDEX IS %d!" % self.index			
+			print "GETDOWN: INDEX IS %d!" % self.index
 			if self.index < self.getMax(server, channel)-1:
 				self.index += 1
-				print "GETDOWN: INDEX INCREASED: %d" % self.index				
+				print "GETDOWN: INDEX INCREASED: %d" % self.index
 				return self.getHistory(server, channel, self.index)
 		print "NOT HIGHER SRY"
 		self.index = self.getMax(server,channel)
@@ -584,8 +584,8 @@ class tekkaHistory(object):
 			return "%s:" % server
 		else:
 			return "%s:%s" % (server,channel)
-			
-	
+
+
 
 class tekkaGUI(object):
 	STATUSBAR_IDLE=1
@@ -595,13 +595,13 @@ class tekkaGUI(object):
 		self.config = config
 
 		self.widgets = gtk.glade.XML(self.config.gladefiles["mainwindow"], "tekkaMainwindow")
-	
+
 		self.accelGroup = gtk.AccelGroup()
 		self._setupAccelGroup()
 
 		self.servertree = tekkaServertree()
 		self._setupServertree()
-	
+
 		SW = self.widgets.get_widget("sw_servertree")
 		SW.add(self.servertree)
 		SW.show_all()
@@ -614,7 +614,7 @@ class tekkaGUI(object):
 		self.statusbar.push(self.STATUSBAR_IDLE,"Acting as IRC-client")
 
 		self.servertree.expand_all()
-		
+
 		self.textbox = self.widgets.get_widget("tekkaOutput")
 		self.textbox.set_cursor_visible(False)
 		self.setOutputFont(self.config.outputFont)
@@ -663,7 +663,7 @@ class tekkaGUI(object):
 	def _setupServertree(self):
 		renderer = gtk.CellRendererText()
 		column = gtk.TreeViewColumn("Server",renderer,markup=0)
-		
+
 		self.servertree.append_column(column)
 
 		self.servertree.set_headers_visible(False)
@@ -676,7 +676,7 @@ class tekkaGUI(object):
 		renderer = gtk.CellRendererText()
 		column = gtk.TreeViewColumn("Prefix", renderer, text=0)
 		self.nicklist.append_column(column)
-		
+
 		renderer = gtk.CellRendererText()
 		column = gtk.TreeViewColumn("Nicks", renderer, text=1)
 		self.nicklist.append_column(column)
@@ -697,7 +697,7 @@ class tekkaGUI(object):
 			srow,crow = self.servertree.getCurrentRow()
 		else:
 			srow,crow = self.servertree.getRow(server,channel)
-		if not crow: 
+		if not crow:
 			return
 
 		obj = crow[self.servertree.COLUMN_OBJECT]
@@ -720,7 +720,7 @@ class tekkaGUI(object):
 		msg = msg.replace(chr(31), "<su/>") # underline-char
 		msg = msg.replace(chr(1), "")
 		return msg
-	
+
 	def channelPrint(self, timestamp, server, channel, message, nick=""):
 		timestring = time.strftime("%H:%M", time.localtime(timestamp))
 
@@ -730,7 +730,7 @@ class tekkaGUI(object):
 
 		if not output:
 			print "channelPrint(): no output buffer, adding channel"
-			return 
+			return
 
 		enditer = output.get_end_iter()
 		output.insert_html(enditer, outputstring)
@@ -800,19 +800,19 @@ class tekkaGUI(object):
 		if tt: tt.foreach(lambda tag,data: data.remove(tag), tt)
 
 	#################################################################
-	
+
 	def getNickColors(self):
 		return tekkaConfig.getNickColors(self)
 
 	def setTopic(self, time, server, channel, nick, topic):
 		self.servertree.setTopic(server,channel,topic,nick)
-		
+
 		cs,cc = self.servertree.getCurrentChannel()
 		if not cs or not cc:
 			return
 		if cs == server and cc == channel:
 			self.setTopicInBar(server,channel)
-	
+
 	def setAway(self, time, server):
 		srow,crow = self.servertree.getRow(server)
 		obj = srow[self.servertree.COLUMN_OBJECT]

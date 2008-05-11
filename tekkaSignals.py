@@ -1,17 +1,17 @@
 """
 Copyright (c) 2008 Marian Tietz
 All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
- 
+
 1. Redistributions of source code must retain the above copyright
    notice, this list of conditions and the following disclaimer.
 2. Redistributions in binary form must reproduce the above copyright
    notice, this list of conditions and the following disclaimer in the
    documentation and/or other materials provided with the distribution.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -75,25 +75,25 @@ class tekkaSignals(object):
 		self.bus.add_signal_receiver(self.makiShutdownSignal, "shutdown")
 
 		self.init_servers()
-	
+
 	def init_servers(self):
 		servertree = self.gui.get_servertree()
 		for server in self.com.fetch_servers():
 
 			servertree.addServer(server)
 			self.addChannels(server)
-			
+
 			if self.com.is_away(server, self.com.get_own_nick(server)):
 				servertree.getObject(server).setAway(True)
 
 	def addChannels(self, server):
 		channels = self.com.fetch_channels(server)
-		
+
 		for channel in channels:
 			nicks = self.com.fetch_nicks(server, channel)
-			
+
 			self.com.request_topic(server,channel)
-			
+
 			ret,iter = self.gui.get_servertree().addChannel(server, channel, nicks=nicks)
 
 			obj = self.gui.get_servertree().getObject(server,channel)
@@ -130,13 +130,13 @@ class tekkaSignals(object):
 	def _prefixFetch(self, server, channel, nicklist, nicks):
 		for nick in nicks:
 			prefix = self.com.fetch_prefix(server,channel,nick)
-			if not prefix: 
+			if not prefix:
 				continue
 			nicklist.setPrefix(nick, prefix, mass=True)
 		nicklist.sortNicks()
-	
+
 	"""
-	Check for a similar to "nick" named channel (case-insensitive) 
+	Check for a similar to "nick" named channel (case-insensitive)
 	and rename it to "nick"
 	User: /query Nemo -> a new channel with Nemo opened
 	nemo: Is answering to User
@@ -214,9 +214,9 @@ class tekkaSignals(object):
 	Apply this!
 	"""
 	def channelTopic(self, time, server, nick, channel, topic):
-		
+
 		self.gui.setTopic(time, server, channel, nick, topic)
-		
+
 		if not nick:
 			return
 
@@ -353,12 +353,12 @@ class tekkaSignals(object):
 		channel = servertree.getChannel(server, nick)
 		if channel:
 			servertree.renameChannel(server, channel, new_nick)
-		
+
 		if new_nick == self.com.get_own_nick(server):
 			nickwrap = "You are"
 		else:
 			nickwrap = "%s is" % nick
-		
+
 		nickchange = "%s now known as %s." % (nickwrap, new_nick)
 		nickchange = self.gui.escape(nickchange)
 
@@ -393,7 +393,7 @@ class tekkaSignals(object):
 	"""
 	def userQuit(self, time, server, nick, reason):
 		servertree = self.gui.get_servertree()
-		
+
 		if nick == self.com.get_own_nick(server):
 			# set the connected flag to False on the server
 			obj = servertree.getObject(server)
@@ -406,7 +406,7 @@ class tekkaSignals(object):
 
 			# walk through all channels and set joined = False on them
 			channels = servertree.getChannels(server)
-			
+
 			if not channels:
 				return
 
@@ -416,7 +416,7 @@ class tekkaSignals(object):
 				servertree.updateDescription(server,channel,obj=obj)
 		else:
 			reasonwrap = ""
-			if reason: 
+			if reason:
 				reasonwrap = " (%s)" % reason
 
 			channels = servertree.getChannels(server)
@@ -436,9 +436,9 @@ class tekkaSignals(object):
 					nicklist.removeNick(nick)
 					self.gui.channelPrint(time, server, channel, \
 					"%s has quit%s." % (nick,reasonwrap))
-	
+
 	"""
-	A user identified by "nick" joins the channel "channel" on 
+	A user identified by "nick" joins the channel "channel" on
 	server "server.
 
 	If the nick is our we add the channeltab and set properties
@@ -451,8 +451,8 @@ class tekkaSignals(object):
 			nicks = self.com.fetch_nicks(server,channel)
 			self.com.request_topic(server, channel)
 
-			# returns the iter of the channel if added (ret=0) 
-			# or if it's already existent (ret=1) if ret is 0 
+			# returns the iter of the channel if added (ret=0)
+			# or if it's already existent (ret=1) if ret is 0
 			# the nicks and the topic are already applied, else
 			# we set them manually.
 			ret,iter = servertree.addChannel(server, channel, nicks=nicks)
@@ -499,12 +499,12 @@ class tekkaSignals(object):
 		if not obj: # happens if part + tab close
 			return
 
-		if reason: 
+		if reason:
 			reason = " (%s)" % reason
 
 		if nick == self.com.get_own_nick(server):
 			self.gui.channelPrint(timestamp, server, channel, "You have left %s%s." % (channel,reason))
-			
+
 			obj.setJoined(False)
 			servertree.updateDescription(server, channel, obj=obj)
 		else:
