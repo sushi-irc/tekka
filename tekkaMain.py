@@ -241,12 +241,10 @@ class tekkaMain(object):
 					label.connect("activate", lambda w: self.commands.makiPart([channel],server=server))
 					menu.append( label )
 
-				label = gtk.MenuItem()
-				chkbutton = gtk.CheckButton(label="Autojoin")
+				label = gtk.CheckMenuItem(label="Autojoin")
 				if self.com.get_channel_autojoin(server,channel) == "true":
-					chkbutton.set_active(True)
-				label.add(chkbutton)
-				label.connect("activate", lambda w: self.channel_menu_autojoin(server,channel,w))
+					label.set_active(True)
+				label.connect("toggled", lambda w: self.channel_menu_autojoin(server,channel,w))
 				menu.append( label )
 			elif srow:
 				if not srow[servertree.COLUMN_OBJECT].getConnected():
@@ -282,8 +280,7 @@ class tekkaMain(object):
 	Autojoin button in context menu of the servertree was pressed
 	"""
 	def channel_menu_autojoin(self, server, channel, w):
-		btn = w.get_children()[0]
-		self.com.set_channel_autojoin(server,channel,not btn.get_active())
+		self.com.set_channel_autojoin(server,channel, w.get_active())
 
 	"""
 	A nick in the nicklist was double clicked
@@ -308,15 +305,82 @@ class tekkaMain(object):
 			return
 
 		nicklist = crow[self.gui.get_servertree().COLUMN_OBJECT].getNicklist()
-		nick = nicklist[path[0]]
+		nickrow = nicklist[path[0]]
 
 		# left click -> activate tab
 		if event.button == 1:
 			print "Would do any left-click action"
 			pass
+		
 		elif event.button == 3:
-			print "Would display context menu"
-			pass
+			nick = nickrow[tekkaGUI.tekkaNicklistStore.COLUMN_NICK]
+			server = srow[tekkaGUI.tekkaServertree.COLUMN_NAME]
+			channel = crow[tekkaGUI.tekkaServertree.COLUMN_NAME]
+
+			menu = gtk.Menu()
+
+			kick_item = gtk.MenuItem(label="Kick")
+			kick_item.connect("activate", lambda w: self.com.kick(server, channel, nick))
+			menu.append(kick_item)
+
+			ban_item = gtk.MenuItem(label="Ban")
+			ban_item.connect("activate", lambda w: self.com.mode(server, channel, "+b %s!*@*" % nick))
+			menu.append(ban_item)
+
+			unban_item = gtk.MenuItem(label="Unban")
+			unban_item.connect("activate", lambda w: self.com.mode(server, channel, "-b %s" % nick))
+			menu.append(unban_item)
+			
+			ignore_item = gtk.CheckMenuItem(label="Ignore")
+			pattern = "%s!*" % nick
+			ignores = self.com.fetch_ignores(server)
+			if pattern in ignores:
+				ignore_item.set_active(True)
+				ignore_item.connect("toggled", lambda w: self.com.unignore(server, pattern))
+			else:
+				ignore_item.connect("toggled", lambda w: self.com.ignore(server, pattern))
+			menu.append(ignore_item)
+
+			mode_menu = gtk.Menu()
+			mode_item = gtk.MenuItem(label="Mode")
+			mode_item.set_submenu(mode_menu)
+
+			menu.append(mode_item)
+
+			op_item       = gtk.MenuItem(label="Op")
+			op_item.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "+o"))
+			mode_menu.append(op_item)
+		
+			deop_item     = gtk.MenuItem(label="Deop")
+			deop_item.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "-o"))
+			mode_menu.append(deop_item)
+
+			halfop_item   = gtk.MenuItem(label="Halfop")
+			halfop_item.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "+h"))
+			mode_menu.append(halfop_item)
+
+			dehalfop_item = gtk.MenuItem(label="DeHalfop")
+			dehalfop_item.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "-h"))
+			mode_menu.append(dehalfop_item)
+
+			voice_item    = gtk.MenuItem(label="Voice")
+			voice_item.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "+v"))
+			mode_menu.append(voice_item)
+
+			devoice_item  = gtk.MenuItem(label="Devoice")
+			devoice_item.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "-v"))
+			mode_menu.append(devoice_item)
+
+			mode_menu.show_all()
+			menu.show_all()
+			menu.popup(None, None, None, button=event.button, activate_time=event.time)
+
+
+	"""
+	User clicked on a mode-menu item in nicklist menu
+	"""
+	def modeChange(self, widget, server, channel, nick, mode):
+		self.com.mode(server, channel, "%s %s" % (mode, nick))
 
 	"""
 	User pressed enter in the topicbar

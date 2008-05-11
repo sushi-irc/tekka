@@ -128,6 +128,8 @@ class htmlbuffer(gtk.TextBuffer):
 		parser = xml.sax.make_parser()
 		parser.setContentHandler(htmlhandler(self))
 
+		text = "<msg>%s</msg>" % text
+
 		try:
 			parser.parse(StringIO(str(text)))
 		except Exception, ex:

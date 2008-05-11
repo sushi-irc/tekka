@@ -117,7 +117,7 @@ class tekkaSignals(object):
 		obj = self.gui.get_servertree().getObject(server,channel)
 		buffer = obj.getBuffer()
 		for line in self.com.proxy.log(server, channel, dbus.UInt64(lines)):
-			buffer.insert_html(buffer.get_end_iter(), "<msg><font foreground=\"#DDDDDD\">%s</font><br/></msg>" % self.gui.escape(line))
+			buffer.insert_html(buffer.get_end_iter(), "<font foreground=\"#DDDDDD\">%s</font><br/>" % self.gui.escape(line))
 
 
 	"""
@@ -263,7 +263,7 @@ class tekkaSignals(object):
 
 	def ownMessage(self, timestamp, server, channel, message):
 		self.gui.channelPrint(timestamp, server, channel, \
-		"&lt;<font foreground='%s'>%s</font>&gt; <msg>%s</msg>" \
+		"&lt;<font foreground='%s'>%s</font>&gt; %s" \
 		% (self.gui.get_config().getColor("ownNick"), self.com.get_own_nick(server), self.gui.escape(message)))
 
 	def ownQuery(self, timestamp, server, channel, message):
@@ -373,14 +373,16 @@ class tekkaSignals(object):
 		if reason:
 			reason = "(%s)" % reason
 
-		if who == self.com.get_own_nick(server):
-			servertree = self.gui.get_servertree()
-			obj = servertree.getObject(server,channel).setJoined(False)
-			servertree.updateDescription(server, channel, obj=obj)
+		servertree = self.gui.get_servertree()
+		obj = servertree.getObject(server,channel)
 
+		if who == self.com.get_own_nick(server):
+			obj.setJoined(False)
+			servertree.updateDescription(server, channel, obj=obj)
 			self.gui.channelPrint(time, server, channel, self.gui.escape(\
 				"You have been kicked from %s by %s %s" % (channel,nick,reason)))
 		else:
+			obj.getNicklist().removeNick(who)
 			self.gui.channelPrint(time, server, channel, self.gui.escape("%s was kicked from %s by %s %s" % (who,channel,nick,reason)))
 
 	"""

@@ -43,7 +43,6 @@ class tekkaCommands(object):
 
 	def send_message(self, server, channel, text):
 		if not text:
-			self.gui.get_servertree().setupShortcuts()
 			return
 		if text[0] == "/" and text[1] != "/":
 			self.parseCommand(text[1:])
@@ -100,10 +99,11 @@ class tekkaCommands(object):
 			self.gui.myPrint("Can't determine my server.")
 			return
 
-		self.proxy.nick(server, xargs[0])
+		self.com.nick(server, xargs[0])
 
 	def makiPart(self, xargs, server=None):
-		if not self.check_proxy(): return
+		if not self.check_proxy(): 
+			return
 
 		cserver,cchannel = self.gui.get_servertree().getCurrentChannel()
 		if not server:
@@ -127,11 +127,12 @@ class tekkaCommands(object):
 		elif len(xargs) >= 2:
 			channel = xargs[0]
 			reason = " ".join(xargs[1:])
-		self.proxy.part(server, channel, reason)
+		self.com.part(server, channel, reason)
 
 	def makiJoin(self, xargs, server=None):
-		if not self.check_proxy(): return
-
+		if not self.check_proxy(): 
+			return
+		
 		if not server:
 			server = self.gui.get_servertree().getCurrentServer()
 			if not server:
@@ -158,7 +159,7 @@ class tekkaCommands(object):
 			self.gui.myPrint("No channel joined.")
 			return
 
-		self.proxy.action(server,channel," ".join(xargs))
+		self.com.action(server,channel," ".join(xargs))
 
 	def makiKick(self, xargs):
 		if not self.check_proxy(): return
@@ -179,7 +180,7 @@ class tekkaCommands(object):
 		reason = ""
 		if len(xargs) >= 2:
 			reason = " ".join(xargs[1:])
-		self.proxy.kick(server, channel, xargs[0], reason)
+		self.com.kick(server, channel, xargs[0], reason)
 
 	def makiMode(self, xargs):
 		if not self.check_proxy(): return
@@ -194,7 +195,7 @@ class tekkaCommands(object):
 		param = ""
 		if len(xargs)==3:
 			param = xargs[2]
-		self.proxy.mode(server, xargs[0], "%s %s" % (xargs[1],param))
+		self.com.mode(server, xargs[0], "%s %s" % (xargs[1],param))
 
 	def makiTopic(self, xargs):
 		if not self.check_proxy(): return

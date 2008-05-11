@@ -134,6 +134,18 @@ class tekkaCom(object):
 	def fetch_channels(self, server):
 		return self.proxy.channels(server) or []
 
+	def fetch_ignores(self, server):
+		return self.proxy.ignores(server)
+
+	def fetch_log(self, server, target):
+		return self.proxy.log(server, target) or []
+
+	def fetch_user_channel_modes(self, server, channel, nick):
+		return self.proxy.user_channel_mode(server, channel, nick)
+
+	def fetch_user_channel_prefix(self, server, channel, nick):
+		return self.proxy.user_channel_prefix(server, channel, nick)
+
 	# requests a topic-signal-emmit for channel @channel on
 	# server @server
 	def request_topic(self, server, channel):
@@ -147,6 +159,57 @@ class tekkaCom(object):
 	# lookup if user @nick on server @server is away
 	def is_away(self, server, nick):
 		return self.proxy.user_away(server, nick)
+
+	def join(self, server, channel, key=""):
+		self.proxy.join(server,channel,key)
+
+	def part(self, server, channel, message=""):
+		self.proxy.part(server,channel,message)
+
+	def set_topic(self, server, channel, topic):
+		self.proxy.topic(server, channel, topic)
+
+	def mode(self, server, target, mode):
+		self.proxy.mode(server, target, mode)
+
+	def kick(self, server, channel, nick, reason=""):
+		self.proxy.kick(server, channel, nick, reason)
+
+	def nickserv(server):
+		self.proxy.nickserv(server)
+
+	def set_away(self, server, message):
+		self.proxy.away(server, message)
+
+	def set_back(self, server):
+		self.proxy.back(server)
+
+	def nick(self, server, new_nick):
+		self.proxy.nick(server, new_nick)
+
+	def ctcp(self, server, target, message):
+		self.proxy.ctcp(server, target, message)
+
+	def action(self, server, channel, message):
+		self.proxy.action(server, channel, message)
+
+	def notice(self, server, target, message):
+		self.proxy.notice(server, target, message)
+
+	def oper(self, server, name, password):
+		self.proxy.oper(server, name, password)
+
+	def kill(self, server, nick, reason):
+		self.proxy.kill(server, nick, reason)
+
+	def raw(self, server, command):
+		self.proxy.raw(server,command)
+
+	def ignore(self, server, pattern):
+		self.proxy.ignore(server, pattern)
+
+	def unignore(self, server, pattern):
+		self.proxy.unignore(server, pattern)
 
 	"""
 	Config, server creation, server deletion
@@ -185,6 +248,9 @@ class tekkaCom(object):
 
 	def set_channel_autojoin(self, server, channel, switch):
 		self.proxy.sushi_set("servers/"+server, channel, "autojoin", switch and "true" or "false")
+
+	
+
 
 if __name__ == "__main__":
 	print "testing"
