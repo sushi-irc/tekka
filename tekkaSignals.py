@@ -116,7 +116,7 @@ class tekkaSignals(object):
 	def lastLog(self, server, channel, lines):
 		obj = self.gui.get_servertree().getObject(server,channel)
 		buffer = obj.getBuffer()
-		for line in self.com.proxy.log(server, channel, dbus.UInt64(lines)):
+		for line in self.com.fetch_log(server, channel, dbus.UInt64(lines)):
 			buffer.insert_html(buffer.get_end_iter(), "<font foreground=\"#DDDDDD\">%s</font><br/>" % self.gui.escape(line))
 
 
@@ -290,14 +290,14 @@ class tekkaSignals(object):
 			if param:
 				nickwrap = "<font foreground='%s'>%s</font>" % (param_color, self.gui.escape(param))
 				if param == myNick:
-					nickwrap = "You"
+					nickwrap = "you"
 				msg = "%s set <b>%s</b> to %s." % (actnick,mode,nickwrap)
 
 				self._prefixMode(server,target,param,mode)
 			# else a channel is the target
 			else:
 				msg = "%s set <b>%s</b> on %s." % (actnick,mode,target)
-			self.gui.channelPrint(time, server, target, msg)
+			self.gui.channelPrint(time, server, target, msg, "action")
 
 	def userCTCP(self, time, server,  nick, target, message):
 		self.gui.channelPrint(time, server, target, \
@@ -366,7 +366,7 @@ class tekkaSignals(object):
 			nicklist = servertree.getObject(server,channel).getNicklist()
 			if nick in nicklist.getNicks() or channel == nick:
 				nicklist.modifyNick(nick, new_nick)
-				self.gui.channelPrint(time, server, channel, nickchange)
+				self.gui.channelPrint(time, server, channel, nickchange, "action")
 
 	# user was kicked
 	def userKick(self, time, server, nick, channel, who, reason):
@@ -383,7 +383,7 @@ class tekkaSignals(object):
 				"You have been kicked from %s by %s %s" % (channel,nick,reason)))
 		else:
 			obj.getNicklist().removeNick(who)
-			self.gui.channelPrint(time, server, channel, self.gui.escape("%s was kicked from %s by %s %s" % (who,channel,nick,reason)))
+			self.gui.channelPrint(time, server, channel, self.gui.escape("%s was kicked from %s by %s %s" % (who,channel,nick,reason)), "action")
 
 	"""
 	The user identified by nick quit on the server "server" with
@@ -437,7 +437,7 @@ class tekkaSignals(object):
 				if nick in nicks or nick == channel:
 					nicklist.removeNick(nick)
 					self.gui.channelPrint(time, server, channel, \
-					"%s has quit%s." % (nick,reasonwrap))
+					"%s has quit%s." % (nick,reasonwrap), "action")
 
 	"""
 	A user identified by "nick" joins the channel "channel" on
@@ -491,7 +491,7 @@ class tekkaSignals(object):
 		else:
 			nickwrap = "<font foreground='%s'>%s</font> has" % (self.gui.get_config().getColor("joinNick"), self.gui.escape(nick))
 			servertree.getObject(server,channel).getNicklist().appendNick(nick)
-		self.gui.channelPrint(timestamp, server, channel, "%s joined %s." % (nickwrap, channel))
+		self.gui.channelPrint(timestamp, server, channel, "%s joined %s." % (nickwrap, channel), "action")
 
 	# user parted
 	def userPart(self, timestamp, server, nick, channel, reason):
@@ -512,6 +512,6 @@ class tekkaSignals(object):
 		else:
 			obj.getNicklist().removeNick(nick)
 			self.gui.channelPrint(timestamp, server, channel, \
-			"<font foreground='%s'>%s</font> has left %s%s." % (self.gui.get_config().getColor("partNick"), self.gui.escape(nick), self.gui.escape(channel), self.gui.escape(reason)))
+			"<font foreground='%s'>%s</font> has left %s%s." % (self.gui.get_config().getColor("partNick"), self.gui.escape(nick), self.gui.escape(channel), self.gui.escape(reason)), "action")
 
 

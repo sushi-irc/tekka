@@ -137,8 +137,8 @@ class tekkaCom(object):
 	def fetch_ignores(self, server):
 		return self.proxy.ignores(server)
 
-	def fetch_log(self, server, target):
-		return self.proxy.log(server, target) or []
+	def fetch_log(self, server, target, lines):
+		return self.proxy.log(server, target, lines) or []
 
 	def fetch_user_channel_modes(self, server, channel, nick):
 		return self.proxy.user_channel_mode(server, channel, nick)
@@ -249,7 +249,12 @@ class tekkaCom(object):
 	def set_channel_autojoin(self, server, channel, switch):
 		self.proxy.sushi_set("servers/"+server, channel, "autojoin", switch and "true" or "false")
 
-	
+	"""
+	Shutdown
+	"""
+
+	def maki_shutdown(self):
+		self.proxy.shutdown()
 
 
 if __name__ == "__main__":

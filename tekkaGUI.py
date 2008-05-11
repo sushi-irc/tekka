@@ -721,10 +721,10 @@ class tekkaGUI(object):
 		msg = msg.replace(chr(1), "")
 		return msg
 
-	def channelPrint(self, timestamp, server, channel, message, nick=""):
+	def channelPrint(self, timestamp, server, channel, message, type=None):
 		timestring = time.strftime("%H:%M", time.localtime(timestamp))
 
-		outputstring = "<msg>[%s] %s<br/></msg>" % (timestring, message)
+		outputstring = "[%s] %s<br/>" % (timestring, message)
 
 		output = self.servertree.getOutput(server,channel)
 
@@ -742,14 +742,14 @@ class tekkaGUI(object):
 			obj = self.servertree.getObject(server,channel)
 			if not obj:
 				print "No such server %s / %s\n" % (server,channel)
-			if obj.getNewMessage():
+			if obj.getNewMessage() and obj.getNewMessageType() == type:
 				return
-			obj.setNewMessage(True)
+			obj.setNewMessage(True,type)
 			self.servertree.updateDescription(server,channel,obj=obj)
 
 	# prints 'string' with "%H:%M' formatted 'timestamp' to the server-output
 	# identified by 'server'
-	def serverPrint(self, timestamp, server, string, raw=False):
+	def serverPrint(self, timestamp, server, string, type=None):
 		output = self.servertree.getOutput(server)
 
 		if not output:
@@ -757,19 +757,16 @@ class tekkaGUI(object):
 
 		timestr = time.strftime("%H:%M", time.localtime(timestamp))
 
-		if not raw:
-			output.insert_html(output.get_end_iter(), "<msg>[%s] %s<br/></msg>" % (timestr,string))
-		else:
-			output.insert(output.get_end_iter(), "[%s] [%s]\n" % (timestr, string))
+		output.insert_html(output.get_end_iter(), "[%s] %s<br/>" % (timestr,string))
 
 		cserver,cchannel = self.servertree.getCurrentChannel()
 		if cserver == server and not cchannel:
 			self.scrollOutput(output)
 		else:
 			obj = self.servertree.getObject(server)
-			if obj.getNewMessage(): # don't need to repeat setting
+			if obj.getNewMessage() and obj.getNewMessageType() == type: # don't need to repeat setting
 				return
-			obj.setNewMessage(True)
+			obj.setNewMessage(True,type)
 			self.servertree.updateDescription(server,obj=obj)
 
 	# prints 'string' to the current output
@@ -782,7 +779,7 @@ class tekkaGUI(object):
 		if not html:
 			output.insert(output.get_end_iter(), string+"\n")
 		else:
-			output.insert_html(output.get_end_iter(), "<msg>"+string+"<br/></msg>")
+			output.insert_html(output.get_end_iter(), string+"<br/>")
 		self.scrollOutput(output)
 
 	# tekkaClear command method from tekkaCom:

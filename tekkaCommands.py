@@ -27,17 +27,8 @@ class tekkaCommands(object):
 			"clear": self.tekkaClear
 		}
 
-		self.proxy = self.com.get_proxy()
-		if not self.proxy:
-			print "tekkaCommands: No proxy object!"
-
 	def get_commands(self):
 		return self.commands
-
-	def check_proxy(self):
-		if not self.proxy:
-			return False
-		return True
 
 	""" COMMAND METHODS """
 
@@ -83,10 +74,8 @@ class tekkaCommands(object):
 			self.com.quit_server(xargs[0], reason)
 
 	def makiNick(self, xargs):
-		if not self.check_proxy(): return
-
 		server = self.gui.get_servertree().getCurrentServer()
-
+		
 		if not self.proxy:
 			self.gui.myPrint("No connection to maki.")
 			return
@@ -102,9 +91,6 @@ class tekkaCommands(object):
 		self.com.nick(server, xargs[0])
 
 	def makiPart(self, xargs, server=None):
-		if not self.check_proxy(): 
-			return
-
 		cserver,cchannel = self.gui.get_servertree().getCurrentChannel()
 		if not server:
 			if not cserver:
@@ -130,9 +116,6 @@ class tekkaCommands(object):
 		self.com.part(server, channel, reason)
 
 	def makiJoin(self, xargs, server=None):
-		if not self.check_proxy(): 
-			return
-		
 		if not server:
 			server = self.gui.get_servertree().getCurrentServer()
 			if not server:
@@ -144,11 +127,9 @@ class tekkaCommands(object):
 		key = ""
 		if len(xargs) >= 2:
 			key = " ".join(xargs[1:])
-		self.proxy.join(server,xargs[0],key)
+		self.com.join(server,xargs[0],key)
 
 	def makiAction(self, xargs):
-		if not self.check_proxy: return
-
 		if not xargs:
 			self.gui.myPrint("Usage: /me <text>")
 			return
@@ -162,8 +143,6 @@ class tekkaCommands(object):
 		self.com.action(server,channel," ".join(xargs))
 
 	def makiKick(self, xargs):
-		if not self.check_proxy(): return
-
 		if not xargs:
 			self.gui.myPrint("Usage: /kick <who>")
 			return
@@ -183,8 +162,6 @@ class tekkaCommands(object):
 		self.com.kick(server, channel, xargs[0], reason)
 
 	def makiMode(self, xargs):
-		if not self.check_proxy(): return
-
 		if not xargs or len(xargs) < 2:
 			self.gui.myPrint("Usage: /mode <target> (+|-)<mode> [param]")
 			return
@@ -198,8 +175,6 @@ class tekkaCommands(object):
 		self.com.mode(server, xargs[0], "%s %s" % (xargs[1],param))
 
 	def makiTopic(self, xargs):
-		if not self.check_proxy(): return
-
 		if not xargs:
 			self.myPrint("Usage: /topic <topic text>")
 			return
@@ -212,11 +187,9 @@ class tekkaCommands(object):
 			self.myPrint("Where should i set the topic?")
 			return
 
-		return self.proxy.topic(server, channel, topic)
+		return self.com.set_topic(server, channel, topic)
 
 	def makiAway(self, xargs):
-		if not self.check_proxy(): return
-
 		if not xargs:
 			self.makiBack(xargs)
 			return
@@ -226,16 +199,14 @@ class tekkaCommands(object):
 			self.myPrint("Can't determine server.")
 			return
 
-		self.proxy.away(s," ".join(xargs))
+		self.com.set_away(s," ".join(xargs))
 
 	def makiBack(self, xargs):
-		if not self.check_proxy(): return
-
 		s = self.gui.get_servertree().getCurrentServer()
 		if not s:
 			self.gui.myPrint("Can't determine server.")
 			return
-		self.proxy.back(s)
+		self.com.set_back(s)
 
 	def makiCTCP(self, xargs):
 		if not xargs or len(xargs) < 2:
@@ -245,23 +216,13 @@ class tekkaCommands(object):
 		if not server:
 			self.gui.myPrint("Could not determine server.")
 			return
-		self.proxy.ctcp(server, xargs[0], xargs[1])
+		self.com.ctcp(server, xargs[0], xargs[1])
 
 	def makiOper(self, xargs):
 		pass
 
 	def makiKill(self, xargs):
 		pass
-
-	def makiShutdown(self, w):
-		if self.proxy:
-			self.proxy.shutdown()
-
-			self.gui.myPrint("Maki shutted down.")
-
-			for server in self.get_servertree().getServers():
-				print "removing %s" % server
-				self.gui.get_servertree().removeServer(server)
 
 	""" TEKKA USER COMMANDS """
 

@@ -12,6 +12,7 @@ class tekkaTab(object):
 		self.buffer = buffer or htmlbuffer.htmlbuffer()
 		self.name = name
 		self.newMessage = False
+		self.newMessageType = None
 
 	# the output buffer
 	def getBuffer(self):
@@ -27,12 +28,16 @@ class tekkaTab(object):
 	def setName(self, name):
 		self.name = name
 
+	def getNewMessageType(self):
+		return self.newMessageType
+	
 	# there is a new message
 	def getNewMessage(self):
 		return self.newMessage
 
 	def setNewMessage(self, switch, type=None):
 		self.newMessage = switch
+		self.newMessageType = type
 
 	# markup the string in due to the
 	# set properties
@@ -122,5 +127,9 @@ class tekkaChannel(tekkaTab):
 		if not self.joined:
 			base = "("+base+")"
 		if self.newMessage:
-			base = "<b>"+base+"</b>"
+			if self.newMessageType == "action":
+				base = "<i>"+base+"</i>"
+			else:
+				base = "<b>"+base+"</b>"
+		print base
 		return base
