@@ -181,7 +181,6 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 
 	def __init__(self,w=None):
 		print "servertree init"
-		#if w: self.set_flags(w.flags())
 		gtk.TreeView.__init__(self)
 
 		# descr. (str), name (str), server/channel object
@@ -192,12 +191,12 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 
 		self.set_model(model)
 
-		self.shortcut_ids = {}
+		self.shortcutIDs = {}
 
 		self.currentRow = None,None
 		self.connect("button-press-event", self._cacheCurrentRow)
 
-		self.shortcut_ids={}
+		self.shortcutIDs={}
 
 	def searchTab(self, treeiter, needle):
 		return [l[self.COLUMN_NAME] for l in treeiter if l and l[self.COLUMN_NAME][0:len(needle)].lower()==needle]
@@ -217,14 +216,14 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 
 	""" SHORTCUTS """
 
-	def get_shortcut(self,i):
-		return self.shortcut_ids[i]
+	def getShortcut(self,i):
+		return self.shortcutIDs[i]
 
 	def _makeShortcuts(self, treeview, path, iter, data):
 		if data[1] > 9:
 			return
 		data[1]+=1
-		self.shortcut_ids["%d" % data[1]] = path
+		self.shortcutIDs["%d" % data[1]] = path
 
 	def updateShortcuts(self):
 		print "updating shortcuts"
@@ -615,6 +614,10 @@ class tekkaGUI(object):
 
 		self.servertree.expand_all()
 
+		textboxSW = self.widgets.get_widget("sw_output")
+		hadjustment = gtk.Adjustment(20)
+		textboxSW.set_hadjustment(hadjustment)
+
 		self.textbox = self.widgets.get_widget("tekkaOutput")
 		self.textbox.set_cursor_visible(False)
 		self.setOutputFont(self.config.outputFont)
@@ -624,34 +627,34 @@ class tekkaGUI(object):
 
 		self.history = tekkaHistory()
 
-	def get_config(self):
+	def getConfig(self):
 		return self.config
 
-	def get_widgets(self):
+	def getWidgets(self):
 		return self.widgets
 
-	def get_servertree(self):
+	def getServertree(self):
 		return self.servertree
 
-	def get_nicklist(self):
+	def getNicklist(self):
 		return self.nicklist
 
-	def get_output(self):
+	def getOutput(self):
 		return self.textbox
 
-	def get_input(self):
+	def getInput(self):
 		return self.textentry
 
-	def get_topicbar(self):
+	def getTopicbar(self):
 		return self.topicbar
 
-	def get_statusbar(self):
+	def getStatusbar(self):
 		return self.statusbar
 
-	def get_history(self):
+	def getHistory(self):
 		return self.history
 
-	def get_accel_group(self):
+	def getAccelGroup(self):
 		return self.accelGroup
 
 	""" SETUP ROUTINES """
@@ -733,7 +736,7 @@ class tekkaGUI(object):
 			return
 
 		enditer = output.get_end_iter()
-		output.insert_html(enditer, outputstring)
+		output.insertHTML(enditer, outputstring)
 
 		# if channel is "activated"
 		if channel == self.servertree.getCurrentChannel()[1]:
@@ -757,7 +760,7 @@ class tekkaGUI(object):
 
 		timestr = time.strftime("%H:%M", time.localtime(timestamp))
 
-		output.insert_html(output.get_end_iter(), "[%s] %s<br/>" % (timestr,string))
+		output.insertHTML(output.get_end_iter(), "[%s] %s<br/>" % (timestr,string))
 
 		cserver,cchannel = self.servertree.getCurrentChannel()
 		if cserver == server and not cchannel:

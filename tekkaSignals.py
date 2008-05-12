@@ -33,7 +33,7 @@ class tekkaSignals(object):
 		self.com = com
 		self.gui = gui
 
-		self.bus = self.com.get_bus()
+		self.bus = self.com.getBus()
 
 		if not self.bus:
 			print "tekkaSignals: No bus."
@@ -74,29 +74,29 @@ class tekkaSignals(object):
 		# Maki signals
 		self.bus.add_signal_receiver(self.makiShutdownSignal, "shutdown")
 
-		self.init_servers()
+		self.initServers()
 
-	def init_servers(self):
-		servertree = self.gui.get_servertree()
-		for server in self.com.fetch_servers():
+	def initServers(self):
+		servertree = self.gui.getServertree()
+		for server in self.com.fetchServers():
 
 			servertree.addServer(server)
 			self.addChannels(server)
 
-			if self.com.is_away(server, self.com.get_own_nick(server)):
+			if self.com.isAway(server, self.com.getOwnNick(server)):
 				servertree.getObject(server).setAway(True)
 
 	def addChannels(self, server):
-		channels = self.com.fetch_channels(server)
+		channels = self.com.fetchChannels(server)
 
 		for channel in channels:
-			nicks = self.com.fetch_nicks(server, channel)
+			nicks = self.com.fetchNicks(server, channel)
 
-			self.com.request_topic(server,channel)
+			self.com.requestTopic(server,channel)
 
-			ret,iter = self.gui.get_servertree().addChannel(server, channel, nicks=nicks)
+			ret,iter = self.gui.getServertree().addChannel(server, channel, nicks=nicks)
 
-			obj = self.gui.get_servertree().getObject(server,channel)
+			obj = self.gui.getServertree().getObject(server,channel)
 			nicklist = obj.getNicklist()
 
 			# channel already existant, settings
@@ -114,10 +114,10 @@ class tekkaSignals(object):
 	""" HELPER """
 
 	def lastLog(self, server, channel, lines):
-		obj = self.gui.get_servertree().getObject(server,channel)
+		obj = self.gui.getServertree().getObject(server,channel)
 		buffer = obj.getBuffer()
-		for line in self.com.fetch_log(server, channel, dbus.UInt64(lines)):
-			buffer.insert_html(buffer.get_end_iter(), "<font foreground=\"#DDDDDD\">%s</font><br/>" % self.gui.escape(line))
+		for line in self.com.fetchLog(server, channel, dbus.UInt64(lines)):
+			buffer.insertHTML(buffer.get_end_iter(), "<font foreground=\"#DDDDDD\">%s</font><br/>" % self.gui.escape(line))
 
 
 	"""
@@ -129,7 +129,7 @@ class tekkaSignals(object):
 	"""
 	def _prefixFetch(self, server, channel, nicklist, nicks):
 		for nick in nicks:
-			prefix = self.com.fetch_prefix(server,channel,nick)
+			prefix = self.com.fetchPrefix(server,channel,nick)
 			if not prefix:
 				continue
 			nicklist.setPrefix(nick, prefix, mass=True)
@@ -145,7 +145,7 @@ class tekkaSignals(object):
 	nemo (Nemo) and renames it to "nemo".
 	"""
 	def _simCheck(self, server, nick):
-		servertree = self.gui.get_servertree()
+		servertree = self.gui.getServertree()
 		check = servertree.getChannel(server, nick)
 		if not check:
 			simfound = False
@@ -163,14 +163,14 @@ class tekkaSignals(object):
 	def _prefixMode(self, server, channel, nick, mode):
 		if mode[1] not in ("q","a","o","h","v"):
 			return
-		nicklist = self.gui.get_servertree().getObject(server,channel).getNicklist()
+		nicklist = self.gui.getServertree().getObject(server,channel).getNicklist()
 		if not nicklist:
 			return
-		nicklist.setPrefix(nick, self.com.fetch_prefix(server,channel,nick))
+		nicklist.setPrefix(nick, self.com.fetchPrefix(server,channel,nick))
 
 
 	def getNickColor(self, nick):
-		colors = self.gui.get_config().getNickColors()
+		colors = self.gui.getConfig().getNickColors()
 		if not colors:
 			return "#2222AA"
 		return colors[ord(nick[0])%len(colors)]
@@ -179,13 +179,13 @@ class tekkaSignals(object):
 	""" SERVER SIGNALS """
 
 	def serverConnect(self, time, server):
-		self.gui.get_servertree().addServer(server)
+		self.gui.getServertree().addServer(server)
 		self.gui.serverPrint(time, server, "Connecting...")
-		self.gui.get_statusbar().push(self.gui.STATUSBAR_CONNECTING, "Connecting to %s" % server)
+		self.gui.getStatusbar().push(self.gui.STATUSBAR_CONNECTING, "Connecting to %s" % server)
 
 	# maki connected to a server
 	def serverConnected(self, time, server, nick):
-		servertree = self.gui.get_servertree()
+		servertree = self.gui.getServertree()
 
 		obj = servertree.getObject(server)
 		obj.setConnected(True)
@@ -193,13 +193,13 @@ class tekkaSignals(object):
 
 		self.addChannels(server)
 
-		self.gui.get_statusbar().pop(self.gui.STATUSBAR_CONNECTING)
+		self.gui.getStatusbar().pop(self.gui.STATUSBAR_CONNECTING)
 		self.gui.serverPrint(time, server, "Connected.")
 
 	# maki is reconnecting to a server
 	def serverReconnect(self, time, server):
 		# TODO: clear nicklists of server if existant
-		self.gui.get_servertree().addServer(server)
+		self.gui.getServertree().addServer(server)
 		self.gui.serverPrint(time, server, "Reconnecting to %s" % server)
 
 	# the server is sending a MOTD
@@ -220,7 +220,7 @@ class tekkaSignals(object):
 		if not nick:
 			return
 
-		if nick == self.com.get_own_nick(server):
+		if nick == self.com.getOwnNick(server):
 			nick = "You"
 
 		self.gui.channelPrint(time, server, channel, "%s changed the topic to '%s'" % (nick, self.gui.escape(topic)))
@@ -231,7 +231,7 @@ class tekkaSignals(object):
 		self.gui.myPrint("Maki is shutting down!")
 		for server in self.gui.getServers():
 			self.gui.removeServer(server)
-			self.com.quit_server(server)
+			self.com.quitServer(server)
 
 	""" USER SIGNALS """
 
@@ -264,7 +264,7 @@ class tekkaSignals(object):
 	def ownMessage(self, timestamp, server, channel, message):
 		self.gui.channelPrint(timestamp, server, channel, \
 		"&lt;<font foreground='%s'>%s</font>&gt; %s" \
-		% (self.gui.get_config().getColor("ownNick"), self.com.get_own_nick(server), self.gui.escape(message)))
+		% (self.gui.getConfig().getColor("ownNick"), self.com.getOwnNick(server), self.gui.escape(message)))
 
 	def ownQuery(self, timestamp, server, channel, message):
 		self.ownMessage(timestamp,server,channel,message)
@@ -274,12 +274,12 @@ class tekkaSignals(object):
 		self.userMessage(timestamp,server,nick,nick,message)
 
 	def userMode(self, time, server, nick, target, mode, param):
-		myNick = self.com.get_own_nick(server)
+		myNick = self.com.getOwnNick(server)
 
-		act_color = self.gui.get_config().getColor("modeActNick")
-		param_color = self.gui.get_config().getColor("modeParam")
+		actColor = self.gui.getConfig().getColor("modeActNick")
+		paramColor = self.gui.getConfig().getColor("modeParam")
 
-		actnick = "<font foreground='%s'>%s</font>" % (act_color, self.gui.escape(nick))
+		actnick = "<font foreground='%s'>%s</font>" % (actColor, self.gui.escape(nick))
 		if nick == myNick:
 			actnick = "You"
 
@@ -288,7 +288,7 @@ class tekkaSignals(object):
 		else:
 			# if param a user mode is set
 			if param:
-				nickwrap = "<font foreground='%s'>%s</font>" % (param_color, self.gui.escape(param))
+				nickwrap = "<font foreground='%s'>%s</font>" % (paramColor, self.gui.escape(param))
 				if param == myNick:
 					nickwrap = "you"
 				msg = "%s set <b>%s</b> to %s." % (actnick,mode,nickwrap)
@@ -305,18 +305,18 @@ class tekkaSignals(object):
 				(self.gui.escape(nick), self.gui.escape(message)))
 
 	def ownCTCP(self, time, server, target, message):
-		channel = self.gui.get_servertree().getChannel(server,target)
+		channel = self.gui.getServertree().getChannel(server,target)
 		if channel:
-			nick_color = self.gui.get_config().getColor("ownNick")
+			nickColor = self.gui.getConfig().getColor("ownNick")
 			self.gui.channelPrint(time, server, channel, \
 				"&lt;CTCP:<font foreground='%s'>%s</foreground>&gt; %s" % \
-					(nick_color, self.com.get_own_nick(server), self.gui.escape(message)))
+					(nickColor, self.com.getOwnNick(server), self.gui.escape(message)))
 		else:
 			self.gui.serverPrint(time, server, "CTCP request from you to %s: %s" \
 					% (self.gui.escape(target), self.gui.escape(message)))
 
 	def queryCTCP(self, time, server, nick, message):
-		channel = self.gui.get_servertree().getChannel(server,nick)
+		channel = self.gui.getServertree().getChannel(server,nick)
 		if channel:
 			self.gui.channelPrint(time, server, channel, \
 					"&lt;CTCP:<font foreground='%s'>%s</font>&gt; %s" % \
@@ -327,7 +327,7 @@ class tekkaSignals(object):
 					(self.getNickColor(nick), self.gui.escape(nick), self.gui.escape(message)))
 
 	def queryNotice(self, time, server, nick, message):
-		channel = self.gui.get_servertree().getChannel(server,nick)
+		channel = self.gui.getServertree().getChannel(server,nick)
 		if channel:
 			self.gui.channelPrint(time, server, channel, \
 					"&lt;Notice:<font foreground='%s'>%s</font>&gt; %s" % \
@@ -338,7 +338,7 @@ class tekkaSignals(object):
 					(self.getNickColor(nick), self.gui.escape(nick), self.gui.escape(message)))
 
 	def userNotice(self, time, server, nick, target, message):
-		if target == self.com.get_own_nick(server):
+		if target == self.com.getOwnNick(server):
 			self._simCheck(server,nick)
 			self.userMessage(time, server, nick, nick, message)
 
@@ -348,24 +348,24 @@ class tekkaSignals(object):
 		self.gui.channelPrint(time, server, channel, "%s %s" % (nick,action))
 
 	# user changed his nick
-	def userNick(self, time, server, nick, new_nick):
-		servertree = self.gui.get_servertree()
+	def userNick(self, time, server, nick, newNick):
+		servertree = self.gui.getServertree()
 		channel = servertree.getChannel(server, nick)
 		if channel:
-			servertree.renameChannel(server, channel, new_nick)
+			servertree.renameChannel(server, channel, newNick)
 
-		if new_nick == self.com.get_own_nick(server):
+		if newNick == self.com.getOwnNick(server):
 			nickwrap = "You are"
 		else:
 			nickwrap = "%s is" % nick
 
-		nickchange = "%s now known as %s." % (nickwrap, new_nick)
+		nickchange = "%s now known as %s." % (nickwrap, newNick)
 		nickchange = self.gui.escape(nickchange)
 
 		for channel in servertree.getChannels(server):
 			nicklist = servertree.getObject(server,channel).getNicklist()
 			if nick in nicklist.getNicks() or channel == nick:
-				nicklist.modifyNick(nick, new_nick)
+				nicklist.modifyNick(nick, newNick)
 				self.gui.channelPrint(time, server, channel, nickchange, "action")
 
 	# user was kicked
@@ -373,10 +373,10 @@ class tekkaSignals(object):
 		if reason:
 			reason = "(%s)" % reason
 
-		servertree = self.gui.get_servertree()
+		servertree = self.gui.getServertree()
 		obj = servertree.getObject(server,channel)
 
-		if who == self.com.get_own_nick(server):
+		if who == self.com.getOwnNick(server):
 			obj.setJoined(False)
 			servertree.updateDescription(server, channel, obj=obj)
 			self.gui.channelPrint(time, server, channel, self.gui.escape(\
@@ -394,9 +394,9 @@ class tekkaSignals(object):
 	a message is generated.
 	"""
 	def userQuit(self, time, server, nick, reason):
-		servertree = self.gui.get_servertree()
+		servertree = self.gui.getServertree()
 
-		if nick == self.com.get_own_nick(server):
+		if nick == self.com.getOwnNick(server):
 			# set the connected flag to False on the server
 			obj = servertree.getObject(server)
 
@@ -447,11 +447,11 @@ class tekkaSignals(object):
 	on it, else we generate messages and stuff.
 	"""
 	def userJoin(self, timestamp, server, nick, channel):
-		servertree = self.gui.get_servertree()
+		servertree = self.gui.getServertree()
 
-		if nick == self.com.get_own_nick(server):
-			nicks = self.com.fetch_nicks(server,channel)
-			self.com.request_topic(server, channel)
+		if nick == self.com.getOwnNick(server):
+			nicks = self.com.fetchNicks(server,channel)
+			self.com.requestTopic(server, channel)
 
 			# returns the iter of the channel if added (ret=0)
 			# or if it's already existent (ret=1) if ret is 0
@@ -489,13 +489,13 @@ class tekkaSignals(object):
 
 			nickwrap = "You have"
 		else:
-			nickwrap = "<font foreground='%s'>%s</font> has" % (self.gui.get_config().getColor("joinNick"), self.gui.escape(nick))
+			nickwrap = "<font foreground='%s'>%s</font> has" % (self.gui.getConfig().getColor("joinNick"), self.gui.escape(nick))
 			servertree.getObject(server,channel).getNicklist().appendNick(nick)
 		self.gui.channelPrint(timestamp, server, channel, "%s joined %s." % (nickwrap, channel), "action")
 
 	# user parted
 	def userPart(self, timestamp, server, nick, channel, reason):
-		servertree = self.gui.get_servertree()
+		servertree = self.gui.getServertree()
 		obj = servertree.getObject(server,channel)
 
 		if not obj: # happens if part + tab close
@@ -504,7 +504,7 @@ class tekkaSignals(object):
 		if reason:
 			reason = " (%s)" % reason
 
-		if nick == self.com.get_own_nick(server):
+		if nick == self.com.get_ownNick(server):
 			self.gui.channelPrint(timestamp, server, channel, "You have left %s%s." % (channel,reason))
 
 			obj.setJoined(False)
@@ -512,6 +512,6 @@ class tekkaSignals(object):
 		else:
 			obj.getNicklist().removeNick(nick)
 			self.gui.channelPrint(timestamp, server, channel, \
-			"<font foreground='%s'>%s</font> has left %s%s." % (self.gui.get_config().getColor("partNick"), self.gui.escape(nick), self.gui.escape(channel), self.gui.escape(reason)), "action")
+			"<font foreground='%s'>%s</font> has left %s%s." % (self.gui.getConfig().getColor("partNick"), self.gui.escape(nick), self.gui.escape(channel), self.gui.escape(reason)), "action")
 
 

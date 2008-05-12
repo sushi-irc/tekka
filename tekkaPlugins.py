@@ -27,6 +27,21 @@ SUCH DAMAGE.
 
 # TODO: all
 
+"""
+Methods:
+ getCurrentChannel
+ getCurrentServer
+ getOwnNick(server)
+ getTopic(server,channel)
+ getNicks(server,channel)
+ getPrefix(server,channel,nick)
+ getUserModes(server,channel,nick)
+ getModes(server,channel)
+
+Signals:
+ all, use a "connect"-method to assign
+ signals to plugins
+"""
 class tekkaPlugins(object):
-	def __init__(self):
+	def __init__(self, tekkaConfig):
 		pass

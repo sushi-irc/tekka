@@ -85,7 +85,7 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 			else:
 				tag.set_property("weight", pango.WEIGHT_NORMAL)
 		elif name == "font":
-			self._parse_font(tag, attrs)
+			self._parseFont(tag, attrs)
 		elif name == "msg":
 			pass
 		else:
@@ -105,7 +105,7 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 
 	""" PARSING HELPER """
 
-	def _parse_font(self, tag, attrs):
+	def _parseFont(self, tag, attrs):
 		if not attrs or attrs.getLength() == 0: return
 		for name in attrs.getNames():
 			try:
@@ -123,7 +123,7 @@ class htmlbuffer(gtk.TextBuffer):
 		gtk.TextBuffer.__init__(self, self.tagtable)
 		self.errorcount = 0
 
-	def insert_html(self, iter, text):
+	def insertHTML(self, iter, text):
 		startoffset = iter.get_offset()
 		parser = xml.sax.make_parser()
 		parser.setContentHandler(htmlhandler(self))
@@ -152,31 +152,10 @@ class htmlbuffer(gtk.TextBuffer):
 					oldend = self.get_iter_at_offset(startoffset)
 					self.delete(oldend, self.get_end_iter())
 
-					self.insert_html(oldend, text.replace(fchar,""))
+					self.insertHTML(oldend, text.replace(fchar,""))
 				else:
 					self.errorcount = 0
 					print "Too many faulty chars."
 					self.insert(self.get_end_iter(), "\n");
 					return
 		self.errorcount = 0
-
-
-if __name__ == "__main__":
-	class servertab(object):
-		def __init__(self,parent=None):
-			widgets = gtk.glade.XML("interface.glade")
-
-			widgets.get_widget("button1").connect("clicked",lambda w: gtk.main_quit())
-			widgets.get_widget("window1").connect("destroy",lambda w: gtk.main_quit())
-
-			textview = widgets.get_widget("textview1")
-			buf = htmlbuffer()
-			textview.set_buffer(buf)
-
-			buf.insert_html(buf.get_end_iter(), "<b>Z<br/></b>")
-			buf.insert_html(buf.get_end_iter(), "<b>Test <i>oh hai</i> foobar<br/></b>")
-			buf.insert(buf.get_end_iter(), "Test\n")
-			buf.insert_html(buf.get_end_iter(), '<tag><u><font foreground="#FF0000" family="Monospace">Fonttest</font></u> hi</tag>')
-
-	s = servertab()
-	gtk.main()

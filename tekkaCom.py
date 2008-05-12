@@ -40,7 +40,7 @@ class tekkaCom(object):
 		self.myNick = {}
 
 	# connect to maki over dbus
-	def connect_maki(self):
+	def connectMaki(self):
 
 		try:
 			self.proxy = self.bus.get_object("de.ikkoku.sushi", "/de/ikkoku/sushi")
@@ -54,47 +54,47 @@ class tekkaCom(object):
 		self.bus.add_signal_receiver(self._connectedSignal, "connected")
 		self.bus.add_signal_receiver(self._nickSignal, "nick")
 
-		for server in self.fetch_servers():
-			self.cache_own_nick(server,self.fetch_own_nick(server))
+		for server in self.fetchServers():
+			self.cacheOwnNick(server,self.fetchOwnNick(server))
 
 		return True
 
-	def __no_proxy_message(self):
+	def __noProxyMessage(self):
 		print "No proxy. Is maki running?"
 
-	def get_bus(self):
+	def getBus(self):
 		return self.bus
 
-	def get_proxy(self):
+	def getProxy(self):
 		return self.proxy
 
-	def get_config(self):
+	def getConfig(self):
 		return self.config
 
 	"""
-	Signals: nickchange
-			 initial nick setting
+	Signals: nickchange (nick => _nickSignal)
+			 initial nick setting (connected => _connectSignal)
 	"""
 
 	def _connectedSignal(self, time, server, nick):
-		self.cache_own_nick(server, nick)
+		self.cacheOwnNick(server, nick)
 
 	def _nickSignal(self, time, server, nick, new_nick):
-		if nick == self.get_own_nick(server):
-			self.cache_own_nick(server,new_nick)
+		if nick == self.getOwnNick(server):
+			self.cacheOwnNick(server,new_nick)
 
 	"""
 	Connection: connect to server
 				quit server
 	"""
 
-	def connect_server(self, server):
+	def connectServer(self, server):
 		if not self.proxy:
-			self.__no_proxy_message()
+			self.__noProxyMessage()
 			return
 		self.proxy.connect(server)
 
-	def quit_server(self, server, reason=""):
+	def quitServer(self, server, reason=""):
 		self.proxy.quit(server,reason)
 
 	"""
@@ -102,62 +102,68 @@ class tekkaCom(object):
 	"""
 
 	# sends a PRIVMSG to channel @channel on server @server
-	def send_message(self, server, channel, text):
+	def sendMessage(self, server, channel, text):
 		self.proxy.message(server, channel, text)
 
 	# fetch all nicks in @channel on server @server
-	def fetch_nicks(self, server, channel):
+	def fetchNicks(self, server, channel):
 		return self.proxy.nicks(server,channel) or []
 
 	# fetches the own nick for server @server from maki
-	def fetch_own_nick(self, server):
+	def fetchOwnNick(self, server):
 		if not self.proxy:
-			self.__no_proxy_message()
+			self.__noProxyMessage()
 			return None
 		return self.proxy.own_nick(server)
 
 	# caches the nick @nickname for server @server.
-	def cache_own_nick(self, server, nickname):
+	def cacheOwnNick(self, server, nickname):
 		self.myNick[server] = nickname
 
 	# returns the cached nick of server @server
-	def get_own_nick(self, server):
+	def getOwnNick(self, server):
 		if self.myNick.has_key(server):
 			return self.myNick[server]
 		return None
 
 	# fetch all servers maki is connected to
-	def fetch_servers(self):
+	def fetchServers(self):
 		return self.proxy.servers() or []
 
 	# fetch all channels joined on server @server
-	def fetch_channels(self, server):
+	def fetchChannels(self, server):
 		return self.proxy.channels(server) or []
 
-	def fetch_ignores(self, server):
+	# returns all ignores set on the server
+	def fetchIgnores(self, server):
 		return self.proxy.ignores(server)
 
-	def fetch_log(self, server, target, lines):
+	# returns @lines lines of log for target @target on server @server
+	def fetchLog(self, server, target, lines):
 		return self.proxy.log(server, target, lines) or []
 
-	def fetch_user_channel_modes(self, server, channel, nick):
+	# returns the modes set on @nick in channel @channel on 
+	# server @server
+	def fetchUserChannelModes(self, server, channel, nick):
 		return self.proxy.user_channel_mode(server, channel, nick)
 
-	def fetch_user_channel_prefix(self, server, channel, nick):
+	# returns the prefix of user @nick in channel @channel
+	# on server @server
+	def fetchUserChannelPrefix(self, server, channel, nick):
 		return self.proxy.user_channel_prefix(server, channel, nick)
 
 	# requests a topic-signal-emmit for channel @channel on
 	# server @server
-	def request_topic(self, server, channel):
+	def requestTopic(self, server, channel):
 		return self.proxy.topic(server,channel,"")
 
 	# fetch the prefix of user @nick in channel @channel on
 	# server @server
-	def fetch_prefix(self, server, channel, nick):
+	def fetchPrefix(self, server, channel, nick):
 		return self.proxy.user_channel_prefix(server,channel,nick)
 
 	# lookup if user @nick on server @server is away
-	def is_away(self, server, nick):
+	def isAway(self, server, nick):
 		return self.proxy.user_away(server, nick)
 
 	def join(self, server, channel, key=""):
@@ -166,7 +172,7 @@ class tekkaCom(object):
 	def part(self, server, channel, message=""):
 		self.proxy.part(server,channel,message)
 
-	def set_topic(self, server, channel, topic):
+	def setTopic(self, server, channel, topic):
 		self.proxy.topic(server, channel, topic)
 
 	def mode(self, server, target, mode):
@@ -178,10 +184,10 @@ class tekkaCom(object):
 	def nickserv(server):
 		self.proxy.nickserv(server)
 
-	def set_away(self, server, message):
+	def setAway(self, server, message):
 		self.proxy.away(server, message)
 
-	def set_back(self, server):
+	def setBack(self, server):
 		self.proxy.back(server)
 
 	def nick(self, server, new_nick):
@@ -215,7 +221,7 @@ class tekkaCom(object):
 	Config, server creation, server deletion
 	"""
 
-	def create_server(self, smap):
+	def createServer(self, smap):
 		domain = "servers/%s" % smap["servername"]
 		del smap["servername"]
 		for (k,v) in smap.items():
@@ -224,14 +230,14 @@ class tekkaCom(object):
 			else:
 				self.proxy.sushi_set(domain, "server", k, v)
 
-	def delete_server(self, name):
+	def deleteServer(self, name):
 		domain = "servers/%s" % name
 		self.proxy.sushi_remove(domain, "", "")
 
-	def fetch_serverlist(self):
+	def fetchServerlist(self):
 		return self.proxy.sushi_list("servers","","")
 
-	def fetch_serverinfo(self, server):
+	def fetchServerinfo(self, server):
 		map = {}
 		domain = "servers/%s" % server
 		map["servername"] = server
@@ -243,17 +249,17 @@ class tekkaCom(object):
 		map["autoconnect"] = self.proxy.sushi_get(domain, "server", "autoconnect")
 		return map
 
-	def get_channel_autojoin(self, server, channel):
+	def getChannelAutojoin(self, server, channel):
 		return self.proxy.sushi_get("servers/"+server, channel, "autojoin")
 
-	def set_channel_autojoin(self, server, channel, switch):
+	def setChannelAutojoin(self, server, channel, switch):
 		self.proxy.sushi_set("servers/"+server, channel, "autojoin", switch and "true" or "false")
 
 	"""
 	Shutdown
 	"""
 
-	def maki_shutdown(self):
+	def makiShutdown(self):
 		self.proxy.shutdown()
 
 

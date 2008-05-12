@@ -2,17 +2,17 @@
 """
 Copyright (c) 2008 Marian Tietz
 All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions
 are met:
- 
+
 1. Redistributions of source code must retain the above copyright
    notice, this list of conditions and the following disclaimer.
 2. Redistributions in binary form must reproduce the above copyright
    notice, this list of conditions and the following disclaimer in the
    documentation and/or other materials provided with the distribution.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -38,56 +38,60 @@ from tekkaCommands import tekkaCommands
 from tekkaSignals import tekkaSignals
 
 import tekkaDialog
+import tekkaPlugins
 
 class tekkaMain(object):
 	def __init__(self):
 		self.config = tekkaConfig()
-		
-		#self.config.read_config()
+		self.config.readConfig()
 
 		self.com = tekkaCom(self.config)
 		self.gui = tekkaGUI.tekkaGUI(self.config)
+		self.plugins = tekkaPlugins.tekkaPlugins(self.config)
 
-		if not self.com.connect_maki():
+		if not self.com.connectMaki():
 			print "Connection to maki failed."
 			sys.exit(1)
 
 		self.commands = tekkaCommands(self.com,self.gui)
 		self.signals = tekkaSignals(self.com,self.gui)
 
-		self._setup_signals(self.gui.get_widgets())
+		self._setupSignals(self.gui.getWidgets())
 
-		self.gui.get_servertree().expand_all()
+		self.gui.getServertree().expand_all()
 
 		self.initShortcuts()
 
-	def get_config(self):
+	def getConfig(self):
 		return self.config
 
-	def get_com(self):
+	def getCom(self):
 		return self.com
 
-	def get_gui(self):
+	def getGui(self):
 		return self.gui
 
-	def get_commands(self):
+	def getCommands(self):
 		return self.commands
 
-	def get_signals(self):
+	def getSignals(self):
 		return self.signals
 
-	def _setup_signals(self, widgets):
-		sigdic = { 
+	def getPlugins(self):
+		return self.plugins
+
+	def _setupSignals(self, widgets):
+		sigdic = {
 				   "tekkaMainwindow_Quit_activate_cb" : gtk.main_quit,
 				   "tekkaInput_activate_cb" : self.userInput,
 				   "tekkaTopic_activate_cb" : self.topicbarActivate,
 				   "tekkaServertree_realize_cb" : lambda w: w.expand_all(),
 				   "tekkaNicklist_row_activated_cb" : self.nicklistActivateRow,
 				   "tekkaNicklist_button_press_event_cb" : self.nicklistButtonPress,
-		           "tekkaMainwindow_Connect_activate_cb" : self.show_server_dialog,				   
+		           "tekkaMainwindow_Connect_activate_cb" : self.showServerDialog,
 				   "tekkaMainwindow_Shutdown_activate_cb" : self.makiShutdown
 		         }
-		           				  
+
 		widgets.signal_autoconnect(sigdic)
 		widget = widgets.get_widget("tekkaMainwindow")
 		if widget:
@@ -96,10 +100,10 @@ class tekkaMain(object):
 		if widget:
 			widget.connect("activate", gtk.main_quit)
 
-		self.gui.get_servertree().connect("button-press-event", self.servertree_button_press)
-		self.gui.get_input().connect("key-press-event", self.userInputEvent)
+		self.gui.getServertree().connect("button-press-event", self.servertreeButtonPress)
+		self.gui.getInput().connect("key-press-event", self.userInputEvent)
 
-	def _show_server_dialog(self, widget):
+	def _showServerDialog(self, widget):
 		serverlist = tekkaDialog.serverDialog(self)
 		result,server = serverlist.run()
 		if result == serverlist.RESPONSE_CONNECT:
@@ -107,9 +111,9 @@ class tekkaMain(object):
 			if server:
 				self.com.connect(server)
 
-	""" Change the current tab to the tab identified by "path" """				
-	def switch_tree_tab(self, path):
-		servertree = self.gui.get_servertree()
+	""" Change the current tab to the tab identified by "path" """
+	def switchTreeTab(self, path):
+		servertree = self.gui.getServertree()
 		srow,crow = servertree.getRowFromPath(path)
 
 		if srow and not crow:
@@ -122,15 +126,15 @@ class tekkaMain(object):
 				print "No output!"
 				return
 
-			self.gui.get_output().set_buffer(output) # set output buffer
+			self.gui.getOutput().set_buffer(output) # set output buffer
 			self.gui.scrollOutput(output) # scroll to the bottom
 
 			# reset hightlight
 			obj.setNewMessage(False)
-			servertree.serverDescription(server, obj.markup()) 
+			servertree.serverDescription(server, obj.markup())
 
-			self.gui.get_nicklist().set_model(None)
-			self.gui.get_topicbar().set_property("visible",False)
+			self.gui.getNicklist().set_model(None)
+			self.gui.getTopicbar().set_property("visible",False)
 
 		elif srow and crow:
 			server = srow[servertree.COLUMN_NAME]
@@ -143,15 +147,15 @@ class tekkaMain(object):
 				print "No output!"
 				return
 
-			self.gui.get_output().set_buffer(output)
+			self.gui.getOutput().set_buffer(output)
 			self.gui.scrollOutput(output)
 
 			obj.setNewMessage(False)
 			servertree.channelDescription(server, channel, obj.markup())
 
-			self.gui.get_nicklist().set_model(obj.getNicklist())
-			
-			topicbar = self.gui.get_topicbar()
+			self.gui.getNicklist().set_model(obj.getNicklist())
+
+			topicbar = self.gui.getTopicbar()
 			topicbar.set_text("")
 			self.gui.setTopicInBar(server=server,channel=channel)
 			topicbar.set_property("visible",True)
@@ -159,72 +163,72 @@ class tekkaMain(object):
 			print "Activation failed due to wrong path."
 
 	""" Wrapper for shortcut functionality """
-	def switch_tab_by_key(self, path):
-		servertree = self.gui.get_servertree()
+	def switchTabByKey(self, path):
+		servertree = self.gui.getServertree()
 		servertree.set_cursor(path)
 		servertree.updateCurrentRowFromPath(path)
-		self.switch_tree_tab(path)
+		self.switchTreeTab(path)
 
 	def initShortcuts(self):
-		servertree = self.gui.get_servertree()
-		accel_group = self.gui.get_accel_group()
+		servertree = self.gui.getServertree()
+		accelGroup = self.gui.getAccelGroup()
 		for i in range(1,10):
 			gobject.signal_new("shortcut_%d" % i, tekkaGUI.tekkaServertree, gobject.SIGNAL_ACTION, None, ())
-			servertree.add_accelerator("shortcut_%d" % i, accel_group, ord("%d" % i), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
+			servertree.add_accelerator("shortcut_%d" % i, accelGroup, ord("%d" % i), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 			servertree.connect("shortcut_%d" % i, eval("self.shortcut_%d" % i))
 
 
-	""" 
+	"""
 	Widget-Signals
 	"""
-	
+
 	""" Keyboard shortcut signals (alt+[1-9]) """
 	def shortcut_1(self,w):
-		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("1"))
+		self.switchTabByKey(self.gui.getServertree().getShortcut("1"))
 	def shortcut_2(self,w):
-		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("2"))
+		self.switchTabByKey(self.gui.getServertree().getShortcut("2"))
 	def shortcut_3(self,w):
-		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("3"))
+		self.switchTabByKey(self.gui.getServertree().getShortcut("3"))
 	def shortcut_4(self,w):
-		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("4"))
+		self.switchTabByKey(self.gui.getServertree().getShortcut("4"))
 	def shortcut_5(self,w):
-		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("5"))
+		self.switchTabByKey(self.gui.getServertree().getShortcut("5"))
 	def shortcut_6(self,w):
-		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("6"))
+		self.switchTabByKey(self.gui.getServertree().getShortcut("6"))
 	def shortcut_7(self,w):
-		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("7"))
+		self.switchTabByKey(self.gui.getServertree().getShortcut("7"))
 	def shortcut_8(self,w):
-		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("8"))
+		self.switchTabByKey(self.gui.getServertree().getShortcut("8"))
 	def shortcut_9(self,w):
-		self.switch_tab_by_key(self.gui.get_servertree().get_shortcut("9"))
+		self.switchTabByKey(self.gui.getServertree().getShortcut("9"))
 
 	"""
 	A button in the servertree was pressed.
 	"""
-	def servertree_button_press(self, widget, event):
+	def servertreeButtonPress(self, widget, event):
 		path = widget.get_path_at_pos(int(event.x), int(event.y))
 
-		if not path or not len(path): 
+		if not path or not len(path):
 			return
 
-		servertree = self.gui.get_servertree()
+		servertree = self.gui.getServertree()
 		srow,crow = servertree.getRowFromPath(path[0])
-		
+
 		# left click -> activate tab
 		if event.button == 1:
-			self.switch_tree_tab(path[0])
+			self.switchTreeTab(path[0])
 
 		# right click -> menu for tab
 		elif event.button == 3:
 			server = None
 			channel = None
 
-			if srow: 
+			if srow:
 				server = srow[servertree.COLUMN_NAME]
-			if crow: 
+			if crow:
 				channel = crow[servertree.COLUMN_NAME]
 
-			if not crow and not srow: 
+			if not crow and not srow:
 				return
 
 			menu = gtk.Menu()
@@ -242,18 +246,18 @@ class tekkaMain(object):
 					menu.append( label )
 
 				label = gtk.CheckMenuItem(label="Autojoin")
-				if self.com.get_channel_autojoin(server,channel) == "true":
+				if self.com.getChannelAutojoin(server,channel) == "true":
 					label.set_active(True)
-				label.connect("toggled", lambda w: self.channel_menu_autojoin(server,channel,w))
+				label.connect("toggled", lambda w: self.channelMenuAutojoin(server,channel,w))
 				menu.append( label )
 			elif srow:
 				if not srow[servertree.COLUMN_OBJECT].getConnected():
 					label = gtk.MenuItem(label="Connect")
-					label.connect("activate",lambda w: self.com.connect_server(server))
+					label.connect("activate",lambda w: self.com.connectServer(server))
 					menu.append( label )
 				else:
 					label = gtk.MenuItem(label="Disconnect")
-					label.connect("activate",lambda w: self.com.quit_server(server))
+					label.connect("activate",lambda w: self.com.quitServer(server))
 					menu.append( label )
 
 			label = gtk.MenuItem(label="Close Tab")
@@ -270,25 +274,25 @@ class tekkaMain(object):
 	"""
 	def userInput(self, widget):
 		text =  widget.get_text()
-		server,channel = self.gui.get_servertree().getCurrentChannel()
-		self.gui.get_history().append(server, channel,text)
-		self.commands.send_message(server, channel, text)
+		server,channel = self.gui.getServertree().getCurrentChannel()
+		self.gui.getHistory().append(server, channel,text)
+		self.commands.sendMessage(server, channel, text)
 		widget.set_text("")
 
 	"""
 	Autojoin button in context menu of the servertree was pressed
 	"""
-	def channel_menu_autojoin(self, server, channel, w):
-		self.com.set_channel_autojoin(server,channel, w.get_active())
+	def channelMenuAutojoin(self, server, channel, w):
+		self.com.setChannelAutojoin(server,channel, w.get_active())
 
 	"""
 	A nick in the nicklist was double clicked
 	"""
 	def nicklistActivateRow(self, treeview, path, parm1):
-		servertree = self.gui.get_servertree()
+		servertree = self.gui.getServertree()
 		server = servertree.getCurrentServer()
 		if not server: return
-		nick = self.gui.get_nicklist().get_model()[path[0]][tekkaGUI.tekkaNicklistStore.COLUMN_NICK]
+		nick = self.gui.getNicklist().get_model()[path[0]][tekkaGUI.tekkaNicklistStore.COLUMN_NICK]
 		servertree.addChannel(server, nick)
 
 	"""
@@ -296,21 +300,21 @@ class tekkaMain(object):
 	"""
 	def nicklistButtonPress(self, widget, event):
 		path = widget.get_path_at_pos(int(event.x), int(event.y))
-		if not path or not len(path): 
+		if not path or not len(path):
 			return
-		srow,crow = self.gui.get_servertree().getCurrentRow()
+		srow,crow = self.gui.getServertree().getCurrentRow()
 
 		if not crow:
 			return
 
-		nicklist = crow[self.gui.get_servertree().COLUMN_OBJECT].getNicklist()
+		nicklist = crow[self.gui.getServertree().COLUMN_OBJECT].getNicklist()
 		nickrow = nicklist[path[0]]
 
 		# left click -> activate tab
 		if event.button == 1:
 			print "Would do any left-click action"
 			pass
-		
+
 		elif event.button == 3:
 			nick = nickrow[tekkaGUI.tekkaNicklistStore.COLUMN_NICK]
 			server = srow[tekkaGUI.tekkaServertree.COLUMN_NAME]
@@ -318,57 +322,57 @@ class tekkaMain(object):
 
 			menu = gtk.Menu()
 
-			kick_item = gtk.MenuItem(label="Kick")
-			kick_item.connect("activate", lambda w: self.com.kick(server, channel, nick))
-			menu.append(kick_item)
+			kickItem = gtk.MenuItem(label="Kick")
+			kickItem.connect("activate", lambda w: self.com.kick(server, channel, nick))
+			menu.append(kickItem)
 
-			ban_item = gtk.MenuItem(label="Ban")
-			ban_item.connect("activate", lambda w: self.com.mode(server, channel, "+b %s!*@*" % nick))
-			menu.append(ban_item)
+			banItem = gtk.MenuItem(label="Ban")
+			banItem.connect("activate", lambda w: self.com.mode(server, channel, "+b %s!*@*" % nick))
+			menu.append(banItem)
 
-			unban_item = gtk.MenuItem(label="Unban")
-			unban_item.connect("activate", lambda w: self.com.mode(server, channel, "-b %s" % nick))
-			menu.append(unban_item)
-			
-			ignore_item = gtk.CheckMenuItem(label="Ignore")
+			unbanItem = gtk.MenuItem(label="Unban")
+			unbanItem.connect("activate", lambda w: self.com.mode(server, channel, "-b %s" % nick))
+			menu.append(unbanItem)
+
+			ignoreItem = gtk.CheckMenuItem(label="Ignore")
 			pattern = "%s!*" % nick
-			ignores = self.com.fetch_ignores(server)
+			ignores = self.com.fetchIgnores(server)
 			if pattern in ignores:
-				ignore_item.set_active(True)
-				ignore_item.connect("toggled", lambda w: self.com.unignore(server, pattern))
+				ignoreItem.set_active(True)
+				ignoreItem.connect("toggled", lambda w: self.com.unignore(server, pattern))
 			else:
-				ignore_item.connect("toggled", lambda w: self.com.ignore(server, pattern))
-			menu.append(ignore_item)
+				ignoreItem.connect("toggled", lambda w: self.com.ignore(server, pattern))
+			menu.append(ignoreItem)
 
 			mode_menu = gtk.Menu()
-			mode_item = gtk.MenuItem(label="Mode")
-			mode_item.set_submenu(mode_menu)
+			modeItem = gtk.MenuItem(label="Mode")
+			modeItem.set_submenu(mode_menu)
 
-			menu.append(mode_item)
+			menu.append(modeItem)
 
-			op_item       = gtk.MenuItem(label="Op")
-			op_item.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "+o"))
-			mode_menu.append(op_item)
-		
-			deop_item     = gtk.MenuItem(label="Deop")
-			deop_item.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "-o"))
-			mode_menu.append(deop_item)
+			opItem       = gtk.MenuItem(label="Op")
+			opItem.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "+o"))
+			mode_menu.append(opItem)
 
-			halfop_item   = gtk.MenuItem(label="Halfop")
-			halfop_item.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "+h"))
-			mode_menu.append(halfop_item)
+			deopItem     = gtk.MenuItem(label="Deop")
+			deopItem.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "-o"))
+			mode_menu.append(deopItem)
 
-			dehalfop_item = gtk.MenuItem(label="DeHalfop")
-			dehalfop_item.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "-h"))
-			mode_menu.append(dehalfop_item)
+			halfopItem   = gtk.MenuItem(label="Halfop")
+			halfopItem.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "+h"))
+			mode_menu.append(halfopItem)
 
-			voice_item    = gtk.MenuItem(label="Voice")
-			voice_item.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "+v"))
-			mode_menu.append(voice_item)
+			dehalfopItem = gtk.MenuItem(label="DeHalfop")
+			dehalfopItem.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "-h"))
+			mode_menu.append(dehalfopItem)
 
-			devoice_item  = gtk.MenuItem(label="Devoice")
-			devoice_item.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "-v"))
-			mode_menu.append(devoice_item)
+			voiceItem    = gtk.MenuItem(label="Voice")
+			voiceItem.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "+v"))
+			mode_menu.append(voiceItem)
+
+			devoiceItem  = gtk.MenuItem(label="Devoice")
+			devoiceItem.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "-v"))
+			mode_menu.append(devoiceItem)
 
 			mode_menu.show_all()
 			menu.show_all()
@@ -392,27 +396,27 @@ class tekkaMain(object):
 	"""
 	def userInputEvent(self, widget, event):
 		name = gtk.gdk.keyval_name( event.keyval )
-		
+
 		if name == "Up":
-			server,channel = self.gui.get_servertree().getCurrentChannel()
+			server,channel = self.gui.getServertree().getCurrentChannel()
 			text = self.gui.get_history().getUp(server,channel)
 
 			widget.set_text(text)
 			widget.set_position(len(text))
 			return True
 		elif name == "Down":
-			server,channel = self.gui.get_servertree().getCurrentChannel()
+			server,channel = self.gui.getServertree().getCurrentChannel()
 			text = self.gui.get_history().getDown(server,channel)
 
 			widget.set_text(text)
 			widget.set_position(len(text))
 			return True
 		if name == "Tab":
-			s,c = self.gui.get_servertree().getCurrentRow()
-			if not c: 
+			s,c = self.gui.getServertree().getCurrentRow()
+			if not c:
 				print "Server keyword tabcompletion."
 			else:
-				obj = c[self.gui.get_servertree().COLUMN_OBJECT]
+				obj = c[self.gui.getServertree().COLUMN_OBJECT]
 				if not obj:
 					return True
 
@@ -425,9 +429,9 @@ class tekkaMain(object):
 					return True
 
 				result = None
-				
+
 				if needle[0] == "#": # channel completion
-					channels = self.gui.get_servertree().searchTab(s.iterchildren(),needle.lower())
+					channels = self.gui.getServertree().searchTab(s.iterchildren(),needle.lower())
 					if channels:
 						result = channels[0]
 				elif needle[0] == "/": # command completion
@@ -453,20 +457,20 @@ class tekkaMain(object):
 	"Close tab" in servertree contextmenu was clicked
 	"""
 	def _menuRemoveTab(self, w, server, channel):
-		servertree = self.gui.get_servertree()
+		servertree = self.gui.getServertree()
 		cs,cc = servertree.getCurrentChannel()
 
-		if not server and not channel: 
+		if not server and not channel:
 			return
 		elif server and not channel:
-			self.com.quit_server(server)
+			self.com.quitServer(server)
 			servertree.removeServer(server)
 			if server == cs:
 				self.gui.get_output().get_buffer().set_text("")
 		elif server and channel:
 			self.com.part(server, channel)
 			servertree.removeChannel(server,channel)
-			
+
 			if cc == channel:
 				self.gui.get_output().get_buffer().set_text("")
 				self.gui.get_topicbar().set_text("")
@@ -476,26 +480,26 @@ class tekkaMain(object):
 	"""
 	"Connect" in the main-menu was clicked
 	"""
-	def show_server_dialog(self, widget):
+	def showServerDialog(self, widget):
 		serverlist = tekkaDialog.serverDialog(self)
 		result,server = serverlist.run()
 		if result == serverlist.RESPONSE_CONNECT:
 			print "we want to connect to server %s" % server
 			if server:
-				self.com.connect_server(server)
+				self.com.connectServer(server)
 
 	"""
 	Shutdown button in main-menu was clicked
 	"""
 	def makiShutdown(self, widget):
 		self.com.shutdown()
-		for server in self.get_servertree().getServers().get_model() or []:
+		for server in self.getServertree().getServers().get_model() or []:
 			obj = server[tekkaGUI.tekkaServertree.COLUMN_OBJECT]
 			obj.setConnected(False)
 			for channel in server.iterchildren():
 				obj = channel[tekkaGUI.tekkaServertree.COLUMN_OBJECT]
 				obj.setJoined(False)
-		# TODO: disable widgets (entry, tekka->connect, tekka->close maki, 
+		# TODO: disable widgets (entry, tekka->connect, tekka->close maki,
 		# nicklist->menu, servertree->menu)
 
 if __name__ == "__main__":

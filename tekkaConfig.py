@@ -67,6 +67,9 @@ class tekkaConfig(object):
 			return self.shortcuts[startkey]
 		return None
 
+	def readConfig(self):
+		pass
+
 class tekkaConfigDialog(object):
 	def __init__(self):
 		pass

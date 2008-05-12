@@ -46,7 +46,7 @@ class in tekkaMain and pass it to the dialogs.
 
 class addServerDialog(object):
 	def __init__(self,tekkaMainobject):
-		self.gladefile = tekkaMainobject.get_config().gladefiles["dialogs"]
+		self.gladefile = tekkaMainobject.getConfig().gladefiles["dialogs"]
 		self.widgets = None
 		self.servername = None
 		self.RESPONSE_ADD = 1
@@ -55,28 +55,28 @@ class addServerDialog(object):
 		data = None
 
 		self.widgets = gtk.glade.XML(self.gladefile, "serverAdd")
-		dialog = self.widgets.get_widget("serverAdd")
+		dialog = self.widgets.getWidget("serverAdd")
 
-		servername_input = self.widgets.get_widget("serverAdd_Servername")
-		serveraddress_input = self.widgets.get_widget("serverAdd_Serveradress")
-		serverport_input = self.widgets.get_widget("serverAdd_Serverport")
-		serverautoconnect_input = self.widgets.get_widget("serverAdd_Autoconnect")
-		nickname_input = self.widgets.get_widget("serverAdd_Nick")
-		realname_input = self.widgets.get_widget("serverAdd_Realname")
-		nickserv_input = self.widgets.get_widget("serverAdd_Nickserv")
+		servernameInput = self.widgets.get_widget("serverAdd_Servername")
+		serveraddressInput = self.widgets.get_widget("serverAdd_Serveradress")
+		serverportInput = self.widgets.get_widget("serverAdd_Serverport")
+		serverautoconnectInput = self.widgets.get_widget("serverAdd_Autoconnect")
+		nicknameInput = self.widgets.get_widget("serverAdd_Nick")
+		realnameInput = self.widgets.get_widget("serverAdd_Realname")
+		nickservInput = self.widgets.get_widget("serverAdd_Nickserv")
 
-		serverport_input.set_text("6667")
+		serverportInput.set_text("6667")
 
 		result = dialog.run()
 		if result == self.RESPONSE_ADD:
 			data = {}
-			data["servername"] = servername_input.get_text()
-			data["address"] = serveraddress_input.get_text()
-			data["port"] = serverport_input.get_text()
-			data["nick"] = nickname_input.get_text()
-			data["name"] = realname_input.get_text()
-			data["nickserv"] = nickserv_input.get_text()
-			if serverautoconnect_input.toggled():
+			data["servername"] = servernameInput.get_text()
+			data["address"] = serveraddressInput.get_text()
+			data["port"] = serverportInput.get_text()
+			data["nick"] = nicknameInput.get_text()
+			data["name"] = realnameInput.get_text()
+			data["nickserv"] = nickservInput.get_text()
+			if serverautoconnectInput.toggled():
 				data["autoconnect"] = 1
 			else:
 				data["autoconnect"] = 0
@@ -102,26 +102,26 @@ class editServerDialog(object):
 		if not self.widgets:
 			return 0,None
 
-		serverservername_input = self.widgets.get_widget("serverEdit_Servername")
-		serverservername_input.set_text(self.serverdata["servername"])
-		serverservername_input.connect("changed",self.servernameChanged)
+		serverservernameInput = self.widgets.get_widget("serverEdit_Servername")
+		serverservernameInput.set_text(self.serverdata["servername"])
+		serverservernameInput.connect("changed",self.servernameChanged)
 		self.org_servername = self.serverdata["servername"]
-		serveraddress_input = self.widgets.get_widget("serverEdit_Address")
-		serveraddress_input.set_text(self.serverdata["address"])
-		serverport_input = self.widgets.get_widget("serverEdit_Port")
-		serverport_input.set_text(self.serverdata["port"])
-		servername_input = self.widgets.get_widget("serverEdit_Realname")
-		servername_input.set_text(self.serverdata["name"])
-		servernick_input = self.widgets.get_widget("serverEdit_Nick")
-		servernick_input.set_text(self.serverdata["nick"])
-		servernickserv_input = self.widgets.get_widget("serverEdit_Nickserv")
-		servernickserv_input.set_text(self.serverdata["nickserv"])
-		serverautoconnect_input = self.widgets.get_widget("serverEdit_Autoconnect")
+		serveraddressInput = self.widgets.get_widget("serverEdit_Address")
+		serveraddressInput.set_text(self.serverdata["address"])
+		serverportInput = self.widgets.get_widget("serverEdit_Port")
+		serverportInput.set_text(self.serverdata["port"])
+		servernameInput = self.widgets.get_widget("serverEdit_Realname")
+		servernameInput.set_text(self.serverdata["name"])
+		servernickInput = self.widgets.get_widget("serverEdit_Nick")
+		servernickInput.set_text(self.serverdata["nick"])
+		servernickservInput = self.widgets.get_widget("serverEdit_Nickserv")
+		servernickservInput.set_text(self.serverdata["nickserv"])
+		serverautoconnectInput = self.widgets.get_widget("serverEdit_Autoconnect")
 		if self.serverdata["autoconnect"]:
 			connect = True
 		else:
 			connect = False
-		serverautoconnect_input.set_active(connect)
+		serverautoconnectInput.set_active(connect)
 
 		dialog = self.widgets.get_widget("serverEdit")
 		result = dialog.run()
@@ -131,7 +131,7 @@ class editServerDialog(object):
 				self.tekkaMainobject.deleteServer(self.org_servername)
 			newServer = {}
 			for i in ("servername","address","port","name","nick","nickserv"):
-				newServer[i] = eval("server%s_input.get_text()" % (i))
+				newServer[i] = eval("server%sInput.get_text()" % (i))
 
 		dialog.destroy()
 
