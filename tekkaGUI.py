@@ -724,7 +724,7 @@ class tekkaGUI(object):
 		msg = msg.replace(chr(1), "")
 		return msg
 
-	def channelPrint(self, timestamp, server, channel, message, type=None):
+	def channelPrint(self, timestamp, server, channel, message, type="message"):
 		timestring = time.strftime("%H:%M", time.localtime(timestamp))
 
 		outputstring = "[%s] %s<br/>" % (timestring, message)
@@ -745,14 +745,14 @@ class tekkaGUI(object):
 			obj = self.servertree.getObject(server,channel)
 			if not obj:
 				print "No such server %s / %s\n" % (server,channel)
-			if obj.getNewMessage() and obj.getNewMessageType() == type:
+			if obj.getNewMessage() == type:
 				return
-			obj.setNewMessage(True,type)
+			obj.setNewMessage(type)
 			self.servertree.updateDescription(server,channel,obj=obj)
 
 	# prints 'string' with "%H:%M' formatted 'timestamp' to the server-output
 	# identified by 'server'
-	def serverPrint(self, timestamp, server, string, type=None):
+	def serverPrint(self, timestamp, server, string, type="message"):
 		output = self.servertree.getOutput(server)
 
 		if not output:
@@ -767,9 +767,9 @@ class tekkaGUI(object):
 			self.scrollOutput(output)
 		else:
 			obj = self.servertree.getObject(server)
-			if obj.getNewMessage() and obj.getNewMessageType() == type: # don't need to repeat setting
+			if obj.getNewMessage() == type: # don't need to repeat setting
 				return
-			obj.setNewMessage(True,type)
+			obj.setNewMessage(type)
 			self.servertree.updateDescription(server,obj=obj)
 
 	# prints 'string' to the current output

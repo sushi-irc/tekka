@@ -230,7 +230,7 @@ class tekkaCommands(object):
 		if not xargs:
 			self.myPrint("Usage: /query <nick>")
 			return
-		server, channel = self.getServertree().getCurrentChannel()
+		server, channel = self.gui.getServertree().getCurrentChannel()
 		if not server:
 			self.myPrint("query who on which server?")
 			return

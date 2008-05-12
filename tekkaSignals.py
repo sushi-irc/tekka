@@ -504,7 +504,7 @@ class tekkaSignals(object):
 		if reason:
 			reason = " (%s)" % reason
 
-		if nick == self.com.get_ownNick(server):
+		if nick == self.com.getOwnNick(server):
 			self.gui.channelPrint(timestamp, server, channel, "You have left %s%s." % (channel,reason))
 
 			obj.setJoined(False)

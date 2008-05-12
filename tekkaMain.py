@@ -399,14 +399,14 @@ class tekkaMain(object):
 
 		if name == "Up":
 			server,channel = self.gui.getServertree().getCurrentChannel()
-			text = self.gui.get_history().getUp(server,channel)
+			text = self.gui.getHistory().getUp(server,channel)
 
 			widget.set_text(text)
 			widget.set_position(len(text))
 			return True
 		elif name == "Down":
 			server,channel = self.gui.getServertree().getCurrentChannel()
-			text = self.gui.get_history().getDown(server,channel)
+			text = self.gui.getHistory().getDown(server,channel)
 
 			widget.set_text(text)
 			widget.set_position(len(text))
@@ -436,7 +436,7 @@ class tekkaMain(object):
 						result = channels[0]
 				elif needle[0] == "/": # command completion
 					needle = needle[1:]
-					commands = [l for l in self.commands.get_commands().iterkeys() if l and l[0:len(needle)].lower() == needle.lower()]
+					commands = [l for l in self.commands.getCommands().iterkeys() if l and l[0:len(needle)].lower() == needle.lower()]
 					if commands:
 						result = "/%s" % commands[0]
 				else: # nick completion
