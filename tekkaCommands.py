@@ -1,3 +1,29 @@
+"""
+Copyright (c) 2008 Marian Tietz
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+"""
 
 import os
 
@@ -21,6 +47,7 @@ class tekkaCommands(object):
 			"away" : self.makiAway,
 			"back" : self.makiBack,
 			"ctcp" : self.makiCTCP,
+		  "notice" : self.makiNotice,
 			"oper" : self.makiOper,
 			"kill" : self.makiKill,
 			"query": self.tekkaQuery,
@@ -40,6 +67,16 @@ class tekkaCommands(object):
 		else:
 			if text[0:2] == "//":
 				text = text[1:]
+			if not server or not channel:
+				return
+			obj = self.gui.getServertree().getObject(server)
+			if obj.getAway():
+				msg = obj.getAwayMessage()
+				if msg:
+					msg = ": "+msg
+				else:
+					msg = "."
+				self.gui.myPrint("<font foreground='#222222'>You're still away%s</font>" % msg, html=True)
 			self.com.sendMessage(server,channel,text)
 
 	# Method to parse the userinput
@@ -115,12 +152,11 @@ class tekkaCommands(object):
 			reason = " ".join(xargs[1:])
 		self.com.part(server, channel, reason)
 
-	def makiJoin(self, xargs, server=None):
+	def makiJoin(self, xargs):
+		server = self.gui.getServertree().getCurrentServer()
 		if not server:
-			server = self.gui.getServertree().getCurrentServer()
-			if not server:
-				self.gui.myPrint("Can't determine server.")
-				return
+			self.gui.myPrint("Can't determine server.")
+			return
 		if not xargs:
 			self.gui.myPrint("Usage: /join <channel> [<key>]")
 			return
@@ -217,6 +253,17 @@ class tekkaCommands(object):
 			self.gui.myPrint("Could not determine server.")
 			return
 		self.com.ctcp(server, xargs[0], xargs[1])
+
+	def makiNotice(self, xargs):
+		if not xargs or len(xargs) < 2:
+			self.gui.myPrint("Usage: /notice <target> <message>")
+			return
+
+		server = self.gui.getServertree.getCurrentServer()
+		if not server:
+			self.gui.myPrint("Could not determine server.")
+
+		self.com.notice(server, xargs[0], " ".join(xargs[1:]))
 
 	def makiOper(self, xargs):
 		pass

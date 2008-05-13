@@ -128,7 +128,7 @@ class editServerDialog(object):
 
 		if result == gtk.RESPONSE_OK:
 			if self.deleteServer:
-				self.tekkaMainobject.deleteServer(self.orgServername)
+				self.tekkaMainobject.getCom().deleteServer(self.orgServername)
 			newServer = {}
 			for i in ("servername","address","port","name","nick","nickserv"):
 				newServer[i] = eval("server%sInput.get_text()" % (i))

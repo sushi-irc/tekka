@@ -111,11 +111,14 @@ class tekkaMain(object):
 			if server:
 				self.com.connect(server)
 
-	""" Change the current tab to the tab identified by "path" """
+	""" 
+	Change the current servertree tab to the tab identified by "path"
+	"""
 	def switchTreeTab(self, path):
 		servertree = self.gui.getServertree()
 		srow,crow = servertree.getRowFromPath(path)
 
+		# a server tab is selected
 		if srow and not crow:
 			server = srow[servertree.COLUMN_NAME]
 			obj = srow[servertree.COLUMN_OBJECT]
@@ -136,6 +139,7 @@ class tekkaMain(object):
 			self.gui.getNicklist().set_model(None)
 			self.gui.getTopicbar().set_property("visible",False)
 
+		# a channel tab is selected
 		elif srow and crow:
 			server = srow[servertree.COLUMN_NAME]
 			channel = crow[servertree.COLUMN_NAME]
@@ -159,6 +163,8 @@ class tekkaMain(object):
 			topicbar.set_text("")
 			self.gui.setTopicInBar(server=server,channel=channel)
 			topicbar.set_property("visible",True)
+
+		# no tab is selected
 		else:
 			print "Activation failed due to wrong path."
 
@@ -466,15 +472,15 @@ class tekkaMain(object):
 			self.com.quitServer(server)
 			servertree.removeServer(server)
 			if server == cs:
-				self.gui.get_output().get_buffer().set_text("")
+				self.gui.getOutput().get_buffer().set_text("")
 		elif server and channel:
 			self.com.part(server, channel)
 			servertree.removeChannel(server,channel)
 
 			if cc == channel:
-				self.gui.get_output().get_buffer().set_text("")
-				self.gui.get_topicbar().set_text("")
-				self.gui.get_nicklist().set_model(None)
+				self.gui.getOutput().get_buffer().set_text("")
+				self.gui.getTopicbar().set_text("")
+				self.gui.getNicklist().set_model(None)
 
 
 	"""

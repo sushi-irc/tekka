@@ -25,14 +25,19 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+import os
+import sys
+
 class tekkaConfig(object):
 	def __init__(self):
 		self.useExternalDBus = False
 		self.busAdress = "tcp:host=192.168.1.101,port=3333"
 
+		prefix = os.sep.join(sys.argv[0].split(os.sep)[:-1]) + "/"
+
 		self.gladefiles = {}
-		self.gladefiles["mainwindow"] = "mainwindow.glade"
-		self.gladefiles["dialogs"] = "dialogs.glade"
+		self.gladefiles["mainwindow"] = prefix + "mainwindow.glade"
+		self.gladefiles["dialogs"] = prefix + "dialogs.glade"
 
 		# TODO: implement saving the window size after resizing
 		# x,y

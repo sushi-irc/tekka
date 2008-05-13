@@ -484,8 +484,6 @@ class tekkaHistory(object):
 		if self.__genCheck(server,channel) == self.lastentry:
 			self.lastentry = "..."
 		if server and not channel:
-			print "SERRVER",
-			print server
 			if not self.serverHistory.has_key(server):
 				self.serverHistory[server] = [text]
 			else:
@@ -782,7 +780,7 @@ class tekkaGUI(object):
 		if not html:
 			output.insert(output.get_end_iter(), string+"\n")
 		else:
-			output.insert_html(output.get_end_iter(), string+"<br/>")
+			output.insertHTML(output.get_end_iter(), string+"<br/>")
 		self.scrollOutput(output)
 
 	# tekkaClear command method from tekkaCom:

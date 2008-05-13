@@ -25,8 +25,12 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+"""
+This code handles all signals from maki and
+translates them into gui-actions.
+"""
+
 import dbus
-import os
 
 class tekkaSignals(object):
 	def __init__(self, com, gui):
@@ -84,7 +88,9 @@ class tekkaSignals(object):
 			self.addChannels(server)
 
 			if self.com.isAway(server, self.com.getOwnNick(server)):
-				servertree.getObject(server).setAway(True)
+				obj = servertree.getObject(server)
+				obj.setAway(True)
+				servertree.serverDescription(server, obj.markup())
 
 	def addChannels(self, server):
 		channels = self.com.fetchChannels(server)
@@ -137,24 +143,36 @@ class tekkaSignals(object):
 
 	"""
 	Check for a similar to "nick" named channel (case-insensitive)
-	and rename it to "nick"
 	User: /query Nemo -> a new channel with Nemo opened
 	nemo: Is answering to User
 	The problem now is that there is no channel-tab named
 	like "nemo". _simCheck() searches for a tab similar to
-	nemo (Nemo) and renames it to "nemo".
+	nemo (Nemo) and returns it so it can be renamed
 	"""
-	def _simCheck(self, server, nick):
+	def _simFind(self, server, nick):
 		servertree = self.gui.getServertree()
 		check = servertree.getChannel(server, nick)
-		if not check:
+		if check:
+			return check
+		else:
 			simfound = False
 			for schannel in servertree.getChannels(server):
 				if schannel.lower() == nick.lower():
-					servertree.renameChannel(server, schannel, nick)
-					simfound = True
-			if not simfound:
-				servertree.addChannel(server,nick)
+					return schannel
+		return False
+
+	"""
+	Extends _simFind.
+	If a similar channel is found it would be renamed
+	otherwise a new channel with name "nick" is created.
+	"""
+	def _simCheck(self, server, nick):
+		servertree = self.gui.getServertree()
+		channel = self._simFind(server, nick)
+		if channel:
+			servertree.renameChannel(server, channel, nick)
+		else:
+			servertree.addChannel(server,nick)
 
 	"""
 	checks if the mode is a prefix-mode. if a prefix mode is
@@ -173,7 +191,7 @@ class tekkaSignals(object):
 		colors = self.gui.getConfig().getNickColors()
 		if not colors:
 			return "#2222AA"
-		return colors[ord(nick[0])%len(colors)]
+		return colors[sum([ord(n) for n in nick])%len(colors)]
 
 
 	""" SERVER SIGNALS """
@@ -340,7 +358,12 @@ class tekkaSignals(object):
 					(self.getNickColor(nick), self.gui.escape(nick), self.gui.escape(message)))
 
 	def queryNotice(self, time, server, nick, message):
-		channel = self.gui.getServertree().getChannel(server,nick)
+		channel = self._simFind(server, nick)
+		if channel:
+			if channel != nick:
+				self.gui.getServertree().renameChannel(server, channel, nick)
+				channel = nick
+		
 		if channel:
 			self.gui.channelPrint(time, server, channel, \
 					"&lt;Notice:<font foreground='%s'>%s</font>&gt; %s" % \
@@ -351,9 +374,9 @@ class tekkaSignals(object):
 					(self.getNickColor(nick), self.gui.escape(nick), self.gui.escape(message)))
 
 	def userNotice(self, time, server, nick, target, message):
-		if target == self.com.getOwnNick(server):
-			self._simCheck(server,nick)
-			self.userMessage(time, server, nick, nick, message)
+		self.gui.channelPrint(time, server, target, \
+				"&lt;Notice:<font foreground='%s'>%s</font>&gt; %s" % \
+				(self.getNickColor(nick), self.gui.escape(nick), self.gui.escape(message)))
 
 	# user sent an /me
 	def userAction(self, time, server, nick, channel, action):
