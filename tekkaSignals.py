@@ -256,10 +256,16 @@ class tekkaSignals(object):
 
 	# privmessages are received here
 	def userMessage(self, timestamp, server, nick, channel, message):
+		if message.find(self.com.getOwnNick(server)) >= 0:
+			type = "highlightmessage"
+		else:
+			type = "message"
+
 		color = self.getNickColor(nick)
 		message = self.gui.escape(message)
+
 		self.gui.channelPrint(timestamp, server, channel, \
-		"&lt;<font foreground='%s'>%s</font>&gt; %s" % (color,nick,message))
+		"&lt;<font foreground='%s'>%s</font>&gt; %s" % (color,nick,message), type)
 
 	def ownMessage(self, timestamp, server, channel, message):
 		self.gui.channelPrint(timestamp, server, channel, \
@@ -279,25 +285,32 @@ class tekkaSignals(object):
 		actColor = self.gui.getConfig().getColor("modeActNick")
 		paramColor = self.gui.getConfig().getColor("modeParam")
 
+		type = "action"
+
 		actnick = "<font foreground='%s'>%s</font>" % (actColor, self.gui.escape(nick))
 		if nick == myNick:
 			actnick = "You"
 
 		if target == myNick:
 			self.gui.serverPrint(time, server,"%s set <b>%s</b> on you." % (actnick, mode))
+
 		else:
 			# if param a user mode is set
 			if param:
 				nickwrap = "<font foreground='%s'>%s</font>" % (paramColor, self.gui.escape(param))
 				if param == myNick:
 					nickwrap = "you"
+					type = "highlightaction"
+
 				msg = "%s set <b>%s</b> to %s." % (actnick,mode,nickwrap)
 
 				self._prefixMode(server,target,param,mode)
+
 			# else a channel is the target
 			else:
 				msg = "%s set <b>%s</b> on %s." % (actnick,mode,target)
-			self.gui.channelPrint(time, server, target, msg, "action")
+
+			self.gui.channelPrint(time, server, target, msg, type)
 
 	def userCTCP(self, time, server,  nick, target, message):
 		self.gui.channelPrint(time, server, target, \

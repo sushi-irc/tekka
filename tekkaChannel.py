@@ -11,7 +11,7 @@ class tekkaTab(object):
 	def __init__(self, name, buffer=None):
 		self.buffer = buffer or htmlbuffer.htmlbuffer()
 		self.name = name
-		self.newMessage = None
+		self.newMessage = []
 
 	# the output buffer
 	def getBuffer(self):
@@ -27,15 +27,17 @@ class tekkaTab(object):
 	def setName(self, name):
 		self.name = name
 
-	def getNewMessageType(self):
-		return self.newMessageType
-	
 	# there is a new message
 	def getNewMessage(self):
 		return self.newMessage
 
 	def setNewMessage(self, type):
-		self.newMessage = type
+		if not type:
+			self.newMessage = []
+		try:
+			self.newMessage.index(type)
+		except:
+			self.newMessage.append(type)
 
 	# markup the string in due to the
 	# set properties
@@ -121,11 +123,33 @@ class tekkaChannel(tekkaTab):
 		self.joined = switch
 
 	def markup(self):
+		italic = False
+		bold = False
+		foreground = None
+
 		base = self.name
+
 		if not self.joined:
 			base = "("+base+")"
-		if self.newMessage == "action":
-			base = "<i>"+base+"</i>"
-		elif self.newMessage == "message":
-			base = "<b>"+base+"</b>"
-		return base
+
+		if "action" in self.newMessage:
+			italic = True
+		if "message" in self.newMessage:
+			bold = True
+		if "highlightmessage" in self.newMessage and "highlightaction" in self.newMessage:
+			foreground = "#DDDD00"
+		elif "highlightmessage" in self.newMessage:
+			foreground = "#DD0000"
+		elif "highlightaction" in self.newMessage:
+			foreground = "#00DD00"
+		
+		markup = "<span "
+		if italic:
+			markup += "style='italic' "
+		if bold:
+			markup += "weight='bold' "
+		if foreground:
+			markup += "foreground='%s'" % foreground
+		markup += ">%s</span>" % base
+
+		return markup

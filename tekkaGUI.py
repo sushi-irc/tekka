@@ -745,7 +745,7 @@ class tekkaGUI(object):
 			obj = self.servertree.getObject(server,channel)
 			if not obj:
 				print "No such server %s / %s\n" % (server,channel)
-			if obj.getNewMessage() == type:
+			if type in obj.getNewMessage():
 				return
 			obj.setNewMessage(type)
 			self.servertree.updateDescription(server,channel,obj=obj)
@@ -767,7 +767,7 @@ class tekkaGUI(object):
 			self.scrollOutput(output)
 		else:
 			obj = self.servertree.getObject(server)
-			if obj.getNewMessage() == type: # don't need to repeat setting
+			if type in obj.getNewMessage(): # don't need to repeat setting
 				return
 			obj.setNewMessage(type)
 			self.servertree.updateDescription(server,obj=obj)
