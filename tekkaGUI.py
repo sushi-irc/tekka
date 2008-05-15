@@ -227,6 +227,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 
 	def updateShortcuts(self):
 		print "updating shortcuts"
+		self.shortcutIDs={}
 		model = self.get_model()
 		count = 0
 		data = [model,count]
