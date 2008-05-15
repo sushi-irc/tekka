@@ -282,6 +282,13 @@ class tekkaSignals(object):
 		color = self.getNickColor(nick)
 		message = self.gui.escape(message)
 
+		url = ""
+		i = message.find("http://")
+		if i >= 0:
+			url = message[i:].split(" ")[0]
+		if url:
+			message = message.replace(url, "<a href=\"%s\">%s</a>" % (url,url))
+
 		self.gui.channelPrint(timestamp, server, channel, \
 		"&lt;<font foreground='%s'>%s</font>&gt; %s" % (color,nick,message), type)
 

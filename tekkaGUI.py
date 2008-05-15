@@ -197,6 +197,16 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		self.connect("button-press-event", self._cacheCurrentRow)
 
 		self.shortcutIDs={}
+		self.urlHandler = None
+
+	"""
+	Set a url handler for tekkaChannel/tekkaServer htmlbuffer
+	"""
+	def setUrlHandler(self, handler):
+		self.urlHandler = handler
+
+	def getUrlHandler(self):
+		return self.urlHandler
 
 	def searchTab(self, treeiter, needle):
 		return [l[self.COLUMN_NAME] for l in treeiter if l and l[self.COLUMN_NAME][0:len(needle)].lower()==needle]
@@ -341,7 +351,10 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 			return row.iter
 
 		model = self.get_model()
-		obj = tekkaChannel.tekkaServer(servername)
+		buffer = htmlbuffer.htmlbuffer()
+		buffer.setUrlHandler(self.urlHandler)
+
+		obj = tekkaChannel.tekkaServer(servername, buffer)
 		obj.setConnected(True)
 
 		iter = model.append(None)
@@ -364,7 +377,9 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 
 		iter = store.append(row.iter)
 
-		obj = tekkaChannel.tekkaChannel(channelname)
+		buffer = htmlbuffer.htmlbuffer()
+		buffer.setUrlHandler(self.urlHandler)
+		obj = tekkaChannel.tekkaChannel(channelname, buffer)
 		if nicks:
 			obj.getNicklist().addNicks(nicks)
 		if topic:

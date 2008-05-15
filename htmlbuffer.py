@@ -45,7 +45,7 @@ def rindex(l, i):
 		return (-1)
 
 class htmlhandler(xml.sax.handler.ContentHandler):
-	def __init__(self,textbuffer):
+	def __init__(self,textbuffer,handler):
 		xml.sax.handler.ContentHandler.__init__(self)
 		self.textbuffer = textbuffer
 		self.elms = []
@@ -53,6 +53,7 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 		self.ignoreableEndTags = ["msg","br","su","sb"]
 		self.sucount = 0
 		self.sbcount = 0
+		self.urlHandler = handler
 
 	def characters(self, text):
 		if len(self.tags):
@@ -72,6 +73,9 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 			return
 		elif name == "u":
 			tag.set_property("underline", pango.UNDERLINE_SINGLE)
+		elif name == "a":
+			if self.urlHandler:
+				tag.connect("event", self.urlHandler, attrs["href"])
 		elif name == "su":
 			self.sucount += 1
 			if self.sucount % 2 != 0:
@@ -123,10 +127,18 @@ class htmlbuffer(gtk.TextBuffer):
 		gtk.TextBuffer.__init__(self, self.tagtable)
 		self.errorcount = 0
 
+		self.urlHandler = None
+
+	def setUrlHandler(self, handler):
+		self.urlHandler = handler
+
+	def getUrlHandler(self):
+		return self.urlHandler
+
 	def insertHTML(self, iter, text):
 		startoffset = iter.get_offset()
 		parser = xml.sax.make_parser()
-		parser.setContentHandler(htmlhandler(self))
+		parser.setContentHandler(htmlhandler(self,self.urlHandler))
 
 		text = "<msg>%s</msg>" % text
 

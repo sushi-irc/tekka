@@ -30,6 +30,7 @@ import sys
 
 import gtk
 import gobject
+import pango
 
 from tekkaConfig import tekkaConfig
 from tekkaCom import tekkaCom
@@ -52,6 +53,8 @@ class tekkaMain(object):
 		if not self.com.connectMaki():
 			print "Connection to maki failed."
 			sys.exit(1)
+
+		self.gui.getServertree().setUrlHandler(self.urlHandler)
 
 		self.commands = tekkaCommands(self.com,self.gui)
 		self.signals = tekkaSignals(self.com,self.gui)
@@ -102,6 +105,12 @@ class tekkaMain(object):
 
 		self.gui.getServertree().connect("button-press-event", self.servertreeButtonPress)
 		self.gui.getInput().connect("key-press-event", self.userInputEvent)
+
+		self.gui.getOutput().connect("populate-popup", self.outputPopup)
+
+	def outputPopup(self, widget, menu):
+		menu.popdown()
+		menu.detach()
 
 	def _showServerDialog(self, widget):
 		serverlist = tekkaDialog.serverDialog(self)
@@ -183,6 +192,25 @@ class tekkaMain(object):
 			servertree.add_accelerator("shortcut_%d" % i, accelGroup, ord("%d" % i), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 			servertree.connect("shortcut_%d" % i, eval("self.shortcut_%d" % i))
 
+	"""
+	URL handler for TextTags
+	"""
+	def urlHandler(self, texttag, widget, event, iter, url):
+		if event.type == gtk.gdk.MOTION_NOTIFY:
+			#texttag.set_property("underline", pango.UNDERLINE_SINGLE)
+			pass
+		elif event.type == gtk.gdk.BUTTON_PRESS:
+			if event.button == 1:
+				print "left click action"
+			elif event.button == 3:
+				menu = gtk.Menu()
+				copyitem = gtk.MenuItem(label="Copy URL")
+				menu.append(copyitem)
+
+				menu.show_all()
+				menu.popup(widget, None, None, button=event.button, activate_time=event.time)
+		else:
+			print "foo"
 
 	"""
 	Widget-Signals
