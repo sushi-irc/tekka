@@ -286,18 +286,25 @@ class tekkaSignals(object):
 
 	# privmessages are received here
 	def userMessage(self, timestamp, server, nick, channel, message):
-		if message.find(self.com.getOwnNick(server)) >= 0:
+		message = self.gui.escape(message)
+		highlight_pre = ""
+		highlight_post = ""
+
+		# highlight text if own nick is in message
+		i = message.find(self.com.getOwnNick(server))
+		if i >= 0:
 			type = "highlightmessage"
+			highlight_pre = "<b><font foreground='#FF0000'>"
+			highlight_post = "</font></b>"
 		else:
 			type = "message"
 
 		color = self.getNickColor(nick)
-		message = self.gui.escape(message)
 
 		message = self._urlToTag(message)
 
 		self.gui.channelPrint(timestamp, server, channel, \
-		"&lt;<font foreground='%s'>%s</font>&gt; %s" % (color,nick,message), type)
+		"%s&lt;<font foreground='%s'>%s</font>&gt; %s%s" % (highlight_pre, color,self.gui.escape(nick), message, highlight_post), type)
 
 	def ownMessage(self, timestamp, server, channel, message):
 		message = self.gui.escape(message)

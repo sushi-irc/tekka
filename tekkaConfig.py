@@ -58,7 +58,7 @@ class tekkaConfig(object):
 
 		self.outputFont = "Monospace"
 
-		self.browser = "/usr/local/bin/firefox"
+		self.browser = "xdg-open"
 		self.browser_arguments = "%s"
 		# TODO: parse config file ~/.sushi/tekka.conf
 
