@@ -57,6 +57,9 @@ class tekkaConfig(object):
 		self.nickColors=["#2222AA","#44AA44","#123456","#987654"]
 
 		self.outputFont = "Monospace"
+
+		self.browser = "/usr/local/bin/firefox"
+		self.browser_arguments = "%s"
 		# TODO: parse config file ~/.sushi/tekka.conf
 
 	def getColor(self, name):

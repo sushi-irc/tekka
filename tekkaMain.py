@@ -26,6 +26,8 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+import os
+import subprocess
 import sys
 
 import gtk
@@ -105,12 +107,7 @@ class tekkaMain(object):
 
 		self.gui.getServertree().connect("button-press-event", self.servertreeButtonPress)
 		self.gui.getInput().connect("key-press-event", self.userInputEvent)
-
-		self.gui.getOutput().connect("populate-popup", self.outputPopup)
-
-	def outputPopup(self, widget, menu):
-		menu.popdown()
-		menu.detach()
+		self.gui.getOutput().connect("populate-popup", lambda w,x: x.destroy())
 
 	def _showServerDialog(self, widget):
 		serverlist = tekkaDialog.serverDialog(self)
@@ -204,17 +201,40 @@ class tekkaMain(object):
 				print "left click action"
 			elif event.button == 3:
 				menu = gtk.Menu()
+				openitem = gtk.MenuItem(label="Open")
+				openitem.connect("activate", self.openUrlWithBrowser, url)
+				menu.append(openitem)
 				copyitem = gtk.MenuItem(label="Copy URL")
+				copyitem.connect("activate", self.copyUrlToClipboard, url)
 				menu.append(copyitem)
 
 				menu.show_all()
-				menu.popup(widget, None, None, button=event.button, activate_time=event.time)
+				menu.popup(None, None, None, button=event.button, activate_time=event.time)
 		else:
 			print "foo"
 
 	"""
 	Widget-Signals
 	"""
+
+	"""
+	"Open URL" in URL context menu was clicked
+	"""
+	def openUrlWithBrowser(self, widget, url):
+		browser = self.config.browser
+		arguments = self.config.browser_arguments or ""
+		if not browser:
+			return
+		subprocess.Popen([browser, arguments % url], env=os.environ)
+
+	"""
+	"Copy URL" in URL context menu was clicked
+	"""
+	def copyUrlToClipboard(self, widget, url):
+		print "Clipboarding %s." % url
+		clipboard = gtk.Clipboard()
+		clipboard.set_text(url)
+
 
 	""" Keyboard shortcut signals (alt+[1-9]) """
 	def shortcut_1(self,w):

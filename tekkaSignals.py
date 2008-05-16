@@ -186,6 +186,18 @@ class tekkaSignals(object):
 			return
 		nicklist.setPrefix(nick, self.com.fetchPrefix(server,channel,nick))
 
+	"""
+	searches for an URL in message and sets an <a>-tag arround
+	it, then returns the new string
+	"""
+	def _urlToTag(self, message):
+		url = ""
+		i = message.find("http://")
+		if i >= 0:
+			url = message[i:].split(" ")[0]
+		if url:
+			message = message.replace(url, "<a href=\"%s\">%s</a>" % (url,url))
+		return message
 
 	def getNickColor(self, nick):
 		colors = self.gui.getConfig().getNickColors()
@@ -282,20 +294,18 @@ class tekkaSignals(object):
 		color = self.getNickColor(nick)
 		message = self.gui.escape(message)
 
-		url = ""
-		i = message.find("http://")
-		if i >= 0:
-			url = message[i:].split(" ")[0]
-		if url:
-			message = message.replace(url, "<a href=\"%s\">%s</a>" % (url,url))
+		message = self._urlToTag(message)
 
 		self.gui.channelPrint(timestamp, server, channel, \
 		"&lt;<font foreground='%s'>%s</font>&gt; %s" % (color,nick,message), type)
 
 	def ownMessage(self, timestamp, server, channel, message):
+		message = self.gui.escape(message)
+		message = self._urlToTag(message)
+	
 		self.gui.channelPrint(timestamp, server, channel, \
 		"&lt;<font foreground='%s'>%s</font>&gt; %s" \
-		% (self.gui.getConfig().getColor("ownNick"), self.com.getOwnNick(server), self.gui.escape(message)))
+		% (self.gui.getConfig().getColor("ownNick"), self.com.getOwnNick(server), message))
 
 	def ownQuery(self, timestamp, server, channel, message):
 		self.ownMessage(timestamp,server,channel,message)
