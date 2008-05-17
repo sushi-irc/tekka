@@ -43,6 +43,8 @@ class tekkaConfig(object):
 		# x,y
 		self.windowSize = [400,500]
 
+		self.sidePosition = 0
+
 		self.servertabShortcuts = True
 
 		self.colors = {}
@@ -52,6 +54,9 @@ class tekkaConfig(object):
 		self.colors["partNick"] = "#004444"
 		self.colors["modeActNick"] = "#AA2222"
 		self.colors["modeParam"] = "#2222AA"
+
+		# additional words to highlight on
+		self.highlightWords = []
 
 		# random nick colors
 		self.nickColors=["#2222AA","#44AA44","#123456","#987654"]

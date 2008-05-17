@@ -762,6 +762,7 @@ class tekkaGUI(object):
 			if not obj:
 				print "No such server %s / %s\n" % (server,channel)
 			if type in obj.getNewMessage():
+				print "DEBUG (no query highlighting)(%s): Aborting highlight because type (%s) is in list (%s)" % (channel,type,repr(obj.getNewMessage()))
 				return
 			obj.setNewMessage(type)
 			self.servertree.updateDescription(server,channel,obj=obj)

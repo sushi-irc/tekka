@@ -169,7 +169,7 @@ class tekkaSignals(object):
 	def _simCheck(self, server, nick):
 		servertree = self.gui.getServertree()
 		channel = self._simFind(server, nick)
-		if channel:
+		if channel and channel != nick:
 			servertree.renameChannel(server, channel, nick)
 		else:
 			servertree.addChannel(server,nick)
@@ -304,7 +304,8 @@ class tekkaSignals(object):
 		message = self._urlToTag(message)
 
 		self.gui.channelPrint(timestamp, server, channel, \
-		"%s&lt;<font foreground='%s'>%s</font>&gt; %s%s" % (highlight_pre, color,self.gui.escape(nick), message, highlight_post), type)
+		"%s&lt;<font foreground='%s'>%s</font>&gt; %s%s" % \
+		(highlight_pre, color,self.gui.escape(nick), message, highlight_post), type)
 
 	def ownMessage(self, timestamp, server, channel, message):
 		message = self.gui.escape(message)
