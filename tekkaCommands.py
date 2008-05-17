@@ -259,14 +259,24 @@ class tekkaCommands(object):
 			self.gui.myPrint("Usage: /notice <target> <message>")
 			return
 
-		server = self.gui.getServertree.getCurrentServer()
+		server = self.gui.getServertree().getCurrentServer()
 		if not server:
 			self.gui.myPrint("Could not determine server.")
+			return
 
 		self.com.notice(server, xargs[0], " ".join(xargs[1:]))
 
 	def makiOper(self, xargs):
-		pass
+		if not xargs or len(xargs) < 2:
+			self.gui.myPrint("Usage: /oper <user> <pass>")
+			return
+
+		server = self.gui.getServertree().getCurrentServer()
+		if not server:
+			self.gui.myPrint("Could not determine server.")
+			return
+
+		self.com.oper(server, xargs[0], " ".join(xargs[1:]))
 
 	def makiKill(self, xargs):
 		pass

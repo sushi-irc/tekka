@@ -75,6 +75,7 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 			tag.set_property("underline", pango.UNDERLINE_SINGLE)
 		elif name == "a":
 			if self.urlHandler:
+				tag.set_property("underline", pango.UNDERLINE_SINGLE)
 				tag.connect("event", self.urlHandler, attrs["href"])
 		elif name == "su":
 			self.sucount += 1

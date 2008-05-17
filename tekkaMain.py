@@ -189,20 +189,20 @@ class tekkaMain(object):
 			servertree.add_accelerator("shortcut_%d" % i, accelGroup, ord("%d" % i), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 			servertree.connect("shortcut_%d" % i, eval("self.shortcut_%d" % i))
 
+
 	"""
 	URL handler for TextTags
 	"""
 	def urlHandler(self, texttag, widget, event, iter, url):
 		if event.type == gtk.gdk.MOTION_NOTIFY:
-			#texttag.set_property("underline", pango.UNDERLINE_SINGLE)
 			pass
-		elif event.type == gtk.gdk.BUTTON_PRESS:
+		if event.type == gtk.gdk.BUTTON_PRESS:
 			if event.button == 1:
-				print "left click action"
+				self.openUrlWithBrowser(url)
 			elif event.button == 3:
 				menu = gtk.Menu()
 				openitem = gtk.MenuItem(label="Open")
-				openitem.connect("activate", self.openUrlWithBrowser, url)
+				openitem.connect("activate", lambda w: self.openUrlWithBrowser(url))
 				menu.append(openitem)
 				copyitem = gtk.MenuItem(label="Copy URL")
 				copyitem.connect("activate", self.copyUrlToClipboard, url)
@@ -210,8 +210,6 @@ class tekkaMain(object):
 
 				menu.show_all()
 				menu.popup(None, None, None, button=event.button, activate_time=event.time)
-		else:
-			print "foo"
 
 	"""
 	Widget-Signals
@@ -220,7 +218,7 @@ class tekkaMain(object):
 	"""
 	"Open URL" in URL context menu was clicked
 	"""
-	def openUrlWithBrowser(self, widget, url):
+	def openUrlWithBrowser(self, url):
 		browser = self.config.browser
 		arguments = self.config.browser_arguments or ""
 		if not browser:

@@ -246,6 +246,8 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 	""" CACHING """
 
 	def _cacheCurrentRow(self, widget, event):
+		if event.button != 1:
+			return
 		path = widget.get_path_at_pos(int(event.x), int(event.y))
 		if not path or not len(path):
 			#self.currentRow = None
