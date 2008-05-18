@@ -112,8 +112,8 @@ class tekkaCommands(object):
 
 	def makiNick(self, xargs):
 		server = self.gui.getServertree().getCurrentServer()
-		
-		if not self.proxy:
+
+		if not self.sushi:
 			self.gui.myPrint("No connection to maki.")
 			return
 
