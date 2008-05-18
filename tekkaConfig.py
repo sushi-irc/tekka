@@ -33,7 +33,8 @@ class tekkaConfig(object):
 		self.useExternalDBus = False
 		self.busAdress = "tcp:host=192.168.1.101,port=3333"
 
-		prefix = os.sep.join(sys.argv[0].split(os.sep)[:-1]) or "." + "/"
+		prefix = (os.sep.join(sys.argv[0].split(os.sep)[:-1]) or ".") + "/"
+		print prefix
 
 		self.gladefiles = {}
 		self.gladefiles["mainwindow"] = prefix + "mainwindow.glade"
