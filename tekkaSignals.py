@@ -199,6 +199,9 @@ class tekkaSignals(object):
 			message = message.replace(url, "<a href=\"%s\">%s</a>" % (url,url))
 		return message
 
+	"""
+	Returns a static color for nick @nick
+	"""
 	def getNickColor(self, nick):
 		colors = self.gui.getConfig().getNickColors()
 		if not colors:
@@ -291,7 +294,13 @@ class tekkaSignals(object):
 		highlight_post = ""
 
 		# highlight text if own nick is in message
-		i = message.find(self.com.getOwnNick(server))
+		i = -1
+		highlightwords = self.gui.getConfig().highlightWords
+		highlightwords.append(self.com.getOwnNick(server))
+		for word in highlightwords:
+			i = message.find(word)
+			if i >= 0:
+				break
 		if i >= 0:
 			type = "highlightmessage"
 			highlight_pre = "<b><font foreground='#FF0000'>"

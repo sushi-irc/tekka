@@ -124,6 +124,9 @@ class tekkaMain(object):
 		servertree = self.gui.getServertree()
 		srow,crow = servertree.getRowFromPath(path)
 
+		servertree.set_cursor(path)
+		servertree.updateCurrentRowFromPath(path)
+
 		# a server tab is selected
 		if srow and not crow:
 			server = srow[servertree.COLUMN_NAME]
@@ -147,6 +150,7 @@ class tekkaMain(object):
 
 		# a channel tab is selected
 		elif srow and crow:
+			print "channel"
 			server = srow[servertree.COLUMN_NAME]
 			channel = crow[servertree.COLUMN_NAME]
 			desc = crow[servertree.COLUMN_DESCRIPTION]
@@ -176,9 +180,7 @@ class tekkaMain(object):
 
 	""" Wrapper for shortcut functionality """
 	def switchTabByKey(self, path):
-		servertree = self.gui.getServertree()
-		servertree.set_cursor(path)
-		servertree.updateCurrentRowFromPath(path)
+
 		self.switchTreeTab(path)
 
 	def initShortcuts(self):
@@ -343,9 +345,13 @@ class tekkaMain(object):
 	def nicklistActivateRow(self, treeview, path, parm1):
 		servertree = self.gui.getServertree()
 		server = servertree.getCurrentServer()
-		if not server: return
-		nick = self.gui.getNicklist().get_model()[path[0]][tekkaGUI.tekkaNicklistStore.COLUMN_NICK]
-		servertree.addChannel(server, nick)
+		if not server: 
+			return
+		nick = treeview.get_model()[path][tekkaGUI.tekkaNicklistStore.COLUMN_NICK]
+		iter = servertree.addChannel(server, nick)[1]
+
+		path = servertree.get_model().get_path(iter)
+		self.switchTreeTab(path)
 
 	"""
 	A button inner the nicklist-area was pressed

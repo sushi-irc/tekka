@@ -55,8 +55,10 @@ class tekkaConfig(object):
 		self.colors["modeActNick"] = "#AA2222"
 		self.colors["modeParam"] = "#2222AA"
 
+
+
 		# additional words to highlight on
-		self.highlightWords = []
+		self.highlightWords = ["fisch"]
 
 		# random nick colors
 		self.nickColors=["#2222AA","#44AA44","#123456","#987654"]
