@@ -34,7 +34,6 @@ class tekkaConfig(object):
 		self.busAdress = "tcp:host=192.168.1.101,port=3333"
 
 		prefix = (os.sep.join(sys.argv[0].split(os.sep)[:-1]) or ".") + "/"
-		print prefix
 
 		self.gladefiles = {}
 		self.gladefiles["mainwindow"] = prefix + "mainwindow.glade"
@@ -61,6 +60,8 @@ class tekkaConfig(object):
 
 		# additional words to highlight on
 		self.highlightWords = ["fisch"]
+
+		self.lastLogLines = 10
 
 		# random nick colors
 		self.nickColors=["#2222AA","#44AA44","#123456","#987654"]

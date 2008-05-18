@@ -350,6 +350,7 @@ class tekkaMain(object):
 
 		path = servertree.get_model().get_path(iter)
 		self.switchTreeTab(path)
+		self.signals.lastLog(server, nick)
 
 	"""
 	A button inner the nicklist-area was pressed

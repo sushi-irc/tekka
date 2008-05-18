@@ -116,17 +116,17 @@ class tekkaSignals(object):
 				nicklist.addNicks(nicks)
 				obj.setJoined(True)
 			else:
-				self.lastLog(server,channel,10)
+				self.lastLog(server,channel)
 
 			self._prefixFetch(server,channel,nicklist,nicks)
 
 
 	""" HELPER """
 
-	def lastLog(self, server, channel, lines):
+	def lastLog(self, server, channel, lines=0):
 		obj = self.gui.getServertree().getObject(server,channel)
 		buffer = obj.getBuffer()
-		for line in self.com.fetchLog(server, channel, dbus.UInt64(lines)):
+		for line in self.com.fetchLog(server, channel, dbus.UInt64(lines or self.com.getConfig().lastLogLines)):
 			buffer.insertHTML(buffer.get_end_iter(), "<font foreground=\"#DDDDDD\">%s</font><br/>" % self.gui.escape(line))
 
 
@@ -177,6 +177,7 @@ class tekkaSignals(object):
 			servertree.renameChannel(server, channel, nick)
 		else:
 			servertree.addChannel(server,nick)
+			self.lastLog(server, nick)
 
 	"""
 	checks if the mode is a prefix-mode. if a prefix mode is
