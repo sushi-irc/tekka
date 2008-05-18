@@ -33,7 +33,7 @@ class tekkaConfig(object):
 		self.useExternalDBus = False
 		self.busAdress = "tcp:host=192.168.1.101,port=3333"
 
-		prefix = os.sep.join(sys.argv[0].split(os.sep)[:-1]) + "/"
+		prefix = os.sep.join(sys.argv[0].split(os.sep)[:-1]) or "." + "/"
 
 		self.gladefiles = {}
 		self.gladefiles["mainwindow"] = prefix + "mainwindow.glade"
@@ -55,6 +55,7 @@ class tekkaConfig(object):
 		self.colors["modeActNick"] = "#AA2222"
 		self.colors["modeParam"] = "#2222AA"
 
+		# seperator to add after tab completion of nick
 		self.nickCompletionSeperator=": "
 
 		# additional words to highlight on

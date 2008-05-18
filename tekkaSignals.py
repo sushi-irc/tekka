@@ -31,6 +31,7 @@ translates them into gui-actions.
 """
 
 import dbus
+import re
 
 class tekkaSignals(object):
 	def __init__(self, com, gui):
@@ -42,6 +43,9 @@ class tekkaSignals(object):
 		if not self.sushi:
 			print "tekkaSignals: No sushi."
 			return
+
+		# URL regexp
+		self.urlExp = re.compile("(\w+)://[^, \t\"'<>]+")
 
 		# Message-Signals
 		self.sushi.connect_to_signal("message", self.userMessage)
@@ -191,14 +195,31 @@ class tekkaSignals(object):
 	it, then returns the new string
 	"""
 	def _urlToTag(self, message):
-		url = ""
-		i = message.find("http://")
-		if i >= 0:
-			url = message[i:].split(" ")[0]
-		if url:
-			message = message.replace(url, "<a href=\"%s\">%s</a>" % (url,url))
-		return message
+		lastEnd = 0
+		while True:
+			match = self.urlExp.search(message, lastEnd)
+			if not match:
+				break
+			mStart = match.start()
+			mEnd = match.end()
 
+			lastEnd = mStart
+
+			url = message[mStart:mEnd]
+
+			tagStart="<a href='%s'>" % url
+			tagEnd = "</a>"
+
+			msgStart = message[0:mStart]
+			msgEnd = message[mEnd:]
+
+			newUrl = tagStart + url + tagEnd
+			message = msgStart + newUrl + msgEnd
+
+			lastEnd += len(tagStart)+len(tagEnd)+len(url)
+		return message
+	
+	
 	"""
 	Returns a static color for nick @nick
 	"""

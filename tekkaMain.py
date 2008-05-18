@@ -150,7 +150,6 @@ class tekkaMain(object):
 
 		# a channel tab is selected
 		elif srow and crow:
-			print "channel"
 			server = srow[servertree.COLUMN_NAME]
 			channel = crow[servertree.COLUMN_NAME]
 			desc = crow[servertree.COLUMN_DESCRIPTION]
@@ -231,7 +230,6 @@ class tekkaMain(object):
 	"Copy URL" in URL context menu was clicked
 	"""
 	def copyUrlToClipboard(self, widget, url):
-		print "Clipboarding %s." % url
 		clipboard = gtk.Clipboard()
 		clipboard.set_text(url)
 
@@ -287,9 +285,11 @@ class tekkaMain(object):
 
 			menu = gtk.Menu()
 
+			# channel menu
 			if crow:
 				obj = servertree.getObject(server,channel)
 
+				# part / join button
 				if not obj.getJoined():
 					label = gtk.MenuItem(label="Join")
 					label.connect("activate", lambda w: self.com.join(server,channel))
@@ -299,12 +299,16 @@ class tekkaMain(object):
 					label.connect("activate", lambda w: self.com.part(server, channel))
 					menu.append( label )
 
+				# autojoin checkbutton
 				label = gtk.CheckMenuItem(label="Autojoin")
 				if self.com.getChannelAutojoin(server,channel) == "true":
 					label.set_active(True)
-				label.connect("toggled", lambda w: self.channelMenuAutojoin(server,channel,w))
+				label.connect("toggled", lambda w: self.com.setChannelAutojoin(server,channel, w.get_active()))
 				menu.append( label )
+
+			# server menu
 			elif srow:
+				# connect / disconnect button
 				if not srow[servertree.COLUMN_OBJECT].getConnected():
 					label = gtk.MenuItem(label="Connect")
 					label.connect("activate",lambda w: self.com.connectServer(server))
@@ -332,12 +336,6 @@ class tekkaMain(object):
 		self.gui.getHistory().append(server, channel,text)
 		self.commands.sendMessage(server, channel, text)
 		widget.set_text("")
-
-	"""
-	Autojoin button in context menu of the servertree was pressed
-	"""
-	def channelMenuAutojoin(self, server, channel, w):
-		self.com.setChannelAutojoin(server,channel, w.get_active())
 
 	"""
 	A nick in the nicklist was double clicked
@@ -471,9 +469,7 @@ class tekkaMain(object):
 			return True
 		if name == "Tab":
 			s,c = self.gui.getServertree().getCurrentRow()
-			if not c:
-				print "Server keyword tabcompletion."
-			else:
+			if s or c:
 				obj = c[self.gui.getServertree().COLUMN_OBJECT]
 				if not obj:
 					return True

@@ -745,7 +745,10 @@ class tekkaGUI(object):
 
 		outputstring = "[%s] %s<br/>" % (timestring, message)
 
-		output = self.servertree.getOutput(server,channel)
+		obj = self.servertree.getObject(server,channel)
+		if not obj:
+			print "No such server %s / %s\n" % (server,channel)
+		output = obj.getBuffer()
 
 		if not output:
 			print "channelPrint(): no output buffer, adding channel"
@@ -758,11 +761,7 @@ class tekkaGUI(object):
 		if channel == self.servertree.getCurrentChannel()[1]:
 			self.scrollOutput(output)
 		else:
-			obj = self.servertree.getObject(server,channel)
-			if not obj:
-				print "No such server %s / %s\n" % (server,channel)
 			if type in obj.getNewMessage():
-				print "DEBUG (no query highlighting)(%s): Aborting highlight because type (%s) is in list (%s)" % (channel,type,repr(obj.getNewMessage()))
 				return
 			obj.setNewMessage(type)
 			self.servertree.updateDescription(server,channel,obj=obj)
@@ -770,7 +769,11 @@ class tekkaGUI(object):
 	# prints 'string' with "%H:%M' formatted 'timestamp' to the server-output
 	# identified by 'server'
 	def serverPrint(self, timestamp, server, string, type="message"):
-		output = self.servertree.getOutput(server)
+		obj = self.servertree.getObject(server)
+		if not obj:
+			print "Server %s does not exist." % server
+			return
+		output = obj.getBuffer()
 
 		if not output:
 			iter,output = self.servertree.addServer(server)
@@ -783,7 +786,6 @@ class tekkaGUI(object):
 		if cserver == server and not cchannel:
 			self.scrollOutput(output)
 		else:
-			obj = self.servertree.getObject(server)
 			if type in obj.getNewMessage(): # don't need to repeat setting
 				return
 			obj.setNewMessage(type)
@@ -806,12 +808,15 @@ class tekkaGUI(object):
 	# clears the output of the tekkaOutput widget
 	def tekkaClear(self, args):
 		server,channel = self.servertree.getCurrentChannel()
-		if not server: return
+		if not server: 
+			return
 		elif server and not channel:
 			output = self.servertree.getOutput(server)
 		else:
 			output = self.servertree.getOutput(server,channel)
+
 		output.set_text("")
+
 		# clear the tagtable
 		tt = output.get_tag_table()
 		if tt: tt.foreach(lambda tag,data: data.remove(tag), tt)
