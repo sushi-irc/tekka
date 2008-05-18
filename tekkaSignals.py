@@ -37,46 +37,46 @@ class tekkaSignals(object):
 		self.com = com
 		self.gui = gui
 
-		self.bus = self.com.getBus()
+		self.sushi = self.com.getSushi()
 
-		if not self.bus:
-			print "tekkaSignals: No bus."
+		if not self.sushi:
+			print "tekkaSignals: No sushi."
 			return
 
 		# Message-Signals
-		self.bus.add_signal_receiver(self.userMessage, "message")
-		self.bus.add_signal_receiver(self.ownMessage, "own_message")
-		self.bus.add_signal_receiver(self.ownQuery, "own_query")
-		self.bus.add_signal_receiver(self.userQuery, "query")
-		self.bus.add_signal_receiver(self.userNotice, "notice")
-		self.bus.add_signal_receiver(self.userAction, "action")
-		self.bus.add_signal_receiver(self.userAwayMessage, "away_message")
-		self.bus.add_signal_receiver(self.userCTCP, "ctcp")
-		self.bus.add_signal_receiver(self.ownCTCP, "own_ctcp")
-		self.bus.add_signal_receiver(self.queryCTCP, "query_ctcp")
-		self.bus.add_signal_receiver(self.queryNotice, "query_notice")
+		self.sushi.connect_to_signal("message", self.userMessage)
+		self.sushi.connect_to_signal("own_message", self.ownMessage)
+		self.sushi.connect_to_signal("own_query", self.ownQuery)
+		self.sushi.connect_to_signal("query", self.userQuery)
+		self.sushi.connect_to_signal("notice", self.userNotice)
+		self.sushi.connect_to_signal("action", self.userAction)
+		self.sushi.connect_to_signal("away_message", self.userAwayMessage)
+		self.sushi.connect_to_signal("ctcp", self.userCTCP)
+		self.sushi.connect_to_signal("own_ctcp", self.ownCTCP)
+		self.sushi.connect_to_signal("query_ctcp", self.queryCTCP)
+		self.sushi.connect_to_signal("query_notice", self.queryNotice)
 
 		# action signals
-		self.bus.add_signal_receiver(self.userPart, "part")
-		self.bus.add_signal_receiver(self.userJoin, "join")
-		self.bus.add_signal_receiver(self.userQuit, "quit")
-		self.bus.add_signal_receiver(self.userKick, "kick")
-		self.bus.add_signal_receiver(self.userNick, "nick")
-		self.bus.add_signal_receiver(self.userAway, "away")
-		self.bus.add_signal_receiver(self.userBack, "back")
-		self.bus.add_signal_receiver(self.userMode, "mode")
+		self.sushi.connect_to_signal("part", self.userPart)
+		self.sushi.connect_to_signal("join", self.userJoin)
+		self.sushi.connect_to_signal("quit", self.userQuit)
+		self.sushi.connect_to_signal("kick", self.userKick)
+		self.sushi.connect_to_signal("nick", self.userNick)
+		self.sushi.connect_to_signal("away", self.userAway)
+		self.sushi.connect_to_signal("back", self.userBack)
+		self.sushi.connect_to_signal("mode", self.userMode)
 
 		# Server-Signals
-		self.bus.add_signal_receiver(self.serverConnect, "connect")
-		self.bus.add_signal_receiver(self.serverConnected, "connected")
-		self.bus.add_signal_receiver(self.serverReconnect, "reconnect")
-		self.bus.add_signal_receiver(self.serverMOTD, "motd")
+		self.sushi.connect_to_signal("connect", self.serverConnect)
+		self.sushi.connect_to_signal("connected", self.serverConnected)
+		self.sushi.connect_to_signal("reconnect", self.serverReconnect)
+		self.sushi.connect_to_signal("motd", self.serverMOTD)
 
 		# Channel-Signals
-		self.bus.add_signal_receiver(self.channelTopic, "topic")
+		self.sushi.connect_to_signal("topic", self.channelTopic)
 
 		# Maki signals
-		self.bus.add_signal_receiver(self.makiShutdownSignal, "shutdown")
+		self.sushi.connect_to_signal("shutdown", self.makiShutdownSignal)
 
 		self.initServers()
 
@@ -319,7 +319,7 @@ class tekkaSignals(object):
 	def ownMessage(self, timestamp, server, channel, message):
 		message = self.gui.escape(message)
 		message = self._urlToTag(message)
-	
+
 		self.gui.channelPrint(timestamp, server, channel, \
 		"&lt;<font foreground='%s'>%s</font>&gt; %s" \
 		% (self.gui.getConfig().getColor("ownNick"), self.com.getOwnNick(server), message))
@@ -397,7 +397,7 @@ class tekkaSignals(object):
 			if channel != nick:
 				self.gui.getServertree().renameChannel(server, channel, nick)
 				channel = nick
-		
+
 		if channel:
 			self.gui.channelPrint(time, server, channel, \
 					"&lt;Notice:<font foreground='%s'>%s</font>&gt; %s" % \

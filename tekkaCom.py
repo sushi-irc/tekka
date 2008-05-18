@@ -64,8 +64,8 @@ class tekkaCom(object):
 	def __noSushiMessage(self):
 		print "No sushi. Is maki running?"
 
-	def getBus(self):
-		return self.bus
+	def getSushi(self):
+		return self.sushi
 
 	def getConfig(self):
 		return self.config
