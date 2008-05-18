@@ -55,7 +55,7 @@ class tekkaConfig(object):
 		self.colors["modeActNick"] = "#AA2222"
 		self.colors["modeParam"] = "#2222AA"
 
-
+		self.nickCompletionSeperator=": "
 
 		# additional words to highlight on
 		self.highlightWords = ["fisch"]

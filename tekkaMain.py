@@ -497,13 +497,15 @@ class tekkaMain(object):
 					commands = [l for l in self.commands.getCommands().iterkeys() if l and l[0:len(needle)].lower() == needle.lower()]
 					if commands:
 						result = "/%s" % commands[0]
-				else: # nick completion
+
+				# nick completion
+				else: 					
 					nicks = obj.getNicklist().searchNick(needle.lower())
 					if nicks:
 						result = nicks[0]
 
 				if result:
-					text[-1] = result+" "
+					text[-1] = result+self.config.nickCompletionSeperator
 					text = " ".join(text)
 					widget.set_text(text)
 					widget.set_position(len(text))
