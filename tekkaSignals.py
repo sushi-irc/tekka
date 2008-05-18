@@ -572,7 +572,7 @@ class tekkaSignals(object):
 				obj.setJoined(True)
 				servertree.updateDescription(server,channel,obj=obj)
 			else:
-				self.lastLog(server,channel,10)
+				self.lastLog(server,channel)
 
 			# fetch the prefixes and apply
 			# them to the nicklist of the channel
