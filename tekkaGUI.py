@@ -630,10 +630,6 @@ class tekkaGUI(object):
 
 		self.servertree.expand_all()
 
-		textboxSW = self.widgets.get_widget("sw_output")
-		hadjustment = gtk.Adjustment(20)
-		textboxSW.set_hadjustment(hadjustment)
-
 		self.textbox = self.widgets.get_widget("tekkaOutput")
 		self.textbox.set_cursor_visible(False)
 		self.setOutputFont(self.config.outputFont)
@@ -727,9 +723,10 @@ class tekkaGUI(object):
 	""" PRINTING ROUTINES """
 
 	def scrollOutput(self, output):
-		output.place_cursor(output.get_end_iter())
-		mark = output.get_insert()
+		iter = output.get_end_iter()
+		mark = output.create_mark("scrollMark", iter, False)
 		self.textbox.scroll_mark_onscreen(mark)
+		output.delete_mark(mark)
 
 	def escape(self, msg):
 		msg = msg.replace("&","&amp;")
