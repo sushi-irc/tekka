@@ -632,12 +632,6 @@ class tekkaMain(object):
 	"""
 	def makiShutdown(self, widget):
 		self.com.shutdown()
-		for server in self.getServertree().getServers().get_model() or []:
-			obj = server[tekkaGUI.tekkaServertree.COLUMN_OBJECT]
-			obj.setConnected(False)
-			for channel in server.iterchildren():
-				obj = channel[tekkaGUI.tekkaServertree.COLUMN_OBJECT]
-				obj.setJoined(False)
 		# TODO: disable widgets (entry, tekka->connect, tekka->close maki,
 		# nicklist->menu, servertree->menu)
 

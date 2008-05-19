@@ -83,13 +83,15 @@ class tekkaCommands(object):
 
 	# Method to parse the userinput
 	def parseCommand(self, command):
-		if not command: return
+		if not command:
+			return
 		cmd = command.split(" ")
 		if not self.commands.has_key(cmd[0]):
 			# if command now known send it raw to the server
 			server = self.gui.getServertree().getCurrentServer()
 			if not server:
 				return
+			cmd[0] = cmd[0].upper()
 			self.com.raw(server, " ".join(cmd))
 			return
 		xargs = None

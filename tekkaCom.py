@@ -41,7 +41,7 @@ class tekkaCom(object):
 
 	# connect to maki over dbus
 	def connectMaki(self):
-
+		proxy = None
 		try:
 			proxy = self.bus.get_object("de.ikkoku.sushi", "/de/ikkoku/sushi")
 		except dbus.exceptions.DBusException, e:
@@ -258,8 +258,8 @@ class tekkaCom(object):
 	Shutdown
 	"""
 
-	def makiShutdown(self):
-		self.sushi.shutdown()
+	def shutdown(self,quitmsg=""):
+		self.sushi.shutdown(quitmsg)
 
 
 if __name__ == "__main__":
