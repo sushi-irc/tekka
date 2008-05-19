@@ -175,7 +175,7 @@ class tekkaSignals(object):
 		channel = self._simFind(server, nick)
 		if channel and channel != nick:
 			servertree.renameChannel(server, channel, nick)
-		else:
+		elif not channel:
 			servertree.addChannel(server,nick)
 			self.lastLog(server, nick)
 

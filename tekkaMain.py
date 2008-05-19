@@ -189,6 +189,17 @@ class tekkaMain(object):
 			gobject.signal_new("shortcut_%d" % i, tekkaGUI.tekkaServertree, gobject.SIGNAL_ACTION, None, ())
 			servertree.add_accelerator("shortcut_%d" % i, accelGroup, ord("%d" % i), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 			servertree.connect("shortcut_%d" % i, eval("self.shortcut_%d" % i))
+		
+		# ctrl + pg up
+		gobject.signal_new("select_upper", tekkaGUI.tekkaServertree, gobject.SIGNAL_ACTION, None, ())
+		servertree.add_accelerator("select_upper", accelGroup, gtk.gdk.keyval_from_name("Page_Up"), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
+		servertree.connect("select_upper", self.servertreeSelectUpper)
+
+		# ctrl + pg up
+		gobject.signal_new("select_lower", tekkaGUI.tekkaServertree, gobject.SIGNAL_ACTION, None, ())
+		servertree.add_accelerator("select_lower", accelGroup, gtk.gdk.keyval_from_name("Page_Down"), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
+		servertree.connect("select_lower", self.servertreeSelectLower)
+
 
 
 	"""
@@ -215,6 +226,68 @@ class tekkaMain(object):
 	"""
 	Widget-Signals
 	"""
+
+	def servertreeSelectUpper(self, widget):
+		path = widget.get_cursor()[0]
+
+		if not path:
+			return
+
+		model = widget.get_model()
+
+		if len(path) == 2 and path[1] == 0:
+			row = model[(path[0],)]
+
+		elif len(path) == 1:
+			if path[0]-1 < 0:
+				return
+			
+			values = [n for n in model[path[0]-1].iterchildren()]
+			
+			if len(values)==0:
+				row = model[path[0]-1]
+			else:
+				row = model[(path[0]-1,len(values)-1)]
+
+		elif len(path) == 2:
+			row = model[(path[0],path[1]-1)]
+		self.switchTreeTab(row.path)
+
+	def servertreeSelectLower(self, widget):
+		path = widget.get_cursor()[0]
+
+		if not path:
+			return
+
+		model = widget.get_model()
+
+		if len(path) == 2:
+			print "server and channel"
+			values = [n for n in model[(path[0])].iterchildren()]
+
+			# if there's no other channel on the server
+			if path[1]+1 >= len(values):
+				# there is no other server
+				if path[0]+1 >= len(model):
+					return
+				else:
+					row = model[path[0]+1]
+			else:
+				print "channel"
+				row = model[(path[0],path[1]+1)]
+
+		elif len(path) == 1:
+			print "only server"
+
+			values = [n for n in model[(path[0])].iterchildren()]
+			
+			# there are no channels on this server
+			if len(values) == 0:
+				return
+			else:
+				row = model[(path[0],0)]
+
+		self.switchTreeTab(row.path)
 
 	"""
 	"Open URL" in URL context menu was clicked
@@ -461,6 +534,7 @@ class tekkaMain(object):
 			widget.set_text(text)
 			widget.set_position(len(text))
 			return True
+
 		elif name == "Down":
 			server,channel = self.gui.getServertree().getCurrentChannel()
 			text = self.gui.getHistory().getDown(server,channel)
@@ -468,6 +542,7 @@ class tekkaMain(object):
 			widget.set_text(text)
 			widget.set_position(len(text))
 			return True
+
 		if name == "Tab":
 			s,c = self.gui.getServertree().getCurrentRow()
 			if s or c:
@@ -488,12 +563,12 @@ class tekkaMain(object):
 				if needle[0] == "#": # channel completion
 					channels = self.gui.getServertree().searchTab(s.iterchildren(),needle.lower())
 					if channels:
-						result = channels[0]
+						result = channels[0] + " "
 				elif needle[0] == "/": # command completion
 					needle = needle[1:]
 					commands = [l for l in self.commands.getCommands().iterkeys() if l and l[0:len(needle)].lower() == needle.lower()]
 					if commands:
-						result = "/%s" % commands[0]
+						result = "/%s " % (commands[0])
 
 				# nick completion
 				else: 					
@@ -501,8 +576,15 @@ class tekkaMain(object):
 					if nicks:
 						result = nicks[0]
 
+						# started sentence?
+						if widget.get_position()-len(needle)==0:
+							result = result + \
+								self.config.nickCompletionSeperator
+						else:
+							result = result + " "
+
 				if result:
-					text[-1] = result+self.config.nickCompletionSeperator
+					text[-1] = result
 					text = " ".join(text)
 					widget.set_text(text)
 					widget.set_position(len(text))

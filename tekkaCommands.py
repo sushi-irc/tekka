@@ -76,7 +76,9 @@ class tekkaCommands(object):
 					msg = ": "+msg
 				else:
 					msg = "."
-				self.gui.myPrint("<font foreground='#222222'>You're still away%s</font>" % msg, html=True)
+				self.gui.myPrint(\
+					"<font foreground='#222222'>You're still away%s</font>" % \
+						msg, html=True)
 			self.com.sendMessage(server,channel,text)
 
 	# Method to parse the userinput
@@ -84,7 +86,11 @@ class tekkaCommands(object):
 		if not command: return
 		cmd = command.split(" ")
 		if not self.commands.has_key(cmd[0]):
-			self.gui.myPrint("Unknown command %s" % cmd[0])
+			# if command now known send it raw to the server
+			server = self.gui.getServertree().getCurrentServer()
+			if not server:
+				return
+			self.com.raw(server, " ".join(cmd))
 			return
 		xargs = None
 		if len(cmd)>1:
@@ -287,12 +293,28 @@ class tekkaCommands(object):
 		if not xargs:
 			self.myPrint("Usage: /query <nick>")
 			return
+
 		server, channel = self.gui.getServertree().getCurrentChannel()
+
 		if not server:
 			self.myPrint("query who on which server?")
 			return
+
 		if not self.gui.getServertree().getChannel(server,xargs[0],sens=False):
-			self.gui.getServertree().addChannel(server, xargs[0])
+			ret,iter = self.gui.getServertree().addChannel(server, xargs[0])
+		
+			# print history
+			servertree = self.gui.getServertree()
+			model = servertree.get_model()
+			path = model.get_path(iter)
+			obj = model[path][servertree.COLUMN_OBJECT]
+			output = obj.getBuffer()
+
+			for line in self.com.fetchLog(server, \
+					xargs[0].lower(), self.com.getConfig().lastLogLines):
+				output.insertHTML(output.get_end_iter(), \
+					"<font foreground='#DDDDDD'>%s</font><br/>" % \
+						self.gui.escape(line))
 
 	def tekkaClear(self, xargs):
 		pass
