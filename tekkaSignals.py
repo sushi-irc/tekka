@@ -101,10 +101,9 @@ class tekkaSignals(object):
 
 		for channel in channels:
 			nicks = self.com.fetchNicks(server, channel)
+			topic = self.sushi.channel_topic(server, channel)
 
-			self.com.requestTopic(server,channel)
-
-			ret,iter = self.gui.getServertree().addChannel(server, channel, nicks=nicks)
+			ret,iter = self.gui.getServertree().addChannel(server, channel, nicks, topic)
 
 			obj = self.gui.getServertree().getObject(server,channel)
 			nicklist = obj.getNicklist()
@@ -219,8 +218,8 @@ class tekkaSignals(object):
 
 			lastEnd += len(tagStart)+len(tagEnd)+len(url)
 		return message
-	
-	
+
+
 	"""
 	Returns a static color for nick @nick
 	"""
@@ -543,13 +542,13 @@ class tekkaSignals(object):
 
 		if nick == self.com.getOwnNick(server):
 			nicks = self.com.fetchNicks(server,channel)
-			self.com.requestTopic(server, channel)
+			topic = self.sushi.channel_topic(server, channel)
 
 			# returns the iter of the channel if added (ret=0)
 			# or if it's already existent (ret=1) if ret is 0
 			# the nicks and the topic are already applied, else
 			# we set them manually.
-			ret,iter = servertree.addChannel(server, channel, nicks=nicks)
+			ret,iter = servertree.addChannel(server, channel, nicks, topic)
 
 			if not iter:
 				print "userJoin(%s,%s,%s): No Server!" % (server,channel,nick)

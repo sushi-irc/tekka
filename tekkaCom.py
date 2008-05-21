@@ -151,11 +151,6 @@ class tekkaCom(object):
 	def fetchUserChannelPrefix(self, server, channel, nick):
 		return self.sushi.user_channel_prefix(server, channel, nick)
 
-	# requests a topic-signal-emmit for channel @channel on
-	# server @server
-	def requestTopic(self, server, channel):
-		return self.sushi.topic(server,channel,"")
-
 	# fetch the prefix of user @nick in channel @channel on
 	# server @server
 	def fetchPrefix(self, server, channel, nick):
