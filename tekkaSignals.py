@@ -324,8 +324,8 @@ class tekkaSignals(object):
 				break
 		if i >= 0:
 			type = "highlightmessage"
-			highlight_pre = "<b><font foreground='#FF0000'>"
-			highlight_post = "</font></b>"
+			highlight_pre = "<font foreground='#FF0000'>"
+			highlight_post = "</font>"
 		else:
 			type = "message"
 
@@ -342,8 +342,8 @@ class tekkaSignals(object):
 		message = self._urlToTag(message)
 
 		self.gui.channelPrint(timestamp, server, channel, \
-		"&lt;<font foreground='%s'>%s</font>&gt; %s" \
-		% (self.gui.getConfig().getColor("ownNick"), self.com.getOwnNick(server), message))
+		"&lt;<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" \
+		% (self.gui.getConfig().getColor("ownNick"), self.com.getOwnNick(server), self.gui.getConfig().getColor("ownText"), message))
 
 	def ownQuery(self, timestamp, server, channel, message):
 		self.ownMessage(timestamp,server,channel,message)

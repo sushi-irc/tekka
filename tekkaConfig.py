@@ -48,7 +48,8 @@ class tekkaConfig(object):
 		self.servertabShortcuts = True
 
 		self.colors = {}
-		self.colors["ownNick"] = "#AA0000"
+		self.colors["ownNick"] = "#444444"
+		self.colors["ownText"] = "#444444"
 		self.colors["nick"] = "#2222AA"
 		self.colors["joinNick"] = "#004444"
 		self.colors["partNick"] = "#004444"
@@ -59,12 +60,12 @@ class tekkaConfig(object):
 		self.nickCompletionSeperator=": "
 
 		# additional words to highlight on
-		self.highlightWords = ["fisch"]
+		self.highlightWords = []
 
 		self.lastLogLines = 10
 
 		# random nick colors
-		self.nickColors=["#2222AA","#44AA44","#123456","#987654"]
+		self.nickColors=["#AA0000","#2222AA","#44AA44","#123456","#987654"]
 
 		self.outputFont = "Monospace"
 
