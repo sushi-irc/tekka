@@ -117,7 +117,7 @@ class tekkaMain(object):
 			if server:
 				self.com.connect(server)
 
-	""" 
+	"""
 	Change the current servertree tab to the tab identified by "path"
 	"""
 	def switchTreeTab(self, path):
@@ -148,6 +148,8 @@ class tekkaMain(object):
 			self.gui.getNicklist().set_model(None)
 			self.gui.getTopicbar().set_property("visible",False)
 
+			self.gui.setTitle(server)
+
 		# a channel tab is selected
 		elif srow and crow:
 			server = srow[servertree.COLUMN_NAME]
@@ -173,6 +175,8 @@ class tekkaMain(object):
 			self.gui.setTopicInBar(server=server,channel=channel)
 			topicbar.set_property("visible",True)
 
+			self.gui.setTitle(channel)
+
 		# no tab is selected
 		else:
 			print "Activation failed due to wrong path."
@@ -189,7 +193,7 @@ class tekkaMain(object):
 			gobject.signal_new("shortcut_%d" % i, tekkaGUI.tekkaServertree, gobject.SIGNAL_ACTION, None, ())
 			servertree.add_accelerator("shortcut_%d" % i, accelGroup, ord("%d" % i), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 			servertree.connect("shortcut_%d" % i, eval("self.shortcut_%d" % i))
-		
+
 		# ctrl + pg up
 		gobject.signal_new("select_upper", tekkaGUI.tekkaServertree, gobject.SIGNAL_ACTION, None, ())
 		servertree.add_accelerator("select_upper", accelGroup, gtk.gdk.keyval_from_name("Page_Up"), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
@@ -241,9 +245,9 @@ class tekkaMain(object):
 		elif len(path) == 1:
 			if path[0]-1 < 0:
 				return
-			
+
 			values = [n for n in model[path[0]-1].iterchildren()]
-			
+
 			if len(values)==0:
 				row = model[path[0]-1]
 			else:
@@ -280,7 +284,7 @@ class tekkaMain(object):
 			print "only server"
 
 			values = [n for n in model[(path[0])].iterchildren()]
-			
+
 			# there are no channels on this server
 			if len(values) == 0:
 				return
@@ -416,7 +420,7 @@ class tekkaMain(object):
 	def nicklistActivateRow(self, treeview, path, parm1):
 		servertree = self.gui.getServertree()
 		server = servertree.getCurrentServer()
-		if not server: 
+		if not server:
 			return
 		nick = treeview.get_model()[path][tekkaGUI.tekkaNicklistStore.COLUMN_NICK]
 		iter = servertree.addChannel(server, nick)[1]
@@ -571,7 +575,7 @@ class tekkaMain(object):
 						result = "/%s " % (commands[0])
 
 				# nick completion
-				else: 					
+				else:
 					nicks = obj.getNicklist().searchNick(needle.lower())
 					if nicks:
 						result = nicks[0]

@@ -611,6 +611,8 @@ class tekkaGUI(object):
 
 		self.widgets = gtk.glade.XML(self.config.gladefiles["mainwindow"], "tekkaMainwindow")
 
+		self.window = self.widgets.get_widget("tekkaMainwindow")
+
 		self.accelGroup = gtk.AccelGroup()
 		self._setupAccelGroup()
 
@@ -638,6 +640,9 @@ class tekkaGUI(object):
 		self.textentry.set_property("can-focus",True)
 
 		self.history = tekkaHistory()
+
+	def setTitle(self, title):
+		self.window.set_title(title)
 
 	def getConfig(self):
 		return self.config
@@ -805,7 +810,7 @@ class tekkaGUI(object):
 	# clears the output of the tekkaOutput widget
 	def tekkaClear(self, args):
 		server,channel = self.servertree.getCurrentChannel()
-		if not server: 
+		if not server:
 			return
 		elif server and not channel:
 			output = self.servertree.getOutput(server)
