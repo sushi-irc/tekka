@@ -1,3 +1,4 @@
+# coding: UTF-8
 """
 Copyright (c) 2008 Marian Tietz
 All rights reserved.
@@ -277,7 +278,7 @@ class tekkaSignals(object):
 		if nick == self.com.getOwnNick(server):
 			nick = "You"
 
-		self.gui.channelPrint(time, server, channel, "%s changed the topic to '%s'" % (nick, self.gui.escape(topic)))
+		self.gui.channelPrint(time, server, channel, "• %s changed the topic to '%s'" % (nick, self.gui.escape(topic)))
 
 	""" MAKI SIGNALS """
 
@@ -369,7 +370,7 @@ class tekkaSignals(object):
 			actnick = "You"
 
 		if target == myNick:
-			self.gui.serverPrint(time, server,"%s set <b>%s</b> on you." % (actnick, mode))
+			self.gui.serverPrint(time, server,"• %s set <b>%s</b> on you." % (actnick, mode))
 
 		else:
 			# if param a user mode is set
@@ -379,13 +380,13 @@ class tekkaSignals(object):
 					nickwrap = "you"
 					type = "highlightaction"
 
-				msg = "%s set <b>%s</b> to %s." % (actnick,mode,nickwrap)
+				msg = "• %s set <b>%s</b> to %s." % (actnick,mode,nickwrap)
 
 				self._prefixMode(server,target,param,mode)
 
 			# else a channel is the target
 			else:
-				msg = "%s set <b>%s</b> on %s." % (actnick,mode,target)
+				msg = "• %s set <b>%s</b> on %s." % (actnick,mode,target)
 
 			self.gui.channelPrint(time, server, target, msg, type)
 
@@ -454,7 +455,7 @@ class tekkaSignals(object):
 		else:
 			nickwrap = "%s is" % nick
 
-		nickchange = "%s now known as %s." % (nickwrap, newNick)
+		nickchange = "• %s now known as %s." % (nickwrap, newNick)
 		nickchange = self.gui.escape(nickchange)
 
 		for channel in servertree.getChannels(server):
@@ -475,10 +476,10 @@ class tekkaSignals(object):
 			obj.setJoined(False)
 			servertree.updateDescription(server, channel, obj=obj)
 			self.gui.channelPrint(time, server, channel, self.gui.escape(\
-				"You have been kicked from %s by %s %s" % (channel,nick,reason)))
+				"« You have been kicked from %s by %s %s" % (channel,nick,reason)))
 		else:
 			obj.getNicklist().removeNick(who)
-			self.gui.channelPrint(time, server, channel, self.gui.escape("%s was kicked from %s by %s %s" % (who,channel,nick,reason)), "action")
+			self.gui.channelPrint(time, server, channel, self.gui.escape("« %s was kicked from %s by %s %s" % (who,channel,nick,reason)), "action")
 
 	"""
 	The user identified by nick quit on the server "server" with
@@ -532,7 +533,7 @@ class tekkaSignals(object):
 				if nick in nicks or nick == channel:
 					nicklist.removeNick(nick)
 					self.gui.channelPrint(time, server, channel, \
-					"%s has quit%s." % (nick,reasonwrap), "action")
+					"« %s has quit%s." % (nick,reasonwrap), "action")
 
 	"""
 	A user identified by "nick" joins the channel "channel" on
@@ -586,7 +587,7 @@ class tekkaSignals(object):
 		else:
 			nickwrap = "<font foreground='%s'>%s</font> has" % (self.gui.getConfig().getColor("joinNick"), self.gui.escape(nick))
 			servertree.getObject(server,channel).getNicklist().appendNick(nick)
-		self.gui.channelPrint(timestamp, server, channel, "%s joined %s." % (nickwrap, channel), "action")
+		self.gui.channelPrint(timestamp, server, channel, "» %s joined %s." % (nickwrap, channel), "action")
 
 	# user parted
 	def userPart(self, timestamp, server, nick, channel, reason):
@@ -600,13 +601,13 @@ class tekkaSignals(object):
 			reason = " (%s)" % reason
 
 		if nick == self.com.getOwnNick(server):
-			self.gui.channelPrint(timestamp, server, channel, "You have left %s%s." % (channel,reason))
+			self.gui.channelPrint(timestamp, server, channel, "« You have left %s%s." % (channel,reason))
 
 			obj.setJoined(False)
 			servertree.updateDescription(server, channel, obj=obj)
 		else:
 			obj.getNicklist().removeNick(nick)
 			self.gui.channelPrint(timestamp, server, channel, \
-			"<font foreground='%s'>%s</font> has left %s%s." % (self.gui.getConfig().getColor("partNick"), self.gui.escape(nick), self.gui.escape(channel), self.gui.escape(reason)), "action")
+			"« <font foreground='%s'>%s</font> has left %s%s." % (self.gui.getConfig().getColor("partNick"), self.gui.escape(nick), self.gui.escape(channel), self.gui.escape(reason)), "action")
 
 
