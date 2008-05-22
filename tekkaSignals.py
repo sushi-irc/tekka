@@ -332,18 +332,22 @@ class tekkaSignals(object):
 		color = self.getNickColor(nick)
 
 		message = self._urlToTag(message)
+		prefix = self.gui.getServertree().getObject(server,channel).getNicklist().getPrefix(nick)
 
 		self.gui.channelPrint(timestamp, server, channel, \
-		"%s&lt;<font foreground='%s'>%s</font>&gt; %s%s" % \
-		(highlight_pre, color,self.gui.escape(nick), message, highlight_post), type)
+		"%s&lt;%s<font foreground='%s'>%s</font>&gt; %s%s" % \
+		(highlight_pre, prefix, color,self.gui.escape(nick), message, highlight_post), type)
 
 	def ownMessage(self, timestamp, server, channel, message):
 		message = self.gui.escape(message)
 		message = self._urlToTag(message)
 
+		nick = self.com.getOwnNick(server)
+		prefix = self.gui.getServertree().getObject(server,channel).getNicklist().getPrefix(nick)
+
 		self.gui.channelPrint(timestamp, server, channel, \
-		"&lt;<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" \
-		% (self.gui.getConfig().getColor("ownNick"), self.com.getOwnNick(server), self.gui.getConfig().getColor("ownText"), message))
+		"&lt;%s<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" \
+		% (prefix, self.gui.getConfig().getColor("ownNick"), nick, self.gui.getConfig().getColor("ownText"), message))
 
 	def ownQuery(self, timestamp, server, channel, message):
 		self.ownMessage(timestamp,server,channel,message)

@@ -129,6 +129,13 @@ class tekkaNicklistStore(tekkaList, gtk.ListStore):
 		if not mass:
 			self.sortNicks()
 
+	def getPrefix(self, nick):
+		store = self.get_model()
+		row = self.findRow(nick, store=store, col=self.COLUMN_NICK)
+		if not row:
+			return " "
+		return row[self.COLUMN_PREFIX]
+
 	def searchNick(self, needle):
 		return [l[self.COLUMN_NICK] for l in self if l and l[self.COLUMN_NICK][0:len(needle)].lower()==needle]
 
