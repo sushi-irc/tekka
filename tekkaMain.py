@@ -109,6 +109,9 @@ class tekkaMain(object):
 		self.gui.getInput().connect("key-press-event", self.userInputEvent)
 		self.gui.getOutput().connect("populate-popup", lambda w,x: x.destroy())
 
+		# if mainwindow gets focus stop being urgent
+		self.gui.getWindow().connect("focus-in-event", lambda w,e: w.set_urgency_hint(False))
+
 	def _showServerDialog(self, widget):
 		serverlist = tekkaDialog.serverDialog(self)
 		result,server = serverlist.run()

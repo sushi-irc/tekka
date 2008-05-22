@@ -327,6 +327,9 @@ class tekkaSignals(object):
 			type = "highlightmessage"
 			highlight_pre = "<font foreground='#FF0000'>"
 			highlight_post = "</font>"
+
+			if not self.gui.getWindow().has_toplevel_focus():
+				self.gui.getWindow().set_urgency_hint(True)
 		else:
 			type = "message"
 
@@ -355,6 +358,11 @@ class tekkaSignals(object):
 
 	def userQuery(self, timestamp, server, nick, message):
 		self._simCheck(server,nick)
+
+		# queries are important
+		if not self.gui.getWindow().has_toplevel_focus():
+			self.gui.getWindow().set_urgency_hint(True)
+
 		self.userMessage(timestamp,server,nick,nick,message)
 
 	def userMode(self, time, server, nick, target, mode, param):

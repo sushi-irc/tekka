@@ -651,6 +651,9 @@ class tekkaGUI(object):
 	def setTitle(self, title):
 		self.window.set_title(title)
 
+	def getWindow(self):
+		return self.window
+
 	def getConfig(self):
 		return self.config
 
