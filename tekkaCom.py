@@ -211,6 +211,9 @@ class tekkaCom(object):
 	def unignore(self, server, pattern):
 		self.sushi.unignore(server, pattern)
 
+	def list(self, server, channel=""):
+		self.sushi.list(server,channel)
+
 	"""
 	Config, server creation, server deletion
 	"""

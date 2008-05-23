@@ -70,12 +70,14 @@ class tekkaSignals(object):
 		self.sushi.connect_to_signal("away", self.userAway)
 		self.sushi.connect_to_signal("back", self.userBack)
 		self.sushi.connect_to_signal("mode", self.userMode)
+		self.sushi.connect_to_signal("oper", self.userOper)
 
 		# Server-Signals
 		self.sushi.connect_to_signal("connect", self.serverConnect)
 		self.sushi.connect_to_signal("connected", self.serverConnected)
 		self.sushi.connect_to_signal("reconnect", self.serverReconnect)
 		self.sushi.connect_to_signal("motd", self.serverMOTD)
+		self.sushi.connect_to_signal("list", self.list)
 
 		# Channel-Signals
 		self.sushi.connect_to_signal("topic", self.channelTopic)
@@ -261,6 +263,14 @@ class tekkaSignals(object):
 	def serverMOTD(self, time, server, message):
 		self.gui.serverPrint(time, server, self.gui.escape(message))
 
+	def list(self, time, server, channel, users, topic):
+		if not channel and not topic and users == -1:
+			self.gui.serverPrint(time, server, "End of list.")
+			return
+		self.gui.serverPrint(time, server, \
+			"%s: %d user; topic: \"%s\"" % \
+			(self.gui.escape(channel), users, self.gui.escape(topic)))
+
 	""" CHANNEL SIGNALS """
 
 	"""
@@ -397,6 +407,9 @@ class tekkaSignals(object):
 				msg = "• %s set <b>%s</b> on %s." % (actnick,mode,target)
 
 			self.gui.channelPrint(time, server, target, msg, type)
+
+	def userOper(self, time, server):
+		self.gui.serverPrint(time, server, "You got oper access.")
 
 	def userCTCP(self, time, server,  nick, target, message):
 		self.gui.channelPrint(time, server, target, \

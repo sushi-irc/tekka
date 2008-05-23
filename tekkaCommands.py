@@ -25,7 +25,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
-import os
+import time
 
 class tekkaCommands(object):
 	def __init__(self, tekkaCom, tekkaGUI):
@@ -50,6 +50,8 @@ class tekkaCommands(object):
 		  "notice" : self.makiNotice,
 			"oper" : self.makiOper,
 			"kill" : self.makiKill,
+			"list" : self.makiList,
+			 "raw" : self.makiRaw,
 			"query": self.tekkaQuery,
 			"clear": self.tekkaClear
 		}
@@ -287,7 +289,42 @@ class tekkaCommands(object):
 		self.com.oper(server, xargs[0], " ".join(xargs[1:]))
 
 	def makiKill(self, xargs):
-		pass
+		if not xargs or len(xargs) < 2:
+			self.gui.myPrint("Usage: /kill <user> <reason>")
+			return
+
+		server = self.gui.getServertree().getCurrentServer()
+		if not server:
+			self.gui.myPrint("Could not determine server.")
+			return
+
+		self.com.kill(server, xargs[0], xargs[1])
+
+	def makiList(self, xargs):
+		server = self.gui.getServertree().getCurrentServer()
+		if not server:
+			self.gui.myPrint("Could not determine server.")
+			return
+
+		try:
+			channel = xargs[0]
+		except:
+			channel = ""
+		self.gui.serverPrint(time.time(), server, "Start of list.")
+		self.com.list(server, channel)
+
+	def makiRaw(self, xargs):
+		if not xargs or len(xargs) < 1:
+			self.gui.myPrint("Usage: /raw <command>")
+			return
+
+		server = self.gui.getServertree().getCurrentServer()
+		if not server:
+			self.gui.myPrint("Could not determine server.")
+			return
+
+		xargs[0] = xargs[0].upper()
+		self.com.raw(server, " ".join(xargs))
 
 	""" TEKKA USER COMMANDS """
 
