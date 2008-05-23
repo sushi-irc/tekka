@@ -219,38 +219,36 @@ class tekkaCom(object):
 	"""
 
 	def createServer(self, smap):
-		domain = "servers/%s" % smap["servername"]
+		name = smap["servername"]
 		del smap["servername"]
 		for (k,v) in smap.items():
 			if not v:
-				self.sushi.sushi_remove(domain, "server", k)
+				self.sushi.maki_server_remove(name, "server", k)
 			else:
-				self.sushi.sushi_set(domain, "server", k, v)
+				self.sushi.maki_server_set(name, "server", k, v)
 
 	def deleteServer(self, name):
-		domain = "servers/%s" % name
-		self.sushi.sushi_remove(domain, "", "")
+		self.sushi.maki_server_remove(name, "", "")
 
 	def fetchServerlist(self):
-		return self.sushi.sushi_list("servers","","")
+		return self.sushi.maki_server_list("","")
 
 	def fetchServerinfo(self, server):
 		map = {}
-		domain = "servers/%s" % server
 		map["servername"] = server
-		map["address"] = self.sushi.sushi_get(domain, "server", "address")
-		map["port"] = self.sushi.sushi_get(domain, "server", "port")
-		map["name"] = self.sushi.sushi_get(domain, "server", "name")
-		map["nick"] = self.sushi.sushi_get(domain, "server", "nick")
-		map["nickserv"] = self.sushi.sushi_get(domain, "server", "nickserv")
-		map["autoconnect"] = self.sushi.sushi_get(domain, "server", "autoconnect")
+		map["address"] = self.sushi.maki_server_get(server, "server", "address")
+		map["port"] = self.sushi.maki_server_get(server, "server", "port")
+		map["name"] = self.sushi.maki_server_get(server, "server", "name")
+		map["nick"] = self.sushi.maki_server_get(server, "server", "nick")
+		map["nickserv"] = self.sushi.maki_server_get(server, "server", "nickserv")
+		map["autoconnect"] = self.sushi.maki_server_get(server, "server", "autoconnect")
 		return map
 
 	def getChannelAutojoin(self, server, channel):
-		return self.sushi.sushi_get("servers/"+server, channel, "autojoin")
+		return self.sushi.maki_server_get(server, channel, "autojoin")
 
 	def setChannelAutojoin(self, server, channel, switch):
-		self.sushi.sushi_set("servers/"+server, channel, "autojoin", switch and "true" or "false")
+		self.sushi.maki_server_set(server, channel, "autojoin", switch and "true" or "false")
 
 	"""
 	Shutdown
