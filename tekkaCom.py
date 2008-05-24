@@ -223,32 +223,32 @@ class tekkaCom(object):
 		del smap["servername"]
 		for (k,v) in smap.items():
 			if not v:
-				self.sushi.maki_server_remove(name, "server", k)
+				self.sushi.server_remove(name, "server", k)
 			else:
-				self.sushi.maki_server_set(name, "server", k, v)
+				self.sushi.server_set(name, "server", k, v)
 
 	def deleteServer(self, name):
-		self.sushi.maki_server_remove(name, "", "")
+		self.sushi.server_remove(name, "", "")
 
 	def fetchServerlist(self):
-		return self.sushi.maki_server_list("","")
+		return self.sushi.server_list("","")
 
 	def fetchServerinfo(self, server):
 		map = {}
 		map["servername"] = server
-		map["address"] = self.sushi.maki_server_get(server, "server", "address")
-		map["port"] = self.sushi.maki_server_get(server, "server", "port")
-		map["name"] = self.sushi.maki_server_get(server, "server", "name")
-		map["nick"] = self.sushi.maki_server_get(server, "server", "nick")
-		map["nickserv"] = self.sushi.maki_server_get(server, "server", "nickserv")
-		map["autoconnect"] = self.sushi.maki_server_get(server, "server", "autoconnect")
+		map["address"] = self.sushi.server_get(server, "server", "address")
+		map["port"] = self.sushi.server_get(server, "server", "port")
+		map["name"] = self.sushi.server_get(server, "server", "name")
+		map["nick"] = self.sushi.server_get(server, "server", "nick")
+		map["nickserv"] = self.sushi.server_get(server, "server", "nickserv")
+		map["autoconnect"] = self.sushi.server_get(server, "server", "autoconnect")
 		return map
 
 	def getChannelAutojoin(self, server, channel):
-		return self.sushi.maki_server_get(server, channel, "autojoin")
+		return self.sushi.server_get(server, channel, "autojoin")
 
 	def setChannelAutojoin(self, server, channel, switch):
-		self.sushi.maki_server_set(server, channel, "autojoin", switch and "true" or "false")
+		self.sushi.server_set(server, channel, "autojoin", switch and "true" or "false")
 
 	"""
 	Shutdown
