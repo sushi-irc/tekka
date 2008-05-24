@@ -123,7 +123,7 @@ class tekkaCommands(object):
 	def makiNick(self, xargs):
 		server = self.gui.getServertree().getCurrentServer()
 
-		if not self.sushi:
+		if not self.com:
 			self.gui.myPrint("No connection to maki.")
 			return
 
@@ -341,7 +341,7 @@ class tekkaCommands(object):
 
 		if not self.gui.getServertree().getChannel(server,xargs[0],sens=False):
 			ret,iter = self.gui.getServertree().addChannel(server, xargs[0])
-		
+
 			# print history
 			servertree = self.gui.getServertree()
 			model = servertree.get_model()
