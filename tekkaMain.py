@@ -304,7 +304,7 @@ class tekkaMain(object):
 		arguments = self.config.browser_arguments or ""
 		if not browser:
 			return
-		subprocess.Popen([browser, arguments % url], env=os.environ)
+		subprocess.call([browser, arguments % url], close_fds=True, env=os.environ)
 
 	"""
 	"Copy URL" in URL context menu was clicked
