@@ -301,7 +301,7 @@ class tekkaMain(object):
 	"""
 	def openUrlWithBrowser(self, url):
 		browser = self.config.browser
-		arguments = self.config.browser_arguments or ""
+		arguments = self.config.browser_arguments or "%s"
 		if not browser:
 			return
 		subprocess.call([browser, arguments % url], close_fds=True, env=os.environ)

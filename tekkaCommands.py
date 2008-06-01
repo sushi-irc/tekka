@@ -109,11 +109,11 @@ class tekkaCommands(object):
 
 	def makiQuit(self, xargs):
 		if not xargs:
-			list = self.com.fetchServers()
-			if not list:
+			server = self.gui.getServertree().getCurrentServer()
+			if not server:
+				self.gui.myPrint("Could not determine server.")
 				return
-			for server in list:
-				self.com.quitServer(server,"")
+			self.com.quitServer(server,"")
 		else:
 			reason = ""
 			if len(xargs) >= 2:
@@ -122,10 +122,6 @@ class tekkaCommands(object):
 
 	def makiNick(self, xargs):
 		server = self.gui.getServertree().getCurrentServer()
-
-		if not self.com:
-			self.gui.myPrint("No connection to maki.")
-			return
 
 		if not xargs:
 			self.gui.myPrint("Usage: /nick <new nick>")
