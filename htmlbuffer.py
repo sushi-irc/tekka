@@ -146,19 +146,19 @@ class htmlbuffer(gtk.TextBuffer):
 		try:
 			parser.parse(StringIO(str(text)))
 		except Exception, ex:
-			print ex
+			#print ex
 
 			if str(ex).find(":"):
 				error = str(ex).split(":")
 
-				print "STRING: " + text
+				#print "STRING: " + text
 				fchar = text[int(error[2])]
-				print "CHAR: " + fchar
+				#print "CHAR: " + fchar
 
 				if not fchar:
 					return
 
-				print "retrying with replacing faulty char."
+				#print "retrying with replacing faulty char."
 
 				self.errorcount += 1
 				if self.errorcount < 5:

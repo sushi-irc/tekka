@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.3 on Fri May  9 16:08:58 2008 -->
+<!--Generated with glade3 3.4.3 on Thu Jun  5 22:21:55 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="tekkaMainwindow">
     <property name="width_request">550</property>
@@ -52,6 +52,26 @@
               </widget>
             </child>
             <child>
+              <widget class="GtkMenuItem" id="menuitem2">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_Show</property>
+                <property name="use_underline">True</property>
+                <child>
+                  <widget class="GtkMenu" id="menu2">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkCheckMenuItem" id="showGeneralOutput">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Show _general output</property>
+                        <property name="use_underline">True</property>
+                        <signal name="toggled" handler="showGeneralOutput_toggled_cb"/>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+            </child>
+            <child>
               <widget class="GtkMenuItem" id="menuitem4">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_Help</property>
@@ -95,19 +115,48 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkScrolledWindow" id="sw_output">
+                  <widget class="GtkVPaned" id="vpaned1">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
-                    <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                    <property name="can_focus">True</property>
                     <child>
-                      <widget class="GtkTextView" id="tekkaOutput">
-					  	<property name="can_focus">False</property>
-                        <property name="visible">True</property>
-                        <property name="editable">False</property>
-                        <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
-                        <property name="cursor_visible">False</property>
+                      <widget class="GtkScrolledWindow" id="sw_generalOutput">
+                        <property name="can_focus">True</property>
+                        <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                        <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                        <child>
+                          <widget class="GtkTextView" id="generalOutput">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="editable">False</property>
+                            <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
+                            <property name="cursor_visible">False</property>
+                          </widget>
+                        </child>
                       </widget>
+                      <packing>
+                        <property name="resize">False</property>
+                        <property name="shrink">True</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkScrolledWindow" id="sw_output">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
+                        <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                        <child>
+                          <widget class="GtkTextView" id="tekkaOutput">
+                            <property name="visible">True</property>
+                            <property name="editable">False</property>
+                            <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
+                            <property name="cursor_visible">False</property>
+                          </widget>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="resize">True</property>
+                        <property name="shrink">True</property>
+                      </packing>
                     </child>
                   </widget>
                   <packing>
@@ -166,7 +215,6 @@
                     <child>
                       <widget class="GtkTreeView" id="tekkaNicklist">
                         <property name="visible">True</property>
-						<property name="can_focus">False</property>
                         <property name="headers_clickable">True</property>
                         <signal name="button_press_event" handler="tekkaNicklist_button_press_event_cb"/>
                         <signal name="row_activated" handler="tekkaNicklist_row_activated_cb"/>

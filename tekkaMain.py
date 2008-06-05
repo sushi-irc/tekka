@@ -46,7 +46,6 @@ import tekkaPlugins
 class tekkaMain(object):
 	def __init__(self):
 		self.config = tekkaConfig()
-		self.config.readConfig()
 
 		self.com = tekkaCom(self.config)
 		self.gui = tekkaGUI.tekkaGUI(self.config)
@@ -57,6 +56,9 @@ class tekkaMain(object):
 			sys.exit(1)
 
 		self.gui.getServertree().setUrlHandler(self.urlHandler)
+
+		if self.gui.getGeneralOutput():
+			self.gui.getGeneralOutput().get_buffer().setUrlHandler(self.urlHandler)
 
 		self.commands = tekkaCommands(self.com,self.gui)
 		self.signals = tekkaSignals(self.com,self.gui)
@@ -87,6 +89,7 @@ class tekkaMain(object):
 
 	def _setupSignals(self, widgets):
 		sigdic = {
+				   "showGeneralOutput_toggled_cb" : self.toggleGeneralOutput,
 				   "tekkaMainwindow_Quit_activate_cb" : gtk.main_quit,
 				   "tekkaInput_activate_cb" : self.userInput,
 				   "tekkaTopic_activate_cb" : self.topicbarActivate,
@@ -130,6 +133,8 @@ class tekkaMain(object):
 		servertree.set_cursor(path)
 		servertree.updateCurrentRowFromPath(path)
 
+		textview = self.gui.getOutput()
+
 		# a server tab is selected
 		if srow and not crow:
 			server = srow[servertree.COLUMN_NAME]
@@ -141,9 +146,8 @@ class tekkaMain(object):
 				print "No output!"
 				return
 
-			self.gui.getOutput().set_buffer(output) # set output buffer
-			self.gui.scrollOutput(output) # scroll to the bottom
-
+			textview.set_buffer(output) # set output buffer
+			self.gui.scrollOutput(textview, output) # scroll to the bottom
 			# reset hightlight
 			obj.setNewMessage(False)
 			servertree.serverDescription(server, obj.markup())
@@ -165,8 +169,8 @@ class tekkaMain(object):
 				print "No output!"
 				return
 
-			self.gui.getOutput().set_buffer(output)
-			self.gui.scrollOutput(output)
+			textview.set_buffer(output)
+			self.gui.scrollOutput(textview, output)
 
 			obj.setNewMessage(False)
 			servertree.channelDescription(server, channel, obj.markup())
@@ -234,6 +238,22 @@ class tekkaMain(object):
 	Widget-Signals
 	"""
 
+	"""
+	User pressed Show -> Show general output
+	"""
+	def toggleGeneralOutput(self, widget):
+		if widget.get_active():
+			if not self.gui.getGeneralOutput():
+				self.gui.setupGeneralOutput()
+			else:
+				self.gui.getGeneralOutputWindow().show_all()
+		else:
+			if self.gui.getGeneralOutputWindow():
+				self.gui.getGeneralOutputWindow().hide()
+
+	"""
+	User pressed Ctrl+PgUp
+	"""
 	def servertreeSelectUpper(self, widget):
 		path = widget.get_cursor()[0]
 
@@ -260,6 +280,9 @@ class tekkaMain(object):
 			row = model[(path[0],path[1]-1)]
 		self.switchTreeTab(row.path)
 
+	"""
+	User pressed Ctrl+PgDwn
+	"""
 	def servertreeSelectLower(self, widget):
 		path = widget.get_cursor()[0]
 
@@ -301,7 +324,7 @@ class tekkaMain(object):
 	"""
 	def openUrlWithBrowser(self, url):
 		browser = self.config.browser
-		arguments = self.config.browser_arguments or "%s"
+		arguments = self.config.browserArguments or "%s"
 		if not browser:
 			return
 		subprocess.call([browser, arguments % url], close_fds=True, env=os.environ)

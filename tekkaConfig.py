@@ -27,6 +27,7 @@ SUCH DAMAGE.
 
 import os
 import sys
+import ConfigParser
 
 class tekkaConfig(object):
 	def __init__(self):
@@ -39,8 +40,6 @@ class tekkaConfig(object):
 		self.gladefiles["mainwindow"] = prefix + "mainwindow.glade"
 		self.gladefiles["dialogs"] = prefix + "dialogs.glade"
 
-		# TODO: implement saving the window size after resizing
-		# x,y
 		self.windowSize = [400,500]
 
 		self.sidePosition = 0
@@ -62,6 +61,9 @@ class tekkaConfig(object):
 		# additional words to highlight on
 		self.highlightWords = []
 
+		self.generalOutput = True
+		self.generalOutputHeight = 100
+
 		self.lastLogLines = 10
 
 		# random nick colors
@@ -70,8 +72,55 @@ class tekkaConfig(object):
 		self.outputFont = "Monospace"
 
 		self.browser = "xdg-open"
-		self.browser_arguments = "%s"
-		# TODO: parse config file ~/.sushi/tekka.conf
+		self.browserArguments = "%s"
+
+		configParser = ConfigParser.ConfigParser()
+		success = configParser.read([os.path.expanduser('~/.sushi/config/tekka')])
+
+		if not success:
+			print "Failed to parse config file."
+			return
+		
+		# Generic colors
+		for (cName,cColor) in configParser.items("colors"):
+			if cColor[0] != "#":
+				print "Only hexadecimal colors supported."
+				continue
+			self.colors[cName] = cColor
+
+		# Nick colors
+		tmp = configParser.get("colors","nick_colors")
+		if tmp:
+			self.nickColors = tmp.split(",")
+			del self.colors["nick_colors"]
+
+		# General traffic window
+		trans = {
+			"show":"b#self.generalOutput",
+			"height":"i#self.generalOutputHeight"
+		}
+
+		self.transConfig(configParser, "general_output", trans)
+
+		# Tekka options
+
+		trans = {
+			"nick_seperator":"s#self.nickCompletionSeperator",
+			"highlightwords":"a#self.highlightWords",
+			"outputfont":"s#self.outputFont",
+			"lastloglines":"i#self.lastLogLines"
+		}
+
+		self.transConfig(configParser, "tekka", trans)
+
+		trans = {
+			"exec":"s#self.browser",
+			"args":"s#self.browserArguments"
+		}
+
+		self.transConfig(configParser, "browser", trans)
+
+		del trans
 
 	def getColor(self, name):
 		if not self.colors.has_key(name):
@@ -86,8 +135,29 @@ class tekkaConfig(object):
 			return self.shortcuts[startkey]
 		return None
 
-	def readConfig(self):
-		pass
+	def transConfig(self, configParser, cat, trans):
+		for (key,val) in configParser.items(cat):
+			if not trans.has_key(key):
+				print "Unknown variable: %s" % key
+				continue
+
+			rule = trans[key][0]
+			var = trans[key][2:]
+
+			if rule=="a":
+				exec('%s = val.split(",")' % var)
+			elif rule=="s":
+				exec('%s = val' % var)
+			elif rule=="b":
+				if val == "1" or val.lower() == "true":
+					exec('%s = True' % var)
+				else:
+					exec('%s = False' % var)
+			elif rule=="i":
+				try:
+					exec('%s = int(val)' % var)
+				except ValueError:
+					print "Wrong arg for key '%s'. int required." % key
 
 class tekkaConfigDialog(object):
 	def __init__(self):

@@ -32,7 +32,6 @@ translates them into gui-actions.
 """
 
 import dbus
-import re
 
 class tekkaSignals(object):
 	def __init__(self, com, gui):
@@ -44,9 +43,6 @@ class tekkaSignals(object):
 		if not self.sushi:
 			print "tekkaSignals: No sushi."
 			return
-
-		# URL regexp
-		self.urlExp = re.compile("(\w+)://[^, \t\"'<>]+")
 
 		# Message-Signals
 		self.sushi.connect_to_signal("message", self.userMessage)
@@ -193,35 +189,6 @@ class tekkaSignals(object):
 			return
 		nicklist.setPrefix(nick, self.com.fetchPrefix(server,channel,nick))
 
-	"""
-	searches for an URL in message and sets an <a>-tag arround
-	it, then returns the new string
-	"""
-	def _urlToTag(self, message):
-		lastEnd = 0
-		while True:
-			match = self.urlExp.search(message, lastEnd)
-			if not match:
-				break
-			mStart = match.start()
-			mEnd = match.end()
-
-			lastEnd = mStart
-
-			url = message[mStart:mEnd]
-
-			tagStart="<a href='%s'>" % url
-			tagEnd = "</a>"
-
-			msgStart = message[0:mStart]
-			msgEnd = message[mEnd:]
-
-			newUrl = tagStart + url + tagEnd
-			message = msgStart + newUrl + msgEnd
-
-			lastEnd += len(tagStart)+len(tagEnd)+len(url)
-		return message
-
 
 	"""
 	Returns a static color for nick @nick
@@ -345,7 +312,6 @@ class tekkaSignals(object):
 
 		color = self.getNickColor(nick)
 
-		message = self._urlToTag(message)
 		prefix = self.gui.getServertree().getObject(server,channel).getNicklist().getPrefix(nick)
 
 		self.gui.channelPrint(timestamp, server, channel, \
@@ -354,7 +320,6 @@ class tekkaSignals(object):
 
 	def ownMessage(self, timestamp, server, channel, message):
 		message = self.gui.escape(message)
-		message = self._urlToTag(message)
 
 		nick = self.com.getOwnNick(server)
 		prefix = self.gui.getServertree().getObject(server,channel).getNicklist().getPrefix(nick)

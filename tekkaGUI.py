@@ -34,6 +34,7 @@ import pango
 import gobject
 
 import time
+import re
 
 import htmlbuffer
 import tekkaChannel
@@ -648,6 +649,15 @@ class tekkaGUI(object):
 
 		self.history = tekkaHistory()
 
+		if self.config.generalOutput:
+			self.setupGeneralOutput()
+		else:
+			self.generalOutput = None
+			self.generalOutputWindow = None
+
+		# URL regexp
+		self.urlExp = re.compile("(\w+)://[^, \t\"'<>]+")
+
 	def setTitle(self, title):
 		self.window.set_title(title)
 
@@ -684,6 +694,12 @@ class tekkaGUI(object):
 	def getAccelGroup(self):
 		return self.accelGroup
 
+	def getGeneralOutput(self):
+		return self.generalOutput
+
+	def getGeneralOutputWindow(self):
+		return self.generalOutputWindow
+
 	""" SETUP ROUTINES """
 
 	def _setupAccelGroup(self):
@@ -713,6 +729,15 @@ class tekkaGUI(object):
 
 		self.nicklist.set_headers_visible(False)
 
+	def setupGeneralOutput(self):
+		self.generalOutputWindow = self.widgets.get_widget("sw_generalOutput")
+		self.generalOutput = self.widgets.get_widget("generalOutput")
+		self.generalOutput.set_property("height-request", \
+				self.config.generalOutputHeight)
+		buffer = htmlbuffer.htmlbuffer()
+		self.generalOutput.set_buffer(buffer)
+		self.generalOutputWindow.show_all()
+
 	def setOutputFont(self, fontname):
 		fd = pango.FontDescription()
 		fd.set_family(fontname)
@@ -737,10 +762,10 @@ class tekkaGUI(object):
 
 	""" PRINTING ROUTINES """
 
-	def scrollOutput(self, output):
+	def scrollOutput(self, textbox, output):
 		iter = output.get_end_iter()
 		mark = output.create_mark("scrollMark", iter, False)
-		self.textbox.scroll_mark_onscreen(mark)
+		textbox.scroll_mark_onscreen(mark)
 		output.delete_mark(mark)
 
 	def escape(self, msg):
@@ -752,9 +777,15 @@ class tekkaGUI(object):
 		msg = msg.replace(chr(1), "")
 		return msg
 
+	"""
+	Inserts a string formatted like "[H:M] <message>\n"
+	into the htmlbuffer of the channel `channel` on server
+	`server`.
+	"""
 	def channelPrint(self, timestamp, server, channel, message, type="message"):
 		timestring = time.strftime("%H:%M", time.localtime(timestamp))
 
+		message = self._urlToTag(message)
 		outputstring = "[%s] %s<br/>" % (timestring, message)
 
 		obj = self.servertree.getObject(server,channel)
@@ -769,9 +800,15 @@ class tekkaGUI(object):
 		enditer = output.get_end_iter()
 		output.insertHTML(enditer, outputstring)
 
+		if self.generalOutput:
+			buffer = self.generalOutput.get_buffer()
+			buffer.insertHTML(buffer.get_end_iter(), \
+					"[%s] &lt;%s:%s&gt; %s<br/>" % (timestring, server, channel, message))
+			self.scrollOutput(self.generalOutput, buffer)
+
 		# if channel is "activated"
 		if channel == self.servertree.getCurrentChannel()[1]:
-			self.scrollOutput(output)
+			self.scrollOutput(self.textbox, output)
 		else:
 			if type in obj.getNewMessage():
 				return
@@ -796,7 +833,7 @@ class tekkaGUI(object):
 
 		cserver,cchannel = self.servertree.getCurrentChannel()
 		if cserver == server and not cchannel:
-			self.scrollOutput(output)
+			self.scrollOutput(self.textbox, output)
 		else:
 			if type in obj.getNewMessage(): # don't need to repeat setting
 				return
@@ -814,7 +851,7 @@ class tekkaGUI(object):
 			output.insert(output.get_end_iter(), string+"\n")
 		else:
 			output.insertHTML(output.get_end_iter(), string+"<br/>")
-		self.scrollOutput(output)
+		self.scrollOutput(self.textbox, output)
 
 	# tekkaClear command method from tekkaCom:
 	# clears the output of the tekkaOutput widget
@@ -832,6 +869,36 @@ class tekkaGUI(object):
 		# clear the tagtable
 		tt = output.get_tag_table()
 		if tt: tt.foreach(lambda tag,data: data.remove(tag), tt)
+
+	
+	"""
+	searches for an URL in message and sets an <a>-tag arround
+	it, then returns the new string
+	"""
+	def _urlToTag(self, message):
+		lastEnd = 0
+		while True:
+			match = self.urlExp.search(message, lastEnd)
+			if not match:
+				break
+			mStart = match.start()
+			mEnd = match.end()
+
+			lastEnd = mStart
+
+			url = message[mStart:mEnd]
+
+			tagStart="<a href='%s'>" % url
+			tagEnd = "</a>"
+
+			msgStart = message[0:mStart]
+			msgEnd = message[mEnd:]
+
+			newUrl = tagStart + url + tagEnd
+			message = msgStart + newUrl + msgEnd
+
+			lastEnd += len(tagStart)+len(tagEnd)+len(url)
+		return message
 
 	#################################################################
 
