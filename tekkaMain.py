@@ -111,6 +111,7 @@ class tekkaMain(object):
 		self.gui.getServertree().connect("button-press-event", self.servertreeButtonPress)
 		self.gui.getInput().connect("key-press-event", self.userInputEvent)
 		self.gui.getOutput().connect("populate-popup", lambda w,x: x.destroy())
+		self.gui.getOutput().connect("button-press-event", self.setInputFocus)
 
 		# if mainwindow gets focus stop being urgent
 		self.gui.getWindow().connect("focus-in-event", lambda w,e: w.set_urgency_hint(False))
@@ -237,6 +238,13 @@ class tekkaMain(object):
 	"""
 	Widget-Signals
 	"""
+
+	"""
+	User clicked into the output field
+	"""
+	def setInputFocus(self, widget, event):
+		self.gui.getInput().set_property("has-focus",True)
+		return True
 
 	"""
 	User pressed Show -> Show general output
