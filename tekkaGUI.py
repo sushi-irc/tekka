@@ -651,6 +651,7 @@ class tekkaGUI(object):
 
 		if self.config.generalOutput:
 			self.setupGeneralOutput()
+			self.widgets.get_widget("showGeneralOutput").set_active(True)
 		else:
 			self.generalOutput = None
 			self.generalOutputWindow = None
