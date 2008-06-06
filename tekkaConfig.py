@@ -63,6 +63,7 @@ class tekkaConfig(object):
 
 		self.generalOutput = True
 		self.generalOutputHeight = 100
+		self.generalOutputFont = "Monospace"
 
 		self.lastLogLines = 10
 
@@ -97,7 +98,8 @@ class tekkaConfig(object):
 		# General traffic window
 		trans = {
 			"show":"b#self.generalOutput",
-			"height":"i#self.generalOutputHeight"
+			"height":"i#self.generalOutputHeight",
+			"font":"s#self.generalOutputFont"
 		}
 
 		self.transConfig(configParser, "general_output", trans)
@@ -147,6 +149,7 @@ class tekkaConfig(object):
 			if rule=="a":
 				exec('%s = val.split(",")' % var)
 			elif rule=="s":
+				val = val.replace('"','')
 				exec('%s = val' % var)
 			elif rule=="b":
 				if val == "1" or val.lower() == "true":

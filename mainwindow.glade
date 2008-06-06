@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.3 on Thu Jun  5 23:20:18 2008 -->
+<!--Generated with glade3 3.4.3 on Fri Jun  6 00:20:56 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="tekkaMainwindow">
     <property name="width_request">550</property>
@@ -8,7 +8,7 @@
     <property name="visible">True</property>
     <property name="title">tekka</property>
     <child>
-      <widget class="GtkVBox" id="vbox1">
+      <widget class="GtkVBox" id="mainVbox">
         <property name="visible">True</property>
         <child>
           <widget class="GtkMenuBar" id="menubar1">
@@ -101,7 +101,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <child>
-              <widget class="GtkVBox" id="vbox2">
+              <widget class="GtkVBox" id="outputVbox">
                 <property name="width_request">400</property>
                 <property name="visible">True</property>
                 <child>
@@ -117,7 +117,6 @@
                 <child>
                   <widget class="GtkVPaned" id="vpaned1">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
                     <child>
                       <widget class="GtkScrolledWindow" id="sw_generalOutput">
                         <property name="can_focus">True</property>
@@ -129,7 +128,6 @@
                             <property name="editable">False</property>
                             <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
                             <property name="cursor_visible">False</property>
-							<property name="can_focus">False</property>
                           </widget>
                         </child>
                       </widget>
@@ -184,7 +182,7 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkVPaned" id="vpaned2">
+              <widget class="GtkVPaned" id="listVbox">
                 <property name="width_request">150</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>

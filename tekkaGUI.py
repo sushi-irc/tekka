@@ -739,6 +739,10 @@ class tekkaGUI(object):
 		self.generalOutput.set_buffer(buffer)
 		self.generalOutputWindow.show_all()
 
+		fd = pango.FontDescription()
+		fd.set_family(self.config.generalOutputFont)
+		self.generalOutput.modify_font(fd)
+
 	def setOutputFont(self, fontname):
 		fd = pango.FontDescription()
 		fd.set_family(fontname)
