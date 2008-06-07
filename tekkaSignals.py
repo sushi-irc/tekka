@@ -305,8 +305,7 @@ class tekkaSignals(object):
 			highlight_pre = "<font foreground='#FF0000'>"
 			highlight_post = "</font>"
 
-			if not self.gui.getWindow().has_toplevel_focus():
-				self.gui.getWindow().set_urgency_hint(True)
+			self.gui.highlightWindow()
 		else:
 			type = "message"
 

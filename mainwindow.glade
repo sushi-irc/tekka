@@ -213,6 +213,7 @@
                     <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                     <child>
                       <widget class="GtkTreeView" id="tekkaNicklist">
+					    <property name="can_focus">False</property>
                         <property name="visible">True</property>
                         <property name="headers_clickable">True</property>
                         <signal name="button_press_event" handler="tekkaNicklist_button_press_event_cb"/>

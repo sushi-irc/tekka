@@ -649,6 +649,9 @@ class tekkaGUI(object):
 
 		self.history = tekkaHistory()
 
+		self.statusIcon = gtk.StatusIcon()
+		self.setupStatusIcon()
+
 		if self.config.generalOutput:
 			self.setupGeneralOutput()
 			self.widgets.get_widget("showGeneralOutput").set_active(True)
@@ -656,7 +659,7 @@ class tekkaGUI(object):
 			self.generalOutput = None
 			self.generalOutputWindow = None
 
-		# URL regexp
+		# URL regexp for tagging URLs
 		self.urlExp = re.compile("(\w+)://[^, \t\"'<>]+")
 
 	def setTitle(self, title):
@@ -701,6 +704,9 @@ class tekkaGUI(object):
 	def getGeneralOutputWindow(self):
 		return self.generalOutputWindow
 
+	def getStatusIcon(self):
+		return self.statusIcon
+
 	""" SETUP ROUTINES """
 
 	def _setupAccelGroup(self):
@@ -743,6 +749,9 @@ class tekkaGUI(object):
 		fd.set_family(self.config.generalOutputFont)
 		self.generalOutput.modify_font(fd)
 
+	def setupStatusIcon(self):
+		self.statusIcon.set_from_file(self.config.getPrefix()+"tekka.svg")
+
 	def setOutputFont(self, fontname):
 		fd = pango.FontDescription()
 		fd.set_family(fontname)
@@ -764,6 +773,16 @@ class tekkaGUI(object):
 
 		self.topicbar.set_text(obj.getTopic())
 
+	""" HIGHLIGHTING """
+	def highlightWindow(self):
+		if not self.getWindow().has_toplevel_focus():
+			self.getWindow().set_urgency_hint(True)
+			self.getStatusIcon().set_blinking(True)
+
+	def unhighlightWindow(self):
+		self.getWindow().set_urgency_hint(False)
+		self.getStatusIcon().set_blinking(False)
+		return True # if this is not True no widgets will be highlighted.. (FIXME)
 
 	""" PRINTING ROUTINES """
 

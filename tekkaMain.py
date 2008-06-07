@@ -114,15 +114,52 @@ class tekkaMain(object):
 		self.gui.getOutput().connect("button-press-event", self.setInputFocus)
 
 		# if mainwindow gets focus stop being urgent
-		self.gui.getWindow().connect("focus-in-event", lambda w,e: w.set_urgency_hint(False))
+		self.gui.getWindow().connect("focus-in-event", lambda w,e: self.gui.unhighlightWindow)
 
-	def _showServerDialog(self, widget):
-		serverlist = tekkaDialog.serverDialog(self)
-		result,server = serverlist.run()
-		if result == serverlist.RESPONSE_CONNECT:
-			print "we want to connect to server %s" % server
-			if server:
-				self.com.connect(server)
+		self.gui.getStatusIcon().connect("activate", self.statusIconActivate)
+
+	def initShortcuts(self):
+		servertree = self.gui.getServertree()
+		accelGroup = self.gui.getAccelGroup()
+
+		# Servertree shortcuts
+		for i in range(1,10):
+			gobject.signal_new("shortcut_%d" % i, tekkaGUI.tekkaServertree, \
+					gobject.SIGNAL_ACTION, None, ())
+			servertree.add_accelerator("shortcut_%d" % i, accelGroup, ord("%d" % i), \
+					gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
+			servertree.connect("shortcut_%d" % i, eval("self.shortcut_%d" % i))
+
+		# ctrl + pg up
+		gobject.signal_new("select_upper", tekkaGUI.tekkaServertree, \
+				gobject.SIGNAL_ACTION, None, ())
+		servertree.add_accelerator("select_upper", accelGroup, \
+				gtk.gdk.keyval_from_name("Page_Up"), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
+		servertree.connect("select_upper", self.servertreeSelectUpper)
+
+		# ctrl + pg up
+		gobject.signal_new("select_lower", tekkaGUI.tekkaServertree, \
+				gobject.SIGNAL_ACTION, None, ())
+		servertree.add_accelerator("select_lower", accelGroup, \
+				gtk.gdk.keyval_from_name("Page_Down"), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
+		servertree.connect("select_lower", self.servertreeSelectLower)
+
+		# Input shortcuts
+		input = self.gui.getInput()
+
+		# clear input field by ctrl+u
+		gobject.signal_new("clearInput", gtk.Entry, gobject.SIGNAL_ACTION, None, ())
+		input.add_accelerator("clearInput", accelGroup, ord("u"), \
+				gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
+		input.connect("clearInput", lambda w: w.set_text(""))
+
+		# Topicbar shortcuts (FIXME: make this working)
+		topicbar = self.gui.getTopicbar()
+		topicbar.add_accelerator("clearInput", accelGroup, ord("u"), \
+				gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
+		topicbar.connect("clearInput", lambda w: w.set_text(""))
+
+
 
 	"""
 	Change the current servertree tab to the tab identified by "path"
@@ -194,24 +231,6 @@ class tekkaMain(object):
 
 		self.switchTreeTab(path)
 
-	def initShortcuts(self):
-		servertree = self.gui.getServertree()
-		accelGroup = self.gui.getAccelGroup()
-		for i in range(1,10):
-			gobject.signal_new("shortcut_%d" % i, tekkaGUI.tekkaServertree, gobject.SIGNAL_ACTION, None, ())
-			servertree.add_accelerator("shortcut_%d" % i, accelGroup, ord("%d" % i), gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
-			servertree.connect("shortcut_%d" % i, eval("self.shortcut_%d" % i))
-
-		# ctrl + pg up
-		gobject.signal_new("select_upper", tekkaGUI.tekkaServertree, gobject.SIGNAL_ACTION, None, ())
-		servertree.add_accelerator("select_upper", accelGroup, gtk.gdk.keyval_from_name("Page_Up"), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
-		servertree.connect("select_upper", self.servertreeSelectUpper)
-
-		# ctrl + pg up
-		gobject.signal_new("select_lower", tekkaGUI.tekkaServertree, gobject.SIGNAL_ACTION, None, ())
-		servertree.add_accelerator("select_lower", accelGroup, gtk.gdk.keyval_from_name("Page_Down"), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
-		servertree.connect("select_lower", self.servertreeSelectLower)
-
 
 
 	"""
@@ -238,6 +257,12 @@ class tekkaMain(object):
 	"""
 	Widget-Signals
 	"""
+
+	"""
+	User clicked on the status icon
+	"""
+	def statusIconActivate(self, widget):
+		self.gui.unhighlightWindow()
 
 	"""
 	User clicked into the output field

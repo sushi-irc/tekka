@@ -34,11 +34,11 @@ class tekkaConfig(object):
 		self.useExternalDBus = False
 		self.busAdress = "tcp:host=192.168.1.101,port=3333"
 
-		prefix = (os.sep.join(sys.argv[0].split(os.sep)[:-1]) or ".") + "/"
+		self.prefix = (os.sep.join(sys.argv[0].split(os.sep)[:-1]) or ".") + "/"
 
 		self.gladefiles = {}
-		self.gladefiles["mainwindow"] = prefix + "mainwindow.glade"
-		self.gladefiles["dialogs"] = prefix + "dialogs.glade"
+		self.gladefiles["mainwindow"] = self.prefix + "mainwindow.glade"
+		self.gladefiles["dialogs"] = self.prefix + "dialogs.glade"
 
 		self.windowSize = [400,500]
 
@@ -136,6 +136,9 @@ class tekkaConfig(object):
 		if self.shortcuts.has_key(startkey):
 			return self.shortcuts[startkey]
 		return None
+
+	def getPrefix(self):
+		return self.prefix
 
 	def transConfig(self, configParser, cat, trans):
 		for (key,val) in configParser.items(cat):
