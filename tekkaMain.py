@@ -116,7 +116,8 @@ class tekkaMain(object):
 		# if mainwindow gets focus stop being urgent
 		self.gui.getWindow().connect("focus-in-event", lambda w,e: False or self.gui.unhighlightWindow())
 
-		self.gui.getStatusIcon().connect("activate", self.statusIconActivate)
+		if self.gui.getStatusIcon():
+			self.gui.getStatusIcon().connect("activate", self.statusIconActivate)
 
 	def initShortcuts(self):
 		servertree = self.gui.getServertree()

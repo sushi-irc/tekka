@@ -642,8 +642,7 @@ class tekkaGUI(object):
 		self.servertree.expand_all()
 
 		self.textbox = self.widgets.get_widget("tekkaOutput")
-		self.textbox.set_cursor_visible(False)
-		self.setOutputFont(self.config.outputFont)
+		self.setOutputFont(self.textbox, self.config.outputFont)
 
 		self.textentry = self.widgets.get_widget("tekkaInput")
 		self.textentry.set_property("can-focus",True)
@@ -749,20 +748,20 @@ class tekkaGUI(object):
 		self.generalOutput.set_buffer(buffer)
 		self.generalOutputWindow.show_all()
 
-		fd = pango.FontDescription()
-		fd.set_family(self.config.generalOutputFont)
-		self.generalOutput.modify_font(fd)
+		self.setOutputFont(self.generalOutput, self.config.generalOutputFont)
 
 	def setupStatusIcon(self):
 		if self.config.trayicon:
 			self.statusIcon.set_from_file(self.config.getPrefix()+"tekka.svg")
+		else:
+			self.statusIcon = None
 
-	def setOutputFont(self, fontname):
+	def setOutputFont(self, textbox, fontname):
 		fd = pango.FontDescription()
 		fd.set_family(fontname)
 		if not fd:
 			return
-		self.textbox.modify_font(fd)
+		textbox.modify_font(fd)
 
 	""" TOPIC BAR METHODS """
 
@@ -782,11 +781,13 @@ class tekkaGUI(object):
 	def highlightWindow(self):
 		if not self.getWindow().has_toplevel_focus():
 			self.getWindow().set_urgency_hint(True)
-			self.getStatusIcon().set_blinking(True)
+			if self.getStatusIcon():
+				self.getStatusIcon().set_blinking(True)
 
 	def unhighlightWindow(self):
 		self.getWindow().set_urgency_hint(False)
-		self.getStatusIcon().set_blinking(False)
+		if self.getStatusIcon():
+			self.getStatusIcon().set_blinking(False)
 
 	""" PRINTING ROUTINES """
 
