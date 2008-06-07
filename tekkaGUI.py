@@ -613,6 +613,7 @@ class tekkaHistory(object):
 class tekkaGUI(object):
 	STATUSBAR_IDLE=1
 	STATUSBAR_CONNECTING=2
+	STATUSBAR_NOMAKI=3
 
 	def __init__(self, config):
 		self.config = config
@@ -788,6 +789,25 @@ class tekkaGUI(object):
 		self.getWindow().set_urgency_hint(False)
 		if self.getStatusIcon():
 			self.getStatusIcon().set_blinking(False)
+
+	""" SENSITIVITY """
+
+	"""
+	Makes all widgets which send or receive signals
+	insensitive
+	"""
+	def makeWidgetsInsensitive(self):
+		widgets = [self.getInput(), self.getOutput(), self.getTopicbar()]
+		for widget in widgets:
+			widget.set_sensitive(False)
+
+	"""
+	Reverse of makeWidgetsInsensitive()
+	"""
+	def makeWidgetsSensitive(self):
+		widgets = [self.getInput(), self.getOutput(), self.getTopicbar()]
+		for widget in widgets:
+			widget.set_sensitive(True)
 
 	""" PRINTING ROUTINES """
 

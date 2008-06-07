@@ -51,9 +51,7 @@ class tekkaMain(object):
 		self.gui = tekkaGUI.tekkaGUI(self.config)
 		self.plugins = tekkaPlugins.tekkaPlugins(self.config)
 
-		if not self.com.connectMaki():
-			print "Connection to maki failed."
-			sys.exit(1)
+		self.connectToMaki()
 
 		self.gui.getServertree().setUrlHandler(self.urlHandler)
 
@@ -90,6 +88,7 @@ class tekkaMain(object):
 	def _setupSignals(self, widgets):
 		sigdic = {
 				   "showGeneralOutput_toggled_cb" : self.toggleGeneralOutput,
+				   "makiConnect_activate_cb" : lambda w: self.connectToMaki(),
 				   "tekkaMainwindow_Quit_activate_cb" : gtk.main_quit,
 				   "tekkaInput_activate_cb" : self.userInput,
 				   "tekkaTopic_activate_cb" : self.topicbarActivate,
@@ -160,6 +159,24 @@ class tekkaMain(object):
 				gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
 		topicbar.connect("clearInput", lambda w: w.set_text(""))
 
+	"""
+	tries to connect to maki via dbus,
+	if successful it would reset tekkasignal and tekkacommand
+	with new connection. else it will deactivate all widgets
+	they would interact with maki
+	"""
+	def connectToMaki(self):
+		if not self.com.connectMaki():
+			print "connection failed"
+			self.gui.makeWidgetsInsensitive()
+			self.gui.getStatusbar().pop(self.gui.STATUSBAR_NOMAKI)
+			self.gui.getStatusbar().push(self.gui.STATUSBAR_NOMAKI, "No connection to maki.")
+		else:
+			print "success!"
+			self.gui.makeWidgetsSensitive()
+			self.gui.getStatusbar().pop(self.gui.STATUSBAR_NOMAKI)
+			self.signals = tekkaSignals(self.com, self.gui)
+			self.commands = tekkaCommands(self.com, self.gui)
 
 
 	"""
@@ -688,6 +705,9 @@ class tekkaMain(object):
 	"Connect" in the main-menu was clicked
 	"""
 	def showServerDialog(self, widget):
+		if not self.com.getSushi():
+			print "No connection, dialog couldn't be showed."
+			return
 		serverlist = tekkaDialog.serverDialog(self)
 		result,server = serverlist.run()
 		if result == serverlist.RESPONSE_CONNECT:

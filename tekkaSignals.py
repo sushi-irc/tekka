@@ -261,9 +261,9 @@ class tekkaSignals(object):
 
 	def makiShutdownSignal(self, time):
 		self.gui.myPrint("Maki is shutting down!")
-		for server in self.gui.getServers():
+		for server in self.gui.getServertree().getServers():
 			self.gui.removeServer(server)
-			self.com.quitServer(server)
+		self.gui.makeWidgetsInsensitive()
 
 	""" USER SIGNALS """
 

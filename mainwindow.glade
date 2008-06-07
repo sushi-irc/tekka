@@ -30,6 +30,14 @@
                         <signal name="activate" handler="tekkaMainwindow_Connect_activate_cb"/>
                       </widget>
                     </child>
+					<child>
+					  <widget class="GtkImageMenuItem" id="menuMakiConnect">
+					    <property name="visible">True</property>
+						<property name="label" translatable="yes">Connect to maki</property>
+						<property name="use_underline">True</property>
+						<signal name="activate" handler="makiConnect_activate_cb"/>
+					  </widget>
+					</child>
                     <child>
                       <widget class="GtkImageMenuItem" id="tekkaMainWindow_MenuTekka_Shutdown">
                         <property name="visible">True</property>
