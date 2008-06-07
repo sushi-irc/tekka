@@ -85,17 +85,24 @@ class tekkaConfig(object):
 			return
 		
 		# Generic colors
-		for (cName,cColor) in configParser.items("colors"):
-			if cColor[0] != "#":
-				print "Only hexadecimal colors supported."
-				continue
-			self.colors[cName] = cColor
+		try:
+			items = configParser.items("colors")
+		except ConfigParser.NoSectionError:
+			pass
+		else:
+			for (cName,cColor) in items:
+				if cColor[0] != "#":
+					print "Only hexadecimal colors supported."
+					continue
+				self.colors[cName] = cColor
 
 		# Nick colors
-		tmp = configParser.get("colors","nick_colors")
-		if tmp:
+		try:
+			tmp = configParser.get("colors","nick_colors")
 			self.nickColors = tmp.split(",")
 			del self.colors["nick_colors"]
+		except ConfigParser.NoSectionError:
+			pass
 
 		# General traffic window
 		trans = {
