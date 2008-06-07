@@ -284,13 +284,13 @@ class tekkaMain(object):
 			self.gui.unhighlightWindow()
 			self.gui.getWindow().show_all()
 			# focus the input field
-			self.gui.getInput().set_property("has-focus",True)
+			self.gui.getInput().grab_focus()
 
 	"""
 	User clicked into the output field
 	"""
 	def setInputFocus(self, widget, event):
-		self.gui.getInput().set_property("has-focus",True)
+		self.gui.getInput().grab_focus()
 		return True
 
 	"""
