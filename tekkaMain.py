@@ -114,7 +114,7 @@ class tekkaMain(object):
 		self.gui.getOutput().connect("button-press-event", self.setInputFocus)
 
 		# if mainwindow gets focus stop being urgent
-		self.gui.getWindow().connect("focus-in-event", lambda w,e: self.gui.unhighlightWindow)
+		self.gui.getWindow().connect("focus-in-event", lambda w,e: False or self.gui.unhighlightWindow())
 
 		self.gui.getStatusIcon().connect("activate", self.statusIconActivate)
 
@@ -228,9 +228,7 @@ class tekkaMain(object):
 
 	""" Wrapper for shortcut functionality """
 	def switchTabByKey(self, path):
-
 		self.switchTreeTab(path)
-
 
 
 	"""
@@ -262,7 +260,11 @@ class tekkaMain(object):
 	User clicked on the status icon
 	"""
 	def statusIconActivate(self, widget):
-		self.gui.unhighlightWindow()
+		if self.gui.getWindow().get_property("visible"):
+			self.gui.getWindow().hide_all()
+		else:
+			self.gui.unhighlightWindow()
+			self.gui.getWindow().show_all()
 
 	"""
 	User clicked into the output field

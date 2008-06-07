@@ -67,6 +67,8 @@ class tekkaConfig(object):
 
 		self.lastLogLines = 10
 
+		self.trayicon = True
+
 		# random nick colors
 		self.nickColors=["#AA0000","#2222AA","#44AA44","#123456","#987654"]
 
@@ -122,6 +124,12 @@ class tekkaConfig(object):
 
 		self.transConfig(configParser, "browser", trans)
 
+		trans = {
+			"show":"b#self.trayicon"
+		}
+
+		self.transConfig(configParser, "trayicon", trans)
+
 		del trans
 
 	def getColor(self, name):
@@ -141,7 +149,13 @@ class tekkaConfig(object):
 		return self.prefix
 
 	def transConfig(self, configParser, cat, trans):
-		for (key,val) in configParser.items(cat):
+		try:
+			items = configParser.items(cat)
+		except Exception,e:
+			print e
+			return
+
+		for (key,val) in items:
 			if not trans.has_key(key):
 				print "Unknown variable: %s" % key
 				continue

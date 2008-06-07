@@ -620,6 +620,7 @@ class tekkaGUI(object):
 		self.widgets = gtk.glade.XML(self.config.gladefiles["mainwindow"], "tekkaMainwindow")
 
 		self.window = self.widgets.get_widget("tekkaMainwindow")
+		self.setupWindow()
 
 		self.accelGroup = gtk.AccelGroup()
 		self._setupAccelGroup()
@@ -709,6 +710,9 @@ class tekkaGUI(object):
 
 	""" SETUP ROUTINES """
 
+	def setupWindow(self):
+		self.window.set_icon_from_file(self.config.getPrefix()+"tekka.svg")
+
 	def _setupAccelGroup(self):
 		window = self.widgets.get_widget("tekkaMainwindow")
 		window.add_accel_group(self.accelGroup)
@@ -750,7 +754,8 @@ class tekkaGUI(object):
 		self.generalOutput.modify_font(fd)
 
 	def setupStatusIcon(self):
-		self.statusIcon.set_from_file(self.config.getPrefix()+"tekka.svg")
+		if self.config.trayicon:
+			self.statusIcon.set_from_file(self.config.getPrefix()+"tekka.svg")
 
 	def setOutputFont(self, fontname):
 		fd = pango.FontDescription()
@@ -782,7 +787,6 @@ class tekkaGUI(object):
 	def unhighlightWindow(self):
 		self.getWindow().set_urgency_hint(False)
 		self.getStatusIcon().set_blinking(False)
-		return True # if this is not True no widgets will be highlighted.. (FIXME)
 
 	""" PRINTING ROUTINES """
 
