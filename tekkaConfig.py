@@ -69,6 +69,8 @@ class tekkaConfig(object):
 
 		self.trayicon = True
 
+		self.showStatusBar = True
+
 		# random nick colors
 		self.nickColors=["#AA0000","#2222AA","#44AA44","#123456","#987654"]
 
@@ -78,7 +80,7 @@ class tekkaConfig(object):
 		self.browserArguments = "%s"
 
 		configParser = ConfigParser.ConfigParser()
-		success = configParser.read([os.path.expanduser('~/.sushi/config/tekka')])
+		success = configParser.read(['%s/sushi/config/tekka' % self.getXDGConfigHome()])
 
 		if not success:
 			print "Failed to parse config file."
@@ -119,7 +121,8 @@ class tekkaConfig(object):
 			"nick_seperator":"s#self.nickCompletionSeperator",
 			"highlightwords":"a#self.highlightWords",
 			"outputfont":"s#self.outputFont",
-			"lastloglines":"i#self.lastLogLines"
+			"lastloglines":"i#self.lastLogLines",
+			"showstatusbar":"b#self.showStatusBar"
 		}
 
 		self.transConfig(configParser, "tekka", trans)
@@ -154,6 +157,12 @@ class tekkaConfig(object):
 
 	def getPrefix(self):
 		return self.prefix
+
+	def getXDGConfigHome(self):
+		try:
+			return os.environ["XDG_CONFIG_HOME"]
+		except KeyError:
+			return os.path.expanduser("~/.config")
 
 	def transConfig(self, configParser, cat, trans):
 		try:

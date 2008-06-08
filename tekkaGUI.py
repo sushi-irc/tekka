@@ -640,7 +640,10 @@ class tekkaGUI(object):
 		self.statusBar = self.widgets.get_widget("statusbar")
 		self.statusBar.push(self.STATUSBAR_IDLE,"Acting as IRC-client")
 
-		self.widgets.get_widget("showStatusBar").set_active(True)
+		if not self.config.showStatusBar:
+			self.statusBar.hide()
+		else:
+			self.widgets.get_widget("showStatusBar").set_active(True)
 
 		self.servertree.expand_all()
 
@@ -845,7 +848,7 @@ class tekkaGUI(object):
 			self.getNickList().set_model(None)
 			self.getTopicBar().set_property("visible",False)
 
-			self.gui.setWindowTitle(server)
+			self.setWindowTitle(server)
 
 		# a channel tab is selected
 		elif srow and crow:
