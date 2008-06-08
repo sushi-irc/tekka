@@ -32,7 +32,7 @@ class tekkaCommands(object):
 		self.com = tekkaCom
 		self.gui = tekkaGUI
 
-		self.sctree = self.gui.getServertree()
+		self.sctree = self.gui.getServerTree()
 
 		self.commands = {
 		 "connect" : self.makiConnect,
@@ -71,7 +71,7 @@ class tekkaCommands(object):
 				text = text[1:]
 			if not server or not channel:
 				return
-			obj = self.gui.getServertree().getObject(server)
+			obj = self.gui.getServerTree().getObject(server)
 			if obj.getAway():
 				msg = obj.getAwayMessage()
 				if msg:
@@ -90,7 +90,7 @@ class tekkaCommands(object):
 		cmd = command.split(" ")
 		if not self.commands.has_key(cmd[0]):
 			# if command now known send it raw to the server
-			server = self.gui.getServertree().getCurrentServer()
+			server = self.gui.getServerTree().getCurrentServer()
 			if not server:
 				return
 			cmd[0] = cmd[0].upper()
@@ -109,7 +109,7 @@ class tekkaCommands(object):
 
 	def makiQuit(self, xargs):
 		if not xargs:
-			server = self.gui.getServertree().getCurrentServer()
+			server = self.gui.getServerTree().getCurrentServer()
 			if not server:
 				self.gui.myPrint("Could not determine server.")
 				return
@@ -121,7 +121,7 @@ class tekkaCommands(object):
 			self.com.quitServer(xargs[0], reason)
 
 	def makiNick(self, xargs):
-		server = self.gui.getServertree().getCurrentServer()
+		server = self.gui.getServerTree().getCurrentServer()
 
 		if not xargs:
 			self.gui.myPrint("Usage: /nick <new nick>")
@@ -134,7 +134,7 @@ class tekkaCommands(object):
 		self.com.nick(server, xargs[0])
 
 	def makiPart(self, xargs, server=None):
-		cserver,cchannel = self.gui.getServertree().getCurrentChannel()
+		cserver,cchannel = self.gui.getServerTree().getCurrentChannel()
 		if not server:
 			if not cserver:
 				self.myPrint("Could not determine my current server.")
@@ -159,7 +159,7 @@ class tekkaCommands(object):
 		self.com.part(server, channel, reason)
 
 	def makiJoin(self, xargs):
-		server = self.gui.getServertree().getCurrentServer()
+		server = self.gui.getServerTree().getCurrentServer()
 		if not server:
 			self.gui.myPrint("Can't determine server.")
 			return
@@ -176,7 +176,7 @@ class tekkaCommands(object):
 			self.gui.myPrint("Usage: /me <text>")
 			return
 
-		server,channel = self.gui.getServertree().getCurrentChannel()
+		server,channel = self.gui.getServerTree().getCurrentChannel()
 
 		if not server or not channel:
 			self.gui.myPrint("No channel joined.")
@@ -189,7 +189,7 @@ class tekkaCommands(object):
 			self.gui.myPrint("Usage: /kick <who>")
 			return
 
-		server,channel = self.gui.getServertree().getCurrentChannel()
+		server,channel = self.gui.getServerTree().getCurrentChannel()
 		if not server:
 			self.myPrint("Can't determine server")
 			return
@@ -207,7 +207,7 @@ class tekkaCommands(object):
 		if not xargs or len(xargs) < 2:
 			self.gui.myPrint("Usage: /mode <target> (+|-)<mode> [param]")
 			return
-		server = self.gui.getServertree().getCurrentServer()
+		server = self.gui.getServerTree().getCurrentServer()
 		if not server:
 			self.myPrint("could not determine server.")
 			return
@@ -223,7 +223,7 @@ class tekkaCommands(object):
 		else:
 			topic = " ".join(xargs)
 
-		server,channel = self.gui.getServertree().getCurrentChannel()
+		server,channel = self.gui.getServerTree().getCurrentChannel()
 
 		if not server or not channel:
 			self.myPrint("Where should i set the topic?")
@@ -236,7 +236,7 @@ class tekkaCommands(object):
 			self.makiBack(xargs)
 			return
 
-		s = self.gui.getServertree().getCurrentServer()
+		s = self.gui.getServerTree().getCurrentServer()
 		if not s:
 			self.myPrint("Can't determine server.")
 			return
@@ -244,7 +244,7 @@ class tekkaCommands(object):
 		self.com.setAway(s," ".join(xargs))
 
 	def makiBack(self, xargs):
-		s = self.gui.getServertree().getCurrentServer()
+		s = self.gui.getServerTree().getCurrentServer()
 		if not s:
 			self.gui.myPrint("Can't determine server.")
 			return
@@ -254,7 +254,7 @@ class tekkaCommands(object):
 		if not xargs or len(xargs) < 2:
 			self.gui.myPrint("Usage: /ctcp <target> <message>")
 			return
-		server = self.gui.getServertree().getCurrentServer()
+		server = self.gui.getServerTree().getCurrentServer()
 		if not server:
 			self.gui.myPrint("Could not determine server.")
 			return
@@ -265,7 +265,7 @@ class tekkaCommands(object):
 			self.gui.myPrint("Usage: /notice <target> <message>")
 			return
 
-		server = self.gui.getServertree().getCurrentServer()
+		server = self.gui.getServerTree().getCurrentServer()
 		if not server:
 			self.gui.myPrint("Could not determine server.")
 			return
@@ -277,7 +277,7 @@ class tekkaCommands(object):
 			self.gui.myPrint("Usage: /oper <user> <pass>")
 			return
 
-		server = self.gui.getServertree().getCurrentServer()
+		server = self.gui.getServerTree().getCurrentServer()
 		if not server:
 			self.gui.myPrint("Could not determine server.")
 			return
@@ -289,7 +289,7 @@ class tekkaCommands(object):
 			self.gui.myPrint("Usage: /kill <user> <reason>")
 			return
 
-		server = self.gui.getServertree().getCurrentServer()
+		server = self.gui.getServerTree().getCurrentServer()
 		if not server:
 			self.gui.myPrint("Could not determine server.")
 			return
@@ -297,7 +297,7 @@ class tekkaCommands(object):
 		self.com.kill(server, xargs[0], xargs[1])
 
 	def makiList(self, xargs):
-		server = self.gui.getServertree().getCurrentServer()
+		server = self.gui.getServerTree().getCurrentServer()
 		if not server:
 			self.gui.myPrint("Could not determine server.")
 			return
@@ -314,7 +314,7 @@ class tekkaCommands(object):
 			self.gui.myPrint("Usage: /raw <command>")
 			return
 
-		server = self.gui.getServertree().getCurrentServer()
+		server = self.gui.getServerTree().getCurrentServer()
 		if not server:
 			self.gui.myPrint("Could not determine server.")
 			return
@@ -329,17 +329,17 @@ class tekkaCommands(object):
 			self.myPrint("Usage: /query <nick>")
 			return
 
-		server, channel = self.gui.getServertree().getCurrentChannel()
+		server, channel = self.gui.getServerTree().getCurrentChannel()
 
 		if not server:
 			self.myPrint("query who on which server?")
 			return
 
-		if not self.gui.getServertree().getChannel(server,xargs[0],sens=False):
-			ret,iter = self.gui.getServertree().addChannel(server, xargs[0])
+		if not self.gui.getServerTree().getChannel(server,xargs[0],sens=False):
+			ret,iter = self.gui.getServerTree().addChannel(server, xargs[0])
 
 			# print history
-			servertree = self.gui.getServertree()
+			servertree = self.gui.getServerTree()
 			model = servertree.get_model()
 			path = model.get_path(iter)
 			obj = model[path][servertree.COLUMN_OBJECT]

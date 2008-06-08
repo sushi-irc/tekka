@@ -51,16 +51,16 @@ class tekkaMain(object):
 		self.gui = tekkaGUI.tekkaGUI(self.config)
 		self.plugins = tekkaPlugins.tekkaPlugins(self.config)
 
-		self.connectToMaki()
+		self.gui.getServerTree().setUrlHandler(self.urlHandler)
 
-		self.gui.getServertree().setUrlHandler(self.urlHandler)
+		self.connectToMaki()
 
 		if self.gui.getGeneralOutput():
 			self.gui.getGeneralOutput().get_buffer().setUrlHandler(self.urlHandler)
 
 		self._setupSignals(self.gui.getWidgets())
 
-		self.gui.getServertree().expand_all()
+		self.gui.getServerTree().expand_all()
 
 		self.initShortcuts()
 
@@ -105,7 +105,7 @@ class tekkaMain(object):
 		if widget:
 			widget.connect("activate", gtk.main_quit)
 
-		self.gui.getServertree().connect("button-press-event", self.servertreeButtonPress)
+		self.gui.getServerTree().connect("button-press-event", self.servertreeButtonPress)
 		self.gui.getInput().connect("key-press-event", self.userInputEvent)
 		self.gui.getOutput().connect("populate-popup", lambda w,x: x.destroy())
 		self.gui.getOutput().connect("button-press-event", self.setInputFocus)
@@ -117,7 +117,7 @@ class tekkaMain(object):
 			self.gui.getStatusIcon().connect("activate", self.statusIconActivate)
 
 	def initShortcuts(self):
-		servertree = self.gui.getServertree()
+		servertree = self.gui.getServerTree()
 		accelGroup = self.gui.getAccelGroup()
 
 		# Servertree shortcuts
@@ -336,23 +336,23 @@ class tekkaMain(object):
 
 	""" Keyboard shortcut signals (alt+[1-9]) """
 	def shortcut_1(self,w):
-		self.switchTabByKey(self.gui.getServertree().getShortcut("1"))
+		self.switchTabByKey(self.gui.getServerTree().getShortcut("1"))
 	def shortcut_2(self,w):
-		self.switchTabByKey(self.gui.getServertree().getShortcut("2"))
+		self.switchTabByKey(self.gui.getServerTree().getShortcut("2"))
 	def shortcut_3(self,w):
-		self.switchTabByKey(self.gui.getServertree().getShortcut("3"))
+		self.switchTabByKey(self.gui.getServerTree().getShortcut("3"))
 	def shortcut_4(self,w):
-		self.switchTabByKey(self.gui.getServertree().getShortcut("4"))
+		self.switchTabByKey(self.gui.getServerTree().getShortcut("4"))
 	def shortcut_5(self,w):
-		self.switchTabByKey(self.gui.getServertree().getShortcut("5"))
+		self.switchTabByKey(self.gui.getServerTree().getShortcut("5"))
 	def shortcut_6(self,w):
-		self.switchTabByKey(self.gui.getServertree().getShortcut("6"))
+		self.switchTabByKey(self.gui.getServerTree().getShortcut("6"))
 	def shortcut_7(self,w):
-		self.switchTabByKey(self.gui.getServertree().getShortcut("7"))
+		self.switchTabByKey(self.gui.getServerTree().getShortcut("7"))
 	def shortcut_8(self,w):
-		self.switchTabByKey(self.gui.getServertree().getShortcut("8"))
+		self.switchTabByKey(self.gui.getServerTree().getShortcut("8"))
 	def shortcut_9(self,w):
-		self.switchTabByKey(self.gui.getServertree().getShortcut("9"))
+		self.switchTabByKey(self.gui.getServerTree().getShortcut("9"))
 
 	"""
 	A button in the servertree was pressed.
@@ -363,7 +363,7 @@ class tekkaMain(object):
 		if not path or not len(path):
 			return
 
-		servertree = self.gui.getServertree()
+		servertree = self.gui.getServerTree()
 		srow,crow = servertree.getRowFromPath(path[0])
 
 		# left click -> activate tab
@@ -432,7 +432,7 @@ class tekkaMain(object):
 	"""
 	def userInput(self, widget):
 		text =  widget.get_text()
-		server,channel = self.gui.getServertree().getCurrentChannel()
+		server,channel = self.gui.getServerTree().getCurrentChannel()
 		self.gui.getHistory().append(server, channel,text)
 		self.commands.sendMessage(server, channel, text)
 		widget.set_text("")
@@ -441,7 +441,7 @@ class tekkaMain(object):
 	A nick in the nicklist was double clicked
 	"""
 	def nicklistActivateRow(self, treeview, path, parm1):
-		servertree = self.gui.getServertree()
+		servertree = self.gui.getServerTree()
 		server = servertree.getCurrentServer()
 		if not server:
 			return
@@ -459,12 +459,12 @@ class tekkaMain(object):
 		path = widget.get_path_at_pos(int(event.x), int(event.y))
 		if not path or not len(path):
 			return
-		srow,crow = self.gui.getServertree().getCurrentRow()
+		srow,crow = self.gui.getServerTree().getCurrentRow()
 
 		if not crow:
 			return
 
-		nicklist = crow[self.gui.getServertree().COLUMN_OBJECT].getNickList()
+		nicklist = crow[self.gui.getServerTree().COLUMN_OBJECT].getNickList()
 		nickrow = nicklist[path[0]]
 
 		# left click -> activate tab
@@ -555,7 +555,7 @@ class tekkaMain(object):
 		name = gtk.gdk.keyval_name( event.keyval )
 
 		if name == "Up":
-			server,channel = self.gui.getServertree().getCurrentChannel()
+			server,channel = self.gui.getServerTree().getCurrentChannel()
 			text = self.gui.getHistory().getUp(server,channel)
 
 			widget.set_text(text)
@@ -563,7 +563,7 @@ class tekkaMain(object):
 			return True
 
 		elif name == "Down":
-			server,channel = self.gui.getServertree().getCurrentChannel()
+			server,channel = self.gui.getServerTree().getCurrentChannel()
 			text = self.gui.getHistory().getDown(server,channel)
 
 			widget.set_text(text)
@@ -571,9 +571,9 @@ class tekkaMain(object):
 			return True
 
 		if name == "Tab":
-			s,c = self.gui.getServertree().getCurrentRow()
+			s,c = self.gui.getServerTree().getCurrentRow()
 			if s or c:
-				obj = c[self.gui.getServertree().COLUMN_OBJECT]
+				obj = c[self.gui.getServerTree().COLUMN_OBJECT]
 				if not obj:
 					return True
 
@@ -588,7 +588,7 @@ class tekkaMain(object):
 				result = None
 
 				if needle[0] == "#": # channel completion
-					channels = self.gui.getServertree().searchTab(s.iterchildren(),needle.lower())
+					channels = self.gui.getServerTree().searchTab(s.iterchildren(),needle.lower())
 					if channels:
 						result = channels[0] + " "
 				elif needle[0] == "/": # command completion
@@ -623,7 +623,7 @@ class tekkaMain(object):
 	"Close tab" in servertree contextmenu was clicked
 	"""
 	def _menuRemoveTab(self, w, server, channel):
-		servertree = self.gui.getServertree()
+		servertree = self.gui.getServerTree()
 		cs,cc = servertree.getCurrentChannel()
 
 		if not server and not channel:

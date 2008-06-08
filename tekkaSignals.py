@@ -84,7 +84,7 @@ class tekkaSignals(object):
 		self.initServers()
 
 	def initServers(self):
-		servertree = self.gui.getServertree()
+		servertree = self.gui.getServerTree()
 		for server in self.com.fetchServers():
 
 			servertree.addServer(server)
@@ -102,9 +102,9 @@ class tekkaSignals(object):
 			nicks = self.com.fetchNicks(server, channel)
 			topic = self.sushi.channel_topic(server, channel)
 
-			ret,iter = self.gui.getServertree().addChannel(server, channel, nicks, topic)
+			ret,iter = self.gui.getServerTree().addChannel(server, channel, nicks, topic)
 
-			obj = self.gui.getServertree().getObject(server,channel)
+			obj = self.gui.getServerTree().getObject(server,channel)
 			nicklist = obj.getNickList()
 
 			# channel already existant, settings
@@ -122,7 +122,7 @@ class tekkaSignals(object):
 	""" HELPER """
 
 	def lastLog(self, server, channel, lines=0):
-		obj = self.gui.getServertree().getObject(server,channel)
+		obj = self.gui.getServerTree().getObject(server,channel)
 		buffer = obj.getBuffer()
 		for line in self.com.fetchLog(server, channel, dbus.UInt64(lines or self.com.getConfig().lastLogLines)):
 			buffer.insertHTML(buffer.get_end_iter(), "<font foreground=\"#DDDDDD\">%s</font><br/>" % self.gui.escape(line))
@@ -152,7 +152,7 @@ class tekkaSignals(object):
 	nemo (Nemo) and returns it so it can be renamed
 	"""
 	def _simFind(self, server, nick):
-		servertree = self.gui.getServertree()
+		servertree = self.gui.getServerTree()
 		check = servertree.getChannel(server, nick)
 		if check:
 			return check
@@ -169,7 +169,7 @@ class tekkaSignals(object):
 	otherwise a new channel with name "nick" is created.
 	"""
 	def _simCheck(self, server, nick):
-		servertree = self.gui.getServertree()
+		servertree = self.gui.getServerTree()
 		channel = self._simFind(server, nick)
 		if channel and channel != nick:
 			servertree.renameChannel(server, channel, nick)
@@ -184,7 +184,7 @@ class tekkaSignals(object):
 	def _prefixMode(self, server, channel, nick, mode):
 		if mode[1] not in ("q","a","o","h","v"):
 			return
-		nicklist = self.gui.getServertree().getObject(server,channel).getNickList()
+		nicklist = self.gui.getServerTree().getObject(server,channel).getNickList()
 		if not nicklist:
 			return
 		nicklist.setPrefix(nick, self.com.fetchPrefix(server,channel,nick))
@@ -203,13 +203,13 @@ class tekkaSignals(object):
 	""" SERVER SIGNALS """
 
 	def serverConnect(self, time, server):
-		self.gui.getServertree().addServer(server)
+		self.gui.getServerTree().addServer(server)
 		self.gui.serverPrint(time, server, "Connecting...")
 		self.gui.getStatusBar().push(self.gui.STATUSBAR_CONNECTING, "Connecting to %s" % server)
 
 	# maki connected to a server
 	def serverConnected(self, time, server, nick):
-		servertree = self.gui.getServertree()
+		servertree = self.gui.getServerTree()
 
 		obj = servertree.getObject(server)
 		obj.setConnected(True)
@@ -223,7 +223,7 @@ class tekkaSignals(object):
 	# maki is reconnecting to a server
 	def serverReconnect(self, time, server):
 		# TODO: clear nicklists of server if existant
-		self.gui.getServertree().addServer(server)
+		self.gui.getServerTree().addServer(server)
 		self.gui.serverPrint(time, server, "Reconnecting to %s" % server)
 
 	# the server is sending a MOTD
@@ -261,7 +261,7 @@ class tekkaSignals(object):
 
 	def makiShutdownSignal(self, time):
 		self.gui.myPrint("Maki is shutting down!")
-		for server in self.gui.getServertree().getServers():
+		for server in self.gui.getServerTree().getServers():
 			self.gui.removeServer(server)
 		self.gui.makeWidgetsInsensitive()
 
@@ -311,7 +311,7 @@ class tekkaSignals(object):
 
 		color = self.getNickColor(nick)
 
-		prefix = self.gui.getServertree().getObject(server,channel).getNickList().getPrefix(nick)
+		prefix = self.gui.getServerTree().getObject(server,channel).getNickList().getPrefix(nick)
 
 		self.gui.channelPrint(timestamp, server, channel, \
 		"%s&lt;%s<font foreground='%s'>%s</font>&gt; %s%s" % \
@@ -321,7 +321,7 @@ class tekkaSignals(object):
 		message = self.gui.escape(message)
 
 		nick = self.com.getOwnNick(server)
-		prefix = self.gui.getServertree().getObject(server,channel).getNickList().getPrefix(nick)
+		prefix = self.gui.getServerTree().getObject(server,channel).getNickList().getPrefix(nick)
 
 		self.gui.channelPrint(timestamp, server, channel, \
 		"&lt;%s<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" \
@@ -381,7 +381,7 @@ class tekkaSignals(object):
 				(self.gui.escape(nick), self.gui.escape(message)))
 
 	def ownCTCP(self, time, server, target, message):
-		channel = self.gui.getServertree().getChannel(server,target)
+		channel = self.gui.getServerTree().getChannel(server,target)
 		if channel:
 			nickColor = self.gui.getConfig().getColor("ownNick")
 			self.gui.channelPrint(time, server, channel, \
@@ -392,7 +392,7 @@ class tekkaSignals(object):
 					% (self.gui.escape(target), self.gui.escape(message)))
 
 	def queryCTCP(self, time, server, nick, message):
-		channel = self.gui.getServertree().getChannel(server,nick)
+		channel = self.gui.getServerTree().getChannel(server,nick)
 		if channel:
 			self.gui.channelPrint(time, server, channel, \
 					"&lt;CTCP:<font foreground='%s'>%s</font>&gt; %s" % \
@@ -406,7 +406,7 @@ class tekkaSignals(object):
 		channel = self._simFind(server, nick)
 		if channel:
 			if channel != nick:
-				self.gui.getServertree().renameChannel(server, channel, nick)
+				self.gui.getServerTree().renameChannel(server, channel, nick)
 				channel = nick
 
 		if channel:
@@ -430,7 +430,7 @@ class tekkaSignals(object):
 
 	# user changed his nick
 	def userNick(self, time, server, nick, newNick):
-		servertree = self.gui.getServertree()
+		servertree = self.gui.getServerTree()
 		channel = servertree.getChannel(server, nick)
 		if channel:
 			servertree.renameChannel(server, channel, newNick)
@@ -454,7 +454,7 @@ class tekkaSignals(object):
 		if reason:
 			reason = "(%s)" % reason
 
-		servertree = self.gui.getServertree()
+		servertree = self.gui.getServerTree()
 		obj = servertree.getObject(server,channel)
 
 		if who == self.com.getOwnNick(server):
@@ -475,7 +475,7 @@ class tekkaSignals(object):
 	a message is generated.
 	"""
 	def userQuit(self, time, server, nick, reason):
-		servertree = self.gui.getServertree()
+		servertree = self.gui.getServerTree()
 
 		if nick == self.com.getOwnNick(server):
 			# set the connected flag to False on the server
@@ -528,7 +528,7 @@ class tekkaSignals(object):
 	on it, else we generate messages and stuff.
 	"""
 	def userJoin(self, timestamp, server, nick, channel):
-		servertree = self.gui.getServertree()
+		servertree = self.gui.getServerTree()
 
 		if nick == self.com.getOwnNick(server):
 			nicks = self.com.fetchNicks(server,channel)
@@ -578,7 +578,7 @@ class tekkaSignals(object):
 
 	# user parted
 	def userPart(self, timestamp, server, nick, channel, reason):
-		servertree = self.gui.getServertree()
+		servertree = self.gui.getServerTree()
 		obj = servertree.getObject(server,channel)
 
 		if not obj: # happens if part + tab close

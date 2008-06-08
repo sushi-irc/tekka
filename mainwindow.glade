@@ -145,6 +145,7 @@
                             <property name="editable">False</property>
                             <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
                             <property name="cursor_visible">False</property>
+							<property name="can_focus">False</property>
                           </widget>
                         </child>
                       </widget>
@@ -235,6 +236,7 @@
                       <widget class="GtkTreeView" id="tekkaNicklist">
                         <property name="visible">True</property>
                         <property name="headers_clickable">True</property>
+						<property name="can_focus">False</property>
                         <signal name="button_press_event" handler="tekkaNicklist_button_press_event_cb"/>
                         <signal name="row_activated" handler="tekkaNicklist_row_activated_cb"/>
                       </widget>

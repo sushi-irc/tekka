@@ -680,7 +680,7 @@ class tekkaGUI(object):
 	def getWidgets(self):
 		return self.widgets
 
-	def getServertree(self):
+	def getServerTree(self):
 		return self.servertree
 
 	def getNickList(self):
@@ -820,7 +820,7 @@ class tekkaGUI(object):
 	Change the current servertree tab to the tab identified by "path"
 	"""
 	def switchTreeTab(self, path):
-		servertree = self.getServertree()
+		servertree = self.getServerTree()
 		srow,crow = servertree.getRowFromPath(path)
 
 		servertree.set_cursor(path)

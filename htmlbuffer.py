@@ -146,7 +146,7 @@ class htmlbuffer(gtk.TextBuffer):
 		try:
 			parser.parse(StringIO(str(text)))
 		except Exception, ex:
-			#print ex
+			print ex
 
 			if str(ex).find(":"):
 				error = str(ex).split(":")
