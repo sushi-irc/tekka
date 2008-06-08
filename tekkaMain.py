@@ -105,7 +105,7 @@ class tekkaMain(object):
 		if widget:
 			widget.connect("activate", gtk.main_quit)
 
-		self.gui.getServerTree().connect("button-press-event", self.servertreeButtonPress)
+		self.gui.getServerTree().connect("button-press-event", self.serverTreeButtonPress)
 		self.gui.getInput().connect("key-press-event", self.userInputEvent)
 		self.gui.getOutput().connect("populate-popup", lambda w,x: x.destroy())
 		self.gui.getOutput().connect("button-press-event", self.setInputFocus)
@@ -357,7 +357,7 @@ class tekkaMain(object):
 	"""
 	A button in the servertree was pressed.
 	"""
-	def servertreeButtonPress(self, widget, event):
+	def serverTreeButtonPress(self, widget, event):
 		path = widget.get_path_at_pos(int(event.x), int(event.y))
 
 		if not path or not len(path):

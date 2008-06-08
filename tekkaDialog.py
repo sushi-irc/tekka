@@ -173,6 +173,8 @@ class serverDialog(object):
 			print "Failed to get serverView."
 			return gtk.RESPONSE_CANCEL
 
+		self.serverView.connect("button-press-event", self.serverViewButtonPress)
+
 		# add servercolumn
 		column = gtk.TreeViewColumn("Server",gtk.CellRendererText(), text=0)
 		column.set_resizable(False)
@@ -206,6 +208,22 @@ class serverDialog(object):
 			dialog.destroy()
 
 		return result,server
+
+	def serverViewButtonPress(self, widget, event):
+		path = widget.get_path_at_pos(int(event.x), int(event.y))
+		if not path or len(path) == 0:
+			return
+
+		if event.button != 3:
+			return
+
+		menu = gtk.Menu()
+		renameItem = gtk.MenuItem(label="Rename")
+
+		menu.append(renameItem)
+
+		menu.popup(None, None, None, event.button, event.time)
+		menu.show_all()
 
 	def _retrieveServerlist(self):
 		com = self.tekkaMainobject.getCom()
