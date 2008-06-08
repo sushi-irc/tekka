@@ -58,9 +58,6 @@ class tekkaMain(object):
 		if self.gui.getGeneralOutput():
 			self.gui.getGeneralOutput().get_buffer().setUrlHandler(self.urlHandler)
 
-		self.commands = tekkaCommands(self.com,self.gui)
-		self.signals = tekkaSignals(self.com,self.gui)
-
 		self._setupSignals(self.gui.getWidgets())
 
 		self.gui.getServertree().expand_all()
