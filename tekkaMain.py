@@ -85,6 +85,7 @@ class tekkaMain(object):
 	def _setupSignals(self, widgets):
 		sigdic = {
 				   "showGeneralOutput_toggled_cb" : self.toggleGeneralOutput,
+				   "showStatusBar_toggled_cb" : self.toggleStatusBar,
 				   "makiConnect_activate_cb" : lambda w: self.connectToMaki(),
 				   "tekkaMainwindow_Quit_activate_cb" : gtk.main_quit,
 				   "tekkaInput_activate_cb" : self.userInput,
@@ -151,7 +152,7 @@ class tekkaMain(object):
 		input.connect("clearInput", lambda w: w.set_text(""))
 
 		# Topicbar shortcuts (FIXME: make this working)
-		topicbar = self.gui.getTopicbar()
+		topicbar = self.gui.getTopicBar()
 		topicbar.add_accelerator("clearInput", accelGroup, ord("u"), \
 				gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
 		topicbar.connect("clearInput", lambda w: w.set_text(""))
@@ -166,84 +167,19 @@ class tekkaMain(object):
 		if not self.com.connectMaki():
 			print "connection failed"
 			self.gui.makeWidgetsInsensitive()
-			self.gui.getStatusbar().pop(self.gui.STATUSBAR_NOMAKI)
-			self.gui.getStatusbar().push(self.gui.STATUSBAR_NOMAKI, "No connection to maki.")
+			self.gui.getStatusBar().pop(self.gui.STATUSBAR_NOMAKI)
+			self.gui.getStatusBar().push(self.gui.STATUSBAR_NOMAKI, "No connection to maki.")
 		else:
 			print "success!"
 			self.gui.makeWidgetsSensitive()
-			self.gui.getStatusbar().pop(self.gui.STATUSBAR_NOMAKI)
+			self.gui.getStatusBar().pop(self.gui.STATUSBAR_NOMAKI)
 			self.signals = tekkaSignals(self.com, self.gui)
 			self.commands = tekkaCommands(self.com, self.gui)
 
 
-	"""
-	Change the current servertree tab to the tab identified by "path"
-	"""
-	def switchTreeTab(self, path):
-		servertree = self.gui.getServertree()
-		srow,crow = servertree.getRowFromPath(path)
-
-		servertree.set_cursor(path)
-		servertree.updateCurrentRowFromPath(path)
-
-		textview = self.gui.getOutput()
-
-		# a server tab is selected
-		if srow and not crow:
-			server = srow[servertree.COLUMN_NAME]
-			obj = srow[servertree.COLUMN_OBJECT]
-
-			output = obj.getBuffer()
-
-			if not output:
-				print "No output!"
-				return
-
-			textview.set_buffer(output) # set output buffer
-			self.gui.scrollOutput(textview, output) # scroll to the bottom
-			# reset hightlight
-			obj.setNewMessage(False)
-			servertree.serverDescription(server, obj.markup())
-
-			self.gui.getNicklist().set_model(None)
-			self.gui.getTopicbar().set_property("visible",False)
-
-			self.gui.setTitle(server)
-
-		# a channel tab is selected
-		elif srow and crow:
-			server = srow[servertree.COLUMN_NAME]
-			channel = crow[servertree.COLUMN_NAME]
-			desc = crow[servertree.COLUMN_DESCRIPTION]
-			obj = crow[servertree.COLUMN_OBJECT]
-
-			output = obj.getBuffer()
-			if not output:
-				print "No output!"
-				return
-
-			textview.set_buffer(output)
-			self.gui.scrollOutput(textview, output)
-
-			obj.setNewMessage(False)
-			servertree.channelDescription(server, channel, obj.markup())
-
-			self.gui.getNicklist().set_model(obj.getNicklist())
-
-			topicbar = self.gui.getTopicbar()
-			topicbar.set_text("")
-			self.gui.setTopicInBar(server=server,channel=channel)
-			topicbar.set_property("visible",True)
-
-			self.gui.setTitle(channel)
-
-		# no tab is selected
-		else:
-			print "Activation failed due to wrong path."
-
 	""" Wrapper for shortcut functionality """
 	def switchTabByKey(self, path):
-		self.switchTreeTab(path)
+		self.gui.switchTreeTab(path)
 
 
 	"""
@@ -288,7 +224,7 @@ class tekkaMain(object):
 	"""
 	def setInputFocus(self, widget, event):
 		self.gui.getInput().grab_focus()
-		return True
+		return False
 
 	"""
 	User pressed Show -> Show general output
@@ -302,6 +238,15 @@ class tekkaMain(object):
 		else:
 			if self.gui.getGeneralOutputWindow():
 				self.gui.getGeneralOutputWindow().hide()
+
+	"""
+	User pressed Show -> Show status bar
+	"""
+	def toggleStatusBar(self, widget):
+		if widget.get_active():
+			self.gui.getStatusBar().show()
+		else:
+			self.gui.getStatusBar().hide()
 
 	"""
 	User pressed Ctrl+PgUp
@@ -330,7 +275,7 @@ class tekkaMain(object):
 
 		elif len(path) == 2:
 			row = model[(path[0],path[1]-1)]
-		self.switchTreeTab(row.path)
+		self.gui.switchTreeTab(row.path)
 
 	"""
 	User pressed Ctrl+PgDwn
@@ -369,7 +314,7 @@ class tekkaMain(object):
 			else:
 				row = model[(path[0],0)]
 
-		self.switchTreeTab(row.path)
+		self.gui.switchTreeTab(row.path)
 
 	"""
 	"Open URL" in URL context menu was clicked
@@ -423,7 +368,7 @@ class tekkaMain(object):
 
 		# left click -> activate tab
 		if event.button == 1:
-			self.switchTreeTab(path[0])
+			self.gui.switchTreeTab(path[0])
 
 		# right click -> menu for tab
 		elif event.button == 3:
@@ -500,11 +445,11 @@ class tekkaMain(object):
 		server = servertree.getCurrentServer()
 		if not server:
 			return
-		nick = treeview.get_model()[path][tekkaGUI.tekkaNicklistStore.COLUMN_NICK]
+		nick = treeview.get_model()[path][tekkaGUI.tekkaNickListStore.COLUMN_NICK]
 		iter = servertree.addChannel(server, nick)[1]
 
 		path = servertree.get_model().get_path(iter)
-		self.switchTreeTab(path)
+		self.gui.switchTreeTab(path)
 		self.signals.lastLog(server, nick)
 
 	"""
@@ -519,7 +464,7 @@ class tekkaMain(object):
 		if not crow:
 			return
 
-		nicklist = crow[self.gui.getServertree().COLUMN_OBJECT].getNicklist()
+		nicklist = crow[self.gui.getServertree().COLUMN_OBJECT].getNickList()
 		nickrow = nicklist[path[0]]
 
 		# left click -> activate tab
@@ -528,7 +473,7 @@ class tekkaMain(object):
 			pass
 
 		elif event.button == 3:
-			nick = nickrow[tekkaGUI.tekkaNicklistStore.COLUMN_NICK]
+			nick = nickrow[tekkaGUI.tekkaNickListStore.COLUMN_NICK]
 			server = srow[tekkaGUI.tekkaServertree.COLUMN_NAME]
 			channel = crow[tekkaGUI.tekkaServertree.COLUMN_NAME]
 
@@ -654,7 +599,7 @@ class tekkaMain(object):
 
 				# nick completion
 				else:
-					nicks = obj.getNicklist().searchNick(needle.lower())
+					nicks = obj.getNickList().searchNick(needle.lower())
 					if nicks:
 						result = nicks[0]
 
@@ -694,8 +639,8 @@ class tekkaMain(object):
 
 			if cc == channel:
 				self.gui.getOutput().get_buffer().set_text("")
-				self.gui.getTopicbar().set_text("")
-				self.gui.getNicklist().set_model(None)
+				self.gui.getTopicBar().set_text("")
+				self.gui.getNickList().set_model(None)
 
 
 	"""

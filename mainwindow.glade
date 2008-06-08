@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.3 on Fri Jun  6 00:20:56 2008 -->
+<!--Generated with glade3 3.4.3 on Sun Jun  8 17:33:08 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="tekkaMainwindow">
     <property name="width_request">550</property>
@@ -30,14 +30,14 @@
                         <signal name="activate" handler="tekkaMainwindow_Connect_activate_cb"/>
                       </widget>
                     </child>
-					<child>
-					  <widget class="GtkImageMenuItem" id="menuMakiConnect">
-					    <property name="visible">True</property>
-						<property name="label" translatable="yes">Connect to maki</property>
-						<property name="use_underline">True</property>
-						<signal name="activate" handler="makiConnect_activate_cb"/>
-					  </widget>
-					</child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menuMakiConnect">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Connect to maki</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="makiConnect_activate_cb"/>
+                      </widget>
+                    </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="tekkaMainWindow_MenuTekka_Shutdown">
                         <property name="visible">True</property>
@@ -73,6 +73,14 @@
                         <property name="label" translatable="yes">Show _general output</property>
                         <property name="use_underline">True</property>
                         <signal name="toggled" handler="showGeneralOutput_toggled_cb"/>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkCheckMenuItem" id="showStatusBar">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Show status bar</property>
+                        <property name="use_underline">True</property>
+						<signal name="toggled" handler="showStatusBar_toggled_cb"/>
                       </widget>
                     </child>
                   </widget>
@@ -127,12 +135,12 @@
                     <property name="visible">True</property>
                     <child>
                       <widget class="GtkScrolledWindow" id="sw_generalOutput">
+                        <property name="height_request">120</property>
                         <property name="can_focus">True</property>
                         <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                         <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                         <child>
                           <widget class="GtkTextView" id="generalOutput">
-						    <property name="can_focus">False</property>
                             <property name="visible">True</property>
                             <property name="editable">False</property>
                             <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
@@ -157,6 +165,7 @@
                             <property name="editable">False</property>
                             <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
                             <property name="cursor_visible">False</property>
+							<property name="can_focus">False</property>
                           </widget>
                         </child>
                       </widget>
@@ -176,6 +185,9 @@
                     <property name="can_focus">True</property>
                     <property name="has_focus">True</property>
                     <property name="is_focus">True</property>
+                    <property name="can_default">True</property>
+                    <property name="has_default">True</property>
+                    <property name="receives_default">True</property>
                     <property name="extension_events">GDK_EXTENSION_EVENTS_ALL</property>
                     <signal name="activate" handler="tekkaInput_activate_cb"/>
                   </widget>
@@ -192,7 +204,7 @@
             </child>
             <child>
               <widget class="GtkVPaned" id="listVbox">
-                <property name="width_request">150</property>
+                <property name="width_request">180</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="position_set">True</property>
@@ -221,7 +233,6 @@
                     <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                     <child>
                       <widget class="GtkTreeView" id="tekkaNicklist">
-					    <property name="can_focus">False</property>
                         <property name="visible">True</property>
                         <property name="headers_clickable">True</property>
                         <signal name="button_press_event" handler="tekkaNicklist_button_press_event_cb"/>

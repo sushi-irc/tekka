@@ -68,7 +68,7 @@ class tekkaList(object):
 				return row
 		return None
 
-class tekkaNicklistStore(tekkaList, gtk.ListStore):
+class tekkaNickListStore(tekkaList, gtk.ListStore):
 	COLUMN_PREFIX=0
 	COLUMN_NICK=1
 
@@ -391,7 +391,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		buffer.setUrlHandler(self.urlHandler)
 		obj = tekkaChannel.tekkaChannel(channelname, buffer)
 		if nicks:
-			obj.getNicklist().addNicks(nicks)
+			obj.getNickList().addNicks(nicks)
 		if topic:
 			obj.setTopic(topic)
 		if topicsetter:
@@ -634,11 +634,13 @@ class tekkaGUI(object):
 		SW.show_all()
 
 		self.nicklist = self.widgets.get_widget("tekkaNicklist")
-		self._setupNicklist()
+		self._setupNickList()
 
 		self.topicbar = self.widgets.get_widget("tekkaTopic")
-		self.statusbar = self.widgets.get_widget("statusbar")
-		self.statusbar.push(self.STATUSBAR_IDLE,"Acting as IRC-client")
+		self.statusBar = self.widgets.get_widget("statusbar")
+		self.statusBar.push(self.STATUSBAR_IDLE,"Acting as IRC-client")
+
+		self.widgets.get_widget("showStatusBar").set_active(True)
 
 		self.servertree.expand_all()
 
@@ -663,7 +665,7 @@ class tekkaGUI(object):
 		# URL regexp for tagging URLs
 		self.urlExp = re.compile("(\w+)://[^, \t\"'<>]+")
 
-	def setTitle(self, title):
+	def setWindowTitle(self, title):
 		self.window.set_title(title)
 
 	def getWindow(self):
@@ -678,7 +680,7 @@ class tekkaGUI(object):
 	def getServertree(self):
 		return self.servertree
 
-	def getNicklist(self):
+	def getNickList(self):
 		return self.nicklist
 
 	def getOutput(self):
@@ -687,11 +689,11 @@ class tekkaGUI(object):
 	def getInput(self):
 		return self.textentry
 
-	def getTopicbar(self):
+	def getTopicBar(self):
 		return self.topicbar
 
-	def getStatusbar(self):
-		return self.statusbar
+	def getStatusBar(self):
+		return self.statusBar
 
 	def getHistory(self):
 		return self.history
@@ -726,7 +728,7 @@ class tekkaGUI(object):
 		self.servertree.set_headers_visible(False)
 		self.servertree.set_property("can-focus",False)
 
-	def _setupNicklist(self):
+	def _setupNickList(self):
 		self.nicklistStore = gtk.ListStore(gobject.TYPE_STRING)
 		self.nicklist.set_model(self.nicklistStore)
 
@@ -797,7 +799,7 @@ class tekkaGUI(object):
 	insensitive
 	"""
 	def makeWidgetsInsensitive(self):
-		widgets = [self.getInput(), self.getOutput(), self.getTopicbar()]
+		widgets = [self.getInput(), self.getOutput(), self.getTopicBar()]
 		for widget in widgets:
 			widget.set_sensitive(False)
 
@@ -805,9 +807,76 @@ class tekkaGUI(object):
 	Reverse of makeWidgetsInsensitive()
 	"""
 	def makeWidgetsSensitive(self):
-		widgets = [self.getInput(), self.getOutput(), self.getTopicbar()]
+		widgets = [self.getInput(), self.getOutput(), self.getTopicBar()]
 		for widget in widgets:
 			widget.set_sensitive(True)
+
+	""" SERVERTREE STUFF """
+
+	"""
+	Change the current servertree tab to the tab identified by "path"
+	"""
+	def switchTreeTab(self, path):
+		servertree = self.getServertree()
+		srow,crow = servertree.getRowFromPath(path)
+
+		servertree.set_cursor(path)
+		servertree.updateCurrentRowFromPath(path)
+
+		textview = self.getOutput()
+
+		# a server tab is selected
+		if srow and not crow:
+			server = srow[servertree.COLUMN_NAME]
+			obj = srow[servertree.COLUMN_OBJECT]
+
+			output = obj.getBuffer()
+
+			if not output:
+				print "No output!"
+				return
+
+			textview.set_buffer(output) # set output buffer
+			self.scrollOutput(textview, output) # scroll to the bottom
+			# reset hightlight
+			obj.setNewMessage(False)
+			servertree.serverDescription(server, obj.markup())
+
+			self.getNickList().set_model(None)
+			self.getTopicBar().set_property("visible",False)
+
+			self.gui.setWindowTitle(server)
+
+		# a channel tab is selected
+		elif srow and crow:
+			server = srow[servertree.COLUMN_NAME]
+			channel = crow[servertree.COLUMN_NAME]
+			desc = crow[servertree.COLUMN_DESCRIPTION]
+			obj = crow[servertree.COLUMN_OBJECT]
+
+			output = obj.getBuffer()
+			if not output:
+				print "No output!"
+				return
+
+			textview.set_buffer(output)
+			self.scrollOutput(textview, output)
+
+			obj.setNewMessage(False)
+			servertree.channelDescription(server, channel, obj.markup())
+
+			self.getNickList().set_model(obj.getNickList())
+
+			topicbar = self.getTopicBar()
+			topicbar.set_text("")
+			self.setTopicInBar(server=server,channel=channel)
+			topicbar.set_property("visible",True)
+
+			self.setWindowTitle(channel)
+
+		# no tab is selected
+		else:
+			print "Activation failed due to wrong path."
 
 	""" PRINTING ROUTINES """
 

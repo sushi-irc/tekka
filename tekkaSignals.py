@@ -105,7 +105,7 @@ class tekkaSignals(object):
 			ret,iter = self.gui.getServertree().addChannel(server, channel, nicks, topic)
 
 			obj = self.gui.getServertree().getObject(server,channel)
-			nicklist = obj.getNicklist()
+			nicklist = obj.getNickList()
 
 			# channel already existant, settings
 			# nicks, set the topic and set the joined flag
@@ -184,7 +184,7 @@ class tekkaSignals(object):
 	def _prefixMode(self, server, channel, nick, mode):
 		if mode[1] not in ("q","a","o","h","v"):
 			return
-		nicklist = self.gui.getServertree().getObject(server,channel).getNicklist()
+		nicklist = self.gui.getServertree().getObject(server,channel).getNickList()
 		if not nicklist:
 			return
 		nicklist.setPrefix(nick, self.com.fetchPrefix(server,channel,nick))
@@ -205,7 +205,7 @@ class tekkaSignals(object):
 	def serverConnect(self, time, server):
 		self.gui.getServertree().addServer(server)
 		self.gui.serverPrint(time, server, "Connecting...")
-		self.gui.getStatusbar().push(self.gui.STATUSBAR_CONNECTING, "Connecting to %s" % server)
+		self.gui.getStatusBar().push(self.gui.STATUSBAR_CONNECTING, "Connecting to %s" % server)
 
 	# maki connected to a server
 	def serverConnected(self, time, server, nick):
@@ -217,7 +217,7 @@ class tekkaSignals(object):
 
 		self.addChannels(server)
 
-		self.gui.getStatusbar().pop(self.gui.STATUSBAR_CONNECTING)
+		self.gui.getStatusBar().pop(self.gui.STATUSBAR_CONNECTING)
 		self.gui.serverPrint(time, server, "Connected.")
 
 	# maki is reconnecting to a server
@@ -311,7 +311,7 @@ class tekkaSignals(object):
 
 		color = self.getNickColor(nick)
 
-		prefix = self.gui.getServertree().getObject(server,channel).getNicklist().getPrefix(nick)
+		prefix = self.gui.getServertree().getObject(server,channel).getNickList().getPrefix(nick)
 
 		self.gui.channelPrint(timestamp, server, channel, \
 		"%s&lt;%s<font foreground='%s'>%s</font>&gt; %s%s" % \
@@ -321,7 +321,7 @@ class tekkaSignals(object):
 		message = self.gui.escape(message)
 
 		nick = self.com.getOwnNick(server)
-		prefix = self.gui.getServertree().getObject(server,channel).getNicklist().getPrefix(nick)
+		prefix = self.gui.getServertree().getObject(server,channel).getNickList().getPrefix(nick)
 
 		self.gui.channelPrint(timestamp, server, channel, \
 		"&lt;%s<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" \
@@ -444,7 +444,7 @@ class tekkaSignals(object):
 		nickchange = self.gui.escape(nickchange)
 
 		for channel in servertree.getChannels(server):
-			nicklist = servertree.getObject(server,channel).getNicklist()
+			nicklist = servertree.getObject(server,channel).getNickList()
 			if nick in nicklist.getNicks() or channel == nick:
 				nicklist.modifyNick(nick, newNick)
 				self.gui.channelPrint(time, server, channel, nickchange, "action")
@@ -463,7 +463,7 @@ class tekkaSignals(object):
 			self.gui.channelPrint(time, server, channel, self.gui.escape(\
 				"« You have been kicked from %s by %s %s" % (channel,nick,reason)))
 		else:
-			obj.getNicklist().removeNick(who)
+			obj.getNickList().removeNick(who)
 			self.gui.channelPrint(time, server, channel, self.gui.escape("« %s was kicked from %s by %s %s" % (who,channel,nick,reason)), "action")
 
 	"""
@@ -511,7 +511,7 @@ class tekkaSignals(object):
 			# print in all channels where nick joined a message
 			for channel in channels:
 				obj = servertree.getObject(server,channel)
-				nicklist = obj.getNicklist()
+				nicklist = obj.getNickList()
 
 				nicks = nicklist.getNicks() or []
 
@@ -548,7 +548,7 @@ class tekkaSignals(object):
 			if not obj:
 				print "Could not get object"
 				return
-			nicklist = obj.getNicklist()
+			nicklist = obj.getNickList()
 
 			# not added, already existent.
 			# set nicks to nicklist of the channel,
@@ -563,6 +563,8 @@ class tekkaSignals(object):
 			else:
 				self.lastLog(server,channel)
 
+
+
 			# fetch the prefixes and apply
 			# them to the nicklist of the channel
 			# identified by "iter"
@@ -571,7 +573,7 @@ class tekkaSignals(object):
 			nickwrap = "You have"
 		else:
 			nickwrap = "<font foreground='%s'>%s</font> has" % (self.gui.getConfig().getColor("joinNick"), self.gui.escape(nick))
-			servertree.getObject(server,channel).getNicklist().appendNick(nick)
+			servertree.getObject(server,channel).getNickList().appendNick(nick)
 		self.gui.channelPrint(timestamp, server, channel, "» %s joined %s." % (nickwrap, channel), "action")
 
 	# user parted
@@ -591,7 +593,7 @@ class tekkaSignals(object):
 			obj.setJoined(False)
 			servertree.updateDescription(server, channel, obj=obj)
 		else:
-			obj.getNicklist().removeNick(nick)
+			obj.getNickList().removeNick(nick)
 			self.gui.channelPrint(timestamp, server, channel, \
 			"« <font foreground='%s'>%s</font> has left %s%s." % (self.gui.getConfig().getColor("partNick"), self.gui.escape(nick), self.gui.escape(channel), self.gui.escape(reason)), "action")
 
