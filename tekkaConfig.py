@@ -80,12 +80,12 @@ class tekkaConfig(object):
 		self.browserArguments = "%s"
 
 		configParser = ConfigParser.ConfigParser()
-		success = configParser.read(['%s/sushi/config/tekka' % self.getXDGConfigHome()])
+		success = configParser.read(['%s/sushi/tekka' % self.getXDGConfigHome()])
 
 		if not success:
 			print "Failed to parse config file."
 			return
-		
+
 		# Generic colors
 		try:
 			items = configParser.items("colors")
