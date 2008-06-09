@@ -37,16 +37,9 @@ try:
 except:
 	sys.exit(1)
 
-"""
-maybe it's not good that all small dialogs inherit tekkaConfig.
-if in tekkaConfig config parsing is implemented it would parse
-the config for every dialog. it's better to initalize the config
-class in tekkaMain and pass it to the dialogs.
-"""
-
 class addServerDialog(object):
-	def __init__(self,tekkaMainobject):
-		self.gladefile = tekkaMainobject.getConfig().gladefiles["dialogs"]
+	def __init__(self,tekkaMainObject):
+		self.gladefile = tekkaMainObject.getConfig().gladefiles["dialogs"]
 		self.widgets = None
 		self.servername = None
 		self.RESPONSE_ADD = 1
@@ -85,11 +78,11 @@ class addServerDialog(object):
 		return result,data
 
 class editServerDialog(object):
-	def __init__(self, serverdata, tekkaMainobject):
-		self.gladefile = tekkaMainobject.getConfig().gladefiles["dialogs"]
+	def __init__(self, serverdata, tekkaMainObject):
+		self.gladefile = tekkaMainObject.getConfig().gladefiles["dialogs"]
 		self.widgets = None
 		self.serverdata = serverdata
-		self.tekkaMainobject = tekkaMainobject
+		self.tekkaMainObject = tekkaMainObject
 		self.deleteServer = 0 # if the server name is changed, delete the old
 
 	def servernameChanged(self,widget):
@@ -128,7 +121,7 @@ class editServerDialog(object):
 
 		if result == gtk.RESPONSE_OK:
 			if self.deleteServer:
-				self.tekkaMainobject.getCom().deleteServer(self.orgServername)
+				self.tekkaMainObject.getCom().deleteServer(self.orgServername)
 			newServer = {}
 			for i in ("servername","address","port","name","nick","nickserv"):
 				newServer[i] = eval("server%sInput.get_text()" % (i))
@@ -138,8 +131,8 @@ class editServerDialog(object):
 		return result,newServer
 
 class deleteServerDialog(object):
-	def __init__(self,tekkaMainobject):
-		self.gladefile = tekkaMainobject.getConfig().gladefiles["dialogs"]
+	def __init__(self,tekkaMainObject):
+		self.gladefile = tekkaMainObject.getConfig().gladefiles["dialogs"]
 
 	def run(self):
 		widgets = gtk.glade.XML(self.gladefile, "serverDelete")
@@ -149,11 +142,11 @@ class deleteServerDialog(object):
 		return result
 
 class serverDialog(object):
-	def __init__(self, tekkaMainobject):
-		self.gladefile = tekkaMainobject.getConfig().gladefiles["dialogs"]
+	def __init__(self, tekkaMainObject):
+		self.gladefile = tekkaMainObject.getConfig().gladefiles["dialogs"]
 		self.serverView = None
 		self.serverList = None
-		self.tekkaMainobject = tekkaMainobject
+		self.tekkaMainObject = tekkaMainObject
 		self.RESPONSE_CONNECT = 3
 
 	def run(self):
@@ -173,10 +166,12 @@ class serverDialog(object):
 			print "Failed to get serverView."
 			return gtk.RESPONSE_CANCEL
 
-		self.serverView.connect("button-press-event", self.serverViewButtonPress)
-
 		# add servercolumn
-		column = gtk.TreeViewColumn("Server",gtk.CellRendererText(), text=0)
+		renderer = gtk.CellRendererText()
+		renderer.set_property("editable",True)
+		renderer.connect("edited", self.serverNameEdit)
+
+		column = gtk.TreeViewColumn("Server", renderer, text=0)
 		column.set_resizable(False)
 		column.set_sort_column_id(0)
 		self.serverView.append_column(column)
@@ -209,29 +204,23 @@ class serverDialog(object):
 
 		return result,server
 
-	def serverViewButtonPress(self, widget, event):
-		path = widget.get_path_at_pos(int(event.x), int(event.y))
-		if not path or len(path) == 0:
+	"""
+	User edited column in serverView
+	"""
+	def serverNameEdit(self, cellrenderertext, path, newText):
+		try:
+			oldText = self.serverView.get_model()[path][0]
+		except IndexError:
 			return
-
-		if event.button != 3:
-			return
-
-		menu = gtk.Menu()
-		renameItem = gtk.MenuItem(label="Rename")
-
-		menu.append(renameItem)
-
-		menu.popup(None, None, None, event.button, event.time)
-		menu.show_all()
+		self.tekkaMainObject.getCom().renameServer(oldText, newText)
 
 	def _retrieveServerlist(self):
-		com = self.tekkaMainobject.getCom()
+		com = self.tekkaMainObject.getCom()
 
 		self.serverView.get_model().clear()
-		serverlist = com.fetchServerlist()
+		serverlist = com.fetchServerList()
 		for s in serverlist:
-			self.addServer(com.fetchServerinfo(s))
+			self.addServer(com.fetchServerInfo(s))
 
 
 	def addServer(self, newServer):
@@ -256,17 +245,17 @@ class serverDialog(object):
 			or not newServer.has_key("name"):
 			print "wrong data to createserver"
 			return
-		self.tekkaMainobject.getCom().createServer(newServer)
+		self.tekkaMainObject.getCom().createServer(newServer)
 
 	def deleteServer(self, servername):
 		for server in self.serverList:
 			if server[0] == servername:
 				self.serverList.remove(server.iter)
-				self.tekkaMainobject.getCom().deleteServer(servername)
+				self.tekkaMainObject.getCom().deleteServer(servername)
 
 
 	def openAddDialog(self, widget):
-		dialog = addServerDialog(self.tekkaMainobject)
+		dialog = addServerDialog(self.tekkaMainObject)
 		result,newServer = dialog.run()
 		if result == dialog.RESPONSE_ADD:
 			print "User added a new server"
@@ -289,12 +278,12 @@ class serverDialog(object):
 			print "Error in retrieving the servername"
 			return
 
-		dialog = editServerDialog(self.serverDict[servername], self.tekkaMainobject)
+		dialog = editServerDialog(self.serverDict[servername], self.tekkaMainObject)
 		result,newServer = dialog.run()
 		if result == gtk.RESPONSE_OK:
 			print "User edited server"
 			print newServer
-			self.tekkaMainobject.getCom().createServer(newServer)
+			self.tekkaMainObject.getCom().createServer(newServer)
 			self._retrieveServerlist()
 
 
@@ -315,12 +304,8 @@ class serverDialog(object):
 			print "Error in retrieving the servername"
 			return
 
-		dialog = deleteServerDialog(self.tekkaMainobject)
+		dialog = deleteServerDialog(self.tekkaMainObject)
 		result = dialog.run()
 		if result == gtk.RESPONSE_YES:
 			print "Deleting server %s" % servername
 			self.deleteServer(servername)
-			# TODO: send a delete of the server to maki
-
-	def setActiveRow(self, widget):
-		print "setting active row"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.3 on Sun Jun  8 17:33:08 2008 -->
+<!--Generated with glade3 3.4.3 on Mon Jun  9 15:04:51 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="tekkaMainwindow">
     <property name="width_request">550</property>
@@ -80,7 +80,7 @@
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Show status bar</property>
                         <property name="use_underline">True</property>
-						<signal name="toggled" handler="showStatusBar_toggled_cb"/>
+                        <signal name="toggled" handler="showStatusBar_toggled_cb"/>
                       </widget>
                     </child>
                   </widget>
@@ -145,7 +145,6 @@
                             <property name="editable">False</property>
                             <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
                             <property name="cursor_visible">False</property>
-							<property name="can_focus">False</property>
                           </widget>
                         </child>
                       </widget>
@@ -160,13 +159,14 @@
                         <property name="can_focus">False</property>
                         <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
                         <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                        <property name="window_placement">GTK_CORNER_BOTTOM_LEFT</property>
+                        <property name="window_placement_set">True</property>
                         <child>
                           <widget class="GtkTextView" id="tekkaOutput">
                             <property name="visible">True</property>
                             <property name="editable">False</property>
                             <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
                             <property name="cursor_visible">False</property>
-							<property name="can_focus">False</property>
                           </widget>
                         </child>
                       </widget>
@@ -236,7 +236,6 @@
                       <widget class="GtkTreeView" id="tekkaNicklist">
                         <property name="visible">True</property>
                         <property name="headers_clickable">True</property>
-						<property name="can_focus">False</property>
                         <signal name="button_press_event" handler="tekkaNicklist_button_press_event_cb"/>
                         <signal name="row_activated" handler="tekkaNicklist_row_activated_cb"/>
                       </widget>

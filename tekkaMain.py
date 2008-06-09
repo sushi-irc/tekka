@@ -107,7 +107,7 @@ class tekkaMain(object):
 
 		self.gui.getServerTree().connect("button-press-event", self.serverTreeButtonPress)
 		self.gui.getInput().connect("key-press-event", self.userInputEvent)
-		self.gui.getOutput().connect("populate-popup", lambda w,x: x.destroy())
+		self.gui.getOutput().connect("populate-popup", self.routeMenus)
 		self.gui.getOutput().connect("button-press-event", self.setInputFocus)
 
 		# if mainwindow gets focus stop being urgent
@@ -206,6 +206,12 @@ class tekkaMain(object):
 	"""
 	Widget-Signals
 	"""
+
+	"""
+	User want to populate menu in output textview
+	"""
+	def routeMenus(self, widget, popup):
+		popup.destroy()
 
 	"""
 	User clicked on the status icon
@@ -662,8 +668,6 @@ class tekkaMain(object):
 	"""
 	def makiShutdown(self, widget):
 		self.com.shutdown()
-		# TODO: disable widgets (entry, tekka->connect, tekka->close maki,
-		# nicklist->menu, servertree->menu)
 
 if __name__ == "__main__":
 

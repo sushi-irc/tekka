@@ -227,13 +227,19 @@ class tekkaCom(object):
 			else:
 				self.sushi.server_set(name, "server", k, v)
 
+	def renameServer(self, name, newName):
+		try:
+			self.sushi.server_rename(name, newName)
+		except dbus.exceptions.UnknownMethodException:
+			print "server_rename not known to maki"
+
 	def deleteServer(self, name):
 		self.sushi.server_remove(name, "", "")
 
-	def fetchServerlist(self):
+	def fetchServerList(self):
 		return self.sushi.server_list("","")
 
-	def fetchServerinfo(self, server):
+	def fetchServerInfo(self, server):
 		map = {}
 		map["servername"] = server
 		map["address"] = self.sushi.server_get(server, "server", "address")
