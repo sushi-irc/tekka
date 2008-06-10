@@ -211,6 +211,8 @@ class tekkaSignals(object):
 	def serverConnected(self, time, server, nick):
 		servertree = self.gui.getServerTree()
 
+		servertree.addServer(server) # if it isn't added here, add it now
+
 		obj = servertree.getObject(server)
 		obj.setConnected(True)
 		servertree.updateDescription(server,obj=obj)

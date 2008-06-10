@@ -211,7 +211,7 @@ class tekkaMain(object):
 	User want to populate menu in output textview
 	"""
 	def routeMenus(self, widget, popup):
-		popup.destroy()
+		print popup.get_attach_widget()
 
 	"""
 	User clicked on the status icon

@@ -300,10 +300,10 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 	def getChannels(self, userver, row=False):
 		server = self.findRow(userver)
 		if not server:
-			return None
+			return []
 		channels = server.iterchildren()
 		if not channels:
-			return None
+			return []
 		clist = []
 		for channel in channels:
 			if row:
