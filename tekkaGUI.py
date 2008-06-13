@@ -666,7 +666,7 @@ class tekkaGUI(object):
 			self.generalOutputWindow = None
 
 		# URL regexp for tagging URLs
-		self.urlExp = re.compile("(\w+)://[^, \t\"'<>]+")
+		self.urlExp = re.compile("(\w+)://[^ \t\"'<>]+[^ \t\"'<>,.]")
 
 	def setWindowTitle(self, title):
 		self.window.set_title(title)
