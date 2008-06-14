@@ -33,6 +33,7 @@ import gtk.glade
 import pango
 import gobject
 
+import os
 import time
 import re
 
@@ -716,7 +717,7 @@ class tekkaGUI(object):
 	""" SETUP ROUTINES """
 
 	def setupWindow(self):
-		self.window.set_icon_from_file(self.config.getPrefix()+"tekka.svg")
+		self.window.set_icon_from_file(os.path.join(self.config.getPrefix(), "tekka.svg"))
 
 	def _setupAccelGroup(self):
 		window = self.widgets.get_widget("tekkaMainwindow")
@@ -758,7 +759,7 @@ class tekkaGUI(object):
 
 	def setupStatusIcon(self):
 		if self.config.trayicon:
-			self.statusIcon.set_from_file(self.config.getPrefix()+"tekka.svg")
+			self.statusIcon.set_from_file(os.path.join(self.config.getPrefix(), "tekka.svg"))
 		else:
 			self.statusIcon = None
 
@@ -991,7 +992,7 @@ class tekkaGUI(object):
 		tt = output.get_tag_table()
 		if tt: tt.foreach(lambda tag,data: data.remove(tag), tt)
 
-	
+
 	"""
 	searches for an URL in message and sets an <a>-tag arround
 	it, then returns the new string

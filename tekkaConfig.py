@@ -34,11 +34,14 @@ class tekkaConfig(object):
 		self.useExternalDBus = False
 		self.busAdress = "tcp:host=192.168.1.101,port=3333"
 
-		self.prefix = (os.sep.join(sys.argv[0].split(os.sep)[:-1]) or ".") + "/"
+		if os.path.islink(sys.argv[0]):
+			self.prefix = os.path.dirname(os.path.abspath(os.readlink(sys.argv[0])))
+		else:
+			self.prefix = os.path.dirname(os.path.abspath(sys.argv[0]))
 
 		self.gladefiles = {}
-		self.gladefiles["mainwindow"] = self.prefix + "mainwindow.glade"
-		self.gladefiles["dialogs"] = self.prefix + "dialogs.glade"
+		self.gladefiles["mainwindow"] = os.path.join(self.prefix, "mainwindow.glade")
+		self.gladefiles["dialogs"] = os.path.join(self.prefix, "dialogs.glade")
 
 		self.windowSize = [400,500]
 
