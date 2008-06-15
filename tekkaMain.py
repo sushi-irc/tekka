@@ -240,10 +240,10 @@ class tekkaMain(object):
 			if not self.gui.getGeneralOutput():
 				self.gui.setupGeneralOutput()
 			else:
-				self.gui.getGeneralOutputWindow().show_all()
+				self.gui.getGeneralOutputFrame().show_all()
 		else:
-			if self.gui.getGeneralOutputWindow():
-				self.gui.getGeneralOutputWindow().hide()
+			if self.gui.getGeneralOutputFrame():
+				self.gui.getGeneralOutputFrame().hide()
 
 	"""
 	User pressed Show -> Show status bar
