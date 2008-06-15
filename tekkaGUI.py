@@ -665,7 +665,6 @@ class tekkaGUI(object):
 		else:
 			self.generalOutput = None
 			self.generalOutputWindow = None
-			self.generalOutputFrame = None
 
 		# URL regexp for tagging URLs
 		self.urlExp = re.compile("(\w+)://[^ \t\"'<>]+[^ \t\"'<>,.]")
@@ -712,9 +711,6 @@ class tekkaGUI(object):
 	def getGeneralOutputWindow(self):
 		return self.generalOutputWindow
 
-	def getGeneralOutputFrame(self):
-		return self.generalOutputFrame
-
 	def getStatusIcon(self):
 		return self.statusIcon
 
@@ -752,7 +748,6 @@ class tekkaGUI(object):
 
 	def setupGeneralOutput(self):
 		self.generalOutputWindow = self.widgets.get_widget("sw_generalOutput")
-		self.generalOutputFrame = self.widgets.get_widget("frame_generalOutput")
 		self.generalOutput = self.widgets.get_widget("generalOutput")
 		self.generalOutput.set_property("height-request", \
 				self.config.generalOutputHeight)
