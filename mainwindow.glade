@@ -146,6 +146,7 @@
                           <widget class="GtkTextView" id="generalOutput">
                             <property name="visible">True</property>
                             <property name="editable">False</property>
+							<property name="can_focus">False</property>
                             <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
                             <property name="cursor_visible">False</property>
                           </widget>
