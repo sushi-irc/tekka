@@ -74,6 +74,8 @@ class tekkaConfig(object):
 
 		self.showStatusBar = True
 
+		self.hideOnDestroy = True
+
 		# random nick colors
 		self.nickColors=["#AA0000","#2222AA","#44AA44","#123456","#987654"]
 
@@ -125,7 +127,8 @@ class tekkaConfig(object):
 			"highlightwords":"a#self.highlightWords",
 			"outputfont":"s#self.outputFont",
 			"lastloglines":"i#self.lastLogLines",
-			"showstatusbar":"b#self.showStatusBar"
+			"showstatusbar":"b#self.showStatusBar",
+			"hideondestroy":"b#self.hideOnDestroy"
 		}
 
 		self.transConfig(configParser, "tekka", trans)

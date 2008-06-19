@@ -100,7 +100,7 @@ class tekkaMain(object):
 		widgets.signal_autoconnect(sigdic)
 		widget = widgets.get_widget("tekkaMainwindow")
 		if widget:
-			widget.connect("destroy", gtk.main_quit)
+			widget.connect("delete-event", self.destroyWin)
 		widget = widgets.get_widget("tekkaMainwindow_MenuTekka_Quit")
 		if widget:
 			widget.connect("activate", gtk.main_quit)
@@ -115,6 +115,8 @@ class tekkaMain(object):
 
 		if self.gui.getStatusIcon():
 			self.gui.getStatusIcon().connect("activate", self.statusIconActivate)
+
+
 
 	def initShortcuts(self):
 		servertree = self.gui.getServerTree()
@@ -206,6 +208,17 @@ class tekkaMain(object):
 	"""
 	Widget-Signals
 	"""
+
+	"""
+	User clicked on close button of mainwindow
+	"""
+	def destroyWin(self, w, x):
+		if self.gui.getStatusIcon() and self.config.hideOnDestroy:
+			self.gui.getWindow().hide()
+			return True
+
+		gtk.main_quit()
+		return False
 
 	"""
 	User want to populate menu in output textview
