@@ -332,7 +332,6 @@ class tekkaMain(object):
 		model = widget.get_model()
 
 		if len(path) == 2:
-			print "server and channel"
 			values = [n for n in model[(path[0])].iterchildren()]
 
 			# if there's no other channel on the server
@@ -343,12 +342,9 @@ class tekkaMain(object):
 				else:
 					row = model[path[0]+1]
 			else:
-				print "channel"
 				row = model[(path[0],path[1]+1)]
 
 		elif len(path) == 1:
-			print "only server"
-
 			values = [n for n in model[(path[0])].iterchildren()]
 
 			# there are no channels on this server
