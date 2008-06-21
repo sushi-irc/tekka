@@ -93,6 +93,7 @@ class tekkaCommands(object):
 			server = self.gui.getServerTree().getCurrentServer()
 			if not server:
 				return
+			self.gui.myPrint("Unknown command; Forwarding as raw.")
 			cmd[0] = cmd[0].upper()
 			self.com.raw(server, " ".join(cmd))
 			return
