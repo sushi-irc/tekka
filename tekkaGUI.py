@@ -208,6 +208,8 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		self.shortcutIDs={}
 		self.urlHandler = None
 
+		self.serverShortcuts = True
+
 	"""
 	Set a url handler for tekkaChannel/tekkaServer htmlbuffer
 	"""
@@ -241,6 +243,9 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 	def _makeShortcuts(self, treeview, path, iter, data):
 		if data[1] > 9:
 			return
+		# don't shortcut server tab
+		if not data[2] and len(path) == 1:
+			return
 		data[1]+=1
 		self.shortcutIDs["%d" % data[1]] = path
 
@@ -249,7 +254,7 @@ class tekkaServertree(tekkaList, gtk.TreeView):
 		self.shortcutIDs={}
 		model = self.get_model()
 		count = 0
-		data = [model,count]
+		data = [model,count,self.serverShortcuts]
 		model.foreach(self._makeShortcuts, data)
 
 	""" CACHING """
@@ -731,6 +736,8 @@ class tekkaGUI(object):
 
 		self.servertree.set_headers_visible(False)
 		self.servertree.set_property("can-focus",False)
+
+		self.servertree.serverShortcuts = self.config.serverShortcuts
 
 	def _setupNickList(self):
 		self.nicklistStore = gtk.ListStore(gobject.TYPE_STRING)

@@ -76,6 +76,8 @@ class tekkaConfig(object):
 
 		self.hideOnDestroy = True
 
+		self.serverShortcuts = True
+
 		# random nick colors
 		self.nickColors=["#AA0000","#2222AA","#44AA44","#123456","#987654"]
 
@@ -85,10 +87,11 @@ class tekkaConfig(object):
 		self.browserArguments = "%s"
 
 		configParser = ConfigParser.ConfigParser()
-		success = configParser.read(['%s/sushi/tekka' % self.getXDGConfigHome()])
+		filename = '%s/sushi/tekka' % self.getXDGConfigHome()
+		success = configParser.read([filename])
 
 		if not success:
-			print "Failed to parse config file."
+			print "Failed to parse config file %s." % filename
 			return
 
 		# Generic colors
@@ -128,7 +131,8 @@ class tekkaConfig(object):
 			"outputfont":"s#self.outputFont",
 			"lastloglines":"i#self.lastLogLines",
 			"showstatusbar":"b#self.showStatusBar",
-			"hideondestroy":"b#self.hideOnDestroy"
+			"hideondestroy":"b#self.hideOnDestroy",
+			"servershortcuts":"b#self.serverShortcuts"
 		}
 
 		self.transConfig(configParser, "tekka", trans)
