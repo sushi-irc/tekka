@@ -107,18 +107,17 @@ class tekkaCommands(object):
 			return
 		self.com.connectServer(xargs[0])
 
+	# /quit [<reason>]
 	def makiQuit(self, xargs):
-		if not xargs:
-			server = self.gui.getServerTree().getCurrentServer()
-			if not server:
-				self.gui.myPrint("Could not determine server.")
-				return
-			self.com.quitServer(server,"")
-		else:
-			reason = ""
-			if len(xargs) >= 2:
-				reason = " ".join(xargs[1:])
-			self.com.quitServer(xargs[0], reason)
+		server = self.gui.getServerTree().getCurrentServer()
+		if not server:
+			self.gui.myPrint("Could not determine server.")
+			return
+		
+		reason = ""
+		if xargs and len(xargs) > 0:
+			reason = " ".join(xargs)
+		self.com.quitServer(server, reason)
 
 	def makiNick(self, xargs):
 		server = self.gui.getServerTree().getCurrentServer()

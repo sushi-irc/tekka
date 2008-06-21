@@ -499,6 +499,10 @@ class tekkaSignals(object):
 				obj = servertree.getObject(server,channel)
 				obj.setJoined(False)
 				servertree.updateDescription(server,channel,obj=obj)
+				if reason:
+					reason = " (%s)" % reason
+				self.gui.channelPrint(time, server, channel, \
+					"« You have quit%s." % reason)
 		else:
 			reasonwrap = ""
 			if reason:
