@@ -213,6 +213,7 @@ class serverDialog(object):
 		except IndexError:
 			return
 		self.tekkaMainObject.getCom().renameServer(oldText, newText)
+		self.serverView.get_model()[path][0] = newText
 
 	def _retrieveServerlist(self):
 		com = self.tekkaMainObject.getCom()
@@ -282,7 +283,7 @@ class serverDialog(object):
 		result,newServer = dialog.run()
 		if result == gtk.RESPONSE_OK:
 			print "User edited server"
-			print newServer
+			#print newServer
 			self.tekkaMainObject.getCom().createServer(newServer)
 			self._retrieveServerlist()
 
