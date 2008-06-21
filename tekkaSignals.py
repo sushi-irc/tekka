@@ -263,8 +263,6 @@ class tekkaSignals(object):
 
 	def makiShutdownSignal(self, time):
 		self.gui.myPrint("Maki is shutting down!")
-		for server in self.gui.getServerTree().getServers():
-			self.gui.removeServer(server)
 		self.gui.makeWidgetsInsensitive()
 
 	""" USER SIGNALS """
@@ -494,13 +492,14 @@ class tekkaSignals(object):
 
 			if not channels:
 				return
+			
+			if reason:
+				reason = " (%s)" % reason
 
 			for channel in channels:
 				obj = servertree.getObject(server,channel)
 				obj.setJoined(False)
 				servertree.updateDescription(server,channel,obj=obj)
-				if reason:
-					reason = " (%s)" % reason
 				self.gui.channelPrint(time, server, channel, \
 					"« You have quit%s." % reason)
 		else:
