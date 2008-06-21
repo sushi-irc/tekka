@@ -119,30 +119,30 @@ class tekkaMain(object):
 
 
 	def initShortcuts(self):
-		servertree = self.gui.getServerTree()
+		serverTree = self.gui.getServerTree()
 		accelGroup = self.gui.getAccelGroup()
 
 		# Servertree shortcuts
 		for i in range(1,10):
 			gobject.signal_new("shortcut_%d" % i, tekkaGUI.tekkaServertree, \
 					gobject.SIGNAL_ACTION, None, ())
-			servertree.add_accelerator("shortcut_%d" % i, accelGroup, ord("%d" % i), \
+			serverTree.add_accelerator("shortcut_%d" % i, accelGroup, ord("%d" % i), \
 					gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
-			servertree.connect("shortcut_%d" % i, eval("self.shortcut_%d" % i))
+			serverTree.connect("shortcut_%d" % i, eval("self.shortcut_%d" % i))
 
 		# ctrl + pg up
 		gobject.signal_new("select_upper", tekkaGUI.tekkaServertree, \
 				gobject.SIGNAL_ACTION, None, ())
-		servertree.add_accelerator("select_upper", accelGroup, \
+		serverTree.add_accelerator("select_upper", accelGroup, \
 				gtk.gdk.keyval_from_name("Page_Up"), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
-		servertree.connect("select_upper", self.servertreeSelectUpper)
+		serverTree.connect("select_upper", self.serverTreeSelectUpper)
 
 		# ctrl + pg up
 		gobject.signal_new("select_lower", tekkaGUI.tekkaServertree, \
 				gobject.SIGNAL_ACTION, None, ())
-		servertree.add_accelerator("select_lower", accelGroup, \
+		serverTree.add_accelerator("select_lower", accelGroup, \
 				gtk.gdk.keyval_from_name("Page_Down"), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
-		servertree.connect("select_lower", self.servertreeSelectLower)
+		serverTree.connect("select_lower", self.serverTreeSelectLower)
 
 		# Input shortcuts
 		input = self.gui.getInput()
@@ -158,6 +158,13 @@ class tekkaMain(object):
 		topicbar.add_accelerator("clearInput", accelGroup, ord("u"), \
 				gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
 		topicbar.connect("clearInput", lambda w: w.set_text(""))
+
+		# Ctrl+W closes current tab
+		gobject.signal_new("close_tab", tekkaGUI.tekkaServertree, \
+				gobject.SIGNAL_ACTION, None, ())
+		serverTree.add_accelerator("close_tab", accelGroup, \
+				ord("w"), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
+		serverTree.connect("close_tab", self.serverTreeCloseCurrentTab)
 
 	"""
 	tries to connect to maki via dbus,
@@ -268,9 +275,26 @@ class tekkaMain(object):
 			self.gui.getStatusBar().hide()
 
 	"""
+	User pressed Ctrl+w, close the current servertree tab
+	"""
+	def serverTreeCloseCurrentTab(self, serverTree):
+		cServer,cChannel = serverTree.getCurrentChannel()
+		if not cServer:
+			return
+		elif cServer and not cChannel:
+			# disconnect + close
+			self.com.quitServer(cServer,"")
+			serverTree.removeServer(cServer)
+		else:
+			# part + close
+			self.com.part(cServer,cChannel)
+			serverTree.removeChannel(cServer,cChannel)
+		
+
+	"""
 	User pressed Ctrl+PgUp
 	"""
-	def servertreeSelectUpper(self, widget):
+	def serverTreeSelectUpper(self, widget):
 		path = widget.get_cursor()[0]
 
 		if not path:
@@ -299,7 +323,7 @@ class tekkaMain(object):
 	"""
 	User pressed Ctrl+PgDwn
 	"""
-	def servertreeSelectLower(self, widget):
+	def serverTreeSelectLower(self, widget):
 		path = widget.get_cursor()[0]
 
 		if not path:
@@ -382,8 +406,8 @@ class tekkaMain(object):
 		if not path or not len(path):
 			return
 
-		servertree = self.gui.getServerTree()
-		srow,crow = servertree.getRowFromPath(path[0])
+		serverTree = self.gui.getServerTree()
+		srow,crow = serverTree.getRowFromPath(path[0])
 
 		# left click -> activate tab
 		if event.button == 1:
@@ -395,9 +419,9 @@ class tekkaMain(object):
 			channel = None
 
 			if srow:
-				server = srow[servertree.COLUMN_NAME]
+				server = srow[serverTree.COLUMN_NAME]
 			if crow:
-				channel = crow[servertree.COLUMN_NAME]
+				channel = crow[serverTree.COLUMN_NAME]
 
 			if not crow and not srow:
 				return
@@ -406,7 +430,7 @@ class tekkaMain(object):
 
 			# channel menu
 			if crow:
-				obj = servertree.getObject(server,channel)
+				obj = serverTree.getObject(server,channel)
 
 				# part / join button
 				if not obj.getJoined():
@@ -428,7 +452,7 @@ class tekkaMain(object):
 			# server menu
 			elif srow:
 				# connect / disconnect button
-				if not srow[servertree.COLUMN_OBJECT].getConnected():
+				if not srow[serverTree.COLUMN_OBJECT].getConnected():
 					label = gtk.MenuItem(label="Connect")
 					label.connect("activate",lambda w: self.com.connectServer(server))
 					menu.append( label )
@@ -460,14 +484,14 @@ class tekkaMain(object):
 	A nick in the nicklist was double clicked
 	"""
 	def nicklistActivateRow(self, treeview, path, parm1):
-		servertree = self.gui.getServerTree()
-		server = servertree.getCurrentServer()
+		serverTree = self.gui.getServerTree()
+		server = serverTree.getCurrentServer()
 		if not server:
 			return
 		nick = treeview.get_model()[path][tekkaGUI.tekkaNickListStore.COLUMN_NICK]
-		iter = servertree.addChannel(server, nick)[1]
+		iter = serverTree.addChannel(server, nick)[1]
 
-		path = servertree.get_model().get_path(iter)
+		path = serverTree.get_model().get_path(iter)
 		self.gui.switchTreeTab(path)
 		self.signals.lastLog(server, nick)
 
@@ -642,19 +666,19 @@ class tekkaMain(object):
 	"Close tab" in servertree contextmenu was clicked
 	"""
 	def _menuRemoveTab(self, w, server, channel):
-		servertree = self.gui.getServerTree()
-		cs,cc = servertree.getCurrentChannel()
+		serverTree = self.gui.getServerTree()
+		cs,cc = serverTree.getCurrentChannel()
 
 		if not server and not channel:
 			return
 		elif server and not channel:
 			self.com.quitServer(server)
-			servertree.removeServer(server)
+			serverTree.removeServer(server)
 			if server == cs:
 				self.gui.getOutput().get_buffer().set_text("")
 		elif server and channel:
 			self.com.part(server, channel)
-			servertree.removeChannel(server,channel)
+			serverTree.removeChannel(server,channel)
 
 			if cc == channel:
 				self.gui.getOutput().get_buffer().set_text("")
