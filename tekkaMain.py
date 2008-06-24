@@ -124,21 +124,21 @@ class tekkaMain(object):
 
 		# Servertree shortcuts
 		for i in range(1,10):
-			gobject.signal_new("shortcut_%d" % i, tekkaGUI.tekkaServertree, \
+			gobject.signal_new("shortcut_%d" % i, tekkaGUI.tekkaServerTree, \
 					gobject.SIGNAL_ACTION, None, ())
 			serverTree.add_accelerator("shortcut_%d" % i, accelGroup, ord("%d" % i), \
 					gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 			serverTree.connect("shortcut_%d" % i, eval("self.shortcut_%d" % i))
 
 		# ctrl + pg up
-		gobject.signal_new("select_upper", tekkaGUI.tekkaServertree, \
+		gobject.signal_new("select_upper", tekkaGUI.tekkaServerTree, \
 				gobject.SIGNAL_ACTION, None, ())
 		serverTree.add_accelerator("select_upper", accelGroup, \
 				gtk.gdk.keyval_from_name("Page_Up"), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
 		serverTree.connect("select_upper", self.serverTreeSelectUpper)
 
 		# ctrl + pg up
-		gobject.signal_new("select_lower", tekkaGUI.tekkaServertree, \
+		gobject.signal_new("select_lower", tekkaGUI.tekkaServerTree, \
 				gobject.SIGNAL_ACTION, None, ())
 		serverTree.add_accelerator("select_lower", accelGroup, \
 				gtk.gdk.keyval_from_name("Page_Down"), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
@@ -160,7 +160,7 @@ class tekkaMain(object):
 		topicbar.connect("clearInput", lambda w: w.set_text(""))
 
 		# Ctrl+W closes current tab
-		gobject.signal_new("close_tab", tekkaGUI.tekkaServertree, \
+		gobject.signal_new("close_tab", tekkaGUI.tekkaServerTree, \
 				gobject.SIGNAL_ACTION, None, ())
 		serverTree.add_accelerator("close_tab", accelGroup, \
 				ord("w"), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
@@ -513,8 +513,8 @@ class tekkaMain(object):
 
 		elif event.button == 3:
 			nick = nickrow[tekkaGUI.tekkaNickListStore.COLUMN_NICK]
-			server = srow[tekkaGUI.tekkaServertree.COLUMN_NAME]
-			channel = crow[tekkaGUI.tekkaServertree.COLUMN_NAME]
+			server = srow[tekkaGUI.tekkaServerTree.COLUMN_NAME]
+			channel = crow[tekkaGUI.tekkaServerTree.COLUMN_NAME]
 
 			menu = gtk.Menu()
 

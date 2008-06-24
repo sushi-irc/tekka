@@ -101,18 +101,21 @@ class tekkaSignals(object):
 		for channel in channels:
 			nicks = self.com.fetchNicks(server, channel)
 			topic = self.sushi.channel_topic(server, channel)
+			serverTree = self.gui.getServerTree()
 
-			ret,iter = self.gui.getServerTree().addChannel(server, channel, nicks, topic)
+			ret,iter = serverTree.addChannel(server, channel, nicks, topic)
 
-			obj = self.gui.getServerTree().getObject(server,channel)
+			obj = serverTree.getObject(server,channel)
 			nicklist = obj.getNickList()
 
-			# channel already existant, settings
-			# nicks, set the topic and set the joined flag
-			if ret == 1:
+			if ret == serverTree.ROW_EXISTS:
+				# channel already existant, settings
+				# nicks, set the topic and set the joined flag
+
 				nicklist.clear()
 				nicklist.addNicks(nicks)
 				obj.setJoined(True)
+
 			else:
 				self.lastLog(server,channel)
 
@@ -121,6 +124,9 @@ class tekkaSignals(object):
 
 	""" HELPER """
 
+	"""
+	Fetch @lines of log from @channel on @server
+	"""
 	def lastLog(self, server, channel, lines=0):
 		obj = self.gui.getServerTree().getObject(server,channel)
 		buffer = obj.getBuffer()
@@ -128,13 +134,6 @@ class tekkaSignals(object):
 			buffer.insertHTML(buffer.get_end_iter(), "<font foreground=\"#DDDDDD\">%s</font><br/>" % self.gui.escape(line))
 
 
-	"""
-	solution to set the prefixes in the nicklist of a new
-	added server. The iter returned by addChannel() is
-	passed to this function (chaniter) like the nicks
-	and prefixes for the nicks were fetched and added to
-	the channel-nicklist
-	"""
 	def _prefixFetch(self, server, channel, nicklist, nicks):
 		for nick in nicks:
 			prefix = self.com.fetchPrefix(server,channel,nick)
@@ -224,8 +223,11 @@ class tekkaSignals(object):
 
 	# maki is reconnecting to a server
 	def serverReconnect(self, time, server):
-		# TODO: clear nicklists of server if existant
-		self.gui.getServerTree().addServer(server)
+		oNick = self.com.getOwnNick(server)
+		if oNick:
+			self.userQuit(time, server, oNick, "Connection lost")
+		else:
+			self.gui.getServerTree().addServer(server)
 		self.gui.serverPrint(time, server, "Reconnecting to %s" % server)
 
 	# the server is sending a MOTD

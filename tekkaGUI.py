@@ -183,10 +183,13 @@ class tekkaNickListStore(tekkaList, gtk.ListStore):
 	To search in the tree use findRow()
 """
 
-class tekkaServertree(tekkaList, gtk.TreeView):
+class tekkaServerTree(tekkaList, gtk.TreeView):
 	COLUMN_DESCRIPTION=0
 	COLUMN_NAME=1
 	COLUMN_OBJECT=2
+
+	ROW_ADDED=0
+	ROW_EXISTS=1
 
 	def __init__(self,w=None):
 		print "servertree init"
@@ -632,7 +635,7 @@ class tekkaGUI(object):
 		self.accelGroup = gtk.AccelGroup()
 		self._setupAccelGroup()
 
-		self.servertree = tekkaServertree()
+		self.servertree = tekkaServerTree()
 		self._setupServertree()
 
 		SW = self.widgets.get_widget("sw_servertree")
