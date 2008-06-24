@@ -223,9 +223,9 @@ class tekkaSignals(object):
 
 	# maki is reconnecting to a server
 	def serverReconnect(self, time, server):
-		oNick = self.com.getOwnNick(server)
-		if oNick:
-			self.userQuit(time, server, oNick, "Connection lost")
+		obj = self.gui.getServerTree().getObject(server)
+		if obj and obj.getConnected():
+			self.userQuit(time, server, self.com.getOwnNick(server), "Connection lost")
 		else:
 			self.gui.getServerTree().addServer(server)
 		self.gui.serverPrint(time, server, "Reconnecting to %s" % server)
