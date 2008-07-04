@@ -265,7 +265,7 @@ class tekkaSignals(object):
 
 	def makiShutdownSignal(self, time):
 		self.gui.myPrint("Maki is shutting down!")
-		self.gui.makeWidgetsInsensitive()
+		self.gui.makeWidgetsSensitive(False)
 
 	""" USER SIGNALS """
 

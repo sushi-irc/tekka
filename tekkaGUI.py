@@ -727,6 +727,16 @@ class tekkaGUI(object):
 	""" SETUP ROUTINES """
 
 	def setupWindow(self):
+		# set size
+		try:
+			self.window.resize(*[int(l) for l in self.config.windowSize])
+		except ValueError:
+			print "Wrong parameter for window size given."
+
+		# set window state
+		# TODO
+
+		# set icon
 		self.window.set_icon_from_file(os.path.join(self.config.getPrefix(), "tekka.svg"))
 
 	def _setupAccelGroup(self):
