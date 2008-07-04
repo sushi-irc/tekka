@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.5
 """
 Copyright (c) 2008 Marian Tietz
 All rights reserved.
@@ -112,11 +112,15 @@ class tekkaMain(object):
 
 		# if mainwindow gets focus stop being urgent
 		self.gui.getWindow().connect("focus-in-event", lambda w,e: False or self.gui.unhighlightWindow())
+		self.gui.getWindow().connect("size-allocate", self.mainWindowSizeAllocate)
+		self.gui.getWindow().connect("window-state-event", self.mainWindowStateEvent)
 
 		if self.gui.getStatusIcon():
 			self.gui.getStatusIcon().connect("activate", self.statusIconActivate)
 
 
+	def sizeReq(self, widget, req):
+		print "Size requested: ",req.width,req.height
 
 	def initShortcuts(self):
 		serverTree = self.gui.getServerTree()
@@ -215,6 +219,18 @@ class tekkaMain(object):
 	"""
 	Widget-Signals
 	"""
+
+	"""
+	Main window was resized
+	"""
+	def mainWindowSizeAllocate(self, widget, alloc):
+		self.config.windowSize = [alloc.width,alloc.height]
+
+	"""
+	Main window state changed
+	"""
+	def mainWindowStateChanged(self, widget, event):
+		print event.type
 
 	"""
 	User clicked on close button of mainwindow
