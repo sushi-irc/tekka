@@ -30,10 +30,9 @@ import sys
 import ConfigParser
 
 class tekkaConfig(object):
-	def __init__(self):
-		self.useExternalDBus = False
-		self.busAdress = "tcp:host=192.168.1.101,port=3333"
 
+	def __init__(self):
+		
 		if os.path.islink(sys.argv[0]):
 			self.prefix = os.path.dirname(os.path.abspath(os.readlink(sys.argv[0])))
 		else:
@@ -43,7 +42,9 @@ class tekkaConfig(object):
 		self.gladefiles["mainwindow"] = os.path.join(self.prefix, "mainwindow.glade")
 		self.gladefiles["dialogs"] = os.path.join(self.prefix, "dialogs.glade")
 
-		self.windowSize = [400,500]
+		# width,height
+		self.windowSize = {"width":800,"height":600}
+		self.windowState = None
 
 		self.sidePosition = 0
 
@@ -115,42 +116,34 @@ class tekkaConfig(object):
 			pass
 
 		# General traffic window
-		trans = {
-			"show":"b#self.generalOutput",
-			"height":"i#self.generalOutputHeight",
-			"font":"s#self.generalOutputFont"
+		options = {
+			"tekka":{
+				"windowsize":"d#self.windowSize",
+				"nick_seperator":"s#self.nickCompletionSeperator",
+				"highlightwords":"a#self.highlightWords",
+				"outputfont":"s#self.outputFont",
+				"lastloglines":"i#self.lastLogLines",
+				"showstatusbar":"b#self.showStatusBar",
+				"hideondestroy":"b#self.hideOnDestroy",
+				"servershortcuts":"b#self.serverShortcuts"
+			},
+			"general_output":{
+				"show":"b#self.generalOutput",
+				"height":"i#self.generalOutputHeight",
+				"font":"s#self.generalOutputFont"
+			},
+			"browser":{
+				"exec":"s#self.browser",
+				"args":"s#self.browserArguments"
+			},
+			"trayicon":{
+				"show":"b#self.trayicon"
+			}
 		}
+		self.transConfig(configParser, options)
 
-		self.transConfig(configParser, "general_output", trans)
-
-		# Tekka options
-
-		trans = {
-			"nick_seperator":"s#self.nickCompletionSeperator",
-			"highlightwords":"a#self.highlightWords",
-			"outputfont":"s#self.outputFont",
-			"lastloglines":"i#self.lastLogLines",
-			"showstatusbar":"b#self.showStatusBar",
-			"hideondestroy":"b#self.hideOnDestroy",
-			"servershortcuts":"b#self.serverShortcuts"
-		}
-
-		self.transConfig(configParser, "tekka", trans)
-
-		trans = {
-			"exec":"s#self.browser",
-			"args":"s#self.browserArguments"
-		}
-
-		self.transConfig(configParser, "browser", trans)
-
-		trans = {
-			"show":"b#self.trayicon"
-		}
-
-		self.transConfig(configParser, "trayicon", trans)
-
-		del trans
+	def writeConfig(self, file, options):
+		pass
 
 	def getColor(self, name):
 		if not self.colors.has_key(name):
@@ -174,36 +167,109 @@ class tekkaConfig(object):
 		except KeyError:
 			return os.path.expanduser("~/.config")
 
-	def transConfig(self, configParser, cat, trans):
-		try:
-			items = configParser.items(cat)
-		except Exception,e:
-			print e
-			return
+	"""
+	parse translation mapping ``trans``:
+	--------
+	{
+		"cat":{
+			"key":"type#var"
+		}
+	}
+	--------
+	"cat" is the config category in which the parser
+	has to search the given options.
+	options are identified by the key field, "key"
+	in the example.
+	If the config parser detects the option "key"
+	he will convert the value into the given type 
+	("type" in example) and save it into the variable
+	"var".
 
-		for (key,val) in items:
-			if not trans.has_key(key):
-				print "Unknown variable: %s" % key
+	Valid types are:
+	 - b: boolean, if the value is not 0 or "true" then 
+	      the variable is set to True, else False
+     - a: array, split the value on "," and save it 
+	      into the variable given
+	 - s: string, convert the value into string, 
+	      '"' will be deleted.
+	 - i: integer, the value will be converted into
+	      an int object
+	 - d: dict, value strings like "s#foo:s#bar,s#baz:i#1" 
+	      will result in {"foo":"bar","baz":1}.
+		  The only valid subtypes are 'i' and 's'.
+	"""
+	def transConfig(self, configParser, trans):
+		for cat in trans:
+			try:
+				items = configParser.items(cat)
+			except Exception, e:
+				print e
 				continue
 
-			rule = trans[key][0]
-			var = trans[key][2:]
+			for (key,val) in items:
+				if not trans[cat].has_key(key):
+					print "Unknown variable: %s" % key
+					continue
 
-			if rule=="a":
-				exec('%s = val.split(",")' % var)
-			elif rule=="s":
-				val = val.replace('"','')
-				exec('%s = val' % var)
-			elif rule=="b":
-				if val == "1" or val.lower() == "true":
-					exec('%s = True' % var)
-				else:
-					exec('%s = False' % var)
-			elif rule=="i":
-				try:
-					exec('%s = int(val)' % var)
-				except ValueError:
-					print "Wrong arg for key '%s'. int required." % key
+				rule = trans[cat][key][0]
+				var = trans[cat][key][2:]
+
+				if rule=="a":
+					exec('%s = val.split(",")' % var)
+				elif rule=="s":
+					val = val.replace('"','')
+					exec('%s = val' % var)
+				elif rule=="b":
+					if val != "0" or val.lower() == "true":
+						exec('%s = True' % var)
+					else:
+						exec('%s = False' % var)
+				elif rule=="i":
+					try:
+						exec('%s = int(val)' % var)
+					except ValueError:
+						print "Wrong arg for key '%s'. int required." % key
+				elif rule=="d":
+					strdict = [[a.split("#"),b.split("#")] for (a,b) in [i.split(":") for i in val.split(",")]]
+	
+					if not strdict:
+						print "No data."
+						continue
+	
+					for (key,val) in strdict:
+	
+						if len(key) != 2 or len(val) != 2:
+							print "Syntax error for type dict (key or val length not 2)"
+							continue
+	
+						nkey = self.typeconvert(key[0],key[1])
+						if not nkey:
+							continue
+	
+						nval = self.typeconvert(val[0],val[1])
+						if not nval:
+							continue
+						try:
+							exec("%s[nkey]=nval" % var)
+						except TypeError:
+							print "Type not matching for dict"
+							continue
+
+	def typeconvert(self,type,value):
+		if type == "s":
+			try:
+				return str(value)
+			except ValueError:
+				return None
+		elif type == "i":
+			try:
+				return int(value)
+			except ValueError:
+				return None
+		print "Unknown type"
+		return None
+
+
 
 class tekkaConfigDialog(object):
 	def __init__(self):
