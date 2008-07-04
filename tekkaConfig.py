@@ -43,7 +43,7 @@ class tekkaConfig(object):
 		self.gladefiles["dialogs"] = os.path.join(self.prefix, "dialogs.glade")
 
 		# width,height
-		self.windowSize = {"width":800,"height":600}
+		self.windowSize = []
 		self.windowState = None
 
 		self.sidePosition = 0
@@ -76,6 +76,7 @@ class tekkaConfig(object):
 		self.showStatusBar = True
 
 		self.hideOnDestroy = True
+		self.killMakiOnDestroy = False
 
 		self.serverShortcuts = True
 
@@ -118,14 +119,15 @@ class tekkaConfig(object):
 		# General traffic window
 		options = {
 			"tekka":{
-				"windowsize":"d#self.windowSize",
+				"window_size":"a#self.windowSize",
 				"nick_seperator":"s#self.nickCompletionSeperator",
-				"highlightwords":"a#self.highlightWords",
-				"outputfont":"s#self.outputFont",
-				"lastloglines":"i#self.lastLogLines",
-				"showstatusbar":"b#self.showStatusBar",
-				"hideondestroy":"b#self.hideOnDestroy",
-				"servershortcuts":"b#self.serverShortcuts"
+				"highlight_words":"a#self.highlightWords",
+				"output_font":"s#self.outputFont",
+				"last_log_lines":"i#self.lastLogLines",
+				"show_statusbar":"b#self.showStatusBar",
+				"hide_on_destroy":"b#self.hideOnDestroy",
+				"kill_maki_on_destroy":"b#self.killMakiOnDestroy",
+				"server_shortcuts":"b#self.serverShortcuts"
 			},
 			"general_output":{
 				"show":"b#self.generalOutput",

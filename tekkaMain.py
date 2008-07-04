@@ -119,9 +119,6 @@ class tekkaMain(object):
 			self.gui.getStatusIcon().connect("activate", self.statusIconActivate)
 
 
-	def sizeReq(self, widget, req):
-		print "Size requested: ",req.width,req.height
-
 	def initShortcuts(self):
 		serverTree = self.gui.getServerTree()
 		accelGroup = self.gui.getAccelGroup()
@@ -224,12 +221,12 @@ class tekkaMain(object):
 	Main window was resized
 	"""
 	def mainWindowSizeAllocate(self, widget, alloc):
-		self.config.windowSize = [alloc.width,alloc.height]
+		self.config.windowSize = {"width":alloc.width,"height":alloc.height}
 
 	"""
 	Main window state changed
 	"""
-	def mainWindowStateChanged(self, widget, event):
+	def mainWindowStateEvent(self, widget, event):
 		print event.type
 
 	"""
@@ -240,6 +237,8 @@ class tekkaMain(object):
 			self.gui.getWindow().hide()
 			return True
 
+		if self.config.killMakiOnDestroy:
+			self.com.shutdown()
 		gtk.main_quit()
 		return False
 
