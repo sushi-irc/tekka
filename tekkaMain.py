@@ -175,12 +175,12 @@ class tekkaMain(object):
 	def connectToMaki(self):
 		if not self.com.connectMaki():
 			print "connection failed"
-			self.gui.makeWidgetsInsensitive()
+			self.gui.makeWidgetsSensitive(False)
 			self.gui.getStatusBar().pop(self.gui.STATUSBAR_NOMAKI)
 			self.gui.getStatusBar().push(self.gui.STATUSBAR_NOMAKI, "No connection to maki.")
 		else:
 			print "success!"
-			self.gui.makeWidgetsSensitive()
+			self.gui.makeWidgetsSensitive(True)
 			self.gui.getStatusBar().pop(self.gui.STATUSBAR_NOMAKI)
 			self.signals = tekkaSignals(self.com, self.gui)
 			self.commands = tekkaCommands(self.com, self.gui)

@@ -37,6 +37,8 @@ import os
 import time
 import re
 
+import cgi
+
 import htmlbuffer
 import tekkaChannel
 
@@ -812,18 +814,11 @@ class tekkaGUI(object):
 	Makes all widgets which send or receive signals
 	insensitive
 	"""
-	def makeWidgetsInsensitive(self):
-		widgets = [self.getInput(), self.getOutput(), self.getTopicBar()]
+	def makeWidgetsSensitive(self, sens):
+		widgets = [self.getInput(), self.getOutput(), self.getTopicBar(), self.getServerTree(), self.getNickList(), self.getGeneralOutput()]
 		for widget in widgets:
-			widget.set_sensitive(False)
-
-	"""
-	Reverse of makeWidgetsInsensitive()
-	"""
-	def makeWidgetsSensitive(self):
-		widgets = [self.getInput(), self.getOutput(), self.getTopicBar()]
-		for widget in widgets:
-			widget.set_sensitive(True)
+			if widget:
+				widget.set_sensitive(sens)
 
 	""" SERVERTREE STUFF """
 
@@ -901,13 +896,14 @@ class tekkaGUI(object):
 		output.delete_mark(mark)
 
 	def escape(self, msg):
-		msg = msg.replace("&","&amp;")
+		"""msg = msg.replace("&","&amp;")
 		msg = msg.replace("<","&lt;")
 		msg = msg.replace(">","&gt;")
 		msg = msg.replace(chr(2), "<sb/>") # bold-char
 		msg = msg.replace(chr(31), "<su/>") # underline-char
 		msg = msg.replace(chr(1), "")
-		return msg
+		return msg"""
+		return cgi.escape(msg)
 
 	"""
 	Inserts a string formatted like "[H:M] <message>\n"
