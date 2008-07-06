@@ -25,7 +25,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
-import tekkaGUI
+import GUI
 import htmlbuffer
 
 
@@ -116,7 +116,7 @@ class tekkaChannel(tekkaTab):
 	def __init__(self, name, buffer=None, nicklist=None, topic=None, topicsetter=None):
 		tekkaTab.__init__(self, name, buffer)
 
-		self.nicklist = nicklist or tekkaGUI.tekkaNickListStore()
+		self.nicklist = nicklist or GUI.tekkaNickListStore()
 		self.topic = topic or ""
 		self.topicsetter = topicsetter or ""
 

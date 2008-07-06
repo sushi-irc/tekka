@@ -40,7 +40,7 @@ import re
 import cgi
 
 import htmlbuffer
-import tekkaChannel
+import channel
 
 """
 Generic list with crappy class functions.
@@ -375,7 +375,7 @@ class tekkaServerTree(tekkaList, gtk.TreeView):
 		buffer = htmlbuffer.htmlbuffer()
 		buffer.setUrlHandler(self.urlHandler)
 
-		obj = tekkaChannel.tekkaServer(servername, buffer)
+		obj = channel.tekkaServer(servername, buffer)
 		obj.setConnected(True)
 
 		iter = model.append(None)
@@ -400,7 +400,7 @@ class tekkaServerTree(tekkaList, gtk.TreeView):
 
 		buffer = htmlbuffer.htmlbuffer()
 		buffer.setUrlHandler(self.urlHandler)
-		obj = tekkaChannel.tekkaChannel(channelname, buffer)
+		obj = channel.tekkaChannel(channelname, buffer)
 		if nicks:
 			obj.getNickList().addNicks(nicks)
 		if topic:
@@ -728,10 +728,11 @@ class tekkaGUI(object):
 
 	def setupWindow(self):
 		# set size
-		try:
-			self.window.resize(*[int(l) for l in self.config.windowSize])
-		except ValueError:
-			print "Wrong parameter for window size given."
+		if self.config.windowSize:
+			try:
+				self.window.resize(*[int(l) for l in self.config.windowSize])
+			except ValueError:
+				print "Wrong parameter for window size given."
 
 		# set window state
 		# TODO

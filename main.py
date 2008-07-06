@@ -34,22 +34,22 @@ import gtk
 import gobject
 import pango
 
-from tekkaConfig import tekkaConfig
-from tekkaCom import tekkaCom
-import tekkaGUI
-from tekkaCommands import tekkaCommands
-from tekkaSignals import tekkaSignals
+from config import tekkaConfig
+from com import tekkaCom
+import GUI
+from commands import tekkaCommands
+from signals import tekkaSignals
 
-import tekkaDialog
-import tekkaPlugins
+import dialog
+import plugins
 
 class tekkaMain(object):
 	def __init__(self):
 		self.config = tekkaConfig()
 
 		self.com = tekkaCom(self.config)
-		self.gui = tekkaGUI.tekkaGUI(self.config)
-		self.plugins = tekkaPlugins.tekkaPlugins(self.config)
+		self.gui = GUI.tekkaGUI(self.config)
+		self.plugins = plugins.tekkaPlugins(self.config)
 
 		self.gui.getServerTree().setUrlHandler(self.urlHandler)
 
@@ -125,21 +125,21 @@ class tekkaMain(object):
 
 		# Servertree shortcuts
 		for i in range(1,10):
-			gobject.signal_new("shortcut_%d" % i, tekkaGUI.tekkaServerTree, \
+			gobject.signal_new("shortcut_%d" % i, GUI.tekkaServerTree, \
 					gobject.SIGNAL_ACTION, None, ())
 			serverTree.add_accelerator("shortcut_%d" % i, accelGroup, ord("%d" % i), \
 					gtk.gdk.MOD1_MASK, gtk.ACCEL_VISIBLE)
 			serverTree.connect("shortcut_%d" % i, eval("self.shortcut_%d" % i))
 
 		# ctrl + pg up
-		gobject.signal_new("select_upper", tekkaGUI.tekkaServerTree, \
+		gobject.signal_new("select_upper", GUI.tekkaServerTree, \
 				gobject.SIGNAL_ACTION, None, ())
 		serverTree.add_accelerator("select_upper", accelGroup, \
 				gtk.gdk.keyval_from_name("Page_Up"), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
 		serverTree.connect("select_upper", self.serverTreeSelectUpper)
 
 		# ctrl + pg up
-		gobject.signal_new("select_lower", tekkaGUI.tekkaServerTree, \
+		gobject.signal_new("select_lower", GUI.tekkaServerTree, \
 				gobject.SIGNAL_ACTION, None, ())
 		serverTree.add_accelerator("select_lower", accelGroup, \
 				gtk.gdk.keyval_from_name("Page_Down"), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
@@ -161,7 +161,7 @@ class tekkaMain(object):
 		topicbar.connect("clearInput", lambda w: w.set_text(""))
 
 		# Ctrl+W closes current tab
-		gobject.signal_new("close_tab", tekkaGUI.tekkaServerTree, \
+		gobject.signal_new("close_tab", GUI.tekkaServerTree, \
 				gobject.SIGNAL_ACTION, None, ())
 		serverTree.add_accelerator("close_tab", accelGroup, \
 				ord("w"), gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
@@ -227,8 +227,12 @@ class tekkaMain(object):
 	Main window state changed
 	"""
 	def mainWindowStateEvent(self, widget, event):
-		print event.type
-
+		if event.changed_mask == gtk.gdk.WINDOW_STATE_MAXIMIZED:
+			if event.new_window_state & gtk.gdk.WINDOW_STATE_MAXIMIZED:
+				self.config.windowState = gtk.gdk.WINDOW_STATE_MAXIMIZED
+			else:
+				self.config.windowState = 0
+	
 	"""
 	User clicked on close button of mainwindow
 	"""
@@ -499,7 +503,7 @@ class tekkaMain(object):
 		server = serverTree.getCurrentServer()
 		if not server:
 			return
-		nick = treeview.get_model()[path][tekkaGUI.tekkaNickListStore.COLUMN_NICK]
+		nick = treeview.get_model()[path][GUI.tekkaNickListStore.COLUMN_NICK]
 		iter = serverTree.addChannel(server, nick)[1]
 
 		path = serverTree.get_model().get_path(iter)
@@ -527,9 +531,9 @@ class tekkaMain(object):
 			pass
 
 		elif event.button == 3:
-			nick = nickrow[tekkaGUI.tekkaNickListStore.COLUMN_NICK]
-			server = srow[tekkaGUI.tekkaServerTree.COLUMN_NAME]
-			channel = crow[tekkaGUI.tekkaServerTree.COLUMN_NAME]
+			nick = nickrow[GUI.tekkaNickListStore.COLUMN_NICK]
+			server = srow[GUI.tekkaServerTree.COLUMN_NAME]
+			channel = crow[GUI.tekkaServerTree.COLUMN_NAME]
 
 			menu = gtk.Menu()
 

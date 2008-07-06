@@ -145,7 +145,10 @@ class tekkaConfig(object):
 		self.transConfig(configParser, options)
 
 	def writeConfig(self, file, options):
-		pass
+		for cat in options:
+			print "[%s]" % cat
+			for key,var in options[cat].items():
+				exec("""print "write %%s = %%s" %% (key,%s)""" % var.split("#")[1])
 
 	def getColor(self, name):
 		if not self.colors.has_key(name):
