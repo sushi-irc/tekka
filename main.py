@@ -115,9 +115,10 @@ class tekkaMain(object):
 		self.gui.getWindow().connect("size-allocate", self.mainWindowSizeAllocate)
 		self.gui.getWindow().connect("window-state-event", self.mainWindowStateEvent)
 
+		self.gui.getOutputScrollBar().get_vscrollbar().connect("value-changed", self.outputScrollBarChanged)
+
 		if self.gui.getStatusIcon():
 			self.gui.getStatusIcon().connect("activate", self.statusIconActivate)
-
 
 	def initShortcuts(self):
 		serverTree = self.gui.getServerTree()
@@ -216,6 +217,19 @@ class tekkaMain(object):
 	"""
 	Widget-Signals
 	"""
+
+	"""
+	User scrolled the vert. scrollbar of the
+	scrolled window containing the text output
+	"""
+	def outputScrollBarChanged(self, range):
+		adjust = range.get_property("adjustment")
+
+		if (adjust.upper - adjust.page_size) == range.get_value():
+			# bottom reached
+			self.gui.setAutoScroll(True)
+		else:
+			self.gui.setAutoScroll(False)
 
 	"""
 	Main window was resized
@@ -708,7 +722,7 @@ class tekkaMain(object):
 		if not self.com.getSushi():
 			print "No connection, dialog couldn't be showed."
 			return
-		serverlist = tekkaDialog.serverDialog(self)
+		serverlist = dialog.serverDialog(self)
 		result,server = serverlist.run()
 		if result == serverlist.RESPONSE_CONNECT:
 			print "we want to connect to server %s" % server

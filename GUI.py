@@ -679,8 +679,14 @@ class tekkaGUI(object):
 		# URL regexp for tagging URLs
 		self.urlExp = re.compile("(\w+)://[^ \t\"'<>]+[^ \t\"'<>,.]")
 
+		# if new message arrives, scroll down
+		self.autoScroll = True
+
 	def setWindowTitle(self, title):
 		self.window.set_title(title)
+
+	def setAutoScroll(self, switch):
+		self.autoScroll = switch
 
 	def getWindow(self):
 		return self.window
@@ -723,6 +729,9 @@ class tekkaGUI(object):
 
 	def getStatusIcon(self):
 		return self.statusIcon
+
+	def getOutputScrollBar(self):
+		return self.widgets.get_widget("sw_output")
 
 	""" SETUP ROUTINES """
 
@@ -857,6 +866,7 @@ class tekkaGUI(object):
 				return
 
 			textview.set_buffer(output) # set output buffer
+			self.setAutoScroll(True)
 			self.scrollOutput(textview, output) # scroll to the bottom
 			# reset hightlight
 			obj.setNewMessage(False)
@@ -880,6 +890,7 @@ class tekkaGUI(object):
 				return
 
 			textview.set_buffer(output)
+			self.setAutoScroll(True)
 			self.scrollOutput(textview, output)
 
 			obj.setNewMessage(False)
@@ -901,6 +912,9 @@ class tekkaGUI(object):
 	""" PRINTING ROUTINES """
 
 	def scrollOutput(self, textbox, output):
+		if not self.autoScroll:
+			return
+
 		iter = output.get_end_iter()
 		mark = output.create_mark("scrollMark", iter, False)
 		textbox.scroll_mark_onscreen(mark)
