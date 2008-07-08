@@ -225,7 +225,7 @@ class tekkaConfig(object):
 					val = val.replace('"','')
 					exec('%s = val' % var)
 				elif rule=="b":
-					if val != "0" or val.lower() == "true":
+					if val == "1" or val.lower() == "true":
 						exec('%s = True' % var)
 					else:
 						exec('%s = False' % var)
