@@ -227,9 +227,9 @@ class tekkaMain(object):
 
 		if (adjust.upper - adjust.page_size) == range.get_value():
 			# bottom reached
-			self.gui.setAutoScroll(True)
+			self.gui.setAutoScroll(self.gui.getOutput(),True)
 		else:
-			self.gui.setAutoScroll(False)
+			self.gui.setAutoScroll(self.gui.getOutput(),False)
 
 	"""
 	Main window was resized
