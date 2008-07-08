@@ -39,6 +39,7 @@ class tekkaCommands(object):
 			"nick" : self.makiNick,
 			"part" : self.makiPart,
 			"join" : self.makiJoin,
+			   "j" : self.makiJoin,
 			"me"   : self.makiAction,
 			"kick" : self.makiKick,
 			"mode" : self.makiMode,
@@ -48,6 +49,7 @@ class tekkaCommands(object):
 			"back" : self.makiBack,
 			"ctcp" : self.makiCTCP,
 		  "notice" : self.makiNotice,
+		     "msg" : self.makiNotice,
 			"oper" : self.makiOper,
 			"kill" : self.makiKill,
 			"list" : self.makiList,
@@ -271,6 +273,16 @@ class tekkaCommands(object):
 			return
 
 		self.com.notice(server, xargs[0], " ".join(xargs[1:]))
+	
+	def makiMessage(self, xargs):
+		if not xargs or len(xargs) < 2:
+			self.gui.myPrint("Usage: /msg <nick> <message>")
+
+		server = self.gui.getServerTree().getCurrentServer()
+		if not server:
+			self.gui.myPrint("Could not determine server.")
+			return
+		self.sendMessage(server, xargs[0], " ".join(xargs[1:]))
 
 	def makiOper(self, xargs):
 		if not xargs or len(xargs) < 2:

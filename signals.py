@@ -48,6 +48,7 @@ class tekkaSignals(object):
 		self.sushi.connect_to_signal("message", self.userMessage)
 		self.sushi.connect_to_signal("own_message", self.ownMessage)
 		self.sushi.connect_to_signal("own_query", self.ownQuery)
+		self.sushi.connect_to_signal("own_notice", self.ownNotice)
 		self.sushi.connect_to_signal("query", self.userQuery)
 		self.sushi.connect_to_signal("notice", self.userNotice)
 		self.sushi.connect_to_signal("action", self.userAction)
@@ -404,6 +405,24 @@ class tekkaSignals(object):
 					"&lt;CTCP:<font foreground='%s'>%s</font>&gt; %s" % \
 					(self.getNickColor(nick), self.gui.escape(nick), self.gui.escape(message)))
 
+	def ownNotice(self, time, server, target, message):
+		# if query channel with ``target`` exists, print
+		# the notice there, else print it with currentServerPrint
+		
+		channel = self.gui.getServerTree().getChannel(server,target)
+
+		ownNickColor = self.gui.getConfig().getColor("ownNick")
+		ownNick = self.com.getOwnNick(server)
+
+		if channel:
+			self.gui.channelPrint(time, server, channel, \
+				"&gt;<font foreground='%s'>%s</font>&lt; %s" % \
+					(self.getNickColor(target), self.gui.escape(target), self.gui.escape(message)))
+		else:
+			self.gui.currentServerPrint(time, server, "&gt;<font foreground='%s'>%s</font>&lt; %s" \
+					% (self.getNickColor(target), self.gui.escape(target), self.gui.escape(message)))
+
+
 	def queryNotice(self, time, server, nick, message):
 		channel = self._simFind(server, nick)
 		if channel:
@@ -413,16 +432,16 @@ class tekkaSignals(object):
 
 		if channel:
 			self.gui.channelPrint(time, server, channel, \
-					"&lt;Notice:<font foreground='%s'>%s</font>&gt; %s" % \
+					"-<font foreground='%s'>%s</font>- %s" % \
 					(self.getNickColor(nick), self.gui.escape(nick), self.gui.escape(message)))
 		else:
-			self.gui.serverPrint(time, server, \
-					"&lt;Notice:<font foreground='%s'>%s</font>&gt; %s" % \
+			self.gui.currentServerPrint(time, server, \
+					"-<font foreground='%s'>%s</font>- %s" % \
 					(self.getNickColor(nick), self.gui.escape(nick), self.gui.escape(message)))
 
 	def userNotice(self, time, server, nick, target, message):
 		self.gui.channelPrint(time, server, target, \
-				"&lt;Notice:<font foreground='%s'>%s</font>&gt; %s" % \
+				"-<font foreground='%s'>%s</font>- %s" % \
 				(self.getNickColor(nick), self.gui.escape(nick), self.gui.escape(message)))
 
 	# user sent an /me

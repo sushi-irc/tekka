@@ -993,6 +993,17 @@ class tekkaGUI(object):
 			obj.setNewMessage(type)
 			self.servertree.updateDescription(server,obj=obj)
 
+	# prints ``string`` on the current row of ``server`` or,
+	# if no current row exists into the servertab.
+	def currentServerPrint(self, timestamp, server, string, type="message"):
+		cserver,cchannel = self.servertree.getCurrentChannel()
+		if cserver == server and cchannel:
+		# print in current channel
+			self.channelPrint(timestamp,server,cchannel,string,type)
+		else:
+		# print to server tab
+			self.serverPrint(timestamp,server,string,type)
+
 	# prints 'string' to the current output
 	def myPrint(self, string, html=False):
 		output = self.textbox.get_buffer()
