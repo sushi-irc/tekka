@@ -49,7 +49,7 @@ class tekkaCommands(object):
 			"back" : self.makiBack,
 			"ctcp" : self.makiCTCP,
 		  "notice" : self.makiNotice,
-		     "msg" : self.makiNotice,
+		     "msg" : self.makiMessage,
 			"oper" : self.makiOper,
 			"kill" : self.makiKill,
 			"list" : self.makiList,
@@ -63,10 +63,10 @@ class tekkaCommands(object):
 
 	""" COMMAND METHODS """
 
-	def sendMessage(self, server, channel, text):
+	def sendMessage(self, server, channel, text, parse_cmd=True):
 		if not text:
 			return
-		if text[0] == "/" and text[1] != "/":
+		if text[0] == "/" and text[1] != "/" and parse_cmd:
 			self.parseCommand(text[1:])
 		else:
 			if text[0:2] == "//":
@@ -282,7 +282,9 @@ class tekkaCommands(object):
 		if not server:
 			self.gui.myPrint("Could not determine server.")
 			return
-		self.sendMessage(server, xargs[0], " ".join(xargs[1:]))
+
+		# to prevent recursion disable command parsing here
+		self.sendMessage(server, xargs[0], " ".join(xargs[1:]), parse_cmd=False)
 
 	def makiOper(self, xargs):
 		if not xargs or len(xargs) < 2:

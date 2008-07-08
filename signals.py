@@ -324,11 +324,26 @@ class tekkaSignals(object):
 		message = self.gui.escape(message)
 
 		nick = self.com.getOwnNick(server)
-		prefix = self.gui.getServerTree().getObject(server,channel).getNickList().getPrefix(nick)
+		
+		try:
+			prefix = self.gui.getServerTree().getObject(server,channel).getNickList().getPrefix(nick)
+			
+			self.gui.channelPrint(timestamp, server, channel, \
+				"&lt;%s<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" \
+				% (prefix, self.gui.getConfig().getColor("ownNick"), nick, self.gui.getConfig().getColor("ownText"), message))
+		except AttributeError:
+			# this happens if sendMessage is called to send a message
+			# directly to a user (e.g. chanserv):
+			# AttributeError: 'NoneType' object has no attribute 'getNickList'
+			# and
+			# AttributeError: 'NoneType' object has no attribute 'getBuffer'
+			prefix = " "
+			self.gui.currentServerPrint(timestamp, server, \
+				"-%s<font foreground='%s'>%s</font>/<font foreground='%s'>%s</font>- <font foreground='%s'>%s</font>" \
+				% (prefix, self.gui.getConfig().getColor("ownNick"), nick, self.getNickColor(channel), channel, self.gui.getConfig().getColor("ownText"), message))
 
-		self.gui.channelPrint(timestamp, server, channel, \
-		"&lt;%s<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" \
-		% (prefix, self.gui.getConfig().getColor("ownNick"), nick, self.gui.getConfig().getColor("ownText"), message))
+
+
 
 	def ownQuery(self, timestamp, server, channel, message):
 		self.ownMessage(timestamp,server,channel,message)
