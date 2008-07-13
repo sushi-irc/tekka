@@ -917,15 +917,24 @@ class tekkaGUI(object):
 
 	""" PRINTING ROUTINES """
 
+	def scroll_to_end_iter(self, textview):
+		buffer = textview.get_buffer()
+		end_iter = buffer.get_end_iter()
+		textview.scroll_to_iter(end_iter, 0, False, 1, 1)
+		return False
+
 	def scrollOutput(self, textbox, output):
 
 		if textbox in self.autoScroll:
 			return
-
+		"""
 		iter = output.get_end_iter()
+		iter = output.get_end_iter().copy()
 		mark = output.create_mark("scrollMark", iter, False)
 		textbox.scroll_mark_onscreen(mark)
 		output.delete_mark(mark)
+		"""
+		gobject.idle_add(self.scroll_to_end_iter,textbox)
 
 	def escape(self, msg):
 		"""msg = msg.replace("&","&amp;")
