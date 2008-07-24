@@ -955,7 +955,7 @@ class tekkaGUI(object):
 		timestring = time.strftime("%H:%M", time.localtime(timestamp))
 
 		message = self._urlToTag(message)
-		outputstring = "[%s] %s<br/>" % (timestring, message)
+		outputstring = "[%s] %s" % (timestring, message)
 
 		obj = self.servertree.getObject(server,channel)
 		if not obj:
@@ -972,7 +972,7 @@ class tekkaGUI(object):
 		if self.generalOutput:
 			buffer = self.generalOutput.get_buffer()
 			buffer.insertHTML(buffer.get_end_iter(), \
-					"[%s] &lt;%s:%s&gt; %s<br/>" % (timestring, server, channel, message))
+					"[%s] &lt;%s:%s&gt; %s" % (timestring, server, channel, message))
 			self.scrollOutput(self.generalOutput, buffer)
 
 		# if channel is "activated"
@@ -998,7 +998,7 @@ class tekkaGUI(object):
 
 		timestr = time.strftime("%H:%M", time.localtime(timestamp))
 
-		output.insertHTML(output.get_end_iter(), "[%s] %s<br/>" % (timestr,string))
+		output.insertHTML(output.get_end_iter(), "[%s] %s" % (timestr,string))
 
 		cserver,cchannel = self.servertree.getCurrentChannel()
 		if cserver == server and not cchannel:
@@ -1028,9 +1028,9 @@ class tekkaGUI(object):
 			print "No output buffer here!"
 			return
 		if not html:
-			output.insert(output.get_end_iter(), string+"\n")
+			output.insert(output.get_end_iter(), "\n"+string)
 		else:
-			output.insertHTML(output.get_end_iter(), string+"<br/>")
+			output.insertHTML(output.get_end_iter(), string)
 		self.scrollOutput(self.textbox, output)
 
 	# tekkaClear command method from tekkaCom:

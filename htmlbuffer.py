@@ -136,12 +136,13 @@ class htmlbuffer(gtk.TextBuffer):
 	def getUrlHandler(self):
 		return self.urlHandler
 
-	def insertHTML(self, iter, text):
+	def insertHTML(self, iter, text, recursive=False):
 		startoffset = iter.get_offset()
 		parser = xml.sax.make_parser()
 		parser.setContentHandler(htmlhandler(self,self.urlHandler))
 
-		text = "<msg>%s</msg>" % text
+		if not recursive:
+			text = "<msg><br/>%s</msg>" % text
 
 		try:
 			parser.parse(StringIO(str(text)))
@@ -165,7 +166,7 @@ class htmlbuffer(gtk.TextBuffer):
 					oldend = self.get_iter_at_offset(startoffset)
 					self.delete(oldend, self.get_end_iter())
 
-					self.insertHTML(oldend, text.replace(fchar,""))
+					self.insertHTML(oldend, text.replace(fchar,""), True)
 				else:
 					self.errorcount = 0
 					print "Too many faulty chars."

@@ -132,7 +132,7 @@ class tekkaSignals(object):
 		obj = self.gui.getServerTree().getObject(server,channel)
 		buffer = obj.getBuffer()
 		for line in self.com.fetchLog(server, channel, dbus.UInt64(lines or self.com.getConfig().lastLogLines)):
-			buffer.insertHTML(buffer.get_end_iter(), "<font foreground=\"#DDDDDD\">%s</font><br/>" % self.gui.escape(line))
+			buffer.insertHTML(buffer.get_end_iter(), "<font foreground=\"#DDDDDD\">%s</font>" % self.gui.escape(line))
 
 
 	def _prefixFetch(self, server, channel, nicklist, nicks):

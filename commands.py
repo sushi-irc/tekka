@@ -362,7 +362,7 @@ class tekkaCommands(object):
 			for line in self.com.fetchLog(server, \
 					xargs[0].lower(), self.com.getConfig().lastLogLines):
 				output.insertHTML(output.get_end_iter(), \
-					"<font foreground='#DDDDDD'>%s</font><br/>" % \
+					"<font foreground='#DDDDDD'>%s</font>" % \
 						self.gui.escape(line))
 
 	def tekkaClear(self, xargs):
