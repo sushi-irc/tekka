@@ -33,6 +33,8 @@ translates them into gui-actions.
 
 import dbus
 
+import time as mtime
+
 class tekkaSignals(object):
 	def __init__(self, com, gui):
 		self.com = com
@@ -78,6 +80,7 @@ class tekkaSignals(object):
 
 		# Channel-Signals
 		self.sushi.connect_to_signal("topic", self.channelTopic)
+		self.sushi.connect_to_signal("banlist", self.channelBanlist)
 
 		# Maki signals
 		self.sushi.connect_to_signal("shutdown", self.makiShutdownSignal)
@@ -261,6 +264,17 @@ class tekkaSignals(object):
 			nick = "You"
 
 		self.gui.channelPrint(time, server, channel, "• %s changed the topic to '%s'" % (nick, self.gui.escape(topic)))
+
+	def channelBanlist(self, time, server, channel, mask, who, when):
+		if not mask and not who and when == -1:
+			self.gui.channelPrint(time, server, channel, "End of banlist.")
+			return
+
+		timestring = mtime.strftime("%Y-%m-%d %H:%M:%S", mtime.localtime(when))
+
+		self.gui.channelPrint(time, server, channel, \
+			"%s by %s on %s" % \
+			(self.gui.escape(mask), self.gui.escape(who), self.gui.escape(timestring)))
 
 	""" MAKI SIGNALS """
 
