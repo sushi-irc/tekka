@@ -58,8 +58,6 @@ class addServerDialog(object):
 		realnameInput = self.widgets.get_widget("serverAdd_Realname")
 		nickservInput = self.widgets.get_widget("serverAdd_Nickserv")
 
-		serverportInput.set_text("6667")
-
 		result = dialog.run()
 		if result == self.RESPONSE_ADD:
 			data = {}
