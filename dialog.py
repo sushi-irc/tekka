@@ -83,10 +83,6 @@ class editServerDialog(object):
 		self.widgets = None
 		self.serverdata = serverdata
 		self.tekkaMainObject = tekkaMainObject
-		self.deleteServer = 0 # if the server name is changed, delete the old
-
-	def servernameChanged(self,widget):
-		self.deleteServer = 1
 
 	def run(self):
 		newServer = None
@@ -95,10 +91,6 @@ class editServerDialog(object):
 		if not self.widgets:
 			return 0,None
 
-		serverservernameInput = self.widgets.get_widget("serverEdit_Servername")
-		serverservernameInput.set_text(self.serverdata["servername"])
-		serverservernameInput.connect("changed",self.servernameChanged)
-		self.orgServername = self.serverdata["servername"]
 		serveraddressInput = self.widgets.get_widget("serverEdit_Address")
 		serveraddressInput.set_text(self.serverdata["address"])
 		serverportInput = self.widgets.get_widget("serverEdit_Port")
@@ -120,10 +112,9 @@ class editServerDialog(object):
 		result = dialog.run()
 
 		if result == gtk.RESPONSE_OK:
-			if self.deleteServer:
-				self.tekkaMainObject.getCom().deleteServer(self.orgServername)
 			newServer = {}
-			for i in ("servername","address","port","name","nick","nickserv"):
+			newServer["servername"] = self.serverdata["servername"]
+			for i in ("address","port","name","nick","nickserv"):
 				newServer[i] = eval("server%sInput.get_text()" % (i))
 
 		dialog.destroy()
