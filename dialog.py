@@ -204,7 +204,7 @@ class serverDialog(object):
 		except IndexError:
 			return
 		self.tekkaMainObject.getCom().renameServer(oldText, newText)
-		self.serverView.get_model()[path][0] = newText
+		self._retrieveServerlist()
 
 	def _retrieveServerlist(self):
 		com = self.tekkaMainObject.getCom()
