@@ -47,6 +47,7 @@ class tekkaCommands(object):
 			"quit" : self.makiQuit,
 			"away" : self.makiAway,
 			"back" : self.makiBack,
+			"nickserv" : self.makiNickserv,
 			"ctcp" : self.makiCTCP,
 		  "notice" : self.makiNotice,
 		     "msg" : self.makiMessage,
@@ -251,6 +252,15 @@ class tekkaCommands(object):
 			self.gui.myPrint("Can't determine server.")
 			return
 		self.com.setBack(s)
+
+	def makiNickserv(self, xargs):
+		server = self.gui.getServerTree().getCurrentServer()
+
+		if not server:
+			self.gui.myPrint("Can't determine server.")
+			return
+
+		self.com.nickserv(server)
 
 	def makiCTCP(self, xargs):
 		if not xargs or len(xargs) < 2:

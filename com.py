@@ -175,7 +175,7 @@ class tekkaCom(object):
 	def kick(self, server, channel, nick, reason=""):
 		self.sushi.kick(server, channel, nick, reason)
 
-	def nickserv(server):
+	def nickserv(self, server):
 		self.sushi.nickserv(server)
 
 	def setAway(self, server, message):
