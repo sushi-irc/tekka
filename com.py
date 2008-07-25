@@ -228,10 +228,7 @@ class tekkaCom(object):
 				self.sushi.server_set(name, "server", k, v)
 
 	def renameServer(self, name, newName):
-		try:
-			self.sushi.server_rename(name, newName)
-		except dbus.exceptions.UnknownMethodException:
-			print "server_rename not known to maki"
+		self.sushi.server_rename(name, newName)
 
 	def deleteServer(self, name):
 		self.sushi.server_remove(name, "", "")
