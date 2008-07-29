@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Mon Jun 16 10:26:34 2008 -->
+<!--Generated with glade3 3.4.5 on Wed Jul 30 17:18:55 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="tekkaMainwindow">
     <property name="width_request">800</property>
@@ -16,7 +16,7 @@
             <child>
               <widget class="GtkMenuItem" id="menuitem1">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">_Tekka</property>
+                <property name="label" translatable="yes">_tekka</property>
                 <property name="use_underline">True</property>
                 <child>
                   <widget class="GtkMenu" id="menu1">
@@ -24,26 +24,14 @@
                     <child>
                       <widget class="GtkImageMenuItem" id="tekkaMainwindow_MenuTekka_Connect">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">gtk-connect</property>
+                        <property name="label" translatable="yes">Server List</property>
                         <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
                         <signal name="activate" handler="tekkaMainwindow_Connect_activate_cb"/>
-                      </widget>
-                    </child>
-                    <child>
-                      <widget class="GtkImageMenuItem" id="menuMakiConnect">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Connect to maki</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="makiConnect_activate_cb"/>
-                      </widget>
-                    </child>
-                    <child>
-                      <widget class="GtkImageMenuItem" id="tekkaMainWindow_MenuTekka_Shutdown">
-                        <property name="visible">True</property>
-                        <property name="label" translatable="yes">Close maki</property>
-                        <property name="use_underline">True</property>
-                        <signal name="activate" handler="tekkaMainwindow_Shutdown_activate_cb"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image1">
+                            <property name="stock">gtk-network</property>
+                          </widget>
+                        </child>
                       </widget>
                     </child>
                     <child>
@@ -60,9 +48,47 @@
               </widget>
             </child>
             <child>
+              <widget class="GtkMenuItem" id="menuitem3">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_maki</property>
+                <property name="use_underline">True</property>
+                <child>
+                  <widget class="GtkMenu" id="menu4">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menuMakiConnect">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Connect</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="makiConnect_activate_cb"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image2">
+                            <property name="stock">gtk-connect</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="tekkaMainWindow_MenuTekka_Shutdown">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Shutdown</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="tekkaMainwindow_Shutdown_activate_cb"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image3">
+                            <property name="stock">gtk-disconnect</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+            </child>
+            <child>
               <widget class="GtkMenuItem" id="menuitem2">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">_Show</property>
+                <property name="label" translatable="yes">_View</property>
                 <property name="use_underline">True</property>
                 <child>
                   <widget class="GtkMenu" id="menu2">
@@ -70,7 +96,7 @@
                     <child>
                       <widget class="GtkCheckMenuItem" id="showGeneralOutput">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Show _general output</property>
+                        <property name="label" translatable="yes">_General Output</property>
                         <property name="use_underline">True</property>
                         <signal name="toggled" handler="showGeneralOutput_toggled_cb"/>
                       </widget>
@@ -78,7 +104,7 @@
                     <child>
                       <widget class="GtkCheckMenuItem" id="showStatusBar">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Show status bar</property>
+                        <property name="label" translatable="yes">_Status Bar</property>
                         <property name="use_underline">True</property>
                         <signal name="toggled" handler="showStatusBar_toggled_cb"/>
                       </widget>
