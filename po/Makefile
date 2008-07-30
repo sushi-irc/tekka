@@ -28,6 +28,7 @@ tekka.pot: $(GLADEH)
 
 %.po: tekka.pot
 	if test -f $@; then \
+		touch $@; \
 		msgmerge --update $@ $<; \
 	else \
 		msginit --input=$< --output=$@; \
