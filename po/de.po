@@ -1,0 +1,144 @@
+# German translations for tekka package
+# German messages for tekka.
+# Copyright (C) 2008 Michael Kuhn
+# This file is distributed under the same license as the tekka package.
+# Michael Kuhn <suraia@ikkoku.de>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tekka 1.0-alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-07-30 12:05+0200\n"
+"PO-Revision-Date: 2008-07-30 12:05+0200\n"
+"Last-Translator: Michael Kuhn <suraia@ikkoku.de>\n"
+"Language-Team: German\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../dialogs.glade.h:1
+msgid "<b>Add Server</b>"
+msgstr "<b>Server hinzufügen</b>"
+
+#: ../dialogs.glade.h:2
+msgid "<b>Edit Server</b>"
+msgstr "<b>Server bearbeiten</b>"
+
+#: ../dialogs.glade.h:3
+msgid ""
+"<span weight=\"bold\" size=\"larger\">Delete Server</span>\n"
+"\n"
+"Are you sure you want to delete the server?"
+msgstr ""
+"<span weight=\"bold\" size=\"larger\">Server löschen</span>\n"
+"\n"
+"Soll der Server gelöscht werden?"
+
+#: ../dialogs.glade.h:6
+msgid "Address:"
+msgstr "Adresse:"
+
+#: ../dialogs.glade.h:7
+msgid "Auto-connect:"
+msgstr "Automatisch verbinden:"
+
+#: ../dialogs.glade.h:8
+msgid "List"
+msgstr ""
+
+#: ../dialogs.glade.h:9
+msgid "Nick name:"
+msgstr "Nickname:"
+
+#: ../dialogs.glade.h:10
+msgid "NickServ password:"
+msgstr "NickServ-Passwort:"
+
+#: ../dialogs.glade.h:11
+msgid "Port:"
+msgstr ""
+
+#: ../dialogs.glade.h:12
+msgid "Real name:"
+msgstr "Realer Name:"
+
+#: ../dialogs.glade.h:13
+msgid "Server name:"
+msgstr "Servername:"
+
+#: ../dialogs.glade.h:14
+msgid "gtk-add"
+msgstr ""
+
+#: ../dialogs.glade.h:15
+msgid "gtk-cancel"
+msgstr ""
+
+#: ../dialogs.glade.h:16
+msgid "gtk-close"
+msgstr ""
+
+#: ../dialogs.glade.h:17
+msgid "gtk-connect"
+msgstr ""
+
+#: ../dialogs.glade.h:18
+msgid "gtk-delete"
+msgstr ""
+
+#: ../dialogs.glade.h:19
+msgid "gtk-no"
+msgstr ""
+
+#: ../dialogs.glade.h:20
+msgid "gtk-ok"
+msgstr ""
+
+#: ../dialogs.glade.h:21
+msgid "gtk-yes"
+msgstr ""
+
+#: ../mainwindow.glade.h:1
+msgid "Connect"
+msgstr "Verbinden"
+
+#: ../mainwindow.glade.h:2
+msgid "Server List"
+msgstr "Serverliste"
+
+#: ../mainwindow.glade.h:3
+msgid "Show _General Output"
+msgstr "Allgemeine Ausgabe"
+
+#: ../mainwindow.glade.h:4
+msgid "Show _Status Bar"
+msgstr "_Statusleiste"
+
+#: ../mainwindow.glade.h:5
+msgid "Shutdown"
+msgstr "Beenden"
+
+#: ../mainwindow.glade.h:6
+msgid "_Help"
+msgstr "_Hilfe"
+
+#: ../mainwindow.glade.h:7
+msgid "_View"
+msgstr "_Ansicht"
+
+#: ../mainwindow.glade.h:8
+msgid "_maki"
+msgstr ""
+
+#: ../mainwindow.glade.h:9
+msgid "_tekka"
+msgstr ""
+
+#: ../mainwindow.glade.h:10
+msgid "gtk-about"
+msgstr ""
+
+#: ../mainwindow.glade.h:11
+msgid "gtk-quit"
+msgstr ""
