@@ -236,6 +236,7 @@ class tekkaSignals(object):
 
 	# the server is sending a MOTD
 	def serverMOTD(self, time, server, message):
+		self.gui.getServerTree().addServer(server)
 		self.gui.serverPrint(time, server, self.gui.escape(message))
 
 	def list(self, time, server, channel, users, topic):
