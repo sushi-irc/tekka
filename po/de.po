@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tekka 1.0-alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-30 12:05+0200\n"
+"POT-Creation-Date: 2008-07-30 17:21+0200\n"
 "PO-Revision-Date: 2008-07-30 12:05+0200\n"
 "Last-Translator: Michael Kuhn <suraia@ikkoku.de>\n"
 "Language-Team: German\n"
@@ -108,20 +108,20 @@ msgid "Server List"
 msgstr "Serverliste"
 
 #: ../mainwindow.glade.h:3
-msgid "Show _General Output"
-msgstr "Allgemeine Ausgabe"
-
-#: ../mainwindow.glade.h:4
-msgid "Show _Status Bar"
-msgstr "_Statusleiste"
-
-#: ../mainwindow.glade.h:5
 msgid "Shutdown"
 msgstr "Beenden"
 
-#: ../mainwindow.glade.h:6
+#: ../mainwindow.glade.h:4
+msgid "_General Output"
+msgstr "_Allgemeine Ausgabe"
+
+#: ../mainwindow.glade.h:5
 msgid "_Help"
 msgstr "_Hilfe"
+
+#: ../mainwindow.glade.h:6
+msgid "_Status Bar"
+msgstr "_Statusleiste"
 
 #: ../mainwindow.glade.h:7
 msgid "_View"
