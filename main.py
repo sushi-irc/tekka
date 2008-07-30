@@ -36,6 +36,7 @@ import pango
 
 import locale
 import gettext
+from gettext import gettext as _
 
 from config import tekkaConfig
 from com import tekkaCom
@@ -55,7 +56,6 @@ class tekkaMain(object):
 		gettext.textdomain(self.config.getName())
 		gtk.glade.bindtextdomain(self.config.getName(), self.config.getLocaleDir())
 		gtk.glade.textdomain(self.config.getName())
-		_ = gettext.gettext
 
 		self.com = tekkaCom(self.config)
 		self.gui = GUI.tekkaGUI(self.config)
