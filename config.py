@@ -32,11 +32,19 @@ import ConfigParser
 class tekkaConfig(object):
 
 	def __init__(self):
-		
+		self.name = "tekka"
+
 		if os.path.islink(sys.argv[0]):
 			self.prefix = os.path.dirname(os.path.abspath(os.readlink(sys.argv[0])))
 		else:
 			self.prefix = os.path.dirname(os.path.abspath(sys.argv[0]))
+
+		# Repository
+		self.localeDir = os.path.join(self.prefix, "po", "locale")
+
+		if not os.path.isdir(self.localeDir):
+			# Installed
+			self.localeDir = os.path.join(self.prefix, "..", "..", "locale")
 
 		self.gladefiles = {}
 		self.gladefiles["mainwindow"] = os.path.join(self.prefix, "mainwindow.glade")
@@ -162,6 +170,12 @@ class tekkaConfig(object):
 		if self.shortcuts.has_key(startkey):
 			return self.shortcuts[startkey]
 		return None
+
+	def getName(self):
+		return self.name
+
+	def getLocaleDir(self):
+		return self.localeDir
 
 	def getPrefix(self):
 		return self.prefix

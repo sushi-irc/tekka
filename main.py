@@ -34,6 +34,9 @@ import gtk
 import gobject
 import pango
 
+import locale
+import gettext
+
 from config import tekkaConfig
 from com import tekkaCom
 import GUI
@@ -46,6 +49,13 @@ import plugins
 class tekkaMain(object):
 	def __init__(self):
 		self.config = tekkaConfig()
+
+		locale.setlocale(locale.LC_ALL, '')
+		gettext.bindtextdomain(self.config.getName(), self.config.getLocaleDir())
+		gettext.textdomain(self.config.getName())
+		gtk.glade.bindtextdomain(self.config.getName(), self.config.getLocaleDir())
+		gtk.glade.textdomain(self.config.getName())
+		_ = gettext.gettext
 
 		self.com = tekkaCom(self.config)
 		self.gui = GUI.tekkaGUI(self.config)
