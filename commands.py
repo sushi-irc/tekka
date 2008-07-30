@@ -215,8 +215,8 @@ class tekkaCommands(object):
 			self.myPrint("could not determine server.")
 			return
 		param = ""
-		if len(xargs)==3:
-			param = xargs[2]
+		if len(xargs) > 2:
+			param = " ".join(xargs[2:])
 		self.com.mode(server, xargs[0], "%s %s" % (xargs[1],param))
 
 	def makiTopic(self, xargs):
