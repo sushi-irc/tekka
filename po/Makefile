@@ -13,7 +13,7 @@ install: all
 	done
 
 clean:
-	$(RM) *.pot
+	$(RM) tekka.pot
 	$(RM) $(GLADEH)
 	$(RM) *.mo
 	$(RM) -r locale
