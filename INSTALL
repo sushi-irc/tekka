@@ -1,0 +1,25 @@
+                                  REQUIREMENTS
+
+You will need the DBus, Glade, GObject and GTK Python modules.
+On Debian-based systems these are available in the following packages:
+
+* python-dbus
+* python-glade2
+* python-gobject
+* python-gtk2
+
+                               BUILD REQUIREMENTS
+
+You will need the gettext and intltool tools.
+On Debian-based systems these are available in the following packages:
+
+* gettext
+* intltool
+
+                                  INSTALLATION
+
+Just type "make", followed by "make install". This will install all the
+necessary files in your home directory. Other directories can be specified by
+calling make with the prefix variable, for example, "make prefix=/usr install".
+
+# vi:textwidth=80:expandtab
