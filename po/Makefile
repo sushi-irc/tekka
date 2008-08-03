@@ -5,11 +5,11 @@ PY     = $(wildcard ../*.py)
 GLADE  = $(wildcard ../*.glade)
 GLADEH = $(GLADE:.glade=.glade.h)
 
-all: $(PO:%.po=%.mo)
+all: $(PO)
 
-install: all
-	for file in $(PO:%.po=%.mo); do \
-		../../tools/install-mo.sh tekka $${file} $(localedir); \
+install: $(PO:%.po=%.mo)
+	for file in $+; do \
+		../../tools/install-mo.sh tekka "$${file}" '$(localedir)'; \
 	done
 
 clean:
@@ -17,20 +17,18 @@ clean:
 	$(RM) $(GLADEH)
 	$(RM) *.mo
 
-update: $(wildcard *.po)
-
 $(GLADEH): %.h: %
 	$(QUIET_GEN) intltool-extract --type=gettext/glade $+
 
 tekka.pot: $(PY) $(GLADEH)
-	$(QUIET_GEN) xgettext --keyword=_ --keyword=N_ --output=$@ $(PY) $(GLADEH)
+	$(QUIET_GEN) xgettext --keyword=_ --keyword=N_ --output=$@ $+
 
 %.po: tekka.pot
 	$(QUIET_GEN) if test -f $@; then \
 		touch $@; \
-		msgmerge --update $@ $<; \
+		msgmerge --update $@ $+; \
 	else \
-		msginit --input=$< --output=$@; \
+		msginit --input=$+ --output=$@; \
 	fi
 
 %.mo: %.po
