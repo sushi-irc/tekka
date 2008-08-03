@@ -23,7 +23,7 @@ update: $(wildcard *.po)
 $(GLADEH): %.h: %
 	intltool-extract --type=gettext/glade $+
 
-tekka.pot: $(GLADEH)
+tekka.pot: $(PY) $(GLADEH)
 	xgettext --keyword=_ --keyword=N_ --output=$@ $(PY) $(GLADEH)
 
 %.po: tekka.pot
