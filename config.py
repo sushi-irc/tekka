@@ -25,6 +25,8 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+import xdg.BaseDirectory
+
 import os
 import sys
 import ConfigParser
@@ -97,7 +99,7 @@ class tekkaConfig(object):
 		self.browserArguments = "%s"
 
 		configParser = ConfigParser.ConfigParser()
-		filename = '%s/sushi/tekka' % self.getXDGConfigHome()
+		filename = '%s/sushi/tekka' % xdg.BaseDirectory.xdg_config_home
 		success = configParser.read([filename])
 
 		if not success:
@@ -179,12 +181,6 @@ class tekkaConfig(object):
 
 	def getPrefix(self):
 		return self.prefix
-
-	def getXDGConfigHome(self):
-		try:
-			return os.environ["XDG_CONFIG_HOME"]
-		except KeyError:
-			return os.path.expanduser("~/.config")
 
 	"""
 	parse translation mapping ``trans``:

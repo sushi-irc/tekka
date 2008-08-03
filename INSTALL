@@ -7,6 +7,7 @@ On Debian-based systems these are available in the following packages:
 * python-glade2
 * python-gobject
 * python-gtk2
+* python-xdg
 
                                BUILD REQUIREMENTS
 
