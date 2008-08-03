@@ -20,13 +20,13 @@ clean:
 update: $(wildcard *.po)
 
 $(GLADEH): %.h: %
-	intltool-extract --type=gettext/glade $+
+	$(QUIET_GEN) intltool-extract --type=gettext/glade $+
 
 tekka.pot: $(PY) $(GLADEH)
-	xgettext --keyword=_ --keyword=N_ --output=$@ $(PY) $(GLADEH)
+	$(QUIET_GEN) xgettext --keyword=_ --keyword=N_ --output=$@ $(PY) $(GLADEH)
 
 %.po: tekka.pot
-	if test -f $@; then \
+	$(QUIET_GEN) if test -f $@; then \
 		touch $@; \
 		msgmerge --update $@ $<; \
 	else \
@@ -34,4 +34,4 @@ tekka.pot: $(PY) $(GLADEH)
 	fi
 
 %.mo: %.po
-	msgfmt --output-file=$@ $+
+	$(QUIET_GEN) msgfmt --output-file=$@ $+
