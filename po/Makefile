@@ -9,7 +9,7 @@ all: $(PO:%.po=%.mo)
 
 install: all
 	for file in $(PO:%.po=%.mo); do \
-		../../tools/install-mo.sh tekka $${file} $(sharedir)/locale; \
+		../../tools/install-mo.sh tekka $${file} $(localedir); \
 	done
 
 clean:

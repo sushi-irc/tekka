@@ -41,12 +41,7 @@ class tekkaConfig(object):
 		else:
 			self.prefix = os.path.dirname(os.path.abspath(sys.argv[0]))
 
-		# Repository
-		self.localeDir = os.path.join(self.prefix, "po", "locale")
-
-		if not os.path.isdir(self.localeDir):
-			# Installed
-			self.localeDir = os.path.join(self.prefix, "..", "..", "locale")
+		self.localeDir = os.path.join(self.prefix, "..", "..", "locale")
 
 		self.gladefiles = {}
 		self.gladefiles["mainwindow"] = os.path.join(self.prefix, "mainwindow.glade")
