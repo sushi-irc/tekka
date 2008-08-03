@@ -16,7 +16,6 @@ clean:
 	$(RM) tekka.pot
 	$(RM) $(GLADEH)
 	$(RM) *.mo
-	$(RM) -r locale
 
 update: $(wildcard *.po)
 
@@ -36,4 +35,3 @@ tekka.pot: $(PY) $(GLADEH)
 
 %.mo: %.po
 	msgfmt --output-file=$@ $+
-	../../tools/install-mo.sh tekka $@ locale
