@@ -514,6 +514,8 @@ class tekkaMain(object):
 	"""
 	def userInput(self, widget):
 		text =  widget.get_text()
+		if not text:
+			return
 		server,channel = self.gui.getServerTree().getCurrentChannel()
 		self.gui.getHistory().append(server, channel,text)
 		self.commands.sendMessage(server, channel, text)
