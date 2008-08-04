@@ -90,9 +90,6 @@ class tekkaConfig(object):
 
 		self.outputFont = "Monospace"
 
-		self.browser = "xdg-open"
-		self.browserArguments = "%s"
-
 		configParser = ConfigParser.ConfigParser()
 		filename = '%s/sushi/tekka' % xdg.BaseDirectory.xdg_config_home
 		success = configParser.read([filename])
@@ -138,10 +135,6 @@ class tekkaConfig(object):
 				"show":"b#self.generalOutput",
 				"height":"i#self.generalOutputHeight",
 				"font":"s#self.generalOutputFont"
-			},
-			"browser":{
-				"exec":"s#self.browser",
-				"args":"s#self.browserArguments"
 			},
 			"trayicon":{
 				"show":"b#self.trayicon"

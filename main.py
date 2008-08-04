@@ -29,6 +29,7 @@ SUCH DAMAGE.
 import os
 import subprocess
 import sys
+import webbrowser
 
 import gtk
 import gobject
@@ -211,11 +212,11 @@ class tekkaMain(object):
 			pass
 		if event.type == gtk.gdk.BUTTON_PRESS:
 			if event.button == 1:
-				self.openUrlWithBrowser(url)
+				webbrowser.open(url)
 			elif event.button == 3:
 				menu = gtk.Menu()
 				openitem = gtk.MenuItem(label="Open")
-				openitem.connect("activate", lambda w: self.openUrlWithBrowser(url))
+				openitem.connect("activate", lambda w: webbrowser.open(url))
 				menu.append(openitem)
 				copyitem = gtk.MenuItem(label="Copy URL")
 				copyitem.connect("activate", self.copyUrlToClipboard, url)
@@ -397,16 +398,6 @@ class tekkaMain(object):
 				row = model[(path[0],0)]
 
 		self.gui.switchTreeTab(row.path)
-
-	"""
-	"Open URL" in URL context menu was clicked
-	"""
-	def openUrlWithBrowser(self, url):
-		browser = self.config.browser
-		arguments = self.config.browserArguments or "%s"
-		if not browser:
-			return
-		subprocess.call([browser, arguments % url], close_fds=True, env=os.environ)
 
 	"""
 	"Copy URL" in URL context menu was clicked
