@@ -27,7 +27,6 @@ SUCH DAMAGE.
 """
 
 import os
-import subprocess
 import sys
 import webbrowser
 
