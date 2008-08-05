@@ -5,7 +5,7 @@ PY     = $(wildcard ../*.py)
 GLADE  = $(wildcard ../*.glade)
 GLADEH = $(GLADE:.glade=.glade.h)
 
-all: $(PO)
+all:
 
 install: $(PO:%.po=%.mo)
 	for file in $+; do \
@@ -31,5 +31,5 @@ tekka.pot: $(PY) $(GLADEH)
 		msginit --input=$+ --output=$@; \
 	fi
 
-%.mo: %.po
-	$(QUIET_GEN) msgfmt --output-file=$@ $+
+%.mo:
+	$(QUIET_GEN) msgfmt --output-file=$@ $(subst .mo,.po,$@)

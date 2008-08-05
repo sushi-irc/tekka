@@ -1,7 +1,6 @@
 include ../Makefile.common
 
 all:
-	$(MAKE) -C po $@
 
 install: all
 	$(INSTALL) -d -m 755 '$(sharedir)/sushi/tekka'
