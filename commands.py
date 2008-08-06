@@ -117,7 +117,7 @@ class tekkaCommands(object):
 		if not server:
 			self.gui.myPrint("Could not determine server.")
 			return
-		
+
 		reason = ""
 		if xargs and len(xargs) > 0:
 			reason = " ".join(xargs)
@@ -283,7 +283,7 @@ class tekkaCommands(object):
 			return
 
 		self.com.notice(server, xargs[0], " ".join(xargs[1:]))
-	
+
 	def makiMessage(self, xargs):
 		if not xargs or len(xargs) < 2:
 			self.gui.myPrint("Usage: /msg <nick> <message>")

@@ -170,7 +170,7 @@ class tekkaChannel(tekkaTab):
 			foreground = "#DD0000"
 		elif "highlightaction" in self.newMessage:
 			foreground = "#00DD00"
-		
+
 		markup = "<span "
 		if italic:
 			markup += "style='italic' "

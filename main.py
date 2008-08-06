@@ -256,7 +256,7 @@ class tekkaMain(object):
 				self.config.windowState = gtk.gdk.WINDOW_STATE_MAXIMIZED
 			else:
 				self.config.windowState = 0
-	
+
 	"""
 	User clicked on close button of mainwindow
 	"""
@@ -332,7 +332,7 @@ class tekkaMain(object):
 			# part + close
 			self.com.part(cServer,cChannel)
 			serverTree.removeChannel(cServer,cChannel)
-		
+
 
 	"""
 	User pressed Ctrl+PgUp

@@ -184,20 +184,20 @@ class tekkaConfig(object):
 	options are identified by the key field, "key"
 	in the example.
 	If the config parser detects the option "key"
-	he will convert the value into the given type 
+	he will convert the value into the given type
 	("type" in example) and save it into the variable
 	"var".
 
 	Valid types are:
-	 - b: boolean, if the value is not 0 or "true" then 
+	 - b: boolean, if the value is not 0 or "true" then
 	      the variable is set to True, else False
-     - a: array, split the value on "," and save it 
+     - a: array, split the value on "," and save it
 	      into the variable given
-	 - s: string, convert the value into string, 
+	 - s: string, convert the value into string,
 	      '"' will be deleted.
 	 - i: integer, the value will be converted into
 	      an int object
-	 - d: dict, value strings like "s#foo:s#bar,s#baz:i#1" 
+	 - d: dict, value strings like "s#foo:s#bar,s#baz:i#1"
 	      will result in {"foo":"bar","baz":1}.
 		  The only valid subtypes are 'i' and 's'.
 	"""
@@ -234,21 +234,21 @@ class tekkaConfig(object):
 						print "Wrong arg for key '%s'. int required." % key
 				elif rule=="d":
 					strdict = [[a.split("#"),b.split("#")] for (a,b) in [i.split(":") for i in val.split(",")]]
-	
+
 					if not strdict:
 						print "No data."
 						continue
-	
+
 					for (key,val) in strdict:
-	
+
 						if len(key) != 2 or len(val) != 2:
 							print "Syntax error for type dict (key or val length not 2)"
 							continue
-	
+
 						nkey = self.typeconvert(key[0],key[1])
 						if not nkey:
 							continue
-	
+
 						nval = self.typeconvert(val[0],val[1])
 						if not nval:
 							continue

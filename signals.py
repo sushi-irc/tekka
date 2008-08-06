@@ -339,10 +339,10 @@ class tekkaSignals(object):
 		message = self.gui.escape(message)
 
 		nick = self.com.getOwnNick(server)
-		
+
 		try:
 			prefix = self.gui.getServerTree().getObject(server,channel).getNickList().getPrefix(nick)
-			
+
 			self.gui.channelPrint(timestamp, server, channel, \
 				"&lt;%s<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" \
 				% (prefix, self.gui.getConfig().getColor("ownNick"), nick, self.gui.getConfig().getColor("ownText"), message))
@@ -438,7 +438,7 @@ class tekkaSignals(object):
 	def ownNotice(self, time, server, target, message):
 		# if query channel with ``target`` exists, print
 		# the notice there, else print it with currentServerPrint
-		
+
 		channel = self.gui.getServerTree().getChannel(server,target)
 
 		ownNickColor = self.gui.getConfig().getColor("ownNick")
@@ -543,7 +543,7 @@ class tekkaSignals(object):
 
 			if not channels:
 				return
-			
+
 			if reason:
 				reason = " (%s)" % reason
 
