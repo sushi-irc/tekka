@@ -16,6 +16,7 @@ clean:
 	$(RM) tekka.pot
 	$(RM) $(GLADEH)
 	$(RM) *.mo
+	$(RM) *.po~
 
 $(GLADEH): %.h: %
 	$(QUIET_GEN) intltool-extract --type=gettext/glade $+
