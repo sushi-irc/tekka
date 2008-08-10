@@ -31,6 +31,8 @@ This code handles all signals from maki and
 translates them into gui-actions.
 """
 
+from gettext import gettext as _
+
 import dbus
 
 import time as mtime
@@ -59,6 +61,7 @@ class tekkaSignals(object):
 		self.sushi.connect_to_signal("own_ctcp", self.ownCTCP)
 		self.sushi.connect_to_signal("query_ctcp", self.queryCTCP)
 		self.sushi.connect_to_signal("query_notice", self.queryNotice)
+		self.sushi.connect_to_signal("invalid_target", self.invalidTarget)
 
 		# action signals
 		self.sushi.connect_to_signal("part", self.userPart)
@@ -653,4 +656,12 @@ class tekkaSignals(object):
 			self.gui.channelPrint(timestamp, server, channel, \
 			"« <font foreground='%s'>%s</font> has left %s%s." % (self.gui.getConfig().getColor("partNick"), self.gui.escape(nick), self.gui.escape(channel), self.gui.escape(reason)), "action")
 
+	def invalidTarget(self, time, server, target):
+		channel = self._simFind(server, target)
 
+		error = _("%s: No such nick/channel.") % (target)
+
+		if channel:
+			self.gui.channelPrint(time, server, channel, "• %s" % (error))
+		else:
+			self.gui.currentServerPrint(time, server, "• %s" % (error))
