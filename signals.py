@@ -95,10 +95,14 @@ class tekkaSignals(object):
 		for server in self.com.fetchServers():
 
 			servertree.addServer(server)
+			obj = servertree.getObject(server)
+
+			obj.setConnected(True)
+			servertree.serverDescription(server, obj.markup())
+
 			self.addChannels(server)
 
 			if self.com.isAway(server, self.com.getOwnNick(server)):
-				obj = servertree.getObject(server)
 				obj.setAway(True)
 				servertree.serverDescription(server, obj.markup())
 
@@ -122,6 +126,7 @@ class tekkaSignals(object):
 				nicklist.clear()
 				nicklist.addNicks(nicks)
 				obj.setJoined(True)
+				serverTree.channelDescription(server, channel, obj.markup())
 
 			else:
 				self.lastLog(server,channel)
