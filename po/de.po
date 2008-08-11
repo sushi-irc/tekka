@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-07-30 17:21+0200\n"
+"POT-Creation-Date: 2008-08-11 15:22+0200\n"
 "PO-Revision-Date: 2008-07-30 12:05+0200\n"
 "Last-Translator: Michael Kuhn <suraia@ikkoku.de>\n"
 "Language-Team: German\n"
@@ -16,6 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../signals.py:667
+#, python-format
+msgid "%s: No such nick/channel."
+msgstr ""
 
 #: ../dialogs.glade.h:1
 msgid "<b>Add Server</b>"
