@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-11 15:22+0200\n"
+"POT-Creation-Date: 2008-08-12 22:15+0200\n"
 "PO-Revision-Date: 2008-07-30 12:05+0200\n"
 "Last-Translator: Michael Kuhn <suraia@ikkoku.de>\n"
 "Language-Team: German\n"
@@ -41,76 +41,56 @@ msgstr ""
 "Soll der Server gelöscht werden?"
 
 #: ../dialogs.glade.h:6
+msgid "Add Server"
+msgstr "<b>Server hinzufügen</b>"
+
+#: ../dialogs.glade.h:7
 msgid "Address:"
 msgstr "Adresse:"
 
-#: ../dialogs.glade.h:7
+#: ../dialogs.glade.h:8
 msgid "Auto-connect:"
 msgstr "Automatisch verbinden:"
 
-#: ../dialogs.glade.h:8
+#: ../dialogs.glade.h:9
+msgid "Delete Server"
+msgstr ""
+
+#: ../dialogs.glade.h:10
+msgid "Edit Server"
+msgstr "<b>Server bearbeiten</b>"
+
+#: ../dialogs.glade.h:11
 msgid "List"
 msgstr ""
 
-#: ../dialogs.glade.h:9
+#: ../dialogs.glade.h:12
 msgid "Nick name:"
 msgstr "Nickname:"
 
-#: ../dialogs.glade.h:10
+#: ../dialogs.glade.h:13
 msgid "NickServ password:"
 msgstr "NickServ-Passwort:"
 
-#: ../dialogs.glade.h:11
+#: ../dialogs.glade.h:14
 msgid "Port:"
 msgstr ""
 
-#: ../dialogs.glade.h:12
+#: ../dialogs.glade.h:15
 msgid "Real name:"
 msgstr "Realer Name:"
 
-#: ../dialogs.glade.h:13
-msgid "Server name:"
-msgstr "Servername:"
-
-#: ../dialogs.glade.h:14
-msgid "gtk-add"
-msgstr ""
-
-#: ../dialogs.glade.h:15
-msgid "gtk-cancel"
-msgstr ""
-
-#: ../dialogs.glade.h:16
-msgid "gtk-close"
-msgstr ""
+#: ../dialogs.glade.h:16 ../mainwindow.glade.h:2
+msgid "Server List"
+msgstr "Serverliste"
 
 #: ../dialogs.glade.h:17
-msgid "gtk-connect"
-msgstr ""
-
-#: ../dialogs.glade.h:18
-msgid "gtk-delete"
-msgstr ""
-
-#: ../dialogs.glade.h:19
-msgid "gtk-no"
-msgstr ""
-
-#: ../dialogs.glade.h:20
-msgid "gtk-ok"
-msgstr ""
-
-#: ../dialogs.glade.h:21
-msgid "gtk-yes"
-msgstr ""
+msgid "Server name:"
+msgstr "Servername:"
 
 #: ../mainwindow.glade.h:1
 msgid "Connect"
 msgstr "Verbinden"
-
-#: ../mainwindow.glade.h:2
-msgid "Server List"
-msgstr "Serverliste"
 
 #: ../mainwindow.glade.h:3
 msgid "Shutdown"
@@ -138,12 +118,4 @@ msgstr ""
 
 #: ../mainwindow.glade.h:9
 msgid "_tekka"
-msgstr ""
-
-#: ../mainwindow.glade.h:10
-msgid "gtk-about"
-msgstr ""
-
-#: ../mainwindow.glade.h:11
-msgid "gtk-quit"
 msgstr ""
