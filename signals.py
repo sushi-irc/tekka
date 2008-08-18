@@ -258,10 +258,10 @@ class tekkaSignals(object):
 
 	def serverWhois (self, time, server, nick, message):
 		if not message:
-			self.gui.serverPrint(time, server, _("[%s] End of whois.") % (self.gui.escape(nick)))
+			self.gui.serverPrint(time, server, _("[%(nick)s] End of whois.") % {'nick': self.gui.escape(nick)})
 			return
 
-		self.gui.serverPrint(time, server, _("[%s] %s") % (self.gui.escape(nick), self.gui.escape(message)))
+		self.gui.serverPrint(time, server, _("[%(nick)s] %(message)s") % {'nick': self.gui.escape(nick), 'message': self.gui.escape(message)})
 
 	""" CHANNEL SIGNALS """
 
