@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-12 22:15+0200\n"
+"POT-Creation-Date: 2008-08-18 15:29+0200\n"
 "PO-Revision-Date: 2008-07-30 12:05+0200\n"
 "Last-Translator: Michael Kuhn <suraia@ikkoku.de>\n"
 "Language-Team: German\n"
@@ -17,7 +17,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../signals.py:667
+#: ../signals.py:261
+#, python-format
+msgid "[%(nick)s] End of whois."
+msgstr ""
+
+#: ../signals.py:264
+#, python-format
+msgid "[%(nick)s] %(message)s"
+msgstr ""
+
+#: ../signals.py:675
 #, python-format
 msgid "%s: No such nick/channel."
 msgstr ""
