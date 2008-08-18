@@ -214,6 +214,9 @@ class tekkaCom(object):
 	def list(self, server, channel=""):
 		self.sushi.list(server,channel)
 
+	def whois(self, server, nick):
+		self.sushi.whois(server, nick)
+
 	"""
 	Config, server creation, server deletion
 	"""

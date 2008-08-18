@@ -553,6 +553,13 @@ class tekkaMain(object):
 
 			menu = gtk.Menu()
 
+			whoisItem = gtk.MenuItem(label="Whois")
+			whoisItem.connect("activate", lambda w: self.com.whois(server, nick))
+			menu.append(whoisItem)
+
+			separatorItem = gtk.SeparatorMenuItem()
+			menu.append(separatorItem)
+
 			kickItem = gtk.MenuItem(label="Kick")
 			kickItem.connect("activate", lambda w: self.com.kick(server, channel, nick))
 			menu.append(kickItem)
@@ -564,16 +571,6 @@ class tekkaMain(object):
 			unbanItem = gtk.MenuItem(label="Unban")
 			unbanItem.connect("activate", lambda w: self.com.mode(server, channel, "-b %s" % nick))
 			menu.append(unbanItem)
-
-			ignoreItem = gtk.CheckMenuItem(label="Ignore")
-			pattern = "%s!*" % nick
-			ignores = self.com.fetchIgnores(server)
-			if pattern in ignores:
-				ignoreItem.set_active(True)
-				ignoreItem.connect("toggled", lambda w: self.com.unignore(server, pattern))
-			else:
-				ignoreItem.connect("toggled", lambda w: self.com.ignore(server, pattern))
-			menu.append(ignoreItem)
 
 			mode_menu = gtk.Menu()
 			modeItem = gtk.MenuItem(label="Mode")
@@ -604,6 +601,19 @@ class tekkaMain(object):
 			devoiceItem  = gtk.MenuItem(label="Devoice")
 			devoiceItem.connect("activate", lambda w: self.modeChange(w, server, channel, nick, "-v"))
 			mode_menu.append(devoiceItem)
+
+			separatorItem = gtk.SeparatorMenuItem()
+			menu.append(separatorItem)
+
+			ignoreItem = gtk.CheckMenuItem(label="Ignore")
+			pattern = "%s!*" % nick
+			ignores = self.com.fetchIgnores(server)
+			if pattern in ignores:
+				ignoreItem.set_active(True)
+				ignoreItem.connect("toggled", lambda w: self.com.unignore(server, pattern))
+			else:
+				ignoreItem.connect("toggled", lambda w: self.com.ignore(server, pattern))
+			menu.append(ignoreItem)
 
 			mode_menu.show_all()
 			menu.show_all()

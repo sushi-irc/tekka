@@ -80,6 +80,7 @@ class tekkaSignals(object):
 		self.sushi.connect_to_signal("reconnect", self.serverReconnect)
 		self.sushi.connect_to_signal("motd", self.serverMOTD)
 		self.sushi.connect_to_signal("list", self.list)
+		self.sushi.connect_to_signal("whois", self.serverWhois)
 
 		# Channel-Signals
 		self.sushi.connect_to_signal("topic", self.channelTopic)
@@ -254,6 +255,13 @@ class tekkaSignals(object):
 		self.gui.serverPrint(time, server, \
 			"%s: %d user; topic: \"%s\"" % \
 			(self.gui.escape(channel), users, self.gui.escape(topic)))
+
+	def serverWhois (self, time, server, nick, message):
+		if not message:
+			self.gui.serverPrint(time, server, _("[%s] End of whois.") % (self.gui.escape(nick)))
+			return
+
+		self.gui.serverPrint(time, server, _("[%s] %s") % (self.gui.escape(nick), self.gui.escape(message)))
 
 	""" CHANNEL SIGNALS """
 
