@@ -1,0 +1,19 @@
+                                  REQUIREMENTS
+
+You will need the DBus, Glade, GObject, GTK and XDG Python modules.
+On Debian-based systems these are available in the following packages:
+
+* python-dbus
+* python-glade2
+* python-gobject
+* python-gtk2
+* python-xdg
+
+                               BUILD REQUIREMENTS
+
+You will need the gettext tools.
+On Debian-based systems these are available in the following packages:
+
+* gettext
+
+# vi:textwidth=80:expandtab
