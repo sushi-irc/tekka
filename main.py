@@ -53,7 +53,6 @@ class guiWrapper(object):
 
 	def __init__(self):
 		self.statusIcon = None
-		self.showGeneralOutput = False
 
 	def getWidgets(self):
 		return widgets
@@ -947,7 +946,11 @@ def setup_statusIcon():
 		Sets up the status icon.
 	"""
 	gui.statusIcon = gtk.StatusIcon()
-	gui.statusIcon.set_from_file(config.get("statusIcon"))
+	try:
+		gui.statusIcon.set_from_file(config.get("tekka","statusIcon"))
+	except Exception,e:
+		print e
+		return
 
 def connectMaki():
 	"""
@@ -1050,6 +1053,9 @@ def setupGTK():
 	if config.get("tekka","showStatusBar"):
 		btn.set_active(True)
 	btn.toggled()
+
+	if config.get("tekka","showStatusIcon"):
+		setup_statusIcon()
 
 	# disable the GUI and wait for commands :-)
 	gui.setUseable(False)
