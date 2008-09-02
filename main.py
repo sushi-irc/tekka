@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # 40G V 607G zf -> fold ; zc -> close
 
 import pygtk
