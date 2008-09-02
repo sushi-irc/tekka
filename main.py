@@ -35,8 +35,6 @@ import menus
 widgets = None
 gui = None
 
-# TODO: url handling!
-
 """
 	The "core": the gui wrapper class.
 """
@@ -1081,5 +1079,5 @@ if __name__ == "__main__":
 
 """
 	The best thing while coding is that anything seems to be working
-	and some peace of code silently drops your data to /dev/null. :]
+	and some piece of code silently drops your data to /dev/null. :]
 """
