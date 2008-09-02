@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
+<!--Generated with glade3 3.4.5 on Wed Jul 30 17:18:55 2008 -->
+<glade-interface>
+  <widget class="GtkWindow" id="mainWindow">
+    <property name="width_request">800</property>
+    <property name="height_request">600</property>
+    <property name="visible">True</property>
+    <property name="title">tekka</property>
+	<signal name="delete_event" handler="mainWindow_delete_event_cb"/>
+	<signal name="focus_in_event" handler="mainWindow_focus_in_event_cb"/>
+	<signal name="size_allocate" handler="mainWindow_size_allocate_cb"/>
+    <child>
+      <widget class="GtkVBox" id="mainVbox">
+        <property name="visible">True</property>
+        <child>
+          <widget class="GtkMenuBar" id="menubar1">
+            <property name="visible">True</property>
+            <child>
+              <widget class="GtkMenuItem" id="menu_tekka_item">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_tekka</property>
+                <property name="use_underline">True</property>
+                <child>
+                  <widget class="GtkMenu" id="menu_tekka">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menu_tekka_Connect">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Server List</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="menu_tekka_Connect_activate_cb"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image1">
+                            <property name="stock">gtk-network</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menu_tekka_Quit">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">gtk-quit</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="menu_tekka_Quit_activate_cb"/>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkMenuItem" id="menu_maki_item">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_maki</property>
+                <property name="use_underline">True</property>
+                <child>
+                  <widget class="GtkMenu" id="menu_maki">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menu_maki_Connect">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Connect</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="menu_maki_activate_cb"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image2">
+                            <property name="stock">gtk-connect</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menu_maki_Shutdown">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Shutdown</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="menu_maki_Shutdown_activate_cb"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="menu-item-image3">
+                            <property name="stock">gtk-disconnect</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkMenuItem" id="menu_View_item">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_View</property>
+                <property name="use_underline">True</property>
+                <child>
+                  <widget class="GtkMenu" id="menu_View">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkCheckMenuItem" id="menu_View_showGeneralOutput">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_General Output</property>
+                        <property name="use_underline">True</property>
+                        <signal name="toggled" handler="menu_View_showGeneralOutput_toggled_cb"/>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkCheckMenuItem" id="menu_View_showStatusBar">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Status Bar</property>
+                        <property name="use_underline">True</property>
+                        <signal name="toggled" handler="menu_View_showStatusBar_toggled_cb"/>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkMenuItem" id="menu_Help_item">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_Help</property>
+                <property name="use_underline">True</property>
+                <child>
+                  <widget class="GtkMenu" id="menu_Help">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menu_Help_About">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">gtk-about</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                      </widget>
+                    </child>
+                  </widget>
+                </child>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkHPaned" id="hpaned1">
+            <property name="visible">True</property>
+            <child>
+              <widget class="GtkVBox" id="outputVbox">
+                <property name="width_request">600</property>
+                <property name="visible">True</property>
+                <property name="border_width">6</property>
+                <property name="spacing">6</property>
+                <child>
+                  <widget class="GtkEntry" id="topicBar">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <signal name="activate" handler="topicBar_activate_cb"/>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkVPaned" id="vpaned1">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkScrolledWindow" id="scrolledWindow_generalOutput">
+                        <property name="height_request">150</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
+                        <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                        <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+                        <child>
+                          <widget class="GtkTextView" id="generalOutput">
+                            <property name="visible">True</property>
+                            <property name="editable">False</property>
+							<property name="can_focus">False</property>
+                            <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
+                            <property name="cursor_visible">False</property>
+                          </widget>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="resize">False</property>
+                        <property name="shrink">True</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkScrolledWindow" id="scrolledWindow_output">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
+                        <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                        <property name="window_placement">GTK_CORNER_BOTTOM_LEFT</property>
+                        <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+                        <child>
+                          <widget class="GtkTextView" id="output">
+                            <property name="visible">True</property>
+                            <property name="editable">False</property>
+							<property name="can_focus">False</property>
+                            <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
+                            <property name="cursor_visible">False</property>
+                          </widget>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="resize">True</property>
+                        <property name="shrink">True</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkEntry" id="inputBar">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="has_focus">True</property>
+                    <property name="is_focus">True</property>
+                    <property name="can_default">True</property>
+                    <property name="has_default">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="extension_events">GDK_EXTENSION_EVENTS_ALL</property>
+                    <signal name="activate" handler="inputBar_activate_cb"/>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkVPaned" id="listVbox">
+                <property name="width_request">200</property>
+                <property name="visible">True</property>
+                <property name="border_width">6</property>
+                <property name="position_set">True</property>
+                <child>
+                  <widget class="GtkScrolledWindow" id="scrolledWindow_serverTree">
+                    <property name="height_request">180</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                    <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                    <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+                    <child>
+                      <widget class="GtkTreeView" id="serverTree">
+                        <property name="visible">True</property>
+						<property name="can_focus">False</property>
+                        <property name="headers_clickable">True</property>
+                        <signal name="row_activated" handler="serverTree_row_activated_cb"/>
+                        <signal name="button_press_event" handler="serverTree_button_press_event_cb"/>                      
+					  </widget>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="resize">True</property>
+                    <property name="shrink">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkScrolledWindow" id="scrolledWindow_nickList">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                    <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
+                    <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+                    <child>
+                      <widget class="GtkTreeView" id="nickList">
+                        <property name="visible">True</property>
+						<property name="can_focus">False</property>
+                        <property name="headers_clickable">True</property>
+                        <signal name="button_press_event" handler="nickList_button_press_event_cb"/>
+                        <signal name="row_activated" handler="nickList_row_activated_cb"/>
+                      </widget>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="resize">True</property>
+                    <property name="shrink">True</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="resize">False</property>
+                <property name="shrink">False</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkStatusbar" id="statusBar">
+            <property name="visible">True</property>
+            <property name="spacing">2</property>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="GtkMenu" id="nickListMenu">
+    <property name="visible">True</property>
+    <signal name="deactivate" handler="nickListMenu_deactivate_cb"/>
+    <child>
+      <widget class="GtkSeparatorMenuItem" id="separatorItem">
+        <property name="visible">True</property>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkCheckMenuItem" id="ignoreItem">
+        <property name="visible">True</property>
+        <property name="tooltip" translatable="yes">KTHXBYE</property>
+        <property name="label" translatable="yes">Ignore</property>
+        <property name="use_underline">True</property>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="kickItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Kick</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="kickItem_activate_cb"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="banItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Ban</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="banItem_activate_cb"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="modesItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Modes</property>
+        <property name="use_underline">True</property>
+        <child>
+          <widget class="GtkMenu" id="modesMenu">
+            <property name="visible">True</property>
+            <child>
+              <widget class="GtkMenuItem" id="deVoiceItem">
+                <property name="visible">True</property>
+                <property name="tooltip" translatable="yes">Set -v to the user</property>
+                <property name="label" translatable="yes">Take Voice</property>
+                <property name="use_underline">True</property>
+                <signal name="activate" handler="deVoiceItem_activate_cb"/>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkMenuItem" id="voiceItem">
+                <property name="visible">True</property>
+                <property name="tooltip" translatable="yes">Sets +v to the user</property>
+                <property name="label" translatable="yes">Give Voice</property>
+                <property name="use_underline">True</property>
+                <signal name="activate" handler="voiceItem_activate_cb"/>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkMenuItem" id="deHalfOpItem">
+                <property name="visible">True</property>
+                <property name="tooltip" translatable="yes">Sets -h to the user</property>
+                <property name="label" translatable="yes">Take half Op</property>
+                <property name="use_underline">True</property>
+                <signal name="activate" handler="deHalfItem_activate_cb"/>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkMenuItem" id="halfOpItem">
+                <property name="visible">True</property>
+                <property name="tooltip" translatable="yes">Sets +h to the user</property>
+                <property name="label" translatable="yes">Give half Op</property>
+                <property name="use_underline">True</property>
+                <signal name="activate" handler="halfOpItem_activate_cb"/>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkMenuItem" id="deOpItem">
+                <property name="visible">True</property>
+                <property name="tooltip" translatable="yes">Sets -o to the user</property>
+                <property name="label" translatable="yes">Take Op</property>
+                <property name="use_underline">True</property>
+                <signal name="activate" handler="deOpItem_activate_cb"/>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkMenuItem" id="opItem">
+                <property name="visible">True</property>
+                <property name="tooltip" translatable="yes">Sets +o to the user</property>
+                <property name="label" translatable="yes">Give Op</property>
+                <property name="use_underline">True</property>
+                <signal name="activate" handler="opItem_activate_cb"/>
+              </widget>
+            </child>
+          </widget>
+        </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="GtkMenu" id="serverTree_tabMenu">
+    <property name="visible">True</property>
+	<signal name="deactivate" handler="tabMenu_deactivate_cb"/>	
+	<child>
+	  <widget class="GtkSeparatorMenuItem" id="separatorItem">
+	    <property name="visible">True</property>
+	  </widget>
+	</child>
+	<child>
+	  <widget class="GtkCheckMenuItem" id="autoConnectItem">
+	    <property name="visible">True</property>
+		<property name="tooltip" translatable="yes">Set auto connect</property>
+		<property name="label" translatable="yes">Autoconnect</property>
+		<property name="use_underline">True</property>
+		<signal name="toggled" handler="autoConnectnItem_toggled_cb"/>
+	  </widget>
+	</child>
+    <child>
+      <widget class="GtkMenuItem" id="connectItem">
+        <property name="visible">True</property>
+        <property name="tooltip" translatable="yes">Connect to the server</property>
+        <property name="label" translatable="yes">Connect</property>
+        <property name="use_underline">True</property>
+		<signal name="activate" handler="connectItem_activate_cb"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="disconnectItem">
+        <property name="visible">True</property>
+        <property name="tooltip" translatable="yes">Disconnect from the server</property>
+        <property name="label" translatable="yes">Disconnect</property>
+        <property name="use_underline">True</property>
+		<signal name="activate" handler="disconnectItem_activate_cb"/>
+      </widget>
+    </child>
+	<child>
+	  <widget class="GtkCheckMenuItem" id="autoJoinItem">
+	    <property name="visible">True</property>
+		<property name="tooltip" translatable="yes">Set auto join</property>
+		<property name="label" translatable="yes">Autojoin</property>
+		<property name="use_underline">True</property>
+		<signal name="toggled" handler="autoJoinItem_toggled_cb"/>
+	  </widget>
+	</child>
+    <child>
+      <widget class="GtkMenuItem" id="joinItem">
+        <property name="visible">True</property>
+        <property name="tooltip" translatable="yes">Join the channel</property>
+        <property name="label" translatable="yes">Join</property>
+        <property name="use_underline">True</property>
+		<signal name="activate" handler="joinItem_activate_cb"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="partItem">
+        <property name="visible">True</property>
+        <property name="tooltip" translatable="yes">Leave the channel</property>
+        <property name="label" translatable="yes">Part</property>
+        <property name="use_underline">True</property>
+		<signal name="activate" handler="partItem_activate_cb"/>
+      </widget>
+    </child>
+	<child>
+      <widget class="GtkMenuItem" id="closeItem">
+	    <property name="visible">True</property>
+		<property name="tooltip" translatable="yes">Closes the tab</property>
+		<property name="label" translatable="yes">Close</property>
+		<property name="use_underline">True</property>
+		<signal name="activate" handler="closeItem_activate_cb"/>
+	  </widget>
+	</child>
+  </widget>
+</glade-interface>

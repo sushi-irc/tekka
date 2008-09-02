@@ -1,0 +1,131 @@
+# German translations for tekka package
+# German messages for tekka.
+# Copyright (C) 2008 Michael Kuhn
+# This file is distributed under the same license as the tekka package.
+# Michael Kuhn <suraia@ikkoku.de>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-08-18 15:29+0200\n"
+"PO-Revision-Date: 2008-07-30 12:05+0200\n"
+"Last-Translator: Michael Kuhn <suraia@ikkoku.de>\n"
+"Language-Team: German\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../signals.py:261
+#, python-format
+msgid "[%(nick)s] End of whois."
+msgstr ""
+
+#: ../signals.py:264
+#, python-format
+msgid "[%(nick)s] %(message)s"
+msgstr ""
+
+#: ../signals.py:675
+#, python-format
+msgid "%s: No such nick/channel."
+msgstr ""
+
+#: ../dialogs.glade.h:1
+msgid "<b>Add Server</b>"
+msgstr "<b>Server hinzufügen</b>"
+
+#: ../dialogs.glade.h:2
+msgid "<b>Edit Server</b>"
+msgstr "<b>Server bearbeiten</b>"
+
+#: ../dialogs.glade.h:3
+msgid ""
+"<span weight=\"bold\" size=\"larger\">Delete Server</span>\n"
+"\n"
+"Are you sure you want to delete the server?"
+msgstr ""
+"<span weight=\"bold\" size=\"larger\">Server löschen</span>\n"
+"\n"
+"Soll der Server gelöscht werden?"
+
+#: ../dialogs.glade.h:6
+msgid "Add Server"
+msgstr "<b>Server hinzufügen</b>"
+
+#: ../dialogs.glade.h:7
+msgid "Address:"
+msgstr "Adresse:"
+
+#: ../dialogs.glade.h:8
+msgid "Auto-connect:"
+msgstr "Automatisch verbinden:"
+
+#: ../dialogs.glade.h:9
+msgid "Delete Server"
+msgstr ""
+
+#: ../dialogs.glade.h:10
+msgid "Edit Server"
+msgstr "<b>Server bearbeiten</b>"
+
+#: ../dialogs.glade.h:11
+msgid "List"
+msgstr ""
+
+#: ../dialogs.glade.h:12
+msgid "Nick name:"
+msgstr "Nickname:"
+
+#: ../dialogs.glade.h:13
+msgid "NickServ password:"
+msgstr "NickServ-Passwort:"
+
+#: ../dialogs.glade.h:14
+msgid "Port:"
+msgstr ""
+
+#: ../dialogs.glade.h:15
+msgid "Real name:"
+msgstr "Realer Name:"
+
+#: ../dialogs.glade.h:16 ../mainwindow.glade.h:2
+msgid "Server List"
+msgstr "Serverliste"
+
+#: ../dialogs.glade.h:17
+msgid "Server name:"
+msgstr "Servername:"
+
+#: ../mainwindow.glade.h:1
+msgid "Connect"
+msgstr "Verbinden"
+
+#: ../mainwindow.glade.h:3
+msgid "Shutdown"
+msgstr "Beenden"
+
+#: ../mainwindow.glade.h:4
+msgid "_General Output"
+msgstr "_Allgemeine Ausgabe"
+
+#: ../mainwindow.glade.h:5
+msgid "_Help"
+msgstr "_Hilfe"
+
+#: ../mainwindow.glade.h:6
+msgid "_Status Bar"
+msgstr "_Statusleiste"
+
+#: ../mainwindow.glade.h:7
+msgid "_View"
+msgstr "_Ansicht"
+
+#: ../mainwindow.glade.h:8
+msgid "_maki"
+msgstr ""
+
+#: ../mainwindow.glade.h:9
+msgid "_tekka"
+msgstr ""
