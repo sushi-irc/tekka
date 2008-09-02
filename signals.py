@@ -114,6 +114,8 @@ def addChannels(server):
 
 		lastLog(server,channel)
 
+	gui.updateServerTreeShortcuts()
+
 
 def fetchPrefixes(server, channel, nicklist, nicks):
 	"""
@@ -195,6 +197,11 @@ def serverConnect(time, server):
 	if not gui.tabs.searchTab(server):
 		gui.tabs.addTab(None, gui.tabs.createServer(server))
 
+		if config.get("tekka","serverShortcuts"):
+			# update is only neccessary if server tabs
+			# shall be shortcutted
+			gui.updateServerTreeShortcuts()
+
 	gui.serverPrint(time, server, "Connecting...")
 
 	# TODO: implement status bar messages
@@ -231,6 +238,9 @@ def serverReconnect(time, server):
 
 	elif not tab:
 		gui.tabs.addTab(None, gui.tabs.createServer(server))
+
+		if config.get("tekka","serverShortcuts"):
+			gui.updateServerTreeShortcuts()
 
 	gui.serverPrint(time, server, "Reconnecting to %s" % server)
 
@@ -753,6 +763,7 @@ def userJoin(timestamp, server, nick, channel):
 				return
 
 			lastLog(server, channel)
+			gui.updateServerTreeShortcuts()
 
 		tab.topic = topic
 		tab.nickList.clear()

@@ -23,6 +23,7 @@ import locale
 import gettext
 
 from helper.url import URLToTag
+from helper.shortcuts import addShortcut, removeShortcuts
 
 import config
 import com
@@ -51,6 +52,7 @@ class guiWrapper(object):
 
 	def __init__(self):
 		self.statusIcon = None
+		self.accelGroup = None
 
 	def getWidgets(self):
 		return widgets
@@ -118,6 +120,31 @@ class guiWrapper(object):
 		tb = widgets.get_widget("topicBar")
 		tb.set_text(string)
 		tb.set_position(len(string))
+
+	def updateServerTreeShortcuts(self):
+		"""
+			Iterates through the TreeModel
+			of the server tree and sets 9
+			shortcuts to tabs for switching.
+		"""
+		tabs = self.tabs.getAllTabs()
+		st = widgets.get_widget("serverTree")
+	
+		removeShortcuts(self.accelGroup, st)
+
+		c = 1
+		for tab in tabs:
+			if c == 10:
+				break
+
+			if tab.is_server() and not config.get("tekka","serverShortcuts"):
+				continue
+
+			print "adding shortcut %d" % c
+			addShortcut(self.accelGroup, st, "<alt>%d" % (c), 
+				lambda w,s,p: self.tabs.switchToPath(p), tab.path)
+
+			c+=1
 
 	def updateServerTreeMarkup(self, path):
 		"""
@@ -407,6 +434,8 @@ class guiWrapper(object):
 			if config.get("serverTree", "autoExpand"):
 				widgets.get_widget("serverTree").expand_row(object.path, True)
 
+			gui.updateServerTreeShortcuts()
+
 			return object.path
 
 		def removeTab(self, tab):
@@ -427,6 +456,9 @@ class guiWrapper(object):
 				return False
 
 			store.remove(row.iter)
+
+			gui.updateServerTreeShortcuts()
+
 			return True
 
 		def removeTabByString(self, server, object):
@@ -453,11 +485,13 @@ class guiWrapper(object):
 						for child in row.iterchildren():
 							if child[1].lower() == object.lower():
 								store.remove(child.iter)
+								gui.updateServerTreeShortcuts()
 								return True
 			else:
 				for row in store:
 					if row[1].lower() == object.lower():
 						store.remove(row.iter)
+						gui.updateServerTreeShortcuts()
 						return True
 
 			return False
@@ -485,6 +519,8 @@ class guiWrapper(object):
 				for row in store.iter_children(iter):
 					row[2].server = new.name
 
+			gui.updateServerTreeShortcuts()
+
 		def getAllTabs(self, server=""):
 			"""
 				Returns all registered tabs.
@@ -499,7 +535,7 @@ class guiWrapper(object):
 			tabs = []
 
 			if not server:
-				store.foreach(lambda model,path,iter: tabs.append(model[path]))
+				store.foreach(lambda model,path,iter: tabs.append(model[path][2]))
 			else:
 				for row in store:
 					if row[1].lower() == server.lower():
@@ -917,6 +953,21 @@ def setup_serverTree():
 		tab object.
 	"""
 	tm = gtk.TreeStore(TYPE_STRING, TYPE_STRING, TYPE_PYOBJECT)
+
+	# Sorting
+	def cmpl(a,b):
+		" compare string a with string b lower case "
+		c,d = None,None
+		if a: c=a.lower()
+		if b: d=b.lower()
+		return cmp(c,d)
+
+	tm.set_sort_func(1,
+		lambda m,i1,i2,*x: cmpl(m.get_value(i1,1), m.get_value(i2,1)))
+	tm.set_sort_column_id(1, gtk.SORT_ASCENDING)
+
+	# further stuff (set model to treeview, add columns)
+
 	widget = widgets.get_widget("serverTree")
 	
 	widget.set_model(tm)
@@ -926,6 +977,8 @@ def setup_serverTree():
 
 	widget.append_column(column)
 	widget.set_headers_visible(False)
+
+
 
 def setup_nickList():
 	"""
@@ -957,6 +1010,13 @@ def setup_statusIcon():
 	except Exception,e:
 		print e
 		return
+
+def setup_shortcuts():
+	"""
+		Set shortcuts to widgets
+	"""
+	gui.accelGroup = gtk.AccelGroup()
+	widgets.get_widget("mainWindow").add_accel_group(gui.accelGroup)
 
 def connectMaki():
 	"""
@@ -1043,7 +1103,7 @@ def setupGTK():
 		raise Exception("guiWrapper not successfully initialized!")
 
 	# set output font
-	gui.setFont(widgets.get_widget("output"),config.get("tekka","outputFont"))
+	gui.setFont(widgets.get_widget("output"), config.get("tekka","outputFont"))
 
 	# setup general output
 	buffer = gui.tabs.getBuffer()
@@ -1064,6 +1124,15 @@ def setupGTK():
 
 	if config.get("tekka","showStatusIcon"):
 		setup_statusIcon()
+
+	# TODO:  add shortcuts to widgets, setup accelgroup
+	# TODO:: and do similar stuff. Especially try to
+	# TODO:: find a better solution for shortcutting
+	# TODO:: the server tree thing.
+	# TODO:: Maybe something like path generation from
+	# TODO:: shortcut..
+
+	setup_shortcuts()
 
 	# disable the GUI and wait for commands :-)
 	gui.setUseable(False)
