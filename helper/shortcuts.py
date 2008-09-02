@@ -1,4 +1,4 @@
-from gobject import signal_new, SIGNAL_ACTION
+from gobject import signal_new, signal_lookup, SIGNAL_ACTION
 from gtk.gdk import CONTROL_MASK, SHIFT_MASK, MOD1_MASK
 from gtk import ACCEL_VISIBLE
 
@@ -6,7 +6,42 @@ from re import compile
 
 shortExp = compile("(<[a-z]*>){0,1}(<[a-z]*>){0,2}(<[a-z]*>){0,3}(.*)")
 
-def addShortcut(accelGroup, widget, shortcut, callback, args=()):
+regmap = {}
+
+def removeShortcuts(accelGroup, widget):
+	"""
+		Removes all shortcuts registered to widget
+	"""
+	if not regmap.has_key(widget):
+		print "No shortcuts registered for widget."
+		return False
+
+	for (handler,keys,keyval,mask) in regmap[widget]:
+		widget.remove_accelerator(accelGroup, keyval, mask)
+		widget.disconnect(handler)
+
+	del regmap[widget]
+
+	return True
+
+def removeShortcut(accelGroup, widget, shortcut):
+	"""
+		Removes the shortcut identified by shortcut string.
+	"""
+	if not regmap.has_key(widget):
+		print "No shortcuts registered for widget."
+		return False
+
+	i = 0
+	for (handler, keys, keyval, mask) in regmap[widget]:
+		if "".join(keys) == shortcut:
+			widget.remove_accelerator(accelGroup, keyval, mask)
+			widget.disconnect(handler)
+			del regmap[widget][i]
+			break
+		i+=1
+
+def addShortcut(accelGroup, widget, shortcut, callback, *args):
 	"""
 		Adds a shortcut identified by a string
 		to the widget and sets the callback
@@ -39,13 +74,10 @@ def addShortcut(accelGroup, widget, shortcut, callback, args=()):
 	for group in vGroups[:-1]:
 		if group == "<ctrl>":
 			mask |= CONTROL_MASK
-			print "cmask"
 		if group == "<shift>":
 			mask |= SHIFT_MASK
-			print "smask"
 		if group == "<alt>":
 			mask |= MOD1_MASK
-			print "mmask"
 
 	key = vGroups[-1]
 
@@ -61,7 +93,10 @@ def addShortcut(accelGroup, widget, shortcut, callback, args=()):
 	# name like shortCut_ctrl_shift_2
 	signame = "shortCut_"+"_".join([i.strip("<>") for i in vGroups])
 
-	ret = signal_new(signame, widget, SIGNAL_ACTION, None, ())
+	
+	if not signal_lookup(signame, widget):
+		signal_new(signame, widget, SIGNAL_ACTION, None, ())
+
 
 	widget.add_accelerator(
 		signame,
@@ -71,6 +106,11 @@ def addShortcut(accelGroup, widget, shortcut, callback, args=()):
 		ACCEL_VISIBLE)
 	
 	handler = widget.connect(signame, callback, shortcut, *args)
+
+	if not regmap.has_key(widget):
+		regmap[widget]=[ (handler,vGroups,keyval,mask) ]
+	else:
+		regmap[widget].append( (handler,vGroups,keyval,mask) )
 
 	return handler
 
