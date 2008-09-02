@@ -752,6 +752,14 @@ def topicBar_activate_cb(topicBar):
 
 	topicBar.set_text("")
 
+def output_button_press_event_cb(output, event):
+	"""
+		Button in output was pressed, set focus
+		to input entry.
+	"""
+	widgets.get_widget("inputBar").grab_focus()
+	return False
+
 def serverTree_button_press_event_cb(serverTree, event):
 	"""
 		A row in the server tree was activated.
@@ -1010,6 +1018,8 @@ def setupGTK():
 	# input signals
 		"inputBar_activate_cb" : inputBar_activate_cb,
 		"topicBar_activate_cb" : topicBar_activate_cb,
+	# output signals
+		"output_button_press_event_cb" : output_button_press_event_cb,
 	# server tree signals
 		"serverTree_realize_cb" : lambda w: w.expand_all(),
 		"serverTree_button_press_event_cb" : serverTree_button_press_event_cb,
