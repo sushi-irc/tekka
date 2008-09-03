@@ -352,7 +352,7 @@ class guiWrapper(object):
 				buffer=self.getBuffer())
 
 		def createQuery(self, server, name):
-			return self.tab.tekkaChannel(name, server, buffer=self.getBuffer())
+			return self.tab.tekkaQuery(name, server, buffer=self.getBuffer())
 
 		def createServer(self, server):
 			return self.tab.tekkaServer(server, buffer=self.getBuffer())
@@ -431,7 +431,7 @@ class guiWrapper(object):
 			object.path = store.get_path(iter)
 			store.set(iter, 0, object.markup(), 1, object.name, 2, object)
 			
-			if config.get("serverTree", "autoExpand"):
+			if not server and config.get("serverTree", "autoExpand"):
 				widgets.get_widget("serverTree").expand_row(object.path, True)
 
 			return object.path
@@ -851,6 +851,8 @@ def nickList_row_activated_cb(nickList, path, column):
 		return
 
 	query = gui.tabs.createQuery(serverTab.name, name)
+	query.connected = True
+
 	gui.tabs.addTab(serverTab.name, query)
 
 def nickList_button_press_event_cb(nickList, event):
