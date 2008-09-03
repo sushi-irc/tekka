@@ -440,6 +440,8 @@ class guiWrapper(object):
 			"""
 				iter points to the row after the deleted row.
 				path is the path of the deleted row.
+				This hack is UGLY! Would someone please fix
+				the crappy rows-reordered signal? KTHXBYE
 			"""
 
 			if not iter:
@@ -1015,7 +1017,7 @@ def serverTree_shortcut_ctrl_Page_Down(serverTree, shortcut):
 	
 	try:
 		i = i+1
-		if (i) > len(tabs):
+		if (i) == len(tabs):
 			i = 0
 		gui.tabs.switchToPath(tabs[i].path)
 	except IndexError:
