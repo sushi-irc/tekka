@@ -234,10 +234,11 @@ def serverReconnect(time, server):
 	"""
 	tab = gui.tabs.searchTab(server)
 
-	if tab and tab.connected:
-		userQuit(time, server, com.getOwnNick(server), "Connection lost")
+	if tab:
+		if tab.connected:
+			userQuit(time, server, com.getOwnNick(server), "Connection lost")
 
-	elif not tab:
+	else:
 		gui.tabs.addTab(None, gui.tabs.createServer(server))
 
 		if config.get("tekka","serverShortcuts"):
