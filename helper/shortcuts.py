@@ -1,5 +1,5 @@
 from gobject import signal_new, signal_lookup, SIGNAL_ACTION
-from gtk.gdk import CONTROL_MASK, SHIFT_MASK, MOD1_MASK
+from gtk.gdk import CONTROL_MASK, SHIFT_MASK, MOD1_MASK, keyval_from_name
 from gtk import ACCEL_VISIBLE
 
 from re import compile
@@ -13,7 +13,7 @@ def removeShortcuts(accelGroup, widget):
 		Removes all shortcuts registered to widget
 	"""
 	if not regmap.has_key(widget):
-		print "No shortcuts registered for widget."
+		print "No shortcuts registered to widget."
 		return False
 
 	for (handler,keys,keyval,mask) in regmap[widget]:
@@ -38,6 +38,7 @@ def removeShortcut(accelGroup, widget, shortcut):
 			widget.remove_accelerator(accelGroup, keyval, mask)
 			widget.disconnect(handler)
 			del regmap[widget][i]
+			print "deleted shortcut %s." % ("".join(keys))
 			break
 		i+=1
 
@@ -79,6 +80,10 @@ def addShortcut(accelGroup, widget, shortcut, callback, *args):
 		if group == "<alt>":
 			mask |= MOD1_MASK
 
+	if not mask:
+		print "No mask, wrong modifier?"
+		return False
+
 	key = vGroups[-1]
 
 	if len(key) > 1:
@@ -87,8 +92,9 @@ def addShortcut(accelGroup, widget, shortcut, callback, *args):
 		if not keyval:
 			print "Too much chars for shortcut (%s)." % (key)
 			return None
-
-	keyval = ord(key)
+	else:
+		keyval = ord(key)
+		print "keyval for shortcut '%s': '%d'" % (shortcut, keyval)
 
 	# name like shortCut_ctrl_shift_2
 	signame = "shortCut_"+"_".join([i.strip("<>") for i in vGroups])
@@ -96,7 +102,6 @@ def addShortcut(accelGroup, widget, shortcut, callback, *args):
 	
 	if not signal_lookup(signame, widget):
 		signal_new(signame, widget, SIGNAL_ACTION, None, ())
-
 
 	widget.add_accelerator(
 		signame,
