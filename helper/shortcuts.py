@@ -66,10 +66,6 @@ def addShortcut(accelGroup, widget, shortcut, callback, *args):
 		print "No filled groups."
 		return None
 
-	if len(vGroups) == 1:
-		print "Single char would not work."
-		return None
-
 	mask = 0
 
 	for group in vGroups[:-1]:
@@ -79,10 +75,6 @@ def addShortcut(accelGroup, widget, shortcut, callback, *args):
 			mask |= SHIFT_MASK
 		if group == "<alt>":
 			mask |= MOD1_MASK
-
-	if not mask:
-		print "No mask, wrong modifier?"
-		return False
 
 	key = vGroups[-1]
 

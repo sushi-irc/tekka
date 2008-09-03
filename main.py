@@ -1034,6 +1034,31 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 		com.quitServer(tab.name)
 	gui.tabs.removeTab(tab)
 
+def output_shortcut_Page_Up(output, shortcut):
+	"""
+		Page_Up was hit, scroll up in output
+	"""
+	vadj = widgets.get_widget("scrolledWindow_output").get_vadjustment()
+
+	if vadj.get_value() == 0.0:
+		return # at top already
+
+	n = vadj.get_value()-vadj.step_increment
+	vadj.set_value(n)
+
+def output_shortcut_Page_Down(output, shortcut):
+	"""
+		Page_Down was hit, scroll down in output
+	"""
+	vadj = widgets.get_widget("scrolledWindow_output").get_vadjustment()
+
+	if (vadj.upper - vadj.page_size) == vadj.get_value():
+		return # we are already at bottom
+
+	n = vadj.get_value()+vadj.step_increment
+	vadj.set_value(n)
+
+
 """
 Initial setup routines
 """
@@ -1135,7 +1160,13 @@ def setup_statusIcon():
 
 def setup_shortcuts():
 	"""
-		Set shortcuts to widgets
+		Set shortcuts to widgets.
+
+		 - ctrl + page_up -> scroll to prev tab in server tree
+		 - ctrl + page_down -> scroll to next tab in server tree
+		 - ctrl + w -> close the current tab
+		 - ctrl + l -> clear the output buffer
+		 - ctrl + u -> clear the input entry
 	"""
 	gui.accelGroup = gtk.AccelGroup()
 	widgets.get_widget("mainWindow").add_accel_group(gui.accelGroup)
@@ -1151,6 +1182,11 @@ def setup_shortcuts():
 		"<ctrl>Page_Down", serverTree_shortcut_ctrl_Page_Down)
 	addShortcut(gui.accelGroup, widgets.get_widget("serverTree"),
 		"<ctrl>w", serverTree_shortcut_ctrl_w)
+
+	addShortcut(gui.accelGroup, widgets.get_widget("output"),
+		"Page_Up", output_shortcut_Page_Up)
+	addShortcut(gui.accelGroup, widgets.get_widget("output"),
+		"Page_Down", output_shortcut_Page_Down)
 
 def connectMaki():
 	"""
