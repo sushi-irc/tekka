@@ -75,7 +75,6 @@ def shutdown(quitmsg=""):
 		return __noSushiMessage()
 	sushi.shutdown(quitmsg)
 
-
 """
 Signals: nickchange (nick => _nickSignal)
 		 initial nick setting (connected => _connectSignal)

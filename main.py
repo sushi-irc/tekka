@@ -300,9 +300,7 @@ class guiWrapper(object):
 		else:
 			output.insertHTML(output.get_end_iter(), string)
 
-		tab = gui.tabs.getCurrentTab()
-		if tab.autoScroll:
-			idle_add(lambda: self.scrollOutput())
+		idle_add(lambda: self.scrollOutput())
 
 	def urlHandler(self, texttag, widget, event, iter, url):
 		if event.type == gtk.gdk.MOTION_NOTIFY:
