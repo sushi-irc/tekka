@@ -318,7 +318,7 @@ Signals for maki
 """
 
 def makiShutdownSignal(time):
-	gui.myPrint("Maki is shutted down!")
+	gui.myPrint("Maki is shut down!")
 	gui.setUseable(False)
 
 """

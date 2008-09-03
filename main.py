@@ -711,8 +711,10 @@ class guiWrapper(object):
 
 			adj = widgets.get_widget("scrolledWindow_output").get_vadjustment()
 
+			#print "position before switch: %s" % (tab.buffer.scrollPosition)
+
 			if tab.buffer.scrollPosition != None:
-				adj.set_value(tab.buffer.scrollPosition)
+				idle_add(adj.set_value,tab.buffer.scrollPosition)
 			else:
 				idle_add(lambda s,tab: s.__help(tab), self,tab)
 
@@ -967,6 +969,8 @@ def scrolledWindow_output_vscrollbar_valueChanged_cb(range):
 	# cache the last position to set after switch
 	tab.buffer.scrollPosition=range.get_value()
 
+	#print "scrollPosition is now %d" % (tab.buffer.scrollPosition)
+
 """
 	Shortcut callbacks
 """
@@ -1044,7 +1048,8 @@ def output_shortcut_Page_Up(output, shortcut):
 		return # at top already
 
 	n = vadj.get_value()-vadj.step_increment
-	vadj.set_value(n)
+	if n < 0: n = 0
+	idle_add(vadj.set_value,n)
 
 def output_shortcut_Page_Down(output, shortcut):
 	"""
@@ -1056,7 +1061,8 @@ def output_shortcut_Page_Down(output, shortcut):
 		return # we are already at bottom
 
 	n = vadj.get_value()+vadj.step_increment
-	vadj.set_value(n)
+	if n > (vadj.upper - vadj.page_size): n = vadj.upper - vadj.page_size
+	idle_add(vadj.set_value,n)
 
 
 """
