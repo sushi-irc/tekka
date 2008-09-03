@@ -23,7 +23,7 @@ import locale
 import gettext
 
 from helper.url import URLToTag
-from helper.shortcuts import addShortcut, removeShortcuts
+from helper.shortcuts import addShortcut, removeShortcut
 
 import config
 import com
@@ -130,7 +130,8 @@ class guiWrapper(object):
 		tabs = self.tabs.getAllTabs()
 		st = widgets.get_widget("serverTree")
 	
-		removeShortcuts(self.accelGroup, st)
+		for i in range(1,10):
+			removeShortcut(self.accelGroup, st, "<alt>%d" % (i))
 
 		c = 1
 		for tab in tabs:
@@ -140,7 +141,6 @@ class guiWrapper(object):
 			if tab.is_server() and not config.get("tekka","serverShortcuts"):
 				continue
 
-			print "adding shortcut %d" % c
 			addShortcut(self.accelGroup, st, "<alt>%d" % (c), 
 				lambda w,s,p: self.tabs.switchToPath(p), tab.path)
 
@@ -227,7 +227,7 @@ class guiWrapper(object):
 
 		if self.tabs.isActive(channelTab):
 			if channelTab.autoScroll:
-				self.scrollOutput()
+				idle_add(lambda: self.scrollOutput())
 
 		else:
 			if type in channelTab.newMessage:
@@ -259,7 +259,7 @@ class guiWrapper(object):
 
 		if self.tabs.isActive(serverTab):
 			if serverTab.autoScroll:
-				self.scrollOutput()
+				idle_add(lambda: self.scrollOutput())
 
 		else:
 			if type in serverTab.newMessage: 
@@ -302,7 +302,7 @@ class guiWrapper(object):
 
 		tab = gui.tabs.getCurrentTab()
 		if tab.autoScroll:
-			self.scrollOutput()
+			idle_add(lambda: self.scrollOutput())
 
 	def urlHandler(self, texttag, widget, event, iter, url):
 		if event.type == gtk.gdk.MOTION_NOTIFY:
@@ -426,15 +426,13 @@ class guiWrapper(object):
 					if row[1].lower() == server.lower():
 						serverIter = row.iter
 
-			iter = store.append(serverIter)
+			iter = store.append(serverIter, row=(object.markup,object.name,object))
 
-			store.set(iter, 0, object.markup(), 1, object.name, 2, object)
 			object.path = store.get_path(iter)
-
+			store.set(iter, 0, object.markup(), 1, object.name, 2, object)
+			
 			if config.get("serverTree", "autoExpand"):
 				widgets.get_widget("serverTree").expand_row(object.path, True)
-
-			gui.updateServerTreeShortcuts()
 
 			return object.path
 
@@ -456,8 +454,6 @@ class guiWrapper(object):
 				return False
 
 			store.remove(row.iter)
-
-			gui.updateServerTreeShortcuts()
 
 			return True
 
@@ -485,13 +481,11 @@ class guiWrapper(object):
 						for child in row.iterchildren():
 							if child[1].lower() == object.lower():
 								store.remove(child.iter)
-								gui.updateServerTreeShortcuts()
 								return True
 			else:
 				for row in store:
 					if row[1].lower() == object.lower():
 						store.remove(row.iter)
-						gui.updateServerTreeShortcuts()
 						return True
 
 			return False
@@ -518,8 +512,6 @@ class guiWrapper(object):
 			if old.is_server():
 				for row in store.iter_children(iter):
 					row[2].server = new.name
-
-			gui.updateServerTreeShortcuts()
 
 		def getAllTabs(self, server=""):
 			"""
@@ -553,7 +545,7 @@ class guiWrapper(object):
 			store = widgets.get_widget("serverTree").get_model()
 			try:
 				return store[self.currentPath][2]
-			except IndexError:
+			except (IndexError,TypeError):
 				return None
 
 		def getCurrentTabs(self):
@@ -669,7 +661,6 @@ class guiWrapper(object):
 			adj = widgets.get_widget("scrolledWindow_output").get_vadjustment()
 
 			if tab.buffer.scrollPosition != None:
-				print "set adjustment"
 				adj.set_value(tab.buffer.scrollPosition)
 			else:
 				idle_add(lambda s,tab: s.__help(tab), self,tab)
@@ -691,7 +682,9 @@ Glade signals
 
 def menu_tekka_Connect_activate_cb(menuItem):
 	"""
-		...
+		menuBar -> tekka -> connect was clicked,
+		show up server dialog and connect to the
+		returned server (if any).
 	"""
 	res, server = dialogs.showServerDialog()
 
@@ -786,6 +779,10 @@ def topicBar_activate_cb(topicBar):
 
 	com.setTopic(sTab.name, cTab.name, text)
 
+	# Reset the topic bar? If a user does not
+	# have the permission the topic bar would not
+	# be refilled and it's empty for now.
+	# TODO: rethink.
 	topicBar.set_text("")
 
 def output_button_press_event_cb(output, event):
@@ -904,15 +901,72 @@ def scrolledWindow_output_vscrollbar_valueChanged_cb(range):
 
 	if (adjust.upper - adjust.page_size) == range.get_value():
 		# bottom reached
-		print "autoscroll to %s true" % tab.name
 		tab.autoScroll = True
 	else:
-		print "setting %s to autoscroll false." % (tab.name)
 		tab.autoScroll = False
 
 	# cache the last position to set after switch
 	tab.buffer.scrollPosition=range.get_value()
-	print "current value: ",range.get_value()
+
+"""
+	Shortcut callbacks
+"""
+
+def inputBar_shortcut_ctrl_u(inputBar, shortcut):
+	"""
+		Ctrl + U was hit, clear the inputBar
+	"""
+	widgets.get_widget("inputBar").set_text("")
+
+def output_shortcut_ctrl_l(output, shortcut):
+	"""
+		Ctrl+L was hit, clear the output.
+	"""
+	buf = output.get_buffer()
+	if buf: buf.set_text("")
+
+def serverTree_shortcut_ctrl_Page_Up(serverTree, shortcut):
+	"""
+		Ctrl+Page_Up was hit, go up in server tree
+	"""
+	tabs = gui.tabs.getAllTabs()
+	tab = gui.tabs.getCurrentTab()
+
+	try:
+		i = tabs.index(tab)
+	except ValueError:
+		return
+	
+	try:
+		gui.tabs.switchToPath(tabs[i-1].path)
+	except IndexError:
+		return
+
+def serverTree_shortcut_ctrl_Page_Down(serverTree, shortcut):
+	"""
+		Ctrl+Page_Down was hit, go down in server tree
+	"""
+	tabs = gui.tabs.getAllTabs()
+	tab = gui.tabs.getCurrentTab()
+
+	try:
+		i = tabs.index(tab)
+	except ValueError:
+		return
+	
+	try:
+		i = i+1
+		if (i) > len(tabs):
+			i = 0
+		gui.tabs.switchToPath(tabs[i].path)
+	except IndexError:
+		return
+
+def serverTree_shortcut_ctrl_w(serverTree, shortcut):
+	"""
+		Ctrl+W was hit, close the current tab (if any)
+	"""
+	pass
 
 """
 Initial setup routines
@@ -954,17 +1008,21 @@ def setup_serverTree():
 	"""
 	tm = gtk.TreeStore(TYPE_STRING, TYPE_STRING, TYPE_PYOBJECT)
 
+	"""
 	# Sorting
-	def cmpl(a,b):
-		" compare string a with string b lower case "
-		c,d = None,None
+	def cmpl(m,i1,i2):
+		" compare columns lower case "
+		a = m.get_value(i1, 1)
+		b = m.get_value(i2, 1)
+		c,d=None,None
 		if a: c=a.lower()
 		if b: d=b.lower()
 		return cmp(c,d)
 
 	tm.set_sort_func(1,
-		lambda m,i1,i2,*x: cmpl(m.get_value(i1,1), m.get_value(i2,1)))
+		lambda m,i1,i2,*x: cmpl(m,i1,i2))
 	tm.set_sort_column_id(1, gtk.SORT_ASCENDING)
+	"""
 
 	# further stuff (set model to treeview, add columns)
 
@@ -977,8 +1035,6 @@ def setup_serverTree():
 
 	widget.append_column(column)
 	widget.set_headers_visible(False)
-
-
 
 def setup_nickList():
 	"""
@@ -1017,6 +1073,18 @@ def setup_shortcuts():
 	"""
 	gui.accelGroup = gtk.AccelGroup()
 	widgets.get_widget("mainWindow").add_accel_group(gui.accelGroup)
+
+	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"), "<ctrl>u",
+		inputBar_shortcut_ctrl_u)
+	addShortcut(gui.accelGroup, widgets.get_widget("output"), "<ctrl>l",
+		output_shortcut_ctrl_l)
+
+	addShortcut(gui.accelGroup, widgets.get_widget("serverTree"), 
+		"<ctrl>Page_Up", serverTree_shortcut_ctrl_Page_Up)
+	addShortcut(gui.accelGroup, widgets.get_widget("serverTree"), 
+		"<ctrl>Page_Down", serverTree_shortcut_ctrl_Page_Down)
+	addShortcut(gui.accelGroup, widgets.get_widget("serverTree"),
+		"<ctrl>w", serverTree_shortcut_ctrl_w)
 
 def connectMaki():
 	"""
