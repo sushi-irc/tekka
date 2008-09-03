@@ -436,6 +436,45 @@ class guiWrapper(object):
 
 			return object.path
 
+		def __updateLowerRows(self, store, iter):
+			"""
+				iter points to the row after the deleted row.
+				path is the path of the deleted row.
+			"""
+
+			if not iter:
+				# no work, phew.
+				return
+
+			newLastPath = None
+			nextIter = iter
+
+			while True:
+				if not nextIter:
+					break
+
+				tab = store.get(nextIter, 2)
+				try:
+					tab=tab[0]
+				except:
+					print "OHMENOODLESKARPOTT"
+					break
+
+				tab.path = store.get_path(nextIter)
+
+				oIter = nextIter
+				nextIter = store.iter_next(oIter)
+				if not nextIter:
+					if store.iter_has_child(oIter):
+						# oIter is a server
+						nextIter = store.iter_children(oIter)
+					else:
+						# oIter is a channel and the next is (maybe)
+						# a further server
+						temp = store.iter_parent(oIter)
+						nextIter = store.iter_next(temp)
+
+
 		def removeTab(self, tab):
 			"""
 				tab: tekkaTab
@@ -453,7 +492,19 @@ class guiWrapper(object):
 				# no tab in server tree at this path
 				return False
 
+			# part of hack:
+			nextIter = store.iter_next(row.iter)
+			if not nextIter:
+				temp = store.iter_parent(row.iter)
+				nextIter = store.iter_parent(temp)
+			path = tab.path
+
 			store.remove(row.iter)
+
+			# hack because the signal rows-reordered
+			# does not work yet. Update all rows under
+			# the deleted to the new path.
+			self.__updateLowerRows(store,nextIter)
 
 			return True
 
@@ -974,7 +1025,14 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 	"""
 		Ctrl+W was hit, close the current tab (if any)
 	"""
-	pass
+	tab = gui.tabs.getCurrentTab()
+	if not tab:
+		return
+	if tab.is_channel():
+		com.part(tab.server,tab.name)
+	elif tab.is_server():
+		com.quitServer(tab.name)
+	gui.tabs.removeTab(tab)
 
 """
 Initial setup routines
@@ -1115,6 +1173,7 @@ def setupGTK():
 	"""
 		Set locale, parse glade files.
 		Connects gobject widget signals to code.
+		Setup widgets.
 	"""
 	global commands, signals, gui
 	global widgets
@@ -1200,13 +1259,6 @@ def setupGTK():
 
 	if config.get("tekka","showStatusIcon"):
 		setup_statusIcon()
-
-	# TODO:  add shortcuts to widgets, setup accelgroup
-	# TODO:: and do similar stuff. Especially try to
-	# TODO:: find a better solution for shortcutting
-	# TODO:: the server tree thing.
-	# TODO:: Maybe something like path generation from
-	# TODO:: shortcut..
 
 	setup_shortcuts()
 
