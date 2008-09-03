@@ -86,7 +86,6 @@ def addShortcut(accelGroup, widget, shortcut, callback, *args):
 			return None
 	else:
 		keyval = ord(key)
-		print "keyval for shortcut '%s': '%d'" % (shortcut, keyval)
 
 	# name like shortCut_ctrl_shift_2
 	signame = "shortCut_"+"_".join([i.strip("<>") for i in vGroups])

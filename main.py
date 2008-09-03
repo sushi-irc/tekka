@@ -431,8 +431,9 @@ class guiWrapper(object):
 			object.path = store.get_path(iter)
 			store.set(iter, 0, object.markup(), 1, object.name, 2, object)
 			
-			if not server and config.get("tekka", "autoExpand"):
-				widgets.get_widget("serverTree").expand_row(object.path, True)
+			if server and config.get("tekka", "autoExpand"):
+				# expand the whole server tab
+				widgets.get_widget("serverTree").expand_row(store.get_path(store.iter_parent(iter)),True)
 
 			return object.path
 
@@ -833,12 +834,6 @@ def topicBar_activate_cb(topicBar):
 	text = topicBar.get_text()
 
 	com.setTopic(sTab.name, cTab.name, text)
-
-	# Reset the topic bar? If a user does not
-	# have the permission the topic bar would not
-	# be refilled and it's empty for now.
-	# TODO: rethink.
-	topicBar.set_text("")
 
 def output_button_press_event_cb(output, event):
 	"""
