@@ -107,6 +107,7 @@ def addChannels(server):
 		tab.topic = topic
 		# TODO: handle topic setter
 		tab.joined=True
+		tab.connected=True
 
 		fetchPrefixes(server, channel, tab.nickList, nicks)			
 
@@ -686,7 +687,8 @@ def userQuit(time, server, nick, reason):
 		The user identified by nick quit on the server "server" with
 		the reason "reason". "reason" can be empty ("").
 		If we are the user all channels were set to joined=False and
-		the server's connected-flag is set to False.
+		the server's connected-flag is set to False (as well as the
+		connect-flags of the childs).
 		If another user quits on all channels on which the user was on
 		a message is generated.
 	"""
@@ -712,6 +714,7 @@ def userQuit(time, server, nick, reason):
 
 		for channelTab in channels:
 			channelTab.joined=False
+			channelTab.connected=False
 			gui.updateServerTreeMarkup(channelTab.path)
 			gui.channelPrint(time, server, channelTab.name, "« You have quit%s." % reason)
 
