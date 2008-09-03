@@ -835,7 +835,7 @@ def nickList_row_activated_cb(nickList, path, column):
 		If there's a nick in the row a query
 		for the nick on the current server will be opened.
 	"""
-	server,channel = gui.tabs.getCurrentTabs()
+	serverTab,channelTab = gui.tabs.getCurrentTabs()
 
 	try:
 		name = nickList.get_model()[path][nickList.get_model().COLUMN_NICK]
@@ -845,7 +845,13 @@ def nickList_row_activated_cb(nickList, path, column):
 	except IndexError:
 		# path is invalid
 		return
-	gui.tabs.createQuery(server, name)
+
+	if gui.tabs.searchTab(serverTab.name, name):
+		# already a query open
+		return
+
+	query = gui.tabs.createQuery(serverTab.name, name)
+	gui.tabs.addTab(serverTab.name, query)
 
 def nickList_button_press_event_cb(nickList, event):
 	"""
