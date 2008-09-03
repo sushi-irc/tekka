@@ -75,6 +75,8 @@ class guiWrapper(object):
 		for widget in widgetList:
 			widget.set_sensitive(switch)
 
+		if switch: widgets.get_widget("inputBar").grab_focus() 
+
 	def setUrgent(self, switch):
 		"""
 			Sets or unsets the urgent
@@ -429,7 +431,7 @@ class guiWrapper(object):
 			object.path = store.get_path(iter)
 			store.set(iter, 0, object.markup(), 1, object.name, 2, object)
 			
-			if not server and config.get("serverTree", "autoExpand"):
+			if not server and config.get("tekka", "autoExpand"):
 				widgets.get_widget("serverTree").expand_row(object.path, True)
 
 			return object.path
@@ -971,6 +973,16 @@ def scrolledWindow_output_vscrollbar_valueChanged_cb(range):
 
 	#print "scrollPosition is now %d" % (tab.buffer.scrollPosition)
 
+def statusIcon_activate_cb(statusIcon):
+	"""
+		Click on status icon
+	"""
+	mw = widgets.get_widget("mainWindow")
+	if mw.get_property("visible"):
+		mw.hide()
+	else:
+		mw.show_all()
+
 """
 	Shortcut callbacks
 """
@@ -1163,6 +1175,8 @@ def setup_statusIcon():
 	except Exception,e:
 		print e
 		return
+
+	gui.statusIcon.connect("activate", statusIcon_activate_cb)
 
 def setup_shortcuts():
 	"""
