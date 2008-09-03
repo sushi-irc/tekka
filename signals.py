@@ -11,8 +11,6 @@ gui = None
 com = None
 sushi = None
 
-# FIXME: after reconnect channels were added again
-
 # TODO:  config values like quit or part message should
 # TODO:: be retrieved from maki and set to maki.
 
@@ -94,6 +92,7 @@ def addChannels(server):
 
 	for channel in channels:
 
+		add = False
 		nicks = com.fetchNicks(server, channel)
 		topic = sushi.channel_topic(server, channel)
 
@@ -101,6 +100,9 @@ def addChannels(server):
 
 		if not tab:
 			tab = gui.tabs.createChannel(server, channel)
+			add = True
+
+
 
 		tab.nickList.clear()
 		tab.nickList.addNicks(nicks)
@@ -109,9 +111,9 @@ def addChannels(server):
 		tab.joined=True
 		tab.connected=True
 
-		fetchPrefixes(server, channel, tab.nickList, nicks)			
+		if add: gui.tabs.addTab(server, tab)
 
-		gui.tabs.addTab(server, tab)
+		fetchPrefixes(server, channel, tab.nickList, nicks)			
 
 		lastLog(server,channel)
 
