@@ -134,7 +134,7 @@ class tekkaQuery(tekkaTab):
 
 		base = self.name
 
-		if not self.joined:
+		if not self.connected:
 			base = "("+base+")"
 
 		if "action" in self.newMessage:
