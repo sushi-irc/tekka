@@ -77,7 +77,7 @@ def readConfigFile():
 	success = configParser.read([configFile])
 
 	if not success:
-		print "Failed to parse config file '%s'" % filename
+		print "Failed to parse config file '%s'" % configFile
 		return False
 
 	return True
