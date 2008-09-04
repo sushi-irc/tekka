@@ -852,7 +852,7 @@ def inputBar_key_press_event_cb(inputBar, event):
 
 	elif key == "Tab":
 		# tab completion comes here.
-		
+
 		def appendMatch(mode, text, word, match):
 			if mode == "c": separator = config.get("tekka","commandSeparator", " ")
 			elif mode == "n": separator = config.get("tekka","nickSeperator", ": ")
@@ -863,11 +863,12 @@ def inputBar_key_press_event_cb(inputBar, event):
 
 		text = inputBar.get_text()
 
-		if not text: return False
+		if not text:
+			return False
 
 		word = text.split(" ")[-1]
 
-		if tab.is_channel():
+		if tab and tab.is_channel():
 			# look for nicks
 
 			match = tab.nickList.searchNick(word)
@@ -881,7 +882,7 @@ def inputBar_key_press_event_cb(inputBar, event):
 
 				return True
 
-		elif tab.is_query():
+		elif tab and tab.is_query():
 			# look for my nick or the other nick
 
 			matches = tab.name, com.getOwnNick(tab.server)
@@ -892,6 +893,18 @@ def inputBar_key_press_event_cb(inputBar, event):
 					appendMatch("n",text, word, match)
 
 					return True
+
+		# channel completion
+		if word[0]=="#":
+			tabs = gui.tabs.getAllTabs()
+			
+			matches = [tab for tab in tabs if tab and tab.name[:len(word)] == word]
+			# TODO: as well as above, iterate here...
+			match = matches[0].name
+
+			if match:
+				appendMatch("c", text, word, match)
+				return True
 
 		# command completion
 
