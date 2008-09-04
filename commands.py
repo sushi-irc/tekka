@@ -26,6 +26,7 @@ SUCH DAMAGE.
 """
 
 import time
+from dbus import UInt64
 
 config = None
 gui = None
@@ -51,7 +52,11 @@ def parseInput(text):
 		list = text[1:].split(" ")
 		cmd = list[0]
 
-		if not commands.has_key(cmd):
+		if not cmd:
+			return gui.myPrint("No command given.")
+		elif not commands.has_key(cmd):
+			if not serverTab:
+				return gui.myPrint("No server active.")
 			gui.myPrint("Unknown command '%s'; Forwarding raw." % (cmd))
 			com.raw(serverTab.name, cmd.upper() + " ".join(list[1:]))
 
@@ -60,7 +65,9 @@ def parseInput(text):
 
 def makiConnect(currentServer, currentChannel, args):
 	"""
-		Connect to server args[0]
+		Connect to the given server.
+
+		Usage: /connect <server>
 	"""
 	if not args:
 		return gui.myPrint("Usage: /connect <servername>")
@@ -69,22 +76,32 @@ def makiConnect(currentServer, currentChannel, args):
 
 def makiQuit(currentServer, currentChannel, args):
 	"""
-		Quit from server args[0] or
-		- if no args given - quit the
-		current server.
+		Quit the given server with an optional reason.
+		If no server is given, the current server is quit.
+
+		Usage: /quit <server> [<reason>]
+		       /quit [<reason>]
 	"""
-
-	if not currentServer:
-		return gui.myPrint("makiQuit: Could not determine server.")
-
-	reason = " ".join(args)
-
-	com.quitServer(currentServer.name, reason)
+	if args:
+		# /quit <server> [<reason>]
+		if gui.tabs.searchTab(None, args[0]):
+			com.quitServer(args[0], " ".join(args[1:]))
+		else:
+			# /quit [<reason>]
+			if not currentServer:
+				return gui.myPrint("Could not determine server.")
+			com.quitServer(currentServer.name, " ".join(args))
+	else:
+		# /quit
+		if not currentServer:
+			return gui.myPrint("Could not determine server.")
+		com.quitServer(currentServer.name,"")
 
 def makiNick(currentServer, currentChannel, args):
 	"""
-		Change the nick on the current server
-		to args[0].
+		Change your current nick to the given nick.
+
+		Usage: /nick <new nick>
 	"""
 	if not args:
 		return gui.myPrint("Usage: /nick <new nick>")
@@ -96,30 +113,32 @@ def makiNick(currentServer, currentChannel, args):
 
 def makiPart(currentServer, currentChannel, args):
 	"""
-		Part the channel args[0] with the reason in args[1:] (optional).
-		If no args are given, part the current channel
-		with the standard part reason.
+		Part the given channel with an optional reason.
+		If no channel is given, the current channel is parted.
+
+		Usage: /part <channel> [<reason>]
+		       /part [<reason>]
 	"""
-	if not currentServer:
-		return gui.myPrint("Could not determine server.")
-
-	if not currentChannel and not args:
-		return gui.myPrint("No channel active.")
-
-	elif args:
-		channel = args[0]
-
-	elif currentChannel:
-		channel = currentChannel.name
-
-	reason = " ".join(args)[1:]
-	self.com.part(currentServer.name, channel, reason)
-
+	if args and currentServer:
+		# /part <channel> [<reason>]
+		if gui.tabs.searchTab(currentServer.name, args[0]):
+			com.part(args[0], " ".join(args[1:]))
+		else:
+			# /part [<reason>]
+			if not currentChannel:
+				return gui.myPrint("Could not determine channel.")
+			com.part(currentServer.name, currentChannel.name, " ".join(args))
+	else:
+		# /part
+		if not currentChannel:
+			return gui.myPrint("Could not determine channel.")
+		com.part(currentServer.name, currentChannel.name,"")
 
 def makiJoin(currentServer, currentChannel, args):
 	"""
-		Joins the channel args[0].
-		If given, args[1] is used as key.
+		Joins the given channel with the optional key.
+
+		Usage: /join <channel> [<key>]
 	"""
 	if not currentServer:
 		return gui.myPrint("Can't determine server.")
@@ -127,12 +146,16 @@ def makiJoin(currentServer, currentChannel, args):
 	if not args:
 		return gui.myPrint("Usage: /join <channel> [<key>]")
 	
-	key = " ".join(args[1:])
-	com.join(currentServer.name, args[0], key)
+	com.join(currentServer.name, args[0], " ".join(args[1:]))
 
 def makiAction(currentServer, currentChannel, args):
 	"""
-		does a ACTION command with all arguments joined together.
+		Sends an action in third person view.
+
+		Usage: /me <text>
+
+		Example: nemo types: /me giggles.
+		Results in: nemo giggles.
 	"""
 	if not args:
 		return gui.myPrint("Usage: /me <text>")
@@ -142,40 +165,33 @@ def makiAction(currentServer, currentChannel, args):
 
 	com.action(currentServer.name, currentChannel.name, " ".join(args))
 
-# XXX XXX XXX XXX XXX XXX XXX WARNING XXX XXX XXX XXX XXX XXX XXX #
-
-def makiKick(self, args):
+def makiKick(currentServer, currentTab, args):
 	"""
-		Kick the user args[0] from current channel.
+		Kick the given user with an optional reason from the
+		current channel.
+
+		Usage: /kick <user> [<reason>]
 	"""
 	if not args:
-		return gui.myPrint("Usage: /kick <who>")
+		return gui.myPrint("Usage: /kick <user> [<reason>]")
 
-	serverTab, channelTab = gui.tabs.getCurrentTabs()
-
-	if not channelTab:
+	if not channelTab or not channelTab.is_channel():
 		return gui.myPrint("You're not on a channel")
 	
-	reason = " ".join(args[1:])
-	self.com.kick(serverTab.name, channelTab.name, args[0], reason)
-
-# XXX XXX XXX XXX XXX #
-#          .          #
-#         / \         #
-#        / _ \        #
-#       / | | \       #
-#      /  |_|  \      #
-#     /         \     #
-#    /     O     \    #
-#   '-------------'   #
-# WATCH YOUR STEP:    #
-# buggy code          #
-# XXX XXX XXX XXX XXX #
+	self.com.kick(serverTab.name, channelTab.name, args[0], " ".join(args[1:]))
 
 def makiMode(currentServer, currentChannel, args):
+	"""
+		Sets a mode on the target.
 
+		Usage: /mode <target> (+|-)<mode> [<param>]
+
+		Example: /mode #xesio +o nemo
+		OR:      /mode nemo +x
+		OR:      /mode #xesio +m
+	"""
 	if not args or len(args) < 2:
-		return gui.myPrint("Usage: /mode <target> (+|-)<mode> [param]")
+		return gui.myPrint("Usage: /mode <target> (+|-)<mode> [<param>]")
 
 	if not currentServer:
 		return gui.myPrint("Could not determine server.")
@@ -186,136 +202,175 @@ def makiMode(currentServer, currentChannel, args):
 
 	com.mode(currentServer.name, args[0], "%s %s" % (args[1],param))
 
-def makiTopic(self, xargs):
-	if not xargs:
-		self.myPrint("Usage: /topic <topic text>")
-		return
+def makiTopic(serverTab, channelTab, args):
+	"""
+		Sets the topic in the current channel.
+
+		Usage: /topic <text>
+	"""
+	if not args:
+		return gui.myPrint("Usage: /topic <text>")
 	else:
-		topic = " ".join(xargs)
+		topic = " ".join(args)
 
-	server,channel = self.gui.serverTree.getCurrentChannel()
+	if not channelTab or not channelTab.is_channel():
+		return gui.myPrint("No channel active.")
 
-	if not server or not channel:
-		self.myPrint("Where should i set the topic?")
-		return
+	com.setTopic(serverTab.name, channelTab.name, topic)
 
-	return self.com.setTopic(server, channel, topic)
+def makiAway(serverTab, channelTab, args):
+	"""
+		Sets you away with an optional reason.
 
-def makiAway(self, xargs):
-	if not xargs:
-		self.makiBack(xargs)
-		return
+		Usage: /away [<reason>]
+	"""
+	if not serverTab:
+		return gui.myPrint("Can't determine server.")
 
-	s = self.gui.serverTree.getCurrentServer()
-	if not s:
-		self.myPrint("Can't determine server.")
-		return
+	com.setAway(serverTab.name, " ".join(args))
 
-	self.com.setAway(s," ".join(xargs))
+def makiBack(serverTab, channelTab, args):
+	"""
+		Sets you back from being away.
 
-def makiBack(self, xargs):
-	s = self.gui.serverTree.getCurrentServer()
-	if not s:
-		self.gui.myPrint("Can't determine server.")
-		return
-	self.com.setBack(s)
+		Usage: /back
+	"""
+	if not serverTab:
+		return gui.myPrint("Can't determine server.")
+	com.setBack(serverTab.name)
 
-def makiNickserv(self, xargs):
-	server = self.gui.serverTree.getCurrentServer()
+def makiNickserv(serverTab, channelTab, args):
+	"""
+		Authenticates you at NickServ with
+		the data stored in maki.
 
-	if not server:
-		self.gui.myPrint("Can't determine server.")
-		return
+		Usage: /nickserv
+	"""
+	if not serverTab:
+		return gui.myPrint("Can't determine server.")
 
-	self.com.nickserv(server)
+	com.nickserv(server)
 
-def makiCTCP(self, xargs):
-	if not xargs or len(xargs) < 2:
-		self.gui.myPrint("Usage: /ctcp <target> <message>")
-		return
-	server = self.gui.serverTree.getCurrentServer()
-	if not server:
-		self.gui.myPrint("Could not determine server.")
-		return
-	self.com.ctcp(server, xargs[0], xargs[1])
+def makiCTCP(serverTab, channelTab, args):
+	"""
+		Sends a CTCP message to the given target.
 
-def makiNotice(self, xargs):
-	if not xargs or len(xargs) < 2:
-		self.gui.myPrint("Usage: /notice <target> <message>")
-		return
+		Usage: /ctcp <target> <message>
+	"""
+	if not args or len(args) < 2:
+		return gui.myPrint("Usage: /ctcp <target> <message>")
 
-	server = self.gui.serverTree.getCurrentServer()
-	if not server:
-		self.gui.myPrint("Could not determine server.")
-		return
+	if not serverTab:
+		return gui.myPrint("Could not determine server.")
 
-	self.com.notice(server, xargs[0], " ".join(xargs[1:]))
+	com.ctcp(serverTab.name, args[0], args[1])
 
-def makiMessage(self, xargs):
-	if not xargs or len(xargs) < 2:
-		self.gui.myPrint("Usage: /msg <nick> <message>")
+def makiNotice(serverTab, channelTab, args):
+	"""
+		Sends a notice to the given target.
+		The difference between /ctcp and /notice
+		is, that /ctcp sends directly to the user
+		while /notice sends the message over the
+		server.
 
-	server = self.gui.serverTree.getCurrentServer()
-	if not server:
-		self.gui.myPrint("Could not determine server.")
-		return
+		Usage: /notice <target> <message>
+	"""
+	if not args or len(args) < 2:
+		return gui.myPrint("Usage: /notice <target> <message>")
 
-	# to prevent recursion disable command parsing here
-	self.sendMessage(server, xargs[0], " ".join(xargs[1:]), parse_cmd=False)
+	if not serverTab:
+		return gui.myPrint("Could not determine server.")
 
-def makiOper(self, xargs):
-	if not xargs or len(xargs) < 2:
-		self.gui.myPrint("Usage: /oper <user> <pass>")
-		return
+	com.notice(serverTab.name, args[0], " ".join(args[1:]))
 
-	server = self.gui.serverTree.getCurrentServer()
-	if not server:
-		self.gui.myPrint("Could not determine server.")
-		return
+def makiMessage(serverTab, channelTab, args):
+	"""
+		Sends a message (PRIVMSG) to the target.
+		The target can be a channel or a user.
 
-	self.com.oper(server, xargs[0], " ".join(xargs[1:]))
+		Usage: /msg <target> <message>
+	"""
+	if not args or len(args) < 2:
+		return gui.myPrint("Usage: /msg <target> <message>")
 
-def makiKill(self, xargs):
-	if not xargs or len(xargs) < 2:
-		self.gui.myPrint("Usage: /kill <user> <reason>")
-		return
+	if not serverTab:
+		return gui.myPrint("Could not determine server.")
 
-	server = self.gui.serverTree.getCurrentServer()
-	if not server:
-		self.gui.myPrint("Could not determine server.")
-		return
+	com.sendMessage(serverTab.name, args[0], " ".join(args[1]))
 
-	self.com.kill(server, xargs[0], xargs[1])
+def makiOper(serverTab, channelTab, args):
+	"""
+		Authentificate as IRC operator.
 
-def makiList(self, xargs):
-	server = self.gui.serverTree.getCurrentServer()
-	if not server:
-		self.gui.myPrint("Could not determine server.")
-		return
+		Usage: /oper <user> <pass>
+	"""
+	if not args or len(args) < 2:
+		return gui.myPrint("Usage: /oper <user> <pass>")
+
+	if not serverTab:
+		return gui.myPrint("Could not determine server.")
+
+	com.oper(serverTab.name, args[0], " ".join(args[1:]))
+
+def makiKill(serverTab, channelTab, args):
+	"""
+		Kill a user on the network with an optional reason.
+
+		Usage: /kill <user> [<reason>]
+	"""
+	if not args or len(args) < 1:
+		return gui.myPrint("Usage: /kill <user> [<reason>]")
+
+	if not serverTab:
+		return gui.myPrint("Could not determine server.")
+
+	com.kill(serverTab.name, args[0], " ".join(args[1:]))
+
+def makiList(serverTab, channelTab, args):
+	"""
+		Start a channel listing.
+		If channel is given, only the channel
+		is listed.
+
+		Usage: /list [<channel>]
+	"""
+	if not serverTab:
+		return gui.myPrint("Could not determine server.")
 
 	try:
-		channel = xargs[0]
-	except:
+		# channel specific listing?
+		channel = args[0]
+	except IndexError:
+		# start a complete list..
 		channel = ""
-	self.gui.serverPrint(time.time(), server, "Start of list.")
-	self.com.list(server, channel)
 
-def makiRaw(self, xargs):
-	if not xargs or len(xargs) < 1:
-		self.gui.myPrint("Usage: /raw <command>")
-		return
+	gui.serverPrint(time.time(), serverTab.name, "Start of list.")
+	com.list(serverTab.name, channel)
 
-	server = self.gui.serverTree.getCurrentServer()
-	if not server:
-		self.gui.myPrint("Could not determine server.")
-		return
+def makiRaw(serverTab, channelTab, args):
+	"""
+		Sends a command with optional args to maki
+		which acts only as forwarder. The command
+		goes unchanged to the server.
 
-	xargs[0] = xargs[0].upper()
-	self.com.raw(server, " ".join(xargs))
+		Usage: /raw <command> [<further text>]
+	"""
+	if not args:
+		return gui.myPrint("Usage: /raw <command>")
+
+	if not serverTab:
+		return gui.myPrint("Could not determine server.")
+
+	# upper-case the command
+	args[0] = args[0].upper()
+
+	com.raw(server, " ".join(args))
 
 def makiWhois(currentServer, currentChannel, args):
 	"""
-		/whois <mask> on current server
+		Query a user's identity on the current server.
+
+		Usage: /whois <user mask>
 	"""
 	if not args:
 		return gui.myPrint("No server activated.")
@@ -324,39 +379,55 @@ def makiWhois(currentServer, currentChannel, args):
 
 """ TEKKA USER COMMANDS """
 
-def tekkaQuery(self, xargs):
+def tekkaQuery(currentServer, currentTab, args):
 	"""
-	Opens a new channel tab for xargs[0] (usually a nick)
+		Starts a query dialog with the given user.
+
+		Usage: /query <nick>
 	"""
-	if not xargs:
-		return self.myPrint("Usage: /query <nick>")
+	if not args:
+		return gui.myPrint("Usage: /query <nick>")
 
-	server = self.gui.serverTree.getCurrentServer()
+	if not serverTab:
+		return gui.myPrint("Can't determine server.")
 
-	if not server:
-		return self.myPrint("query who on which server?")
+	if not gui.tabs.searchTab(currentServer.name, args[0]):
+		# no query started
 
-	nick = xargs[0]
-
-	if not self.gui.serverTree.getInCaseChannel(server, nick):
-		tab = self.gui.createQuery(server, nick)
-		self.gui.serverTree.addTab(tab)
+		tab = gui.tabs.createQuery(serverTab.name, nick)
+		tab.connected = True
+		gui.tabs.addTab(serverTab.name, tab)
 
 		output = tab.buffer
 
-		for line in self.com.fetchLog(server, channel.lower(), self.com.getConfig().lastLogLines):
-			output.insertHTML(output.get_end_iter(), \
-				"<font foreground='#DDDDDD'>%s</font>" % \
-					self.gui.escape(line))
+		# fetch and write history to query (if any)
+		for line in com.fetchLog(serverTab.name, nick, 
+			UInt64(config.get("chatting","lastLogLines","10"))):
 
-def tekkaClear(self, xargs):
-	s,c = self.gui.serverTree.getCurrentChannel()
-	
-	if not c:
-		s[self.gui.serverTree.COLUMN_OBJECT].output.clear()
+			output.insertHTML(output.get_end_iter(),
+				"<font foreground='#DDDDDD'>%s</font>" % self.gui.escape(line))
+
+def tekkaClear(currentServer, currentTab, args):
+	"""
+		Clears the output of the current channel.
+
+		Usage: /clear
+	"""
+	if currentTab: currentTab.buffer.set_text("")
+	elif currentServer: currentServer.buffer.set_text("")
+
+def tekkaHelp(currentServer, currentTab, args):
+	"""
+		Prints the doc-string of the given command.
+
+		Usage: /help <command>
+	"""
+	if not args:
+		return gui.myPrint("Usage: /help <command>")
+	if commands.has_key(args[0]):
+		gui.myPrint(commands[args[0]].__doc__.replace("\t",""))
 	else:
-		s[self.gui.serverTree.COLUMN_OBJECT].output.clear()
-
+		gui.myPrint("No help for %s available." % (args[0]))
 
 def setup(_config, _gui, _com):
 	"""
@@ -393,5 +464,6 @@ def setup(_config, _gui, _com):
 		"raw" : makiRaw,
 		"whois" : makiWhois,
 		"query": tekkaQuery,
-		"clear": tekkaClear
+		"clear": tekkaClear,
+		"help": tekkaHelp
 	}
