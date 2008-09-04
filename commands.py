@@ -312,6 +312,15 @@ def makiRaw(self, xargs):
 	xargs[0] = xargs[0].upper()
 	self.com.raw(server, " ".join(xargs))
 
+def makiWhois(currentServer, currentChannel, args):
+	"""
+		/whois <mask> on current server
+	"""
+	if not args:
+		return gui.myPrint("No server activated.")
+	
+	com.sushi.whois(currentServer.name, args[0])
+
 """ TEKKA USER COMMANDS """
 
 def tekkaQuery(self, xargs):
@@ -381,6 +390,7 @@ def setup(_config, _gui, _com):
 		"kill" : makiKill,
 		"list" : makiList,
 		"raw" : makiRaw,
+		"whois" : makiWhois,
 		"query": tekkaQuery,
 		"clear": tekkaClear
 	}
