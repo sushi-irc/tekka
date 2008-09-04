@@ -878,7 +878,15 @@ def inputBar_key_press_event_cb(inputBar, event):
 			if len(match): match = match[0]
 
 			if match:
-				appendMatch("n",text,word,match)
+
+				# if the word is in a sentence, use command
+				# completion (only whitespace)
+				if text.count(" ") > 1:
+					mode = "c"
+				else:
+					mode = "n"
+
+				appendMatch(mode, text, word, match)
 
 				return True
 
@@ -890,7 +898,12 @@ def inputBar_key_press_event_cb(inputBar, event):
 			for match in matches:
 
 				if match[:len(word)] == word:
-					appendMatch("n",text, word, match)
+					if text.count(" ") > 1:
+						mode = "c"
+					else:
+						mode = "n"
+
+					appendMatch(mode, text, word, match)
 
 					return True
 
