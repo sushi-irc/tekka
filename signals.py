@@ -160,18 +160,15 @@ def lastLog(server, channel, lines=0):
 		buffer.insertHTML(buffer.get_end_iter(), \
 		"<font foreground=\"#DDDDDD\">%s</font>" % gui.escape(line))
 
-def _updatePrefix(server, channel, nick, mode):
+def updatePrefix(tab, nick, mode):
 	"""
-		checks if the mode is a prefix-mode. if a prefix mode is
-		given the prefix-char is added.
+		checks if the mode is a prefix-mode (+o f.e.)
+		If so, the prefix of the nick `nick` in channel `channel`
+		will be updated (fetched).
 	"""
+	if not nick: return
 	if mode[1] in ("q","a","o","h","v"):
-		nickList = gui.tabs.searchTab(server,channel).nickList
-
-		if not nickList:
-			return
-		
-		nickList.setPrefix(nick, com.fetchPrefix(server, channel, nick))
+		tab.nickList.setPrefix(nick, com.fetchPrefix(tab.server, tab.name, nick))
 
 
 def getNickColor(nick):
@@ -504,8 +501,14 @@ def userMode(time, server, nick, target, mode, param):
 		if not tab:
 			# no channel/query found
 
+			if param: param = " "+param
+
 			gui.currentServerPrint(time, server,
-				"• %s set %son %s" % (actor, mode+" "+param, target),
+				"• %(actor)s set %(mode)s%(param)s on %(target)s" % {
+					"actor":actor,
+					"mode":mode,
+					"param":param,
+					"target":target},
 				"action")
 		else:
 			# suitable channel/query found, print it there
@@ -517,10 +520,18 @@ def userMode(time, server, nick, target, mode, param):
 				victim = "you"
 				type = "hightlightaction"
 
+			updatePrefix(tab, param, mode)
+			if param: param = " "+param
+
 			gui.channelPrint(time, server, tab.name,
-				"• %s set %son %s" % (actor, mode+" "+param, victim),
+				"• %(actor)s set %(mode)s%(param)s on %(victim)s." % {
+						"actor":actor,
+						"mode":mode,
+						"param":param,
+						"victim":victim},
 				type)
 
+	
 def userOper(time, server):
 	"""
 		yay, somebody gives the user oper rights.

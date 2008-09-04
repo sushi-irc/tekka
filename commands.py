@@ -172,18 +172,19 @@ def makiKick(self, args):
 # buggy code          #
 # XXX XXX XXX XXX XXX #
 
-def makiMode(self, xargs):
-	if not xargs or len(xargs) < 2:
-		self.gui.myPrint("Usage: /mode <target> (+|-)<mode> [param]")
-		return
-	server = self.gui.serverTree.getCurrentServer()
-	if not server:
-		self.myPrint("could not determine server.")
-		return
-	param = ""
-	if len(xargs) > 2:
-		param = " ".join(xargs[2:])
-	self.com.mode(server, xargs[0], "%s %s" % (xargs[1],param))
+def makiMode(currentServer, currentChannel, args):
+
+	if not args or len(args) < 2:
+		return gui.myPrint("Usage: /mode <target> (+|-)<mode> [param]")
+
+	if not currentServer:
+		return gui.myPrint("Could not determine server.")
+
+	if len(args) > 2:
+		# a parameter is given
+		param = " ".join(args[2:])
+
+	com.mode(currentServer.name, args[0], "%s %s" % (args[1],param))
 
 def makiTopic(self, xargs):
 	if not xargs:
