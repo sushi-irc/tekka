@@ -729,18 +729,21 @@ def userQuit(time, server, nick, reason):
 			return
 
 		if reason:
-			reason = " (%s)" % reason
+			message = _("« You have quit (%(reason)s).")
+		else:
+			message = _("« You have quit.")
 
 		for channelTab in channels:
 			channelTab.joined=False
 			channelTab.connected=False
 			gui.updateServerTreeMarkup(channelTab.path)
-			gui.channelPrint(time, server, channelTab.name, "« You have quit%s." % reason)
+			gui.channelPrint(time, server, channelTab.name, message % { "reason": reason } )
 
 	else:
-		reasonwrap = ""
 		if reason:
-			reasonwrap = " (%s)" % reason
+			message = _("« %(nick)s has quit (%(reason)s).")
+		else:
+			message = _("« %(nick)s has quit.")
 
 		channels = gui.tabs.getAllTabs(server)[1:]
 
@@ -758,7 +761,7 @@ def userQuit(time, server, nick, reason):
 			if nick in nicks or nick.lower() == channelTab.name.lower():
 				nickList.removeNick(nick)
 				gui.channelPrint(time, server, channelTab.name, \
-				"« %s has quit%s." % (nick,reasonwrap), "action")
+				message % { "nick": nick, "reason": reason), "action")
 
 
 def userJoin(timestamp, server, nick, channel):
