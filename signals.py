@@ -49,12 +49,14 @@ def setup(_config, _gui, _com):
 	sushi.connect_to_signal("mode", userMode)
 	sushi.connect_to_signal("oper", userOper)
 
+
 	# Server-Signals
 	sushi.connect_to_signal("connect", serverConnect)
 	sushi.connect_to_signal("connected", serverConnected)
 	sushi.connect_to_signal("reconnect", serverReconnect)
 	sushi.connect_to_signal("motd", serverMOTD)
 	sushi.connect_to_signal("list", list)
+	sushi.connect_to_signal("whois", whois)	
 
 	# Channel-Signals
 	sushi.connect_to_signal("topic", channelTopic)
@@ -410,7 +412,7 @@ def userMessage(timestamp, server, nick, channel, message):
 
 def ownMessage(timestamp, server, channel, message):
 	"""
-		The maki user wrote something.
+		The maki user wrote something on a channel or a query
 	"""
 	message = gui.escape(message)
 
@@ -435,13 +437,11 @@ def ownMessage(timestamp, server, channel, message):
 			message))
 
 	elif tab.is_query():
-		# -nick- message
+		# <nick> message
 		gui.currentServerPrint(timestamp, server, \
-			"-<font foreground='%s'>%s</font>/<font foreground='%s'>%s</font>- <font foreground='%s'>%s</font>" % (
+			"&lt;<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" % (
 			config.get("colors","ownNick","#000000"),
 			nick,
-			getNickColor(channel),
-			channel,
 			config.get("colors","ownText","#000000"),
 			message))
 
@@ -456,11 +456,12 @@ def userQuery(timestamp, server, nick, message):
 	"""
 		A user writes to us in a query.
 	"""
-	tab = gui.searchTab(server, nick)
+	tab = gui.tabs.searchTab(server, nick)
 
 	if not tab:
-		tab = createQuery(server, nick)
-		gui.addTab(server, tab)
+		tab = gui.tabs.createQuery(server, nick)
+		tab.connected = True
+		gui.tabs.addTab(server, tab)
 	
 	if tab.name != nick:
 		# the name of the tab differs from the
@@ -469,7 +470,7 @@ def userQuery(timestamp, server, nick, message):
 		corrected = tab.copy()
 		corrected.name = nick
 
-		gui.replaceTab(tab, corrected)
+		gui.tabs.replaceTab(tab, corrected)
 
 	# queries are important
 	gui.setUrgent(True)
@@ -478,47 +479,53 @@ def userQuery(timestamp, server, nick, message):
 
 def userMode(time, server, nick, target, mode, param):
 	"""
-		zomg.
+		Mode change on target from nick detected.
+		nick and param are optional arguments and
+		can be empty.
+
+		As nemo:
+			/mode #xesio +o nemo
+		will result in:
+			userMode(<time>,<server>,"nemo","#xesio","+o","nemo")
 	"""
-	# FIXME: broken
-	return
-	myNick = com.getOwnNick(server)
 
-	actColor = gui.getConfig().getColor("modeActNick")
-	paramColor = gui.getConfig().getColor("modeParam")
-
-	type = "action"
-
-	actnick = "<font foreground='%s'>%s</font>" % (actColor, gui.escape(nick))
-	if nick == myNick:
-		actnick = "You"
-
-	if target == myNick:
-		gui.serverPrint(time, server,"• %s set <b>%s</b> on you." % (actnick, mode))
+	# nick: /mode target +mode param
+	
+	if not nick:
+		# only a mode listing
+		gui.currentServerPrint(time, server, "• Modes for %s: %s" % (target, mode), "action")
 
 	else:
-		# if param a user mode is set
-		if param:
-			nickwrap = "<font foreground='%s'>%s</font>" % (paramColor, gui.escape(param))
-			if param == myNick:
-				nickwrap = "you"
-				type = "highlightaction"
+		actor = nick
+		if nick == com.getOwnNick(server):
+			actor = "You"
 
-			msg = "• %s set <b>%s</b> to %s." % (actnick,mode,nickwrap)
+		tab = gui.tabs.searchTab(server, target)
+		if not tab:
+			# no channel/query found
 
-			_updatePrefix(server, target, param, mode)
-
-		# else a channel is the target
+			gui.currentServerPrint(time, server,
+				"• %s set %son %s" % (actor, mode+" "+param, target),
+				"action")
 		else:
-			msg = "• %s set <b>%s</b> on %s." % (actnick,mode,target)
+			# suitable channel/query found, print it there
 
-		gui.channelPrint(time, server, target, msg, type)
+			type = "action"
+			victim = target
+
+			if victim == com.getOwnNick(server):
+				victim = "you"
+				type = "hightlightaction"
+
+			gui.channelPrint(time, server, tab.name,
+				"• %s set %son %s" % (actor, mode+" "+param, victim),
+				type)
 
 def userOper(time, server):
 	"""
 		yay, somebody gives the user oper rights.
 	"""
-	gui.serverPrint(time, server, "You got oper access.")
+	gui.currentServerPrint(time, server, "• You got oper access.")
 
 def userCTCP(time, server,  nick, target, message):
 	"""
@@ -535,17 +542,19 @@ def ownCTCP(time, server, target, message):
 		The maki user sends a CTCP request to 
 		a channel or user (target).
 	"""
-	# FIXME: BR=KEN
+	tab = gui.tabs.searchTab(server, target)
 
-	channel = gui.serverTree.getChannel(server,target)
-	if channel:
-		nickColor = gui.getConfig().getColor("ownNick")
+	if tab:
+		# valid query/channel found, print it there
+
+		nickColor = config.get("colors","nickColor","#000000")
 		gui.channelPrint(time, server, channel, \
 			"&lt;CTCP:<font foreground='%s'>%s</foreground>&gt; %s" % \
 				(nickColor, com.getOwnNick(server), gui.escape(message)))
+
 	else:
-		gui.serverPrint(time, server, "CTCP request from you to %s: %s" \
-				% (gui.escape(target), gui.escape(message)))
+		gui.serverPrint(time, server,
+			"CTCP request from you to %s: %s" % (gui.escape(target),gui.escape(message)))
 
 def queryCTCP(time, server, nick, message):
 	"""
@@ -554,15 +563,14 @@ def queryCTCP(time, server, nick, message):
 		If no query window is open, send it to the server tab.
 		FIXME: prove this for all methods which act like queryCTCP
 	"""
-	channel = gui.serverTree.getChannel(server,nick)
-	# FIXME: BR=KEN
+	tab = gui.tabs.searchTab(server, nick)
 	
-	if channel:
-		gui.channelPrint(time, server, channel, \
+	if tab:
+		gui.channelPrint(time, server, tab.name, \
 				"&lt;CTCP:<font foreground='%s'>%s</font>&gt; %s" % \
 				(getNickColor(nick), gui.escape(nick), gui.escape(message)))
 	else:
-		gui.serverPrint(time, server, \
+		gui.currentServerPrint(time, server, \
 				"&lt;CTCP:<font foreground='%s'>%s</font>&gt; %s" % \
 				(getNickColor(nick), gui.escape(nick), gui.escape(message)))
 
@@ -573,15 +581,12 @@ def ownNotice(time, server, target, message):
 		channel of the network which is identified by 
 		`server`
 	"""
-	# FIXME: BR=KEN
-
-	channel = gui.serverTree.getChannel(server,target)
-
-	ownNickColor = gui.getConfig().getColor("ownNick")
+	tab = gui.tabs.searchTab(server, target)
+	ownNickColor = config.get("colors","ownNick","#000000")
 	ownNick = com.getOwnNick(server)
 
-	if channel:
-		gui.channelPrint(time, server, channel, \
+	if tab:
+		gui.channelPrint(time, server, tab.name, \
 			"&gt;<font foreground='%s'>%s</font>&lt; %s" % \
 				(getNickColor(target), gui.escape(target), gui.escape(message)))
 	else:
@@ -593,16 +598,16 @@ def queryNotice(time, server, nick, message):
 	"""
 		A user sends a notice directly to the maki user.
 	"""
-	# FIXME: BR=KEN
-	return
+	
+	tab = gui.tabs.searchTab(server, nick)
+	if tab:
+		if tab.name != nick:
+			# correct notation of tab name
+			cTab = tab.copy()
+			cTab.name = nick
+			gui.tabs.replaceTab(tab,cTab)
 
-	channel = _simFind(server, nick)
-	if channel:
-		if channel != nick:
-			gui.serverTree.renameChannel(server, channel, nick)
-			channel = nick
-
-	if channel:
+	if tab:
 		gui.channelPrint(time, server, channel, \
 				"-<font foreground='%s'>%s</font>- %s" % \
 				(getNickColor(nick), gui.escape(nick), gui.escape(message)))
@@ -734,6 +739,8 @@ def userQuit(time, server, nick, reason):
 
 		# print in all channels where nick joined a message
 		for channelTab in channels:
+			if channelTab.is_query(): continue
+
 			nickList = channelTab.nickList
 			nicks = nickList.getNicks() or []
 
@@ -847,3 +854,12 @@ def invalidTarget(time, server, target):
 		gui.channelPrint(time, server, channel, "• %s" % (error))
 	else:
 		gui.currentServerPrint(time, server, "• %s" % (error))
+
+def whois(time, server, nick, message):
+	"""
+		message = "" => end of whois
+	"""
+	if message:
+		gui.serverPrint(time, server, "Whois of %s: %s" % (nick, message))
+	else:
+		gui.serverPrint(time, server, "End whois of %s." % (nick))
