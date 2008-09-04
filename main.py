@@ -277,9 +277,9 @@ class guiWrapper(object):
 		"""
 		serverTab,channelTab = self.tabs.getCurrentTabs()
 
-		if serverTab.name.lower() == server.lower() and channelTab:
+		if serverTab and serverTab.name.lower() == server.lower() and channelTab:
 			# print in current channel
-			self.channelPrint(timestamp, server, cchannel, string, type)
+			self.channelPrint(timestamp, server, channelTab.name, string, type)
 		else:
 			# print to server tab
 			self.serverPrint(timestamp, server, string, type)
@@ -499,7 +499,10 @@ class guiWrapper(object):
 			nextIter = store.iter_next(row.iter)
 			if not nextIter:
 				temp = store.iter_parent(row.iter)
-				nextIter = store.iter_parent(temp)
+				if temp:
+					nextIter = store.iter_parent(temp)
+				else:
+					nextIter = None
 			path = tab.path
 
 			store.remove(row.iter)
@@ -817,6 +820,75 @@ def inputBar_activate_cb(inputBar):
 	commands.parseInput(text)
 
 	inputBar.set_text("")
+
+def inputBar_key_press_event_cb(inputBar, event):
+	"""
+		Key pressed in inputBar.
+		Implements tab and command completion.
+	"""
+	if event.type != gtk.gdk.KEY_PRESS:
+		return False
+
+	key =  gtk.gdk.keyval_name(event.keyval)
+	text = inputBar.get_text()
+
+	if not text: return False
+
+	tab =  gui.tabs.getCurrentTab()
+	word = text.split(" ")[-1]
+
+	if key == "Tab":
+		# tab completion comes here.
+		
+		def appendMatch(mode, text, word, match):
+			if mode == "c": separator = config.get("tekka","commandSeparator", " ")
+			elif mode == "n": separator = config.get("tekka","nickSeperator", ": ")
+
+			text = text + match[len(word):] + separator
+			inputBar.set_text(text)
+			inputBar.set_position(len(text)+len(separator))
+
+
+
+		if tab.is_channel():
+			# look for nicks
+
+			match = tab.nickList.searchNick(word)
+
+			# TODO:  it would be nice to iterate over this
+			# TODO:: on every tab-hit.
+			if len(match): match = match[0]
+
+			if match:
+				appendMatch("n",text,word,match)
+
+				return True
+
+		elif tab.is_query():
+			# look for my nick or the other nick
+
+			matches = tab.name, com.getOwnNick(tab.server)
+
+			for match in matches:
+
+				if match[:len(word)] == word:
+					appendMatch("n",text, word, match)
+
+					return True
+
+		# command completion
+
+		if word[0]=="/":
+			# oh, a command... strip /
+			word = word[1:]
+		else:
+			return False
+
+		for command in commands.commands.keys():
+			if command[:len(word)]==word:
+				appendMatch("c",text, word, command)
+
+				return True
 
 def topicBar_activate_cb(topicBar):
 	"""
@@ -1263,6 +1335,7 @@ def setupGTK():
 		# TODO: catch window state change for restoring through tray hide
 	# input signals
 		"inputBar_activate_cb" : inputBar_activate_cb,
+		"inputBar_key_press_event_cb" : inputBar_key_press_event_cb,
 		"topicBar_activate_cb" : topicBar_activate_cb,
 	# output signals
 		"output_button_press_event_cb" : output_button_press_event_cb,

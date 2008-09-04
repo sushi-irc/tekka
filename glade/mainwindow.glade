@@ -226,6 +226,7 @@
                     <property name="receives_default">True</property>
                     <property name="extension_events">GDK_EXTENSION_EVENTS_ALL</property>
                     <signal name="activate" handler="inputBar_activate_cb"/>
+					<signal name="key_press_event" handler="inputBar_key_press_event_cb"/>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
