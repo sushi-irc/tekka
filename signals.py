@@ -56,7 +56,7 @@ def setup(_config, _gui, _com):
 	sushi.connect_to_signal("reconnect", serverReconnect)
 	sushi.connect_to_signal("motd", serverMOTD)
 	sushi.connect_to_signal("list", list)
-	sushi.connect_to_signal("whois", whois)	
+	sushi.connect_to_signal("whois", whois)
 
 	# Channel-Signals
 	sushi.connect_to_signal("topic", channelTopic)
@@ -78,7 +78,7 @@ def initServers():
 
 		tab = gui.tabs.createServer(server)
 		tab.connected = True
-		
+
 		if com.isAway(server, com.getOwnNick(server)):
 			tab.setAway(True)
 
@@ -115,7 +115,7 @@ def addChannels(server):
 
 		if add: gui.tabs.addTab(server, tab)
 
-		fetchPrefixes(server, channel, tab.nickList, nicks)			
+		fetchPrefixes(server, channel, tab.nickList, nicks)
 
 		lastLog(server,channel)
 
@@ -151,7 +151,7 @@ def lastLog(server, channel, lines=0):
 	if not buffer:
 		print "lastLog('%s','%s'): no buffer" % (server,channel)
 		return
-	
+
 	for line in com.fetchLog(
 				server,
 				channel,
@@ -365,7 +365,7 @@ def userMessage(timestamp, server, nick, channel, message):
 
 	# highlight text if own nick is in message
 	i = -1
-	
+
 	# TODO:  make this global so the method hasn't
 	# TODO:: to fetch the mapping every time
 	highlightwords = config.get("highlightWords", default={})
@@ -459,7 +459,7 @@ def userQuery(timestamp, server, nick, message):
 		tab = gui.tabs.createQuery(server, nick)
 		tab.connected = True
 		gui.tabs.addTab(server, tab)
-	
+
 	if tab.name != nick:
 		# the name of the tab differs from the
 		# real nick, correct this.
@@ -487,7 +487,7 @@ def userMode(time, server, nick, target, mode, param):
 	"""
 
 	# nick: /mode target +mode param
-	
+
 	if not nick:
 		# only a mode listing
 		gui.currentServerPrint(time, server, "• Modes for %s: %s" % (target, mode), "action")
@@ -531,7 +531,7 @@ def userMode(time, server, nick, target, mode, param):
 						"victim":victim},
 				type)
 
-	
+
 def userOper(time, server):
 	"""
 		yay, somebody gives the user oper rights.
@@ -550,7 +550,7 @@ def userCTCP(time, server,  nick, target, message):
 
 def ownCTCP(time, server, target, message):
 	"""
-		The maki user sends a CTCP request to 
+		The maki user sends a CTCP request to
 		a channel or user (target).
 	"""
 	tab = gui.tabs.searchTab(server, target)
@@ -575,7 +575,7 @@ def queryCTCP(time, server, nick, message):
 		FIXME: prove this for all methods which act like queryCTCP
 	"""
 	tab = gui.tabs.searchTab(server, nick)
-	
+
 	if tab:
 		gui.channelPrint(time, server, tab.name, \
 				"&lt;CTCP:<font foreground='%s'>%s</font>&gt; %s" % \
@@ -589,7 +589,7 @@ def ownNotice(time, server, target, message):
 	"""
 		if query channel with ``target`` exists, print
 		the notice there, else print it on the current
-		channel of the network which is identified by 
+		channel of the network which is identified by
 		`server`
 	"""
 	tab = gui.tabs.searchTab(server, target)
@@ -609,7 +609,7 @@ def queryNotice(time, server, nick, message):
 	"""
 		A user sends a notice directly to the maki user.
 	"""
-	
+
 	tab = gui.tabs.searchTab(server, nick)
 	if tab:
 		if tab.name != nick:
@@ -679,7 +679,7 @@ def userKick(time, server, nick, channel, who, reason):
 	"""
 	if reason:
 		reason = "(%s)" % reason
-	
+
 	tab = gui.tabs.searchTab(server, channel)
 
 	if not tab:
@@ -697,7 +697,7 @@ def userKick(time, server, nick, channel, who, reason):
 	else:
 		tab.nickList.removeNick(who)
 		gui.channelPrint(time, server, channel, gui.escape(
-			"« %s was kicked from %s by %s %s" % (who,channel,nick,reason)), 
+			"« %s was kicked from %s by %s %s" % (who,channel,nick,reason)),
 			"action")
 
 
@@ -715,7 +715,7 @@ def userQuit(time, server, nick, reason):
 		# set the connected flag to False on the server
 		serverTab = gui.tabs.searchTab(server)
 
-		if not serverTab: 
+		if not serverTab:
 			# this happens if the tab is closed
 			return
 
@@ -773,7 +773,7 @@ def userJoin(timestamp, server, nick, channel):
 	if nick == com.getOwnNick(server):
 		# we joined a channel, fetch nicks and topic, create
 		# channel and such things...
-		
+
 		nicks = com.fetchNicks(server,channel)
 		topic = sushi.channel_topic(server, channel) # XXX: does this really returns a topic?
 
@@ -841,7 +841,7 @@ def userPart(timestamp, server, nick, channel, reason):
 
 	else:
 		# another user parted
-		
+
 		tab.nickList.removeNick(nick)
 		gui.channelPrint(timestamp, server, channel,
 			"« <font foreground='%s'>%s</font> has left %s%s." % (

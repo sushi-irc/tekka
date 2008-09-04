@@ -44,11 +44,11 @@ config = None
 
 def setup(_config, _gui, _com):
 	"""
-		Look, I don't have to tell you what a 
+		Look, I don't have to tell you what a
 		setup method does, don't I?
 	"""
 	global config, gui, com
-	
+
 	config = _config
 	gui = _gui
 	com = _com

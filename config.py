@@ -199,7 +199,7 @@ def setup():
 if __name__ == "__main__":
 	setup()
 	readConfigFile()
-	
+
 	print "Without defaults:"
 	for section in configParser.sections():
 		print "section '%s':" % (section)

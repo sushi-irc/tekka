@@ -43,7 +43,7 @@ gui = None
 class guiWrapper(object):
 	"""
 		The gui wrapper class is instanced one time
-		and acts as interface to the gtk widgets 
+		and acts as interface to the gtk widgets
 		for modules like the signals-module.
 
 		gui = wrapper class
@@ -75,19 +75,19 @@ class guiWrapper(object):
 		for widget in widgetList:
 			widget.set_sensitive(switch)
 
-		if switch: widgets.get_widget("inputBar").grab_focus() 
+		if switch: widgets.get_widget("inputBar").grab_focus()
 
 	def setUrgent(self, switch):
 		"""
 			Sets or unsets the urgent
 			status to the main window.
 			If the status icon is enabled
-			it will be set flashing (or 
+			it will be set flashing (or
 			if switch is False the flashing
 			will stop)
 		"""
 		win = widgets.get_widget("mainWindow")
-		
+
 		if win.has_toplevel_focus():
 			# urgent toplevel windows suck ass
 			return
@@ -131,7 +131,7 @@ class guiWrapper(object):
 		"""
 		tabs = self.tabs.getAllTabs()
 		st = widgets.get_widget("serverTree")
-	
+
 		for i in range(1,10):
 			removeShortcut(self.accelGroup, st, "<alt>%d" % (i))
 
@@ -143,7 +143,7 @@ class guiWrapper(object):
 			if tab.is_server() and not config.get("tekka","serverShortcuts"):
 				continue
 
-			addShortcut(self.accelGroup, st, "<alt>%d" % (c), 
+			addShortcut(self.accelGroup, st, "<alt>%d" % (c),
 				lambda w,s,p: self.tabs.switchToPath(p), tab.path)
 
 			c+=1
@@ -264,7 +264,7 @@ class guiWrapper(object):
 				idle_add(lambda: self.scrollOutput())
 
 		else:
-			if type in serverTab.newMessage: 
+			if type in serverTab.newMessage:
 				# don't need to repeat setting
 				return
 			serverTab.setNewMessage(type)
@@ -348,7 +348,7 @@ class guiWrapper(object):
 			return buffer
 
 		def createChannel(self, server, name):
-			return self.tab.tekkaChannel(name, server, nicklist=self.nickListStore(), 
+			return self.tab.tekkaChannel(name, server, nicklist=self.nickListStore(),
 				buffer=self.getBuffer())
 
 		def createQuery(self, server, name):
@@ -359,7 +359,7 @@ class guiWrapper(object):
 
 		def searchTab(self, server, name=""):
 			"""
-				Searches for server (and if name is given, 
+				Searches for server (and if name is given,
 				for a tab identified by name).
 				The method returns the tab object or None.
 			"""
@@ -382,7 +382,7 @@ class guiWrapper(object):
 				server: string
 				name: string
 
-				Searches for the given server and 
+				Searches for the given server and
 				if not "" the method searches for
 				a child identified by name.
 				They would be returned in a tuple:
@@ -410,8 +410,8 @@ class guiWrapper(object):
 				object: tekkaTab
 
 				Adds a tab object into the server tree.
-				server can be a string identifying a 
-				server acting as parent for the tab or 
+				server can be a string identifying a
+				server acting as parent for the tab or
 				None.
 
 				On succes the method returns the path
@@ -430,7 +430,7 @@ class guiWrapper(object):
 
 			object.path = store.get_path(iter)
 			store.set(iter, 0, object.markup(), 1, object.name, 2, object)
-			
+
 			if server and config.get("tekka", "autoExpand"):
 				# expand the whole server tab
 				widgets.get_widget("serverTree").expand_row(store.get_path(store.iter_parent(iter)),True)
@@ -484,7 +484,7 @@ class guiWrapper(object):
 
 				Removes the tab from the server tree.
 				There's no need for giving a parent due
-				to to the unique identifying path stored 
+				to to the unique identifying path stored
 				inner the tekkaTab.
 			"""
 			store = widgets.get_widget("serverTree").get_model()
@@ -518,15 +518,15 @@ class guiWrapper(object):
 			"""
 				server: string
 				object: string
-				
+
 				Removes a tab from the server tree.
-				
+
 				server and object are strings identifying
 				the server and the child tab.
 
 				server can be None/"" so there only
 				a search on the top of the tree is performed.
-				
+
 				On success this method returns True
 				otherwise False.
 			"""
@@ -621,7 +621,7 @@ class guiWrapper(object):
 
 			if not self.currentPath:
 				return None,None
-			
+
 			serverPath = self.currentPath[0]
 			channelPath = self.currentPath
 
@@ -692,7 +692,7 @@ class guiWrapper(object):
 
 			serverTree.set_cursor(path)
 			self.currentPath = path
-		
+
 			widgets.get_widget("output").set_buffer(tab.buffer)
 
 			if tab.is_channel():
@@ -779,7 +779,7 @@ def menu_View_showStatusBar_toggled_cb(menuItem):
 def mainWindow_delete_event_cb(mainWindow, event):
 	"""
 		The user want's to close the main window.
-		If the status icon is enabled and the 
+		If the status icon is enabled and the
 		"hideOnClose" option is set the window
 		will be hidden, otherwise the main looped
 		will be stopped.
@@ -921,7 +921,7 @@ def inputBar_key_press_event_cb(inputBar, event):
 		# channel completion
 		if word[0]=="#":
 			tabs = gui.tabs.getAllTabs()
-			
+
 			matches = [tab for tab in tabs if tab and tab.name[:len(word)] == word]
 			# TODO: as well as above, iterate here...
 			match = matches[0].name
@@ -1043,7 +1043,7 @@ def nickList_button_press_event_cb(nickList, event):
 	"""
 	if event.button == 3:
 		# right mouse button pressed.
-		
+
 		path = nickList.get_path_at_pos(int(event.x), int(event.y))
 
 		# get marked nick
@@ -1074,7 +1074,7 @@ def scrolledWindow_output_vscrollbar_valueChanged_cb(range):
 		of the output text view was moved.
 		Disable the autoscroll if the scroll bar is not at the
 		bottom.
-		Also the method sets the current scroll position 
+		Also the method sets the current scroll position
 		to the buffer in the tab.
 	"""
 	tab = gui.tabs.getCurrentTab()
@@ -1134,7 +1134,7 @@ def serverTree_shortcut_ctrl_Page_Up(serverTree, shortcut):
 		i = tabs.index(tab)
 	except ValueError:
 		return
-	
+
 	try:
 		gui.tabs.switchToPath(tabs[i-1].path)
 	except IndexError:
@@ -1151,7 +1151,7 @@ def serverTree_shortcut_ctrl_Page_Down(serverTree, shortcut):
 		i = tabs.index(tab)
 	except ValueError:
 		return
-	
+
 	try:
 		i = i+1
 		if (i) == len(tabs):
@@ -1270,7 +1270,7 @@ def setup_serverTree():
 	# further stuff (set model to treeview, add columns)
 
 	widget = widgets.get_widget("serverTree")
-	
+
 	widget.set_model(tm)
 
 	renderer = gtk.CellRendererText()
@@ -1330,9 +1330,9 @@ def setup_shortcuts():
 	addShortcut(gui.accelGroup, widgets.get_widget("output"), "<ctrl>l",
 		output_shortcut_ctrl_l)
 
-	addShortcut(gui.accelGroup, widgets.get_widget("serverTree"), 
+	addShortcut(gui.accelGroup, widgets.get_widget("serverTree"),
 		"<ctrl>Page_Up", serverTree_shortcut_ctrl_Page_Up)
-	addShortcut(gui.accelGroup, widgets.get_widget("serverTree"), 
+	addShortcut(gui.accelGroup, widgets.get_widget("serverTree"),
 		"<ctrl>Page_Down", serverTree_shortcut_ctrl_Page_Down)
 	addShortcut(gui.accelGroup, widgets.get_widget("serverTree"),
 		"<ctrl>w", serverTree_shortcut_ctrl_w)
@@ -1346,11 +1346,11 @@ def connectMaki():
 	"""
 		Tries to connect to maki over DBus.
 		If succesful, the GUI is enabled (gui.setUseable(True))
-		and signals, dialogs, menus as well as the commands module 
+		and signals, dialogs, menus as well as the commands module
 		were set up.
 	"""
 	gui.setUseable(False)
-	
+
 	if com.connect():
 		signals.setup(config, gui, com)
 		commands.setup(config, gui, com)

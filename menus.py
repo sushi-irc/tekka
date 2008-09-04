@@ -79,11 +79,11 @@ def serverTreeMenu_closeItem_activate_cb(menuItem):
 	if serverTree_tabMenu_currentTab.is_channel():
 		com.part(serverTree_tabMenu_currentTab.server, serverTree_tabMenu_currentTab.name, config.get("partMessage", default=""))
 	elif serverTree_tabMenu_currentTab.is_server():
-		com.quitServer(serverTree_tabMenu_currentTab.name, config.get("quitMessage", default=""))		
+		com.quitServer(serverTree_tabMenu_currentTab.name, config.get("quitMessage", default=""))
 
 def serverTreeMenu_autoJoinItem_toggled_cb(menuItem):
 	"""
-		set the auto join state of the tab to the state 
+		set the auto join state of the tab to the state
 		of the menu item. (for channels)
 	"""
 	if not serverTree_tabMenu_currentTab or not serverTree_tabMenu_currentTab.is_channel():
@@ -95,7 +95,7 @@ def serverTreeMenu_autoJoinItem_toggled_cb(menuItem):
 
 def serverTreeMenu_autoConnectItem_toggled_cb(menuItem):
 	"""
-		set the auto connect state of the tab to the state 
+		set the auto connect state of the tab to the state
 		of the menu item. (for servers)
 	"""
 	if not serverTree_tabMenu_currentTab or not serverTree_tabMenu_currentTab.is_server():
@@ -111,7 +111,7 @@ def initServerTreeMenu():
 	"""
 	global serverTree_tabMenu_widgets
 
-	serverTree_tabMenu_widgets = glade.XML(config.get("gladefiles", "mainwindow"), 
+	serverTree_tabMenu_widgets = glade.XML(config.get("gladefiles", "mainwindow"),
 			"serverTree_tabMenu")
 
 	if not serverTree_tabMenu_widgets:
@@ -161,7 +161,7 @@ def getServerTreeMenu(pointedTab):
 	disconnectItem = serverTree_tabMenu_widgets.get_widget("disconnectItem")
 	joinItem = serverTree_tabMenu_widgets.get_widget("joinItem")
 	partItem = serverTree_tabMenu_widgets.get_widget("partItem")
-	autoConnectItem = serverTree_tabMenu_widgets.get_widget("autoConnectItem")		
+	autoConnectItem = serverTree_tabMenu_widgets.get_widget("autoConnectItem")
 	autoJoinItem = serverTree_tabMenu_widgets.get_widget("autoJoinItem")
 	closeItem = serverTree_tabMenu_widgets.get_widget("closeItem")
 
@@ -196,7 +196,7 @@ def getServerTreeMenu(pointedTab):
 			joinItem.hide()
 		else:
 			partItem.hide()
-	
+
 	elif pointedTab.is_query():
 		autoConnectItem.hide()
 		connectItem.hide()
@@ -225,7 +225,7 @@ def nickListMenu_deactivate_cb(menu):
 			handler[0](menu, *handler[1:])
 		else:
 			handler[0](menu)
-	
+
 	nickListMenu_deactivateHandlers = []
 
 def kickItem_activate_cb(menuItem):
@@ -294,7 +294,7 @@ def opItem_activate_cb(menuItem):
 
 def initNickListMenu():
 	"""
-		Parse nickListMenu widget from glade file and 
+		Parse nickListMenu widget from glade file and
 		connect signals.
 		Returns True if successful, otherwise False.
 	"""
@@ -354,12 +354,12 @@ def getNickListMenu(currentNick):
 
 	if pattern in ignores:
 		ignoreItem.set_active(True)
-		ignoreHandler = ignoreItem.connect("toggled", 
+		ignoreHandler = ignoreItem.connect("toggled",
 			lambda w,n,p: com.unignore(n, p), sTab.name, pattern)
 
 	else:
 		ignoreItem.set_active(False)
-		ignoreHandler = ignoreItem.connect_after("toggled", 
+		ignoreHandler = ignoreItem.connect_after("toggled",
 			lambda w,n,p: com.ignore(n, p), sTab.name, pattern)
 
 	global nickListMenu_deactivateHandlers

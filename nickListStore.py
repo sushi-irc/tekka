@@ -39,7 +39,7 @@ nick is a string.
 	def findLowerRow(self, store, column, needle):
 		"""
 		Strings only.
-		Does the same as findRow but compares the 
+		Does the same as findRow but compares the
 		lower cased content of the column with the
 		lower cased needle so character case does not
 		matter.
@@ -67,8 +67,8 @@ nick is a string.
 		return [l[self.COLUMN_NICK] for l in self if l is not None ]
 
 	def appendNick(self, nick, sort=True):
-		""" 
-		appends a nick to the store, if sort is false, 
+		"""
+		appends a nick to the store, if sort is false,
 		data in the nickListStore would'nt be sorted in-place
 		"""
 		store = self
@@ -129,7 +129,7 @@ nick is a string.
 
 	def searchNick(self, needle):
 		"""
-		returns a list of nicks wich are beginning with 
+		returns a list of nicks wich are beginning with
 		the string `needle`
 		"""
 		return [l[self.COLUMN_NICK] for l in self if l and l[self.COLUMN_NICK][0:len(needle)].lower()==needle]

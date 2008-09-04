@@ -145,7 +145,7 @@ def makiJoin(currentServer, currentChannel, args):
 
 	if not args:
 		return gui.myPrint("Usage: /join <channel> [<key>]")
-	
+
 	com.join(currentServer.name, args[0], " ".join(args[1:]))
 
 def makiAction(currentServer, currentChannel, args):
@@ -177,7 +177,7 @@ def makiKick(currentServer, currentTab, args):
 
 	if not channelTab or not channelTab.is_channel():
 		return gui.myPrint("You're not on a channel")
-	
+
 	self.com.kick(serverTab.name, channelTab.name, args[0], " ".join(args[1:]))
 
 def makiMode(currentServer, currentChannel, args):
@@ -374,7 +374,7 @@ def makiWhois(currentServer, currentChannel, args):
 	"""
 	if not args:
 		return gui.myPrint("No server activated.")
-	
+
 	com.sushi.whois(currentServer.name, args[0])
 
 """ TEKKA USER COMMANDS """
@@ -401,7 +401,7 @@ def tekkaQuery(currentServer, currentTab, args):
 		output = tab.buffer
 
 		# fetch and write history to query (if any)
-		for line in com.fetchLog(serverTab.name, nick, 
+		for line in com.fetchLog(serverTab.name, nick,
 			UInt64(config.get("chatting","lastLogLines","10"))):
 
 			output.insertHTML(output.get_end_iter(),

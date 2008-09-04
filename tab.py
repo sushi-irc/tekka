@@ -27,7 +27,7 @@ SUCH DAMAGE.
 
 class tekkaTab(object):
 	"""
-		Provides basic attributes like the outputbuffer, 
+		Provides basic attributes like the outputbuffer,
 		the name of the tab and a flag if a new message is received.
 
 		Attributes:
