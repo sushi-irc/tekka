@@ -655,9 +655,9 @@ def userNick(time, server, nick, newNick):
 		gui.tabs.replaceTab(tab, cTab)
 
 	if newNick == com.getOwnNick(server):
-		message = _("• You are now known as %(newnick)s.")
+		message = _(u"• You are now known as %(newnick)s.")
 	else:
-		message = _("• %(nick)s is now known as %(newnick)s.")
+		message = _(u"• %(nick)s is now known as %(newnick)s.")
 
 	# iterate over all channels and look if the nick is
 	# present there. If true so rename him in nicklist cache.
@@ -724,9 +724,9 @@ def userQuit(time, server, nick, reason):
 			return
 
 		if reason:
-			message = _("« You have quit (%(reason)s).")
+			message = _(u"« You have quit (%(reason)s).")
 		else:
-			message = _("« You have quit.")
+			message = _(u"« You have quit.")
 
 		for channelTab in channels:
 			channelTab.joined=False
@@ -736,9 +736,9 @@ def userQuit(time, server, nick, reason):
 
 	else:
 		if reason:
-			message = _("« %(nick)s has quit (%(reason)s).")
+			message = _(u"« %(nick)s has quit (%(reason)s).")
 		else:
-			message = _("« %(nick)s has quit.")
+			message = _(u"« %(nick)s has quit.")
 
 		channels = gui.tabs.getAllTabs(server)[1:]
 
@@ -796,7 +796,7 @@ def userJoin(timestamp, server, nick, channel):
 
 		fetchPrefixes(server,channel,tab.nickList,nicks)
 
-		message = _("» You have joined %(channel)s.")
+		message = _(u"» You have joined %(channel)s.")
 
 	else:
 		# another one joined the channel
@@ -806,7 +806,7 @@ def userJoin(timestamp, server, nick, channel):
 			print "No tab for channel '%s' in userJoin (not me)."
 			return
 
-		message = _("» <font foreground='%(color)s'>%(nick)s</font> has joined %(channel)s.")
+		message = _(u"» <font foreground='%(color)s'>%(nick)s</font> has joined %(channel)s.")
 
 		tab.nickList.appendNick(nick)
 
@@ -827,9 +827,9 @@ def userPart(timestamp, server, nick, channel, reason):
 
 	if nick == com.getOwnNick(server):
 		if reason:
-			message = _("« You have left %(channel)s (%(reason)s).")
+			message = _(u"« You have left %(channel)s (%(reason)s).")
 		else:
-			message = _("« You have left %(channel)s.")
+			message = _(u"« You have left %(channel)s.")
 
 		tab.joined = False
 		gui.updateServerTreeMarkup(tab.path)
@@ -839,9 +839,9 @@ def userPart(timestamp, server, nick, channel, reason):
 	else:
 		# another user parted
 		if reason:
-			message = _("« <font foreground='%(color)s'>%(nick)s</font> has left %(channel)s (%(reason)s).")
+			message = _(u"« <font foreground='%(color)s'>%(nick)s</font> has left %(channel)s (%(reason)s).")
 		else:
-			message = _("« <font foreground='%(color)s'>%(nick)s</font> has left %(channel)s.")
+			message = _(u"« <font foreground='%(color)s'>%(nick)s</font> has left %(channel)s.")
 
 
 		tab.nickList.removeNick(nick)
@@ -861,7 +861,7 @@ def invalidTarget(time, server, target):
 	"""
 	tab = gui.tabs.searchTab(server, target)
 
-	error = _("• %(target)s: No such nick/channel.") % { "target": gui.escape(target) }
+	error = _(u"• %(target)s: No such nick/channel.") % { "target": gui.escape(target) }
 
 	if tab:
 		gui.channelPrint(time, server, target, error)
@@ -873,6 +873,6 @@ def whois(time, server, nick, message):
 		message = "" => end of whois
 	"""
 	if message:
-		gui.serverPrint(time, server, _("[%(nick)s] %(message)s") % { "nick": gui.escape(nick), "message": gui.escape(message) })
+		gui.serverPrint(time, server, _(u"[%(nick)s] %(message)s") % { "nick": gui.escape(nick), "message": gui.escape(message) })
 	else:
-		gui.serverPrint(time, server, _("[%(nick)s] End of whois.") % { "nick": gui.escape(nick) })
+		gui.serverPrint(time, server, _(u"[%(nick)s] End of whois.") % { "nick": gui.escape(nick) })
