@@ -162,12 +162,12 @@ def lastLog(server, channel, lines=0):
 
 def updatePrefix(tab, nick, mode):
 	"""
-		checks if the mode is a prefix-mode (+o f.e.)
+		checks if the mode is a prefix-mode (e.g. +o)
 		If so, the prefix of the nick `nick` in channel `channel`
 		will be updated (fetched).
 	"""
 	if not nick: return
-	if mode[1] in ("q","a","o","h","v"):
+	if mode[1] in sushi.support_prefix(tab.server)[0]:
 		tab.nickList.setPrefix(nick, com.fetchPrefix(tab.server, tab.name, nick))
 
 
