@@ -801,7 +801,7 @@ def userJoin(timestamp, server, nick, channel):
 
 		fetchPrefixes(server,channel,tab.nickList,nicks)
 
-		nickwrap = "You have"
+		message = _("You have joined %(channel)s.")
 
 	else:
 		# another one joined the channel
@@ -811,14 +811,11 @@ def userJoin(timestamp, server, nick, channel):
 			print "No tab for channel '%s' in userJoin (not me)."
 			return
 
-		nickwrap = "<font foreground='%s'>%s</font> has" % (
-			config.get("colors","joinNick","#000000"),
-			gui.escape(nick)
-			)
+		message = _("<font foreground='%(color)s'>%(nick)s</font> has joined %(channel)s.")
 
 		tab.nickList.appendNick(nick)
 
-	gui.channelPrint(timestamp, server, channel, "» %s joined %s." % (nickwrap, channel), "action")
+	gui.channelPrint(timestamp, server, channel, message % { "color": config.get("colors","joinNick","#000000"), "nick": gui.escape(nick), "channel": channel }, "action")
 
 def userPart(timestamp, server, nick, channel, reason):
 	"""
