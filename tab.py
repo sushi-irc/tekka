@@ -50,6 +50,9 @@ class tekkaTab(object):
 
 		self.autoScroll = True
 
+		self.inputHistory = []
+		self.historyPosition = -1
+
 	""" I don't know if this is required but iirc
 	python is throwing the AttributeError exception if
 	anyone tries to call up a function which does not exist
@@ -71,6 +74,43 @@ class tekkaTab(object):
 			except:
 				self.newMessage.append(type)
 
+	def insertHistory(self, string):
+		"""
+			Inserts a new input history string.
+		"""
+		self.inputHistory.insert(0, string)
+		if len(self.inputHistory) > 20:
+			del self.inputHistory[20:]
+
+	def getNextHistory(self):
+		"""
+			Gets the next item in history
+		"""
+		if not self.inputHistory:
+			return ""
+
+		print self.historyPosition
+
+		if self.historyPosition + 1 == len(self.inputHistory):
+			return self.inputHistory[self.historyPosition]
+		else:
+			self.historyPosition += 1
+			return self.inputHistory[self.historyPosition]
+
+	def getPrevHistory(self):
+		"""
+			Gets the previous item in history
+		"""
+
+		print self.historyPosition
+
+		if not self.inputHistory or self.historyPosition - 1 < 0:
+			self.historyPosition = -1
+			return ""
+		else:
+			self.historyPosition -= 1
+			return self.inputHistory[self.historyPosition]
+
 	def markup(self):
 		if self.newMessage:
 			return "<b>"+self.name+"</b>"
@@ -86,6 +126,8 @@ class tekkaTab(object):
 		copy.connected = self.connected
 		copy.path = self.path
 		copy.autoScroll = self.autoScroll
+		copy.inputHistory = list(self.inputHistory)
+		copy.historyPosition = self.historyPosition
 		return copy
 
 class tekkaServer(tekkaTab):

@@ -817,7 +817,12 @@ def inputBar_activate_cb(inputBar):
 	"""
 	text = inputBar.get_text()
 
+	tab = gui.tabs.getCurrentTab()
+
 	commands.parseInput(text)
+
+	if tab:
+		tab.insertHistory(text)
 
 	inputBar.set_text("")
 
@@ -826,18 +831,26 @@ def inputBar_key_press_event_cb(inputBar, event):
 		Key pressed in inputBar.
 		Implements tab and command completion.
 	"""
-	if event.type != gtk.gdk.KEY_PRESS:
-		return False
-
 	key =  gtk.gdk.keyval_name(event.keyval)
-	text = inputBar.get_text()
-
-	if not text: return False
-
 	tab =  gui.tabs.getCurrentTab()
-	word = text.split(" ")[-1]
 
-	if key == "Tab":
+	if key == "Up":
+		# get next input history item
+		if not tab: return
+
+		hist = tab.getNextHistory()
+		inputBar.set_text(hist)
+		inputBar.set_position(len(hist))
+
+	elif key == "Down":
+		# get previous input history item
+		if not tab: return
+
+		hist = tab.getPrevHistory()
+		inputBar.set_text(hist)
+		inputBar.set_position(len(hist))
+
+	elif key == "Tab":
 		# tab completion comes here.
 		
 		def appendMatch(mode, text, word, match):
@@ -848,7 +861,11 @@ def inputBar_key_press_event_cb(inputBar, event):
 			inputBar.set_text(text)
 			inputBar.set_position(len(text)+len(separator))
 
+		text = inputBar.get_text()
 
+		if not text: return False
+
+		word = text.split(" ")[-1]
 
 		if tab.is_channel():
 			# look for nicks
@@ -882,6 +899,8 @@ def inputBar_key_press_event_cb(inputBar, event):
 			# oh, a command... strip /
 			word = word[1:]
 		else:
+			# nick completing is done,
+			# normal words are useless here
 			return False
 
 		for command in commands.commands.keys():
