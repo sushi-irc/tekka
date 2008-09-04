@@ -2,7 +2,7 @@ include ../../Makefile.common
 
 PO     = $(wildcard *.po)
 PY     = $(wildcard ../*.py)
-GLADE  = $(wildcard ../*.glade)
+GLADE  = $(wildcard ../glade/*.glade)
 GLADEH = $(GLADE:.glade=.glade.h)
 
 all:
