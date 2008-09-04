@@ -10,6 +10,7 @@
 	<signal name="delete_event" handler="mainWindow_delete_event_cb"/>
 	<signal name="focus_in_event" handler="mainWindow_focus_in_event_cb"/>
 	<signal name="size_allocate" handler="mainWindow_size_allocate_cb"/>
+	<signal name="window_state_event" handler="mainWindow_window_state_event_cb"/>
     <child>
       <widget class="GtkVBox" id="mainVbox">
         <property name="visible">True</property>

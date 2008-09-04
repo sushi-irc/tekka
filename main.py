@@ -807,6 +807,17 @@ def mainWindow_size_allocate_cb(mainWindow, alloc):
 	config.set("tekka","window_width",alloc.width)
 	config.set("tekka","window_height",alloc.height)
 
+def mainWindow_window_state_event_cb(mainWindow, event):
+	"""
+		Window state was changed.
+		Track maximifoo and save it.
+	"""
+
+	if event.new_window_state & gtk.gdk.WINDOW_STATE_MAXIMIZED:
+		config.set("tekka","window_state",int(gtk.gdk.WINDOW_STATE_MAXIMIZED))
+	else:
+		config.unset("tekka","window_state")
+
 def inputBar_activate_cb(inputBar):
 	"""
 		Receives if a message in the input bar
@@ -1219,6 +1230,17 @@ def setup_mainWindow():
 
 	win.resize(int(width),int(height))
 
+	state = config.get("tekka","window_state")
+
+	if not state:
+		return
+
+	try:
+		if int(state) & int(gtk.gdk.WINDOW_STATE_MAXIMIZED):
+			win.maximize()
+	except:
+		config.unset("tekka","window_state")
+
 def setup_serverTree():
 	"""
 		Sets up a treemodel with three columns.
@@ -1377,7 +1399,7 @@ def setupGTK():
 		"mainWindow_delete_event_cb" : mainWindow_delete_event_cb,
 		"mainWindow_focus_in_event_cb" : mainWindow_focus_in_event_cb,
 		"mainWindow_size_allocate_cb" : mainWindow_size_allocate_cb,
-		# TODO: catch window state change for restoring through tray hide
+		"mainWindow_window_state_event_cb" : mainWindow_window_state_event_cb,
 	# input signals
 		"inputBar_activate_cb" : inputBar_activate_cb,
 		"inputBar_key_press_event_cb" : inputBar_key_press_event_cb,
