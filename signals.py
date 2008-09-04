@@ -871,6 +871,6 @@ def whois(time, server, nick, message):
 		message = "" => end of whois
 	"""
 	if message:
-		gui.serverPrint(time, server, "Whois of %s: %s" % (nick, message))
+		gui.serverPrint(time, server, _("[%(nick)s] %(message)s") % { "nick": nick, "message": message })
 	else:
-		gui.serverPrint(time, server, "End whois of %s." % (nick))
+		gui.serverPrint(time, server, _("[%(nick)s] End of whois.") % { "nick": nick })
