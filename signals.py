@@ -830,26 +830,33 @@ def userPart(timestamp, server, nick, channel, reason):
 		# tab was closed
 		return
 
-	if reason:
-		reason = " (%s)" % reason
-
 	if nick == com.getOwnNick(server):
+		if reason:
+			message = _("« You have left %(channel)s (%(reason)s).")
+		else:
+			message = _("« You have left %(channel)s.")
+
 		tab.joined = False
 		gui.updateServerTreeMarkup(tab.path)
 
-		gui.channelPrint(timestamp, server, channel, "« You have left %s%s." % (channel,reason), "action")
+		gui.channelPrint(timestamp, server, channel, message % { "channel": channel, "reason": reason }, "action")
 
 	else:
 		# another user parted
+		if reason:
+			message = _("« <font foreground='%(color)s'>%(nick)s</font> has left %(channel)s (%(reason)s).")
+		else:
+			message = _("« <font foreground='%(color)s'>%(nick)s</font> has left %(channel)s.")
+
 
 		tab.nickList.removeNick(nick)
 		gui.channelPrint(timestamp, server, channel,
-			"« <font foreground='%s'>%s</font> has left %s%s." % (
-				config.get("colors","partNick","#000000"),
-				gui.escape(nick),
-				gui.escape(channel),
-				gui.escape(reason)
-			),
+			message % {
+				"color": config.get("colors","partNick","#000000"),
+				"nick": gui.escape(nick),
+				"channel": gui.escape(channel),
+				"reason": gui.escape(reason)
+				},
 			"action")
 
 def invalidTarget(time, server, target):
