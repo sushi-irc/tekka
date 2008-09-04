@@ -657,11 +657,11 @@ def userNick(time, server, nick, newNick):
 		gui.tabs.replaceTab(tab, cTab)
 
 	if newNick == com.getOwnNick(server):
-		nickwrap = "You are"
+		message = _("• You are now known as %(newnick)s.")
 	else:
-		nickwrap = "%s is" % (nick)
+		message = _("• %(nick)s is now known as %(newnick)s.")
 
-	nickchange = "• %s now known as %s." % (nickwrap, newNick)
+	nickchange = message % { "nick": nick, "newnick": newNick }
 	nickchange = gui.escape(nickchange)
 
 	# iterate over all channels and look if the nick is
