@@ -217,7 +217,7 @@ def serverConnected(time, server, nick):
 
 	if not tab:
 		tab = gui.tabs.createServer(server)
-		gui.tabs.addTab(tab)
+		gui.tabs.addTab(None, tab)
 
 	tab.connected = True
 	gui.updateServerTreeMarkup(tab.path)
@@ -252,7 +252,7 @@ def serverMOTD(time, server, message):
 		Server is sending a MOTD
 	"""
 	if not gui.tabs.searchTab(server):
-		gui.tabs.addTab(None, gui.createServer(server))
+		gui.tabs.addTab(None, gui.tabs.createServer(server))
 
 	gui.serverPrint(time, server, gui.escape(message))
 
