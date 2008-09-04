@@ -661,15 +661,12 @@ def userNick(time, server, nick, newNick):
 	else:
 		message = _("• %(nick)s is now known as %(newnick)s.")
 
-	nickchange = message % { "nick": nick, "newnick": newNick }
-	nickchange = gui.escape(nickchange)
-
 	# iterate over all channels and look if the nick is
 	# present there. If true so rename him in nicklist cache.
 	for tab in gui.tabs.getAllTabs(server)[1:]:
 		if (nick in tab.nickList.getNicks()) or (tab.name.lower() == nick.lower()):
 			tab.nickList.modifyNick(nick, newNick)
-			gui.channelPrint(time, server, tab.name, nickchange, "action")
+			gui.channelPrint(time, server, tab.name, message % { "nick": gui.escape(nick), "newnick": gui.escape(newNick) }, "action")
 
 def userKick(time, server, nick, channel, who, reason):
 	"""
@@ -815,7 +812,7 @@ def userJoin(timestamp, server, nick, channel):
 
 		tab.nickList.appendNick(nick)
 
-	gui.channelPrint(timestamp, server, channel, message % { "color": config.get("colors","joinNick","#000000"), "nick": gui.escape(nick), "channel": channel }, "action")
+	gui.channelPrint(timestamp, server, channel, message % { "color": config.get("colors","joinNick","#000000"), "nick": gui.escape(nick), "channel": gui.escape(channel) }, "action")
 
 def userPart(timestamp, server, nick, channel, reason):
 	"""
@@ -878,6 +875,6 @@ def whois(time, server, nick, message):
 		message = "" => end of whois
 	"""
 	if message:
-		gui.serverPrint(time, server, _("[%(nick)s] %(message)s") % { "nick": nick, "message": message })
+		gui.serverPrint(time, server, _("[%(nick)s] %(message)s") % { "nick": gui.escape(nick), "message": gui.escape(message) })
 	else:
-		gui.serverPrint(time, server, _("[%(nick)s] End of whois.") % { "nick": nick })
+		gui.serverPrint(time, server, _("[%(nick)s] End of whois.") % { "nick": gui.escape(nick) })
