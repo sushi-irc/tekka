@@ -866,12 +866,12 @@ def invalidTarget(time, server, target):
 	"""
 	tab = gui.tabs.searchTab(server, target)
 
-	error = _("%s: No such nick/channel.") % (target)
+	error = _("• %(target)s: No such nick/channel.") % { "target": gui.escape(target) }
 
 	if tab:
-		gui.channelPrint(time, server, channel, "• %s" % (error))
+		gui.channelPrint(time, server, target, error)
 	else:
-		gui.currentServerPrint(time, server, "• %s" % (error))
+		gui.serverPrint(time, server, error)
 
 def whois(time, server, nick, message):
 	"""
