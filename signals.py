@@ -761,7 +761,7 @@ def userQuit(time, server, nick, reason):
 			if nick in nicks or nick.lower() == channelTab.name.lower():
 				nickList.removeNick(nick)
 				gui.channelPrint(time, server, channelTab.name, \
-				message % { "nick": nick, "reason": reason), "action")
+				message % { "nick": gui.escape(nick), "reason": gui.escape(reason) }, "action")
 
 
 def userJoin(timestamp, server, nick, channel):
