@@ -244,6 +244,14 @@ def banItem_activate_cb(menuItem):
 
 	com.mode(sTab.name, cTab.name, "+b %s*!*@*" % (nickListMenu_currentNick) )
 
+def whoisItem_activate_cb(menuItem):
+	sTab,cTab = gui.tabs.getCurrentTabs()
+
+	if not sTab:
+		return
+
+	com.sushi.whois(sTab.name, nickListMenu_currentNick)
+
 def deVoiceItem_activate_cb(menuItem):
 	sTab,cTab = gui.tabs.getCurrentTabs()
 
@@ -309,6 +317,7 @@ def initNickListMenu():
 		"nickListMenu_deactivate_cb" : nickListMenu_deactivate_cb,
 		"kickItem_activate_cb" : kickItem_activate_cb,
 		"banItem_activate_cb" : banItem_activate_cb,
+		"whoisItem_activate_cb" : whoisItem_activate_cb,
 		# modes
 		"deVoiceItem_activate_cb" : deVoiceItem_activate_cb,
 		"voiceItem_activate_cb" : voiceItem_activate_cb,
