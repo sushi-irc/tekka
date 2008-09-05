@@ -881,10 +881,10 @@ def inputBar_key_press_event_cb(inputBar, event):
 			if mode == "c": separator = config.get("tekka","commandSeparator", " ")
 			elif mode == "n": separator = config.get("tekka","nickSeperator", ": ")
 
-			text = text + match[len(word):] + separator
+			text = text[:-len(word)] + match + separator
+			print "text: '%s' word: '%s' match: '%s'" % (text,word,match)
 			inputBar.set_text(text)
-			inputBar.set_position(len(text)+len(separator))
-
+			inputBar.set_position(len(text))
 
 
 		if not text:
@@ -897,7 +897,7 @@ def inputBar_key_press_event_cb(inputBar, event):
 		if tab and tab.is_channel():
 			# look for nicks
 
-			match = tab.nickList.searchNick(word)
+			match = tab.nickList.searchNick(word.lower())
 
 			# TODO:  it would be nice to iterate over this
 			# TODO:: on every tab-hit.
