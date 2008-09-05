@@ -229,6 +229,7 @@ class guiWrapper(object):
 
 		if self.tabs.isActive(channelTab):
 			if channelTab.autoScroll:
+				print "scrolling in channelPrint"
 				idle_add(lambda: self.scrollOutput())
 
 		else:
@@ -261,6 +262,7 @@ class guiWrapper(object):
 
 		if self.tabs.isActive(serverTab):
 			if serverTab.autoScroll:
+				print "scrolling in serverPrint"
 				idle_add(lambda: self.scrollOutput())
 
 		else:
@@ -302,6 +304,7 @@ class guiWrapper(object):
 		else:
 			output.insertHTML(output.get_end_iter(), string)
 
+		print "scrolling in myPrint"
 		idle_add(lambda: self.scrollOutput())
 
 	def urlHandler(self, texttag, widget, event, iter, url):
@@ -719,9 +722,11 @@ class guiWrapper(object):
 
 			#print "position before switch: %s" % (tab.buffer.scrollPosition)
 
-			if tab.buffer.scrollPosition != None:
+			if tab.buffer.scrollPosition != None and not tab.autoScroll:
+				print "scrolling in switchToPath(%s) to %f" % (tab.name,tab.buffer.scrollPosition)
 				idle_add(adj.set_value,tab.buffer.scrollPosition)
 			else:
+				print "scrolling with __help in switchToPath(%s)" % tab.name
 				idle_add(lambda s,tab: s.__help(tab), self,tab)
 
 			# NOTE:  to avoid race conditions the idle_add() method is used.
@@ -845,11 +850,14 @@ def inputBar_key_press_event_cb(inputBar, event):
 	key =  gtk.gdk.keyval_name(event.keyval)
 	tab =  gui.tabs.getCurrentTab()
 
+	text = inputBar.get_text()
+
 	if key == "Up":
 		# get next input history item
 		if not tab: return
 
 		hist = tab.getNextHistory()
+
 		inputBar.set_text(hist)
 		inputBar.set_position(len(hist))
 
@@ -857,9 +865,14 @@ def inputBar_key_press_event_cb(inputBar, event):
 		# get previous input history item
 		if not tab: return
 
+		if tab.historyPosition == -1:
+			return
+
 		hist = tab.getPrevHistory()
+
 		inputBar.set_text(hist)
 		inputBar.set_position(len(hist))
+
 
 	elif key == "Tab":
 		# tab completion comes here.
@@ -872,12 +885,14 @@ def inputBar_key_press_event_cb(inputBar, event):
 			inputBar.set_text(text)
 			inputBar.set_position(len(text)+len(separator))
 
-		text = inputBar.get_text()
+
 
 		if not text:
 			return False
 
 		word = text.split(" ")[-1]
+
+		print "needle is '%s'" % (word)
 
 		if tab and tab.is_channel():
 			# look for nicks
@@ -892,7 +907,7 @@ def inputBar_key_press_event_cb(inputBar, event):
 
 				# if the word is in a sentence, use command
 				# completion (only whitespace)
-				if text.count(" ") > 1:
+				if text.count(" ") >= 1:
 					mode = "c"
 				else:
 					mode = "n"
@@ -909,7 +924,7 @@ def inputBar_key_press_event_cb(inputBar, event):
 			for match in matches:
 
 				if match[:len(word)] == word:
-					if text.count(" ") > 1:
+					if text.count(" ") >= 1:
 						mode = "c"
 					else:
 						mode = "n"
@@ -1088,13 +1103,15 @@ def scrolledWindow_output_vscrollbar_valueChanged_cb(range):
 	if (adjust.upper - adjust.page_size) == range.get_value():
 		# bottom reached
 		tab.autoScroll = True
+		print "autoscroll for %s = True" % (tab.name)
 	else:
 		tab.autoScroll = False
+		print "autoScroll for %s = False" % (tab.name)
 
 	# cache the last position to set after switch
 	tab.buffer.scrollPosition=range.get_value()
 
-	#print "scrollPosition is now %d" % (tab.buffer.scrollPosition)
+	print "scrollPosition is now %d" % (tab.buffer.scrollPosition)
 
 def statusIcon_activate_cb(statusIcon):
 	"""
