@@ -1223,13 +1223,15 @@ def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 		selected text in the inputBar.
 	"""
 	buffer = widgets.get_widget("output").get_buffer()
+	goBuffer = widgets.get_widget("generalOutput").get_buffer()
 	cb = gtk.Clipboard()
 
 	if buffer.get_property("has-selection"):
 		buffer.copy_clipboard(cb)
 	elif inputBar.get_selection_bounds():
 		inputBar.copy_clipboard(cb)
-
+	elif goBuffer.get_property("has-selection"):
+		goBuffer.copy_clipboard(cb)
 
 
 """
