@@ -230,7 +230,8 @@ class guiWrapper(object):
 		if self.tabs.isActive(channelTab):
 			if channelTab.autoScroll:
 				print "scrolling in channelPrint"
-				idle_add(lambda: self.scrollOutput())
+				#idle_add(lambda: self.scrollOutput())
+				self.scrollOutput()
 
 		else:
 			if type in channelTab.newMessage:
@@ -263,7 +264,8 @@ class guiWrapper(object):
 		if self.tabs.isActive(serverTab):
 			if serverTab.autoScroll:
 				print "scrolling in serverPrint"
-				idle_add(lambda: self.scrollOutput())
+				#idle_add(lambda: self.scrollOutput())
+				self.scrollOutput()
 
 		else:
 			if type in serverTab.newMessage:
@@ -305,7 +307,8 @@ class guiWrapper(object):
 			output.insertHTML(output.get_end_iter(), string)
 
 		print "scrolling in myPrint"
-		idle_add(lambda: self.scrollOutput())
+		#idle_add(lambda: self.scrollOutput())
+		self.scrollOutput()
 
 	def urlHandler(self, texttag, widget, event, iter, url):
 		if event.type == gtk.gdk.MOTION_NOTIFY:
@@ -664,15 +667,6 @@ class guiWrapper(object):
 
 			return False
 
-		def __help(self, tab):
-			"""
-				ugly scrolling helper but.. *sigh*
-				well it's needed until someone has
-				a better solution (which works)
-			"""
-			tab.autoScroll=True
-			gui.scrollOutput()
-
 		def switchToPath(self, path):
 			"""
 				path: tuple
@@ -726,8 +720,12 @@ class guiWrapper(object):
 				print "scrolling in switchToPath(%s) to %f" % (tab.name,tab.buffer.scrollPosition)
 				idle_add(adj.set_value,tab.buffer.scrollPosition)
 			else:
-				print "scrolling with __help in switchToPath(%s)" % tab.name
-				idle_add(lambda s,tab: s.__help(tab), self,tab)
+				print "scrolling with narf(tab) in switchToPath(%s)" % tab.name
+				gui.scrollOutput()
+				def narf(tab):
+					tab.autoScroll=True
+					return False
+				idle_add(narf,tab)
 
 			# NOTE:  to avoid race conditions the idle_add() method is used.
 			# NOTE:: If it wouldn't be used the scrolling would not work due
