@@ -1216,22 +1216,24 @@ def output_shortcut_Page_Down(output, shortcut):
 
 def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 	"""
-		Ctrl + C in inputBar was hit, check if the
-		current output buffer has has_selection = True,
-		in case it's true use the copy_clipboard method
-		to copy the selection. Else copy the current 
-		selected text in the inputBar.
+		Ctrl + C was hit.
+		Check every text input widget for selection
+		and copy the selection to clipboard.
+		FIXME: this solution sucks ass.
 	"""
 	buffer = widgets.get_widget("output").get_buffer()
 	goBuffer = widgets.get_widget("generalOutput").get_buffer()
+	topicBar = widgets.get_widget("topicBar")
 	cb = gtk.Clipboard()
 
 	if buffer.get_property("has-selection"):
 		buffer.copy_clipboard(cb)
 	elif inputBar.get_selection_bounds():
-		inputBar.copy_clipboard(cb)
+		inputBar.copy_clipboard()
 	elif goBuffer.get_property("has-selection"):
 		goBuffer.copy_clipboard(cb)
+	elif topicBar.get_selection_bounds():
+		topicBar.copy_clipboard()
 
 
 """
