@@ -1214,6 +1214,23 @@ def output_shortcut_Page_Down(output, shortcut):
 	if n > (vadj.upper - vadj.page_size): n = vadj.upper - vadj.page_size
 	idle_add(vadj.set_value,n)
 
+def inputBar_shortcut_ctrl_c(inputBar, shortcut):
+	"""
+		Ctrl + C in inputBar was hit, check if the
+		current output buffer has has_selection = True,
+		in case it's true use the copy_clipboard method
+		to copy the selection. Else copy the current 
+		selected text in the inputBar.
+	"""
+	buffer = widgets.get_widget("output").get_buffer()
+	cb = gtk.Clipboard()
+
+	if buffer.get_property("has-selection"):
+		buffer.copy_clipboard(cb)
+	elif inputBar.get_selection_bounds():
+		inputBar.copy_clipboard(cb)
+
+
 
 """
 Initial setup routines
@@ -1356,6 +1373,9 @@ def setup_shortcuts():
 		"Page_Up", output_shortcut_Page_Up)
 	addShortcut(gui.accelGroup, widgets.get_widget("output"),
 		"Page_Down", output_shortcut_Page_Down)
+
+	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"),
+		"<ctrl>c", inputBar_shortcut_ctrl_c)
 
 def connectMaki():
 	"""
