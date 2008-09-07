@@ -28,7 +28,7 @@ from helper.shortcuts import addShortcut, removeShortcut
 import config
 import com
 
-import dialogs
+import dialog
 import signals
 import commands
 import menus
@@ -748,7 +748,7 @@ def menu_tekka_Connect_activate_cb(menuItem):
 		show up server dialog and connect to the
 		returned server (if any).
 	"""
-	res, server = dialogs.showServerDialog()
+	server = dialog.showServerDialog()
 
 	if server:
 		com.connectServer(server)
@@ -806,9 +806,20 @@ def mainWindow_size_allocate_cb(mainWindow, alloc):
 	"""
 		Main window was resized.
 		Store the new size in the config.
+
+		Due to resizing the scrollbar dimensions
+		of the scrolled window arround the output
+		changed. In conclusion the autoscroll is
+		disabled because the scrollbar is not
+		at bottom anymore. So if the current tab
+		has auto scroll = True, scroll to bottom.
 	"""
 	config.set("tekka","window_width",alloc.width)
 	config.set("tekka","window_height",alloc.height)
+
+	tab = gui.tabs.getCurrentTab()
+	if tab and tab.autoScroll:
+		idle_add(lambda: gui.scrollOutput())
 
 def mainWindow_window_state_event_cb(mainWindow, event):
 	"""
@@ -1393,7 +1404,7 @@ def connectMaki():
 	if com.connect():
 		signals.setup(config, gui, com)
 		commands.setup(config, gui, com)
-		dialogs.setup(config, gui, com)
+		dialog.setup(config, gui, com)
 		menus.setup(config, gui, com, gtk, gtk.glade)
 
 		gui.setUseable(True)
