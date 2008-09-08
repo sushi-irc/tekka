@@ -10,6 +10,7 @@ widgets = None
 currentServer = None
 filterExpression = None
 listView = None
+cache = []  # /list cache
 
 def run(server):
 	"""
@@ -18,7 +19,12 @@ def run(server):
 	if not widgets:
 		return
 
-	global currentServer
+	global currentServer, cache
+
+	if currentServer != server:
+		# new server, reset list cache
+		cache = []
+
 	currentServer = server
 
 	dialog = widgets.get_widget("serverList")
@@ -43,8 +49,18 @@ def regexpListButton_clicked_cb(button):
 		print "no current server"
 		return
 
-	global filterExpression
+	global filterExpression, cache
+
 	filterExpression = compile(widgets.get_widget("regexpSearchEntry").get_text())
+
+	listView.get_model().clear()
+
+	if cache:
+		# use cached values
+		for (server, channel, user, topic) in cache:
+			sushiList(0, server, channel, user, topic)
+
+		return
 
 	"""
 		ok the next lines need some explanation.
@@ -71,10 +87,9 @@ def regexpListButton_clicked_cb(button):
 	signals.list.func_globals["myCode"] = signals.list.func_code
 	signals.list.func_globals["listView"] = listView
 	signals.list.func_globals["filterExpression"] = filterExpression
+	signals.list.func_globals["cache"] = cache
 
 	signals.list.func_code = sushiList.func_code
-
-	listView.get_model().clear()
 
 	try:
 		com.list(currentServer)
@@ -84,6 +99,7 @@ def regexpListButton_clicked_cb(button):
 		del signals.list.func_globals["myCode"]
 		del signals.list.func_globals["listView"]
 		del signals.list.func_globals["filterExpression"]
+		del signals.list.func_globals["cache"]
 
 def listView_row_activated_cb(treeView, path, column):
 	"""
@@ -107,10 +123,19 @@ def sushiList(time, server, channel, user, topic):
 	add server/user/topic to listStore
 	"""
 
+	if time > 0:
+		# no manual call
+		cache.append((server,channel,user,topic))
+
 	if user < 0:
 		# EOL
-		me.func_code = myCode
+		
+		try:
+			me.func_code = myCode
+		except NameError:
+			return
 
+		del me.func_globals["cache"]
 		del me.func_globals["listView"]
 		del me.func_globals["filterExpression"]
 		del me.func_globals["myCode"]		
