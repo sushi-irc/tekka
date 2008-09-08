@@ -237,18 +237,39 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="inputBar">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="has_focus">True</property>
-                    <property name="is_focus">True</property>
-                    <property name="can_default">True</property>
-                    <property name="has_default">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="extension_events">GDK_EXTENSION_EVENTS_ALL</property>
-                    <signal name="activate" handler="inputBar_activate_cb"/>
-					<signal name="key_press_event" handler="inputBar_key_press_event_cb"/>
-                  </widget>
+				  <widget class="GtkHBox" id="inputHbox">
+                	<property name="visible">True</property>
+                	<property name="border_width">6</property>
+                	<property name="spacing">6</property>
+					<child>
+						<widget class="GtkLabel" id="nickLabel">
+							<property name="visible">True</property>
+							<property name="label">&lt;NICKNAME&gt;</property>
+						</widget>
+						<packing>
+							<property name="expand">False</property>
+							<property name="position">1</property>
+						</packing>
+					</child>
+                	<child>
+						<widget class="GtkEntry" id="inputBar">
+							<property name="visible">True</property>
+							<property name="can_focus">True</property>
+							<property name="has_focus">True</property>
+							<property name="is_focus">True</property>
+							<property name="can_default">True</property>
+							<property name="has_default">True</property>
+							<property name="receives_default">True</property>
+							<property name="extension_events">GDK_EXTENSION_EVENTS_ALL</property>
+							<signal name="activate" handler="inputBar_activate_cb"/>
+							<signal name="key_press_event" handler="inputBar_key_press_event_cb"/>
+						</widget>
+						<packing>
+							<property name="expand">True</property>
+							<property name="position">2</property>
+						</packing>
+					</child>
+	              </widget>
                   <packing>
                     <property name="expand">False</property>
                     <property name="position">2</property>

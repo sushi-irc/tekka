@@ -108,6 +108,13 @@ class guiWrapper(object):
 		"""
 		widgets.get_widget("mainWindow").set_title(title)
 
+	def setNick(self, nick):
+		"""
+			Sets nick as label text of nickLabel.
+		"""
+		widgets.get_widget("nickLabel").set_text(nick)
+		
+
 	def setFont(self, textView, fontFamily):
 		"""
 			Sets the font of the textView to
@@ -736,6 +743,11 @@ class guiWrapper(object):
 			# NOTE:: to resets of the base class.
 
 			gui.setWindowTitle(tab.name)
+
+			if not tab.is_server():
+				gui.setNick(com.getOwnNick(tab.server))
+			else:
+				gui.setNick(com.getOwnNick(tab.name))
 
 	tabs = tabClass()
 
