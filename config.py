@@ -34,6 +34,7 @@ def setDefaults():
 	defaults["tekka"]["status_icon"] = os.path.join(prefix, "graphics", "icon.svg")
 	defaults["tekka"]["output_font"] = "Monospace"
 	defaults["tekka"]["auto_expand"] = "True"
+	defaults["tekka"]["show_general_output"] = "True"
 
 	defaults["colors"]={}
 	defaults["colors"]["own_nick"] = "#444444"
