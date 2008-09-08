@@ -43,11 +43,14 @@ def parseInput(text):
 
 	serverTab,channelTab = gui.tabs.getCurrentTabs()
 
-	if text[:2]=="//" or text[0] != "/":
+	if text[0] != "/":
 		if not channelTab:
 			return
 		com.sendMessage(serverTab.name, channelTab.name, text)
-
+	elif text[:2] == "//":
+		if not channelTab:
+			return
+		com.sendMessage(serverTab.name, channelTab.name, text[1:])
 	else:
 		list = text[1:].split(" ")
 		cmd = list[0]
