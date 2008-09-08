@@ -437,7 +437,7 @@ def ownMessage(timestamp, server, channel, message):
 		prefix = tab.nickList.getPrefix(nick)
 
 		# <prefixnick> message
-		gui.channelPrint(timestamp, server, channel, \
+		gui.channelPrint(timestamp, server, channel,
 			"&lt;%s<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" % (
 			prefix,
 			config.get("colors","own_nick","#000000"),
@@ -447,7 +447,7 @@ def ownMessage(timestamp, server, channel, message):
 
 	elif tab.is_query():
 		# <nick> message
-		gui.channelPrint(timestamp, server, channel, \
+		gui.channelPrint(timestamp, server, tab.name,
 			"&lt;<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" % (
 			config.get("colors","own_nick","#000000"),
 			nick,
