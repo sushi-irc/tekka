@@ -151,7 +151,7 @@ class guiWrapper(object):
 			if c == 10:
 				break
 
-			if tab.is_server() and not config.get("tekka","serverShortcuts"):
+			if tab.is_server() and not config.get("tekka","server_shortcuts"):
 				continue
 
 			addShortcut(self.accelGroup, st, "<alt>%d" % (c),
@@ -231,7 +231,7 @@ class guiWrapper(object):
 
 		buffer.insertHTML(buffer.get_end_iter(), outputString)
 
-		if config.get("tekka","showGeneralOutput"):
+		if config.get("tekka","show_general_output"):
 			goBuffer = widgets.get_widget("generalOutput").get_buffer()
 			goBuffer.insertHTML(goBuffer.get_end_iter(), \
 					"[%s] &lt;%s:%s&gt; %s" % (timestring, server, channel, message))
@@ -451,7 +451,7 @@ class guiWrapper(object):
 			object.path = store.get_path(iter)
 			store.set(iter, 0, object.markup(), 1, object.name, 2, object)
 
-			if server and config.get("tekka", "autoExpand"):
+			if server and config.get("tekka", "auto_expand"):
 				# expand the whole server tab
 				widgets.get_widget("serverTree").expand_row(store.get_path(store.iter_parent(iter)),True)
 
@@ -781,10 +781,10 @@ def menu_View_showGeneralOutput_toggled_cb(menuItem):
 
 	if menuItem.get_active():
 		sw.show_all()
-		config.set("tekka","showGeneralOutput","True")
+		config.set("tekka","show_general_output","True")
 	else:
 		sw.hide()
-		config.unset("tekka","showGeneralOutput")
+		config.unset("tekka","show_general_output")
 
 def menu_View_showStatusBar_toggled_cb(menuItem):
 	"""
@@ -793,10 +793,10 @@ def menu_View_showStatusBar_toggled_cb(menuItem):
 	bar = gui.getWidgets().get_widget("statusBar")
 	if menuItem.get_active():
 		bar.show()
-		config.set("tekka","showStatusBar","True")
+		config.set("tekka","show_status_bar","True")
 	else:
 		bar.hide()
-		config.unset("tekka","showStatusBar")
+		config.unset("tekka","show_status_bar")
 
 def menu_Dialogs_channelList_activate_cb(menuItem):
 	"""
@@ -814,7 +814,7 @@ def mainWindow_delete_event_cb(mainWindow, event):
 		will be hidden, otherwise the main looped
 		will be stopped.
 	"""
-	if config.get("hideOnClose") and gui.statusIcon:
+	if config.get("hide_on_close") and gui.statusIcon:
 		mainWindow.hide()
 		return True
 	else:
@@ -914,8 +914,8 @@ def inputBar_key_press_event_cb(inputBar, event):
 		# tab completion comes here.
 
 		def appendMatch(mode, text, word, match):
-			if mode == "c": separator = config.get("tekka","commandSeparator", " ")
-			elif mode == "n": separator = config.get("tekka","nickSeperator", ": ")
+			if mode == "c": separator = config.get("tekka","command_separator", " ")
+			elif mode == "n": separator = config.get("tekka","nick_seperator", ": ")
 
 			text = text[:-len(word)] + match + separator
 			print "text: '%s' word: '%s' match: '%s'" % (text,word,match)
@@ -1292,7 +1292,7 @@ def setup_mainWindow():
 
 	win.set_title("tekka")
 
-	iconPath = config.get("tekka","statusIcon")
+	iconPath = config.get("tekka","status_icon")
 	if iconPath:
 		try:
 			win.set_icon_from_file(iconPath)
@@ -1383,7 +1383,7 @@ def setup_statusIcon():
 	"""
 	gui.statusIcon = gtk.StatusIcon()
 	try:
-		gui.statusIcon.set_from_file(config.get("tekka","statusIcon"))
+		gui.statusIcon.set_from_file(config.get("tekka","status_icon"))
 	except Exception,e:
 		print e
 		return
@@ -1436,7 +1436,7 @@ def connectMaki():
 		signals.setup(config, gui, com)
 		commands.setup(config, gui, com)
 		dialog.setup(config, gui, com)
-		menus.setup(config, gui, com, gtk, gtk.glade)
+		menus.setup(config, gui, com)
 
 		gui.setUseable(True)
 
@@ -1454,10 +1454,10 @@ def setupGTK():
 	# setup locale stuff
 	locale.setlocale(locale.LC_ALL, '')
 
-	gettext.bindtextdomain("tekka", config.get("tekka","localeDir"))
+	gettext.bindtextdomain("tekka", config.get("tekka","locale_dir"))
 	gettext.textdomain("tekka")
 
-	gtk.glade.bindtextdomain("tekka", config.get("tekka","localeDir"))
+	gtk.glade.bindtextdomain("tekka", config.get("tekka","locale_dir"))
 	gtk.glade.textdomain("tekka")
 
 	# parse glade file for main window
@@ -1512,7 +1512,7 @@ def setupGTK():
 		raise Exception("guiWrapper not successfully initialized!")
 
 	# set output font
-	gui.setFont(widgets.get_widget("output"), config.get("tekka","outputFont"))
+	gui.setFont(widgets.get_widget("output"), config.get("tekka","output_font"))
 
 	# setup general output
 	buffer = gui.tabs.getBuffer()
@@ -1521,17 +1521,17 @@ def setupGTK():
 	# setup menu bar stuff
 	btn = widgets.get_widget("menu_View_showGeneralOutput")
 
-	if config.get("tekka","showGeneralOutput"):
+	if config.get("tekka","show_general_output"):
 		btn.set_active(True)
 	btn.toggled()
 
 	btn = widgets.get_widget("menu_View_showStatusBar")
 
-	if config.get("tekka","showStatusBar"):
+	if config.get("tekka","show_status_bar"):
 		btn.set_active(True)
 	btn.toggled()
 
-	if config.get("tekka","showStatusIcon"):
+	if config.get("tekka","show_status_icon"):
 		setup_statusIcon()
 
 	setup_shortcuts()

@@ -402,7 +402,7 @@ def tekkaQuery(currentServer, currentTab, args):
 
 		# fetch and write history to query (if any)
 		for line in com.fetchLog(serverTab.name, nick,
-			UInt64(config.get("chatting","lastLogLines","10"))):
+			UInt64(config.get("chatting","last_log_lines","10"))):
 
 			output.insertHTML(output.get_end_iter(),
 				"<font foreground='#DDDDDD'>%s</font>" % self.gui.escape(line))

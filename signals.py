@@ -86,6 +86,13 @@ def initServers():
 
 		addChannels(server)
 
+	try:
+		toSwitch = gui.tabs.getAllTabs()[1]
+	except IndexError:
+		return
+	else:
+		gui.tabs.switchToPath(toSwitch.path)
+
 def addChannels(server):
 	"""
 		Adds all channels to tekka wich are reported by maki.
@@ -113,7 +120,8 @@ def addChannels(server):
 		tab.joined=True
 		tab.connected=True
 
-		if add: gui.tabs.addTab(server, tab)
+		if add:
+			gui.tabs.addTab(server, tab)
 
 		fetchPrefixes(server, channel, tab.nickList, nicks)
 
@@ -155,7 +163,7 @@ def lastLog(server, channel, lines=0):
 	for line in com.fetchLog(
 				server,
 				channel,
-				UInt64(lines or config.get("chatting", "lastLogLines", default="0"))
+				UInt64(lines or config.get("chatting", "last_log_lines", default="0"))
 				):
 		buffer.insertHTML(buffer.get_end_iter(), \
 		"<font foreground=\"#DDDDDD\">%s</font>" % gui.escape(line))
@@ -178,7 +186,7 @@ def getNickColor(nick):
 		The returned color depends on the color mapping
 		set in config module.
 	"""
-	colors = config.get("nickColors", default={})
+	colors = config.get("nick_colors", default={})
 
 	colors = colors.values()
 
@@ -200,7 +208,7 @@ def serverConnect(time, server):
 	if not gui.tabs.searchTab(server):
 		gui.tabs.addTab(None, gui.tabs.createServer(server))
 
-		if config.get("tekka","serverShortcuts"):
+		if config.get("tekka","server_shortcuts"):
 			# update is only neccessary if server tabs
 			# shall be shortcutted
 			gui.updateServerTreeShortcuts()
@@ -243,7 +251,7 @@ def serverReconnect(time, server):
 	else:
 		gui.tabs.addTab(None, gui.tabs.createServer(server))
 
-		if config.get("tekka","serverShortcuts"):
+		if config.get("tekka","server_shortcuts"):
 			gui.updateServerTreeShortcuts()
 
 	gui.serverPrint(time, server, "Reconnecting to %s" % server)
@@ -367,7 +375,7 @@ def userMessage(timestamp, server, nick, channel, message):
 
 	# TODO:  make this global so the method hasn't
 	# TODO:: to fetch the mapping every time
-	highlightwords = config.get("highlightWords", default={})
+	highlightwords = config.get("highlight_words", default={})
 	highlightwords = highlightwords.values()
 
 	highlightwords.append(com.getOwnNick(server))
@@ -427,18 +435,18 @@ def ownMessage(timestamp, server, channel, message):
 		gui.channelPrint(timestamp, server, channel, \
 			"&lt;%s<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" % (
 			prefix,
-			config.get("colors","ownNick","#000000"),
+			config.get("colors","own_nick","#000000"),
 			nick,
-			config.get("colors","ownNick","#000000"),
+			config.get("colors","own_nick","#000000"),
 			message))
 
 	elif tab.is_query():
 		# <nick> message
 		gui.currentServerPrint(timestamp, server, \
 			"&lt;<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" % (
-			config.get("colors","ownNick","#000000"),
+			config.get("colors","own_nick","#000000"),
 			nick,
-			config.get("colors","ownText","#000000"),
+			config.get("colors","own_text","#000000"),
 			message))
 
 
@@ -557,7 +565,7 @@ def ownCTCP(time, server, target, message):
 	if tab:
 		# valid query/channel found, print it there
 
-		nickColor = config.get("colors","nickColor","#000000")
+		nickColor = config.get("colors","nick_color","#000000")
 		gui.channelPrint(time, server, channel, \
 			"&lt;CTCP:<font foreground='%s'>%s</foreground>&gt; %s" % \
 				(nickColor, com.getOwnNick(server), gui.escape(message)))
@@ -592,7 +600,7 @@ def ownNotice(time, server, target, message):
 		`server`
 	"""
 	tab = gui.tabs.searchTab(server, target)
-	ownNickColor = config.get("colors","ownNick","#000000")
+	ownNickColor = config.get("colors","own_nick","#000000")
 	ownNick = com.getOwnNick(server)
 
 	if tab:
@@ -650,13 +658,16 @@ def userNick(time, server, nick, newNick):
 
 	tab = gui.tabs.searchTab(server, nick)
 
-	if tab:
+	if tab and tab.is_query():
 		cTab = tab.copy()
 		cTab.name = newNick
 		gui.tabs.replaceTab(tab, cTab)
 
 	if newNick == com.getOwnNick(server):
 		message = _(u"• You are now known as %(newnick)s.")
+
+		# update the nick in the GUI
+		gui.setNick(newNick)
 	else:
 		message = _(u"• %(nick)s is now known as %(newnick)s.")
 
@@ -797,6 +808,9 @@ def userJoin(timestamp, server, nick, channel):
 
 		fetchPrefixes(server,channel,tab.nickList,nicks)
 
+		if config.get("tekka","switch_to_channel_after_join"):
+			gui.tabs.switchToPath(tab.path)
+
 		message = _(u"» You have joined %(channel)s.")
 
 	else:
@@ -811,7 +825,7 @@ def userJoin(timestamp, server, nick, channel):
 
 		tab.nickList.appendNick(nick)
 
-	gui.channelPrint(timestamp, server, channel, message % { "color": config.get("colors","joinNick","#000000"), "nick": gui.escape(nick), "channel": gui.escape(channel) }, "action")
+	gui.channelPrint(timestamp, server, channel, message % { "color": config.get("colors","join_nick","#000000"), "nick": gui.escape(nick), "channel": gui.escape(channel) }, "action")
 
 def userPart(timestamp, server, nick, channel, reason):
 	"""
@@ -848,7 +862,7 @@ def userPart(timestamp, server, nick, channel, reason):
 		tab.nickList.removeNick(nick)
 		gui.channelPrint(timestamp, server, channel,
 			message % {
-				"color": config.get("colors","partNick","#000000"),
+				"color": config.get("colors","part_nick","#000000"),
 				"nick": gui.escape(nick),
 				"channel": gui.escape(channel),
 				"reason": gui.escape(reason)

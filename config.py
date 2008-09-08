@@ -30,24 +30,24 @@ def setDefaults():
 	global defaults
 
 	defaults["tekka"] = {}
-	defaults["tekka"]["localeDir"] = os.path.join(prefix, "..", "..", "locale")
-	defaults["tekka"]["statusIcon"] = os.path.join(prefix, "graphics", "icon.svg")
-	defaults["tekka"]["outputFont"] = "Monospace"
-	defaults["tekka"]["autoExpand"] = "True"
+	defaults["tekka"]["locale_dir"] = os.path.join(prefix, "..", "..", "locale")
+	defaults["tekka"]["status_icon"] = os.path.join(prefix, "graphics", "icon.svg")
+	defaults["tekka"]["output_font"] = "Monospace"
+	defaults["tekka"]["auto_expand"] = "True"
 
 	defaults["colors"]={}
-	defaults["colors"]["ownNick"] = "#444444"
-	defaults["colors"]["ownText"] = "#444444"
+	defaults["colors"]["own_nick"] = "#444444"
+	defaults["colors"]["own_text"] = "#444444"
 	defaults["colors"]["nick"] = "#2222AA"
-	defaults["colors"]["joinNick"] = "#004444"
-	defaults["colors"]["partNick"] = "#004444"
-	defaults["colors"]["modeActNick"] = "#AA2222"
-	defaults["colors"]["modeParam"] = "#2222AA"
+	defaults["colors"]["join_nick"] = "#004444"
+	defaults["colors"]["part_nick"] = "#004444"
+	defaults["colors"]["mode_act_nick"] = "#AA2222"
+	defaults["colors"]["mode_param"] = "#2222AA"
 
 	defaults["chatting"]={}
-	defaults["chatting"]["lastLogLines"] = "10"
+	defaults["chatting"]["last_log_lines"] = "10"
 
-	defaults["nickColors"]={
+	defaults["nick_colors"]={
 		"1":"#AA0000",
 		"2":"#2222AA",
 		"3":"#44AA44",

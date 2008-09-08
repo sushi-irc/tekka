@@ -1,4 +1,5 @@
-
+import gtk
+import gtk.glade
 from gobject import idle_add
 
 """
@@ -11,17 +12,15 @@ com = None
 gtk = None
 glade = None
 
-def setup(_config, _gui, _com, _gtk, _glade):
+def setup(_config, _gui, _com):
 	"""
 		setup the module.
 	"""
-	global config, gui, com, gtk, glade
+	global config, gui, com
 
 	config = _config
 	gui = _gui
 	com = _com
-	gtk = _gtk
-	glade = _glade
 
 """
 	Server tree tab menu.
@@ -52,7 +51,7 @@ def serverTreeMenu_disconnectItem_activate_cb(menuItem):
 		quit server with default quit message.
 	"""
 	if serverTree_tabMenu_currentTab and serverTree_tabMenu_currentTab.is_server():
-		com.quitServer(serverTree_tabMenu_currentTab.name, config.get("quitMessage", default=""))
+		com.quitServer(serverTree_tabMenu_currentTab.name)
 
 def serverTreeMenu_joinItem_activate_cb(menuItem):
 	"""
@@ -66,7 +65,7 @@ def serverTreeMenu_partItem_activate_cb(menuItem):
 		part channel with default part message
 	"""
 	if serverTree_tabMenu_currentTab and serverTree_tabMenu_currentTab.is_channel():
-		com.part(serverTree_tabMenu_currentTab.server, serverTree_tabMenu_currentTab.name, config.get("partMessage", default=""))
+		com.part(serverTree_tabMenu_currentTab.server, serverTree_tabMenu_currentTab.name)
 
 def serverTreeMenu_closeItem_activate_cb(menuItem):
 	"""
@@ -77,9 +76,9 @@ def serverTreeMenu_closeItem_activate_cb(menuItem):
 		return
 
 	if serverTree_tabMenu_currentTab.is_channel() and serverTree_tabMenu_currentTab.joined:
-		com.part(serverTree_tabMenu_currentTab.server, serverTree_tabMenu_currentTab.name, config.get("partMessage", default=""))
+		com.part(serverTree_tabMenu_currentTab.server, serverTree_tabMenu_currentTab.name)
 	elif serverTree_tabMenu_currentTab.is_server() and serverTree_tabMenu_currentTab.connected:
-		com.quitServer(serverTree_tabMenu_currentTab.name, config.get("quitMessage", default=""))
+		com.quitServer(serverTree_tabMenu_currentTab.name)
 
 	gui.tabs.removeTab(serverTree_tabMenu_currentTab)
 	gui.updateServerTreeShortcuts()
@@ -114,7 +113,7 @@ def initServerTreeMenu():
 	"""
 	global serverTree_tabMenu_widgets
 
-	serverTree_tabMenu_widgets = glade.XML(config.get("gladefiles", "mainwindow"),
+	serverTree_tabMenu_widgets = gtk.glade.XML(config.get("gladefiles", "mainwindow"),
 			"serverTree_tabMenu")
 
 	if not serverTree_tabMenu_widgets:
@@ -311,7 +310,7 @@ def initNickListMenu():
 	"""
 	global nickListMenu_widgets
 
-	nickListMenu_widgets = glade.XML(config.get("gladefiles", "mainwindow"), "nickListMenu")
+	nickListMenu_widgets = gtk.glade.XML(config.get("gladefiles", "mainwindow"), "nickListMenu")
 
 	if not nickListMenu_widgets:
 		return False
