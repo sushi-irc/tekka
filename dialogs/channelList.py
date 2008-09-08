@@ -121,7 +121,7 @@ def sushiList(time, server, channel, user, topic):
 	store = listView.get_model()
 	if not filterExpression or (
 		filterExpression and (
-			filterExpression.match(channel) or filterExpression.match(topic)
+			filterExpression.search(channel) or filterExpression.search(topic)
 			)
 		):
 		store.append(row=(channel, int(user), topic))
