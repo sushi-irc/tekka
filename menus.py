@@ -81,6 +81,8 @@ def serverTreeMenu_closeItem_activate_cb(menuItem):
 	elif serverTree_tabMenu_currentTab.is_server():
 		com.quitServer(serverTree_tabMenu_currentTab.name, config.get("quitMessage", default=""))
 
+	gui.tabs.removeTab(serverTree_tabMenu_currentTab)
+
 def serverTreeMenu_autoJoinItem_toggled_cb(menuItem):
 	"""
 		set the auto join state of the tab to the state

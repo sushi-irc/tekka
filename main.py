@@ -36,6 +36,10 @@ import menus
 widgets = None
 gui = None
 
+# TODO:  if a tab is closed the widgets remain the same.
+# TODO:: it would be nice if the tab would be switched
+# TODO:: to an active on (for error prevention too).
+
 """
 	The "core": the gui wrapper class.
 """
@@ -779,6 +783,14 @@ def menu_View_showStatusBar_toggled_cb(menuItem):
 		bar.hide()
 		config.unset("tekka","showStatusBar")
 
+def menu_Dialogs_channelList_activate_cb(menuItem):
+	"""
+		show channel list dialog.
+	"""
+	sTab,cTab = gui.tabs.getCurrentTabs()
+	if not sTab: return
+	dialog.showChannelListDialog(sTab.name)
+
 def mainWindow_delete_event_cb(mainWindow, event):
 	"""
 		The user want's to close the main window.
@@ -1193,6 +1205,9 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 	tab = gui.tabs.getCurrentTab()
 	if not tab:
 		return
+
+	# TODO: dialog which asks for close
+
 	if tab.is_channel():
 		com.part(tab.server,tab.name)
 	elif tab.is_server():
@@ -1443,6 +1458,8 @@ def setupGTK():
 	# view menu
 		"menu_View_showGeneralOutput_toggled_cb" : menu_View_showGeneralOutput_toggled_cb,
 		"menu_View_showStatusBar_toggled_cb" : menu_View_showStatusBar_toggled_cb,
+	# dialogs menu
+		"menu_Dialogs_channelList_activate_cb" : menu_Dialogs_channelList_activate_cb,
 	# help menu
 		# TODO: about dialog
 	# main window signals

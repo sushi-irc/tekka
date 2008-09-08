@@ -1,17 +1,17 @@
-gtk = None
+import gtk
+import gtk.glade
+
 com = None
 dialogs = None
 widgets = None
 
-# XXX: what is this? o.0
 RESPONSE_CONNECT = 3
 
-def setup(_dialogs, _gtk, _glade):
-	global widgets, com, gtk, dialogs
+def setup(_dialogs):
+	global widgets, com, dialogs
 
-	widgets = _glade.XML(_dialogs.config.get("gladefiles","dialogs"), "serverDialog")
+	widgets = gtk.glade.XML(_dialogs.config.get("gladefiles","dialogs"), "serverDialog")
 	com = _dialogs.com
-	gtk = _gtk
 	dialogs = _dialogs
 
 	sigdic = { "serverDialog_Add_clicked_cb" : openAddDialog,

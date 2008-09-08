@@ -1,10 +1,11 @@
-widgets = None
-gtk = None
+import gtk
+import gtk.glade
 
-def setup(dialogs, _gtk, _glade):
-	global widgets,gtk
-	gtk = _gtk
-	widgets = _glade.XML(dialogs.config.get("gladefiles","dialogs"), "serverDelete")
+widgets = None
+
+def setup(dialogs):
+	global widgets
+	widgets = gtk.glade.XML(dialogs.config.get("gladefiles","dialogs"), "serverDelete")
 
 def run():
 	"""
@@ -13,4 +14,4 @@ def run():
 	dialog = widgets.get_widget("serverDelete")
 	result = dialog.run()
 	dialog.destroy()
-	return (result == gtk.RESPONSE_YES) and True or False
+	return (result == gtk.RESPONSE_YES)

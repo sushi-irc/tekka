@@ -1,12 +1,13 @@
+import gtk
+import gtk.glade
+
 widgets = None
 com = None
-gtk = None
 
-def setup(dialogs, _gtk, _glade):
-	global widgets, com, gtk
+def setup(dialogs):
+	global widgets, com
 	com = dialogs.com
-	gtk = _gtk
-	widgets = _glade.XML(dialogs.config.get("gladefiles","dialogs"),"serverEdit")
+	widgets = gtk.glade.XML(dialogs.config.get("gladefiles","dialogs"),"serverEdit")
 
 def run(server):
 	serverdata = com.fetchServerInfo(server)

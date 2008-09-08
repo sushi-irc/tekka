@@ -67,7 +67,7 @@ def loadDialog(name):
 		dialog = getattr(dialog, comp)
 	if not dialog:
 		return None
-	dialog.setup(sys.modules["dialog"], gtk, gtk.glade)
+	dialog.setup(sys.modules["dialog"])#, gtk, gtk.glade)
 	return dialog
 
 def showEditServerDialog(server):
@@ -92,3 +92,12 @@ def showServerDialog():
 	d = loadDialog("serverDialog")
 
 	return d.run()
+
+def showChannelListDialog(server):
+	"""
+		Shows up the channel list dialog
+		(GUI representation of /list)
+	"""
+	d = loadDialog("channelList")
+
+	return d.run(server)

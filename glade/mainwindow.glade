@@ -117,6 +117,26 @@
                 </child>
               </widget>
             </child>
+			<child>
+			<widget class="GtkMenuItem" id="menu_Dialogs_item">
+				<property name="visible">True</property>
+				<property name="label" translatable="yes">_Dialogs</property>
+				<property name="use_underline">True</property>
+				<child>
+				  <widget class="GtkMenu" id="menu_Dialogs">
+				  	<property name="visible">True</property>
+					<child>
+					  <widget class="GtkMenuItem" id="menu_Dialogs_channelList">
+					  	<property name="visible">True</property>
+						<property name="label" translatable="yes">Channel List</property>
+						<property name="use_underline">True</property>
+						<signal name="activate" handler="menu_Dialogs_channelList_activate_cb"/>
+					  </widget>
+					</child>
+				  </widget>
+				</child>
+			</widget>
+			</child>
             <child>
               <widget class="GtkMenuItem" id="menu_Help_item">
                 <property name="visible">True</property>

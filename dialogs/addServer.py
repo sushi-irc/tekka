@@ -1,12 +1,14 @@
+import gtk.glade
+
 widgets = None
 com = None
 
 RESPONSE_ADD = 1
 
-def setup(dialogs, _gtk, _glade):
+def setup(dialogs):
 	global widgets, com
 	com = dialogs.com
-	widgets = _glade.XML(dialogs.config.get("gladefiles","dialogs"), "serverAdd")
+	widgets = gtk.glade.XML(dialogs.config.get("gladefiles","dialogs"), "serverAdd")
 
 def run():
 	data = None
