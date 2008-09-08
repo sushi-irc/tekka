@@ -1,5 +1,7 @@
 from re import compile
 
+from gettext import gettext as _
+
 import gtk
 import gtk.glade
 
@@ -172,7 +174,7 @@ def setup(_dialog):
 	listView.set_model(model)
 
 	c = 0
-	for name in ("Channel","User","Topic"):
+	for name in (_("Channel"), _("User"), _("Topic")):
 		renderer = gtk.CellRendererText()
 		column = gtk.TreeViewColumn(name, renderer, text=c)
 		listView.append_column(column)
