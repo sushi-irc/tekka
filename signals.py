@@ -26,7 +26,6 @@ def setup(_config, _gui, _com):
 	# Message-Signals
 	sushi.connect_to_signal("message", userMessage)
 	sushi.connect_to_signal("own_message", ownMessage)
-	sushi.connect_to_signal("own_query", ownQuery)
 	sushi.connect_to_signal("own_notice", ownNotice)
 	sushi.connect_to_signal("query", userQuery)
 	sushi.connect_to_signal("notice", userNotice)
@@ -425,8 +424,13 @@ def ownMessage(timestamp, server, channel, message):
 	tab = gui.tabs.searchTab(server, channel)
 
 	if not tab:
-		raise Exception("This should not happen. No tab in ownMessage(%s,%s)." % \
-			(server,channel))
+		if channel[0] in sushi.support_chantypes(server):
+			tab = gui.tabs.createChannel(server, channel)
+		else:
+			tab = gui.tabs.createQuery(server, channel)
+
+		tab.connected = True
+		gui.tabs.addTab(server, tab)
 
 	if tab.is_channel():
 		prefix = tab.nickList.getPrefix(nick)
@@ -442,19 +446,13 @@ def ownMessage(timestamp, server, channel, message):
 
 	elif tab.is_query():
 		# <nick> message
-		gui.currentServerPrint(timestamp, server, \
+		gui.channelPrint(timestamp, server, channel, \
 			"&lt;<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" % (
 			config.get("colors","own_nick","#000000"),
 			nick,
 			config.get("colors","own_text","#000000"),
 			message))
 
-
-def ownQuery(timestamp, server, channel, message):
-	"""
-		The maki user writes to a query.
-	"""
-	ownMessage(timestamp,server,channel,message)
 
 def userQuery(timestamp, server, nick, message):
 	"""
