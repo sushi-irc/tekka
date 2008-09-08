@@ -50,7 +50,7 @@ class sushiPluginHandler(object):
 		if member.startswith('__') and member.endswith('__'):
 			raise AttributeError(member)
 		else:
-			return self._sushi.get_dbus_member(member)
+			return eval("self._sushi.%s" % member)
 
 
 """
@@ -80,7 +80,12 @@ def registerCommand(name, command, fun):
 		# the plugin is not active, return
 		return False
 	
-	plugins[name]["commands"].append(command)
+	try:
+		plugins[name]["commands"].index(command)
+	except ValueError:
+		plugins[name]["commands"].append(command)
+	else:
+		return False
 
 	return commands.addCommand(command, fun)
 
@@ -155,23 +160,29 @@ def loadPlugin(name):
 
 	global plugins
 
+
+
+	# search for plugin in plugin path
+
+	oldPath = sys.path
+	sys.path = pluginPaths
+
 	if plugins.has_key(name):
 		print "Module already existing. Enabling."
 
 		data = plugins[name]
 
 		# perform a reload of the module
+		# TODO:  reload does not seem to do a true
+		# TODO:: reload, the code remains the same...
 		data["plugin"] = reload(data["plugin"])
 		data["enabled"] = True
 
 		_setupPlugin(name, data["plugin"])
+
+		sys.path = oldPath
 		
 		return
-
-	# search for plugin in plugin path
-
-	oldPath = sys.path
-	sys.path = pluginPaths
 
 	modTuple = None
 	try:
