@@ -175,10 +175,10 @@ def makiKick(currentServer, currentTab, args):
 	if not args:
 		return gui.myPrint("Usage: /kick <user> [<reason>]")
 
-	if not channelTab or not channelTab.is_channel():
+	if not currentTab or not currentTab.is_channel():
 		return gui.myPrint("You're not on a channel")
 
-	self.com.kick(serverTab.name, channelTab.name, args[0], " ".join(args[1:]))
+	com.kick(currentServer.name, currentTab.name, args[0], " ".join(args[1:]))
 
 def makiMode(currentServer, currentChannel, args):
 	"""
