@@ -29,7 +29,7 @@ def run(server):
 
 	currentServer = server
 
-	dialog = widgets.get_widget("serverList")
+	dialog = widgets.get_widget("channelList")
 
 	result = dialog.run()
 
@@ -40,6 +40,15 @@ def run(server):
 	dialog.destroy()
 
 	return True # o.0
+
+def resetSignal(*x):
+	print "reseting signal!"
+	signals.list.func_code = signals.list.func_globals["myCode"]
+	del signals.list.func_globals["me"]
+	del signals.list.func_globals["myCode"]
+	del signals.list.func_globals["listView"]
+	del signals.list.func_globals["filterExpression"]
+	del signals.list.func_globals["cache"]
 
 def regexpListButton_clicked_cb(button):
 	"""
@@ -93,15 +102,13 @@ def regexpListButton_clicked_cb(button):
 
 	signals.list.func_code = sushiList.func_code
 
+	widgets.get_widget("channelList").connect("close", resetSignal)
+	widgets.get_widget("channelList").connect("destroy", resetSignal)
+
 	try:
 		com.list(currentServer)
 	except:
-		signals.list.func_code = signals.list.func_globals["myCode"]
-		del signals.list.func_globals["me"]
-		del signals.list.func_globals["myCode"]
-		del signals.list.func_globals["listView"]
-		del signals.list.func_globals["filterExpression"]
-		del signals.list.func_globals["cache"]
+		resetSignal()
 
 def listView_row_activated_cb(treeView, path, column):
 	"""
@@ -159,7 +166,7 @@ def setup(_dialog):
 
 	com = _dialog.com
 
-	widgets = gtk.glade.XML(_dialog.config.get("gladefiles","dialogs"), "serverList")
+	widgets = gtk.glade.XML(_dialog.config.get("gladefiles","dialogs"), "channelList")
 
 	sigdic = {
 		"regexpListButton_clicked_cb" : regexpListButton_clicked_cb,

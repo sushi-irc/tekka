@@ -679,7 +679,7 @@ Are you sure you want to delete the server?</property>
       </widget>
     </child>
   </widget>
-  <widget class="GtkDialog" id="serverList">
+  <widget class="GtkDialog" id="channelList">
     <property name="border_width">6</property>
     <property name="title" translatable="yes">Channel List</property>
     <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
