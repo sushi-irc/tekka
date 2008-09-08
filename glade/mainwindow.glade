@@ -133,6 +133,14 @@
 						<signal name="activate" handler="menu_Dialogs_channelList_activate_cb"/>
 					  </widget>
 					</child>
+					<child>
+					  <widget class="GtkMenuItem" id="menu_Dialogs_plugins">
+					  	<property name="visible">True</property>
+						<property name="label" translatable="yes">Plugins</property>
+						<property name="use_underline">True</property>
+						<signal name="activate" handler="menu_Dialogs_plugins_activate_cb"/>
+					  </widget>
+					</child>
 				  </widget>
 				</child>
 			</widget>

@@ -101,3 +101,10 @@ def showChannelListDialog(server):
 	d = loadDialog("channelList")
 
 	return d.run(server)
+
+def showPluginsDialog():
+	"""
+	"""
+	d = loadDialog("pluginsDialog")
+
+	return d.run()

@@ -96,6 +96,15 @@ def writeConfigFile():
 
 	fp.close()
 
+def createSection(section):
+	"""
+		creates config section `section`.
+	"""
+	if configParser.has_section(section):
+		return False
+	configParser.add_section(section)
+	return True
+
 def set(section, option, value):
 	"""
 		Sets in the section the option to value.

@@ -33,6 +33,7 @@ import dialog
 import signals
 import commands
 import menus
+import plugins
 
 widgets = None
 gui = None
@@ -814,6 +815,12 @@ def menu_Dialogs_channelList_activate_cb(menuItem):
 	if not sTab: return
 	dialog.showChannelListDialog(sTab.name)
 
+def menu_Dialogs_plugins_activate_cb(menuItem):
+	"""
+		show plugin load/unload/list dialog.
+	"""
+	dialog.showPluginsDialog()
+
 def mainWindow_delete_event_cb(mainWindow, event):
 	"""
 		The user want's to close the main window.
@@ -1494,6 +1501,7 @@ def setupGTK():
 		"menu_View_showStatusBar_toggled_cb" : menu_View_showStatusBar_toggled_cb,
 	# dialogs menu
 		"menu_Dialogs_channelList_activate_cb" : menu_Dialogs_channelList_activate_cb,
+		"menu_Dialogs_plugins_activate_cb" : menu_Dialogs_plugins_activate_cb,
 	# help menu
 		# TODO: about dialog
 	# main window signals
@@ -1568,6 +1576,8 @@ def main():
 	config.setup()
 
 	setupGTK()
+
+	plugins.setup(gui)
 
 	connectMaki()
 

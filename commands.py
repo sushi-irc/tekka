@@ -434,6 +434,33 @@ def tekkaHelp(currentServer, currentTab, args):
 	else:
 		gui.myPrint("No help for %s available." % (args[0]))
 
+def addCommand(command, function):
+	"""
+		Add a command.
+		Returns True on success, otherwise False.
+	"""
+	global commands
+
+	if commands.has_key(command):
+		return False
+
+	commands[command] = function
+
+	return True
+
+def removeCommand(command):
+	"""
+		Removes a command.
+		Returns True on success, otherwise False.
+	"""
+	global commands
+
+	if commands.has_key(command):
+		del commands[command]
+		return True
+
+	return False
+
 def setup(_config, _gui, _com):
 	"""
 		Setup the command module.
