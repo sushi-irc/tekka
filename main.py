@@ -826,6 +826,8 @@ def mainWindow_delete_event_cb(mainWindow, event):
 		mainWindow.hide()
 		return True
 	else:
+		if config.get("tekka", "close_maki_on_close"):
+			com.shutdown()
 		gtk.main_quit()
 
 def mainWindow_focus_in_event_cb(mainWindow, event):
