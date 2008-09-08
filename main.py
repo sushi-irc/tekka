@@ -822,7 +822,7 @@ def mainWindow_delete_event_cb(mainWindow, event):
 		will be hidden, otherwise the main looped
 		will be stopped.
 	"""
-	if config.get("hide_on_close") and gui.statusIcon:
+	if config.get("tekka", "hide_on_close") and gui.statusIcon:
 		mainWindow.hide()
 		return True
 	else:
@@ -1529,6 +1529,9 @@ def setupGTK():
 
 	# set output font
 	gui.setFont(widgets.get_widget("output"), config.get("tekka","output_font"))
+
+	# set general output font
+	gui.setFont(widgets.get_widget("generalOutput"), config.get("tekka","general_output_font"))
 
 	# setup general output
 	buffer = gui.tabs.getBuffer()
