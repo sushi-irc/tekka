@@ -9,8 +9,6 @@ from gobject import idle_add
 gui = None
 config = None
 com = None
-gtk = None
-glade = None
 
 def setup(_config, _gui, _com):
 	"""
