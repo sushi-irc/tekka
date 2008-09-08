@@ -1459,7 +1459,10 @@ def setupGTK():
 	gladefiles = config.get("gladefiles", default={})
 
 	# setup locale stuff
-	locale.setlocale(locale.LC_ALL, '')
+	try:
+		locale.setlocale(locale.LC_ALL, '')
+	except:
+		pass
 
 	gettext.bindtextdomain("tekka", config.get("tekka","locale_dir"))
 	gettext.textdomain("tekka")
