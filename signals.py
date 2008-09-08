@@ -167,6 +167,7 @@ def updatePrefix(tab, nick, mode):
 		will be updated (fetched).
 	"""
 	if not nick: return
+	# FIXME: cache support_prefix()!
 	if mode[1] in sushi.support_prefix(tab.server)[0]:
 		tab.nickList.setPrefix(nick, com.fetchPrefix(tab.server, tab.name, nick))
 
