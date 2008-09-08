@@ -16,7 +16,6 @@ clean:
 	$(RM) tekka.pot
 	$(RM) $(GLADEH)
 	$(RM) *.mo
-	$(RM) *.po~
 
 $(GLADEH): %.h: %
 	$(QUIET_GEN) intltool-extract --type=gettext/glade $+; \
@@ -28,7 +27,7 @@ tekka.pot: $(PY) $(GLADEH)
 %.po: tekka.pot
 	$(QUIET_GEN) if test -f $@; then \
 		touch $@; \
-		msgmerge --update $@ $+; \
+		msgmerge --update --backup=off $@ $+; \
 	else \
 		msginit --input=$+ --output=$@; \
 	fi
