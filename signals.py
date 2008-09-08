@@ -431,11 +431,7 @@ def ownMessage(timestamp, server, channel, message):
 
 		tab.connected = True
 		gui.tabs.addTab(server, tab)
-
-		output = tab.buffer
-
-		for line in com.fetchLog(server, channel, UInt64(config.get("chatting", "last_log_lines", "10"))):
-			output.insertHTML(output.get_end_iter(), "<font foreground='#DDDDDD'>%s</font>" % gui.escape(line))
+		lastLog(server, channel)
 
 	if tab.is_channel():
 		prefix = tab.nickList.getPrefix(nick)
@@ -469,11 +465,7 @@ def userQuery(timestamp, server, nick, message):
 		tab = gui.tabs.createQuery(server, nick)
 		tab.connected = True
 		gui.tabs.addTab(server, tab)
-
-		output = tab.buffer
-
-		for line in com.fetchLog(server, nick, UInt64(config.get("chatting", "last_log_lines", "10"))):
-			output.insertHTML(output.get_end_iter(), "<font foreground='#DDDDDD'>%s</font>" % gui.escape(line))
+		lastLog(server, nick)
 
 	if tab.name != nick:
 		# the name of the tab differs from the
