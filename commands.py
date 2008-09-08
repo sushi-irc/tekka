@@ -388,24 +388,26 @@ def tekkaQuery(currentServer, currentTab, args):
 	if not args:
 		return gui.myPrint("Usage: /query <nick>")
 
-	if not serverTab:
+	if not currentServer:
 		return gui.myPrint("Can't determine server.")
 
-	if not gui.tabs.searchTab(currentServer.name, args[0]):
+	nick = args[0]
+
+	if not gui.tabs.searchTab(currentServer.name, nick):
 		# no query started
 
-		tab = gui.tabs.createQuery(serverTab.name, nick)
+		tab = gui.tabs.createQuery(currentServer.name, nick)
 		tab.connected = True
-		gui.tabs.addTab(serverTab.name, tab)
+		gui.tabs.addTab(currentServer.name, tab)
 
 		output = tab.buffer
 
 		# fetch and write history to query (if any)
-		for line in com.fetchLog(serverTab.name, nick,
+		for line in com.fetchLog(currentServer.name, nick,
 			UInt64(config.get("chatting","last_log_lines","10"))):
 
 			output.insertHTML(output.get_end_iter(),
-				"<font foreground='#DDDDDD'>%s</font>" % self.gui.escape(line))
+				"<font foreground='#DDDDDD'>%s</font>" % gui.escape(line))
 
 def tekkaClear(currentServer, currentTab, args):
 	"""
