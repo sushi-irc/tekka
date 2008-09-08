@@ -326,14 +326,21 @@ class guiWrapper(object):
 			pass
 
 		if event.type == gtk.gdk.BUTTON_PRESS:
+			name = config.get("tekka","browser")
+
+			if name and webbrowser.get(name):
+				browser = webbrowser.get(name)
+			else:
+				browser = webbrowser
+
 			if event.button == 1:
-				webbrowser.open(url)
+				browser.open(url)
 
 			elif event.button == 3:
 				menu = gtk.Menu()
 				cb = gtk.Clipboard()
 				openitem = gtk.MenuItem(label="Open")
-				openitem.connect("activate", lambda w: webbrowser.open(url))
+				openitem.connect("activate", lambda w,b: b.open(url), browser)
 				menu.append(openitem)
 				copyitem = gtk.MenuItem(label="Copy URL")
 				copyitem.connect("activate", lambda w,u,c: c.set_text(u), url, cb)
