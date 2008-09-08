@@ -12,6 +12,7 @@ except:
 	print "Are you sure X is running?"
 	sys.exit(1)
 
+import dbus
 import time
 
 import gtk.glade
@@ -113,7 +114,7 @@ class guiWrapper(object):
 			Sets nick as label text of nickLabel.
 		"""
 		widgets.get_widget("nickLabel").set_text(nick)
-		
+
 
 	def setFont(self, textView, fontFamily):
 		"""
@@ -1090,6 +1091,11 @@ def nickList_row_activated_cb(nickList, path, column):
 	query.connected = True
 
 	gui.tabs.addTab(serverTab.name, query)
+
+	output = query.buffer
+
+	for line in com.fetchLog(serverTab.name, name, dbus.UInt64(config.get("chatting", "last_log_lines", "10"))):
+		output.insertHTML(output.get_end_iter(), "<font foreground='#DDDDDD'>%s</font>" % gui.escape(line))
 
 def nickList_button_press_event_cb(nickList, event):
 	"""
