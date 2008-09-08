@@ -76,12 +76,13 @@ def serverTreeMenu_closeItem_activate_cb(menuItem):
 	if not serverTree_tabMenu_currentTab:
 		return
 
-	if serverTree_tabMenu_currentTab.is_channel():
+	if serverTree_tabMenu_currentTab.is_channel() and serverTree_tabMenu_currentTab.joined:
 		com.part(serverTree_tabMenu_currentTab.server, serverTree_tabMenu_currentTab.name, config.get("partMessage", default=""))
-	elif serverTree_tabMenu_currentTab.is_server():
+	elif serverTree_tabMenu_currentTab.is_server() and serverTree_tabMenu_currentTab.connected:
 		com.quitServer(serverTree_tabMenu_currentTab.name, config.get("quitMessage", default=""))
 
 	gui.tabs.removeTab(serverTree_tabMenu_currentTab)
+	gui.updateServerTreeShortcuts()
 
 def serverTreeMenu_autoJoinItem_toggled_cb(menuItem):
 	"""

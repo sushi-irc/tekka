@@ -1225,6 +1225,7 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 	elif tab.is_server():
 		com.quitServer(tab.name)
 	gui.tabs.removeTab(tab)
+	gui.updateServerTreeShortcuts()
 
 def output_shortcut_Page_Up(output, shortcut):
 	"""
