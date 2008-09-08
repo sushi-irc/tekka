@@ -128,7 +128,8 @@ def sushiList(time, server, channel, user, topic):
 		cache.append((server,channel,user,topic))
 
 	if user < 0:
-		# EOL
+		# EOL, this is not reached if we use 
+		# manual call.
 		
 		try:
 			me.func_code = myCode

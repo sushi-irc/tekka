@@ -331,15 +331,18 @@ class guiWrapper(object):
 
 			elif event.button == 3:
 				menu = gtk.Menu()
+				cb = gtk.Clipboard()
 				openitem = gtk.MenuItem(label="Open")
 				openitem.connect("activate", lambda w: webbrowser.open(url))
 				menu.append(openitem)
 				copyitem = gtk.MenuItem(label="Copy URL")
-				copyitem.connect("activate", self.copyUrlToClipboard, url)
+				copyitem.connect("activate", lambda w,u,c: c.set_text(u), url, cb)
 				menu.append(copyitem)
 
 				menu.show_all()
 				menu.popup(None, None, None, button=event.button, activate_time=event.time)
+
+				return True
 
 	class tabClass(object):
 		"""
