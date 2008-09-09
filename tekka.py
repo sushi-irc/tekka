@@ -6,7 +6,7 @@ import commands
 
 gui = None
 pluginPaths = []
-plugins = {}
+_plugins = {}
 
 class sushiPluginHandler(object):
 	"""
@@ -26,7 +26,9 @@ class sushiPluginHandler(object):
 			Forwards args to handler if the plugin
 			is permitted to receive signals (loaded and enabled).
 		"""
-		if plugins.has_key(self._plugin) and plugins[self._plugin]["enabled"]:
+		if (_plugins.has_key(self._plugin) and
+			_plugins[self._plugin]["enabled"]):
+
 			handler(*args)
 
 	def connect_to_signal(self, signal, handler):
@@ -38,10 +40,10 @@ class sushiPluginHandler(object):
 			data (=> plugin enabled yes/no).
 		"""
 		try:
-			plugins[self._plugin]["signals"].index(signal)
+			_plugins[self._plugin]["signals"].index(signal)
 		except ValueError:
 			self._sushi.connect_to_signal(signal, lambda *x: self._check(handler,*x))
-			plugins[self._plugin]["signals"].append(signal)
+			_plugins[self._plugin]["signals"].append(signal)
 		else:
 			# already connected
 			return False
@@ -53,95 +55,89 @@ class sushiPluginHandler(object):
 			return eval("self._sushi.%s" % member)
 
 
-"""
-	Plugin-API
-"""
+class plugin(object):
 
-def getDBusInterface(name):
-	"""
-		Return a sushiPluginHandler instance.
-	"""
-	if not plugins.has_key(name):
-		return
+	def __init__(self, name):
+		global _plugins
 
-	if not plugins[name]["proxy"]:
-		plugins[name]["proxy"] = sushiPluginHandler(name, com.sushi)
-	return plugins[name]["proxy"]
+		if not _plugins.has_key(name):
+			del self
+			return
 
-def getGUI():
-	return gui
+		_plugins[name]["object"] = self
 
-def registerCommand(name, command, fun):
-	"""
-		Registers a command associated with fun
-		in commands and for plugin `name`.
-	"""
-	if not plugins.has_key(name):
-		# the plugin is not active, return
-		return False
+		self.__name = name
+		self.__proxy = None
+		self.__commands = []
+
+	def get_commands(self):
+		return list(self.__commands)
+
+	def get_name(self):
+		return str(self.__name)
+
+	def get_module(self):
+		return self.__module
 	
-	try:
-		plugins[name]["commands"].index(command)
-	except ValueError:
-		plugins[name]["commands"].append(command)
-	else:
-		return False
+	def get_dbus_interface(self):
+		if not self.__proxy:
+			self.__proxy = sushiPluginHandler(self.__name, com.sushi)
+		return self.__proxy
 
-	return commands.addCommand(command, fun)
+	def register_command(self, command, callback):
+		if not _plugins.has_key(command) or not _plugins[self.__name]["enabled"]:
+			return
 
-def setPluginOption(name, option, value):
-	"""
-		set config value for plugin `name`.
-		On successful setting the method returns True,
-		otherwise False.
-	"""
-	config.createSection(name)
-	return config.set(name, option, value)
+		try:
+			self.__commands.index(command)
+		except ValueError:
+			ret = commands.addCommand(command, callback)
+			if ret:
+				self.__commands.append(command)
+			return ret
+		else:
+			return False
 
-def getPluginOption(name, option):
-	"""
-		get config value for plugin `name`.
-		if the option is not found an empty string
-		is returned
-	"""
-	return config.get(name, option, "")
+	def plugin_info(self):
+		return ("Basic plugin class", "0.1")
+
+	def set_option(self, option, value):
+		config.addSection(self.__name)
+		if value:
+			return config.set(self.__name, option, value)
+		else:
+			return config.unset(self.__name, option)
+
+	def get_option(self, option):
+		return config.get(self.__name, option)
+
+	def get_gui(self):
+		return gui
+
 
 """
 	Methods for plugin stuff.
 """
 
-def _registerPlugin(name, plugin):
+def _registerPlugin(name, module):
 	"""
 		Registers the plugin in a global dict.
 		Only loaded plugins would be registered.
 	"""
-	global plugins
+	global _plugins
 
-	if plugins.has_key(name) and plugins[name]["filename"] == filename:
+	if _plugins.has_key(name):
 		print "double plugin '%s'!" % (name)
 		return False
 
-	plugins[name]={
-		"plugin":plugin,
-		"commands":[],
+	_plugins[name]={
+		"object":None,
+		"module":module,
 		"signals":[],
-		"proxy":None,
 		"enabled":True
 		}
 
 	return True
-
-def _setupPlugin(name, plugin):
-	"""
-		sets the functions the plugin can use.
-	"""	
-	# give the plugin the methods it deserves :)
-	plugin.getDBusInterface = lambda: getDBusInterface(name)
-	plugin.registerCommand = lambda c,f: registerCommand(name, c, f)
-	plugin.setOption = lambda o,v: setPluginOption(name, o, v)
-	plugin.getOption = lambda o: getPluginOption(name, o)
-
-	plugin.getGUI = getGUI
 
 def loadPlugin(name):
 	"""
@@ -158,27 +154,22 @@ def loadPlugin(name):
 		print "No search paths."
 		return
 
-	global plugins
-
-
+	global _plugins
 
 	# search for plugin in plugin path
 
 	oldPath = sys.path
 	sys.path = pluginPaths
 
-	if plugins.has_key(name):
+	if _plugins.has_key(name):
 		print "Module already existing. Enabling."
 
-		data = plugins[name]
+		data = _plugins[name]
 
 		# perform a reload of the module
-		# TODO:  reload does not seem to do a true
-		# TODO:: reload, the code remains the same...
-		data["plugin"] = reload(data["plugin"])
+		
+		reload(data["module"])
 		data["enabled"] = True
-
-		_setupPlugin(name, data["plugin"])
 
 		sys.path = oldPath
 		
@@ -214,9 +205,7 @@ def loadPlugin(name):
 		print "registration failed."
 		return
 
-	_setupPlugin(name, plugin)
-
-	plugin.__init__()
+	plugin.load()
 
 def unloadPlugin(name):
 	"""
@@ -224,38 +213,21 @@ def unloadPlugin(name):
 		Before the deletion is made, __destruct__
 		is called in the module.
 	"""
-	global plugins
+	global _plugins
 
-	if not plugins.has_key(name):
+	if not _plugins.has_key(name):
 		print "no such plugin registered ('%s')"
 		return False
 
 	try:
-		plugins[name].__destruct__()
+		_plugins[name]["module"].unload()
 	except AttributeError:
 		pass
 
+	for command in _plugins[name]["object"].get_commands():
+		commands.removeCommand(command)
 
-	# try to unregister all commands created by the plugin
-	try:
-		for command in plugins[name]["commands"]:
-			commands.removeCommand(command)
-	except KeyError:
-		pass
-
-	# because modules are not deletable, make it unuseable
-	# and set it to enabled = False
-
-	plugins[name]["plugin"].getDBusInterface = None
-	plugins[name]["plugin"].registerCommand = None
-	plugins[name]["plugin"].setOption = None
-	plugins[name]["plugin"].getOption = None
-	plugins[name]["plugin"].getGUI = None
-	plugins[name]["enabled"] = False
-	# NOTE:  important: do NOT delete the entry in plugins!
-	# NOTE:: If you do this all signal entries will be lost
-	# NOTE:: so they will be added the next time the plugin
-	# NOTE:: is initalized.
+	_plugins[name]["enabled"] = False
 
 def setup(_gui):
 	"""

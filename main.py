@@ -33,7 +33,9 @@ import dialog
 import signals
 import commands
 import menus
-import plugins
+
+# plugin interface
+import tekka as plugins
 
 widgets = None
 gui = None
@@ -1577,6 +1579,7 @@ def main():
 
 	setupGTK()
 
+	# set up plugin interface
 	plugins.setup(gui)
 
 	connectMaki()
