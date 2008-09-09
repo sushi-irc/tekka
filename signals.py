@@ -79,7 +79,7 @@ def initServers():
 		tab.connected = True
 
 		if com.isAway(server, com.getOwnNick(server)):
-			tab.setAway(True)
+			tab.away = "OHAI"
 
 		gui.tabs.addTab(None, tab)
 
