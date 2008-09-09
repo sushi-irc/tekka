@@ -6,68 +6,93 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tekka 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-09-08 02:29+0200\n"
-"PO-Revision-Date: 2008-09-08 13:43+0000\n"
+"POT-Creation-Date: 2008-09-09 07:11+0200\n"
+"PO-Revision-Date: 2008-09-09 13:12+0000\n"
 "Last-Translator: Michael Kuhn <Unknown>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2008-09-08 15:24+0000\n"
+"X-Launchpad-Export-Date: 2008-09-09 13:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: ../signals.py:658
+#: ../main.py:1251
+#, python-format
+msgid "Do you really want to close channel “%(name)s”?"
+msgstr "Wollen Sie Channel »%(name)s« wirklich schließen?"
+
+#: ../main.py:1253
+#, python-format
+msgid "Do you really want to close server “%(name)s”?"
+msgstr "Wollen Sie Server »%(name)s« wirklich schließen?"
+
+#: ../signals.py:307
+#, python-format
+msgid "• You changed the topic to “%(topic)s”."
+msgstr "• Sie haben das Thema zu »%(topic)s« geändert."
+
+#: ../signals.py:309
+#, python-format
+msgid "• %(nick)s changed the topic to “%(topic)s”."
+msgstr "• %(nick)s hat das Thema zu »%(topic)s« geändert."
+
+#: ../signals.py:366
+#, python-format
+msgid "• %(nick)s is away (%(message)s)."
+msgstr "• %(nick)s ist abwesend (%(message)s)."
+
+#: ../signals.py:671
 #, python-format
 msgid "• You are now known as %(newnick)s."
 msgstr "• Sie sind jetzt bekannt als %(newnick)s."
 
-#: ../signals.py:660
+#: ../signals.py:676
 #, python-format
 msgid "• %(nick)s is now known as %(newnick)s."
 msgstr "• %(nick)s ist jetzt bekannt als %(newnick)s."
 
-#: ../signals.py:727
+#: ../signals.py:743
 #, python-format
 msgid "« You have quit (%(reason)s)."
 msgstr "« Sie haben die Verbindung beendet (%(reason)s)."
 
-#: ../signals.py:729
+#: ../signals.py:745
 msgid "« You have quit."
 msgstr "« Sie haben die Verbindung beendet."
 
-#: ../signals.py:739
+#: ../signals.py:755
 #, python-format
 msgid "« %(nick)s has quit (%(reason)s)."
 msgstr "« %(nick)s hat die Verbindung beendet (%(reason)s)."
 
-#: ../signals.py:741
+#: ../signals.py:757
 #, python-format
 msgid "« %(nick)s has quit."
 msgstr "« %(nick)s hat die Verbindung beendet."
 
-#: ../signals.py:799
+#: ../signals.py:818
 #, python-format
 msgid "» You have joined %(channel)s."
 msgstr "» Sie haben %(channel)s betreten."
 
-#: ../signals.py:809
+#: ../signals.py:828
 #, python-format
 msgid ""
 "» <font foreground='%(color)s'>%(nick)s</font> has joined %(channel)s."
 msgstr ""
 "» <font foreground='%(color)s'>%(nick)s</font> hat %(channel)s betreten."
 
-#: ../signals.py:830
+#: ../signals.py:849
 #, python-format
 msgid "« You have left %(channel)s (%(reason)s)."
 msgstr "« Sie haben %(channel)s verlassen (%(reason)s)."
 
-#: ../signals.py:832
+#: ../signals.py:851
 #, python-format
 msgid "« You have left %(channel)s."
 msgstr "« Sie haben %(channel)s verlassen."
 
-#: ../signals.py:842
+#: ../signals.py:861
 #, python-format
 msgid ""
 "« <font foreground='%(color)s'>%(nick)s</font> has left %(channel)s "
@@ -76,23 +101,23 @@ msgstr ""
 "« <font foreground='%(color)s'>%(nick)s</font> hat %(channel)s  verlassen "
 "(%(reason)s)."
 
-#: ../signals.py:844
+#: ../signals.py:863
 #, python-format
 msgid "« <font foreground='%(color)s'>%(nick)s</font> has left %(channel)s."
 msgstr ""
 "« <font foreground='%(color)s'>%(nick)s</font> hat %(channel)s verlassen."
 
-#: ../signals.py:864
+#: ../signals.py:883
 #, python-format
 msgid "• %(target)s: No such nick/channel."
 msgstr "• %(target)s: Kein solcher Nick/Channel."
 
-#: ../signals.py:876
+#: ../signals.py:895
 #, python-format
 msgid "[%(nick)s] %(message)s"
 msgstr "[%(nick)s] %(message)s"
 
-#: ../signals.py:878
+#: ../signals.py:897
 #, python-format
 msgid "[%(nick)s] End of whois."
 msgstr "[%(nick)s] Ende der whois-Abfrage."
@@ -131,205 +156,158 @@ msgstr "Adresse:"
 msgid "Auto-connect:"
 msgstr "Automatisch verbinden:"
 
-#: ../glade/dialogs.glade.h:10
+#: ../glade/dialogs.glade.h:10 ../glade/mainwindow.glade.h:4
+msgid "Channel List"
+msgstr "Channelliste"
+
+#: ../glade/dialogs.glade.h:11
 msgid "Delete Server"
 msgstr "Server löschen"
 
-#: ../glade/dialogs.glade.h:11
+#: ../glade/dialogs.glade.h:12
 msgid "Edit Server"
 msgstr "Server bearbeiten"
 
-#: ../glade/dialogs.glade.h:12
+#: ../glade/dialogs.glade.h:13
 msgid "List"
 msgstr "Liste"
 
-#: ../glade/dialogs.glade.h:13
+#: ../glade/dialogs.glade.h:14
+msgid "Load"
+msgstr "Laden"
+
+#: ../glade/dialogs.glade.h:15
 msgid "Nick name:"
 msgstr "Nickname:"
 
-#: ../glade/dialogs.glade.h:14
+#: ../glade/dialogs.glade.h:16
 msgid "NickServ password:"
 msgstr "NickServ-Passwort:"
 
-#: ../glade/dialogs.glade.h:15
+#: ../glade/dialogs.glade.h:17 ../glade/mainwindow.glade.h:16
+msgid "Plugins"
+msgstr "Plugins"
+
+#: ../glade/dialogs.glade.h:18
 msgid "Port:"
 msgstr "Port:"
 
-#: ../glade/dialogs.glade.h:16
+#: ../glade/dialogs.glade.h:19
 msgid "Real name:"
 msgstr "Realer Name:"
 
-#: ../glade/dialogs.glade.h:17 ../glade/mainwindow.glade.h:22
+#: ../glade/dialogs.glade.h:20 ../glade/mainwindow.glade.h:17
 msgid "Server List"
 msgstr "Serverliste"
 
-#: ../glade/dialogs.glade.h:18
+#: ../glade/dialogs.glade.h:21
 msgid "Server name:"
 msgstr "Servername:"
 
+#: ../glade/dialogs.glade.h:22
+msgid "Unload"
+msgstr "Entladen"
+
 #: ../glade/mainwindow.glade.h:1
-#, fuzzy
-msgid "Autoconnect"
-msgstr "Automatisch verbinden:"
+msgid "Auto-connect"
+msgstr "Automatisch verbinden"
 
 #: ../glade/mainwindow.glade.h:2
-msgid "Autojoin"
+msgid "Auto-join"
 msgstr "Automatisch betreten"
 
 #: ../glade/mainwindow.glade.h:3
 msgid "Ban"
 msgstr "Bannen"
 
-#: ../glade/mainwindow.glade.h:4
-msgid "Channel List"
-msgstr "Channelliste"
-
 #: ../glade/mainwindow.glade.h:5
 msgid "Close"
 msgstr "Schließen"
 
 #: ../glade/mainwindow.glade.h:6
-msgid "Closes the tab"
-msgstr "Schließt den Reiter"
-
-#: ../glade/mainwindow.glade.h:7
 msgid "Connect"
 msgstr "Verbinden"
 
+#: ../glade/mainwindow.glade.h:7
+msgid "Disconnect"
+msgstr "Verbindung trennen"
+
 #: ../glade/mainwindow.glade.h:8
-msgid "Connect to the server"
-msgstr ""
+msgid "Give Half-Op"
+msgstr "Half-Op geben"
 
 #: ../glade/mainwindow.glade.h:9
-#, fuzzy
-msgid "Disconnect"
-msgstr "Verbinden"
+msgid "Give Op"
+msgstr "Op geben"
 
 #: ../glade/mainwindow.glade.h:10
-msgid "Disconnect from the server"
-msgstr ""
+msgid "Give Voice"
+msgstr "Voice geben"
 
 #: ../glade/mainwindow.glade.h:11
-msgid "Give Op"
-msgstr ""
-
-#: ../glade/mainwindow.glade.h:12
-msgid "Give Voice"
-msgstr ""
-
-#: ../glade/mainwindow.glade.h:13
-msgid "Give half Op"
-msgstr ""
-
-#: ../glade/mainwindow.glade.h:14
 msgid "Ignore"
 msgstr "Ignorieren"
 
-#: ../glade/mainwindow.glade.h:15
+#: ../glade/mainwindow.glade.h:12
 msgid "Join"
 msgstr "Betreten"
 
-#: ../glade/mainwindow.glade.h:16
-msgid "Join the channel"
-msgstr ""
-
-#: ../glade/mainwindow.glade.h:17
-msgid "KTHXBYE"
-msgstr ""
-
-#: ../glade/mainwindow.glade.h:18
+#: ../glade/mainwindow.glade.h:13
 msgid "Kick"
 msgstr "Kicken"
 
-#: ../glade/mainwindow.glade.h:19
-msgid "Leave the channel"
-msgstr ""
-
-#: ../glade/mainwindow.glade.h:20
+#: ../glade/mainwindow.glade.h:14
 msgid "Modes"
 msgstr "Modi"
 
-#: ../glade/mainwindow.glade.h:21
+#: ../glade/mainwindow.glade.h:15
 msgid "Part"
 msgstr "Verlassen"
 
-#: ../glade/mainwindow.glade.h:23
-msgid "Set -v to the user"
-msgstr ""
-
-#: ../glade/mainwindow.glade.h:24
-#, fuzzy
-msgid "Set auto connect"
-msgstr "Automatisch verbinden:"
-
-#: ../glade/mainwindow.glade.h:25
-msgid "Set auto join"
-msgstr ""
-
-#: ../glade/mainwindow.glade.h:26
-msgid "Sets +h to the user"
-msgstr ""
-
-#: ../glade/mainwindow.glade.h:27
-msgid "Sets +o to the user"
-msgstr ""
-
-#: ../glade/mainwindow.glade.h:28
-msgid "Sets +v to the user"
-msgstr ""
-
-#: ../glade/mainwindow.glade.h:29
-msgid "Sets -h to the user"
-msgstr ""
-
-#: ../glade/mainwindow.glade.h:30
-msgid "Sets -o to the user"
-msgstr ""
-
-#: ../glade/mainwindow.glade.h:31
+#: ../glade/mainwindow.glade.h:18
 msgid "Shutdown"
 msgstr "Beenden"
 
-#: ../glade/mainwindow.glade.h:32
+#: ../glade/mainwindow.glade.h:19
+msgid "Take Half-Op"
+msgstr "Half-Op nehmen"
+
+#: ../glade/mainwindow.glade.h:20
 msgid "Take Op"
-msgstr ""
+msgstr "Op nehmen"
 
-#: ../glade/mainwindow.glade.h:33
+#: ../glade/mainwindow.glade.h:21
 msgid "Take Voice"
-msgstr ""
+msgstr "Voice nehmen"
 
-#: ../glade/mainwindow.glade.h:34
-msgid "Take half Op"
-msgstr ""
-
-#: ../glade/mainwindow.glade.h:35
+#: ../glade/mainwindow.glade.h:22
 msgid "Whois"
 msgstr "Whois"
 
-#: ../glade/mainwindow.glade.h:36
+#: ../glade/mainwindow.glade.h:23
 msgid "_Dialogs"
 msgstr "_Dialoge"
 
-#: ../glade/mainwindow.glade.h:37
+#: ../glade/mainwindow.glade.h:24
 msgid "_General Output"
 msgstr "_Allgemeine Ausgabe"
 
-#: ../glade/mainwindow.glade.h:38
+#: ../glade/mainwindow.glade.h:25
 msgid "_Help"
 msgstr "_Hilfe"
 
-#: ../glade/mainwindow.glade.h:39
+#: ../glade/mainwindow.glade.h:26
 msgid "_Status Bar"
 msgstr "_Statusleiste"
 
-#: ../glade/mainwindow.glade.h:40
+#: ../glade/mainwindow.glade.h:27
 msgid "_View"
 msgstr "_Ansicht"
 
-#: ../glade/mainwindow.glade.h:41
+#: ../glade/mainwindow.glade.h:28
 msgid "_maki"
 msgstr "_maki"
 
-#: ../glade/mainwindow.glade.h:42
+#: ../glade/mainwindow.glade.h:29
 msgid "_tekka"
 msgstr "_tekka"
