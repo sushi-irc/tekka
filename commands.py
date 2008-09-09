@@ -201,9 +201,9 @@ def makiMode(currentServer, currentChannel, args):
 
 	if len(args) > 2:
 		# a parameter is given
-		param = " ".join(args[2:])
-
-	com.mode(currentServer.name, args[0], "%s %s" % (args[1],param))
+		com.mode(currentServer.name, args[0], "%s %s" % (args[1], " ".join(args[2:])))
+	else:
+		com.mode(currentServer.name, args[0], args[1])
 
 def makiTopic(serverTab, channelTab, args):
 	"""
