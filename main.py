@@ -1245,7 +1245,13 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 	if not tab:
 		return
 
-	# TODO: dialog which asks for close
+	dialog = gtk.MessageDialog(type=gtk.MESSAGE_QUESTION, buttons=gtk.BUTTONS_YES_NO,
+		message_format='Do you really want to close?')
+	res = dialog.run()
+	dialog.destroy()
+
+	if res == gtk.RESPONSE_NO:
+		return
 
 	if tab.is_channel():
 		com.part(tab.server,tab.name)
@@ -1579,7 +1585,6 @@ def main():
 
 	setupGTK()
 
-	# set up plugin interface
 	plugins.setup(gui)
 
 	connectMaki()
