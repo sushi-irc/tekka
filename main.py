@@ -1110,6 +1110,8 @@ def nickList_row_activated_cb(nickList, path, column):
 	for line in com.fetchLog(serverTab.name, name, dbus.UInt64(config.get("chatting", "last_log_lines", "10"))):
 		output.insertHTML(output.get_end_iter(), "<font foreground='#DDDDDD'>%s</font>" % gui.escape(line))
 
+	gui.tabs.switchToPath(query.path)
+
 def nickList_button_press_event_cb(nickList, event):
 	"""
 		A button pressed inner nickList.
