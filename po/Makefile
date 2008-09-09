@@ -1,9 +1,10 @@
 include ../../Makefile.common
 
-PO     = $(wildcard *.po)
-PY     = $(wildcard ../*.py)
-GLADE  = $(wildcard ../glade/*.glade)
-GLADEH = $(GLADE:.glade=.glade.h)
+LANGUAGES = de es
+PO        = $(LANGUAGES:%=%.po)
+PY        = $(wildcard ../*.py)
+GLADE     = $(wildcard ../glade/*.glade)
+GLADEH    = $(GLADE:.glade=.glade.h)
 
 all:
 
