@@ -337,7 +337,7 @@ def userAway(time, server):
 	"""
 		maki says that we are away.
 	"""
-	tab = gui.tabs.searchTab(None, server)
+	tab = gui.tabs.searchTab(server)
 
 	if tab:
 		tab.away = "WE ARE AWAY. HERE SHOULD BE A MESSAGE BUT IT'S NOT IMPLEMENTED YET, SRY!"
@@ -348,7 +348,7 @@ def userBack(time, server):
 	"""
 		maki says that we are back from away being.
 	"""
-	tab = gui.tabs.searchTab(None, server)
+	tab = gui.tabs.searchTab(server)
 
 	if tab:
 		tab.away = ""
