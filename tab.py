@@ -153,9 +153,16 @@ class tekkaServer(tekkaTab):
 		return base
 
 	def copy(self):
-		tab = tekkaTab.copy(self)
-		tab.away = str(self.away)
-		return tab
+		copy = tekkaServer(str(self.name))
+		copy.name = str(self.name)
+		copy.newMessage = list(self.newMessage)
+		copy.connected = self.connected
+		copy.path = self.path
+		copy.autoScroll = self.autoScroll
+		copy.inputHistory = list(self.inputHistory)
+		copy.historyPosition = self.historyPosition
+		copy.away = str(self.away)
+		return copy
 
 class tekkaQuery(tekkaTab):
 	"""
@@ -202,9 +209,16 @@ class tekkaQuery(tekkaTab):
 		return markup
 
 	def copy(self):
-		tab = tekkaTab.copy(self)
-		tab.server = str(self.server)
-		return tab
+		copy = tekkaQuery(str(self.name))
+		copy.name = str(self.name)
+		copy.newMessage = list(self.newMessage)
+		copy.connected = self.connected
+		copy.path = self.path
+		copy.autoScroll = self.autoScroll
+		copy.inputHistory = list(self.inputHistory)
+		copy.historyPosition = self.historyPosition
+		copy.server = str(self.server)
+		return copy
 
 class tekkaChannel(tekkaTab):
 	"""
@@ -257,10 +271,17 @@ class tekkaChannel(tekkaTab):
 		return markup
 
 	def copy(self):
-		tab = tekkaTab.copy(self)
-		tab.nickList = self.nickList # FIXME: this is only a reference, no copy...
-		tab.topic = str(self.topic)
-		tab.topicSetter = str(self.topicSetter)
-		tab.joined = self.joined
-		tab.server = str(self.server)
-		return tab
+		copy = tekkaChannel(str(self.name))
+		copy.name = str(self.name)
+		copy.newMessage = list(self.newMessage)
+		copy.connected = self.connected
+		copy.path = self.path
+		copy.autoScroll = self.autoScroll
+		copy.inputHistory = list(self.inputHistory)
+		copy.historyPosition = self.historyPosition
+		copy.nickList = self.nickList # FIXME: this is only a reference, no copy...
+		copy.topic = str(self.topic)
+		copy.topicSetter = str(self.topicSetter)
+		copy.joined = self.joined
+		copy.server = str(self.server)
+		return copy
