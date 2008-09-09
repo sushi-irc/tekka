@@ -182,23 +182,25 @@ def loadPlugin(name):
 		print "E: ", e
 		pass
 
+	# reset old search path
+	sys.path = oldPath
+
 	if not modTuple:
 		print "no such plugin found '%s'" % (name)
-		sys.path = oldPath
 		return
 
+	plugin = None
 	try:
 		plugin = imp.load_module(name, *modTuple)
-	except ImportError:
-		print "Failure while loading plugin '%s'" % (name)
+	except ImportError,e:
+		print "Failure while loading plugin '%s': " % (name), e
 	finally:
 		try:
 			modTuple[0].close()
 		except (IndexError,AttributeError):
 			pass
 
-	# reset old search path
-	sys.path = oldPath
+	if not plugin: return
 
 	if not _registerPlugin(name, plugin):
 		# registration failed, abort loading..
