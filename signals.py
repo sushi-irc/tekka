@@ -360,7 +360,7 @@ def userAwayMessage(timestamp, server, nick, message):
 		The user is away and the server gives us the message he left
 		for us to see why he is away and probably when he's back again.
 	"""
-	gui.channelPrint(timestamp, server, nick, "%s is away: %s" % (nick, gui.escape(message)), "action")
+	gui.channelPrint(timestamp, server, nick, _("• %(nick)s is away (%(message)s).") % { "nick": nick, "message": gui.escape(message) }, "action")
 
 def userMessage(timestamp, server, nick, channel, message):
 	"""
