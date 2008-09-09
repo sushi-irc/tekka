@@ -61,8 +61,7 @@ class plugin(object):
 		global _plugins
 
 		if not _plugins.has_key(name):
-			del self
-			return
+			raise Exception("No entry for plugin.")
 
 		_plugins[name]["object"] = self
 
@@ -139,6 +138,24 @@ def _registerPlugin(name, module):
 
 	return True
 
+def hasPlugin(name):
+	"""
+		Returns True if the plugin
+		is registered.
+	"""
+	if _plugins.has_key(name):
+		return True
+	return False
+
+def isLoaded(name):
+	"""
+		Returns True if the plugin
+		is loaded.
+	"""
+	if not hasPlugin(name):
+		return False
+	return _plugins[name]["enabled"]
+
 def loadPlugin(name):
 	"""
 		searches for a module named like `name` in
@@ -149,6 +166,9 @@ def loadPlugin(name):
 
 		If a plugin was already loaded (plugins[name] exists)
 		reload the module and change "enabled" flag to True.
+
+		If the load was successful this method returns True,
+		otherwise False.
 	"""
 	if not pluginPaths:
 		print "No search paths."
@@ -173,7 +193,7 @@ def loadPlugin(name):
 
 		sys.path = oldPath
 		
-		return
+		return True
 
 	modTuple = None
 	try:
@@ -187,7 +207,7 @@ def loadPlugin(name):
 
 	if not modTuple:
 		print "no such plugin found '%s'" % (name)
-		return
+		return False
 
 	plugin = None
 	try:
@@ -200,25 +220,30 @@ def loadPlugin(name):
 		except (IndexError,AttributeError):
 			pass
 
-	if not plugin: return
+	if not plugin:
+		return False
 
 	if not _registerPlugin(name, plugin):
 		# registration failed, abort loading..
 		print "registration failed."
-		return
+		return False
 
 	plugin.load()
+	return True
 
 def unloadPlugin(name):
 	"""
 		removes the plugin (refcount = 0).
 		Before the deletion is made, __destruct__
 		is called in the module.
+
+		On successful unload the method returns True,
+		otherwise False.
 	"""
 	global _plugins
 
 	if not _plugins.has_key(name):
-		print "no such plugin registered ('%s')"
+		print "no such plugin registered ('%s')" % (name)
 		return False
 
 	try:
@@ -230,12 +255,22 @@ def unloadPlugin(name):
 		commands.removeCommand(command)
 
 	_plugins[name]["enabled"] = False
+	return True
 
 def setup(_gui):
 	"""
 		module setup function.
 	"""
 	global gui, pluginPaths
+
+
+	# if the call is a re-setup reload all plugins
+	# TODO: check if this is needed.
+	# TODO:: (connection to maki lost -> reconnect)
+	if _plugins:
+		for key in _plugins:
+			unloadPlugin(key)
+			loadPlugin(key)
 
 	gui = _gui
 
