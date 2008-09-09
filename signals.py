@@ -678,9 +678,16 @@ def userNick(time, server, nick, newNick):
 	# iterate over all channels and look if the nick is
 	# present there. If true so rename him in nicklist cache.
 	for tab in gui.tabs.getAllTabs(server)[1:]:
-		if (nick in tab.nickList.getNicks()) or (tab.name.lower() == nick.lower()):
-			tab.nickList.modifyNick(nick, newNick)
-			gui.channelPrint(time, server, tab.name, message % { "nick": gui.escape(nick), "newnick": gui.escape(newNick) }, "action")
+
+		if tab.is_channel():
+			if (nick in tab.nickList.getNicks()) or (tab.name.lower() == nick.lower()):
+				tab.nickList.modifyNick(nick, newNick)
+
+		gui.channelPrint(time, server, tab.name, message % {
+			"nick": gui.escape(nick),
+			"newnick": gui.escape(newNick)
+			},
+			"action")
 
 def userKick(time, server, nick, channel, who, reason):
 	"""

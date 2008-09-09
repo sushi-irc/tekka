@@ -596,7 +596,7 @@ class guiWrapper(object):
 				return False
 
 			store.set(row.iter, 0, new.markup(), 1, new.name, 2, new)
-			new.path = store.get_path(iter)
+			new.path = store.get_path(row.iter)
 
 			# apply new server name to childs
 			if old.is_server():
