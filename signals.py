@@ -121,10 +121,9 @@ def addChannels(server):
 
 		if add:
 			gui.tabs.addTab(server, tab)
+			lastLog(server, channel)
 
 		fetchPrefixes(server, channel, tab.nickList, nicks)
-
-		lastLog(server,channel)
 
 	gui.updateServerTreeShortcuts()
 
