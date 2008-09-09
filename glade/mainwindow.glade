@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Tue Sep  9 02:38:47 2008 -->
+<!--Generated with glade3 3.4.5 on Tue Sep  9 02:48:54 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="mainWindow">
     <property name="width_request">800</property>
@@ -426,22 +426,6 @@
               </widget>
             </child>
             <child>
-              <widget class="GtkMenuItem" id="deHalfOpItem">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Take Half-Op</property>
-                <property name="use_underline">True</property>
-                <signal name="activate" handler="deHalfItem_activate_cb"/>
-              </widget>
-            </child>
-            <child>
-              <widget class="GtkMenuItem" id="deVoiceItem">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Take Voice</property>
-                <property name="use_underline">True</property>
-                <signal name="activate" handler="deVoiceItem_activate_cb"/>
-              </widget>
-            </child>
-            <child>
               <widget class="GtkMenuItem" id="halfOpItem">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Give Half-Op</property>
@@ -450,11 +434,27 @@
               </widget>
             </child>
             <child>
+              <widget class="GtkMenuItem" id="deHalfOpItem">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Take Half-Op</property>
+                <property name="use_underline">True</property>
+                <signal name="activate" handler="deHalfItem_activate_cb"/>
+              </widget>
+            </child>
+            <child>
               <widget class="GtkMenuItem" id="voiceItem">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Give Voice</property>
                 <property name="use_underline">True</property>
                 <signal name="activate" handler="voiceItem_activate_cb"/>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkMenuItem" id="deVoiceItem">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Take Voice</property>
+                <property name="use_underline">True</property>
+                <signal name="activate" handler="deVoiceItem_activate_cb"/>
               </widget>
             </child>
           </widget>
