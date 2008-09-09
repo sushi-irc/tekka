@@ -231,6 +231,11 @@ def serverConnected(time, server, nick):
 
 	addChannels(server)
 
+	# iterate over tabs, set the connected flag to queries
+	for query in [tab for tab in gui.tabs.getAllTabs(server)[1:] if tab.is_query()]:
+		query.connected = True
+		gui.updateServerTreeMarkup(query.path)
+
 	# TODO: implement status bar messages
 	#gui.statusBar.pop(gui.STATUSBAR_CONNECTING)
 
