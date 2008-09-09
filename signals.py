@@ -304,9 +304,9 @@ def channelTopic(time, server, nick, channel, topic):
 		return
 
 	if nick == com.getOwnNick(server):
-		message = _("• You changed the topic to “%(topic)s”.")
+		message = _(u"• You changed the topic to “%(topic)s”.")
 	else:
-		message = _("• %(nick)s changed the topic to “%(topic)s”.")
+		message = _(u"• %(nick)s changed the topic to “%(topic)s”.")
 
 	gui.channelPrint(time, server, channel, message % { "nick": nick, "topic": gui.escape(topic) }, "action")
 
@@ -363,7 +363,7 @@ def userAwayMessage(timestamp, server, nick, message):
 		The user is away and the server gives us the message he left
 		for us to see why he is away and probably when he's back again.
 	"""
-	gui.channelPrint(timestamp, server, nick, _("• %(nick)s is away (%(message)s).") % { "nick": nick, "message": gui.escape(message) }, "action")
+	gui.channelPrint(timestamp, server, nick, _(u"• %(nick)s is away (%(message)s).") % { "nick": nick, "message": gui.escape(message) }, "action")
 
 def userMessage(timestamp, server, nick, channel, message):
 	"""

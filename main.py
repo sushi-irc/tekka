@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# coding: UTF-8
 # 40G V 607G zf -> fold ; zc -> close
 
 import pygtk
@@ -22,6 +23,7 @@ import webbrowser
 
 import locale
 import gettext
+from gettext import gettext as _
 
 from helper.url import URLToTag
 from helper.shortcuts import addShortcut, removeShortcut
@@ -1245,8 +1247,13 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 	if not tab:
 		return
 
+	if tab.is_channel():
+		message = _(u"Do you really want to close channel “%(name)s”?")
+	elif tab.is_server():
+		message = _(u"Do you really want to close server “%(name)s”?")
+
 	dialog = gtk.MessageDialog(type=gtk.MESSAGE_QUESTION, buttons=gtk.BUTTONS_YES_NO,
-		message_format='Do you really want to close?')
+		message_format=message % { "name": tab.name })
 	res = dialog.run()
 	dialog.destroy()
 
