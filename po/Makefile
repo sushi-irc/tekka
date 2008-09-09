@@ -25,13 +25,5 @@ $(GLADEH): %.h: %
 tekka.pot: $(PY) $(GLADEH)
 	$(QUIET_GEN) xgettext --keyword=_ --keyword=N_ --output=$@ $+
 
-%.po: tekka.pot
-	$(QUIET_GEN) if test -f $@; then \
-		touch $@; \
-		msgmerge --update --backup=off $@ $+; \
-	else \
-		msginit --input=$+ --output=$@; \
-	fi
-
-%.mo:
-	$(QUIET_GEN) msgfmt --output-file=$@ $(subst .mo,.po,$@)
+%.mo: %.po
+	$(QUIET_GEN) msgfmt --output-file=$@ $+
