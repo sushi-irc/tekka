@@ -683,6 +683,9 @@ def userNick(time, server, nick, newNick):
 			if (nick in tab.nickList.getNicks()) or (tab.name.lower() == nick.lower()):
 				tab.nickList.modifyNick(nick, newNick)
 
+		if tab.is_query() and tab.name != newNick:
+			continue
+
 		gui.channelPrint(time, server, tab.name, message % {
 			"nick": gui.escape(nick),
 			"newnick": gui.escape(newNick)
