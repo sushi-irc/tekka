@@ -50,6 +50,8 @@ def setDefaults():
 	defaults["chatting"]={}
 	defaults["chatting"]["last_log_lines"] = "10"
 
+	defaults["autoload_plugins"] = {}
+
 	defaults["nick_colors"]={
 		"1":"#AA0000",
 		"2":"#2222AA",

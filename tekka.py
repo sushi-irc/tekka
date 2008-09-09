@@ -245,3 +245,10 @@ def setup(_gui):
 	if not path: return
 
 	pluginPaths.append(path)
+
+	autoLoads = config.get("autoload_plugins").values()
+
+	for plugin in autoLoads:
+		print "auto loading '%s'" % (plugin)
+
+		loadPlugin(plugin)

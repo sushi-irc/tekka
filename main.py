@@ -1470,6 +1470,9 @@ def connectMaki():
 
 		gui.setUseable(True)
 
+		plugins.setup(gui)
+
+
 def setupGTK():
 	"""
 		Set locale, parse glade files.
@@ -1584,8 +1587,6 @@ def main():
 	config.setup()
 
 	setupGTK()
-
-	plugins.setup(gui)
 
 	connectMaki()
 
