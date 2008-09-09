@@ -301,9 +301,11 @@ def channelTopic(time, server, nick, channel, topic):
 		return
 
 	if nick == com.getOwnNick(server):
-		nick = "You"
+		message = _("• You changed the topic to “%(topic)s”.")
+	else:
+		message = _("• %(nick)s changed the topic to “%(topic)s”.")
 
-	gui.channelPrint(time, server, channel, "• %s changed the topic to '%s'" % (nick, gui.escape(topic)), "action")
+	gui.channelPrint(time, server, channel, message % { "nick": nick, "topic": gui.escape(topic) }, "action")
 
 def channelBanlist(time, server, channel, mask, who, when):
 	"""
