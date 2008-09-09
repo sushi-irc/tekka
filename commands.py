@@ -402,6 +402,7 @@ def tekkaQuery(currentServer, currentTab, args):
 		tab = gui.tabs.createQuery(currentServer.name, nick)
 		tab.connected = True
 		gui.tabs.addTab(currentServer.name, tab)
+		gui.updateServerTreeShortcuts()
 
 		output = tab.buffer
 

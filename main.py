@@ -1104,6 +1104,7 @@ def nickList_row_activated_cb(nickList, path, column):
 	query.connected = True
 
 	gui.tabs.addTab(serverTab.name, query)
+	gui.updateServerTreeShortcuts()
 
 	output = query.buffer
 
@@ -1249,9 +1250,9 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 	if not tab:
 		return
 
-	if tab.is_channel():
+	if not tab.is_server():
 		message = _(u"Do you really want to close channel “%(name)s”?")
-	elif tab.is_server():
+	else:
 		message = _(u"Do you really want to close server “%(name)s”?")
 
 	dialog = gtk.MessageDialog(type=gtk.MESSAGE_QUESTION, buttons=gtk.BUTTONS_YES_NO,
