@@ -755,7 +755,8 @@ def userQuit(time, server, nick, reason):
 			message = _(u"« You have quit.")
 
 		for channelTab in channels:
-			channelTab.joined=False
+			if channelTab.is_channel():
+				channelTab.joined=False
 			channelTab.connected=False
 			gui.updateServerTreeMarkup(channelTab.path)
 			gui.channelPrint(time, server, channelTab.name, message % { "reason": reason } )
@@ -774,14 +775,22 @@ def userQuit(time, server, nick, reason):
 
 		# print in all channels where nick joined a message
 		for channelTab in channels:
-			if channelTab.is_query(): continue
+
+			if channelTab.is_query() and channelTab.name.lower() == nick.lower():
+				# on query with `nick` only print quitmessage
+
+				gui.channelPrint(time, server, channelTab.name,
+				message % { "nick": gui.escape(nick), "reason": gui.escape(reason) }, "action")
+
+				continue
 
 			nickList = channelTab.nickList
 			nicks = nickList.getNicks() or []
 
-			if nick in nicks or nick.lower() == channelTab.name.lower():
+			if nick in nicks:
 				nickList.removeNick(nick)
-				gui.channelPrint(time, server, channelTab.name, \
+
+				gui.channelPrint(time, server, channelTab.name,
 				message % { "nick": gui.escape(nick), "reason": gui.escape(reason) }, "action")
 
 
