@@ -1250,9 +1250,11 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 	if not tab:
 		return
 
-	if not tab.is_server():
+	if tab.is_channel():
 		message = _(u"Do you really want to close channel “%(name)s”?")
-	else:
+	elif tab.is_query():
+		message = _(u"Do you really want to close query “%(name)s”?")
+	elif tab.is_server():
 		message = _(u"Do you really want to close server “%(name)s”?")
 
 	dialog = gtk.MessageDialog(type=gtk.MESSAGE_QUESTION, buttons=gtk.BUTTONS_YES_NO,
