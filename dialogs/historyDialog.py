@@ -3,6 +3,8 @@ import gtk.glade
 import config
 import com
 
+import os
+
 widgets = None
 
 def readLog(tab):
@@ -11,7 +13,7 @@ def readLog(tab):
 	if tab.is_server():
 		return
 
-	name = logDir+"/"+tab.server+"/"+tab.name+".txt"
+	name = os.path.join(logDir, tab.server, "%s.txt" % (tab.name))
 	try:
 		fd = file(name,"r")
 	except IOError:
