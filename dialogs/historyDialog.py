@@ -28,8 +28,6 @@ def readLog(tab):
 	for line in fd:
 		date = line.split(" ")[0]
 
-		offset += len(line)
-		
 		if not lastDate:
 			lastDate = date
 			startOffset = 0L
@@ -37,19 +35,24 @@ def readLog(tab):
 
 		if lastDate != date:
 			# close lastDate
-
-			dateOffsets[lastDate] = (startOffset, offset-len(line))
+			
+			dateOffsets[lastDate] = (startOffset, offset + len(line))
 
 			lastDate = date
-			startOffset = offset
+			startOffset = offset + len(line)
+
+		offset += len(line)
+
+	print dateOffsets
 
 
 	return (fd, dateOffsets)
 
 def fillCalendar(calendar):
-	
-	mkey = "%02d-%02d-%%02d" % calendar.get_properties("year","month")
+	(year, month) = calendar.get_properties("year","month")
+	mkey = "%02d-%02d-%%02d" % (year, month+1)
 
+	calendar.clear_marks()
 	for day in range(1,32):
 		key = mkey % day
 
@@ -74,7 +77,8 @@ def calendar_day_selected_cb(calendar):
 	"""
 		get the history of calendar.day from maki.
 	"""
-	key = "%02d-%02d-%02d" % calendar.get_properties("year","month","day")
+	(year, month, day) = calendar.get_properties("year","month","day")
+	key = "%02d-%02d-%02d" % (year, month+1, day)
 
 	buffer = widgets.get_widget("historyView").get_buffer()
 
