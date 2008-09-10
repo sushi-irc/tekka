@@ -474,6 +474,7 @@ def userQuery(timestamp, server, nick, message):
 		tab = gui.tabs.createQuery(server, nick)
 		tab.connected = True
 		gui.tabs.addTab(server, tab)
+		gui.updateServerTreeShortcuts()
 		lastLog(server, nick)
 
 	if tab.name != nick:
