@@ -104,6 +104,8 @@ def run(tab):
 
 	dialog = widgets.get_widget("historyDialog")
 
+	dialog.set_title("History for "+tab.name)
+
 	result = dialog.run()
 	
 	dialog.destroy()

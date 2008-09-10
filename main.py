@@ -825,17 +825,6 @@ def menu_Dialogs_plugins_activate_cb(menuItem):
 	"""
 	dialog.showPluginsDialog()
 
-def menu_Dialogs_history_activate_cb(menuItem):
-	"""
-		show history dialog for current tab.
-	"""
-	tab = gui.tabs.getCurrentTab()
-	if not tab:
-		# TODO: warning
-		return
-
-	dialog.showHistoryDialog(tab)
-
 def mainWindow_delete_event_cb(mainWindow, event):
 	"""
 		The user want's to close the main window.
@@ -1544,7 +1533,6 @@ def setupGTK():
 	# dialogs menu
 		"menu_Dialogs_channelList_activate_cb" : menu_Dialogs_channelList_activate_cb,
 		"menu_Dialogs_plugins_activate_cb" : menu_Dialogs_plugins_activate_cb,
-		"menu_Dialogs_history_activate_cb" : menu_Dialogs_history_activate_cb,
 	# help menu
 		# TODO: about dialog
 	# main window signals

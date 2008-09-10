@@ -1,6 +1,7 @@
 import gtk
 import gtk.glade
 from gobject import idle_add
+import dialog
 
 """
 	References to modules loaded by main script
@@ -104,6 +105,14 @@ def serverTreeMenu_autoConnectItem_toggled_cb(menuItem):
 	com.setServerAutoConnect(serverTree_tabMenu_currentTab.name,
 			menuItem.get_active())
 
+def serverTreeMenu_historyItem_activate_cb(menuItem):
+	"""
+	show up history dialog for current tab.
+	"""
+	if not serverTree_tabMenu_currentTab or serverTree_tabMenu_currentTab.is_server():
+		return
+
+	dialog.showHistoryDialog(serverTree_tabMenu_currentTab)
 
 def initServerTreeMenu():
 	"""
@@ -126,7 +135,8 @@ def initServerTreeMenu():
 		"partItem_activate_cb" : serverTreeMenu_partItem_activate_cb,
 		"closeItem_activate_cb" : serverTreeMenu_closeItem_activate_cb,
 		"autoJoinItem_toggled_cb" : serverTreeMenu_autoJoinItem_toggled_cb,
-		"autoConnectItem_toggled_cb" : serverTreeMenu_autoConnectItem_toggled_cb
+		"autoConnectItem_toggled_cb" : serverTreeMenu_autoConnectItem_toggled_cb,
+		"historyItem_activate_cb" : serverTreeMenu_historyItem_activate_cb
 	}
 
 	serverTree_tabMenu_widgets.signal_autoconnect(sigdic)
@@ -163,6 +173,7 @@ def getServerTreeMenu(pointedTab):
 	partItem = serverTree_tabMenu_widgets.get_widget("partItem")
 	autoConnectItem = serverTree_tabMenu_widgets.get_widget("autoConnectItem")
 	autoJoinItem = serverTree_tabMenu_widgets.get_widget("autoJoinItem")
+	historyItem = serverTree_tabMenu_widgets.get_widget("historyItem")
 	closeItem = serverTree_tabMenu_widgets.get_widget("closeItem")
 
 	# set up visibilty of menu items for each case
@@ -170,6 +181,7 @@ def getServerTreeMenu(pointedTab):
 		joinItem.hide()
 		partItem.hide()
 		autoJoinItem.hide()
+		historyItem.hide()
 
 		if com.getServerAutoConnect(pointedTab.name) == "true":
 			autoConnectItem.set_active(True)
