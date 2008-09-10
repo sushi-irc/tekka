@@ -226,7 +226,7 @@ class guiWrapper(object):
 		channelTab = self.tabs.searchTab(server, channel)
 
 		if not channelTab:
-			print "No such channel %s:%s\n" % (server,channel)
+			print "No such channel %s:%s" % (server,channel)
 			return
 
 		buffer = channelTab.buffer
@@ -825,6 +825,17 @@ def menu_Dialogs_plugins_activate_cb(menuItem):
 	"""
 	dialog.showPluginsDialog()
 
+def menu_Dialogs_history_activate_cb(menuItem):
+	"""
+		show history dialog for current tab.
+	"""
+	tab = gui.tabs.getCurrentTab()
+	if not tab:
+		# TODO: warning
+		return
+
+	dialog.showHistoryDialog(tab)
+
 def mainWindow_delete_event_cb(mainWindow, event):
 	"""
 		The user want's to close the main window.
@@ -1262,15 +1273,23 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 	res = dialog.run()
 	dialog.destroy()
 
-	if res == gtk.RESPONSE_NO:
+	if res != gtk.RESPONSE_YES:
 		return
 
+	# FIXME:  if you close a tab no part message will be shown up
+	# FIXME:: because the tab which contains the output buffer is
+	# FIXME:: removed before the signal execution.
 	if tab.is_channel():
 		com.part(tab.server,tab.name)
+
 	elif tab.is_server():
 		com.quitServer(tab.name)
+
 	gui.tabs.removeTab(tab)
 	gui.updateServerTreeShortcuts()
+
+	# TODO:  automagically switch to the next active tab
+	# TODO:: around the old tab.
 
 def output_shortcut_Page_Up(output, shortcut):
 	"""
@@ -1525,6 +1544,7 @@ def setupGTK():
 	# dialogs menu
 		"menu_Dialogs_channelList_activate_cb" : menu_Dialogs_channelList_activate_cb,
 		"menu_Dialogs_plugins_activate_cb" : menu_Dialogs_plugins_activate_cb,
+		"menu_Dialogs_history_activate_cb" : menu_Dialogs_history_activate_cb,
 	# help menu
 		# TODO: about dialog
 	# main window signals

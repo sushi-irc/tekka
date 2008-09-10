@@ -140,14 +140,19 @@ def makiPart(currentServer, currentChannel, args):
 def makiJoin(currentServer, currentChannel, args):
 	"""
 		Joins the given channel with the optional key.
+		If no channel is given, the command tries to
+		join the current activated channel if it's parted.
 
-		Usage: /join <channel> [<key>]
+		Usage: /join [<channel> [<key>]]
 	"""
 	if not currentServer:
 		return gui.myPrint("Can't determine server.")
 
 	if not args:
-		return gui.myPrint("Usage: /join <channel> [<key>]")
+		if currentChannel and not currentChannel.joined:
+			return com.join(currentServer.name, currentChannel.name, "")
+		else:
+			return gui.myPrint("Usage: /join <channel> [<key>]")
 
 	com.join(currentServer.name, args[0], " ".join(args[1:]))
 

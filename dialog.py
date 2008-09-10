@@ -108,3 +108,11 @@ def showPluginsDialog():
 	d = loadDialog("pluginsDialog")
 
 	return d.run()
+
+def showHistoryDialog(tab):
+	"""
+		Shows up the history dialog for the current tab.
+	"""
+	d = loadDialog("historyDialog")
+
+	return d.run(tab)

@@ -8,6 +8,9 @@ gui = None
 pluginPaths = []
 _plugins = {}
 
+# FIXME:  it would be probably a problem that the plugins are
+# FIXME:: set up after the sucessful connect to maki. Check this!
+
 class sushiPluginHandler(object):
 	"""
 	interface connecting dbus and plugins.

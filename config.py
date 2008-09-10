@@ -1,7 +1,7 @@
 import os
 import sys
 
-import xdg.BaseDirectory
+from xdg.BaseDirectory import xdg_config_home
 import ConfigParser
 
 prefix = ""
@@ -205,7 +205,7 @@ def setup():
 
 	configParser = ConfigParser.ConfigParser()
 	setDefaults()
-	configFile = '%s/sushi/tekka' % (xdg.BaseDirectory.xdg_config_home)
+	configFile = os.path.join(xdg_config_home,"sushi","tekka")
 
 	readConfigFile()
 
