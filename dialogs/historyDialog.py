@@ -31,20 +31,18 @@ def readLog(tab):
 		if not lastDate:
 			lastDate = date
 			startOffset = 0L
-			continue
 
 		if lastDate != date:
 			# close lastDate
 			
-			dateOffsets[lastDate] = (startOffset, offset + len(line))
+			dateOffsets[lastDate] = (startOffset, offset)
 
 			lastDate = date
 			startOffset = offset + len(line)
 
 		offset += len(line)
 
-	print dateOffsets
-
+	dateOffsets[lastDate] = (startOffset, offset + len(line))
 
 	return (fd, dateOffsets)
 
@@ -124,6 +122,7 @@ def setup(dialog):
 		"calendar_day_selected_cb" : calendar_day_selected_cb
 	}
 
+	widgets.signal_autoconnect(sigdic)
 	widgets.get_widget("calendar").connect("realize", calendar_realize_cb)
 
-	widgets.signal_autoconnect(sigdic)
+	dialog.gui.setFont(widgets.get_widget("historyView"), config.get("tekka","history_font","Monospace"))
