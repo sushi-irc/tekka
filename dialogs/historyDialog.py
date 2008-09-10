@@ -8,7 +8,7 @@ import os
 widgets = None
 
 def readLog(tab):
-	logDir = "/home/nemo/.local/share/sushi/logs/"
+	logDir = os.path.expanduser("~")+"/.local/share/sushi/logs/"
 
 	if tab.is_server():
 		return
