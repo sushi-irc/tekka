@@ -685,8 +685,10 @@ def userNick(time, server, nick, newNick):
 	for tab in gui.tabs.getAllTabs(server)[1:]:
 
 		if tab.is_channel():
-			if (nick in tab.nickList.getNicks()) or (tab.name.lower() == nick.lower()):
+			if (nick in tab.nickList.getNicks()):
 				tab.nickList.modifyNick(nick, newNick)
+			else:
+				continue
 
 		if tab.is_query() and tab.name != newNick:
 			continue
