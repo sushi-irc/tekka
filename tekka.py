@@ -150,6 +150,14 @@ def hasPlugin(name):
 		return True
 	return False
 
+def getInfo(name):
+	"""
+		Returns the info tuple of plugin `name`.
+	"""
+	if not hasPlugin(name):
+		return None
+	return _plugins[name]["object"].plugin_info()
+
 def isLoaded(name):
 	"""
 		Returns True if the plugin

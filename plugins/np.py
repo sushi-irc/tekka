@@ -21,5 +21,8 @@ class pluginNP(tekka.plugin):
 
 		client.disconnect()
 
+	def plugin_info(self):
+		return ("Writes the current playing song to the channel after typing /np", "0.1")
+
 def load():
 	np = pluginNP("np")

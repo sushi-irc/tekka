@@ -11,7 +11,8 @@ widgets = None
 COL_AUTOLOAD,
 COL_NAME,
 COL_PATH,
-COL_DESC) = range(5)
+COL_VERSION,
+COL_DESC) = range(6)
 
 def run():
 	
@@ -94,7 +95,15 @@ def loadPluginList():
 			else:
 				autoload = True
 
-			view.get_model().append((loaded, autoload, name, path+item, "<ph/>"))
+			info = plugins.getInfo(name)
+			if not info:
+				print "no info for plugin '%s'" % name
+				version = "N/A"
+				desc = "N/A"
+			else:
+				desc,version = info
+
+			view.get_model().append((loaded, autoload, name, path+"/"+item, version, desc))
 
 	return True
 
@@ -111,7 +120,7 @@ def setup(dialog):
 	widgets.signal_autoconnect(sigdic)
 
 	pluginView = widgets.get_widget("pluginView")
-	model = gtk.ListStore(TYPE_BOOLEAN, TYPE_BOOLEAN, str, str, str)
+	model = gtk.ListStore(TYPE_BOOLEAN, TYPE_BOOLEAN, str, str, str, str)
 		# chkbutton | chkbutton | channel | user | topic
 	pluginView.set_model(model)
 
@@ -123,7 +132,7 @@ def setup(dialog):
 	pluginView.append_column(column)
 
 	c = 1
-	for name in ("Autoload","Name","Path","Description"):
+	for name in ("Autoload","Name","Path","Version","Description"):
 		if c == 1:
 			renderer = gtk.CellRendererToggle()
 			renderer.set_data("column", c)
@@ -133,6 +142,7 @@ def setup(dialog):
 			renderer = gtk.CellRendererText()
 			column = gtk.TreeViewColumn(name, renderer, text=c)
 		column.set_resizable(True)
+		column.set_fixed_width(80)
 		pluginView.append_column(column)
 		c+=1
 
