@@ -121,8 +121,12 @@ nick is a string.
 		row = self.findRow(store, self.COLUMN_NICK, nick)
 		if not row:
 			return
-		store.remove(row.iter)
+
+		if row[self.COLUMN_PREFIX] in self.__modes[:-2]:
+			self.__opcount -= 1
 		self.__count -= 1
+		store.remove(row.iter)
+
 
 	def setPrefix(self, nick, prefix, sort=True):
 		"""
@@ -137,12 +141,16 @@ nick is a string.
 		if not row:
 			return
 
-		row[self.COLUMN_PREFIX] = prefix
+		op_pre = self.__modes[:-2]
 
-		if self.__has_ops and prefix in self.modes[:-2]:
-			self.__opcount += 1
-		elif self.__has_ops:
+		if row[self.COLUMN_PREFIX] in op_pre and prefix not in op_pre:
+			# op goes to non-op
 			self.__opcount -= 1
+		elif prefix in op_pre:
+			# wasn't an op and becomes one
+			self.__opcount += 1
+
+		row[self.COLUMN_PREFIX] = prefix
 
 		if sort:
 			self.sortNicks()
@@ -178,7 +186,7 @@ nick is a string.
 	then by nick name
 		"""
 		store = self
-		modes = self.modes
+		modes = self.__modes
 		nl = []
 
 		for row in store:
