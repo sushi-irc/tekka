@@ -3,12 +3,13 @@ import gtk.glade
 import config
 import com
 
+from time import localtime
 import os
 
 widgets = None
 
 def readLog(tab):
-	logDir = os.path.expanduser("~")+"/.local/share/sushi/logs/"
+	logDir = com.sushi.config_get("directories","logs")
 
 	if tab.is_server():
 		return
@@ -101,6 +102,7 @@ def run(tab):
 
 	calendar.fd = fdata[0]
 	calendar.offsets = fdata[1]
+	calendar.select_day(localtime()[2])
 
 	dialog = widgets.get_widget("historyDialog")
 
