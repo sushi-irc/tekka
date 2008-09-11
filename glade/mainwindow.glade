@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Thu Sep 11 14:30:04 2008 -->
+<!--Generated with glade3 3.4.5 on Thu Sep 11 23:53:12 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="mainWindow">
     <property name="width_request">800</property>
@@ -317,22 +317,19 @@
                   </packing>
                 </child>
                 <child>
-				  <widget class="GtkVBox" id="VBox_nickList">
-					<property name="visible">True</property>
-                    <property name="border_width">0</property>
+                  <widget class="GtkVBox" id="VBox_nickList">
+                    <property name="visible">True</property>
                     <property name="spacing">5</property>
-					<child>
-				      <widget class="GtkLabel" id="nickList_label">
-					    <property name="visible">True</property>
-						<property name="label" translatable="yes">User: 0 Operator: 0</property>
-					  </widget>
-					  <packing>
-					  	<property name="padding">2</property>
-					    <property name="expand">False</property>
-						<property name="fill">True</property>
-					  </packing>
-				    </child>
-				    <child>
+                    <child>
+                      <widget class="GtkLabel" id="nickList_label">
+                        <property name="visible">True</property>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="padding">2</property>
+                      </packing>
+                    </child>
+                    <child>
                       <widget class="GtkScrolledWindow" id="scrolledWindow_nickList">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -350,8 +347,7 @@
                         </child>
                       </widget>
                       <packing>
-					  	<property name="expand">True</property>
-						<property name="fill">True</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                   </widget>
