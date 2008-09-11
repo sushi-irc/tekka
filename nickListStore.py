@@ -24,7 +24,7 @@ nick is a string.
 			self.addNicks(nicks)
 
 		# default modes:
-		self.modes = ["*","!","@","%","+"," "]
+		self.modes = ["@","+"," "]
 
 		# user count, operator count, dowehaveoperators?
 		self.__count = 0
