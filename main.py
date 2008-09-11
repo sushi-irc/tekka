@@ -120,6 +120,14 @@ class guiWrapper(object):
 		"""
 		widgets.get_widget("nickLabel").set_text(nick)
 
+	def setUserCount(self, normal, ops):
+		"""
+		sets the amount of users in the current channel.
+		"""
+		widgets.get_widget("nickList_label").set_text(
+			"Users: %(user_amount)s Operators: %(operator_amount)s" % {
+				"user_amount":normal, "operator_amount":ops})
+
 
 	def setFont(self, textView, fontFamily):
 		"""
@@ -381,7 +389,10 @@ class guiWrapper(object):
 			return buffer
 
 		def createChannel(self, server, name):
-			return self.tab.tekkaChannel(name, server, nicklist=self.nickListStore(),
+			ns = self.nickListStore()
+			ns.set_modes(list(com.sushi.support_prefix(server)[1]))
+
+			return self.tab.tekkaChannel(name, server, nicklist=ns,
 				buffer=self.getBuffer())
 
 		def createQuery(self, server, name):
@@ -725,16 +736,18 @@ class guiWrapper(object):
 					they were hidden) and fill them with tab
 					specific data.
 				"""
+				gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
+
 				widgets.get_widget("topicBar").show()
 				widgets.get_widget("topicBar").set_text(tab.topic)
 
-				widgets.get_widget("scrolledWindow_nickList").show_all()
+				widgets.get_widget("VBox_nickList").show_all()
 				widgets.get_widget("nickList").set_model(tab.nickList)
 
 			elif tab.is_query() or tab.is_server():
 				# queries and server tabs don't have topics or nicklists
 				widgets.get_widget("topicBar").hide()
-				widgets.get_widget("scrolledWindow_nickList").hide()
+				widgets.get_widget("VBox_nickList").hide()
 
 			tab.setNewMessage(None)
 			gui.updateServerTreeMarkup(tab.path)

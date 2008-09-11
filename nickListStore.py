@@ -22,7 +22,29 @@ nick is a string.
 
 		if nicks:
 			self.addNicks(nicks)
+
+		# default modes:
 		self.modes = ["*","!","@","%","+"," "]
+
+		# user count, operator count, dowehaveoperators?
+		self.__count = 0
+		self.__opcount = 0
+		self.__has_ops = False
+
+	def __len__(self):
+		return self.__count
+
+	def get_operator_count(self):
+		return self.__opcount
+
+	def set_modes(self, modes):
+		self.__modes = modes
+		self.__modes.append(" ") # append the empty mode
+
+		# FIXME: i want this more reliable
+		if len(self.__modes) > 1:
+			# no ops in mode set
+			self.__has_ops = True
 
 	def findRow(self, store, column, needle):
 		"""
@@ -71,9 +93,10 @@ nick is a string.
 		appends a nick to the store, if sort is false,
 		data in the nickListStore would'nt be sorted in-place
 		"""
-		store = self
-		iter = store.append(None)
-		store.set(iter, self.COLUMN_NICK, nick)
+		iter = self.append(None)
+		self.set(iter, self.COLUMN_NICK, nick)
+
+		self.__count += 1
 
 		if sort:
 			self.sortNicks()
@@ -99,6 +122,7 @@ nick is a string.
 		if not row:
 			return
 		store.remove(row.iter)
+		self.__count -= 1
 
 	def setPrefix(self, nick, prefix, sort=True):
 		"""
@@ -109,9 +133,16 @@ nick is a string.
 		"""
 		store = self
 		row = self.findRow(store, self.COLUMN_NICK, nick)
+
 		if not row:
 			return
+
 		row[self.COLUMN_PREFIX] = prefix
+
+		if self.__has_ops and prefix in self.modes[:-2]:
+			self.__opcount += 1
+		elif self.__has_ops:
+			self.__opcount -= 1
 
 		if sort:
 			self.sortNicks()
@@ -133,6 +164,13 @@ nick is a string.
 		the string `needle`
 		"""
 		return [l[self.COLUMN_NICK] for l in self if l and l[self.COLUMN_NICK][0:len(needle)].lower()==needle]
+
+	def searchNickByPrefix(self, prefixes):
+		"""
+		Searches for nicks which prefix is in the tuple prefixes
+		and returns the found nicks as a list.
+		"""
+		return [l[self.COLUMN_NICK] for l in self if l and l[self.COLUMN_PREFIX] in prefixes]
 
 	def sortNicks(self):
 		"""
