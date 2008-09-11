@@ -213,16 +213,23 @@ def makiMode(currentServer, currentChannel, args):
 def makiTopic(serverTab, channelTab, args):
 	"""
 		Sets the topic in the current channel.
+		If no argument is given, print the current topic.
 
-		Usage: /topic <text>
+		Usage: /topic [<text>]
 	"""
+	if not channelTab or not channelTab.is_channel():
+		return gui.myPrint("No channel active.")
+
 	if not args:
-		return gui.myPrint("Usage: /topic <text>")
+		return gui.myPrint(
+		"Topic for channel %(channel)s: '%(topic)s'" % {
+			"channel":channelTab.name,
+			"topic":channelTab.topic
+		})
+	
 	else:
 		topic = " ".join(args)
 
-	if not channelTab or not channelTab.is_channel():
-		return gui.myPrint("No channel active.")
 
 	com.setTopic(serverTab.name, channelTab.name, topic)
 
