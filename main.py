@@ -1035,6 +1035,8 @@ def topicBar_activate_cb(topicBar):
 
 	com.setTopic(sTab.name, cTab.name, text)
 
+	widgets.get_widget("inputBar").grab_focus()
+
 def output_button_press_event_cb(output, event):
 	"""
 		Button in output was pressed, set focus
