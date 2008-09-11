@@ -124,9 +124,11 @@ class guiWrapper(object):
 		"""
 		sets the amount of users in the current channel.
 		"""
+		m_users = gettext.ngettext("User: %d", "Users: %d", normal) % (normal)
+		m_ops = gettext.ngettext("Operator: %d", "Operators: %d", ops) % (ops)
+
 		widgets.get_widget("nickList_label").set_text(
-			"Users: %(user_amount)s Operators: %(operator_amount)s" % {
-				"user_amount":normal, "operator_amount":ops})
+			"%(users)s – %(ops)s" % { "users": m_users, "ops": m_ops })
 
 
 	def setFont(self, textView, fontFamily):
