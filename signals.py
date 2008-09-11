@@ -114,6 +114,10 @@ def addChannels(server):
 
 		tab.nickList.clear()
 		tab.nickList.addNicks(nicks)
+
+		if gui.tabs.isActive(tab):
+			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
+
 		tab.topic = topic
 		# TODO: handle topic setter
 		tab.joined=True
@@ -176,6 +180,9 @@ def updatePrefix(tab, nick, mode):
 	# FIXME: cache support_prefix()!
 	if mode[1] in sushi.support_prefix(tab.server)[0]:
 		tab.nickList.setPrefix(nick, com.fetchPrefix(tab.server, tab.name, nick))
+
+		if gui.tabs.isActive(tab):
+			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
 
 
 def getNickColor(nick):
@@ -725,6 +732,9 @@ def userKick(time, server, nick, channel, who, reason):
 
 	else:
 		tab.nickList.removeNick(who)
+
+		if gui.tabs.isActive(tab):
+			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())		
 		gui.channelPrint(time, server, channel, gui.escape(
 			"« %s was kicked from %s by %s %s" % (who,channel,nick,reason)),
 			"action")
@@ -798,6 +808,9 @@ def userQuit(time, server, nick, reason):
 			if nick in nicks:
 				nickList.removeNick(nick)
 
+				if gui.tabs.isActive(channelTab):
+					gui.setUserCount(len(nickList), nickList.get_operator_count())
+
 				gui.channelPrint(time, server, channelTab.name,
 				message % { "nick": gui.escape(nick), "reason": gui.escape(reason) }, "action")
 
@@ -833,6 +846,10 @@ def userJoin(timestamp, server, nick, channel):
 		tab.topic = topic
 		tab.nickList.clear()
 		tab.nickList.addNicks(nicks)
+
+		if gui.tabs.isActive(tab):
+			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
+
 		tab.joined=True
 
 		gui.updateServerTreeMarkup(tab.path)
@@ -855,6 +872,9 @@ def userJoin(timestamp, server, nick, channel):
 		message = _(u"» <font foreground='%(color)s'>%(nick)s</font> has joined %(channel)s.")
 
 		tab.nickList.appendNick(nick)
+
+		if gui.tabs.isActive(tab):
+			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())		
 
 	gui.channelPrint(timestamp, server, channel, message % { "color": config.get("colors","join_nick","#000000"), "nick": gui.escape(nick), "channel": gui.escape(channel) }, "action")
 
@@ -891,6 +911,9 @@ def userPart(timestamp, server, nick, channel, reason):
 
 
 		tab.nickList.removeNick(nick)
+
+		if gui.tabs.isActive(tab):
+			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())		
 		gui.channelPrint(timestamp, server, channel,
 			message % {
 				"color": config.get("colors","part_nick","#000000"),

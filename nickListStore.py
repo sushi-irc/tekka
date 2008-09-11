@@ -141,12 +141,13 @@ nick is a string.
 		if not row:
 			return
 
+		# list without voice and no-mode
 		op_pre = self.__modes[:-2]
 
 		if row[self.COLUMN_PREFIX] in op_pre and prefix not in op_pre:
 			# op goes to non-op
 			self.__opcount -= 1
-		elif prefix in op_pre:
+		elif row[self.COLUMN_PREFIX] not in op_pre and prefix in op_pre:
 			# wasn't an op and becomes one
 			self.__opcount += 1
 
