@@ -82,28 +82,31 @@ def loadPluginList():
 
 	list = config.get("autoload_plugins", default={}).values()
 
-	for item in os.listdir(path):
-		if item[-3:] == ".py":
-			name = item[:-3]
+	try:
+		for item in os.listdir(path):
+			if item[-3:] == ".py":
+				name = item[:-3]
+	
+				loaded = plugins.isLoaded(name)
 
-			loaded = plugins.isLoaded(name)
+				try:
+					i = list.index(name)
+				except ValueError:
+					autoload = False
+				else:
+					autoload = True
 
-			try:
-				i = list.index(name)
-			except ValueError:
-				autoload = False
-			else:
-				autoload = True
+				info = plugins.getInfo(name)
+				if not info:
+					print "no info for plugin '%s'" % name
+					version = "N/A"
+					desc = "N/A"
+				else:
+					desc,version = info
 
-			info = plugins.getInfo(name)
-			if not info:
-				print "no info for plugin '%s'" % name
-				version = "N/A"
-				desc = "N/A"
-			else:
-				desc,version = info
-
-			view.get_model().append((loaded, autoload, name, path+"/"+item, version, desc))
+				view.get_model().append((loaded, autoload, name, path+"/"+item, version, desc))
+	except OSError:
+		return False
 
 	return True
 
