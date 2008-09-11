@@ -124,8 +124,8 @@ class guiWrapper(object):
 		"""
 		sets the amount of users in the current channel.
 		"""
-		m_users = gettext.ngettext("User: %d", "Users: %d", normal) % (normal)
-		m_ops = gettext.ngettext("Operator: %d", "Operators: %d", ops) % (ops)
+		m_users = gettext.ngettext("%d User", "%d Users", normal) % (normal)
+		m_ops = gettext.ngettext("%d Operator", "%d Operators", ops) % (ops)
 
 		widgets.get_widget("nickList_label").set_text(
 			"%(users)s – %(ops)s" % { "users": m_users, "ops": m_ops })
