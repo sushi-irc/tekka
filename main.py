@@ -795,6 +795,13 @@ def menu_tekka_Connect_activate_cb(menuItem):
 		show up server dialog and connect to the
 		returned server (if any).
 	"""
+	if not com.getConnected():
+		err = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, buttons=gtk.BUTTONS_CLOSE,
+			message_format="There is no connection to maki!")
+		err.run()
+		err.destroy()
+		return
+
 	server = dialog.showServerDialog()
 
 	if server:
@@ -830,6 +837,13 @@ def menu_Dialogs_channelList_activate_cb(menuItem):
 	"""
 		show channel list dialog.
 	"""
+	if not com.getConnected():
+		err = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, buttons=gtk.BUTTONS_CLOSE,
+			message_format="There is no connection to maki!")
+		err.run()
+		err.destroy()
+		return
+
 	sTab,cTab = gui.tabs.getCurrentTabs()
 	if not sTab: return
 	dialog.showChannelListDialog(sTab.name)
@@ -839,6 +853,15 @@ def menu_Dialogs_plugins_activate_cb(menuItem):
 		show plugin load/unload/list dialog.
 	"""
 	dialog.showPluginsDialog()
+
+def menu_Help_about_activate_cb(menuItem):
+	"""
+		Show the about dialog!
+	"""
+	widgets = gtk.glade.XML(config.get("gladefiles","dialogs"), "aboutDialog")
+	d = widgets.get_widget("aboutDialog")
+	d.run()
+	d.destroy()
 
 def mainWindow_delete_event_cb(mainWindow, event):
 	"""
@@ -1551,7 +1574,7 @@ def setupGTK():
 		"menu_Dialogs_channelList_activate_cb" : menu_Dialogs_channelList_activate_cb,
 		"menu_Dialogs_plugins_activate_cb" : menu_Dialogs_plugins_activate_cb,
 	# help menu
-		# TODO: about dialog
+		"menu_Help_about_activate_cb" : menu_Help_about_activate_cb,
 	# main window signals
 		"mainWindow_delete_event_cb" : mainWindow_delete_event_cb,
 		"mainWindow_focus_in_event_cb" : mainWindow_focus_in_event_cb,

@@ -159,6 +159,7 @@
                         <property name="label" translatable="yes">gtk-about</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
+						<signal name="activate" handler="menu_Help_about_activate_cb"/>
                       </widget>
                     </child>
                   </widget>

@@ -34,6 +34,7 @@ dbus_loop = DBusGMainLoop()
 bus = dbus.SessionBus(mainloop=dbus_loop)
 sushi = None
 myNick = {}
+__connected = False
 
 def connect():
 	"""
@@ -61,7 +62,16 @@ def connect():
 	for server in fetchServers():
 		cacheOwnNick(server,fetchOwnNick(server))
 
+	global __connected
+	__connected = True
+
 	return True
+
+def getConnected():
+	"""
+		Returns True if we are connected to maki.
+	"""
+	return __connected
 
 def __noSushiMessage():
 	"""
@@ -74,6 +84,8 @@ def shutdown(quitmsg=""):
 	if not sushi:
 		return __noSushiMessage()
 	sushi.shutdown(quitmsg)
+	global __connected
+	__connected = False
 
 """
 Signals: nickchange (nick => _nickSignal)
