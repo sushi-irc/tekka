@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Fri Sep 12 13:46:55 2008 -->
+<!--Generated with glade3 3.4.5 on Fri Sep 12 18:26:59 2008 -->
 <glade-interface>
   <widget class="GtkDialog" id="serverDialog">
     <property name="border_width">6</property>
@@ -953,7 +953,7 @@ Are you sure you want to delete the server?</property>
   </widget>
   <widget class="GtkAboutDialog" id="aboutDialog">
     <property name="border_width">5</property>
-    <property name="title" translatable="yes">About tekka</property>
+    <property name="title" translatable="yes">About</property>
     <property name="resizable">False</property>
     <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
