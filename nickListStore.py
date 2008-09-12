@@ -20,9 +20,6 @@ nick is a string.
 	def __init__(self, nicks=None):
 		gtk.ListStore.__init__(self, gobject.TYPE_STRING, gobject.TYPE_STRING)
 
-		if nicks:
-			self.addNicks(nicks)
-
 		# default modes:
 		self.modes = ["@","+"," "]
 
@@ -30,6 +27,9 @@ nick is a string.
 		self.__count = 0
 		self.__opcount = 0
 		self.__has_ops = False
+
+		if nicks:
+			self.addNicks(nicks)
 
 	def __len__(self):
 		return self.__count
@@ -76,10 +76,12 @@ nick is a string.
 		Adds a list of nicks to the nickListStore.
 		After adding all nicks sortNicks is called.
 		"""
-		if not nicks or len(nicks) == 0:
+		if not nicks:
 			return
+
 		for nick in nicks:
-			self.appendNick(nick,sort=False)
+			self.appendNick(nick, sort=False)
+
 		self.sortNicks()
 
 	def getNicks(self):
@@ -119,11 +121,13 @@ nick is a string.
 		"""
 		store = self
 		row = self.findRow(store, self.COLUMN_NICK, nick)
+
 		if not row:
 			return
 
 		if row[self.COLUMN_PREFIX] in self.__modes[:-2]:
 			self.__opcount -= 1
+
 		self.__count -= 1
 		store.remove(row.iter)
 
@@ -147,6 +151,7 @@ nick is a string.
 		if row[self.COLUMN_PREFIX] in op_pre and prefix not in op_pre:
 			# op goes to non-op
 			self.__opcount -= 1
+
 		elif row[self.COLUMN_PREFIX] not in op_pre and prefix in op_pre:
 			# wasn't an op and becomes one
 			self.__opcount += 1
