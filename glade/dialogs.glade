@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Fri Sep 12 13:42:27 2008 -->
+<!--Generated with glade3 3.4.5 on Fri Sep 12 13:46:55 2008 -->
 <glade-interface>
   <widget class="GtkDialog" id="serverDialog">
     <property name="border_width">6</property>
@@ -998,7 +998,7 @@ Alexandre Sapata Carbonell (pt_BR)
 Michael Kuhn (de)</property>
     <property name="artists">Eva Leibovitz
 Marian Tietz</property>
-    <property name="logo">icon.svg</property>
+    <property name="logo">../graphics/icon.svg</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox8">
         <property name="visible">True</property>
