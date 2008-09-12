@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Fri Sep 12 03:30:17 2008 -->
+<!--Generated with glade3 3.4.5 on Fri Sep 12 13:42:27 2008 -->
 <glade-interface>
   <widget class="GtkDialog" id="serverDialog">
     <property name="border_width">6</property>
@@ -959,12 +959,13 @@ Are you sure you want to delete the server?</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <property name="has_separator">False</property>
     <property name="program_name">tekka</property>
-    <property name="version">1.0-prealpha</property>
-    <property name="copyright" translatable="yes">Copyright (C) 2008 Marian Tietz &lt;nemo@ikkoku.de&gt;</property>
-    <property name="comments" translatable="yes">Oh hell yeah!</property>
+    <property name="version">1.0-alpha1</property>
+    <property name="copyright">Copyright (c) 2008 Marian Tietz &lt;nemo@ikkoku.de&gt;</property>
+    <property name="comments">Oh hell yeah!</property>
     <property name="website">http://sushi.ikkoku.de/</property>
-    <property name="website_label" translatable="yes">http://sushi.ikkoku.de/</property>
-    <property name="license" translatable="yes">Copyright (c) 2008 Marian Tietz
+    <property name="website_label">http://sushi.ikkoku.de/</property>
+    <property name="license">Copyright (c) 2008 Michael Kuhn
+Copyright (c) 2008 Marian Tietz
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -988,11 +989,15 @@ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.</property>
-    <property name="authors">Marian Tietz
-Michael Kuhn</property>
-    <property name="documenters">Marian Tietz
-Michael Kuhn</property>
-    <property name="translator_credits" translatable="yes">Michael Kuhn</property>
+    <property name="authors">Michael Kuhn
+Marian Tietz</property>
+    <property name="documenters">Michael Kuhn
+Marian Tietz</property>
+    <property name="translator_credits">Felipe Besoain (es)
+Alexandre Sapata Carbonell (pt_BR)
+Michael Kuhn (de)</property>
+    <property name="artists">Eva Leibovitz
+Marian Tietz</property>
     <property name="logo">icon.svg</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox8">
