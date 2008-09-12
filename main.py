@@ -1226,7 +1226,7 @@ def statusIcon_activate_cb(statusIcon):
 	if mw.get_property("visible"):
 		mw.hide()
 	else:
-		mw.show_all()
+		mw.show()
 
 """
 	Shortcut callbacks
