@@ -116,3 +116,8 @@ def showHistoryDialog(tab):
 	d = loadDialog("historyDialog")
 
 	return d.run(tab)
+
+def showDebugDialog():
+	d = loadDialog("debugDialog")
+	
+	return d.run()
