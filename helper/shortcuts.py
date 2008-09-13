@@ -12,15 +12,19 @@ def removeShortcuts(accelGroup, widget):
 	"""
 		Removes all shortcuts registered to widget
 	"""
-	if not regmap.has_key(widget):
+	if not regmap.has_key(accelGroup):
+		print "No shortcuts registered to accel group."
+		return False
+
+	if not regmap[accelGroup].has_key(widget):
 		print "No shortcuts registered to widget."
 		return False
 
-	for (handler,keys,keyval,mask) in regmap[widget]:
+	for (handler,keys,keyval,mask) in regmap[accelGroup][widget]:
 		widget.remove_accelerator(accelGroup, keyval, mask)
 		widget.disconnect(handler)
 
-	del regmap[widget]
+	del regmap[accelGroup][widget]
 
 	return True
 
@@ -28,16 +32,20 @@ def removeShortcut(accelGroup, widget, shortcut):
 	"""
 		Removes the shortcut identified by shortcut string.
 	"""
-	if not regmap.has_key(widget):
+	if not regmap.has_key(accelGroup):
+		print "No shortcuts registered to accel group."
+		return False
+
+	if not regmap[accelGroup].has_key(widget):
 		print "No shortcuts registered for widget."
 		return False
 
 	i = 0
-	for (handler, keys, keyval, mask) in regmap[widget]:
+	for (handler, keys, keyval, mask) in regmap[accelGroup][widget]:
 		if "".join(keys) == shortcut:
 			widget.remove_accelerator(accelGroup, keyval, mask)
 			widget.disconnect(handler)
-			del regmap[widget][i]
+			del regmap[accelGroup][widget][i]
 			print "deleted shortcut %s." % ("".join(keys))
 			break
 		i+=1
@@ -103,10 +111,13 @@ def addShortcut(accelGroup, widget, shortcut, callback, *args):
 	
 	handler = widget.connect(signame, callback, shortcut, *args)
 
-	if not regmap.has_key(widget):
-		regmap[widget]=[ (handler,vGroups,keyval,mask) ]
+	if not regmap.has_key(accelGroup):
+		regmap[accelGroup] = {}
+
+	if not regmap[accelGroup].has_key(widget):
+		regmap[accelGroup][widget]=[ (handler,vGroups,keyval,mask) ]
 	else:
-		regmap[widget].append( (handler,vGroups,keyval,mask) )
+		regmap[accelGroup][widget].append( (handler,vGroups,keyval,mask) )
 
 	return handler
 
