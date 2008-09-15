@@ -110,8 +110,6 @@ def addChannels(server):
 			tab = gui.tabs.createChannel(server, channel)
 			add = True
 
-
-
 		tab.nickList.clear()
 		tab.nickList.addNicks(nicks)
 

@@ -3,15 +3,15 @@ import gtk,gobject
 
 class nickListStore(gtk.ListStore):
 	"""
-Store class for the nickList widget.
-Stores the prefix and the nick name
-in a list:
-<prefix_0>,<nick_0>
-<prefix_1>,<nick_1>
-...
+	Store class for the nickList widget.
+	Stores the prefix and the nick name
+	in a list:
+	<prefix_0>,<nick_0>
+	<prefix_1>,<nick_1>
+	...
 
-prefix is a item of nickListStore.modes,
-nick is a string.
+	prefix is a item of nickListStore.modes,
+	nick is a string.
 	"""
 
 	COLUMN_PREFIX=0
@@ -129,8 +129,18 @@ nick is a string.
 			self.__opcount -= 1
 
 		self.__count -= 1
+
 		store.remove(row.iter)
 
+	def clear(self, countReset=True):
+		"""
+		remove all entries from the store
+		and set counts to 0.
+		"""
+		gtk.ListStore.clear(self)
+		if countReset:
+			self.__count = 0
+			self.__opcount = 0
 
 	def setPrefix(self, nick, prefix, sort=True):
 		"""
@@ -205,7 +215,7 @@ nick is a string.
 				continue
 			nl.append([i,nick])
 		nl.sort(cmp=lambda a,b: cmp(a[0],b[0]) or cmp(a[1].lower(),b[1].lower()))
-		store.clear()
+		store.clear(False)
 		for (prefix,nick) in nl:
 			iter = store.append(None)
 			prefix = modes[prefix]

@@ -1,3 +1,15 @@
+"""
+	Plugin interface named like the main application to do
+	something like "import tekka" in plugins.
+
+	Handles load/unload of plugins and registers loaded
+	plugins to a global dict _plugins.
+
+	Serves the base plugin class "plugin" as well as
+	the DBus proxy class sushiPluginHandler which
+	controls the DBus interaction of plugins.
+"""
+
 import sys
 import imp
 import config

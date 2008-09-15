@@ -771,7 +771,7 @@ class guiWrapper(object):
 
 			# NOTE:  to avoid race conditions the idle_add() method is used.
 			# NOTE:: If it wouldn't be used the scrolling would not work due
-			# NOTE:: to resets of the base class.
+			# NOTE:: to modifications of the scroll position by the base class.
 
 			gui.setWindowTitle(tab.name)
 
@@ -1380,6 +1380,7 @@ def setup_mainWindow():
 		- set window title
 		- set window icon
 		- set window size
+		- set window state
 	"""
 	win = widgets.get_widget("mainWindow")
 
