@@ -125,7 +125,7 @@ def makiPart(currentServer, currentChannel, args):
 	if args and currentServer:
 		# /part <channel> [<reason>]
 		if gui.tabs.searchTab(currentServer.name, args[0]):
-			com.part(args[0], " ".join(args[1:]))
+			com.part(currentServer.name, args[0], " ".join(args[1:]))
 		else:
 			# /part [<reason>]
 			if not currentChannel:
@@ -311,7 +311,7 @@ def makiMessage(serverTab, channelTab, args):
 	if not serverTab:
 		return gui.myPrint("Could not determine server.")
 
-	com.sendMessage(serverTab.name, args[0], " ".join(args[1]))
+	com.sendMessage(serverTab.name, args[0], "".join(args[1]))
 
 def makiOper(serverTab, channelTab, args):
 	"""

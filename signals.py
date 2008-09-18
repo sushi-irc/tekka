@@ -641,11 +641,11 @@ def queryNotice(time, server, nick, message):
 			gui.tabs.replaceTab(tab,cTab)
 
 	if tab:
-		gui.channelPrint(time, server, channel, \
+		gui.channelPrint(time, server, tab.name,
 				"-<font foreground='%s'>%s</font>- %s" % \
 				(getNickColor(nick), gui.escape(nick), gui.escape(message)))
 	else:
-		gui.currentServerPrint(time, server, \
+		gui.currentServerPrint(time, server,
 				"-<font foreground='%s'>%s</font>- %s" % \
 				(getNickColor(nick), gui.escape(nick), gui.escape(message)))
 
