@@ -1,3 +1,4 @@
+# coding: UTF-8
 """
 Copyright (c) 2008 Marian Tietz
 All rights reserved.
@@ -27,6 +28,8 @@ SUCH DAMAGE.
 
 import time
 from dbus import UInt64
+
+from gettext import gettext as _
 
 config = None
 gui = None
@@ -60,8 +63,9 @@ def parseInput(text):
 		elif not commands.has_key(cmd):
 			if not serverTab:
 				return gui.myPrint("No server active.")
-			gui.myPrint("Unknown command '%s'; Forwarding raw." % (cmd))
-			com.raw(serverTab.name, cmd.upper() + " ".join(list[1:]))
+			raw = cmd.upper() + " " + " ".join(list[1:])
+			gui.myPrint(_(u"• Unknown command “%(command)s”, sending raw command “%(raw)s”.") % { "command": cmd, "raw": raw })
+			com.raw(serverTab.name, raw)
 
 		else:
 			commands[cmd](serverTab, channelTab, list[1:])
