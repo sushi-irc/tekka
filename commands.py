@@ -327,20 +327,6 @@ def makiOper(serverTab, channelTab, args):
 
 	com.oper(serverTab.name, args[0], " ".join(args[1:]))
 
-def makiKill(serverTab, channelTab, args):
-	"""
-		Kill a user on the network with an optional reason.
-
-		Usage: /kill <user> [<reason>]
-	"""
-	if not args or len(args) < 1:
-		return gui.myPrint("Usage: /kill <user> [<reason>]")
-
-	if not serverTab:
-		return gui.myPrint("Could not determine server.")
-
-	com.kill(serverTab.name, args[0], " ".join(args[1:]))
-
 def makiList(serverTab, channelTab, args):
 	"""
 		Start a channel listing.
@@ -504,7 +490,6 @@ def setup(_config, _gui, _com):
 		"notice" : makiNotice,
 		"msg" : makiMessage,
 		"oper" : makiOper,
-		"kill" : makiKill,
 		"list" : makiList,
 		"raw" : makiRaw,
 		"whois" : makiWhois,

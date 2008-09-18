@@ -228,9 +228,6 @@ def notice(server, target, message):
 def oper(server, name, password):
 	sushi.oper(server, name, password)
 
-def kill(server, nick, reason):
-	sushi.kill(server, nick, reason)
-
 def raw(server, command):
 	sushi.raw(server,command)
 
