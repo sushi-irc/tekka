@@ -102,7 +102,6 @@ def addChannels(server):
 
 		add = False
 		nicks = com.fetchNicks(server, channel)
-		topic = sushi.channel_topic(server, channel)
 
 		tab = gui.tabs.searchTab(server, channel)
 
@@ -116,7 +115,6 @@ def addChannels(server):
 		if gui.tabs.isActive(tab):
 			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
 
-		tab.topic = topic
 		# TODO: handle topic setter
 		tab.joined=True
 		tab.connected=True
@@ -126,6 +124,7 @@ def addChannels(server):
 			lastLog(server, channel)
 
 		fetchPrefixes(server, channel, tab.nickList, nicks)
+		sushi.topic(server, channel, "")
 
 	gui.updateServerTreeShortcuts()
 
@@ -827,7 +826,6 @@ def userJoin(timestamp, server, nick, channel):
 		# channel and such things...
 
 		nicks = com.fetchNicks(server,channel)
-		topic = sushi.channel_topic(server, channel) # XXX: does this really returns a topic?
 
 		tab = gui.tabs.searchTab(server, channel)
 
@@ -841,7 +839,6 @@ def userJoin(timestamp, server, nick, channel):
 			lastLog(server, channel)
 			gui.updateServerTreeShortcuts()
 
-		tab.topic = topic
 		tab.nickList.clear()
 		tab.nickList.addNicks(nicks)
 
@@ -858,6 +855,7 @@ def userJoin(timestamp, server, nick, channel):
 			gui.tabs.switchToPath(tab.path)
 
 		message = _(u"» You have joined %(channel)s.")
+		sushi.topic(server, channel, "")
 
 	else:
 		# another one joined the channel
