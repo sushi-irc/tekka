@@ -288,6 +288,13 @@ class guiWrapper(object):
 
 		buffer.insertHTML(buffer.get_end_iter(), "[%s] %s" % (timestr,string))
 
+		if config.get("tekka","show_general_output"):
+			goBuffer = widgets.get_widget("generalOutput").get_buffer()
+			goBuffer.insertHTML(goBuffer.get_end_iter(), \
+					"[%s] &lt;%s&gt; %s" % (timestr, server, string))
+
+			self.scrollGeneralOutput()
+
 		if self.tabs.isActive(serverTab):
 			if serverTab.autoScroll:
 				print "scrolling in serverPrint"
