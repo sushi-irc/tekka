@@ -392,6 +392,8 @@ class guiWrapper(object):
 
 		def createChannel(self, server, name):
 			ns = self.nickListStore()
+
+			# TODO: cache prefixes?
 			ns.set_modes(list(com.sushi.support_prefix(server)[1]))
 
 			return self.tab.tekkaChannel(name, server, nicklist=ns,
@@ -1332,7 +1334,7 @@ def output_shortcut_Page_Up(output, shortcut):
 	if vadj.get_value() == 0.0:
 		return # at top already
 
-	n = vadj.get_value()-vadj.step_increment
+	n = vadj.get_value()-vadj.page_size
 	if n < 0: n = 0
 	idle_add(vadj.set_value,n)
 
@@ -1345,7 +1347,7 @@ def output_shortcut_Page_Down(output, shortcut):
 	if (vadj.upper - vadj.page_size) == vadj.get_value():
 		return # we are already at bottom
 
-	n = vadj.get_value()+vadj.step_increment
+	n = vadj.get_value()+vadj.page_size
 	if n > (vadj.upper - vadj.page_size): n = vadj.upper - vadj.page_size
 	idle_add(vadj.set_value,n)
 
