@@ -581,7 +581,7 @@ def ownCTCP(time, server, target, message):
 
 		nickColor = config.get("colors","nick_color","#000000")
 		gui.channelPrint(time, server, tab.name, \
-			"&lt;CTCP:<font foreground='%s'>%s</foreground>&gt; %s" % \
+			"&lt;CTCP:<font foreground='%s'>%s</font>&gt; %s" % \
 				(nickColor, com.getOwnNick(server), gui.escape(message)))
 
 	else:
