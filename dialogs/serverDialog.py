@@ -81,6 +81,7 @@ def run():
 						RESPONSE_CONNECT):
 			result = dialog.run()
 	else:
+		server = None
 		if result == RESPONSE_CONNECT:
 			# look for servername
 			id = serverView.get_cursor()[0]
