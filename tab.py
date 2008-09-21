@@ -81,6 +81,7 @@ class tekkaTab(object):
 		self.inputHistory.insert(0, string)
 		if len(self.inputHistory) > 20:
 			del self.inputHistory[20:]
+		self.historyPosition = -1
 
 	def getNextHistory(self):
 		"""
