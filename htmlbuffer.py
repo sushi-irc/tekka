@@ -132,8 +132,13 @@ class htmlbuffer(gtk.TextBuffer):
 
 		self.urlHandler = None
 
+		self.parser = xml.sax.make_parser()
+		self.contentHandler = htmlhandler(self, self.urlHandler)
+		self.parser.setContentHandler(self.contentHandler)
+
 	def setUrlHandler(self, handler):
 		self.urlHandler = handler
+		self.contentHandler.urlHandler = handler
 
 	def getUrlHandler(self):
 		return self.urlHandler
@@ -148,40 +153,32 @@ class htmlbuffer(gtk.TextBuffer):
 		tt = self.get_tag_table()
 		if tt: tt.foreach(lambda tag,data: data.remove(tag), tt)
 
-	def insertHTML(self, iter, text, recursive=False):
+	def insertHTML(self, iter, text):
 		startoffset = iter.get_offset()
-		parser = xml.sax.make_parser()
-		parser.setContentHandler(htmlhandler(self,self.urlHandler))
 
-		if not recursive:
-			text = "<msg><br/>%s</msg>" % text
+		text = "<msg><br/>%s</msg>" % text
 
-		try:
-			parser.parse(StringIO(str(text)))
-		except Exception, ex:
-			#print ex
+		while True:
+			try:
+				self.parser.parse(StringIO(str(text)))
 
-			if str(ex).find(":"):
-				error = str(ex).split(":")
+			except xml.sax.SAXParseException, e:
+				pos = e.getColumnNumber()
+				line = e.getLineNumber()
 
-				#print "STRING: " + text
-				fchar = text[int(error[2])]
-				#print "CHAR: " + fchar
+				print "faulty char on line %d char %d ('%s')" % (line, pos, text[pos])
 
-				if not fchar:
-					return
+				# delete the written stuff
+				self.delete(self.get_iter_at_offset(startoffset), self.get_end_iter())
 
-				#print "retrying with replacing faulty char."
+				# replace the faulty char
+				text = text[:pos] + text[pos+1:]
 
-				self.errorcount += 1
-				if self.errorcount < 5:
-					oldend = self.get_iter_at_offset(startoffset)
-					self.delete(oldend, self.get_end_iter())
+				continue
 
-					self.insertHTML(oldend, text.replace(fchar,""), True)
-				else:
-					self.errorcount = 0
-					print "Too many faulty chars."
-					self.insert(self.get_end_iter(), "\n");
-					return
-		self.errorcount = 0
+			except Exception, e:
+				print e
+				break
+
+			else:
+				break
