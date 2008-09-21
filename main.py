@@ -828,7 +828,7 @@ def menu_View_showGeneralOutput_toggled_cb(menuItem):
 		config.set("tekka","show_general_output","True")
 	else:
 		sw.hide()
-		config.unset("tekka","show_general_output")
+		config.set("tekka","show_general_output","False")
 
 def menu_View_showStatusBar_toggled_cb(menuItem):
 	"""
@@ -840,7 +840,7 @@ def menu_View_showStatusBar_toggled_cb(menuItem):
 		config.set("tekka","show_status_bar","True")
 	else:
 		bar.hide()
-		config.unset("tekka","show_status_bar")
+		config.set("tekka","show_status_bar","False")
 
 def menu_Dialogs_channelList_activate_cb(menuItem):
 	"""
@@ -1635,17 +1635,17 @@ def setupGTK():
 	# setup menu bar stuff
 	btn = widgets.get_widget("menu_View_showGeneralOutput")
 
-	if config.get("tekka","show_general_output"):
+	if config.getBool("tekka","show_general_output"):
 		btn.set_active(True)
 	btn.toggled()
 
 	btn = widgets.get_widget("menu_View_showStatusBar")
 
-	if config.get("tekka","show_status_bar"):
+	if config.getBool("tekka","show_status_bar"):
 		btn.set_active(True)
 	btn.toggled()
 
-	if config.get("tekka","show_status_icon"):
+	if config.getBool("tekka","show_status_icon"):
 		setup_statusIcon()
 
 	setup_shortcuts()

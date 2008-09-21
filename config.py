@@ -191,6 +191,21 @@ def get(section, option=None, default=None):
 	# usually this is not reached
 	return default
 
+def getBool(section, option, default=None):
+	"""
+		Returns True or False if the value is
+		set or unset.
+	"""
+	res = get(section, option, default)
+
+	if res == default:
+		return False
+
+	if res.lower() == "true" or res == "1":
+		return True
+
+	return False
+
 def setup():
 	"""
 		TODO: document
