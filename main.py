@@ -393,8 +393,7 @@ class guiWrapper(object):
 			"""
 				Returns a HTMLBuffer with assigned URL handler.
 			"""
-			buffer = self.htmlbuffer()
-			buffer.urlHandler = gui.urlHandler
+			buffer = self.htmlbuffer(handler = gui.urlHandler)
 			return buffer
 
 		def createChannel(self, server, name):

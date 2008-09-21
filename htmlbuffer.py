@@ -45,6 +45,11 @@ def rindex(l, i):
 		return (-1)
 
 class htmlhandler(xml.sax.handler.ContentHandler):
+	"""
+	Parses HTML like strings and applies
+	the tags as format rules for the given text buffer.
+	"""
+
 	def __init__(self,textbuffer,handler):
 		xml.sax.handler.ContentHandler.__init__(self)
 		self.textbuffer = textbuffer
@@ -56,6 +61,10 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 		self.urlHandler = handler
 
 	def characters(self, text):
+		"""
+		Raw characters? Apply them (with tags, if given) to the text buffer
+		"""
+
 		if len(self.tags):
 			self.textbuffer.insert_with_tags(self.textbuffer.get_end_iter(), text, *self.tags)
 		else:
@@ -103,42 +112,67 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 	def endElement(self, name):
 		if name in self.ignoreableEndTags:
 			return
+
 		i = rindex(self.elms, name)
 		if i >= 0:
 			del self.elms[i]
 			del self.tags[i]
 
+	def endDocument(self):
+		"""
+			Close all bold/underline tags
+			if there was no end tag.
+		"""
+		tag = self.textbuffer.create_tag(None)
+
+		if self.sbcount % 2 != 0:
+			tag.set_property("weight", pango.WEIGHT_NORMAL)
+
+		if self.sucount % 2 != 0:
+			tag.set_property("underline", pango.UNDERLINE_NONE)
+
+		self.textbuffer.insert_with_tags(self.textbuffer.get_end_iter(), "", tag)
+
+		# reset to start
+		self.__init__(self.textbuffer, self.urlHandler)
+
+
 	""" PARSING HELPER """
 
 	def _parseFont(self, tag, attrs):
-		if not attrs or attrs.getLength() == 0: return
+		if not attrs or attrs.getLength() == 0: 
+			return
+
 		for name in attrs.getNames():
 			try:
 				tag.set_property(name, attrs[name])
+
 			except Exception, ex:
 				print ex
 
 
 class htmlbuffer(gtk.TextBuffer):
 	scrollPosition = None
+	urlHandler = None
 
-	def __init__(self,tagtable=None):
+	def __init__(self, handler=None, tagtable=None):
 		if tagtable:
 			self.tagtable = tagtable
 		else:
 			self.tagtable = gtk.TextTagTable()
-		gtk.TextBuffer.__init__(self, self.tagtable)
-		self.errorcount = 0
 
-		self.urlHandler = None
+		gtk.TextBuffer.__init__(self, self.tagtable)
+
+		self.urlHandler = handler
 
 		self.parser = xml.sax.make_parser()
-		self.contentHandler = htmlhandler(self, self.urlHandler)
-		self.parser.setContentHandler(self.contentHandler)
+		
+		contentHandler = htmlhandler(self, self.urlHandler)
+		self.parser.setContentHandler(contentHandler)
 
 	def setUrlHandler(self, handler):
 		self.urlHandler = handler
-		self.contentHandler.urlHandler = handler
+		self.parser.getContentHandler().urlHandler = handler
 
 	def getUrlHandler(self):
 		return self.urlHandler
