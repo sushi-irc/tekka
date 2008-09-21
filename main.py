@@ -679,6 +679,13 @@ class guiWrapper(object):
 			serverPath = self.currentPath[0]
 			channelPath = self.currentPath
 
+			if len(channelPath) == 1:
+				# channelPath is the same as serverPath
+				# which means a server tab is active but
+				# no channel is. Make channelPath raise
+				# an IndexError.
+				channelPath = -1
+
 			try:
 				serverTab = store[serverPath][2]
 			except IndexError:
