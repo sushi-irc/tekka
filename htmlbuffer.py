@@ -200,6 +200,10 @@ class htmlbuffer(gtk.TextBuffer):
 				pos = e.getColumnNumber()
 				line = e.getLineNumber()
 
+				if (pos-2 >= 0 and text[pos-2:pos] == "</"):
+					print "Syntax error on line %d, column %d: %s\n\t%s" % (line, pos, text[pos:], text)
+					return
+
 				print "faulty char on line %d char %d ('%s')" % (line, pos, text[pos])
 
 				# delete the written stuff
