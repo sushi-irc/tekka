@@ -63,7 +63,10 @@ def parseInput(text):
 		elif not commands.has_key(cmd):
 			if not serverTab:
 				return gui.myPrint("No server active.")
-			raw = cmd.upper() + " " + " ".join(list[1:])
+			raw = cmd.upper()
+			args = " ".join(list[1:])
+			if args:
+				raw = raw + " " + args
 			gui.myPrint(_(u"• Unknown command “%(command)s”, sending raw command “%(raw)s”.") % { "command": cmd, "raw": raw })
 			com.raw(serverTab.name, raw)
 
