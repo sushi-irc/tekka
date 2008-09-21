@@ -855,7 +855,6 @@ def userJoin(timestamp, server, nick, channel):
 			gui.tabs.switchToPath(tab.path)
 
 		message = _(u"» You have joined %(channel)s.")
-		sushi.topic(server, channel, "")
 
 	else:
 		# another one joined the channel
