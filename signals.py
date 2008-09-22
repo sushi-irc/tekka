@@ -414,7 +414,8 @@ def userMessage(timestamp, server, nick, channel, message):
 		prefix = tab.nickList.getPrefix(nick)
 
 	else:
-		prefix = " "
+		# queries don't support prefixes..
+		prefix = ""
 
 	gui.channelPrint(timestamp, server, channel,
 		"%s&lt;%s<font foreground='%s'>%s</font>&gt; %s%s" % (
@@ -851,7 +852,7 @@ def userJoin(timestamp, server, nick, channel):
 
 		fetchPrefixes(server,channel,tab.nickList,nicks)
 
-		if config.get("tekka","switch_to_channel_after_join"):
+		if config.getBool("tekka","switch_to_channel_after_join"):
 			gui.tabs.switchToPath(tab.path)
 
 		message = _(u"» You have joined %(channel)s.")
