@@ -372,7 +372,7 @@ def makiRaw(serverTab, channelTab, args):
 	# upper-case the command
 	args[0] = args[0].upper()
 
-	com.raw(server, " ".join(args))
+	com.raw(serverTab.name, " ".join(args))
 
 def makiWhois(currentServer, currentChannel, args):
 	"""
