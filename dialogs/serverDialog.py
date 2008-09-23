@@ -158,14 +158,14 @@ def openEditDialog(widget):
 		servername = serverList[path][0]
 
 	data = dialogs.showEditServerDialog(servername)
-	
+
 	if not servername:
 		print "Error in retrieving the servername"
 		return
 
 	if data:
 		print "User edited server"
-		com.createServer(data)
+		createServer(data)
 		retrieveServerlist()
 
 def openDeleteDialog(widget):

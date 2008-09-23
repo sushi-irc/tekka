@@ -32,10 +32,10 @@ def run():
 		data["nick"] = nicknameInput.get_text()
 		data["name"] = realnameInput.get_text()
 		data["nickserv"] = nickservInput.get_text()
-		if serverautoconnectInput.toggled():
-			data["autoconnect"] = 1
+		if serverautoconnectInput.get_active():
+			data["autoconnect"] = "true"
 		else:
-			data["autoconnect"] = 0
+			data["autoconnect"] = "false"
 	dialog.destroy()
 
 	return data

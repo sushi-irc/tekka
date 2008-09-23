@@ -29,7 +29,7 @@ def run(server):
 
 	serverautoconnectInput = widgets.get_widget("serverEdit_Autoconnect")
 
-	if serverdata["autoconnect"]:
+	if serverdata["autoconnect"] == "true":
 		serverautoconnectInput.set_active(True)
 	else:
 		serverautoconnectInput.set_active(False)
@@ -44,6 +44,10 @@ def run(server):
 		newServer["servername"] = serverdata["servername"]
 		for i in ("address","port","name","nick","nickserv"):
 			newServer[i] = eval("server%sInput.get_text()" % (i))
+		if serverautoconnectInput.get_active():
+			newServer["autoconnect"] = "true"
+		else:
+			newServer["autoconnect"] = "false"
 
 	dialog.destroy()
 
