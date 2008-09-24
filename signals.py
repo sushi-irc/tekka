@@ -866,11 +866,14 @@ def userJoin(timestamp, server, nick, channel):
 		tab.nickList.appendNick(nick)
 
 		if gui.tabs.isActive(tab):
-			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())		
+			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
 
 	gui.channelPrint(timestamp, server, channel, message % { "color": config.get("colors","join_nick","#000000"), "nick": gui.escape(nick), "channel": gui.escape(channel) }, "action")
 
 def userNames(timestamp, server, nick, channel):
+	if not nick:
+		return
+
 	tab = gui.tabs.searchTab(server, channel)
 
 	if not tab:
