@@ -35,7 +35,7 @@ def readLog(tab):
 
 		if lastDate != date:
 			# close lastDate
-			
+
 			dateOffsets[lastDate] = (startOffset, offset)
 
 			lastDate = date
@@ -83,7 +83,7 @@ def calendar_day_selected_cb(calendar):
 
 	if not calendar.offsets.has_key(key):
 		print "no such entry!"
-		buffer.set_text("")	
+		buffer.set_text("")
 		return
 
 	(start,end) = calendar.offsets[key]
@@ -109,7 +109,7 @@ def run(tab):
 	dialog.set_title("History for "+tab.name)
 
 	result = dialog.run()
-	
+
 	dialog.destroy()
 
 	fdata[0].close()
@@ -118,7 +118,7 @@ def setup(dialog):
 	"""
 	"""
 	global widgets
-	
+
 	widgets = gtk.glade.XML(config.get("gladefiles","dialogs"), "historyDialog")
 
 	sigdic = {

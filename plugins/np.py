@@ -2,7 +2,7 @@ import tekka
 import mpd
 
 class pluginNP(tekka.plugin):
-	
+
 	def __init__(self, name):
 		tekka.plugin.__init__(self, name)
 

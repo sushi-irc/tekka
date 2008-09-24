@@ -92,7 +92,7 @@ class plugin(object):
 
 	def get_module(self):
 		return self.__module
-	
+
 	def get_dbus_interface(self):
 		if not self.__proxy:
 			self.__proxy = sushiPluginHandler(self.__name, com.sushi)
@@ -210,12 +210,12 @@ def loadPlugin(name):
 		data = _plugins[name]
 
 		# perform a reload of the module
-		
+
 		reload(data["module"])
 		data["enabled"] = True
 
 		sys.path = oldPath
-		
+
 		return True
 
 	modTuple = None

@@ -63,13 +63,13 @@ def addShortcut(accelGroup, widget, shortcut, callback, *args):
 	"""
 
 	match = shortExp.match(shortcut)
-	
+
 	if not match:
 		print "No pattern match."
 		return None
 
 	vGroups = [g for g in match.groups() if g]
-	
+
 	if not vGroups:
 		print "No filled groups."
 		return None
@@ -98,7 +98,7 @@ def addShortcut(accelGroup, widget, shortcut, callback, *args):
 	# name like shortCut_ctrl_shift_2
 	signame = "shortCut_"+"_".join([i.strip("<>") for i in vGroups])
 
-	
+
 	if not signal_lookup(signame, widget):
 		signal_new(signame, widget, SIGNAL_ACTION, None, ())
 
@@ -108,7 +108,7 @@ def addShortcut(accelGroup, widget, shortcut, callback, *args):
 		keyval,
 		mask,
 		ACCEL_VISIBLE)
-	
+
 	handler = widget.connect(signame, callback, shortcut, *args)
 
 	if not regmap.has_key(accelGroup):

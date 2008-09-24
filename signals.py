@@ -733,7 +733,7 @@ def userKick(time, server, nick, channel, who, reason):
 		tab.nickList.removeNick(who)
 
 		if gui.tabs.isActive(tab):
-			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())		
+			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
 		gui.channelPrint(time, server, channel, gui.escape(
 			"« %s was kicked from %s by %s %s" % (who,channel,nick,reason)),
 			"action")
@@ -930,7 +930,7 @@ def userPart(timestamp, server, nick, channel, reason):
 		tab.nickList.removeNick(nick)
 
 		if gui.tabs.isActive(tab):
-			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())		
+			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
 		gui.channelPrint(timestamp, server, channel,
 			message % {
 				"color": config.get("colors","part_nick","#000000"),

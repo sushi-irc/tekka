@@ -23,7 +23,7 @@ def setup(_dialogs):
 
 def addServer(newServer):
 	"""
-		Add server from maki to the Serverlist.get_model() 
+		Add server from maki to the Serverlist.get_model()
 		(ListStore)
 	"""
 	if not newServer.has_key("servername") \
@@ -65,7 +65,7 @@ def run():
 	column = gtk.TreeViewColumn("Server", renderer, text=0)
 	column.set_resizable(False)
 	column.set_sort_column_id(0)
-	
+
 	serverView.append_column(column)
 
 	# setup the serverList

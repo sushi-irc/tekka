@@ -15,7 +15,7 @@ COL_VERSION,
 COL_DESC) = range(6)
 
 def run():
-	
+
 	dialog = widgets.get_widget("plugins")
 
 	while True:
@@ -86,7 +86,7 @@ def loadPluginList():
 		for item in os.listdir(path):
 			if item[-3:] == ".py":
 				name = item[:-3]
-	
+
 				loaded = plugins.isLoaded(name)
 
 				try:

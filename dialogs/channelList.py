@@ -89,8 +89,8 @@ def regexpListButton_clicked_cb(button):
 		global vars into func_globals dict of the function.
 
 		FIXME:  may be a better solution would be great.
-		FIXME:: if something is going wrong this could 
-		FIXME:: fuck up the whole usability (list would 
+		FIXME:: if something is going wrong this could
+		FIXME:: fuck up the whole usability (list would
 		FIXME:: not workd and may be python mess arround
 		FIXME:: due to wasted functions.
 	"""
@@ -137,9 +137,9 @@ def sushiList(time, server, channel, user, topic):
 		cache.append((server,channel,user,topic))
 
 	if user < 0:
-		# EOL, this is not reached if we use 
+		# EOL, this is not reached if we use
 		# manual call.
-		
+
 		try:
 			me.func_code = myCode
 		except NameError:
@@ -148,7 +148,7 @@ def sushiList(time, server, channel, user, topic):
 		del me.func_globals["cache"]
 		del me.func_globals["listView"]
 		del me.func_globals["filterExpression"]
-		del me.func_globals["myCode"]		
+		del me.func_globals["myCode"]
 		del me.func_globals["me"]
 
 		return

@@ -233,7 +233,7 @@ def makiTopic(serverTab, channelTab, args):
 			"channel":channelTab.name,
 			"topic":channelTab.topic
 		})
-	
+
 	else:
 		topic = " ".join(args)
 

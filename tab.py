@@ -122,7 +122,7 @@ class tekkaTab(object):
 			Returns a copy of this tab.
 		"""
 		copy = tekkaTab(str(self.name))
-		copy.buffer = self.buffer # XXX: Not a copy!		
+		copy.buffer = self.buffer # XXX: Not a copy!
 		copy.newMessage = list(self.newMessage)
 		copy.connected = self.connected
 		copy.path = self.path
@@ -156,7 +156,7 @@ class tekkaServer(tekkaTab):
 
 	def copy(self):
 		copy = tekkaServer(str(self.name))
-		copy.buffer = self.buffer # XXX: Not a copy!		
+		copy.buffer = self.buffer # XXX: Not a copy!
 		copy.newMessage = list(self.newMessage)
 		copy.connected = self.connected
 		copy.path = self.path
@@ -212,7 +212,7 @@ class tekkaQuery(tekkaTab):
 
 	def copy(self):
 		copy = tekkaQuery(self, str(self.name))
-		copy.buffer = self.buffer # XXX: Not a copy!		
+		copy.buffer = self.buffer # XXX: Not a copy!
 		copy.newMessage = list(self.newMessage)
 		copy.connected = self.connected
 		copy.path = self.path
@@ -274,7 +274,7 @@ class tekkaChannel(tekkaTab):
 
 	def copy(self):
 		copy = tekkaChannel(str(self.name))
-		copy.buffer = self.buffer # XXX: Not a copy!		
+		copy.buffer = self.buffer # XXX: Not a copy!
 		copy.newMessage = list(self.newMessage)
 		copy.connected = self.connected
 		copy.path = self.path

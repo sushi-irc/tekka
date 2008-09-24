@@ -140,7 +140,7 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 	""" PARSING HELPER """
 
 	def _parseFont(self, tag, attrs):
-		if not attrs or attrs.getLength() == 0: 
+		if not attrs or attrs.getLength() == 0:
 			return
 
 		for name in attrs.getNames():
@@ -166,7 +166,7 @@ class htmlbuffer(gtk.TextBuffer):
 		self.urlHandler = handler
 
 		self.parser = xml.sax.make_parser()
-		
+
 		contentHandler = htmlhandler(self, self.urlHandler)
 		self.parser.setContentHandler(contentHandler)
 
