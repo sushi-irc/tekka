@@ -40,6 +40,7 @@ def setup(_config, _gui, _com):
 	# action signals
 	sushi.connect_to_signal("part", userPart)
 	sushi.connect_to_signal("join", userJoin)
+	sushi.connect_to_signal("names", userNames)
 	sushi.connect_to_signal("quit", userQuit)
 	sushi.connect_to_signal("kick", userKick)
 	sushi.connect_to_signal("nick", userNick)
@@ -826,8 +827,6 @@ def userJoin(timestamp, server, nick, channel):
 		# we joined a channel, fetch nicks and topic, create
 		# channel and such things...
 
-		nicks = com.fetchNicks(server,channel)
-
 		tab = gui.tabs.searchTab(server, channel)
 
 		if not tab:
@@ -841,7 +840,6 @@ def userJoin(timestamp, server, nick, channel):
 			gui.updateServerTreeShortcuts()
 
 		tab.nickList.clear()
-		tab.nickList.addNicks(nicks)
 
 		if gui.tabs.isActive(tab):
 			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
@@ -849,8 +847,6 @@ def userJoin(timestamp, server, nick, channel):
 		tab.joined=True
 
 		gui.updateServerTreeMarkup(tab.path)
-
-		fetchPrefixes(server,channel,tab.nickList,nicks)
 
 		if config.getBool("tekka","switch_to_channel_after_join"):
 			gui.tabs.switchToPath(tab.path)
@@ -873,6 +869,28 @@ def userJoin(timestamp, server, nick, channel):
 			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())		
 
 	gui.channelPrint(timestamp, server, channel, message % { "color": config.get("colors","join_nick","#000000"), "nick": gui.escape(nick), "channel": gui.escape(channel) }, "action")
+
+def userNames(timestamp, server, nick, channel):
+	tab = gui.tabs.searchTab(server, channel)
+
+	if not tab:
+		tab = gui.tabs.createChannel(server, channel)
+
+		if not gui.tabs.addTab(server, tab):
+			print "adding tab for channel '%s' failed." % (channel)
+			return
+
+		lastLog(server, channel)
+		gui.updateServerTreeShortcuts()
+
+	tab.nickList.appendNick(nick)
+
+	if gui.tabs.isActive(tab):
+		gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
+
+	gui.updateServerTreeMarkup(tab.path)
+
+	fetchPrefixes(server,channel,tab.nickList,[nick])
 
 def userPart(timestamp, server, nick, channel, reason):
 	"""
