@@ -886,6 +886,8 @@ def userNames(timestamp, server, nick, channel):
 		lastLog(server, channel)
 		gui.updateServerTreeShortcuts()
 
+	# FIXME
+	tab.nickList.removeNick(nick)
 	tab.nickList.appendNick(nick)
 
 	if gui.tabs.isActive(tab):
