@@ -132,7 +132,7 @@ def fetchNicks(server, channel):
 		Returns a list of nicks joined
 		in channel on server.
 	"""
-	return sushi.channel_nicks(server,channel)
+	return sushi.nicks(server,channel)
 
 # fetches the own nick for server @server from maki
 def fetchOwnNick(server):
