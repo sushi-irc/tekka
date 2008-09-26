@@ -1399,7 +1399,11 @@ def setup_mainWindow():
 	"""
 	win = widgets.get_widget("mainWindow")
 
-	win.set_title("tekka")
+	colormap = win.get_screen().get_rgba_colormap()
+	if colormap:
+	    gtk.widget_set_default_colormap(colormap)
+
+	win.show_all()
 
 	iconPath = config.get("tekka","status_icon")
 	if iconPath:
@@ -1578,6 +1582,8 @@ def setupGTK():
 	# parse glade file for main window
 	widgets = gtk.glade.XML(gladefiles["mainwindow"], "mainWindow")
 
+	setup_mainWindow()
+
 	# connect main window signals:
 	sigdic = {
 	# tekka menu
@@ -1619,7 +1625,6 @@ def setupGTK():
 	vbar = widgets.get_widget("scrolledWindow_output").get_vscrollbar()
 	vbar.connect("value-changed", scrolledWindow_output_vscrollbar_valueChanged_cb)
 
-	setup_mainWindow()
 	setup_serverTree()
 	setup_nickList()
 

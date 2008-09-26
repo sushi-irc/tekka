@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Thu Sep 11 23:53:12 2008 -->
+<!--Generated with glade3 3.4.5 on Fri Sep 26 17:06:11 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="mainWindow">
     <property name="width_request">800</property>
     <property name="height_request">600</property>
-    <property name="visible">True</property>
     <property name="title">tekka</property>
     <signal name="focus_in_event" handler="mainWindow_focus_in_event_cb"/>
     <signal name="size_allocate" handler="mainWindow_size_allocate_cb"/>
@@ -141,7 +140,7 @@
                         <signal name="activate" handler="menu_Dialogs_plugins_activate_cb"/>
                       </widget>
                     </child>
-					<child>
+                    <child>
                       <widget class="GtkMenuItem" id="menu_Dialogs_debug">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Debug</property>
@@ -167,7 +166,7 @@
                         <property name="label" translatable="yes">gtk-about</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
-						<signal name="activate" handler="menu_Help_about_activate_cb"/>
+                        <signal name="activate" handler="menu_Help_about_activate_cb"/>
                       </widget>
                     </child>
                   </widget>
