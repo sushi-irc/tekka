@@ -676,27 +676,20 @@ class guiWrapper(object):
 			if not self.currentPath:
 				return None,None
 
-			serverPath = self.currentPath[0]
-			channelPath = self.currentPath
+			# iter could be server or channel
+			iter = store.get_iter(self.currentPath)
 
-			if len(channelPath) == 1:
-				# channelPath is the same as serverPath
-				# which means a server tab is active but
-				# no channel is. Make channelPath raise
-				# an IndexError.
-				channelPath = -1
+			if not iter:
+				return None, None
 
-			try:
-				serverTab = store[serverPath][2]
-			except IndexError:
-				return None,None
+			pIter = store.iter_parent(iter)
+			if not pIter:
+				# no parent, iter is a server
+				return store.get_value(iter, 2), None
+			else:
+				return store.get_value(pIter, 2), store.get_value(iter, 2)
 
-			try:
-				channelTab = store[channelPath][2]
-			except IndexError:
-				channelTab = None
-
-			return serverTab,channelTab
+			return None, None
 
 		def isActive(self, tab):
 			"""
