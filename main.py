@@ -1396,8 +1396,6 @@ def setup_mainWindow():
 	if colormap:
 	    gtk.widget_set_default_colormap(colormap)
 
-	win.show_all()
-
 	iconPath = config.get("tekka","status_icon")
 	if iconPath:
 		try:
@@ -1416,14 +1414,14 @@ def setup_mainWindow():
 
 	state = config.get("tekka","window_state")
 
-	if not state:
-		return
+	if state:
+		try:
+			if int(state) & int(gtk.gdk.WINDOW_STATE_MAXIMIZED):
+				win.maximize()
+		except:
+			config.unset("tekka","window_state")
 
-	try:
-		if int(state) & int(gtk.gdk.WINDOW_STATE_MAXIMIZED):
-			win.maximize()
-	except:
-		config.unset("tekka","window_state")
+	win.show_all()
 
 def setup_serverTree():
 	"""
@@ -1487,7 +1485,9 @@ def setup_statusIcon():
 	"""
 		Sets up the status icon.
 	"""
+	gtk.widget_push_colormap(widgets.get_widget("mainWindow").get_screen().get_rgb_colormap())
 	gui.statusIcon = gtk.StatusIcon()
+	gtk.widget_pop_colormap()
 	try:
 		gui.statusIcon.set_from_file(config.get("tekka","status_icon"))
 	except Exception,e:
