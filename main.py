@@ -1407,10 +1407,8 @@ def setup_mainWindow():
 	width = config.get("tekka","window_width")
 	height = config.get("tekka","window_height")
 
-	if not width or not height:
-		return
-
-	win.resize(int(width),int(height))
+	if width and height:
+		win.resize(int(width),int(height))
 
 	state = config.get("tekka","window_state")
 
