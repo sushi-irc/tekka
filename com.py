@@ -147,9 +147,9 @@ def cacheOwnNick(server, nickname):
 
 # returns the cached nick of server @server
 def getOwnNick(server):
-	if myNick.has_key(server):
-		return myNick[server]
-	return None
+	if not myNick.has_key(server):
+		cacheOwnNick(server, fetchOwnNick(server))
+	return myNick[server]
 
 # fetch all servers maki is connected to
 def fetchServers():
