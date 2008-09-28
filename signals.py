@@ -776,7 +776,7 @@ def userQuit(time, server, nick, reason):
 				channelTab.joined=False
 			channelTab.connected=False
 			gui.updateServerTreeMarkup(channelTab.path)
-			gui.channelPrint(time, server, channelTab.name, message % { "reason": reason } )
+			gui.channelPrint(time, server, channelTab.name, message % { "reason": reason }, type="action")
 
 	else:
 		if reason:
