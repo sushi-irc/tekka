@@ -154,6 +154,7 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 class htmlbuffer(gtk.TextBuffer):
 	scrollPosition = None
 	urlHandler = None
+	lastLine = ""
 
 	def __init__(self, handler=None, tagtable=None):
 		if tagtable:
@@ -179,7 +180,8 @@ class htmlbuffer(gtk.TextBuffer):
 
 	def clear(self):
 		"""
-		Clears the output and resets the tag table to zero.
+		Clears the output and resets the tag table to zero
+		to save memory.
 		"""
 		self.set_text("")
 
@@ -187,16 +189,56 @@ class htmlbuffer(gtk.TextBuffer):
 		tt = self.get_tag_table()
 		if tt: tt.foreach(lambda tag,data: data.remove(tag), tt)
 
+	def lastLineText(self, text):
+		"""
+		Adds text which is standing statically on the last line.
+
+		Problems triggered by this:
+		* this line is every(!) time at bottom, insert
+		  has to be overriden.
+		* there can be only one statically last line
+		"""
+		if self.lastLine:
+			self.removeLastLineText()
+
+		self.lastLine = text
+
+	def removeLastLineText(self):
+		"""
+		Removes the statically last line.
+		"""
+		if self.lastLine:
+			self.lastLine = ""
+
+	def insert(self, iter, text, *x):
+		if self.lastLine:
+			if iter.get_line() == self.get_end_iter().get_line():
+				# set the target iter to a line before the last
+				iter.set_line(iter.get_line()-1)
+
+				# XXX: this may cause problems if iter.get_line() is 0
+			
+		gtk.TextBuffer.insert(self, iter, text, *x)
+
 	def insertHTML(self, iter, text):
 		startoffset = iter.get_offset()
 
 		text = "<msg><br/>%s</msg>" % text
+
+		# check for last line text
 
 		while True:
 			try:
 				self.parser.parse(StringIO(str(text)))
 
 			except xml.sax.SAXParseException, e:
+				# Exception while parsing, get (if caused by char)
+				# the character and delete it. Then try again to
+				# add the text.
+				# If the exception is caused by a syntax error,
+				# abort parsing and print the error with line
+				# and position.
+
 				pos = e.getColumnNumber()
 				line = e.getLineNumber()
 
