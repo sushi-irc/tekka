@@ -27,6 +27,7 @@ from gettext import gettext as _
 
 from helper.url import URLToTag
 from helper.shortcuts import addShortcut, removeShortcut
+from helper import tabcompletion
 
 import config
 import com
@@ -983,89 +984,11 @@ def inputBar_key_press_event_cb(inputBar, event):
 	elif key == "Tab":
 		# tab completion comes here.
 
-		def appendMatch(mode, text, word, match):
-			if mode == "c": separator = config.get("tekka","command_separator", " ")
-			elif mode == "n": separator = config.get("tekka","nick_seperator", ": ")
+		tabcompletion.complete(tab, text)
 
-			text = text[:-len(word)] + match + separator
-			print "text: '%s' word: '%s' match: '%s'" % (text,word,match)
-			inputBar.set_text(text)
-			inputBar.set_position(len(text))
+	if key != "Tab":
+		tabcompletion.stopIteration()
 
-
-		if not text:
-			return False
-
-		word = text.split(" ")[-1]
-
-		print "needle is '%s'" % (word)
-
-		if tab and tab.is_channel():
-			# look for nicks
-
-			match = tab.nickList.searchNick(word.lower())
-
-			# TODO:  it would be nice to iterate over this
-			# TODO:: on every tab-hit.
-			if len(match): match = match[0]
-
-			if match:
-
-				# if the word is in a sentence, use command
-				# completion (only whitespace)
-				if text.count(" ") >= 1:
-					mode = "c"
-				else:
-					mode = "n"
-
-				appendMatch(mode, text, word, match)
-
-				return True
-
-		elif tab and tab.is_query():
-			# look for my nick or the other nick
-
-			matches = tab.name, com.getOwnNick(tab.server)
-
-			for match in matches:
-
-				if match[:len(word)] == word:
-					if text.count(" ") >= 1:
-						mode = "c"
-					else:
-						mode = "n"
-
-					appendMatch(mode, text, word, match)
-
-					return True
-
-		# channel completion
-		if word[0]=="#":
-			tabs = gui.tabs.getAllTabs()
-
-			matches = [tab for tab in tabs if tab and tab.name[:len(word)] == word]
-			# TODO: as well as above, iterate here...
-			match = matches[0].name
-
-			if match:
-				appendMatch("c", text, word, match)
-				return True
-
-		# command completion
-
-		if word[0]=="/":
-			# oh, a command... strip /
-			word = word[1:]
-		else:
-			# nick completing is done,
-			# normal words are useless here
-			return False
-
-		for command in commands.commands.keys():
-			if command[:len(word)]==word:
-				appendMatch("c",text, word, command)
-
-				return True
 
 def topicBar_activate_cb(topicBar):
 	"""
