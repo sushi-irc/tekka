@@ -91,6 +91,8 @@ def complete(currentTab, text):
 	The end of the iteration is determined outside in the key press
 	event of the input bar. If another key except "Tab" is pressed,
 	the iteration ends (stopIteration).
+
+	TODO: generalize code, especially the section checks / match checks
 	"""
 
 	global _current
@@ -200,39 +202,61 @@ def complete(currentTab, text):
 
 			return True
 
-	# channel completion
-	# TODO:  GUI has to be moved in here or
-	# TODO:: tabs are made accesible from here.
-	"""
-	if word[0]=="#":
-		tabs = gui.tabs.getAllTabs()
+	# ** no successful completion so far **
 
-		matches = [tab for tab in tabs if tab and tab.name[:len(word)] == word]
-		# TODO: as well as above, iterate here...
-		match = matches[0].name
+	# channel completion
+	if word[0] in com.sushi.support_chantypes(currentTab.server):
+		tabs = main.gui.tabs.getAllTabs()
+
+		# find all matching tabs
+		matches = [tab.name for tab in tabs 
+			if tab and tab.name[:len(word)].lower() == word.lower()]
+		
+		if matches:
+			if _current["type"] == CHANNEL_TYPE:
+
+				if _current["position"]+1 >= len(matches) or _current["position"] == None:
+					_current["position"] = 0
+
+				else:
+					_current["position"] += 1
+
+			else:
+				_current["type"] = CHANNEL_TYPE
+				_current["position"] = 0
+
+			match = matches[_current["position"]]
 
 		if match:
 			_appendMatch("c", text, word, match)
-				return True
-	"""
+			return True
 
-	# command completion
-	# TODO: command completion
-	"""
-	if word[0]=="/":
-		# oh, a command... strip /
-		word = word[1:]
-	else:
-		# nick completing is done,
-		# channel completion is done,
-		# normal words are useless here
+	# *** command completion ***
+
+	if word[0] != "/":
 		return False
 
-	for command in commands.commands.keys():
-		if command[:len(word)]==word:
-			_appendMatch("c",text, word, command)
+	needle = word[1:]
+	matches = [cmd for cmd in commands.commands.keys()
+		if cmd[:len(needle)].lower()==needle.lower()]
 
-			return True
-	"""
+	if matches:
+		if _current["type"] == COMMAND_TYPE:
+			if _current["position"]+1 >= len(matches) or _current["position"] == None:
+				_current["position"] = 0
+
+			else:
+				_current["position"] += 1
+
+		else:
+			_current["type"] = COMMAND_TYPE
+			_current["position"] = 0
+
+		match = matches[_current["position"]]
+
+	if match:
+		_appendMatch("c",text, word, "/"+match)
+
+		return True
 
 	return False
