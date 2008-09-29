@@ -793,12 +793,17 @@ def userQuit(time, server, nick, reason):
 		# print in all channels where nick joined a message
 		for channelTab in channels:
 
-			if channelTab.is_query() and channelTab.name.lower() == nick.lower():
-				# on query with `nick` only print quitmessage
+			if channelTab.is_query():
+				if channelTab.name.lower() == nick.lower():
+					# on query with `nick` only print quitmessage
 
-				gui.channelPrint(time, server, channelTab.name,
-				message % { "nick": gui.escape(nick), "reason": gui.escape(reason) }, "action")
+					gui.channelPrint(time, server, channelTab.name,
+					message % {
+						"nick": gui.escape(nick),
+						"reason": gui.escape(reason) },
+						"action")
 
+				# skip queries in general
 				continue
 
 			nickList = channelTab.nickList
