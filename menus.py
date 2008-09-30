@@ -358,7 +358,7 @@ def getNickListMenu(currentNick):
 	nickListMenu_currentNick = currentNick
 	menu = nickListMenu_widgets.get_widget("nickListMenu")
 
-	headerItem = gtk.MenuItem(label=currentNick)
+	headerItem = gtk.MenuItem(label=currentNick, use_underline=False)
 	menu.insert(headerItem, 0)
 	headerItem.show()
 
