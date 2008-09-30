@@ -408,7 +408,7 @@ class guiWrapper(object):
 			nlHpaned = gtk.HPaned()
 			nlHpaned.pack1(nl)
 			nlHpaned.pack2(hbox)
-			nlHpaned.show_all()
+			nlHpaned.show()
 	
 			nl.set_property("border-width", 6)
 	
@@ -416,7 +416,9 @@ class guiWrapper(object):
 	
 			# set to the middle (above status bar, under menu bar)
 			vbox.reorder_child(nlHpaned, 1)
-	
+
+			widgets.get_widget("inputBar").grab_focus()
+
 			config.set("tekka", "nick_list_left", "True")
 	
 		else:
