@@ -214,7 +214,12 @@ def setup():
 	global prefix
 
 	if os.path.islink(sys.argv[0]):
-		prefix = os.path.dirname(os.path.abspath(os.path.join(os.path.dirname(sys.argv[0]), os.readlink(sys.argv[0]))))
+		link = os.readlink(sys.argv[0])
+
+		if not os.path.isabs(link):
+			link = os.path.join(os.path.dirname(sys.argv[0]), link)
+
+		prefix = os.path.dirname(os.path.abspath(link))
 	else:
 		prefix = os.path.dirname(os.path.abspath(sys.argv[0]))
 
