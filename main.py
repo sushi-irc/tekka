@@ -375,6 +375,72 @@ class guiWrapper(object):
 
 				return True
 
+	def moveNickList(self, left):
+		"""
+		Moves the nick list to the left side of the window if left is True
+		otherwise to the right bottom vpaned.
+		"""
+	
+		# XXX: no move to the already set position (will crash....)
+	
+		nl = widgets.get_widget("VBox_nickList")
+	
+		# TODO: fix naming in glade file, listVbox is wrong, it's a vpaned...
+		vpaned = widgets.get_widget("listVbox")
+		hbox = widgets.get_widget("mainHBox")
+		# TODO: fix naming (Vbox => VBox)
+		vbox = widgets.get_widget("mainVbox")
+	
+		if left:
+			"""
+			remove the nick list packet from the vpaned on the right side,
+			remove the mainHBox (containing GO,output,input,vpaned from servertree,...)
+			from the mainVBox (containing all window stuff) and create
+			a hpaned.
+			Position one (left side) is filled with the nick list stuff
+			with new border (6px) and the right side is the main hbox.
+			After this, apply the new hpaned to the main vbox.
+			"""
+	
+			vpaned.remove(nl)
+			vbox.remove(hbox)
+	
+			nlHpaned = gtk.HPaned()
+			nlHpaned.pack1(nl)
+			nlHpaned.pack2(hbox)
+			nlHpaned.show_all()
+	
+			nl.set_property("border-width", 6)
+	
+			vbox.pack_start(nlHpaned)
+	
+			# set to the middle (above status bar, under menu bar)
+			vbox.reorder_child(nlHpaned, 1)
+	
+			config.set("tekka", "nick_list_left", "True")
+	
+		else:
+			nl.set_property("border-width", 0)
+	
+			nlHpaned = vbox.get_children()[1]
+			
+			nl = nlHpaned.get_child1()
+			nlHpaned.remove(nl)
+	
+			# move nl box to the right vpaned
+			vpaned.pack2(nl, resize=True, shrink=False)
+	
+			main = nlHpaned.get_child2()
+			nlHpaned.remove(main)
+	
+			vbox.remove(nlHpaned)
+	
+			vbox.pack_start(main)
+			vbox.reorder_child(main, 1)
+	
+			config.set("tekka", "nick_list_left", "False")
+
+
 	class tabClass(object):
 		"""
 			Add/remove/replace tabs.
@@ -1128,6 +1194,19 @@ def nickList_row_activated_cb(nickList, path, column):
 
 	gui.tabs.switchToPath(query.path)
 
+def nickList_menu_leftSide_toggled_cb(menuItem):
+	"""
+	move the nick list widget to the left hbox if menuItem
+	is toggled or move it to the vpaned
+	"""
+
+	if menuItem.get_active():
+		gui.moveNickList(left=True)
+
+	else:
+		gui.moveNickList(left=False)
+		
+
 def nickList_button_press_event_cb(nickList, event):
 	"""
 		A button pressed inner nickList.
@@ -1141,25 +1220,46 @@ def nickList_button_press_event_cb(nickList, event):
 
 		path = nickList.get_path_at_pos(int(event.x), int(event.y))
 
+		nick = None
+
 		# get marked nick
 		try:
 			nick = nickList.get_model()[path[0]]
 		except TypeError:
 			# no model
-			return False
+			pass
 		except IndexError:
 			# path is "invalid"
-			return False
+			pass
 
-		nick = nick[nickList.get_model().COLUMN_NICK]
+		if nick:
+			# display nick specific menu
 
-		menu = menus.getNickListMenu(nick)
+			nick = nick[nickList.get_model().COLUMN_NICK]
 
-		if not menu:
-			return False
+			menu = menus.getNickListMenu(nick)
 
-		# finaly popup the menu
-		menu.popup(None, None, None, event.button, event.time)
+			if not menu:
+				return False
+
+			# finaly popup the menu
+			menu.popup(None, None, None, event.button, event.time)
+
+		else:
+			# display nick list menu
+
+			menu = gtk.Menu()
+			leftSide = gtk.CheckMenuItem(label="Show on _left side")
+			menu.append(leftSide)
+			leftSide.show()
+
+			if config.getBool("tekka", "nick_list_left"):
+				leftSide.set_active(True)
+
+			leftSide.connect("toggled", nickList_menu_leftSide_toggled_cb)
+
+			menu.popup(None, None, None, event.button, event.time)
+
 	return False
 
 
@@ -1655,6 +1755,9 @@ def setupGTK():
 		setup_statusIcon()
 		btn.set_active(True)
 	btn.toggled()
+
+	if config.getBool("tekka", "nick_list_left"):
+		gui.moveNickList(left=True)
 
 	setup_shortcuts()
 
