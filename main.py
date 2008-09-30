@@ -1017,6 +1017,14 @@ def output_button_press_event_cb(output, event):
 	widgets.get_widget("inputBar").grab_focus()
 	return False
 
+def serverTree_misc_menu_reset_activate_cb(menuItem):
+	"""
+	reset the markup of all tabs
+	"""
+	for tab in gui.tabs.getAllTabs():
+		tab.setNewMessage(None)
+		gui.updateServerTreeMarkup(tab.path)
+
 def serverTree_button_press_event_cb(serverTree, event):
 	"""
 		A row in the server tree was activated.
@@ -1029,25 +1037,40 @@ def serverTree_button_press_event_cb(serverTree, event):
 		tab = serverTree.get_model()[path][2]
 	except Exception,e:
 		print e
-		return False
+		tab = None
 
 	if event.button == 1:
 		# activate the tab
+
+		if not tab:
+			return False
 
 		gui.tabs.switchToPath(path)
 
 	elif event.button == 3:
 		# popup tab menu
+	
+		if tab:
 
-		menu = menus.getServerTreeMenu(tab)
+			menu = menus.getServerTreeMenu(tab)
 
-		if not menu:
-			print "error in creating server tree tab menu."
-			return False
+			if not menu:
+				print "error in creating server tree tab menu."
+				return False
 
-		menu.popup(None, None, None, event.button, event.time)
+			menu.popup(None, None, None, event.button, event.time)
 
-		return True
+			return True
+
+		else:
+			# display misc. menu
+			menu = gtk.Menu()
+			reset = gtk.MenuItem(label="Reset markups")
+			reset.set_tooltip_text(_(u"Resets the markup of all tabs."))
+			reset.connect("activate", serverTree_misc_menu_reset_activate_cb)
+			menu.append(reset)
+			reset.show()
+			menu.popup(None,None,None,event.button,event.time)
 
 	return False
 
