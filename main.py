@@ -842,6 +842,24 @@ def menu_View_showStatusBar_toggled_cb(menuItem):
 		bar.hide()
 		config.set("tekka","show_status_bar","False")
 
+def menu_View_showStatusIcon_toggled_cb(menuItem):
+	"""
+	hide or show the status icon
+	"""
+	if not gui.statusIcon and menuItem.get_active():
+		setup_statusIcon()
+	elif not gui.statusIcon:
+		return
+
+	if not menuItem.get_active():
+		gui.statusIcon.set_visible(False)
+		config.set("tekka", "show_status_icon", "False")
+
+	else:
+		gui.statusIcon.set_visible(True)
+		config.set("tekka", "show_status_icon", "True")
+		
+
 def menu_Dialogs_channelList_activate_cb(menuItem):
 	"""
 		show channel list dialog.
@@ -883,7 +901,7 @@ def mainWindow_delete_event_cb(mainWindow, event):
 		will be hidden, otherwise the main looped
 		will be stopped.
 	"""
-	if config.get("tekka", "hide_on_close") and gui.statusIcon:
+	if config.get("tekka", "hide_on_close") and gui.statusIcon and gui.statusIcon.get_visible():
 		mainWindow.hide()
 		return True
 	else:
@@ -1569,6 +1587,7 @@ def setupGTK():
 	# view menu
 		"menu_View_showGeneralOutput_toggled_cb" : menu_View_showGeneralOutput_toggled_cb,
 		"menu_View_showStatusBar_toggled_cb" : menu_View_showStatusBar_toggled_cb,
+		"menu_View_showStatusIcon_toggled_cb" : menu_View_showStatusIcon_toggled_cb,
 	# dialogs menu
 		"menu_Dialogs_channelList_activate_cb" : menu_Dialogs_channelList_activate_cb,
 		"menu_Dialogs_plugins_activate_cb" : menu_Dialogs_plugins_activate_cb,
@@ -1630,8 +1649,12 @@ def setupGTK():
 		btn.set_active(True)
 	btn.toggled()
 
+	btn = widgets.get_widget("menu_View_showStatusIcon")
+
 	if config.getBool("tekka","show_status_icon"):
 		setup_statusIcon()
+		btn.set_active(True)
+	btn.toggled()
 
 	setup_shortcuts()
 

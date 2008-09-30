@@ -107,9 +107,17 @@
                     <child>
                       <widget class="GtkCheckMenuItem" id="menu_View_showStatusBar">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">_Status Bar</property>
+                        <property name="label" translatable="yes">Status _Bar</property>
                         <property name="use_underline">True</property>
                         <signal name="toggled" handler="menu_View_showStatusBar_toggled_cb"/>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkCheckMenuItem" id="menu_View_showStatusIcon">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Status _Icon</property>
+                        <property name="use_underline">True</property>
+                        <signal name="toggled" handler="menu_View_showStatusIcon_toggled_cb"/>
                       </widget>
                     </child>
                   </widget>
