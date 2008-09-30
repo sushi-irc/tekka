@@ -8,6 +8,14 @@ import os
 
 widgets = None
 
+def dialog_response_cb(dialog, responseID, fd):
+	"""
+	destroy the dialog and close the fd on gtk.RESPONSE_CANCEL
+	"""
+	if responseID == gtk.RESPONSE_CANCEL:
+		fd.close()
+		dialog.destroy()
+
 def readLog(tab):
 	logDir = com.sushi.config_get("directories","logs")
 
@@ -108,11 +116,10 @@ def run(tab):
 
 	dialog.set_title("History for "+tab.name)
 
-	result = dialog.run()
-
-	dialog.destroy()
-
-	fdata[0].close()
+	dialog.connect("response", dialog_response_cb, fdata[0])
+	
+	# non modal..
+	dialog.show_all()
 
 def setup(dialog):
 	"""

@@ -15,7 +15,7 @@ def run():
 	dialog = gtk.Dialog(
 		title="Debug dialog",
 		parent=gui.getWidgets().get_widget("mainWindow"),
-		flags=gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+		flags=gtk.DIALOG_DESTROY_WITH_PARENT,
 		buttons=( (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL) ))
 
 	dialog.resize(300,400)
@@ -35,9 +35,10 @@ def run():
 
 	button.connect("clicked", button_clicked_cb, textView)
 
-	dialog.run()
+	# close on cancel
+	dialog.connect("response", lambda d,rid: d.destroy())
 
-	dialog.destroy()
+	dialog.show_all()
 
 def setup(dialog):
 	global gui
