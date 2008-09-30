@@ -1162,6 +1162,38 @@ def statusIcon_activate_cb(statusIcon):
 	else:
 		mw.show()
 
+def statusIcon_popup_menu_cb(statusIcon, button, time):
+	"""
+	User wants to see the menu
+	"""
+	m = gtk.Menu()
+
+	hide = gtk.MenuItem(label="Show/Hide main window")
+	m.append(hide)
+	hide.connect("activate", statusIcon_menu_hide_activate_cb)
+
+	sep = gtk.SeparatorMenuItem()
+	m.append(sep)
+
+	quit = gtk.ImageMenuItem(stock_id=gtk.STOCK_QUIT)
+	m.append(quit)
+	quit.connect("activate", lambda *x: gtk.main_quit())
+
+	m.show_all()
+
+	m.popup(None, None, gtk.status_icon_position_menu, button, time, statusIcon)
+
+def statusIcon_menu_hide_activate_cb(menuItem):
+	"""
+	Show main window if hidden, else hide.
+	"""
+	mw = widgets.get_widget("mainWindow")
+	if mw.get_property("visible"):
+		mw.hide()
+	else:
+		mw.show()
+
+
 """
 	Shortcut callbacks
 """
@@ -1409,6 +1441,11 @@ def setup_statusIcon():
 	gtk.widget_push_colormap(widgets.get_widget("mainWindow").get_screen().get_rgb_colormap())
 	gui.statusIcon = gtk.StatusIcon()
 	gtk.widget_pop_colormap()
+
+	gui.statusIcon.set_tooltip("tekka IRC client")
+	
+	gui.statusIcon.connect("popup-menu", statusIcon_popup_menu_cb)
+
 	try:
 		gui.statusIcon.set_from_file(config.get("tekka","status_icon"))
 	except Exception,e:
