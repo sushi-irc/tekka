@@ -134,7 +134,7 @@ def complete(currentTab, text):
 		# look for nicks
 
 		matches = currentTab.nickList.searchNick(word.lower())
-		matches.sort() # sort alphabetically
+		matches.sort(lambda x, y: cmp(x.lower(), y.lower())) # sort alphabetically
 
 		if matches:
 			if _current["type"] == NICK_TYPE:
