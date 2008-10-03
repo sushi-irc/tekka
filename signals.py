@@ -53,7 +53,6 @@ def setup(_config, _gui, _com):
 	# Server-Signals
 	sushi.connect_to_signal("connect", serverConnect)
 	sushi.connect_to_signal("connected", serverConnected)
-	sushi.connect_to_signal("reconnect", serverReconnect)
 	sushi.connect_to_signal("motd", serverMOTD)
 	sushi.connect_to_signal("list", list)
 	sushi.connect_to_signal("whois", whois)
@@ -245,24 +244,6 @@ def serverConnected(time, server, nick):
 	#gui.statusBar.pop(gui.STATUSBAR_CONNECTING)
 
 	gui.serverPrint(time, server, "Connected.")
-
-def serverReconnect(time, server):
-	"""
-		maki is reconnecting to a server.
-	"""
-	tab = gui.tabs.searchTab(server)
-
-	if tab:
-		if tab.connected:
-			userQuit(time, server, com.getOwnNick(server), "Connection lost")
-
-	else:
-		gui.tabs.addTab(None, gui.tabs.createServer(server))
-
-		if config.get("tekka","server_shortcuts"):
-			gui.updateServerTreeShortcuts()
-
-	gui.serverPrint(time, server, "Reconnecting to %s" % server)
 
 def serverMOTD(time, server, message):
 	"""
