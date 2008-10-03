@@ -249,6 +249,9 @@ def serverMOTD(time, server, message):
 	"""
 		Server is sending a MOTD
 	"""
+	if not message:
+		return
+
 	if not gui.tabs.searchTab(server):
 		gui.tabs.addTab(None, gui.tabs.createServer(server))
 
