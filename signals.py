@@ -206,14 +206,29 @@ def serverConnect(time, server):
 	"""
 		maki is connecting to a server.
 	"""
+	tab = gui.tabs.searchTab(server)
 
-	if not gui.tabs.searchTab(server):
-		gui.tabs.addTab(None, gui.tabs.createServer(server))
+	if not tab:
+		tab = gui.tabs.createServer(server)
+		gui.tabs.addTab(None, tab)
 
 		if config.get("tekka","server_shortcuts"):
 			# update is only neccessary if server tabs
 			# shall be shortcutted
 			gui.updateServerTreeShortcuts()
+
+	if tab.connected:
+		tab.connected = False
+		gui.updateServerTreeMarkup(tab.path)
+
+		channels = gui.tabs.getAllTabs(server)[1:]
+
+		if channels:
+			for channelTab in channels:
+				if channelTab.is_channel():
+					channelTab.joined=False
+				channelTab.connected=False
+				gui.updateServerTreeMarkup(channelTab.path)
 
 	gui.serverPrint(time, server, "Connecting...")
 
