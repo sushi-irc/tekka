@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=tekka IRC Client
+GenericName=IRC Client
+Comment=Chat on IRC
+Exec=@bindir@/tekka
+Icon=tekka
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=Network;
