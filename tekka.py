@@ -233,7 +233,7 @@ def loadPlugin(name):
 	sys.path = pluginPaths
 
 	if _plugins.has_key(name):
-		print "Module already existing. Enabling."
+		print "Module already exists. Enabling."
 
 		data = _plugins[name]
 
@@ -243,6 +243,8 @@ def loadPlugin(name):
 		data["enabled"] = True
 
 		sys.path = oldPath
+
+		data["module"].load()
 
 		return True
 
