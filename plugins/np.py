@@ -27,7 +27,6 @@ SUCH DAMAGE.
 """
 
 import tekka
-import mpd
 
 class pluginNP(tekka.plugin):
 
@@ -37,17 +36,39 @@ class pluginNP(tekka.plugin):
 		self.register_command("np", self.np_command)
 
 	def np_command(self, currentServer, currentTab, args):
-		client = mpd.MPDClient()
-		client.connect("localhost", 6600)
+		try:
+			import mpd
 
-		data = {"artist":"N/A","title":"N/A","album":"N/A"}
-		data.update(client.currentsong())
+			client = mpd.MPDClient()
+			client.connect("localhost", 6600)
 
-		fstring = "np: %(artist)s - %(title)s" % data
+			data = {"artist":"N/A","title":"N/A","album":"N/A"}
+			data.update(client.currentsong())
 
-		self.get_dbus_interface().message(currentServer.name, currentTab.name, fstring)
+			fstring = "np: %(artist)s - %(title)s" % data
 
-		client.disconnect()
+			self.get_dbus_interface().message(currentServer.name, currentTab.name, fstring)
+
+			client.disconnect()
+
+			return
+		except:
+			pass
+
+		try:
+			import os
+			from xdg.BaseDirectory import xdg_config_home
+
+			f = open(os.path.join(xdg_config_home, "decibel-audio-player", "now-playing.txt"))
+			s = f.read()
+			s.replace("\n", " ")
+			f.close()
+
+			self.get_dbus_interface().message(currentServer.name, currentTab.name, "np: %s" % (s))
+
+			return
+		except:
+			pass
 
 	def plugin_info(self):
 		return ("Writes the current playing song to the channel after typing /np", "0.1")
