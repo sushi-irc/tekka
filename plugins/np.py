@@ -60,8 +60,7 @@ class pluginNP(tekka.plugin):
 			from xdg.BaseDirectory import xdg_config_home
 
 			f = open(os.path.join(xdg_config_home, "decibel-audio-player", "now-playing.txt"))
-			s = f.read()
-			s.replace("\n", " ")
+			s = f.read().replace("\n", " ")
 			f.close()
 
 			self.get_dbus_interface().message(currentServer.name, currentTab.name, "np: %s" % (s))
