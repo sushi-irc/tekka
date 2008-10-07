@@ -995,8 +995,7 @@ Marian Tietz</property>
     <property name="documenters">Michael Kuhn
 Marian Tietz</property>
     <property name="translator_credits" translatable="yes">translator-credits</property>
-    <property name="artists">Eva Leibovitz
-Marian Tietz</property>
+    <property name="artists">Marian Tietz</property>
     <property name="logo">../graphics/icon.svg</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox8">
