@@ -1039,9 +1039,9 @@ def mainWindow_window_state_event_cb(mainWindow, event):
 	"""
 
 	if event.new_window_state & gtk.gdk.WINDOW_STATE_MAXIMIZED:
-		config.set("tekka","window_state",int(gtk.gdk.WINDOW_STATE_MAXIMIZED))
+		config.set("tekka","window_maximized","True")
 	else:
-		config.unset("tekka","window_state")
+		config.set("tekka","window_maximized","False")
 
 def inputBar_activate_cb(inputBar):
 	"""
@@ -1535,14 +1535,8 @@ def setup_mainWindow():
 	if width and height:
 		win.resize(int(width),int(height))
 
-	state = config.get("tekka","window_state")
-
-	if state:
-		try:
-			if int(state) & int(gtk.gdk.WINDOW_STATE_MAXIMIZED):
-				win.maximize()
-		except:
-			config.unset("tekka","window_state")
+	if config.getBool("tekka","window_maximized"):
+		win.maximize()
 
 	win.show_all()
 
