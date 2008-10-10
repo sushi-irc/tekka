@@ -28,7 +28,7 @@ SUCH DAMAGE.
 
 import re
 
-urlExp = re.compile("(\w+)://[^ \t\"'<>]+[^ \t\"'<>,.)]")
+urlExp = re.compile("(\w+)://[^ \t\"'<>]+[^ \t\"'<>,.)\]]")
 
 def URLToTag(message):
 	"""
