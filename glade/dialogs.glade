@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Sun Sep 14 17:28:40 2008 -->
+<!--Generated with glade3 3.4.5 on Sat Oct 11 00:57:07 2008 -->
 <glade-interface>
   <widget class="GtkDialog" id="serverDialog">
     <property name="border_width">6</property>
@@ -699,24 +699,21 @@ Are you sure you want to delete the server?</property>
                 <property name="visible">True</property>
                 <property name="spacing">6</property>
                 <child>
-                  <widget class="GtkEntry" id="regexpSearchEntry">
+                  <widget class="GtkLabel" id="label1">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="tooltip" translatable="yes">A regular expression to limit list results.</property>
-                    <signal name="activate" handler="regexpSearchEntry_activate_cb"/>
-                  </widget>
-                </child>
-                <child>
-                  <widget class="GtkButton" id="regexpListButton">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="label" translatable="yes">List</property>
-                    <property name="response_id">0</property>
-                    <signal name="clicked" handler="regexpListButton_clicked_cb"/>
+                    <property name="label" translatable="yes">Filter:</property>
                   </widget>
                   <packing>
                     <property name="expand">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkEntry" id="regexpSearchEntry">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <signal name="activate" handler="regexpSearchEntry_activate_cb"/>
+                  </widget>
+                  <packing>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -755,7 +752,17 @@ Are you sure you want to delete the server?</property>
             <property name="visible">True</property>
             <property name="layout_style">GTK_BUTTONBOX_END</property>
             <child>
-              <placeholder/>
+              <widget class="GtkButton" id="regexpListButton">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label" translatable="yes">List</property>
+                <property name="response_id">0</property>
+                <signal name="clicked" handler="regexpListButton_clicked_cb"/>
+              </widget>
+              <packing>
+                <property name="expand">False</property>
+              </packing>
             </child>
             <child>
               <widget class="GtkButton" id="cancelButton">
