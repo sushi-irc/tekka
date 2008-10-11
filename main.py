@@ -1178,8 +1178,7 @@ def serverTree_button_press_event_cb(serverTree, event):
 		else:
 			# display misc. menu
 			menu = gtk.Menu()
-			reset = gtk.MenuItem(label="Reset markups")
-			reset.set_tooltip_text(_(u"Resets the markup of all tabs."))
+			reset = gtk.MenuItem(label=_(u"Reset markup"))
 			reset.connect("activate", serverTree_misc_menu_reset_activate_cb)
 			menu.append(reset)
 			reset.show()
