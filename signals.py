@@ -61,7 +61,7 @@ def setup(_config, _gui, _com):
 	sushi.connect_to_signal("own_ctcp", ownCTCP)
 	sushi.connect_to_signal("query_ctcp", queryCTCP)
 	sushi.connect_to_signal("query_notice", queryNotice)
-	sushi.connect_to_signal("invalid_target", invalidTarget)
+	sushi.connect_to_signal("no_such", noSuch)
 
 	# action signals
 	sushi.connect_to_signal("part", userPart)
@@ -972,14 +972,19 @@ def userPart(timestamp, server, nick, channel, reason):
 				},
 			"action")
 
-def invalidTarget(time, server, target):
+def noSuch(time, server, target, type):
 	"""
 		Signal emitted if maki can't find the target
 		on the server.
 	"""
 	tab = gui.tabs.searchTab(server, target)
 
-	error = _(u"• %(target)s: No such nick/channel.") % { "target": gui.escape(target) }
+	if type == "n":
+		error = _(u"• %(target)s: No such nick/channel.") % { "target": gui.escape(target) }
+	elif type == "s":
+		error = _(u"• %(target)s: No such server.") % { "target": gui.escape(target) }
+	elif type == "c":
+		error = _(u"• %(target)s: No such channel.") % { "target": gui.escape(target) }
 
 	if tab:
 		gui.channelPrint(time, server, target, error)
