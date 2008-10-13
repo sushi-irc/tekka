@@ -967,7 +967,7 @@ Are you sure you want to delete the server?</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <property name="has_separator">False</property>
     <property name="program_name">tekka</property>
-    <property name="version">1.0-alpha2</property>
+    <property name="version">@SUSHI_VERSION@</property>
     <property name="copyright">Copyright (c) 2008 Marian Tietz &lt;nemo@ikkoku.de&gt;</property>
     <property name="comments">Oh hell yeah!</property>
     <property name="website">http://sushi.ikkoku.de/</property>
