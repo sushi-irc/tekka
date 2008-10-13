@@ -1516,9 +1516,10 @@ def setup_mainWindow():
 	"""
 	win = widgets.get_widget("mainWindow")
 
-	colormap = win.get_screen().get_rgba_colormap()
-	if colormap:
-	    gtk.widget_set_default_colormap(colormap)
+	if config.getBool("tekka", "rgba"):
+		colormap = win.get_screen().get_rgba_colormap()
+		if colormap:
+		    gtk.widget_set_default_colormap(colormap)
 
 	iconPath = config.get("tekka","status_icon")
 	if iconPath:
@@ -1601,9 +1602,11 @@ def setup_statusIcon():
 	"""
 		Sets up the status icon.
 	"""
-	gtk.widget_push_colormap(widgets.get_widget("mainWindow").get_screen().get_rgb_colormap())
+	if config.getBool("tekka", "rgba"):
+		gtk.widget_push_colormap(widgets.get_widget("mainWindow").get_screen().get_rgb_colormap())
 	gui.statusIcon = gtk.StatusIcon()
-	gtk.widget_pop_colormap()
+	if config.getBool("tekka", "rgba"):
+		gtk.widget_pop_colormap()
 
 	gui.statusIcon.set_tooltip("tekka IRC client")
 	

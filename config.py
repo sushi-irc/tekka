@@ -65,6 +65,7 @@ def setDefaults():
 	defaults["tekka"]["general_output_font"] = "Monospace"
 	defaults["tekka"]["auto_expand"] = "True"
 	defaults["tekka"]["show_general_output"] = "True"
+	defaults["tekka"]["rgba"] = "False"
 
 	defaults["colors"]={}
 	defaults["colors"]["own_nick"] = "#444444"
