@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tekka 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-10-11 13:30+0200\n"
-"PO-Revision-Date: 2008-10-11 13:59+0000\n"
+"POT-Creation-Date: 2008-10-12 17:37+0200\n"
+"PO-Revision-Date: 2008-10-13 22:45+0000\n"
 "Last-Translator: Michael Kuhn <Unknown>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2008-10-11 14:04+0000\n"
+"X-Launchpad-Export-Date: 2008-10-14 00:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../commands.py:70
@@ -128,7 +128,7 @@ msgid ""
 "« <font foreground='%(color)s'>%(nick)s</font> has left %(channel)s "
 "(%(reason)s)."
 msgstr ""
-"« <font foreground='%(color)s'>%(nick)s</font> hat %(channel)s  verlassen "
+"« <font foreground='%(color)s'>%(nick)s</font> hat %(channel)s verlassen "
 "(%(reason)s)."
 
 #: ../signals.py:961
@@ -137,17 +137,27 @@ msgid "« <font foreground='%(color)s'>%(nick)s</font> has left %(channel)s."
 msgstr ""
 "« <font foreground='%(color)s'>%(nick)s</font> hat %(channel)s verlassen."
 
-#: ../signals.py:984
+#: ../signals.py:985
 #, python-format
 msgid "• %(target)s: No such nick/channel."
 msgstr "• %(target)s: Kein solcher Nick/Channel."
 
-#: ../signals.py:996
+#: ../signals.py:987
+#, python-format
+msgid "• %(target)s: No such server."
+msgstr "• %(target)s: Kein solcher Server."
+
+#: ../signals.py:989
+#, python-format
+msgid "• %(target)s: No such channel."
+msgstr "• %(target)s: Kein solcher Channel."
+
+#: ../signals.py:1001
 #, python-format
 msgid "[%(nick)s] %(message)s"
 msgstr "[%(nick)s] %(message)s"
 
-#: ../signals.py:998
+#: ../signals.py:1003
 #, python-format
 msgid "[%(nick)s] End of whois."
 msgstr "[%(nick)s] Ende der whois-Abfrage."
@@ -245,9 +255,6 @@ msgstr "Entladen"
 #: ../glade/dialogs.glade.h:24
 msgid "translator-credits"
 msgstr ""
-"Launchpad Contributions:\n"
-"  Michael Kuhn https://launchpad.net/~suraia\n"
-"\n"
 "Launchpad Contributions:\n"
 "  Michael Kuhn https://launchpad.net/~suraia"
 
