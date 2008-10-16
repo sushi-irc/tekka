@@ -57,11 +57,10 @@ def connect():
 
 	sushi = dbus.Interface(proxy, "de.ikkoku.sushi")
 
-	sushi.connect_to_signal("connected", _connectedSignal)
 	sushi.connect_to_signal("nick", _nickSignal)
 
 	for server in fetchServers():
-		cacheOwnNick(server,fetchOwnNick(server))
+		fetchOwnNick(server)
 
 	global __connected
 	__connected = True
@@ -93,11 +92,8 @@ Signals: nickchange (nick => _nickSignal)
 		 initial nick setting (connected => _connectSignal)
 """
 
-def _connectedSignal(time, server, nick):
-	cacheOwnNick(server, nick)
-
 def _nickSignal(time, server, nick, new_nick):
-	if nick == getOwnNick(server):
+	if not nick:
 		cacheOwnNick(server, new_nick)
 
 """
@@ -139,8 +135,8 @@ def fetchNicks(server, channel):
 def fetchOwnNick(server):
 	if not sushi:
 		__noSushiMessage()
-		return ""
-	return sushi.own_nick(server)
+		return
+	sushi.nick(server, "")
 
 # caches the nick @nickname for server @server.
 def cacheOwnNick(server, nickname):

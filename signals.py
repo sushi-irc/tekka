@@ -104,8 +104,7 @@ def initServers():
 		tab = gui.tabs.createServer(server)
 		tab.connected = True
 
-		com.cacheOwnNick(server, com.fetchOwnNick(server))
-
+		# FIXME
 		if com.isAway(server, com.getOwnNick(server)):
 			tab.away = "OHAI"
 
