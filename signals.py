@@ -262,7 +262,7 @@ def serverConnect(time, server):
 	# TODO: implement status bar messages
 	#gui.statusBar.push(gui.STATUSBAR_CONNECTING, "Connecting to %s" % server)
 
-def serverConnected(time, server, nick):
+def serverConnected(time, server):
 	"""
 		maki connected successfuly to a server.
 	"""
