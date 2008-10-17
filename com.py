@@ -270,7 +270,7 @@ def getChannelAutoJoin(server, channel):
 	return sushi.server_get(server, channel, "autojoin")
 
 def setChannelAutoJoin(server, channel, switch):
-	sushi.server_set(server, channel, "autojoin", (switch and "true") or "false")
+	sushi.server_set(server, channel, "autojoin", str(switch).lower())
 
 def getServerAutoConnect(server):
 	return sushi.server_get(server, "server", "autoconnect")
