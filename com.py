@@ -89,11 +89,10 @@ def shutdown(quitmsg=""):
 
 """
 Signals: nickchange (nick => _nickSignal)
-		 initial nick setting (connected => _connectSignal)
 """
 
 def _nickSignal(time, server, nick, new_nick):
-	if not nick:
+	if not nick or nick == getOwnNick(server):
 		cacheOwnNick(server, new_nick)
 
 """
