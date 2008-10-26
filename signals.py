@@ -101,6 +101,9 @@ def initServers():
 
 	for server in com.fetchServers():
 
+		print "emitting nick signal"
+		sushi.nick(server, "")
+
 		tab = gui.tabs.createServer(server)
 		tab.connected = True
 
@@ -700,16 +703,23 @@ def userNick(time, server, nick, newNick):
 
 	tab = gui.tabs.searchTab(server, nick)
 
+	# rename query
 	if tab and tab.is_query():
 		cTab = tab.copy()
 		cTab.name = newNick
 		gui.tabs.replaceTab(tab, cTab)
+		tab = cTab
 
+	# we changed the nick
 	if newNick == com.getOwnNick(server):
 		message = _(u"• You are now known as %(newnick)s.")
 
 		# update the nick in the GUI
-		gui.setNick(newNick)
+		currentServer, currentChannel = gui.tabs.getCurrentTabs()
+		if currentServer == tab or (tab.is_channel() and currentServer.name.lower() == tab.server):
+			gui.setNick(newNick)
+
+	# someone else did
 	else:
 		message = _(u"• %(nick)s is now known as %(newnick)s.")
 
