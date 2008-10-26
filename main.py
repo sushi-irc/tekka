@@ -379,10 +379,14 @@ class guiWrapper(object):
 		if event.type == gtk.gdk.BUTTON_PRESS:
 			name = config.get("tekka","browser")
 
-			if name and webbrowser.get(name):
-				browser = webbrowser.get(name)
-			else:
-				browser = webbrowser
+			try:
+				if name and webbrowser.get(name):
+					browser = webbrowser.get(name)
+				else:
+					browser = webbrowser
+			except webbrowser.Error:
+				print "Could not open a browser"
+				return
 
 			if event.button == 1:
 				browser.open(url)
