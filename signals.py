@@ -701,6 +701,7 @@ def userNick(time, server, nick, newNick):
 		exists, it's name would be changed.
 	"""
 
+	# find a query
 	tab = gui.tabs.searchTab(server, nick)
 
 	# rename query
@@ -716,7 +717,7 @@ def userNick(time, server, nick, newNick):
 
 		# update the nick in the GUI
 		currentServer, currentChannel = gui.tabs.getCurrentTabs()
-		if currentServer == tab or (tab.is_channel() and currentServer.name.lower() == tab.server):
+		if currentServer and currentServer.name == server:
 			gui.setNick(newNick)
 
 	# someone else did
