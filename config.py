@@ -78,6 +78,8 @@ def setDefaults():
 
 	defaults["chatting"]={}
 	defaults["chatting"]["last_log_lines"] = "10"
+	defaults["chatting"]["quit_message"] = "default quit message"
+	defaults["chatting"]["part_message"] = "default part message"
 
 	defaults["autoload_plugins"] = {}
 
