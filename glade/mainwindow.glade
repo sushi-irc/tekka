@@ -135,7 +135,7 @@
                     <child>
                       <widget class="GtkMenuItem" id="menu_Dialogs_channelList">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Channel List</property>
+                        <property name="label" translatable="yes">_Channel List</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="menu_Dialogs_channelList_activate_cb"/>
                       </widget>
@@ -143,7 +143,7 @@
                     <child>
                       <widget class="GtkMenuItem" id="menu_Dialogs_plugins">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Plugins</property>
+                        <property name="label" translatable="yes">_Plugins</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="menu_Dialogs_plugins_activate_cb"/>
                       </widget>
@@ -151,11 +151,19 @@
                     <child>
                       <widget class="GtkMenuItem" id="menu_Dialogs_debug">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Debug</property>
+                        <property name="label" translatable="yes">_Debug</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="menu_Dialogs_debug_activate_cb"/>
                       </widget>
                     </child>
+					<child>
+					  <widget class="GtkMenuItem" id="menu_Dialogs_preferences">
+					    <property name="visible">True</property>
+						<property name="label" translatable="yes">Pr_eferences</property>
+						<property name="use_underline">True</property>
+						<signal name="activate" handler="menu_Dialogs_preferences_activate_cb"/>
+					  </widget>
+					</child>
                   </widget>
                 </child>
               </widget>

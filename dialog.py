@@ -122,3 +122,8 @@ def showDebugDialog():
 	d = loadDialog("debugDialog")
 
 	return d.run()
+
+def showPreferencesDialog():
+	d = loadDialog("preferencesDialog")
+
+	return d.run()

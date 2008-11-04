@@ -983,6 +983,9 @@ def menu_Dialogs_plugins_activate_cb(menuItem):
 def menu_Dialogs_debug_activate_cb(menuItem):
 	dialog.showDebugDialog()
 
+def menu_Dialogs_preferences_activate_cb(menuItem):
+	dialog.showPreferencesDialog()
+
 def menu_Help_about_activate_cb(menuItem):
 	"""
 		Show the about dialog!
@@ -1721,6 +1724,7 @@ def setupGTK():
 		"menu_Dialogs_channelList_activate_cb" : menu_Dialogs_channelList_activate_cb,
 		"menu_Dialogs_plugins_activate_cb" : menu_Dialogs_plugins_activate_cb,
 		"menu_Dialogs_debug_activate_cb" : menu_Dialogs_debug_activate_cb,
+		"menu_Dialogs_preferences_activate_cb" : menu_Dialogs_preferences_activate_cb,
 	# help menu
 		"menu_Help_about_activate_cb" : menu_Help_about_activate_cb,
 	# main window signals
