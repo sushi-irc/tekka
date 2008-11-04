@@ -138,7 +138,11 @@ def run(tab):
 
 	calendar.fd = fdata[0]
 	calendar.offsets = fdata[1]
-	calendar.select_day(localtime()[2])
+
+	ltime = localtime()
+
+	calendar.select_month(ltime[1]-1, ltime[0])
+	calendar.select_day(ltime[2])
 
 	dialog = widgets.get_widget("historyDialog")
 
