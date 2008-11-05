@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Tue Sep 30 22:28:22 2008 -->
+<!--Generated with glade3 3.4.5 on Wed Nov  5 01:19:13 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="mainWindow">
     <property name="width_request">800</property>
@@ -156,14 +156,14 @@
                         <signal name="activate" handler="menu_Dialogs_debug_activate_cb"/>
                       </widget>
                     </child>
-					<child>
-					  <widget class="GtkMenuItem" id="menu_Dialogs_preferences">
-					    <property name="visible">True</property>
-						<property name="label" translatable="yes">Pr_eferences</property>
-						<property name="use_underline">True</property>
-						<signal name="activate" handler="menu_Dialogs_preferences_activate_cb"/>
-					  </widget>
-					</child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menu_Dialogs_preferences">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">gtk-preferences</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                      </widget>
+                    </child>
                   </widget>
                 </child>
               </widget>
