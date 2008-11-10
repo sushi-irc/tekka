@@ -486,7 +486,7 @@ def ownMessage(timestamp, server, channel, message):
 			prefix,
 			config.get("colors","own_nick","#000000"),
 			nick,
-			config.get("colors","own_nick","#000000"),
+			config.get("colors","own_text","#000000"),
 			message))
 
 	elif tab.is_query():
