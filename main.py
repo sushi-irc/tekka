@@ -386,17 +386,26 @@ class guiWrapper(object):
 					browser = webbrowser
 			except webbrowser.Error:
 				print "Could not open a browser"
-				return
+				browser = None
 
-			if event.button == 1:
+			except TypeError:
+				print "Fetching bug in python2.4"
+				browser = None
+
+			if event.button == 1 and browser:
 				browser.open(url)
 
 			elif event.button == 3:
 				menu = gtk.Menu()
 				cb = gtk.Clipboard()
-				openitem = gtk.MenuItem(label="Open")
-				openitem.connect("activate", lambda w,b: b.open(url), browser)
-				menu.append(openitem)
+
+				if browser:
+					openitem = gtk.MenuItem(label="Open")
+					openitem.connect("activate",
+						lambda w,b: b.open(url), browser)
+
+					menu.append(openitem)
+
 				copyitem = gtk.MenuItem(label="Copy URL")
 				copyitem.connect("activate", lambda w,u,c: c.set_text(u), url, cb)
 				menu.append(copyitem)
