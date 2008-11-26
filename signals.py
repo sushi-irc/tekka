@@ -62,6 +62,7 @@ def setup(_config, _gui, _com):
 	sushi.connect_to_signal("query_ctcp", queryCTCP)
 	sushi.connect_to_signal("query_notice", queryNotice)
 	sushi.connect_to_signal("no_such", noSuch)
+	sushi.connect_to_signal("cannot_join", cannotJoin)
 
 	# action signals
 	sushi.connect_to_signal("part", userPart)
@@ -1002,6 +1003,30 @@ def noSuch(time, server, target, type):
 		gui.channelPrint(time, server, target, error)
 	else:
 		gui.serverPrint(time, server, error)
+
+def cannotJoin(time, server, channel, reason):
+	"""
+		The channel could not be joined.
+		reason : { l (full), i (invite only), b (banned), k (key) }
+	"""
+	message = _("Unknown reason.")
+
+	if reason == "l":
+		message = _("The channel is full.")
+	elif reason == "i":
+		message = _("The channel is invite only.")
+	elif reason == "b":
+		message = _("You're banned.")
+	elif reason == "k":
+		message = _("You need a key.")
+
+	gui.currentServerPrint (time, server,
+		_("You can't join channel %(channel)s: %(reason)s" % {
+			"channel":channel,
+			"reason":message
+			}
+		))
+
 
 def whois(time, server, nick, message):
 	"""
