@@ -159,13 +159,16 @@ class guiWrapper(object):
 			"%(users)s – %(ops)s" % { "users": m_users, "ops": m_ops })
 
 
-	def setFont(self, textView, fontFamily):
+	def setFont(self, textView, font):
 		"""
 			Sets the font of the textView to
 			the font identified by fontFamily
 		"""
-		fd = FontDescription()
-		fd.set_family(fontFamily)
+		fd = FontDescription(font)
+
+		if not fd:
+			print "Font _not_ modified (previous error)"
+			return
 
 		textView.modify_font(fd)
 
