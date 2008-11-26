@@ -420,17 +420,17 @@ class guiWrapper(object):
 		Moves the nick list to the left side of the window if left is True
 		otherwise to the right bottom vpaned.
 		"""
-	
+
 		# XXX: no move to the already set position (will crash....)
-	
+
 		nl = widgets.get_widget("VBox_nickList")
-	
+
 		# TODO: fix naming in glade file, listVbox is wrong, it's a vpaned...
 		vpaned = widgets.get_widget("listVbox")
 		hbox = widgets.get_widget("mainHBox")
 		# TODO: fix naming (Vbox => VBox)
 		vbox = widgets.get_widget("mainVbox")
-	
+
 		if left:
 			"""
 			remove the nick list packet from the vpaned on the right side,
@@ -441,45 +441,45 @@ class guiWrapper(object):
 			with new border (6px) and the right side is the main hbox.
 			After this, apply the new hpaned to the main vbox.
 			"""
-	
+
 			vpaned.remove(nl)
 			vbox.remove(hbox)
-	
+
 			nlHpaned = gtk.HPaned()
 			nlHpaned.pack1(nl)
 			nlHpaned.pack2(hbox)
 			nlHpaned.show()
-	
+
 			nl.set_property("border-width", 6)
-	
+
 			vbox.pack_start(nlHpaned)
-	
+
 			# set to the middle (above status bar, under menu bar)
 			vbox.reorder_child(nlHpaned, 1)
 
 			widgets.get_widget("inputBar").grab_focus()
 
 			config.set("tekka", "nick_list_left", "True")
-	
+
 		else:
 			nl.set_property("border-width", 0)
-	
+
 			nlHpaned = vbox.get_children()[1]
-			
+
 			nl = nlHpaned.get_child1()
 			nlHpaned.remove(nl)
-	
+
 			# move nl box to the right vpaned
 			vpaned.pack2(nl, resize=True, shrink=False)
-	
+
 			main = nlHpaned.get_child2()
 			nlHpaned.remove(main)
-	
+
 			vbox.remove(nlHpaned)
-	
+
 			vbox.pack_start(main)
 			vbox.reorder_child(main, 1)
-	
+
 			config.set("tekka", "nick_list_left", "False")
 
 
@@ -966,7 +966,7 @@ def menu_View_showStatusIcon_toggled_cb(menuItem):
 	else:
 		gui.statusIcon.set_visible(True)
 		config.set("tekka", "show_status_icon", "True")
-		
+
 
 def menu_Dialogs_channelList_activate_cb(menuItem):
 	"""
@@ -1178,7 +1178,7 @@ def serverTree_button_press_event_cb(serverTree, event):
 
 	elif event.button == 3:
 		# popup tab menu
-	
+
 		if tab:
 
 			menu = menus.getServerTreeMenu(tab)
@@ -1249,7 +1249,7 @@ def nickList_menu_leftSide_toggled_cb(menuItem):
 
 	else:
 		gui.moveNickList(left=False)
-		
+
 
 def nickList_button_press_event_cb(nickList, event):
 	"""
@@ -1625,7 +1625,7 @@ def setup_statusIcon():
 		gtk.widget_pop_colormap()
 
 	gui.statusIcon.set_tooltip("tekka IRC client")
-	
+
 	gui.statusIcon.connect("popup-menu", statusIcon_popup_menu_cb)
 
 	try:

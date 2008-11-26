@@ -267,7 +267,7 @@ def loadPlugin(name):
 		plugin = imp.load_module(name, *modTuple)
 	except ImportError,e:
 		print "Failure while loading plugin '%s': " % (name), e
-	
+
 	try:
 		modTuple[0].close()
 	except (IndexError,AttributeError):
