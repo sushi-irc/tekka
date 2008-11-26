@@ -94,7 +94,7 @@ def makiQuit(currentServer, currentChannel, args):
 	"""
 	if args:
 		# /quit <server> [<reason>]
-		if gui.tabs.searchTab(None, args[0]):
+		if gui.tabs.searchTab(args[0]):
 			com.quitServer(args[0], " ".join(args[1:]))
 		else:
 			# /quit [<reason>]
