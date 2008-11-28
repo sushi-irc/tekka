@@ -262,7 +262,14 @@ class guiWrapper(object):
 		timestring = time.strftime("%H:%M", time.localtime(timestamp))
 
 		message = URLToTag(message)
-		outputString = "[%s] %s" % (timestring, message)
+
+		if not config.getBool("tekka","color_text"):
+			colorHack = ""
+		else:
+			colorHack = "foreground='%s'" % config.get("colors", "text_%s" % type, "#000000")
+
+		outputString = "[%s] <font %s>%s</font>" % \
+			(timestring, colorHack, message)
 
 		channelTab = self.tabs.searchTab(server, channel)
 
@@ -278,17 +285,38 @@ class guiWrapper(object):
 
 		buffer.insertHTML(buffer.get_end_iter(), outputString)
 
+		if not channelTab.connected:
+			# warn about missing connection to $server
+
+			notification = _("Warning: You are not connected "
+						"to server %(server)s.") % {
+							"server": channelTab.server
+						}
+
+			nColor = config.get("colors","notification","#000000")
+
+			buffer.insertHTML(buffer.get_end_iter(),
+				'<font foreground="%(nf_color)s">'
+				'%(notification)s</font>' % {
+					"nf_color" : nColor,
+					"notification" : notification
+				})
+
+
 		if config.getBool("tekka","show_general_output"):
+			# write it to the general output, also
+
 			goBuffer = widgets.get_widget("generalOutput").get_buffer()
-			goBuffer.insertHTML(goBuffer.get_end_iter(), \
-					"[%s] &lt;%s:%s&gt; %s" % (timestring, server, channel, message))
+			goBuffer.insertHTML(goBuffer.get_end_iter(),
+					"[%s] &lt;%s:%s&gt; %s" % (
+						timestring, server, channel, message
+					))
 
 			self.scrollGeneralOutput()
 
+		# notification in server/channel list
 		if self.tabs.isActive(channelTab):
 			if channelTab.autoScroll:
-				print "scrolling in channelPrint"
-				#idle_add(lambda: self.scrollOutput())
 				self.scrollOutput()
 
 		else:

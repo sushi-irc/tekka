@@ -66,15 +66,18 @@ def setDefaults():
 	defaults["tekka"]["auto_expand"] = "True"
 	defaults["tekka"]["show_general_output"] = "True"
 	defaults["tekka"]["rgba"] = "False"
+	defaults["tekka"]["color_text"] = "True" 		# colors enabled?
+	defaults["tekka"]["color_nick_text"] = "False" 	# color the text as well as the nick
 
 	defaults["colors"]={}
 	defaults["colors"]["own_nick"] = "#444444"
 	defaults["colors"]["own_text"] = "#444444"
-	defaults["colors"]["nick"] = "#2222AA"
-	defaults["colors"]["join_nick"] = "#004444"
-	defaults["colors"]["part_nick"] = "#004444"
-	defaults["colors"]["mode_act_nick"] = "#AA2222"
-	defaults["colors"]["mode_param"] = "#2222AA"
+	defaults["colors"]["notification"] = "#AAAAAA"
+	defaults["colors"]["text_message"] = "#000000"
+	defaults["colors"]["text_action"] = "#BBBBBB"
+	defaults["colors"]["text_highlightmessage"] = "#FF0000"
+	defaults["colors"]["text_highlightaction"] = "#0000FF"
+	defaults["colors"]["nick"] = "#2222AA" # default foreign nick color
 
 	defaults["chatting"]={}
 	defaults["chatting"]["last_log_lines"] = "10"
