@@ -40,8 +40,6 @@ import __main__
 """
 
 gui = None
-config = None
-com = None
 
 def setup():
 	"""
