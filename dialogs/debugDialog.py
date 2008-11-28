@@ -27,6 +27,7 @@ SUCH DAMAGE.
 """
 
 import gtk
+from gettext import gettext as _
 
 gui = None
 
@@ -53,7 +54,7 @@ def run():
 		return
 
 	textView = gtk.TextView()
-	button = gtk.Button(label="C_ompile and run")
+	button = gtk.Button(label=_("C_ompile and run"))
 
 	dialog.vbox.pack_start(textView)
 	dialog.vbox.pack_end(button)
