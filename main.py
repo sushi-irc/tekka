@@ -285,24 +285,6 @@ class guiWrapper(object):
 
 		buffer.insertHTML(buffer.get_end_iter(), outputString)
 
-		if not channelTab.connected:
-			# warn about missing connection to $server
-
-			notification = _("Warning: You are not connected "
-						"to server %(server)s.") % {
-							"server": channelTab.server
-						}
-
-			nColor = config.get("colors","notification","#000000")
-
-			buffer.insertHTML(buffer.get_end_iter(),
-				'<font foreground="%(nf_color)s">'
-				'%(notification)s</font>' % {
-					"nf_color" : nColor,
-					"notification" : notification
-				})
-
-
 		if config.getBool("tekka","show_general_output"):
 			# write it to the general output, also
 

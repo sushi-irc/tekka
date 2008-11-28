@@ -37,29 +37,64 @@ com = None
 
 commands = {}
 
+def warnNoConnection(tab):
+	if not tab.buffer:
+		return
+
+	if tab.is_server():
+		name = tab.name
+	elif tab.is_channel() or tab.is_query():
+		name = tab.server
+
+	notification = _("Warning: You are not connected "
+		"to server %(server)s.") % {
+			"server": name
+		}
+
+	nColor = config.get("colors","notification","#000000")
+
+	tab.buffer.insertHTML(tab.buffer.get_end_iter(),
+		'<font foreground="%(nf_color)s">'
+		'%(notification)s</font>' % {
+		"nf_color" : nColor,
+		"notification" : notification
+	})
+
+
 def parseInput(text):
 	"""
-		TODO: document
+	TODO: document
 	"""
 	if not text:
 		return
 
 	serverTab,channelTab = gui.tabs.getCurrentTabs()
 
+	if channelTab and not channelTab.connected:
+		warnNoConnection(channelTab)
+	elif serverTab and not serverTab.connected:
+		warnNoConnection(serverTab)
+
 	if text[0] != "/":
 		if not channelTab:
 			return
+
 		com.sendMessage(serverTab.name, channelTab.name, text)
+
 	elif text[:2] == "//":
 		if not channelTab:
 			return
+
 		com.sendMessage(serverTab.name, channelTab.name, text[1:])
+
 	else:
+		print "case 3"
 		list = text[1:].split(" ")
 		cmd = list[0]
 
 		if not cmd:
 			return gui.myPrint("No command given.")
+
 		elif not commands.has_key(cmd):
 			if not serverTab:
 				return gui.myPrint("No server active.")
@@ -90,7 +125,7 @@ def makiQuit(currentServer, currentChannel, args):
 		If no server is given, the current server is quit.
 
 		Usage: /quit <server> [<reason>]
-		       /quit [<reason>]
+			   /quit [<reason>]
 	"""
 	if args:
 		# /quit <server> [<reason>]
@@ -127,7 +162,7 @@ def makiPart(currentServer, currentChannel, args):
 		If no channel is given, the current channel is parted.
 
 		Usage: /part <channel> [<reason>]
-		       /part [<reason>]
+			   /part [<reason>]
 	"""
 	if args and currentServer:
 		# /part <channel> [<reason>]
@@ -202,8 +237,8 @@ def makiMode(currentServer, currentChannel, args):
 		Usage: /mode <target> (+|-)<mode> [<param>]
 
 		Example: /mode #xesio +o nemo
-		OR:      /mode nemo +x
-		OR:      /mode #xesio +m
+		OR:	  /mode nemo +x
+		OR:	  /mode #xesio +m
 	"""
 	if not args or len(args) < 2:
 		return gui.myPrint("Usage: /mode <target> (+|-)<mode> [<param>]")
