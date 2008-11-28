@@ -403,7 +403,7 @@ class guiWrapper(object):
 		#idle_add(lambda: self.scrollOutput())
 		self.scrollOutput()
 
-	def urlHandler(self, texttag, widget, event, iter, url):
+	def URLHandler(self, texttag, widget, event, iter, url):
 		if event.type == gtk.gdk.MOTION_NOTIFY:
 			pass
 
@@ -531,7 +531,7 @@ class guiWrapper(object):
 			"""
 				Returns a HTMLBuffer with assigned URL handler.
 			"""
-			buffer = self.htmlbuffer(handler = gui.urlHandler)
+			buffer = self.htmlbuffer(handler = gui.URLHandler)
 			return buffer
 
 		def createChannel(self, server, name):
