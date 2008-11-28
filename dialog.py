@@ -27,11 +27,8 @@ SUCH DAMAGE.
 """
 
 import sys
-try:
-	import pygtk
-	pygtk.require("2.0")
-except:
-	pass
+import com
+import config
 
 try:
 	import gtk
@@ -40,20 +37,11 @@ except:
 	print "GTK load failed."
 	sys.exit(1)
 
-gui = None
-com = None
-config = None
-
-def setup(_config, _gui, _com):
+def setup():
 	"""
-		Look, I don't have to tell you what a
-		setup method does, don't I?
+	No special meaning here.
 	"""
-	global config, gui, com
-
-	config = _config
-	gui = _gui
-	com = _com
+	pass
 
 def loadDialog(name):
 	importName = "dialogs."+name

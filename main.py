@@ -1690,14 +1690,14 @@ def connectMaki():
 	gui.setUseable(False)
 
 	if com.connect():
-		signals.setup(config, gui, com)
-		commands.setup(config, gui, com)
-		dialog.setup(config, gui, com)
-		menus.setup(config, gui, com)
+		signals.setup()
+		commands.setup()
+		dialog.setup()
+		menus.setup()
 
 		gui.setUseable(True)
 
-		plugins.setup(gui)
+		plugins.setup()
 
 
 def setupGTK():

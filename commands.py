@@ -31,10 +31,11 @@ from dbus import UInt64
 
 from gettext import gettext as _
 
-config = None
-gui = None
-com = None
+import config
+import com
+import __main__
 
+gui = None
 commands = {}
 
 def warnNoConnection(tab):
@@ -502,17 +503,15 @@ def removeCommand(command):
 
 	return False
 
-def setup(_config, _gui, _com):
+def setup():
 	"""
 		Setup the command module.
 		  * Set modules
 		  * Set command mapping
 	"""
-	global config, gui, com, commands
+	global gui, commands
 
-	config = _config
-	gui = _gui
-	com = _com
+	gui = __main__.gui
 
 	commands = {
 		"connect" : makiConnect,

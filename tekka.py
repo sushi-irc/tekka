@@ -43,6 +43,7 @@ import imp
 import config
 import com
 import commands
+import __main__
 
 gui = None
 pluginPaths = []
@@ -310,12 +311,13 @@ def unloadPlugin(name):
 	_plugins[name]["enabled"] = False
 	return True
 
-def setup(_gui):
+def setup():
 	"""
 		module setup function.
 	"""
 	global gui, pluginPaths
 
+	gui = __main__.gui
 
 	# if the call is a re-setup reload all plugins
 	# TODO: check if this is needed.
@@ -324,8 +326,6 @@ def setup(_gui):
 		for key in _plugins:
 			unloadPlugin(key)
 			loadPlugin(key)
-
-	gui = _gui
 
 	# TODO: make multiple plugin paths possible
 	path = config.get("tekka", "plugin_dir", default="")

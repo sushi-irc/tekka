@@ -31,6 +31,10 @@ import gtk.glade
 from gobject import idle_add
 import dialog
 
+import config
+import com
+import __main__
+
 """
 	References to modules loaded by main script
 """
@@ -39,15 +43,13 @@ gui = None
 config = None
 com = None
 
-def setup(_config, _gui, _com):
+def setup():
 	"""
-		setup the module.
+	setup the module, make GUI module accessable.
 	"""
-	global config, gui, com
+	global gui
 
-	config = _config
-	gui = _gui
-	com = _com
+	gui = __main__.gui
 
 """
 	Server tree tab menu.

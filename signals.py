@@ -32,21 +32,17 @@ from gettext import gettext as _
 from dbus import UInt64
 import time as mtime
 
-config = None
+import com
+import config
+import __main__
+
 gui = None
-com = None
 sushi = None
 
-# TODO:  config values like quit or part message should
-# TODO:: be retrieved from maki and set to maki.
+def setup():
+	global gui, sushi
 
-def setup(_config, _gui, _com):
-	global config, com, gui, sushi
-
-	config = _config
-	gui = _gui
-	com = _com
-
+	gui = __main__.gui
 	sushi = com.sushi
 
 	# Message-Signals
