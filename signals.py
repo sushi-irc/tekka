@@ -219,15 +219,32 @@ def getNickColor(nick):
 		The returned color depends on the color mapping
 		set in config module.
 	"""
+	if not config.getBool("tekka","color_text"):
+		return
+
 	colors = config.get("nick_colors", default={})
 
 	colors = colors.values()
 
 	if not colors:
-		return "#2222AA"
+		return config.get("colors","nick","#000000")
 
 	return colors[sum([ord(n) for n in nick])%len(colors)]
 
+def getTextColor(nick):
+	"""
+		Same as getNickColor but for text and defaults
+		to another value (text_message)
+	"""
+	if not config.getBool("tekka","color_text"):
+		return
+
+	colors = config.get("nick_colors",default={})
+	colors = colors.values()
+
+	if not colors or not config.getBool("tekka","color_nick_text"):
+		return config.get("colors","text_message","#000000")
+	return colors[sum([ord(n) for n in nick]) % len(colors)]
 
 """
 Server signals
@@ -410,8 +427,6 @@ def userMessage(timestamp, server, nick, channel, message):
 		PRIVMSGs are coming in here.
 	"""
 	message = gui.escape(message)
-	highlight_pre = ""
-	highlight_post = ""
 
 	# highlight text if own nick is in message
 	i = -1
@@ -429,15 +444,21 @@ def userMessage(timestamp, server, nick, channel, message):
 			break
 
 	if i >= 0:
+		# set mode to highlight and disable setting
+		# of text color for the main message (would
+		# override channelPrint() highlight color)
+
 		type = "highlightmessage"
-		highlight_pre = "<font foreground='#FF0000'>"
-		highlight_post = "</font>"
-
 		gui.setUrgent(True)
-	else:
-		type = "message"
+		messageString = message
 
-	color = getNickColor(nick)
+	else:
+		# no highlight, normal message type and
+		# text color is allowed.
+
+		type = "message"
+		messageString = "<font foreground='%s'>%s</font>" % (
+			getTextColor(nick), message)
 
 	tab = gui.tabs.searchTab(server, channel)
 
@@ -449,13 +470,11 @@ def userMessage(timestamp, server, nick, channel, message):
 		prefix = ""
 
 	gui.channelPrint(timestamp, server, channel,
-		"%s&lt;%s<font foreground='%s'>%s</font>&gt; %s%s" % (
-			highlight_pre,
+		"&lt;%s<font foreground='%s'>%s</font>&gt; %s" % (
 			prefix,
-			color,
+			getNickColor(nick),
 			gui.escape(nick),
-			message,
-			highlight_post
+			messageString,
 		), type)
 
 def ownMessage(timestamp, server, channel, message):
@@ -537,6 +556,8 @@ def userMode(time, server, nick, target, mode, param):
 			/mode #xesio +o nemo
 		will result in:
 			userMode(<time>,<server>,"nemo","#xesio","+o","nemo")
+
+		TODO: has to be colored and gettexted (o.0)
 	"""
 
 	# nick: /mode target +mode param
@@ -611,32 +632,40 @@ def ownCTCP(time, server, target, message):
 	if tab:
 		# valid query/channel found, print it there
 
-		nickColor = config.get("colors","nick_color","#000000")
-		gui.channelPrint(time, server, tab.name, \
-			"&lt;CTCP:<font foreground='%s'>%s</font>&gt; %s" % \
-				(nickColor, com.getOwnNick(server), gui.escape(message)))
+		nickColor = config.get("colors","own_nick","#000000")
+		textColor = config.get("colors","own_text","#000000")
+
+		gui.channelPrint(time, server, tab.name,
+			"&lt;CTCP:<font foreground='%s'>%s</font>&gt; "+
+			"<font foreground='%s'>%s</font>" % \
+				(nickColor, com.getOwnNick(server),
+				textColor, gui.escape(message)))
 
 	else:
 		gui.serverPrint(time, server,
-			"CTCP request from you to %s: %s" % (gui.escape(target),gui.escape(message)))
+			"CTCP request from you to %s: %s" % \
+			(gui.escape(target),gui.escape(message)))
 
 def queryCTCP(time, server, nick, message):
 	"""
 		A user sends us a CTCP request over a query.
 
 		If no query window is open, send it to the server tab.
-		FIXME: prove this for all methods which act like queryCTCP
 	"""
 	tab = gui.tabs.searchTab(server, nick)
 
 	if tab:
 		gui.channelPrint(time, server, tab.name, \
-				"&lt;CTCP:<font foreground='%s'>%s</font>&gt; %s" % \
-				(getNickColor(nick), gui.escape(nick), gui.escape(message)))
+				"&lt;CTCP:<font foreground='%s'>%s</font>&gt; "+
+				"<font foreground='%s'>%s</font>" % \
+				(getNickColor(nick), gui.escape(nick),
+				getTextColor(nick), gui.escape(message)))
 	else:
 		gui.currentServerPrint(time, server, \
-				"&lt;CTCP:<font foreground='%s'>%s</font>&gt; %s" % \
-				(getNickColor(nick), gui.escape(nick), gui.escape(message)))
+				"&lt;CTCP:<font foreground='%s'>%s</font>&gt; "
+				"<font foreground='%s'>%s</font>" % \
+				(getNickColor(nick), gui.escape(nick),
+				getTextColor(nick), gui.escape(message)))
 
 def ownNotice(time, server, target, message):
 	"""
@@ -651,11 +680,16 @@ def ownNotice(time, server, target, message):
 
 	if tab:
 		gui.channelPrint(time, server, tab.name, \
-			"&gt;<font foreground='%s'>%s</font>&lt; %s" % \
-				(getNickColor(target), gui.escape(target), gui.escape(message)))
+			"&gt;<font foreground='%s'>%s</font>&lt; "
+			"<font foreground='%s'>%s</font>" % \
+				(getNickColor(target), gui.escape(target),
+				getTextColor(target), gui.escape(message)))
 	else:
-		gui.currentServerPrint(time, server, "&gt;<font foreground='%s'>%s</font>&lt; %s" \
-				% (getNickColor(target), gui.escape(target), gui.escape(message)))
+		gui.currentServerPrint(time, server,
+			"&gt;<font foreground='%s'>%s</font>&lt; "
+			"<font foreground='%s'>%s</font>" % \
+				(getNickColor(target), gui.escape(target),
+				getTextColor(target), gui.escape(message)))
 
 
 def queryNotice(time, server, nick, message):
@@ -667,33 +701,46 @@ def queryNotice(time, server, nick, message):
 	if tab:
 		if tab.name != nick:
 			# correct notation of tab name
+
 			cTab = tab.copy()
 			cTab.name = nick
 			gui.tabs.replaceTab(tab,cTab)
 
 	if tab:
 		gui.channelPrint(time, server, tab.name,
-				"-<font foreground='%s'>%s</font>- %s" % \
-				(getNickColor(nick), gui.escape(nick), gui.escape(message)))
+				"-<font foreground='%s'>%s</font>- "
+				"<font foreground='%s'>%s</font>" % \
+				(getNickColor(nick), gui.escape(nick),
+				getTextColor(nick), gui.escape(message)))
 	else:
 		gui.currentServerPrint(time, server,
-				"-<font foreground='%s'>%s</font>- %s" % \
-				(getNickColor(nick), gui.escape(nick), gui.escape(message)))
+				"-<font foreground='%s'>%s</font>- "
+				"<font foreground='%s'>%s</font>" % \
+				(getNickColor(nick), gui.escape(nick),
+				getTextColor(nick), gui.escape(message)))
 
 def userNotice(time, server, nick, target, message):
 	"""
 		A user noticed to a channel (target).
 	"""
 	gui.channelPrint(time, server, target, \
-			"-<font foreground='%s'>%s</font>- %s" % \
-			(getNickColor(nick), gui.escape(nick), gui.escape(message)))
+			"-<font foreground='%s'>%s</font>- "
+			"<font foreground='%s'>%s</font>" % \
+			(getNickColor(nick), gui.escape(nick),
+			getTextColor(nick), gui.escape(message)))
 
 def userAction(time, server, nick, channel, action):
 	"""
-		A user sent a /me
+		A user sent a action (text in third person)
 	"""
 	action = gui.escape(action)
-	gui.channelPrint(time, server, channel, "%s %s" % (nick,action))
+	nickColor = config.get("colors","own_nick","#000000")
+	textColor = config.get("colors","own_text","#000000")
+
+	gui.channelPrint(time, server, channel,
+		"<font foreground='%s'>%s</font> "
+		"<font foreground='%s'>%s</font>" % \
+			(nickColor, nick, textColor, action))
 
 def userNick(time, server, nick, newNick):
 	"""
@@ -701,11 +748,10 @@ def userNick(time, server, nick, newNick):
 		If a query window for this nick on this server
 		exists, it's name would be changed.
 	"""
-
 	# find a query
 	tab = gui.tabs.searchTab(server, nick)
 
-	# rename query
+	# rename query if found
 	if tab and tab.is_query():
 		cTab = tab.copy()
 		cTab.name = newNick
@@ -738,9 +784,15 @@ def userNick(time, server, nick, newNick):
 		if tab.is_query() and tab.name != newNick:
 			continue
 
-		gui.channelPrint(time, server, tab.name, message % {
-			"nick": gui.escape(nick),
-			"newnick": gui.escape(newNick)
+		nickString = "<font foreground='%s'>%s</font>" % \
+			(getNickColor(nick), gui.escape(nick))
+		newNickString = "<font foreground='%s'>%s</font>" % \
+			(getNickColor(newNick), gui.escape(newNick))
+
+		gui.channelPrint(time, server, tab.name,
+			message % {
+				"nick": nickString,
+				"newnick": newNickString
 			},
 			"action")
 
@@ -750,45 +802,65 @@ def userKick(time, server, nick, channel, who, reason):
 		If the kicked user is ourself mark the channel as
 		joined=False
 	"""
-	if reason:
-		reason = "(%s)" % reason
-
 	tab = gui.tabs.searchTab(server, channel)
 
 	if not tab:
 		print "userKick: channel '%s' does not exist." % (channel)
 		return
 
+	channelString = "<font foreground='%s'>%s</font>" % (
+		getTextColor(channel), gui.escape(channel))
+
+	nickString = "<font foreground='%s'>%s</font>" % (
+		getNickColor(nick), gui.escape(nick))
+
+	reasonString = "(<font foreground='%s'>%s</font>)" % (
+		getTextColor(nick), gui.escape(reason))
+
 	if who == com.getOwnNick(server):
 		tab.joined = False
 
 		gui.updateServerTreeMarkup(tab.path)
-		gui.channelPrint(time, server, channel, gui.escape(
-			"« You have been kicked from %s by %s %s" % (channel,nick,reason)
-			))
+
+		message = _("« You have been kicked from %(channel)s "
+			"by %(nick)s %(reason)s" % {
+				"channel": channelString,
+				"nick": nickString,
+				"reason": reasonString })
+
+		gui.channelPrint(time, server, channel, message, "highlightaction")
 
 	else:
 		tab.nickList.removeNick(who)
 
 		if gui.tabs.isActive(tab):
 			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
-		gui.channelPrint(time, server, channel, gui.escape(
-			"« %s was kicked from %s by %s %s" % (who,channel,nick,reason)),
-			"action")
+
+		whoString = "<font foreground='%s'>%s</font>" % (
+			getNickColor(who), gui.escape(who))
+
+		message = _("« %(who)s was kicked from %(channel)s by %(nick)s %(reason)s") % {
+			"who": whoString,
+			"channel": channelString,
+			"nick": nickString,
+			"reason": reasonString }
+
+		gui.channelPrint(time, server, channel, message, "action")
 
 
 def userQuit(time, server, nick, reason):
 	"""
-		The user identified by nick quit on the server "server" with
-		the reason "reason". "reason" can be empty ("").
-		If we are the user all channels were set to joined=False and
-		the server's connected-flag is set to False (as well as the
-		connect-flags of the childs).
-		If another user quits on all channels on which the user was on
-		a message is generated.
+	The user identified by nick quit on the server "server" with
+	the reason "reason". "reason" can be empty ("").
+	If we are the user all channels were set to joined=False and
+	the server's connected-flag is set to False (as well as the
+	connect-flags of the childs).
+
+	If another user quits on all channels on which the user was on
+	a message is generated.
 	"""
 	if nick == com.getOwnNick(server):
-		# set the connected flag to False on the server
+		# set the connected flag to False for the server
 		serverTab = gui.tabs.searchTab(server)
 
 		if not serverTab:
@@ -809,14 +881,17 @@ def userQuit(time, server, nick, reason):
 		else:
 			message = _(u"« You have quit.")
 
+		# deactivate channels/queries
 		for channelTab in channels:
 			if channelTab.is_channel():
 				channelTab.joined=False
+
 			channelTab.connected=False
 			gui.updateServerTreeMarkup(channelTab.path)
 			gui.channelPrint(time, server, channelTab.name, message % { "reason": reason }, type="action")
 
-	else:
+	else: # another user quit the network
+
 		if reason:
 			message = _(u"« %(nick)s has quit (%(reason)s).")
 		else:
@@ -828,22 +903,37 @@ def userQuit(time, server, nick, reason):
 			print "No channels but quit reported.. Hum wtf? o.0"
 			return
 
+
+
+		nickString = "<font foreground='%s'>%s</font>" % (
+			getNickColor(nick),
+			gui.escape(nick))
+
+		reasonString = "<font foreground='%s'>%s</font>" % (
+			getTextColor(nick),
+			gui.escape(reason))
+
+		message = message % {
+			"nick": nickString,
+			"reason": reasonString
+		}
+
 		# print in all channels where nick joined a message
 		for channelTab in channels:
 
 			if channelTab.is_query():
+				# on query with `nick` only print quitmessage
+
 				if channelTab.name.lower() == nick.lower():
-					# on query with `nick` only print quitmessage
-
 					gui.channelPrint(time, server, channelTab.name,
-					message % {
-						"nick": gui.escape(nick),
-						"reason": gui.escape(reason) },
-						"action")
+						message, "action")
 
-				# skip queries in general
+				# skip nickList modification for queries
 				continue
 
+			# search for the nick in the channel
+			# and print the quit message if the
+			# nick was found.
 			nickList = channelTab.nickList
 			nicks = nickList.getNicks() or []
 
@@ -851,24 +941,26 @@ def userQuit(time, server, nick, reason):
 				nickList.removeNick(nick)
 
 				if gui.tabs.isActive(channelTab):
-					gui.setUserCount(len(nickList), nickList.get_operator_count())
+					# update gui display for usercount
+					gui.setUserCount(len(nickList),
+						nickList.get_operator_count())
 
 				gui.channelPrint(time, server, channelTab.name,
-				message % { "nick": gui.escape(nick), "reason": gui.escape(reason) }, "action")
+					message, "action")
 
 
 def userJoin(timestamp, server, nick, channel):
 	"""
-		A user identified by "nick" joins the channel "channel" on
-		server "server.
+	A user identified by "nick" joins the channel "channel" on
+	server "server.
 
-		If the nick is our we add the channeltab and set properties
-		on it, else we generate messages and stuff.
+	If the nick is our we add the channeltab and set properties
+	on it, else we generate messages and stuff.
 	"""
 
 	if nick == com.getOwnNick(server):
 		# we joined a channel, fetch nicks and topic, create
-		# channel and such things...
+		# channel and print the log
 
 		tab = gui.tabs.searchTab(server, channel)
 
@@ -887,33 +979,61 @@ def userJoin(timestamp, server, nick, channel):
 		if gui.tabs.isActive(tab):
 			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
 
-		tab.joined=True
+		tab.joined = True
+		tab.connected = True
 
 		gui.updateServerTreeMarkup(tab.path)
 
 		if config.getBool("tekka","switch_to_channel_after_join"):
 			gui.tabs.switchToPath(tab.path)
 
+		nickString = "You"
+		channelString = "<font foreground='%s'>%s</font>" % (
+			getTextColor(channel), gui.escape(channel))
+
 		message = _(u"» You have joined %(channel)s.")
 
-	else:
-		# another one joined the channel
+	else: # another one joined the channel
+
 		tab = gui.tabs.searchTab(server, channel)
 
 		if not tab:
 			print "No tab for channel '%s' in userJoin (not me)."
 			return
 
-		message = _(u"» <font foreground='%(color)s'>%(nick)s</font> has joined %(channel)s.")
+		message = _(u"» %(nick)s has joined %(channel)s.")
 
+		nickString = "<font foreground='%s'>%s</font>" % (
+			getNickColor(nick),
+			gui.escape(nick))
+
+		channelString = "<font foreground='%s'>%s</font>" % (
+			getTextColor(channel),
+			gui.escape(channel))
+
+ 
 		tab.nickList.appendNick(nick)
 
 		if gui.tabs.isActive(tab):
 			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
 
-	gui.channelPrint(timestamp, server, channel, message % { "color": config.get("colors","join_nick","#000000"), "nick": gui.escape(nick), "channel": gui.escape(channel) }, "action")
+	message = message % {
+		"nick": nickString,
+		"channel": channelString
+		}
+
+	gui.channelPrint(timestamp, server, channel, message, "action")
 
 def userNames(timestamp, server, nick, channel):
+	"""
+	this signal is called for each nick in the channel.
+	remove the nick to make sure it isn't there (hac--workaround),
+	add the nick, fetch the prefix for it and at least
+	update the user count.
+
+	To avoid a non existent channel this method checks against
+	a missing channel tab and adds it if needed.
+	"""
 	if not nick:
 		return
 
@@ -927,7 +1047,11 @@ def userNames(timestamp, server, nick, channel):
 			return
 
 		lastLog(server, channel)
+
+		tab.joined = True
+		tab.connected = True
 		gui.updateServerTreeShortcuts()
+		gui.updateServerTreeMarkup(tab.path)
 
 	# FIXME
 	tab.nickList.removeNick(nick)
@@ -936,15 +1060,14 @@ def userNames(timestamp, server, nick, channel):
 	if gui.tabs.isActive(tab):
 		gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
 
-	gui.updateServerTreeMarkup(tab.path)
-
 	fetchPrefixes(server,channel,tab.nickList,[nick])
 
 def userPart(timestamp, server, nick, channel, reason):
 	"""
-		A user parted the channel.
-		If we are the user who parted, mark the channel
-		as parted (joined=False)
+	A user parted the channel.
+	
+	If we are the user who parted, mark the channel
+	as parted (joined=False)
 	"""
 
 	tab = gui.tabs.searchTab(server, channel)
@@ -954,6 +1077,14 @@ def userPart(timestamp, server, nick, channel, reason):
 		return
 
 	if nick == com.getOwnNick(server):
+		# we parted
+
+		channelString = "<font foreground='%s'>%s</font>" % (
+			getTextColor(channel), gui.escape(channel))
+
+		reasonString = "<font foreground='%s'>%s</font>" % (
+			getTextColor(nick), gui.escape(reason))
+
 		if reason:
 			message = _(u"« You have left %(channel)s (%(reason)s).")
 		else:
@@ -962,34 +1093,44 @@ def userPart(timestamp, server, nick, channel, reason):
 		tab.joined = False
 		gui.updateServerTreeMarkup(tab.path)
 
-		gui.channelPrint(timestamp, server, channel, message % { "channel": channel, "reason": reason }, "action")
+		gui.channelPrint(timestamp, server, channel,
+			message % { "channel": channelString, "reason": reasonString },
+			"action")
 
-	else:
-		# another user parted
+	else: # another user parted
+
+		nickString = "<font foreground='%s'>%s</font>" % (
+			getNickColor(nick), gui.escape(nick))
+
+		channelString = "<font foreground='%s'>%s</font>" % (
+			getTextColor(channel), gui.escape(channel))
+
+		reasonString = "<font foreground='%s'>%s</font>" % (
+			getTextColor(nick), gui.escape(reason))
+
 		if reason:
-			message = _(u"« <font foreground='%(color)s'>%(nick)s</font> has left %(channel)s (%(reason)s).")
+			message = _(u"« %(nick)s has left %(channel)s (%(reason)s).")
 		else:
-			message = _(u"« <font foreground='%(color)s'>%(nick)s</font> has left %(channel)s.")
-
+			message = _(u"« %(nick)s has left %(channel)s.")
 
 		tab.nickList.removeNick(nick)
 
 		if gui.tabs.isActive(tab):
 			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
+
 		gui.channelPrint(timestamp, server, channel,
 			message % {
-				"color": config.get("colors","part_nick","#000000"),
-				"nick": gui.escape(nick),
-				"channel": gui.escape(channel),
-				"reason": gui.escape(reason)
+				"nick": nickString,
+				"channel": channelString,
+				"reason": reasonString
 				},
 			"action")
 
 def noSuch(time, server, target, type):
 	"""
-		Signal emitted if maki can't find the target
-		on the server.
+	Signal is emitted if maki can't find the target on the server.
 	"""
+
 	tab = gui.tabs.searchTab(server, target)
 
 	if type == "n":
