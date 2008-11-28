@@ -1011,7 +1011,7 @@ def userJoin(timestamp, server, nick, channel):
 			getTextColor(channel),
 			gui.escape(channel))
 
- 
+
 		tab.nickList.appendNick(nick)
 
 		if gui.tabs.isActive(tab):
@@ -1065,7 +1065,7 @@ def userNames(timestamp, server, nick, channel):
 def userPart(timestamp, server, nick, channel, reason):
 	"""
 	A user parted the channel.
-	
+
 	If we are the user who parted, mark the channel
 	as parted (joined=False)
 	"""
