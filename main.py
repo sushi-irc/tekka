@@ -428,11 +428,9 @@ class guiWrapper(object):
 
 		nl = widgets.get_widget("VBox_nickList")
 
-		# TODO: fix naming in glade file, listVbox is wrong, it's a vpaned...
-		vpaned = widgets.get_widget("listVbox")
+		vpaned = widgets.get_widget("listVPaned")
 		hbox = widgets.get_widget("mainHBox")
-		# TODO: fix naming (Vbox => VBox)
-		vbox = widgets.get_widget("mainVbox")
+		vbox = widgets.get_widget("mainVBox")
 
 		if left:
 			"""

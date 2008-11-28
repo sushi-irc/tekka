@@ -11,7 +11,7 @@
     <signal name="delete_event" handler="mainWindow_delete_event_cb"/>
     <signal name="window_state_event" handler="mainWindow_window_state_event_cb"/>
     <child>
-      <widget class="GtkVBox" id="mainVbox">
+      <widget class="GtkVBox" id="mainVBox">
         <property name="visible">True</property>
         <child>
           <widget class="GtkMenuBar" id="menubar1">
@@ -202,7 +202,7 @@
               <widget class="GtkHPaned" id="hpaned1">
                 <property name="visible">True</property>
                 <child>
-                  <widget class="GtkVBox" id="outputVbox">
+                  <widget class="GtkVBox" id="outputVBox">
                     <property name="width_request">600</property>
                     <property name="visible">True</property>
                     <property name="border_width">6</property>
@@ -316,7 +316,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkVPaned" id="listVbox">
+                  <widget class="GtkVPaned" id="listVPaned">
                     <property name="width_request">200</property>
                     <property name="visible">True</property>
                     <property name="border_width">6</property>
