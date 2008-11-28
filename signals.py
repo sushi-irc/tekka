@@ -195,22 +195,26 @@ def lastLog(server, channel, lines=0):
 				channel,
 				UInt64(lines or config.get("chatting", "last_log_lines", default="0"))
 				):
-		buffer.insertHTML(buffer.get_end_iter(), \
+		buffer.insertHTML(buffer.get_end_iter(),
 		"<font foreground=\"#DDDDDD\">%s</font>" % gui.escape(line))
 
 def updatePrefix(tab, nick, mode):
 	"""
-		checks if the mode is a prefix-mode (e.g. +o)
-		If so, the prefix of the nick `nick` in channel `channel`
-		will be updated (fetched).
+	checks if the mode is a prefix-mode (e.g. +o)
+	If so, the prefix of the nick `nick` in channel `channel`
+	will be updated (fetched).
 	"""
-	if not nick: return
+	if not nick:
+		return
+
 	# FIXME: cache support_prefix()!
 	if mode[1] in sushi.support_prefix(tab.server)[0]:
-		tab.nickList.setPrefix(nick, com.fetchPrefix(tab.server, tab.name, nick))
+		tab.nickList.setPrefix(nick,
+			com.fetchPrefix(tab.server, tab.name, nick))
 
 		if gui.tabs.isActive(tab):
-			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
+			gui.setUserCount(len(tab.nickList),
+				tab.nickList.get_operator_count())
 
 
 def getNickColor(nick):
@@ -734,8 +738,13 @@ def userAction(time, server, nick, channel, action):
 		A user sent a action (text in third person)
 	"""
 	action = gui.escape(action)
-	nickColor = config.get("colors","own_nick","#000000")
-	textColor = config.get("colors","own_text","#000000")
+
+	if nick != com.getOwnNick(server):
+		nickColor = getNickColor(nick)
+		textColor = getTextColor(nick)
+	else:
+		nickColor = config.get("colors","own_nick","#000000")
+		textColor = config.get("colors","own_text","#000000")
 
 	gui.channelPrint(time, server, channel,
 		"<font foreground='%s'>%s</font> "
@@ -744,9 +753,9 @@ def userAction(time, server, nick, channel, action):
 
 def userNick(time, server, nick, newNick):
 	"""
-		A user (or the maki user) changed it's nick.
-		If a query window for this nick on this server
-		exists, it's name would be changed.
+	A user (or the maki user) changed it's nick.
+	If a query window for this nick on this server
+	exists, it's name would be changed.
 	"""
 	# find a query
 	tab = gui.tabs.searchTab(server, nick)
