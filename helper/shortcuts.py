@@ -74,7 +74,7 @@ def removeShortcut(accelGroup, widget, shortcut):
 			widget.remove_accelerator(accelGroup, keyval, mask)
 			widget.disconnect(handler)
 			del regmap[accelGroup][widget][i]
-			print "deleted shortcut %s." % ("".join(keys))
+			#print "deleted shortcut %s." % ("".join(keys))
 			break
 		i+=1
 
