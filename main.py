@@ -75,7 +75,7 @@ gui = None
 # TODO:: to an active on (for error prevention too).
 
 """
-	The "core": the gui wrapper class.
+The "core": the gui wrapper class.
 """
 
 class guiWrapper(object):
@@ -1125,6 +1125,7 @@ def inputBar_key_press_event_cb(inputBar, event):
 		# tab completion comes here.
 
 		tabcompletion.complete(tab, text)
+		return True
 
 	if key != "Tab":
 		tabcompletion.stopIteration()
@@ -1338,15 +1339,15 @@ def scrolledWindow_output_vscrollbar_valueChanged_cb(range):
 	if (adjust.upper - adjust.page_size) == range.get_value():
 		# bottom reached
 		tab.autoScroll = True
-		print "autoscroll for %s = True" % (tab.name)
+		#print "autoscroll for %s = True" % (tab.name)
 	else:
 		tab.autoScroll = False
-		print "autoScroll for %s = False" % (tab.name)
+		#print "autoScroll for %s = False" % (tab.name)
 
 	# cache the last position to set after switch
 	tab.buffer.scrollPosition=range.get_value()
 
-	print "scrollPosition is now %d" % (tab.buffer.scrollPosition)
+	#print "scrollPosition is now %d" % (tab.buffer.scrollPosition)
 
 def statusIcon_activate_cb(statusIcon):
 	"""
