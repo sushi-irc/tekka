@@ -6,7 +6,7 @@
     <property name="title">About tekka</property>
     <property name="resizable">False</property>
     <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
-    <property name="icon">icon.svg</property>
+    <property name="icon">../../graphics/icon.svg</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <property name="has_separator">False</property>
     <property name="program_name">tekka</property>
@@ -46,7 +46,7 @@ Marian Tietz</property>
 Marian Tietz</property>
     <property name="translator_credits" translatable="yes">translator-credits</property>
     <property name="artists">Marian Tietz</property>
-    <property name="logo">icon.svg</property>
+    <property name="logo">../../graphics/icon.svg</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox8">
         <property name="visible">True</property>
