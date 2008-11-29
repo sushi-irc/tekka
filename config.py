@@ -106,7 +106,7 @@ def setDefaults():
 	# can't be set by the set method (will raise NoSectionError)
 	defaults["gladefiles"] = {}
 	defaults["gladefiles"]["mainwindow"] = os.path.join(prefix, "glade", "mainwindow.glade")
-	defaults["gladefiles"]["dialogs"] = os.path.join(prefix, "glade", "dialogs.glade")
+	defaults["gladefiles"]["dialogs"] = os.path.join(prefix, "glade", "dialogs") + os.path.sep
 
 def readConfigFile():
 	"""

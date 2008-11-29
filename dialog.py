@@ -56,7 +56,8 @@ def loadDialog(name):
 		dialog = getattr(dialog, comp)
 	if not dialog:
 		return None
-	dialog.setup(sys.modules["dialog"])#, gtk, gtk.glade)
+
+	dialog.setup()
 	return dialog
 
 def showEditServerDialog(server):
