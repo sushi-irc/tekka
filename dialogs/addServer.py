@@ -27,31 +27,34 @@ SUCH DAMAGE.
 """
 
 import gtk.glade
+import com
+import config
 
 widgets = None
-com = None
 
 RESPONSE_ADD = 1
 
-def setup(dialogs):
-	global widgets, com
-	com = dialogs.com
-	widgets = gtk.glade.XML(dialogs.config.get("gladefiles","dialogs"), "serverAdd")
+def setup():
+	global widgets
+
+	path = config.get("gladefiles","dialogs") + "serverAdd.glade"
+	widgets = gtk.glade.XML(path)
 
 def run():
 	data = None
 
 	dialog = widgets.get_widget("serverAdd")
 
-	servernameInput = widgets.get_widget("serverAdd_Servername")
-	serveraddressInput = widgets.get_widget("serverAdd_Serveradress")
-	serverportInput = widgets.get_widget("serverAdd_Serverport")
-	serverautoconnectInput = widgets.get_widget("serverAdd_Autoconnect")
-	nicknameInput = widgets.get_widget("serverAdd_Nick")
-	realnameInput = widgets.get_widget("serverAdd_Realname")
-	nickservInput = widgets.get_widget("serverAdd_Nickserv")
+	servernameInput = widgets.get_widget("nameEntry")
+	serveraddressInput = widgets.get_widget("AddressEntry")
+	serverportInput = widgets.get_widget("portEntry")
+	serverautoconnectInput = widgets.get_widget("autoConnectCheckButton")
+	nicknameInput = widgets.get_widget("nickNameEntry")
+	realnameInput = widgets.get_widget("realNameEntry")
+	nickservInput = widgets.get_widget("nickServEntry")
 
 	result = dialog.run()
+
 	if result == RESPONSE_ADD:
 		data = {}
 		data["servername"] = servernameInput.get_text()
@@ -60,10 +63,12 @@ def run():
 		data["nick"] = nicknameInput.get_text()
 		data["name"] = realnameInput.get_text()
 		data["nickserv"] = nickservInput.get_text()
+
 		if serverautoconnectInput.get_active():
 			data["autoconnect"] = "true"
 		else:
 			data["autoconnect"] = "false"
+
 	dialog.destroy()
 
 	return data

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
+<glade-interface>
+  <widget class="GtkDialog" id="serverDialog">
+    <property name="border_width">6</property>
+    <property name="title" translatable="yes">Server List</property>
+    <property name="default_height">400</property>
+    <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
+    <property name="has_separator">False</property>
+    <child internal-child="vbox">
+      <widget class="GtkVBox" id="dialog-vbox1">
+        <property name="visible">True</property>
+        <property name="spacing">12</property>
+        <child>
+          <widget class="GtkViewport" id="viewport1">
+            <property name="visible">True</property>
+            <property name="resize_mode">GTK_RESIZE_QUEUE</property>
+            <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+            <child>
+              <widget class="GtkTreeView" id="serverList">
+                <property name="height_request">0</property>
+                <property name="visible">True</property>
+                <signal name="select_cursor_row" handler="serverList_select_cursor_row_cb"/>
+                <signal name="row_activated" handler="serverList_row_activated_cb"/>
+              </widget>
+            </child>
+          </widget>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkHButtonBox" id="hbuttonbox1">
+            <property name="visible">True</property>
+            <property name="layout_style">GTK_BUTTONBOX_CENTER</property>
+            <child>
+              <widget class="GtkButton" id="deleteButton">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label" translatable="yes">gtk-delete</property>
+                <property name="use_stock">True</property>
+                <property name="response_id">0</property>
+                <signal name="clicked" handler="deleteButton_clicked_cb"/>
+              </widget>
+            </child>
+            <child>
+              <widget class="GtkButton" id="editButton">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label">gtk-edit</property>
+                <property name="use_stock">True</property>
+                <property name="response_id">1</property>
+                <signal name="clicked" handler="editButton_clicked_cb"/>
+              </widget>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkButton" id="addButton">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label" translatable="yes">gtk-add</property>
+                <property name="use_stock">True</property>
+                <property name="response_id">2</property>
+                <signal name="clicked" handler="addButton_clicked_cb"/>
+              </widget>
+              <packing>
+                <property name="position">2</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child internal-child="action_area">
+          <widget class="GtkHButtonBox" id="dialog-action_area1">
+            <property name="visible">True</property>
+            <property name="layout_style">GTK_BUTTONBOX_END</property>
+            <child>
+              <widget class="GtkButton" id="closeButton">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label">gtk-cancel</property>
+                <property name="use_stock">True</property>
+                <property name="response_id">-6</property>
+              </widget>
+              <packing>
+                <property name="secondary">True</property>
+              </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <widget class="GtkButton" id="connectButton">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="label" translatable="yes">gtk-connect</property>
+                <property name="use_stock">True</property>
+                <property name="response_id">3</property>
+              </widget>
+              <packing>
+                <property name="position">3</property>
+              </packing>
+            </child>
+          </widget>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">GTK_PACK_END</property>
+          </packing>
+        </child>
+      </widget>
+    </child>
+  </widget>
+</glade-interface>

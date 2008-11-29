@@ -28,23 +28,23 @@ SUCH DAMAGE.
 
 import gtk
 import gtk.glade
+import com
+import dialog
+import config
 
-com = None
-dialogs = None
 widgets = None
 
 RESPONSE_CONNECT = 3
 
-def setup(_dialogs):
-	global widgets, com, dialogs
+def setup():
+	global widgets
 
-	widgets = gtk.glade.XML(_dialogs.config.get("gladefiles","dialogs"), "serverDialog")
-	com = _dialogs.com
-	dialogs = _dialogs
+	path = config.get("gladefiles","dialogs") + "server.glade"
+	widgets = gtk.glade.XML(path)
 
-	sigdic = { "serverDialog_Add_clicked_cb" : openAddDialog,
-				"serverDialog_Edit_clicked_cb" : openEditDialog,
-				"serverDialog_Delete_clicked_cb" : openDeleteDialog
+	sigdic = { "addButton_clicked_cb" : openAddDialog,
+				"editButton_clicked_cb" : openEditDialog,
+				"deleteButton_clicked_cb" : openDeleteDialog
 			}
 
 	widgets.signal_autoconnect(sigdic)
@@ -64,7 +64,7 @@ def addServer(newServer):
 		print "Wrong data to addServer."
 		return
 
-	serverList = widgets.get_widget("serverDialog_Serverlist").get_model()
+	serverList = widgets.get_widget("serverList").get_model()
 	serverList.append([newServer["servername"]])
 
 def retrieveServerlist():
@@ -72,7 +72,7 @@ def retrieveServerlist():
 		Fetch server list from maki and get
 		infos about every server.
 	"""
-	store = widgets.get_widget("serverDialog_Serverlist").get_model()
+	store = widgets.get_widget("serverList").get_model()
 	store.clear()
 
 	servers = com.fetchServerList()
@@ -83,7 +83,7 @@ def run():
 	dialog = widgets.get_widget("serverDialog")
 
 	# get the treeview
-	serverView = widgets.get_widget("serverDialog_Serverlist")
+	serverView = widgets.get_widget("serverList")
 
 	# add servercolumn
 	renderer = gtk.CellRendererText()
@@ -125,7 +125,7 @@ def serverNameEdit(cellrenderertext, path, newText):
 	"""
 
 	try:
-		oldText = widgets.get_widget("serverDialog_Serverlist").get_model()[path][0]
+		oldText = widgets.get_widget("serverList").get_model()[path][0]
 	except IndexError:
 		return
 
@@ -155,7 +155,7 @@ def deleteServer(servername):
 		Remove server from Serverlist widget
 		and delete server in maki.
 	"""
-	serverList = widgets.get_widget("serverDialog_Serverlist").get_model()
+	serverList = widgets.get_widget("serverList").get_model()
 
 	for row in serverList:
 		if row[0] == servername:
@@ -163,7 +163,7 @@ def deleteServer(servername):
 			com.deleteServer(servername)
 
 def openAddDialog(widget):
-	data = dialogs.showAddServerDialog()
+	data = dialog.showAddServerDialog()
 
 	if data:
 		# TODO: these methods check input twice at all.
@@ -171,7 +171,7 @@ def openAddDialog(widget):
 		createServer(data) # add server in maki
 
 def openEditDialog(widget):
-	view = widgets.get_widget("serverDialog_Serverlist")
+	view = widgets.get_widget("serverList")
 	serverList = view.get_model()
 
 	path = view.get_cursor()[0]
@@ -185,7 +185,7 @@ def openEditDialog(widget):
 	else:
 		servername = serverList[path][0]
 
-	data = dialogs.showEditServerDialog(servername)
+	data = dialog.showEditServerDialog(servername)
 
 	if not servername:
 		print "Error in retrieving the servername"
@@ -197,7 +197,7 @@ def openEditDialog(widget):
 		retrieveServerlist()
 
 def openDeleteDialog(widget):
-	view = widgets.get_widget("serverDialog_Serverlist")
+	view = widgets.get_widget("serverList")
 
 	path = view.get_cursor()[0]
 	servername = None
@@ -213,7 +213,7 @@ def openDeleteDialog(widget):
 		print "Error in retrieving the servername"
 		return
 
-	result = dialogs.showDeleteServerDialog()
+	result = dialog.showDeleteServerDialog()
 	# result = True if answer = Yes
 
 	if result:

@@ -26,10 +26,9 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+from __main__ import gui
 import gtk
 from gettext import gettext as _
-
-gui = None
 
 def button_clicked_cb(button, textView):
 	"""
@@ -69,6 +68,5 @@ def run():
 
 	dialog.show_all()
 
-def setup(dialog):
-	global gui
-	gui = dialog.gui
+def setup():
+	pass

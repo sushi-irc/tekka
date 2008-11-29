@@ -28,12 +28,14 @@ SUCH DAMAGE.
 
 import gtk
 import gtk.glade
+import config
 
 widgets = None
 
-def setup(dialogs):
+def setup():
 	global widgets
-	widgets = gtk.glade.XML(dialogs.config.get("gladefiles","dialogs"), "serverDelete")
+	path = config.get("gladefiles","dialogs") + "serverDelete.glade"
+	widgets = gtk.glade.XML(path)
 
 def run():
 	"""

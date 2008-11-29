@@ -26,6 +26,9 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+# TODO:  add a status bar or something which 
+# TODO:: reports that the listing is done
+
 from re import compile
 
 from gettext import gettext as _
@@ -34,8 +37,9 @@ import gtk
 import gtk.glade
 
 import signals
+import com
+import config
 
-com = None
 widgets = None
 currentServer = None
 filterExpression = None
@@ -78,10 +82,10 @@ def resetSignal(*x):
 	del signals.list.func_globals["filterExpression"]
 	del signals.list.func_globals["cache"]
 
-def regexpListButton_clicked_cb(button):
+def listButton_clicked_cb(button):
 	"""
 	Button for regexp list was hit, compile expression
-	from regexpSearchEntry (if any) and start retrieving
+	from regexpEntry (if any) and start retrieving
 	the server listing.
 	"""
 	if not currentServer:
@@ -90,7 +94,11 @@ def regexpListButton_clicked_cb(button):
 
 	global filterExpression, cache
 
-	filterExpression = compile(widgets.get_widget("regexpSearchEntry").get_text())
+	try:
+		filterExpression = compile(widgets.get_widget("regexpEntry").get_text())
+	except: # TODO: sre_constants.error?
+		# TODO: print error msg in message box
+		pass
 
 	listView.get_model().clear()
 
@@ -189,16 +197,15 @@ def sushiList(time, server, channel, user, topic):
 		):
 		store.append(row=(channel, int(user), topic))
 
-def setup(_dialog):
-	global com, widgets, listView
+def setup():
+	global widgets, listView
 
-	com = _dialog.com
-
-	widgets = gtk.glade.XML(_dialog.config.get("gladefiles","dialogs"), "channelList")
+	path = config.get("gladefiles","dialogs") + "channelList.glade"
+	widgets = gtk.glade.XML(path)
 
 	sigdic = {
-		"regexpListButton_clicked_cb" : regexpListButton_clicked_cb,
-		"regexpSearchEntry_activate_cb" : regexpListButton_clicked_cb,
+		"listButton_clicked_cb" : listButton_clicked_cb,
+		"regexpEntry_activate_cb" : listButton_clicked_cb,
 		"listView_row_activated_cb" : listView_row_activated_cb
 	}
 

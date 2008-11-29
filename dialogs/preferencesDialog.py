@@ -90,13 +90,14 @@ def tekka_output_font_fontSelectionButton_clicked_cb(button):
 def tekka_general_output_font_fontSelectionButton_clicked_cb(button):
 	pass
 
-def setup(dialogInterface):
+def setup():
 	"""
 	read glade stuff
 	"""
 	global widgets
 
-	widgets = gtk.glade.XML(config.get("gladefiles","dialogs"), "preferencesDialog")
+	path = config.get("gladefiles","dialogs") + "preferences.glade"
+	widgets = gtk.glade.XML(path)
 
 	sigdic = {
 		"tekka_output_font_fontSelectionButton_clicked_cb" :

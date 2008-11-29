@@ -1010,7 +1010,7 @@ def menu_Help_about_activate_cb(menuItem):
 	"""
 		Show the about dialog!
 	"""
-	widgets = gtk.glade.XML(config.get("gladefiles","dialogs"), "aboutDialog")
+	widgets = gtk.glade.XML(config.get("gladefiles","dialogs") + "about.glade")
 	d = widgets.get_widget("aboutDialog")
 	d.run()
 	d.destroy()

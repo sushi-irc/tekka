@@ -33,6 +33,7 @@ import com
 
 from time import localtime
 import os
+from __main__ import gui
 
 widgets = None
 
@@ -149,16 +150,15 @@ def run(tab):
 	dialog.set_title("History for "+tab.name)
 
 	dialog.connect("response", dialog_response_cb, fdata[0])
-	
+
 	# non modal..
 	dialog.show_all()
 
-def setup(dialog):
-	"""
-	"""
+def setup():
 	global widgets
 
-	widgets = gtk.glade.XML(config.get("gladefiles","dialogs"), "historyDialog")
+	path = config.get("gladefiles","dialogs") + "history.glade"
+	widgets = gtk.glade.XML(path)
 
 	sigdic = {
 		"calendar_month_changed_cb" : calendar_month_changed_cb,
@@ -168,4 +168,4 @@ def setup(dialog):
 	widgets.signal_autoconnect(sigdic)
 	widgets.get_widget("calendar").connect("realize", calendar_realize_cb)
 
-	dialog.gui.setFont(widgets.get_widget("historyView"), config.get("tekka","history_font","Monospace"))
+	gui.setFont(widgets.get_widget("historyView"), config.get("tekka","history_font","Monospace"))

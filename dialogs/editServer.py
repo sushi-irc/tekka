@@ -28,34 +28,35 @@ SUCH DAMAGE.
 
 import gtk
 import gtk.glade
+import config
+import com
 
 widgets = None
-com = None
 
-def setup(dialogs):
-	global widgets, com
-	com = dialogs.com
-	widgets = gtk.glade.XML(dialogs.config.get("gladefiles","dialogs"),"serverEdit")
+def setup():
+	global widgets
+	path = config.get("gladefiles","dialogs") + "serverEdit.glade"
+	widgets = gtk.glade.XML(path)
 
 def run(server):
 	serverdata = com.fetchServerInfo(server)
 
-	serveraddressInput = widgets.get_widget("serverEdit_Address")
+	serveraddressInput = widgets.get_widget("addressEntry")
 	serveraddressInput.set_text(serverdata["address"])
 
-	serverportInput = widgets.get_widget("serverEdit_Port")
+	serverportInput = widgets.get_widget("portEntry")
 	serverportInput.set_text(serverdata["port"])
 
-	servernameInput = widgets.get_widget("serverEdit_Realname")
+	servernameInput = widgets.get_widget("realNameEntry")
 	servernameInput.set_text(serverdata["name"])
 
-	servernickInput = widgets.get_widget("serverEdit_Nick")
+	servernickInput = widgets.get_widget("nickEntry")
 	servernickInput.set_text(serverdata["nick"])
 
-	servernickservInput = widgets.get_widget("serverEdit_Nickserv")
+	servernickservInput = widgets.get_widget("nickServEntry")
 	servernickservInput.set_text(serverdata["nickserv"])
 
-	serverautoconnectInput = widgets.get_widget("serverEdit_Autoconnect")
+	serverautoconnectInput = widgets.get_widget("autoConnectCheckButton")
 
 	if serverdata["autoconnect"] == "true":
 		serverautoconnectInput.set_active(True)

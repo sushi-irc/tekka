@@ -43,7 +43,6 @@ COL_VERSION,
 COL_DESC) = range(6)
 
 def run():
-
 	dialog = widgets.get_widget("plugins")
 
 	while True:
@@ -62,8 +61,12 @@ def loadPlugin_clicked_cb(button):
 		return
 
 	print "loading plugin '%s'..." % (store[path][COL_NAME])
+
 	if plugins.loadPlugin(store[path][COL_NAME]):
 		store.set(store.get_iter(path), COL_LOADED, True)
+	else:
+		# TODO: print error in msgbox
+		pass
 
 def unloadPlugin_clicked_cb(button):
 	view = widgets.get_widget("pluginView")
@@ -102,6 +105,8 @@ def loadPluginList():
 
 	view.get_model().clear()
 
+	# TODO:  replace this with "plugin_path",
+	# TODO:: a string seperated by ':'.
 	path = config.get("tekka", "plugin_dir")
 
 	if not path:
@@ -138,14 +143,15 @@ def loadPluginList():
 
 	return True
 
-def setup(dialog):
+def setup():
 	global widgets
 
-	widgets = gtk.glade.XML(config.get("gladefiles","dialogs"), "plugins")
+	path = config.get("gladefiles","dialogs") + "plugins.glade"
+	widgets = gtk.glade.XML(path)
 
 	sigdic = {
-		"loadPlugin_clicked_cb" : loadPlugin_clicked_cb,
-		"unloadPlugin_clicked_cb" : unloadPlugin_clicked_cb
+		"loadButton_clicked_cb" : loadPlugin_clicked_cb,
+		"unloadButton_clicked_cb" : unloadPlugin_clicked_cb
 	}
 
 	widgets.signal_autoconnect(sigdic)
