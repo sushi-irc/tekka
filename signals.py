@@ -827,8 +827,8 @@ def userKick(time, server, nick, channel, who, reason):
 
 		gui.updateServerTreeMarkup(tab.path)
 
-		message = _("« You have been kicked from %(channel)s "
-			"by %(nick)s %(reason)s" % {
+		message = _(u"« You have been kicked from %(channel)s "
+			"by %(nick)s (%(reason)s)." % {
 				"channel": channelString,
 				"nick": nickString,
 				"reason": reasonString })
@@ -844,7 +844,7 @@ def userKick(time, server, nick, channel, who, reason):
 		whoString = "<font foreground='%s'>%s</font>" % (
 			getNickColor(who), gui.escape(who))
 
-		message = _("« %(who)s was kicked from %(channel)s by %(nick)s %(reason)s") % {
+		message = _(u"« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s).") % {
 			"who": whoString,
 			"channel": channelString,
 			"nick": nickString,
@@ -1155,19 +1155,19 @@ def cannotJoin(time, server, channel, reason):
 		The channel could not be joined.
 		reason : { l (full), i (invite only), b (banned), k (key) }
 	"""
-	message = _("Unknown reason.")
+	message = _("Unknown reason")
 
 	if reason == "l":
 		message = _("The channel is full.")
 	elif reason == "i":
-		message = _("The channel is invite only.")
+		message = _("The channel is invite-only.")
 	elif reason == "b":
-		message = _("You're banned.")
+		message = _("You are banned.")
 	elif reason == "k":
-		message = _("You need a key.")
+		message = _("You need the correct channel key.")
 
 	gui.currentServerPrint (time, server,
-		_("You can't join channel %(channel)s: %(reason)s" % {
+		_("You can not join %(channel)s: %(reason)s" % {
 			"channel":channel,
 			"reason":message
 			}
