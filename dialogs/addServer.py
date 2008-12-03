@@ -46,7 +46,7 @@ def run():
 	dialog = widgets.get_widget("serverAdd")
 
 	servernameInput = widgets.get_widget("nameEntry")
-	serveraddressInput = widgets.get_widget("AddressEntry")
+	serveraddressInput = widgets.get_widget("addressEntry")
 	serverportInput = widgets.get_widget("portEntry")
 	serverautoconnectInput = widgets.get_widget("autoConnectCheckButton")
 	nicknameInput = widgets.get_widget("nickNameEntry")

@@ -61,7 +61,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="adderssEntry">
+                  <widget class="GtkEntry" id="addressEntry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                   </widget>
@@ -132,7 +132,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="serverAdd_Realname">
+                  <widget class="GtkEntry" id="realNameEntry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                   </widget>
