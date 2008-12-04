@@ -150,6 +150,22 @@ def createServer(newServer):
 
 	com.createServer(newServer)
 
+def editServer(server):
+	"""
+		Edit a server in maki.
+	"""
+	if not server.has_key("servername") \
+		or not server.has_key("address") \
+		or not server.has_key("port") \
+		or not server.has_key("autoconnect") \
+		or not server.has_key("nick") \
+		or not server.has_key("name"):
+
+		print "wrong data to createserver"
+		return
+
+	com.editServer(server)
+
 def deleteServer(servername):
 	"""
 		Remove server from Serverlist widget
@@ -193,7 +209,7 @@ def openEditDialog(widget):
 
 	if data:
 		print "User edited server"
-		createServer(data)
+		editServer(data)
 		retrieveServerlist()
 
 def openDeleteDialog(widget):

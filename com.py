@@ -241,10 +241,14 @@ def createServer(smap):
 	name = smap["servername"]
 	del smap["servername"]
 	for (k,v) in smap.items():
-		if not v:
-			sushi.server_remove(name, "server", k)
-		else:
+		if v:
 			sushi.server_set(name, "server", k, v)
+
+def editServer(smap):
+	name = smap["servername"]
+	del smap["servername"]
+	for (k,v) in smap.items():
+		sushi.server_set(name, "server", k, v)
 
 def renameServer(name, newName):
 	sushi.server_rename(name, newName)
