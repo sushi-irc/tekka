@@ -321,7 +321,7 @@ def makiCTCP(serverTab, channelTab, args):
 	if not serverTab:
 		return gui.myPrint("Could not determine server.")
 
-	com.ctcp(serverTab.name, args[0], args[1])
+	com.ctcp(serverTab.name, args[0], " ".join(args[1:]))
 
 def makiNotice(serverTab, channelTab, args):
 	"""
