@@ -47,7 +47,7 @@ class expandingList(gtk.Table):
 
 		self._add_plus_button(row, column)
 		self._add_minus_button(row, column+1)
-		
+
 		self.show_all()
 
 	def add_row(self, under=-1):
@@ -84,7 +84,7 @@ class expandingList(gtk.Table):
 		"""
 		if row < (self._rows-1):
 			# swap needed
-			
+
 			for i in reversed(range(row, self._rows-1)):
 				cells = self._matrix[i]
 
@@ -119,33 +119,38 @@ class expandingList(gtk.Table):
 		for widget in cells:
 			self.remove(widget)
 
-		for i in range(index, self._rows-1):
-			row = self._matrix[i+1]
+		for i in range(index+1, self._rows):
+			# i -> (i-1)
+			row = self._matrix[i]
+			newRow = i - 1
 
 			column = 0
 			for widget in row:
 				self.remove(widget)
-				self.attach(widget, column, column+1, i, i+1)
+				self.attach(widget, column, column+1, newRow, i)
 				column += 1
 
-			row[-1].row = i
-			row[-2].row = i
+			row[-1].row = newRow
+			row[-2].row = newRow
 
-			self._matrix[i] = self._matrix[i+1]
+			self._matrix[newRow] = self._matrix[i]
 
-		del self._matrix[index]
+		# NOW remove the line
+		del self._matrix[-1]
 
 		# bring the table to the new size
 		self._rows -= 1
 		self.resize(self._rows, self._columns)
 
-		i=0
-		for c in self._matrix:
-			print "%d: " % (i), c
-			i+=1
-
 	def attach(self, *x):
+		if not x:
+			return
+		widget = x[0]
+
 		gtk.Table.attach(self, *x)
+
+		if widget.parent:
+			self.child_set_property(widget, "y-options", gtk.SHRINK)
 
 	def _button_add_clicked(self, button):
 		self.add_row(under=button.row)
@@ -173,20 +178,21 @@ class expandingList(gtk.Table):
 		self._matrix[row].append(a)
 		self.attach(a, column, column+1, row, row+1)
 
-
-
 if __name__ == "__main__":
 	win = gtk.Window()
+	win.resize(400,400)
+
+	sWin = gtk.ScrolledWindow()
 
 	expList = expandingList(gtk.Entry, gtk.Entry)
 	expList.set_property("homogeneous", True)
 
-	win.add(expList)
+	sWin.add_with_viewport(expList)
+
+	win.add(sWin)
 	win.connect("destroy", lambda *x: gtk.main_quit())
 
 	win.show_all()
 
 	gtk.main()
-
-
 
