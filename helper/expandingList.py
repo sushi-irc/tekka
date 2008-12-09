@@ -160,6 +160,8 @@ class expandingList(gtk.Table):
 
 	def _add_plus_button(self, row, column):
 		a = gtk.Button(stock=gtk.STOCK_ADD)
+		# remove the label of the button
+		a.get_children()[0].get_children()[0].get_children()[1].set_text("")
 
 		a.row = row
 		a.column = column
@@ -170,6 +172,8 @@ class expandingList(gtk.Table):
 
 	def _add_minus_button(self, row, column):
 		a = gtk.Button(stock=gtk.STOCK_REMOVE)
+		# remove the label of the button
+		a.get_children()[0].get_children()[0].get_children()[1].set_text("")
 
 		a.row = row
 		a.column = column
