@@ -296,8 +296,6 @@ class guiWrapper(object):
 
 			self.scrollGeneralOutput()
 
-		print "ChannelTab: %s" % (channelTab)
-
 		# notification in server/channel list
 		if self.tabs.isActive(channelTab):
 			if channelTab.autoScroll:
@@ -933,10 +931,11 @@ def menu_tekka_Connect_activate_cb(menuItem):
 		err.destroy()
 		return
 
-	server = dialog.showServerDialog()
+	serverList = dialog.showServerDialog()
 
-	if server:
-		com.connectServer(server)
+	if serverList:
+		for server in serverList:
+			com.connectServer(server)
 
 def menu_View_showGeneralOutput_toggled_cb(menuItem):
 	"""

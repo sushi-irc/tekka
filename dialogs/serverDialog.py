@@ -33,11 +33,12 @@ import dialog
 import config
 
 widgets = None
+serverSelection = None
 
 RESPONSE_CONNECT = 3
 
 def setup():
-	global widgets
+	global widgets, serverSelection
 
 	path = config.get("gladefiles","dialogs") + "server.glade"
 	widgets = gtk.glade.XML(path)
@@ -48,6 +49,10 @@ def setup():
 			}
 
 	widgets.signal_autoconnect(sigdic)
+
+	# enable multiple selection
+	serverSelection = widgets.get_widget("serverList").get_selection()
+	serverSelection.set_mode(gtk.SELECTION_MULTIPLE)
 
 def addServer(newServer):
 	"""
@@ -87,7 +92,7 @@ def run():
 
 	# add servercolumn
 	renderer = gtk.CellRendererText()
-	renderer.set_property("editable",True)
+	renderer.set_property("editable", True)
 	renderer.connect("edited", serverNameEdit)
 
 	column = gtk.TreeViewColumn("Server", renderer, text=0)
@@ -102,22 +107,31 @@ def run():
 
 	retrieveServerlist()
 
-	result = dialog.run()
+	while True:
 
-	while result not in (gtk.RESPONSE_CANCEL,
-						gtk.RESPONSE_DELETE_EVENT,
-						RESPONSE_CONNECT):
-			result = dialog.run()
-	else:
+		result = dialog.run()
+
 		server = None
-		if result == RESPONSE_CONNECT:
-			# look for servername
-			id = serverView.get_cursor()[0]
-			if id:
-				server = serverList[id][0]
-		dialog.destroy()
 
-	return (result == RESPONSE_CONNECT) and server or None
+		if result == RESPONSE_CONNECT:
+			# get the selected server(s)
+
+			paths = serverSelection.get_selected_rows()[1]
+			
+			if not paths:
+				continue
+
+			toConnect = []
+			for path in paths:
+				toConnect.append(serverList[path][0])
+
+			dialog.destroy()
+
+			return toConnect
+
+		else:
+			dialog.destroy()
+			return []
 
 def serverNameEdit(cellrenderertext, path, newText):
 	"""
