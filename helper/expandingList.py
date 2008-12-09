@@ -19,8 +19,16 @@ class expandingList(gtk.Table):
 
 		self._add_row(row=0)
 
-	def _add_row(self, row):
+	def get_widget_matrix(self):
+		return self._matrix
 
+	def _add_row(self, row):
+		"""
+		Adds a row filled with the given widgets
+		(self._widgets) and a plus (add) as well as
+		a minus (remove) button. It also extends
+		the matrix which holds the widgets.
+		"""
 		self._matrix[row]=[]
 		column = 0
 
@@ -37,15 +45,17 @@ class expandingList(gtk.Table):
 			self._matrix[row].append(instance)
 			column += 1
 
-		self._add_plus_button(row, column+1)
-		self._add_minus_button(row, column+2)
+		self._add_plus_button(row, column)
+		self._add_minus_button(row, column+1)
 		
 		self.show_all()
 
 	def add_row(self, under=-1):
 		"""
 		under is the index (starting at 0)
-		under which row the new one shall be added
+		under which row the new one shall be added.
+		if under is not given or is under 0,
+		the new row is added under the last one.
 		"""
 
 		# determine the row to add the new row under
@@ -72,52 +82,67 @@ class expandingList(gtk.Table):
 		3| | | |--. <-'
 		4|_|_|_|<-'
 		"""
-		if under >= 0 and row != self._rows - 1:
+		if row < (self._rows-1):
+			# swap needed
+			
+			for i in reversed(range(row, self._rows-1)):
+				cells = self._matrix[i]
 
-			print "under is %d, rows are %d, row is %d" % (
-				under, self._rows, row)
-
-			print "-------- dumping matrix -----------"
-			for i in range(len(self._matrix)):
-				print "%d: %s" % (i,self._matrix[i])
-
-			print "OFFICIAL COLUMN NUMBER: %d" % (self.get_property("n-columns"))
-
-			# from last to under, move row one down
-			for i in reversed(range(row+1, self._rows)):
-
-				print "swapping %d to %d" % (i-1, i)
-
-				rowList = list(self._matrix[i-1])
-
-				c = 0
-				for widget in rowList:
+				column = 0
+				for widget in cells:
 					self.remove(widget)
+					self.attach(widget, column, column+1, i+1, i+2)
+					column += 1
 
-					self._matrix[i].append(widget)
-					self._matrix[i-1].remove(widget)
+				cells[-1].row = i+1
+				cells[-2].row = i+1
 
-					self.attach(widget, c, c+1, i, i+1)
+				self._matrix[i+1] = self._matrix[i]
 
-					c+=1
+		self._add_row(row)
 
-				# update button's row values
-				self._matrix[i][-2].row = i
-				self._matrix[i][-1].row = i
+	def remove_row(self, index):
+		"""
+		Remove the row with the given index from
+		the table.
+		"""
+		if index > (self._rows - 1) or index < 0:
+			raise Exception("index out of bounds")
 
-			print "-------- dumping matrix -----------"
-			for i in range(len(self._matrix)):
-				print "%d: %s" % (i,self._matrix[i])
-
+		# You can't delete the last row
+		if self._rows == 1:
 			return
 
-		print "_add_row(%d)" % (row)
+		cells = self._matrix[index]
 
-		self._add_row(row = row)
+		# remove the widgets in the destinasted row
+		for widget in cells:
+			self.remove(widget)
 
-		print "-------- dumping matrix -----------"
-		for i in range(len(self._matrix)):
-			print "%d: %s" % (i,self._matrix[i])
+		for i in range(index, self._rows-1):
+			row = self._matrix[i+1]
+
+			column = 0
+			for widget in row:
+				self.remove(widget)
+				self.attach(widget, column, column+1, i, i+1)
+				column += 1
+
+			row[-1].row = i
+			row[-2].row = i
+
+			self._matrix[i] = self._matrix[i+1]
+
+		del self._matrix[index]
+
+		# bring the table to the new size
+		self._rows -= 1
+		self.resize(self._rows, self._columns)
+
+		i=0
+		for c in self._matrix:
+			print "%d: " % (i), c
+			i+=1
 
 	def attach(self, *x):
 		gtk.Table.attach(self, *x)
@@ -126,7 +151,7 @@ class expandingList(gtk.Table):
 		self.add_row(under=button.row)
 
 	def _button_remove_clicked(self, button):
-		pass
+		self.remove_row(button.row)
 
 	def _add_plus_button(self, row, column):
 		a = gtk.Button(stock=gtk.STOCK_ADD)
