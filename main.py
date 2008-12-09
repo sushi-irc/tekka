@@ -296,6 +296,8 @@ class guiWrapper(object):
 
 			self.scrollGeneralOutput()
 
+		print "ChannelTab: %s" % (channelTab)
+
 		# notification in server/channel list
 		if self.tabs.isActive(channelTab):
 			if channelTab.autoScroll:
@@ -829,6 +831,7 @@ class guiWrapper(object):
 				return True
 
 			if ( tab.is_channel() or tab.is_query() ) \
+			and channelTab \
 			and tab.name.lower() == channelTab.name.lower() \
 			and tab.server.lower() == serverTab.name.lower():
 				return True
