@@ -35,7 +35,9 @@ class pluginNP(tekka.plugin):
 
 		self.register_command("np", self.np_command)
 
-		self.mpd_host = ""
+		self.mpd_host = "localhost"
+		self.mpd_port = 6600
+		self.mpd_password = "fh482"
 
 	def np_command(self, currentServer, currentTab, args):
 		try:
@@ -46,7 +48,10 @@ class pluginNP(tekka.plugin):
 			if not self.mpd_host:
 				self.mpd_host = "localhost"
 
-			client.connect(self.mpd_host, 6600)
+			client.connect(self.mpd_host, self.mpd_port)
+
+			if self.mpd_password:
+				client.password(self.mpd_password)
 
 			data = {"artist":"N/A","title":"N/A","album":"N/A"}
 			data.update(client.currentsong())
