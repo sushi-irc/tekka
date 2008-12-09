@@ -30,15 +30,39 @@ import gtk.glade
 import com
 import config
 
+from helper.expandingList import expandingList
+
 widgets = None
 
 RESPONSE_ADD = 1
+
+def createCommandList(glade, fun_name, widget_name, *x):
+	"""
+	create the command list widget.
+	this function is called by glade
+	"""
+	global commandList
+
+	if widget_name != "commandList":
+		print "wrong widget"
+		return None
+
+	commandList = expandingList(gtk.Entry)
+
+	sw = gtk.ScrolledWindow()
+	sw.add_with_viewport(commandList)
+
+	sw.show_all()
+
+	return sw
 
 def setup():
 	global widgets
 
 	path = config.get("gladefiles","dialogs") + "serverAdd.glade"
+	gtk.glade.set_custom_handler(createCommandList)
 	widgets = gtk.glade.XML(path)
+
 
 def run():
 	data = None
