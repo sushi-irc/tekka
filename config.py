@@ -74,7 +74,7 @@ def setDefaults():
 	defaults["colors"]["own_text"] = "#444444"
 	defaults["colors"]["notification"] = "#AAAAAA"
 	defaults["colors"]["text_message"] = "#000000"
-	defaults["colors"]["text_action"] = "#BBBBBB"
+	defaults["colors"]["text_action"] = "#444444"
 	defaults["colors"]["text_highlightmessage"] = "#FF0000"
 	defaults["colors"]["text_highlightaction"] = "#0000FF"
 	defaults["colors"]["nick"] = "#2222AA" # default foreign nick color
