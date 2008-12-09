@@ -239,6 +239,7 @@ def getServerTreeMenu(pointedTab):
 
 	elif pointedTab.is_query():
 		autoConnectItem.hide()
+		autoJoinItem.hide()
 		connectItem.hide()
 		disconnectItem.hide()
 		joinItem.hide()
