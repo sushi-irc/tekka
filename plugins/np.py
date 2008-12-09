@@ -35,12 +35,18 @@ class pluginNP(tekka.plugin):
 
 		self.register_command("np", self.np_command)
 
+		self.mpd_host = ""
+
 	def np_command(self, currentServer, currentTab, args):
 		try:
 			import mpd
 
 			client = mpd.MPDClient()
-			client.connect("localhost", 6600)
+
+			if not self.mpd_host:
+				self.mpd_host = "localhost"
+
+			client.connect(self.mpd_host, 6600)
 
 			data = {"artist":"N/A","title":"N/A","album":"N/A"}
 			data.update(client.currentsong())
@@ -52,7 +58,8 @@ class pluginNP(tekka.plugin):
 			client.disconnect()
 
 			return
-		except:
+		except BaseException, e:
+			print e
 			pass
 
 		try:
