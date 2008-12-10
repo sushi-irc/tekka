@@ -4,91 +4,210 @@ import config
 import gtk
 import gtk.glade
 
+from __main__ import gui
+
+from helper.expandingList import expandingList
+
 widgets = None
+nickColorsList = None
 
-def fillChild(category, table, child):
-	name = child.get_property("name")
+def customHandler(glade, function_name, widget_name, *x):
+	if widget_name == "nickColorsList":
+		global nickColorsList
 
-	if type(child) == gtk.CheckButton:
-		value = config.getBool(category, name, "")
+		nickColorsList = expandingList(gtk.Entry)
+		sw = gtk.ScrolledWindow()
+		sw.add_with_viewport(nickColorsList)
+		sw.show_all()
 
-		child.set_active(value)
-		
-	elif type(child) == gtk.Label:
-		oldText = child.get_text()
-		value = config.get(category, name[:-len("_label")], "")
+		return sw
 
-		if value:
-			child.set_text(value)
-		else:
-			child.set_text(oldText)
+	return None
 
-	elif type(child) == gtk.Entry:
-		value = config.get(category, name, "")
-		child.set_text(value)
+def fillTekka():
+	table = widgets.get_widget("tekkaTable")
 
-	elif type(child) == gtk.SpinButton:
-		value = int (config.get(category, name, ""))
-		child.set_value(value)
+	# set checkbuttons
+	for child in table.get_children():
 
-def fillValues(categories):
-	
-	for category in categories:
+		if type(child) != gtk.CheckButton:
+			continue
 
-		table = widgets.get_widget("%sTable" % category)
+		name = child.get_property("name")
+		bval = config.getBool("tekka", name)
 
-		if not table:
-			print "table '%sTable' not found." % category
+		child.set_active(bval)
 
-		for child in table.get_children():
+	# set font labels
+	oFont = config.get("tekka", "output_font")
+	widgets.get_widget("output_font_label").set_text(oFont)
 
-			# This i more like a hack for subcontainer (*Box)
-			# to handle their childs, too
-			if type(child) == gtk.HBox or type(child) == gtk.VBox:
-				for subchild in child.get_children():
-					fillChild(category, child, subchild)
-			
-			fillChild(category, table, child)
+	gFont = config.get("tekka", "general_output_font")
+	widgets.get_widget("general_output_font_label").set_text(gFont)
 
-def applyChild(category, table, child):
-	name = child.get_property("name")
+def fillColors():
+	for key in ("own_nick", "own_text", "notification",
+				"text_message", "text_action", "nick",
+				"text_highlightmessage", "text_highlightaction"):
+		val = config.get("colors", key)
 
-	if type(child) == gtk.CheckButton:
-		value = str(child.get_active()).lower()
-		config.set(category, name, value)
-		
-	elif type(child) == gtk.Entry:
-		value = child.get_text()
-		config.set(category, name, value)
+		if not val:
+			continue
 
-	elif type(child) == gtk.SpinButton:
-		value = str(int(child.get_value()))
-		config.set(category, name, value)
+		widgets.get_widget(key).set_text(val)
 
-def applyValues(categories):
-	
-	for category in categories:
+def fillChatting():
+	for key in ("quit_message", "part_message"):
+		val = config.get("chatting", key)
+		if not val:
+			continue
+		widgets.get_widget(key).set_text(val)
 
-		table = widgets.get_widget("%sTable" % category)
+	val = config.get("chatting", "last_log_lines")
+	widgets.get_widget("last_log_lines").set_value(float(val))
 
-		if not table:
-			print "table '%sTable' not found." % category
+def fillNickColors():
+	colors = config.get("nick_colors", default={})
 
-		for child in table.get_children():
+	if not colors:
+		return
 
-			# This i more like a hack for subcontainer (*Box)
-			# to handle their childs, too
-			if type(child) == gtk.HBox or type(child) == gtk.VBox:
-				for subchild in child.get_children():
-					applyChild(category, child, subchild)
-			
-			applyChild(category, table, child)
+	i = 0
+	for color in colors.values():
+		nickColorsList.get_widget_matrix()[i][0].set_text(color)
+		nickColorsList.add_row()
+		i+=1
+	nickColorsList.remove_row(i)
 
-def tekka_output_font_fontSelectionButton_clicked_cb(button):
-	pass
+def applyNickColors():
+	i = 1
+	for row in nickColorsList.get_widget_matrix():
+		entry = row[0]
 
-def tekka_general_output_font_fontSelectionButton_clicked_cb(button):
-	pass
+		text = entry.get_text()
+
+		if not text:
+			continue
+
+		config.set("nick_colors", str(i), text)
+
+		i+=1
+
+""" tekka page signals """
+
+def tekka_show_status_icon_toggled(button):
+	config.set("tekka", "show_status_icon",
+			str(button.get_active()).lower())
+	gui.statusIcon.set_visible(button.get_active())
+
+def tekka_hide_on_close_toggled(button):
+	config.set("tekka", "hide_on_close",
+			str(button.get_active()).lower())
+
+def tekka_output_font_clicked(button):
+	diag = gtk.FontSelectionDialog("Select output font")
+	font = config.get("tekka", "output_font")
+
+	if font:
+		diag.set_font_name(font)
+
+	output = gui.getWidgets().get_widget("output")
+
+	if diag.run() == gtk.RESPONSE_OK:
+		font = diag.get_font_name()
+
+		if font:
+			widgets.get_widget("output_font_label").set_text(font)
+			config.set("tekka", "output_font", font)
+			gui.setFont(output, font)
+
+	diag.destroy()
+
+def tekka_general_output_font_clicked(button):
+	diag = gtk.FontSelectionDialog("Select general output font")
+	font = config.get("tekka", "general_output_font")
+
+	if font:
+		diag.set_font_name(font)
+
+	output = gui.getWidgets().get_widget("generalOutput")
+
+	if diag.run() == gtk.RESPONSE_OK:
+		font = diag.get_font_name()
+
+		if font:
+			widgets.get_widget("general_output_font_label").set_text(font)
+			config.set("tekka", "general_output_font", font)
+			gui.setFont(output, font)
+
+
+	diag.destroy()
+
+def tekka_auto_expand_toggled(button):
+	config.set("tekka", "auto_expand",
+			str(button.get_active()).lower())
+
+def tekka_rgba_toggled(button):
+	config.set("tekka", "rgba",
+			str(button.get_active()).lower())
+
+""" colors page signals """
+
+def colors_set_color_from_entry(entry, key):
+	text = entry.get_text()
+
+	if not text:
+		return
+
+	config.set("colors", "key", text)
+
+def colors_own_text_written(entry, event):
+	colors_set_color_from_entry(entry, "own_text")
+
+def colors_own_nick_written(entry, event):
+	colors_set_color_from_entry(entry, "own_nick")
+
+def colors_notification_written(entry, event):
+	colors_set_color_from_entry(entry, "notification")
+
+def colors_messages_written(entry, event):
+	colors_set_color_from_entry(entry, "text_message")
+
+def colors_actions_written(entry, event):
+	colors_set_color_from_entry(entry, "text_action")
+
+def colors_highlighted_messages_written(entry, event):
+	colors_set_color_from_entry(entry, "text_highlightmessage")
+
+def colors_highlighted_actions_written(entry, event):
+	colors_set_color_from_entry(entry, "text_highlightaction")
+
+def colors_default_nick_written(entry, event):
+	colors_set_color_from_entry(entry, "nick")
+
+""" chatting page signals """
+
+def chatting_quit_message_written(entry, event):
+	text = entry.get_text()
+	if not text:
+		return
+
+	config.set("chatting", "quit_message", text)
+
+def chatting_part_message_written(entry, event):
+	text = entry.get_text()
+	if not text:
+		return
+
+	config.set("chatting", "part_message", text)
+
+def chatting_log_lines_changed(button):
+	value = int(button.get_value())
+	if value < 0:
+		return
+	config.set("chatting", "last_log_lines", str(value))
+
+""" setup/run/maintenace methods """
 
 def setup():
 	"""
@@ -97,26 +216,48 @@ def setup():
 	global widgets
 
 	path = config.get("gladefiles","dialogs") + "preferences.glade"
+
+	gtk.glade.set_custom_handler(customHandler)
 	widgets = gtk.glade.XML(path)
 
 	sigdic = {
-		"tekka_output_font_fontSelectionButton_clicked_cb" :
-			tekka_output_font_fontSelectionButton_clicked_cb,
-		"tekka_general_output_font_fontSelectionButton_clicked_cb" :
-			tekka_general_output_font_fontSelectionButton_clicked_cb,
+	# tekka page
+		"tekka_show_status_icon_toggled": tekka_show_status_icon_toggled,
+		"tekka_hide_on_close_toggled": tekka_hide_on_close_toggled,
+		"tekka_output_font_clicked": tekka_output_font_clicked,
+		"tekka_general_output_font_clicked": tekka_general_output_font_clicked,
+		"tekka_auto_expand_toggled": tekka_auto_expand_toggled,
+		"tekka_rgba_toggled": tekka_rgba_toggled,
+	# colors page
+		"colors_own_text_written": colors_own_text_written,
+		"colors_own_nick_written": colors_own_nick_written,
+		"colors_notification_written": colors_notification_written,
+		"colors_messages_written": colors_messages_written,
+		"colors_actions_written": colors_actions_written,
+		"colors_highlighted_messages_written":
+				colors_highlighted_messages_written,
+		"colors_highlighted_actions_written":
+				colors_highlighted_actions_written,
+		"colors_default_nick_written": colors_default_nick_written,
+	# chatting page
+		"chatting_quit_message_written": chatting_quit_message_written,
+		"chatting_part_message_written": chatting_part_message_written,
+		"chatting_log_lines_changed": chatting_log_lines_changed
 	}
 
 	widgets.signal_autoconnect(sigdic)
 
 def run():
-	categories = ("tekka","colors","chatting")
 	dialog = widgets.get_widget("preferencesDialog")
-	
-	fillValues(categories)
 
-	if dialog.run() == gtk.RESPONSE_OK:
-		applyValues(categories)
-		# TODO: restart everything
+	fillTekka()
+	fillColors()
+	fillChatting()
+	fillNickColors()
+
+	dialog.run()
+
+	applyNickColors()
 
 	dialog.destroy()
 
