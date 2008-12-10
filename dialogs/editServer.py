@@ -31,37 +31,64 @@ import gtk.glade
 import config
 import com
 
+from helper.expandingList import expandingList
+
 widgets = None
+commandList = None
+
+def createCommandList(glade, function_name, widget_name, *x):
+	global commandList
+
+	print widget_name
+	if widget_name != "commandList":
+		print "wrong widget"
+		return
+
+	commandList = expandingList(gtk.Entry)
+
+	sw = gtk.ScrolledWindow()
+	sw.add_with_viewport(commandList)
+	sw.show_all()
+
+	return sw
 
 def setup():
 	global widgets
 	path = config.get("gladefiles","dialogs") + "serverEdit.glade"
+	gtk.glade.set_custom_handler(createCommandList)
 	widgets = gtk.glade.XML(path)
 
 def run(server):
 	serverdata = com.fetchServerInfo(server)
 
-	serveraddressInput = widgets.get_widget("addressEntry")
-	serveraddressInput.set_text(serverdata["address"])
+	addressInput = widgets.get_widget("addressEntry")
+	addressInput.set_text(serverdata["address"])
 
-	serverportInput = widgets.get_widget("portEntry")
-	serverportInput.set_text(serverdata["port"])
+	portInput = widgets.get_widget("portEntry")
+	portInput.set_text(serverdata["port"])
 
-	servernameInput = widgets.get_widget("realNameEntry")
-	servernameInput.set_text(serverdata["name"])
+	nameInput = widgets.get_widget("realNameEntry")
+	nameInput.set_text(serverdata["name"])
 
-	servernickInput = widgets.get_widget("nickEntry")
-	servernickInput.set_text(serverdata["nick"])
+	nickInput = widgets.get_widget("nickEntry")
+	nickInput.set_text(serverdata["nick"])
 
-	servernickservInput = widgets.get_widget("nickServEntry")
-	servernickservInput.set_text(serverdata["nickserv"])
+	nickservInput = widgets.get_widget("nickServEntry")
+	nickservInput.set_text(serverdata["nickserv"])
 
-	serverautoconnectInput = widgets.get_widget("autoConnectCheckButton")
+	# TODO: implement nickserv ghost flag
+	autoconnectInput = widgets.get_widget("autoConnectCheckButton")
 
 	if serverdata["autoconnect"] == "true":
-		serverautoconnectInput.set_active(True)
+		autoconnectInput.set_active(True)
 	else:
-		serverautoconnectInput.set_active(False)
+		autoconnectInput.set_active(False)
+
+	i = 0
+	for command in com.sushi.server_get_list(server, "server", "commands"):
+		commandList.get_widget_matrix()[i][0].set_text(command)
+		commandList.add_row()
+		i += 1
 
 	dialog = widgets.get_widget("serverEdit")
 	result = dialog.run()
@@ -69,16 +96,18 @@ def run(server):
 	newServer = {}
 
 	if result == gtk.RESPONSE_OK:
+		# apply the data
+		for key in ("address","port","name","nick","nickserv"):
+			exec ("value = %sInput.get_text()" % key)
+			com.sushi.server_set(server, "server", key, value)
 
-		newServer["servername"] = serverdata["servername"]
-		for i in ("address","port","name","nick","nickserv"):
-			newServer[i] = eval("server%sInput.get_text()" % (i))
-		if serverautoconnectInput.get_active():
-			newServer["autoconnect"] = "true"
-		else:
-			newServer["autoconnect"] = "false"
+		com.sushi.server_set(server, "server", "autoconnect",
+				str(autoconnectInput.get_active()))
+
+		# apply commands
+		list = [i[0].get_text() for i in commandList.get_widget_matrix() if i[0].get_text()]
+		com.sushi.server_set_list(server, "server", "commands", list)
 
 	dialog.destroy()
 
-	return newServer
 

@@ -117,7 +117,7 @@ def run():
 			# get the selected server(s)
 
 			paths = serverSelection.get_selected_rows()[1]
-			
+
 			if not paths:
 				continue
 
@@ -164,26 +164,10 @@ def createServer(newServer):
 
 	com.createServer(newServer)
 
-def editServer(server):
-	"""
-		Edit a server in maki.
-	"""
-	if not server.has_key("servername") \
-		or not server.has_key("address") \
-		or not server.has_key("port") \
-		or not server.has_key("autoconnect") \
-		or not server.has_key("nick") \
-		or not server.has_key("name"):
-
-		print "wrong data to createserver"
-		return
-
-	com.editServer(server)
-
 def deleteServer(servername):
 	"""
-		Remove server from Serverlist widget
-		and delete server in maki.
+	Remove server from Serverlist widget
+	and delete server in maki.
 	"""
 	serverList = widgets.get_widget("serverList").get_model()
 
@@ -223,7 +207,6 @@ def openEditDialog(widget):
 
 	if data:
 		print "User edited server"
-		editServer(data)
 		retrieveServerlist()
 
 def openDeleteDialog(widget):
