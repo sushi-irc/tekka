@@ -271,7 +271,7 @@ def fetchServerInfo(server):
 	"""
 	map = {}
 
-	if server not in sushi.servers():
+	if server not in fetchServerList():
 		return map
 
 	map["servername"] = server
