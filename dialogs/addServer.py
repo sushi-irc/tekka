@@ -90,7 +90,8 @@ def run():
 		# set text values
 		for key in ("address","port","nick","name","nickserv"):
 			exec ("value = %sInput.get_text()" % key)
-			com.sushi.server_set(server, "server", key, value)
+			if value:
+				com.sushi.server_set(server, "server", key, value)
 
 		# set autoconnect bool
 		com.sushi.server_set(server, "server", "autoconnect",
