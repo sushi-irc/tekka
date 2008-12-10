@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Wed Dec 10 03:19:23 2008 -->
+<!--Generated with glade3 3.4.5 on Wed Dec 10 03:20:21 2008 -->
 <glade-interface>
   <widget class="GtkDialog" id="preferencesDialog">
     <property name="width_request">400</property>
@@ -502,6 +502,7 @@ Messages</property>
                 <child>
                   <widget class="Custom" id="nickColorsList">
                     <property name="visible">True</property>
+                    <property name="creation_function">createNickColorsList</property>
                   </widget>
                 </child>
               </widget>
