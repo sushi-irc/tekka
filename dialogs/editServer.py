@@ -62,27 +62,26 @@ def run(server):
 	serverdata = com.fetchServerInfo(server)
 
 	addressInput = widgets.get_widget("addressEntry")
-	addressInput.set_text(serverdata["address"])
-
 	portInput = widgets.get_widget("portEntry")
-	portInput.set_text(serverdata["port"])
-
 	nameInput = widgets.get_widget("realNameEntry")
-	nameInput.set_text(serverdata["name"])
-
 	nickInput = widgets.get_widget("nickEntry")
-	nickInput.set_text(serverdata["nick"])
-
 	nickservInput = widgets.get_widget("nickServEntry")
-	nickservInput.set_text(serverdata["nickserv"])
-
-	# TODO: implement nickserv ghost flag
 	autoconnectInput = widgets.get_widget("autoConnectCheckButton")
+	# TODO: implement nickserv ghost flag
 
-	if serverdata["autoconnect"] == "true":
-		autoconnectInput.set_active(True)
-	else:
-		autoconnectInput.set_active(False)
+	try:
+		addressInput.set_text(serverdata["address"])
+		portInput.set_text(serverdata["port"])
+		nameInput.set_text(serverdata["name"])
+		nickInput.set_text(serverdata["nick"])
+		nickservInput.set_text(serverdata["nickserv"])
+
+		if serverdata["autoconnect"] == "true":
+			autoconnectInput.set_active(True)
+		else:
+			autoconnectInput.set_active(False)
+	except KeyError, e:
+		print "editServer reported missing: ", e
 
 	i = 0
 	for command in com.sushi.server_get_list(server, "server", "commands"):
@@ -102,7 +101,7 @@ def run(server):
 			com.sushi.server_set(server, "server", key, value)
 
 		com.sushi.server_set(server, "server", "autoconnect",
-				str(autoconnectInput.get_active()))
+				str(autoconnectInput.get_active()).lower())
 
 		# apply commands
 		list = [i[0].get_text() for i in commandList.get_widget_matrix() if i[0].get_text()]
