@@ -33,6 +33,7 @@ import config
 from helper.expandingList import expandingList
 
 widgets = None
+commandList = None
 
 RESPONSE_ADD = 1
 
@@ -70,31 +71,34 @@ def run():
 	dialog = widgets.get_widget("serverAdd")
 
 	servernameInput = widgets.get_widget("nameEntry")
-	serveraddressInput = widgets.get_widget("addressEntry")
-	serverportInput = widgets.get_widget("portEntry")
-	serverautoconnectInput = widgets.get_widget("autoConnectCheckButton")
-	nicknameInput = widgets.get_widget("nickNameEntry")
-	realnameInput = widgets.get_widget("realNameEntry")
+	addressInput = widgets.get_widget("addressEntry")
+	portInput = widgets.get_widget("portEntry")
+	autoconnectInput = widgets.get_widget("autoConnectCheckButton")
+	nickInput = widgets.get_widget("nickNameEntry")
+	nameInput = widgets.get_widget("realNameEntry")
 	nickservInput = widgets.get_widget("nickServEntry")
 
 	result = dialog.run()
 
 	if result == RESPONSE_ADD:
-		data = {}
-		data["servername"] = servernameInput.get_text()
-		data["address"] = serveraddressInput.get_text()
-		data["port"] = serverportInput.get_text()
-		data["nick"] = nicknameInput.get_text()
-		data["name"] = realnameInput.get_text()
-		data["nickserv"] = nickservInput.get_text()
 
-		if serverautoconnectInput.get_active():
-			data["autoconnect"] = "true"
-		else:
-			data["autoconnect"] = "false"
+		server = servernameInput.get_text()
+
+		if not server:
+			return
+
+		# set text values
+		for key in ("address","port","nick","name","nickserv"):
+			exec ("value = %sInput.get_text()" % key)
+			com.sushi.server_set(server, "server", key, value)
+
+		# set autoconnect bool
+		com.sushi.server_set(server, "server", "autoconnect",
+				str (autoconnectInput.get_active()).lower())
+
+		# set up commands
+		list = [i[0].get_text() for i in commandList.get_widget_matrix() if i[0].get_text()]
+		com.sushi.server_set_list(server, "server", "commands", list)
 
 	dialog.destroy()
-
-	return data
-
 

@@ -54,23 +54,13 @@ def setup():
 	serverSelection = widgets.get_widget("serverList").get_selection()
 	serverSelection.set_mode(gtk.SELECTION_MULTIPLE)
 
-def addServer(newServer):
+def addServer(name):
 	"""
-		Add server from maki to the Serverlist.get_model()
-		(ListStore)
+	Add server from maki to the Serverlist.get_model()
+	(ListStore)
 	"""
-	if not newServer.has_key("servername") \
-		or not newServer.has_key("address") \
-		or not newServer.has_key("port") \
-		or not newServer.has_key("autoconnect") \
-		or not newServer.has_key("nick") \
-		or not newServer.has_key("name"):
-
-		print "Wrong data to addServer."
-		return
-
 	serverList = widgets.get_widget("serverList").get_model()
-	serverList.append([newServer["servername"]])
+	serverList.append([name])
 
 def retrieveServerlist():
 	"""
@@ -82,7 +72,7 @@ def retrieveServerlist():
 
 	servers = com.fetchServerList()
 	for server in servers:
-		addServer(com.fetchServerInfo(server))
+		addServer(server)
 
 def run():
 	dialog = widgets.get_widget("serverDialog")
@@ -107,31 +97,30 @@ def run():
 
 	retrieveServerlist()
 
-	while True:
+	result = dialog.run()
 
-		result = dialog.run()
+	server = None
 
-		server = None
+	if result == RESPONSE_CONNECT:
+		# get the selected server(s)
 
-		if result == RESPONSE_CONNECT:
-			# get the selected server(s)
+		paths = serverSelection.get_selected_rows()[1]
 
-			paths = serverSelection.get_selected_rows()[1]
+		if not paths:
+			print "no server(s) selected"
+			return
 
-			if not paths:
-				continue
+		toConnect = []
+		for path in paths:
+			toConnect.append(serverList[path][0])
 
-			toConnect = []
-			for path in paths:
-				toConnect.append(serverList[path][0])
+		dialog.destroy()
 
-			dialog.destroy()
+		return toConnect
 
-			return toConnect
-
-		else:
-			dialog.destroy()
-			return []
+	else:
+		dialog.destroy()
+		return []
 
 def serverNameEdit(cellrenderertext, path, newText):
 	"""
@@ -177,12 +166,8 @@ def deleteServer(servername):
 			com.deleteServer(servername)
 
 def openAddDialog(widget):
-	data = dialog.showAddServerDialog()
-
-	if data:
-		# TODO: these methods check input twice at all.
-		addServer(data) # append to local list
-		createServer(data) # add server in maki
+	dialog.showAddServerDialog()
+	retrieveServerlist()
 
 def openEditDialog(widget):
 	view = widgets.get_widget("serverList")
