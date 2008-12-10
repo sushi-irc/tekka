@@ -244,9 +244,14 @@ def createServer(smap):
 		if v:
 			sushi.server_set(name, "server", k, v)
 
-def editServer(smap):
+def applyServerInfo(smap):
+	""" get a dictionary, search for the servername to edit
+	and apply the values for the keys to the server.
+	Note: smap[servername] will be removed """
+
 	name = smap["servername"]
 	del smap["servername"]
+
 	for (k,v) in smap.items():
 		sushi.server_set(name, "server", k, v)
 
@@ -260,14 +265,21 @@ def fetchServerList():
 	return sushi.server_list("","")
 
 def fetchServerInfo(server):
+	"""
+	fetch all available info of the given server from maki
+	and return it as a dict
+	"""
 	map = {}
+
+	if server not in sushi.servers():
+		return map
+
 	map["servername"] = server
-	map["address"] = sushi.server_get(server, "server", "address")
-	map["port"] = sushi.server_get(server, "server", "port")
-	map["name"] = sushi.server_get(server, "server", "name")
-	map["nick"] = sushi.server_get(server, "server", "nick")
-	map["nickserv"] = sushi.server_get(server, "server", "nickserv")
-	map["autoconnect"] = sushi.server_get(server, "server", "autoconnect")
+
+	for key in ("address","port","name","nick","nickserv",
+				"autoconnect","nickserv_ghost","ignores",
+				"commands"):
+		map[key] = sushi.server_get(server, "server", key)
 	return map
 
 def getChannelAutoJoin(server, channel):
