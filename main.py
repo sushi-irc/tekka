@@ -123,6 +123,8 @@ class guiWrapper(object):
 			self.statusIcon.set_visible(True)
 
 		else:
+			if not self.statusIcon:
+				return
 			self.statusIcon.set_visible(False)
 
 	def setUrgent(self, switch):
