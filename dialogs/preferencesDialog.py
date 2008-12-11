@@ -80,6 +80,10 @@ def fillNickColors():
 	nickColorsList.remove_row(i)
 
 def applyNickColors():
+	toClear = config.get("nick_colors", default={})
+	for key in toClear:
+		config.unset("nick_colors", key)
+
 	i = 1
 	for row in nickColorsList.get_widget_matrix():
 		entry = row[0]
