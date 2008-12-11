@@ -4,6 +4,7 @@ import gtk
 import gtk.glade
 import config
 import gobject
+import pango
 
 widgets = None
 
@@ -32,13 +33,17 @@ def fillConfigView():
 			default = str(config.getDefault(category, key))
 			configStore.append(iter, row=(key, value, default))
 
-def renderOption(column, cell, model, iter):
+def renderOption(column, renderer, model, iter):
+	if not model.iter_parent(iter):
+		# category row, markup bold
+		renderer.set_property("weight", pango.WEIGHT_BOLD)
+	else:
+		renderer.set_property("weight", pango.WEIGHT_NORMAL)
+
+def renderValue(column, renderer, model, iter):
 	pass
 
-def renderValue(column, cell, model, iter):
-	pass
-
-def renderDefaultValue(column, cell, model, iter):
+def renderDefaultValue(column, renderer, model, iter):
 	pass
 
 def setup():
