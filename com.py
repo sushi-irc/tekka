@@ -292,4 +292,4 @@ def getServerAutoConnect(server):
 	return sushi.server_get(server, "server", "autoconnect")
 
 def setServerAutoConnect(server, switch):
-	sushi.server_set(server, "server", "autoconnect", (switch and "true") or "false")
+	sushi.server_set(server, "server", "autoconnect", str(switch).lower())
