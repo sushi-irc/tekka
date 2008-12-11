@@ -1028,9 +1028,8 @@ def mainWindow_delete_event_cb(mainWindow, event):
 	if config.get("tekka", "hide_on_close") and gui.statusIcon and gui.statusIcon.get_visible():
 		mainWindow.hide()
 		return True
+
 	else:
-		if config.get("tekka", "close_maki_on_close"):
-			com.shutdown()
 		gtk.main_quit()
 
 def mainWindow_focus_in_event_cb(mainWindow, event):
