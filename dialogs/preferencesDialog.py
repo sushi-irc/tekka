@@ -40,10 +40,10 @@ def fillTekka():
 
 	# set font labels
 	oFont = config.get("tekka", "output_font")
-	widgets.get_widget("output_font_label").set_text(oFont)
+	widgets.get_widget("fontSelectButton").set_font_name(oFont)
 
 	gFont = config.get("tekka", "general_output_font")
-	widgets.get_widget("general_output_font_label").set_text(gFont)
+	widgets.get_widget("fontSelectButton_generalOutput").set_font_name(gFont)
 
 def fillColors():
 	for key in ("own_nick", "own_text", "notification",
@@ -109,43 +109,22 @@ def tekka_hide_on_close_toggled(button):
 			str(button.get_active()).lower())
 
 def tekka_output_font_clicked(button):
-	diag = gtk.FontSelectionDialog("Select output font")
-	font = config.get("tekka", "output_font")
-
-	if font:
-		diag.set_font_name(font)
-
 	output = gui.getWidgets().get_widget("output")
 
-	if diag.run() == gtk.RESPONSE_OK:
-		font = diag.get_font_name()
-
-		if font:
-			widgets.get_widget("output_font_label").set_text(font)
-			config.set("tekka", "output_font", font)
-			gui.setFont(output, font)
-
-	diag.destroy()
-
-def tekka_general_output_font_clicked(button):
-	diag = gtk.FontSelectionDialog("Select general output font")
-	font = config.get("tekka", "general_output_font")
+	font = button.get_font_name()
 
 	if font:
-		diag.set_font_name(font)
+		config.set("tekka", "output_font", font)
+		gui.setFont(output, font)
 
+def tekka_general_output_font_clicked(button):
 	output = gui.getWidgets().get_widget("generalOutput")
 
-	if diag.run() == gtk.RESPONSE_OK:
-		font = diag.get_font_name()
+	font = button.get_font_name()
 
-		if font:
-			widgets.get_widget("general_output_font_label").set_text(font)
-			config.set("tekka", "general_output_font", font)
-			gui.setFont(output, font)
-
-
-	diag.destroy()
+	if font:
+		config.set("tekka", "general_output_font", font)
+		gui.setFont(output, font)
 
 def tekka_auto_expand_toggled(button):
 	config.set("tekka", "auto_expand",

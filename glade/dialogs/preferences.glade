@@ -1,104 +1,122 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Thu Dec 11 22:27:35 2008 -->
+<?xml version="1.0"?>
 <glade-interface>
+  <requires-version lib="gtk+" version="2.12"/>
   <widget class="GtkDialog" id="preferencesDialog">
     <property name="width_request">400</property>
     <property name="height_request">400</property>
-    <property name="border_width">5</property>
+    <property name="border_width">4</property>
     <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
     <property name="has_separator">False</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox9">
         <property name="visible">True</property>
-        <property name="spacing">2</property>
+        <property name="spacing">4</property>
         <child>
           <widget class="GtkNotebook" id="notebook">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="border_width">4</property>
             <child>
               <widget class="GtkTable" id="tekkaTable">
                 <property name="visible">True</property>
+                <property name="border_width">8</property>
                 <property name="n_rows">9</property>
                 <property name="n_columns">2</property>
                 <property name="column_spacing">6</property>
                 <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <widget class="GtkCheckButton" id="close_maki_on_close">
+                  <widget class="GtkFontButton" id="fontSelectButton_generalOutput">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Shutdown _maki on tekka close</property>
-                    <property name="use_underline">True</property>
+                    <property name="receives_default">True</property>
                     <property name="response_id">0</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="tekka_close_maki_on_close_toggled"/>
+                    <property name="font_name">Monospace 10</property>
+                    <property name="use_font">True</property>
+                    <property name="use_size">True</property>
+                    <signal name="font_set" handler="tekka_general_output_font_clicked"/>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">8</property>
-                    <property name="bottom_attach">9</property>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
+                    <property name="x_options"></property>
+                    <property name="y_options"></property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkCheckButton" id="auto_expand">
+                  <widget class="GtkFontButton" id="fontSelectButton">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">A_uto expand server tree</property>
-                    <property name="use_underline">True</property>
+                    <property name="receives_default">True</property>
                     <property name="response_id">0</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="tekka_auto_expand_toggled"/>
+                    <property name="font_name">Monospace 10</property>
+                    <property name="use_font">True</property>
+                    <property name="use_size">True</property>
+                    <signal name="font_set" handler="tekka_output_font_clicked"/>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">6</property>
-                    <property name="bottom_attach">7</property>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
+                    <property name="x_options"></property>
+                    <property name="y_options"></property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <widget class="GtkCheckButton" id="rgba">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="label" translatable="yes">Use _RGBA</property>
+                    <property name="use_underline">True</property>
+                    <property name="response_id">0</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="toggled" handler="tekka_rgba_toggled"/>
+                  </widget>
+                  <packing>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">7</property>
+                    <property name="bottom_attach">8</property>
                     <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                     <property name="y_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkCheckButton" id="show_status_icon">
+                  <widget class="GtkLabel" id="label24">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">_Show status icon</property>
-                    <property name="use_underline">True</property>
-                    <property name="response_id">0</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="tekka_show_status_icon_toggled"/>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">General Output font:</property>
                   </widget>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
+                    <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label21">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Output font:</property>
+                    <property name="ellipsize">PANGO_ELLIPSIZE_START</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
+                    <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                   </packing>
                 </child>
                 <child>
@@ -112,121 +130,57 @@
                     <signal name="toggled" handler="tekka_hide_on_close_toggled"/>
                   </widget>
                   <packing>
-                    <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
                     <property name="top_attach">1</property>
                     <property name="bottom_attach">2</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="label21">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Output font</property>
-                    <property name="ellipsize">PANGO_ELLIPSIZE_START</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">3</property>
-                    <property name="bottom_attach">4</property>
-                    <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label24">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">General output font</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">4</property>
-                    <property name="bottom_attach">5</property>
-                    <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkCheckButton" id="rgba">
+                  <widget class="GtkCheckButton" id="show_status_icon">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Use _RGBA</property>
+                    <property name="label" translatable="yes">_Show status icon</property>
                     <property name="use_underline">True</property>
                     <property name="response_id">0</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="tekka_rgba_toggled"/>
+                    <signal name="toggled" handler="tekka_show_status_icon_toggled"/>
                   </widget>
                   <packing>
-                    <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">7</property>
-                    <property name="bottom_attach">8</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkCheckButton" id="auto_expand">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="label" translatable="yes">A_uto expand server tree</property>
+                    <property name="use_underline">True</property>
+                    <property name="response_id">0</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="toggled" handler="tekka_auto_expand_toggled"/>
+                  </widget>
+                  <packing>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">6</property>
+                    <property name="bottom_attach">7</property>
                     <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                     <property name="y_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkHBox" id="hbox3">
+                  <widget class="GtkCheckButton" id="close_maki_on_close">
                     <property name="visible">True</property>
-                    <child>
-                      <widget class="GtkLabel" id="output_font_label">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">output_font_label</property>
-                      </widget>
-                    </child>
-                    <child>
-                      <widget class="GtkButton" id="fontSelectButton">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="label" translatable="yes">Select font</property>
-                        <property name="response_id">0</property>
-                        <signal name="clicked" handler="tekka_output_font_clicked"/>
-                      </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="padding">6</property>
-                        <property name="position">-1</property>
-                      </packing>
-                    </child>
+                    <property name="can_focus">True</property>
+                    <property name="label" translatable="yes">Shutdown _maki on close</property>
+                    <property name="use_underline">True</property>
+                    <property name="response_id">0</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="toggled" handler="tekka_close_maki_on_close_toggled"/>
                   </widget>
                   <packing>
-                    <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">3</property>
-                    <property name="bottom_attach">4</property>
-                    <property name="y_options">GTK_EXPAND</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkHBox" id="hbox4">
-                    <property name="visible">True</property>
-                    <child>
-                      <widget class="GtkLabel" id="general_output_font_label">
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="label" translatable="yes">general_output_font_label</property>
-                      </widget>
-                    </child>
-                    <child>
-                      <widget class="GtkButton" id="fontSelectButton_generalOutput">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="label" translatable="yes">Select font</property>
-                        <property name="response_id">0</property>
-                        <signal name="clicked" handler="tekka_general_output_font_clicked"/>
-                      </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="padding">6</property>
-                        <property name="position">-1</property>
-                      </packing>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">4</property>
-                    <property name="bottom_attach">5</property>
-                    <property name="y_options">GTK_EXPAND</property>
+                    <property name="top_attach">8</property>
+                    <property name="bottom_attach">9</property>
                   </packing>
                 </child>
               </widget>
@@ -238,8 +192,8 @@
                 <property name="use_underline">True</property>
               </widget>
               <packing>
-                <property name="type">tab</property>
                 <property name="tab_fill">False</property>
+                <property name="type">tab</property>
               </packing>
             </child>
             <child>
@@ -248,131 +202,38 @@
                 <property name="n_rows">8</property>
                 <property name="n_columns">2</property>
                 <child>
-                  <widget class="GtkEntry" id="nick">
+                  <widget class="GtkLabel" id="label26">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Own nick</property>
+                  </widget>
+                </child>
+                <child>
+                  <widget class="GtkEntry" id="own_nick">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="colors_default_nick_written"/>
+                    <signal name="focus_out_event" handler="colors_own_nick_written"/>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">7</property>
-                    <property name="bottom_attach">8</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="text_highlightaction">
+                  <widget class="GtkLabel" id="label27">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="colors_highlighted_actions_written"/>
+                    <property name="label" translatable="yes">Own text</property>
                   </widget>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">6</property>
-                    <property name="bottom_attach">7</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="text_highlightmessage">
+                  <widget class="GtkLabel" id="label28">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="colors_highlighted_messages_written"/>
+                    <property name="label" translatable="yes">Notification</property>
                   </widget>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">5</property>
-                    <property name="bottom_attach">6</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkEntry" id="text_action">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="colors_actions_written"/>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">4</property>
-                    <property name="bottom_attach">5</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkEntry" id="text_message">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="colors_messages_written"/>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">3</property>
-                    <property name="bottom_attach">4</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label5">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Default nick</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">7</property>
-                    <property name="bottom_attach">8</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label4">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Highlighted
-Actions</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">6</property>
-                    <property name="bottom_attach">7</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label3">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Highlighted
-Messages</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">5</property>
-                    <property name="bottom_attach">6</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label2">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Actions</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">4</property>
-                    <property name="bottom_attach">5</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label1">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Messages</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">3</property>
-                    <property name="bottom_attach">4</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkEntry" id="notification">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="colors_notification_written"/>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
                     <property name="top_attach">2</property>
                     <property name="bottom_attach">3</property>
                   </packing>
@@ -391,41 +252,134 @@ Messages</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="label28">
+                  <widget class="GtkEntry" id="notification">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Notification</property>
+                    <property name="can_focus">True</property>
+                    <signal name="focus_out_event" handler="colors_notification_written"/>
                   </widget>
                   <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
                     <property name="top_attach">2</property>
                     <property name="bottom_attach">3</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="label27">
+                  <widget class="GtkLabel" id="label1">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Own text</property>
+                    <property name="label" translatable="yes">Messages</property>
                   </widget>
                   <packing>
-                    <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="own_nick">
+                  <widget class="GtkLabel" id="label2">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Actions</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label3">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Highlighted
+Messages</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label4">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Highlighted
+Actions</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">6</property>
+                    <property name="bottom_attach">7</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label5">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Default nick</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">7</property>
+                    <property name="bottom_attach">8</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkEntry" id="text_message">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="colors_own_nick_written"/>
+                    <signal name="focus_out_event" handler="colors_messages_written"/>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="label26">
+                  <widget class="GtkEntry" id="text_action">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Own nick</property>
+                    <property name="can_focus">True</property>
+                    <signal name="focus_out_event" handler="colors_actions_written"/>
                   </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkEntry" id="text_highlightmessage">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <signal name="focus_out_event" handler="colors_highlighted_messages_written"/>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkEntry" id="text_highlightaction">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <signal name="focus_out_event" handler="colors_highlighted_actions_written"/>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">6</property>
+                    <property name="bottom_attach">7</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkEntry" id="nick">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <signal name="focus_out_event" handler="colors_default_nick_written"/>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">7</property>
+                    <property name="bottom_attach">8</property>
+                  </packing>
                 </child>
               </widget>
               <packing>
@@ -439,9 +393,9 @@ Messages</property>
                 <property name="use_underline">True</property>
               </widget>
               <packing>
-                <property name="type">tab</property>
                 <property name="position">1</property>
                 <property name="tab_fill">False</property>
+                <property name="type">tab</property>
               </packing>
             </child>
             <child>
@@ -456,27 +410,30 @@ Messages</property>
                   <placeholder/>
                 </child>
                 <child>
-                  <widget class="GtkSpinButton" id="last_log_lines">
+                  <widget class="GtkLabel" id="label22">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Quit message</property>
+                  </widget>
+                </child>
+                <child>
+                  <widget class="GtkEntry" id="quit_message">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="adjustment">10 0 100 1 10 10</property>
-                    <signal name="value_changed" handler="chatting_log_lines_changed"/>
+                    <signal name="focus_out_event" handler="chatting_quit_message_written"/>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">2</property>
-                    <property name="bottom_attach">3</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="label25">
+                  <widget class="GtkLabel" id="label23">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Last log lines</property>
+                    <property name="label" translatable="yes">Part message</property>
                   </widget>
                   <packing>
-                    <property name="top_attach">2</property>
-                    <property name="bottom_attach">3</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
                   </packing>
                 </child>
                 <child>
@@ -493,31 +450,28 @@ Messages</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="label23">
+                  <widget class="GtkLabel" id="label25">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Part message</property>
+                    <property name="label" translatable="yes">Last log lines</property>
                   </widget>
                   <packing>
-                    <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="quit_message">
+                  <widget class="GtkSpinButton" id="last_log_lines">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="chatting_quit_message_written"/>
+                    <property name="adjustment">10 0 100 1 10 10</property>
+                    <signal name="value_changed" handler="chatting_log_lines_changed"/>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
                   </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label22">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Quit message</property>
-                  </widget>
                 </child>
               </widget>
               <packing>
@@ -531,15 +485,33 @@ Messages</property>
                 <property name="use_underline">True</property>
               </widget>
               <packing>
-                <property name="type">tab</property>
                 <property name="position">2</property>
                 <property name="tab_fill">False</property>
+                <property name="type">tab</property>
               </packing>
             </child>
             <child>
               <widget class="GtkTable" id="nickColorsTable">
                 <property name="visible">True</property>
                 <property name="n_rows">2</property>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <widget class="Custom" id="nickColorsList">
+                    <property name="visible">True</property>
+                    <property name="creation_function">createNickColorsList</property>
+                  </widget>
+                </child>
                 <child>
                   <widget class="GtkLabel" id="label7">
                     <property name="visible">True</property>
@@ -556,12 +528,6 @@ this dialog.</property>
                     <property name="y_padding">6</property>
                   </packing>
                 </child>
-                <child>
-                  <widget class="Custom" id="nickColorsList">
-                    <property name="visible">True</property>
-                    <property name="creation_function">createNickColorsList</property>
-                  </widget>
-                </child>
               </widget>
               <packing>
                 <property name="position">3</property>
@@ -574,9 +540,9 @@ this dialog.</property>
                 <property name="use_underline">True</property>
               </widget>
               <packing>
-                <property name="type">tab</property>
                 <property name="position">3</property>
                 <property name="tab_fill">False</property>
+                <property name="type">tab</property>
               </packing>
             </child>
             <child>
@@ -584,18 +550,16 @@ this dialog.</property>
                 <property name="visible">True</property>
                 <property name="n_rows">2</property>
                 <child>
-                  <widget class="GtkLabel" id="label9">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">If you want to have control about
-&lt;u&gt;all&lt;/u&gt; settings you can use the
-advanced settings dialog.
-
-&lt;b&gt;Notice:&lt;/b&gt;
-For some options it is neccessary
-that you restart tekka to commit
-the change.</property>
-                    <property name="use_markup">True</property>
-                  </widget>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
                 </child>
                 <child>
                   <widget class="GtkButton" id="advancedSettingsButton">
@@ -614,6 +578,20 @@ the change.</property>
                     <property name="y_options">GTK_EXPAND</property>
                   </packing>
                 </child>
+                <child>
+                  <widget class="GtkLabel" id="label9">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">If you want to have control about
+&lt;u&gt;all&lt;/u&gt; settings you can use the
+advanced settings dialog.
+
+&lt;b&gt;Notice:&lt;/b&gt;
+For some options it is neccessary
+that you restart tekka to commit
+the change.</property>
+                    <property name="use_markup">True</property>
+                  </widget>
+                </child>
               </widget>
               <packing>
                 <property name="position">4</property>
@@ -626,9 +604,9 @@ the change.</property>
                 <property name="use_underline">True</property>
               </widget>
               <packing>
-                <property name="type">tab</property>
                 <property name="position">4</property>
                 <property name="tab_fill">False</property>
+                <property name="type">tab</property>
               </packing>
             </child>
           </widget>
