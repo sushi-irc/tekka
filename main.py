@@ -115,6 +115,16 @@ class guiWrapper(object):
 
 		if switch: widgets.get_widget("inputBar").grab_focus()
 
+	def setStatusIcon(self, switch):
+		""" enables / disables status icon """
+		if switch:
+			if not self.statusIcon:
+				setup_statusIcon()
+			self.statusIcon.set_visible(True)
+
+		else:
+			self.statusIcon.set_visible(False)
+
 	def setUrgent(self, switch):
 		"""
 			Sets or unsets the urgent
@@ -967,18 +977,13 @@ def menu_View_showStatusIcon_toggled_cb(menuItem):
 	"""
 	hide or show the status icon
 	"""
-	if not gui.statusIcon and menuItem.get_active():
-		setup_statusIcon()
-	elif not gui.statusIcon:
-		return
-
 	if not menuItem.get_active():
-		gui.statusIcon.set_visible(False)
 		config.set("tekka", "show_status_icon", "False")
+		gui.setStatusIcon(False)
 
 	else:
-		gui.statusIcon.set_visible(True)
 		config.set("tekka", "show_status_icon", "True")
+		gui.setStatusIcon(True)
 
 
 def menu_Dialogs_channelList_activate_cb(menuItem):

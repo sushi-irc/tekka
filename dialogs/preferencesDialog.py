@@ -102,7 +102,7 @@ def applyNickColors():
 def tekka_show_status_icon_toggled(button):
 	config.set("tekka", "show_status_icon",
 			str(button.get_active()).lower())
-	gui.statusIcon.set_visible(button.get_active())
+	gui.setStatusIcon(button.get_active())
 
 def tekka_hide_on_close_toggled(button):
 	config.set("tekka", "hide_on_close",
