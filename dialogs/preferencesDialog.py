@@ -155,6 +155,10 @@ def tekka_rgba_toggled(button):
 	config.set("tekka", "rgba",
 			str(button.get_active()).lower())
 
+def tekka_close_maki_on_close_toggled(button):
+	config.set("tekka", "close_maki_on_close",
+			str(button.get_active()).lower())
+
 """ colors page signals """
 
 def colors_set_color_from_entry(entry, key):
@@ -242,6 +246,7 @@ def setup():
 		"tekka_general_output_font_clicked": tekka_general_output_font_clicked,
 		"tekka_auto_expand_toggled": tekka_auto_expand_toggled,
 		"tekka_rgba_toggled": tekka_rgba_toggled,
+		"tekka_close_maki_on_close_toggled": tekka_close_maki_on_close_toggled,
 	# colors page
 		"colors_own_text_written": colors_own_text_written,
 		"colors_own_nick_written": colors_own_nick_written,

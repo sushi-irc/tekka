@@ -66,6 +66,7 @@ def setDefaults():
 	defaults["tekka"]["auto_expand"] = "True"
 	defaults["tekka"]["show_general_output"] = "True"
 	defaults["tekka"]["rgba"] = "False"
+	defaults["tekka"]["close_maki_on_close"] = "False"
 	defaults["tekka"]["color_text"] = "True" 		# colors enabled?
 	defaults["tekka"]["color_nick_text"] = "False" 	# color the text as well as the nick
 

@@ -1822,7 +1822,7 @@ def setupGTK():
 
 def main():
 	"""
-		Entry point. The program starts here.
+	Entry point. The program starts here.
 	"""
 
 	config.setup()
@@ -1834,6 +1834,10 @@ def main():
 	gtk.main()
 
 	config.writeConfigFile()
+
+	# At end, close maki if requested
+	if config.getBool("tekka", "close_maki_on_close"):
+		com.shutdown(config.get("chatting", "quit_message", ""))
 
 if __name__ == "__main__":
 
