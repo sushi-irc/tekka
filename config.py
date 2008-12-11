@@ -147,7 +147,7 @@ def set(section, option, value):
 		On success the method returns True.
 	"""
 	try:
-		configParser.set(section, option, value)
+		configParser.set(section, option, str(value))
 	except ConfigParser.NoSectionError:
 		return False
 	else:
@@ -253,7 +253,7 @@ def getDefault(section, option=None):
 			return defaults[section]
 	else:
 		if defaults.has_key(section):
-			if defaults.has_key(option):
+			if defaults[section].has_key(option):
 				return defaults[section][option]
 	return None
 
