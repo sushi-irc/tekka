@@ -240,6 +240,23 @@ def getBool(section, option, default=None):
 
 	return False
 
+def getDefault(section, option=None):
+	"""
+	Returns the default value for the option
+	in the given section. If no option is given
+	(option = None) all defaults of the given
+	section are returned as a dictionary.
+	If there are no defaults, None is returned.
+	"""
+	if not option:
+		if defaults.has_key(section):
+			return defaults[section]
+	else:
+		if defaults.has_key(section):
+			if defaults.has_key(option):
+				return defaults[section][option]
+	return None
+
 def setup():
 	"""
 		TODO: document
