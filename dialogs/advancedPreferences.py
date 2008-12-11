@@ -15,6 +15,10 @@ def addCategory(store, category):
 	return iter
 
 def fillConfigView():
+	"""
+	fill config treeview with categories,
+	options/values and defaults
+	"""
 	configView = widgets.get_widget("configView")
 	configStore = configView.get_model()
 
@@ -41,10 +45,30 @@ def renderOption(column, renderer, model, iter):
 		renderer.set_property("weight", pango.WEIGHT_NORMAL)
 
 def renderValue(column, renderer, model, iter):
-	pass
+	if not model.iter_parent(iter):
+		renderer.set_property("editable", False)
+	else:
+		renderer.set_property("editable", True)
 
 def renderDefaultValue(column, renderer, model, iter):
 	pass
+
+def configValueEdited(renderer, path, newText):
+	model = widgets.get_widget("configView").get_model()
+	treeIter = model.get_iter(path)
+
+	catIter = model.iter_parent(treeIter)
+
+	if not catIter:
+		return
+
+	model.set(treeIter, 1, newText)
+
+	category = model.get(catIter, 0)[0]
+	option = model[path][0]
+	value = model[path][1]
+
+	config.set(category, option, value)
 
 def setup():
 	""" called initially """
@@ -57,6 +81,11 @@ def setup():
 	c = 0
 	for name in ("Option", "Value", "Default Value"):
 		renderer = gtk.CellRendererText()
+
+		if name == "Value":
+			# value column is editable
+			renderer.set_property("editable", True)
+			renderer.connect("edited", configValueEdited)
 
 		column = gtk.TreeViewColumn(name, renderer, text=c)
 
