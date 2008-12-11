@@ -63,7 +63,7 @@ def fillChatting():
 			continue
 		widgets.get_widget(key).set_text(val)
 
-	val = config.get("chatting", "last_log_lines")
+	val = config.get("chatting", "last_log_lines", default=0)
 	widgets.get_widget("last_log_lines").set_value(float(val))
 
 def fillNickColors():
@@ -197,22 +197,26 @@ def colors_default_nick_written(entry, event):
 
 def chatting_quit_message_written(entry, event):
 	text = entry.get_text()
-	if not text:
-		return
 
-	config.set("chatting", "quit_message", text)
+	if not text:
+		config.unset("chatting", "quit_message")
+	else:
+		config.set("chatting", "quit_message", text)
 
 def chatting_part_message_written(entry, event):
 	text = entry.get_text()
-	if not text:
-		return
 
-	config.set("chatting", "part_message", text)
+	if not text:
+		config.unset("chatting", "part_message")
+	else:
+		config.set("chatting", "part_message", text)
 
 def chatting_log_lines_changed(button):
 	value = int(button.get_value())
+
 	if value < 0:
 		return
+
 	config.set("chatting", "last_log_lines", str(value))
 
 """ advanced page signals """
