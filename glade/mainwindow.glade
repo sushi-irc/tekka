@@ -63,7 +63,7 @@
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">Connect</property>
                         <property name="use_underline">True</property>
-                        <signal name="activate" handler="menu_maki_activate_cb"/>
+                        <signal name="activate" handler="menu_maki_Connect_activate_cb"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="menu-item-image2">
                             <property name="stock">gtk-connect</property>
