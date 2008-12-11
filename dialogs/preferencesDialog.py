@@ -207,6 +207,16 @@ def chatting_log_lines_changed(button):
 		return
 	config.set("chatting", "last_log_lines", str(value))
 
+""" advanced page signals """
+
+def advanced_advancedSettingsClicked(button):
+	import dialog
+	d = dialog.loadDialog("advancedPreferences")
+	if not d:
+		print "dialog setup failed"
+		return
+	d.run()
+
 """ setup/run/maintenace methods """
 
 def setup():
@@ -242,7 +252,9 @@ def setup():
 	# chatting page
 		"chatting_quit_message_written": chatting_quit_message_written,
 		"chatting_part_message_written": chatting_part_message_written,
-		"chatting_log_lines_changed": chatting_log_lines_changed
+		"chatting_log_lines_changed": chatting_log_lines_changed,
+	# advanced page
+		"advanced_advancedSettingsClicked": advanced_advancedSettingsClicked
 	}
 
 	widgets.signal_autoconnect(sigdic)
