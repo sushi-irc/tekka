@@ -165,9 +165,9 @@ def colors_set_color_from_entry(entry, key):
 	text = entry.get_text()
 
 	if not text:
-		return
-
-	config.set("colors", key, text)
+		config.unset("colors", key)
+	else:
+		config.set("colors", key, text)
 
 def colors_own_text_written(entry, event):
 	colors_set_color_from_entry(entry, "own_text")
