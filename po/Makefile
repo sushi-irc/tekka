@@ -10,7 +10,7 @@ all:
 
 install: $(PO:%.po=%.mo)
 	for file in $+; do \
-		../../tools/install-mo.sh tekka "$${file}" '$(DESTDIR)$(localedir)'; \
+		INSTALL=$(INSTALL) ../../tools/install-mo.sh tekka "$${file}" '$(DESTDIR)$(localedir)'; \
 	done
 
 clean:
