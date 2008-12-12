@@ -45,7 +45,7 @@ import time
 
 import gtk.glade
 from gobject import TYPE_STRING, TYPE_PYOBJECT, idle_add,GError
-from pango import FontDescription
+import pango
 import webbrowser
 
 import locale
@@ -176,7 +176,7 @@ class guiWrapper(object):
 			Sets the font of the textView to
 			the font identified by fontFamily
 		"""
-		fd = FontDescription(font)
+		fd = pango.FontDescription(font)
 
 		if not fd:
 			print "Font _not_ modified (previous error)"
@@ -1539,6 +1539,27 @@ def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 		topicBar.copy_clipboard()
 
 
+def nickListRenderNicks(column, renderer, model, iter):
+	""" Renderer func for column "Nicks" in NickList """
+
+	# highlight own nick
+	server = gui.tabs.getCurrentTabs()[0]
+
+	if not server:
+		return
+
+	nick = model.get(iter, 1)
+
+	if not nick:
+		return
+
+	nick = nick[0]
+
+	if com.getOwnNick(server.name) == nick:
+		renderer.set_property("weight", pango.WEIGHT_BOLD)
+	else:
+		renderer.set_property("weight", pango.WEIGHT_NORMAL)
+
 """
 Initial setup routines
 """
@@ -1630,6 +1651,7 @@ def setup_nickList():
 
 	renderer = gtk.CellRendererText()
 	column = gtk.TreeViewColumn("Nicks", renderer, text=1)
+	column.set_cell_data_func(renderer, nickListRenderNicks)
 	widget.append_column(column)
 
 	widget.set_headers_visible(False)
