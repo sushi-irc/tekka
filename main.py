@@ -1542,10 +1542,10 @@ def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 def nickListRenderNicks(column, renderer, model, iter):
 	""" Renderer func for column "Nicks" in NickList """
 
-	# highlight own nick
-	server = gui.tabs.getCurrentTabs()[0]
+	# highlight ignores / own nick
+	serverTab = gui.tabs.getCurrentTabs()[0]
 
-	if not server:
+	if not serverTab:
 		return
 
 	nick = model.get(iter, 1)
@@ -1555,7 +1555,16 @@ def nickListRenderNicks(column, renderer, model, iter):
 
 	nick = nick[0]
 
-	if com.getOwnNick(server.name) == nick:
+	# highlight ignores
+	ignores = com.fetchIgnores(serverTab.name)
+
+	if nick+"!*" in ignores:
+		renderer.set_property("strikethrough", True)
+	else:
+		renderer.set_property("strikethrough", False)
+
+	# highlight own nick
+	if com.getOwnNick(serverTab.name) == nick:
 		renderer.set_property("weight", pango.WEIGHT_BOLD)
 	else:
 		renderer.set_property("weight", pango.WEIGHT_NORMAL)

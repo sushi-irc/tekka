@@ -402,6 +402,8 @@ def getNickListMenu(currentNick):
 
 	ignores = com.fetchIgnores(sTab.name)
 
+	# TODO:  refresh nickList column/renderer after
+	# TODO:: setting/unsetting ignore on $nick
 	if pattern in ignores:
 		ignoreItem.set_active(True)
 		ignoreHandler = ignoreItem.connect("toggled",
