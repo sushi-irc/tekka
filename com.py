@@ -28,11 +28,17 @@ SUCH DAMAGE.
 
 # TODO: add shutdown signal
 
+import os
+
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
 
 dbus_loop = DBusGMainLoop()
-bus = dbus.SessionBus(mainloop=dbus_loop)
+bus_address = os.getenv("SUSHI_REMOTE_BUS_ADDRESS")
+if bus_address:
+	bus = dbus.bus.BusConnection(bus_address, mainloop=dbus_loop)
+else:
+	bus = dbus.SessionBus(mainloop=dbus_loop)
 sushi = None
 myNick = {}
 __connected = False
