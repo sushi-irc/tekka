@@ -819,7 +819,7 @@ def userKick(time, server, nick, channel, who, reason):
 	nickString = "<font foreground='%s'>%s</font>" % (
 		getNickColor(nick), gui.escape(nick))
 
-	reasonString = "(<font foreground='%s'>%s</font>)" % (
+	reasonString = "<font foreground='%s'>%s</font>" % (
 		getTextColor(nick), gui.escape(reason))
 
 	if who == com.getOwnNick(server):
