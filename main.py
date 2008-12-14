@@ -1542,6 +1542,10 @@ def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 def nickListRenderNicks(column, renderer, model, iter):
 	""" Renderer func for column "Nicks" in NickList """
 
+	if not com.getConnected():
+		# do not render if no connection exists
+		return
+
 	# highlight ignores / own nick
 	serverTab = gui.tabs.getCurrentTabs()[0]
 
