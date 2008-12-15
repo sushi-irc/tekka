@@ -69,6 +69,7 @@ def setDefaults():
 	defaults["tekka"]["close_maki_on_close"] = "False"
 	defaults["tekka"]["color_text"] = "True" 		# colors enabled?
 	defaults["tekka"]["color_nick_text"] = "False" 	# color the text as well as the nick
+	defaults["tekka"]["ask_for_key_on_cannotjoin"] = "True"
 
 	defaults["colors"]={}
 	defaults["colors"]["own_nick"] = "#444444"

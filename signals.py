@@ -29,15 +29,17 @@ SUCH DAMAGE.
 
 from gettext import gettext as _
 
+import gtk
 from dbus import UInt64
 import time as mtime
 
 import com
 import config
 import __main__
+from helper import keyDialog
 
-gui = None
 sushi = None
+gui = None
 
 def setup():
 	global gui, sushi
@@ -1164,7 +1166,18 @@ def cannotJoin(time, server, channel, reason):
 	elif reason == "b":
 		message = _("You are banned.")
 	elif reason == "k":
-		message = _("You need the correct channel key.")
+		if config.getBool("tekka", "ask_for_key_on_cannotjoin"):
+			# open a input dialog which asks for the key
+			d = keyDialog.KeyDialog(server, channel)
+			result = d.run()
+
+			if result == gtk.RESPONSE_OK:
+				com.join(server, channel, d.entry.get_text())
+
+			d.destroy()
+			return
+		else:
+			message = _("You need the correct channel key.")
 
 	gui.currentServerPrint (time, server,
 		_("You can not join %(channel)s: %(reason)s" % {
