@@ -809,7 +809,11 @@ class guiWrapper(object):
 				return None,None
 
 			# iter could be server or channel
-			iter = store.get_iter(self.currentPath)
+			try:
+				iter = store.get_iter(self.currentPath)
+			except ValueError:
+				# tab is already closed
+				return None, None
 
 			if not iter:
 				return None, None
