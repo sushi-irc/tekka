@@ -259,6 +259,7 @@
                                 <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
                                 <property name="cursor_visible">False</property>
                                 <signal name="button_press_event" handler="output_button_press_event_cb"/>
+                                <signal name="motion_notify_event" handler="output_motion_notify_event_cb"/>
                               </widget>
                             </child>
                           </widget>
