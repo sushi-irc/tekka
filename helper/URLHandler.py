@@ -2,6 +2,11 @@ import gtk
 import config
 import webbrowser
 
+eventIDs = {}
+
+def _resetCursor(widget, event, window, cursor):
+	window.set_cursor(cursor)
+
 def URLHandler(texttag, widget, event, iter, url):
 	""" do URL specific stuff """
 
@@ -10,6 +15,12 @@ def URLHandler(texttag, widget, event, iter, url):
 		cursor = gtk.gdk.Cursor(gtk.gdk.HAND2)
 		textWin = widget.get_window(gtk.TEXT_WINDOW_TEXT)
 		textWin.set_cursor(cursor)
+
+		# add signal to reset the cursor
+		if not eventIDs.has_key(widget):
+			id = widget.connect("motion-notify-event", _resetCursor,
+					textWin, gtk.gdk.Cursor(gtk.gdk.XTERM))
+			eventIDs[widget] = id
 
 		return True
 

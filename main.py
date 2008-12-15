@@ -1126,15 +1126,6 @@ def output_button_press_event_cb(output, event):
 	widgets.get_widget("inputBar").grab_focus()
 	return False
 
-def output_motion_notify_event_cb(output, event):
-	"""
-	reset the cursor to the "normal" one of the
-	output widget if we're not on a texttag (event
-	catched before in URLHandler)
-	"""
-	textWin = output.get_window(gtk.TEXT_WINDOW_TEXT)
-	textWin.set_cursor(gtk.gdk.Cursor(gtk.gdk.XTERM))
-
 def serverTree_misc_menu_reset_activate_cb(menuItem):
 	"""
 	reset the markup of all tabs
@@ -1771,7 +1762,6 @@ def setupGTK():
 		"topicBar_activate_cb" : topicBar_activate_cb,
 	# output signals
 		"output_button_press_event_cb" : output_button_press_event_cb,
-		"output_motion_notify_event_cb": output_motion_notify_event_cb,
 	# server tree signals
 		"serverTree_realize_cb" : lambda w: w.expand_all(),
 		"serverTree_button_press_event_cb" : serverTree_button_press_event_cb,
