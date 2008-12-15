@@ -29,7 +29,9 @@ SUCH DAMAGE.
 import gtk
 import gtk.glade
 from gobject import idle_add
+
 import dialog
+from helper import keyDialog
 
 import config
 import com
@@ -142,6 +144,23 @@ def serverTreeMenu_historyItem_activate_cb(menuItem):
 
 	dialog.showHistoryDialog(serverTree_tabMenu_currentTab)
 
+def serverTreeMenu_setKeyItem_activate_cb(menuItem):
+	""" show up dialog for key setting """
+	if not serverTree_tabMenu_currentTab or serverTree_tabMenu_currentTab.is_server():
+		return
+
+	server = serverTree_tabMenu_currentTab.server
+	channel = serverTree_tabMenu_currentTab.name
+
+	d = keyDialog.KeyDialog(server, channel)
+
+	d.checkButton.set_property("visible",False)
+	d.checkButton.set_active(True)
+
+	d.run()
+
+	d.destroy()
+
 def initServerTreeMenu():
 	"""
 		TODO: document
@@ -164,7 +183,8 @@ def initServerTreeMenu():
 		"closeItem_activate_cb" : serverTreeMenu_closeItem_activate_cb,
 		"autoJoinItem_toggled_cb" : serverTreeMenu_autoJoinItem_toggled_cb,
 		"autoConnectItem_toggled_cb" : serverTreeMenu_autoConnectItem_toggled_cb,
-		"historyItem_activate_cb" : serverTreeMenu_historyItem_activate_cb
+		"historyItem_activate_cb" : serverTreeMenu_historyItem_activate_cb,
+		"setKeyItem_activate_cb" : serverTreeMenu_setKeyItem_activate_cb
 	}
 
 	serverTree_tabMenu_widgets.signal_autoconnect(sigdic)
@@ -394,6 +414,7 @@ def getNickListMenu(currentNick):
 	ignoreItem = nickListMenu_widgets.get_widget("ignoreItem")
 	ignoreItem.set_active(False)
 
+	# TODO: replace pattern with real pattern matching
 	pattern = "%s!*" % (currentNick)
 	sTab,cTab = gui.tabs.getCurrentTabs()
 
