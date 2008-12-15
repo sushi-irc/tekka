@@ -46,7 +46,6 @@ import time
 import gtk.glade
 from gobject import TYPE_STRING, TYPE_PYOBJECT, idle_add,GError
 import pango
-import webbrowser
 
 import locale
 import gettext
@@ -55,6 +54,7 @@ from gettext import gettext as _
 from helper.url import URLToTag
 from helper.shortcuts import addShortcut, removeShortcut
 from helper import tabcompletion
+from helper import URLHandler
 
 import config
 import com
@@ -393,56 +393,8 @@ class guiWrapper(object):
 		else:
 			output.insertHTML(output.get_end_iter(), string)
 
-		print "scrolling in myPrint"
-		#idle_add(lambda: self.scrollOutput())
 		self.scrollOutput()
 
-	def URLHandler(self, texttag, widget, event, iter, url):
-		if event.type == gtk.gdk.MOTION_NOTIFY:
-			cursor = gtk.gdk.Cursor(gtk.gdk.HAND2)
-			output = widgets.get_widget("output")
-			textWin = output.get_window(gtk.TEXT_WINDOW_TEXT)
-			textWin.set_cursor(cursor)
-			return True
-
-		if event.type == gtk.gdk.BUTTON_PRESS:
-			name = config.get("tekka","browser")
-
-			try:
-				if name and webbrowser.get(name):
-					browser = webbrowser.get(name)
-				else:
-					browser = webbrowser
-			except webbrowser.Error:
-				print "Could not open a browser"
-				browser = None
-
-			except TypeError:
-				print "Fetching bug in python2.4"
-				browser = None
-
-			if event.button == 1 and browser:
-				browser.open(url)
-
-			elif event.button == 3:
-				menu = gtk.Menu()
-				cb = gtk.Clipboard()
-
-				if browser:
-					openitem = gtk.MenuItem(label="Open")
-					openitem.connect("activate",
-						lambda w,b: b.open(url), browser)
-
-					menu.append(openitem)
-
-				copyitem = gtk.MenuItem(label="Copy URL")
-				copyitem.connect("activate", lambda w,u,c: c.set_text(u), url, cb)
-				menu.append(copyitem)
-
-				menu.show_all()
-				menu.popup(None, None, None, button=event.button, activate_time=event.time)
-
-				return True
 
 	def moveNickList(self, left):
 		"""
@@ -529,7 +481,7 @@ class guiWrapper(object):
 			"""
 				Returns a HTMLBuffer with assigned URL handler.
 			"""
-			buffer = self.htmlbuffer(handler = gui.URLHandler)
+			buffer = self.htmlbuffer(handler = URLHandler.URLHandler)
 			return buffer
 
 		def createChannel(self, server, name):
@@ -1884,17 +1836,22 @@ def main():
 	Entry point. The program starts here.
 	"""
 
+	# load config file, apply defaults
 	config.setup()
 
+	# build graphical interface
 	setupGTK()
 
+	# connect to maki daemon
 	connectMaki()
 
+	# start main loop
 	gtk.main()
 
+	# after main loop break, write config
 	config.writeConfigFile()
 
-	# At end, close maki if requested
+	# At last, close maki if requested
 	if config.getBool("tekka", "close_maki_on_close"):
 		com.shutdown(config.get("chatting", "quit_message", ""))
 
