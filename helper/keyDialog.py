@@ -48,6 +48,10 @@ class KeyDialog(gtk.Dialog):
 		self.show_all()
 
 	def run(self):
+		key = com.sushi.server_get(self.server, self.channel, "key")
+		self.entry.set_text(key)
+		self.entry.set_position(len(key))
+
 		res = gtk.Dialog.run(self)
 
 		if res == gtk.RESPONSE_OK and self.checkButton.get_active():
