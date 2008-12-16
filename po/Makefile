@@ -14,9 +14,9 @@ install: $(PO:%.po=%.mo)
 	done
 
 clean:
-	$(RM) tekka.pot
-	$(RM) $(GLADEH)
-	$(RM) *.mo
+	$(RM) -f tekka.pot
+	$(RM) -f $(GLADEH)
+	$(RM) -f *.mo
 
 $(GLADEH): %.h: %
 	$(QUIET_GEN) intltool-extract --type=gettext/glade $+; \

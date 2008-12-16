@@ -23,11 +23,11 @@ install: all
 	$(INSTALL) -m 644 plugins/*.py '$(DESTDIR)$(sharedir)/sushi/tekka/plugins'
 	$(SED) 's#@bindir@#$(bindir)#' 'tekka.desktop' > '$(DESTDIR)$(sharedir)/applications/tekka.desktop'
 	$(CHMOD) +x '$(DESTDIR)$(sharedir)/sushi/tekka/main.py'
-	$(LN) '$(sharedir)/sushi/tekka/main.py' '$(DESTDIR)$(bindir)/tekka'
+	$(LN) -sf '$(sharedir)/sushi/tekka/main.py' '$(DESTDIR)$(bindir)/tekka'
 
 	$(MAKE) -C po $@
 
 clean:
-	$(RM) *.pyc
+	$(RM) -f *.pyc
 
 	$(MAKE) -C po $@
