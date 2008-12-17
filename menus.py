@@ -223,11 +223,13 @@ def getServerTreeMenu(pointedTab):
 	autoJoinItem = serverTree_tabMenu_widgets.get_widget("autoJoinItem")
 	historyItem = serverTree_tabMenu_widgets.get_widget("historyItem")
 	closeItem = serverTree_tabMenu_widgets.get_widget("closeItem")
+	setKeyItem = serverTree_tabMenu_widgets.get_widget("setKeyItem")
 
 	# set up visibilty of menu items for each case
 	if pointedTab.is_server():
 		joinItem.hide()
 		partItem.hide()
+		setKeyItem.hide()
 		autoJoinItem.hide()
 		historyItem.hide()
 
@@ -260,6 +262,7 @@ def getServerTreeMenu(pointedTab):
 	elif pointedTab.is_query():
 		autoConnectItem.hide()
 		autoJoinItem.hide()
+		setKeyItem.hide()
 		connectItem.hide()
 		disconnectItem.hide()
 		joinItem.hide()
