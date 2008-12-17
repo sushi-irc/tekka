@@ -21,7 +21,7 @@ install: all
 	$(INSTALL) -m 644 graphics/*.svg '$(DESTDIR)$(sharedir)/sushi/tekka/graphics'
 	$(INSTALL) -m 644 helper/*.py '$(DESTDIR)$(sharedir)/sushi/tekka/helper'
 	$(INSTALL) -m 644 plugins/*.py '$(DESTDIR)$(sharedir)/sushi/tekka/plugins'
-	$(SED) 's#@bindir@#$(bindir)#' 'tekka.desktop' > '$(DESTDIR)$(sharedir)/applications/tekka.desktop'
+	$(SED) -e 's#@bindir@#$(bindir)#' -e 's#@sharedir@#$(sharedir)#' 'tekka.desktop.in' > '$(DESTDIR)$(sharedir)/applications/tekka.desktop'
 	$(CHMOD) +x '$(DESTDIR)$(sharedir)/sushi/tekka/main.py'
 	$(LN) -sf '$(sharedir)/sushi/tekka/main.py' '$(DESTDIR)$(bindir)/tekka'
 
