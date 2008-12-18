@@ -129,8 +129,8 @@ def sendMessage(server, channel, text):
 	if not sushi:
 		return __noSushiMessage()
 
-	text = re.sub('(_\w+_)', chr(31) + '\\1' + chr(31), text)
-	text = re.sub('(\*\w+\*)', chr(2) + '\\1' + chr(2), text)
+	text = re.sub('(_\S+_)', chr(31) + '\\1' + chr(31), text)
+	text = re.sub('(\*\S+\*)', chr(2) + '\\1' + chr(2), text)
 
 	sushi.message(server, channel, text)
 
