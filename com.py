@@ -29,6 +29,7 @@ SUCH DAMAGE.
 # TODO: add shutdown signal
 
 import os
+import re
 
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
@@ -127,6 +128,10 @@ def sendMessage(server, channel, text):
 	"""
 	if not sushi:
 		return __noSushiMessage()
+
+	text = re.sub('(_\w+_)', chr(31) + '\\1' + chr(31), text)
+	text = re.sub('(\*\w+\*)', chr(2) + '\\1' + chr(2), text)
+
 	sushi.message(server, channel, text)
 
 def fetchNicks(server, channel):
