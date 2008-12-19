@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
+<!--Generated with glade3 3.4.5 on Fri Dec 19 22:49:39 2008 -->
 <glade-interface>
   <widget class="GtkDialog" id="channelList">
     <property name="border_width">6</property>
@@ -21,21 +22,24 @@
                 <property name="visible">True</property>
                 <property name="spacing">6</property>
                 <child>
-                  <widget class="GtkLabel" id="filterLabel">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Filter:</property>
-                  </widget>
-                  <packing>
-                    <property name="expand">False</property>
-                  </packing>
-                </child>
-                <child>
                   <widget class="GtkEntry" id="regexpEntry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <signal name="activate" handler="regexpEntry_activate_cb"/>
                   </widget>
+                </child>
+                <child>
+                  <widget class="GtkButton" id="listButton">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="label" translatable="yes">gtk-find</property>
+                    <property name="use_stock">True</property>
+                    <property name="response_id">0</property>
+                    <signal name="clicked" handler="listButton_clicked_cb"/>
+                  </widget>
                   <packing>
+                    <property name="expand">False</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -74,20 +78,6 @@
             <property name="visible">True</property>
             <property name="layout_style">GTK_BUTTONBOX_END</property>
             <child>
-              <widget class="GtkButton" id="listButton">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-				<property name="use_underline">True</property>
-                <property name="label" translatable="yes">_List</property>
-                <property name="response_id">0</property>
-                <signal name="clicked" handler="listButton_clicked_cb"/>
-              </widget>
-              <packing>
-                <property name="expand">False</property>
-              </packing>
-            </child>
-            <child>
               <widget class="GtkButton" id="cancelButton">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -96,9 +86,6 @@
                 <property name="use_stock">True</property>
                 <property name="response_id">-6</property>
               </widget>
-              <packing>
-                <property name="position">1</property>
-              </packing>
             </child>
           </widget>
           <packing>
