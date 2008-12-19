@@ -71,7 +71,7 @@ def run(server):
 
 	return True # o.0
 
-def resetSignal():
+def resetSignal(*x):
 	""" reset the list signal to the original state """
 	global check
 	if not check:
@@ -112,6 +112,11 @@ def listButton_clicked_cb(button):
 				com.sushi.object_path)
 		global handler
 		handler = com.sushi.connect_to_signal("list", sushiList)
+
+		widgets.get_widget("channelList").connect("close",
+				resetSignal)
+		widgets.get_widget("channelList").connect("destroy",
+				resetSignal)
 
 		try:
 			com.list(currentServer)
