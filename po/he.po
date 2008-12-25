@@ -1,0 +1,557 @@
+# Hebrew translation for tekka
+# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# This file is distributed under the same license as the tekka package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: tekka 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-12-25 14:11+0100\n"
+"PO-Revision-Date: 2008-12-20 13:36+0000\n"
+"Last-Translator: Yaron <sh.yaron@gmail.com>\n"
+"Language-Team: Hebrew <he@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Launchpad-Export-Date: 2008-12-25 19:12+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: ../commands.py:50
+#, python-format
+msgid "Warning: You are not connected to server %(server)s."
+msgstr "אזהרה: אינך מחובר לשרת %(server)s."
+
+#: ../commands.py:106
+#, python-format
+msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
+msgstr "• הפקודה “%(command)s”אינה ידועה, שולח את הפקודה הגולמית “%(raw)s”."
+
+#: ../main.py:167
+#, python-format
+msgid "%d User"
+msgid_plural "%d Users"
+msgstr[0] "משתמש %d"
+msgstr[1] "%d משתמשים"
+
+#: ../main.py:168
+#, python-format
+msgid "%d Operator"
+msgid_plural "%d Operators"
+msgstr[0] "מפעיל %d"
+msgstr[1] "%d מפעילים"
+
+#: ../main.py:1177
+msgid "Reset markup"
+msgstr "איפוס הסימון"
+
+#: ../main.py:1425
+#, python-format
+msgid "Do you really want to close channel “%(name)s”?"
+msgstr "האם אתה בטוח שברצונך לסגור את הערוץ “%(name)s”?"
+
+#: ../main.py:1427
+#, python-format
+msgid "Do you really want to close query “%(name)s”?"
+msgstr "האם אתה בטוח שברצונך לסגור את השאילתה  “%(name)s”?"
+
+#: ../main.py:1429
+#, python-format
+msgid "Do you really want to close server “%(name)s”?"
+msgstr "האם אתה בטוח שברצונך לסגור את השרת  “%(name)s”?"
+
+#: ../signals.py:366
+#, python-format
+msgid "• You changed the topic to “%(topic)s”."
+msgstr "• שינית את הכותרת ל־ “%(topic)s”."
+
+#: ../signals.py:368
+#, python-format
+msgid "• %(nick)s changed the topic to “%(topic)s”."
+msgstr "• %(nick)s שינה את הכותרת ל־“%(topic)s”."
+
+#: ../signals.py:425
+#, python-format
+msgid "• %(nick)s is away (%(message)s)."
+msgstr "• %(nick)s הינו מרוחק (%(message)s)."
+
+#: ../signals.py:770
+#, python-format
+msgid "• You are now known as %(newnick)s."
+msgstr "• כינויך החדש הינו %(newnick)s."
+
+#: ../signals.py:779
+#, python-format
+msgid "• %(nick)s is now known as %(newnick)s."
+msgstr "• %(nick)s כעת ידוע תחת השם %(newnick)s."
+
+#: ../signals.py:832
+#, python-format
+msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
+msgstr "« נבעטת אל מחוץ לערוץ %(channel)s על ידי %(nick)s (%(reason)s)."
+
+#: ../signals.py:849
+#, python-format
+msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
+msgstr ""
+"« %(who)s נבעט אל מחוץ לערוץ %(channel)s על ידי %(nick)s (%(reason)s)."
+
+#: ../signals.py:887
+#, python-format
+msgid "« You have quit (%(reason)s)."
+msgstr "« יצאת מהערוץ (%(reason)s)."
+
+#: ../signals.py:889
+msgid "« You have quit."
+msgstr "« יצאת."
+
+#: ../signals.py:903
+#, python-format
+msgid "« %(nick)s has quit (%(reason)s)."
+msgstr "« %(nick)s יצא מהערוץ (%(reason)s)."
+
+#: ../signals.py:905
+#, python-format
+msgid "« %(nick)s has quit."
+msgstr "« %(nick)s יצא."
+
+#: ../signals.py:1001
+#, python-format
+msgid "» You have joined %(channel)s."
+msgstr "» הצטרפת לערוץ %(channel)s."
+
+#: ../signals.py:1011
+#, python-format
+msgid "» %(nick)s has joined %(channel)s."
+msgstr "» %(nick)s הצטרף לערוץ %(channel)s."
+
+#: ../signals.py:1096
+#, python-format
+msgid "« You have left %(channel)s (%(reason)s)."
+msgstr "« עזבת את הערוץ %(channel)s (%(reason)s)."
+
+#: ../signals.py:1098
+#, python-format
+msgid "« You have left %(channel)s."
+msgstr "« עזבת את הערוץ %(channel)s."
+
+#: ../signals.py:1119
+#, python-format
+msgid "« %(nick)s has left %(channel)s (%(reason)s)."
+msgstr "« %(nick)s עזב את הערוץ %(channel)s (%(reason)s)."
+
+#: ../signals.py:1121
+#, python-format
+msgid "« %(nick)s has left %(channel)s."
+msgstr "« %(nick)s עזב את הערוץ %(channel)s."
+
+#: ../signals.py:1144
+#, python-format
+msgid "• %(target)s: No such nick/channel."
+msgstr "• %(target)s: אין כינוי/ערוץ כזה."
+
+#: ../signals.py:1146
+#, python-format
+msgid "• %(target)s: No such server."
+msgstr "• %(target)s: אין שרת כזה."
+
+#: ../signals.py:1148
+#, python-format
+msgid "• %(target)s: No such channel."
+msgstr "• %(target)s: אין ערוץ כזה."
+
+#: ../signals.py:1160
+msgid "Unknown reason"
+msgstr "סיבה לא ידועה"
+
+#: ../signals.py:1163
+msgid "The channel is full."
+msgstr "הערוץ מלא."
+
+#: ../signals.py:1165
+msgid "The channel is invite-only."
+msgstr "הערוץ הינו למוזמנים בלבד:"
+
+#: ../signals.py:1167
+msgid "You are banned."
+msgstr "נחסמת."
+
+#: ../signals.py:1180
+msgid "You need the correct channel key."
+msgstr "תזדקק למפתח הערוץ הנכון."
+
+#: ../signals.py:1183
+#, python-format
+msgid "You can not join %(channel)s: %(reason)s"
+msgstr "לא תוכל להצטרף לערוץ %(channel)s: %(reason)s"
+
+#: ../signals.py:1195
+#, python-format
+msgid "[%(nick)s] %(message)s"
+msgstr "[%(nick)s] %(message)s"
+
+#: ../signals.py:1197
+#, python-format
+msgid "[%(nick)s] End of whois."
+msgstr "[%(nick)s] סיום נתוני ה־whois."
+
+#: ../dialogs/channelList.py:187
+msgid "Channel"
+msgstr "ערוץ"
+
+#: ../dialogs/channelList.py:187
+msgid "User"
+msgstr "משתמש"
+
+#: ../dialogs/channelList.py:187
+msgid "Topic"
+msgstr "כותרת"
+
+#: ../dialogs/debugDialog.py:56
+msgid "C_ompile and run"
+msgstr "הי_דור והרצה"
+
+#: ../helper/keyDialog.py:10
+msgid "Channel Key"
+msgstr ""
+
+#: ../helper/keyDialog.py:30
+#, python-format
+msgid "Enter the key for the channel %(channel)s."
+msgstr ""
+
+#: ../helper/keyDialog.py:41
+msgid "Save key for channel"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:1
+msgid "Auto-connect"
+msgstr "התחברות אוטומטיתהצ"
+
+#: ../glade/mainwindow.glade.h:2
+msgid "Auto-join"
+msgstr "הצטרפות אוטומטית"
+
+#: ../glade/mainwindow.glade.h:3
+msgid "Ban"
+msgstr "חסום"
+
+#: ../glade/mainwindow.glade.h:4
+msgid "Close"
+msgstr "סגור"
+
+#: ../glade/mainwindow.glade.h:5
+msgid "Connect"
+msgstr "התחבר"
+
+#: ../glade/mainwindow.glade.h:6
+msgid "Disconnect"
+msgstr "התנתק"
+
+#: ../glade/mainwindow.glade.h:7
+msgid "Give Half-Op"
+msgstr "הענק חצי־מפעיל"
+
+#: ../glade/mainwindow.glade.h:8
+msgid "Give Op"
+msgstr "הענק מפעיל"
+
+#: ../glade/mainwindow.glade.h:9
+msgid "Give Voice"
+msgstr "הענק קול"
+
+#: ../glade/mainwindow.glade.h:10 ../glade/dialogs/history.glade.h:1
+msgid "History"
+msgstr "היסטוריה"
+
+#: ../glade/mainwindow.glade.h:11
+msgid "Ignore"
+msgstr "התעלם"
+
+#: ../glade/mainwindow.glade.h:12
+msgid "Join"
+msgstr "צרף"
+
+#: ../glade/mainwindow.glade.h:13
+msgid "Kick"
+msgstr "בעט"
+
+#: ../glade/mainwindow.glade.h:14
+msgid "Modes"
+msgstr "מצבים"
+
+#: ../glade/mainwindow.glade.h:15
+msgid "Opens a dialog which asks you for the channel key to set."
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:16
+msgid "Part"
+msgstr "עזוב"
+
+#: ../glade/mainwindow.glade.h:17 ../glade/dialogs/server.glade.h:1
+msgid "Server List"
+msgstr "רשימת שרתים"
+
+#: ../glade/mainwindow.glade.h:18
+msgid "Set Key"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:19
+msgid "Shutdown"
+msgstr "כבה"
+
+#: ../glade/mainwindow.glade.h:20
+msgid "Status _Bar"
+msgstr "שורת ה_מצב"
+
+#: ../glade/mainwindow.glade.h:21
+msgid "Status _Icon"
+msgstr "סמל ה_מצב"
+
+#: ../glade/mainwindow.glade.h:22
+msgid "Take Half-Op"
+msgstr "שלול חצי־מפעיל"
+
+#: ../glade/mainwindow.glade.h:23
+msgid "Take Op"
+msgstr "שלילת מפעיל"
+
+#: ../glade/mainwindow.glade.h:24
+msgid "Take Voice"
+msgstr "שלילת קול"
+
+#: ../glade/mainwindow.glade.h:25
+msgid "Whois"
+msgstr "Whois"
+
+#: ../glade/mainwindow.glade.h:26
+msgid "_Channel List"
+msgstr "רשימת ה_ערוצים"
+
+#: ../glade/mainwindow.glade.h:27
+msgid "_Debug"
+msgstr "_ניפוי שגיאות"
+
+#: ../glade/mainwindow.glade.h:28
+msgid "_Dialogs"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:29
+msgid "_General Output"
+msgstr "_פלט כללי"
+
+#: ../glade/mainwindow.glade.h:30
+msgid "_Help"
+msgstr "ע_זרה"
+
+#: ../glade/mainwindow.glade.h:31
+msgid "_Plugins"
+msgstr "_תוספים"
+
+#: ../glade/mainwindow.glade.h:32
+msgid "_View"
+msgstr "_תצוגה"
+
+#: ../glade/mainwindow.glade.h:33
+msgid "_maki"
+msgstr "_maki"
+
+#: ../glade/mainwindow.glade.h:34 ../glade/dialogs/preferences.glade.h:30
+msgid "_tekka"
+msgstr "_tekka"
+
+#: ../glade/dialogs/about.glade.h:1
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Yaron https://launchpad.net/~sh-yaron"
+
+#: ../glade/dialogs/advancedPreferences.glade.h:1
+msgid "Advanced Preferences"
+msgstr ""
+
+#: ../glade/dialogs/channelList.glade.h:1
+msgid "Channel List"
+msgstr "רשימת הערוצים"
+
+#: ../glade/dialogs/plugins.glade.h:1
+msgid "Plugins"
+msgstr "תוספים"
+
+#: ../glade/dialogs/plugins.glade.h:2
+msgid "_Load"
+msgstr "_טען"
+
+#: ../glade/dialogs/plugins.glade.h:3
+msgid "_Unload"
+msgstr "_פרוק"
+
+#: ../glade/dialogs/preferences.glade.h:1
+msgid ""
+"<b>Warning:</b>\n"
+"Changes will be applied after closing this dialog."
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:3
+msgid "A_uto expand server tree"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:4
+msgid "Actions:"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:5
+msgid "Ad_vanced Settings"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:6
+msgid "C_hatting"
+msgstr "_שיחה"
+
+#: ../glade/dialogs/preferences.glade.h:7
+msgid "C_olors"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:8
+msgid "Default nick:"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:9
+msgid "General Output font:"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:10
+msgid "Highlighted actions:"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:11
+msgid "Highlighted messages:"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:12
+msgid ""
+"If you want to have control about <u>all</u> settings you can use the "
+"advanced settings dialog.\n"
+"\n"
+"<b>Notice:</b>\n"
+"For some options it is neccessary to restart tekka for the changes to take "
+"effect."
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:16
+msgid "Last log lines:"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:17
+msgid "Messages:"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:18
+msgid "Notification:"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:19
+msgid "Output font:"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:20
+msgid "Own nick:"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:21
+msgid "Own text:"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:22
+msgid "Part message:"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:23
+msgid "Quit message:"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:24
+msgid "Shutdown _maki on close"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:25
+msgid "Use _RGBA"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:26
+msgid "_Advanced"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:27
+msgid "_Hide on close"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:28
+msgid "_Nick Colors"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:29
+msgid "_Show status icon"
+msgstr ""
+
+#: ../glade/dialogs/serverAdd.glade.h:1
+msgid "<b>Add Server</b>"
+msgstr "<b>הוסף שרת</b>"
+
+#: ../glade/dialogs/serverAdd.glade.h:2 ../glade/dialogs/serverEdit.glade.h:1
+msgid "<b>Command List</b>"
+msgstr ""
+
+#: ../glade/dialogs/serverAdd.glade.h:3
+msgid "Add Server"
+msgstr "הוסף שרת"
+
+#: ../glade/dialogs/serverAdd.glade.h:4 ../glade/dialogs/serverEdit.glade.h:3
+msgid "Address:"
+msgstr "כתובת:‏"
+
+#: ../glade/dialogs/serverAdd.glade.h:5 ../glade/dialogs/serverEdit.glade.h:4
+msgid "Auto-connect:"
+msgstr "התחברות אוטומטית:"
+
+#: ../glade/dialogs/serverAdd.glade.h:6 ../glade/dialogs/serverEdit.glade.h:6
+msgid "Nick name:"
+msgstr "כינוי:"
+
+#: ../glade/dialogs/serverAdd.glade.h:7 ../glade/dialogs/serverEdit.glade.h:7
+msgid "NickServ password:"
+msgstr "סיסמת ה־NickServ:"
+
+#: ../glade/dialogs/serverAdd.glade.h:8 ../glade/dialogs/serverEdit.glade.h:8
+msgid "Port:"
+msgstr "פתחה:"
+
+#: ../glade/dialogs/serverAdd.glade.h:9 ../glade/dialogs/serverEdit.glade.h:9
+msgid "Real name:"
+msgstr "שם אמיתי:"
+
+#: ../glade/dialogs/serverAdd.glade.h:10
+msgid "Server name:"
+msgstr "שם השרת:"
+
+#: ../glade/dialogs/serverDelete.glade.h:1
+msgid ""
+"<span weight=\"bold\" size=\"larger\">Delete Server</span>\n"
+"\n"
+"Are you sure you want to delete the server?"
+msgstr ""
+"<span weight=\"bold\" size=\"larger\">מחיקת השרת</span>\n"
+"\n"
+"האם אתה בטוח שברצונך למחוק את השרת?"
+
+#: ../glade/dialogs/serverDelete.glade.h:4
+msgid "Delete Server"
+msgstr "מחק את השרת"
+
+#: ../glade/dialogs/serverEdit.glade.h:2
+msgid "<b>Edit Server</b>"
+msgstr "<b>עריכת שרת</b>"
+
+#: ../glade/dialogs/serverEdit.glade.h:5
+msgid "Edit Server"
+msgstr "ערוך שרת"

@@ -1,6 +1,6 @@
 include ../../Makefile.common
 
-LANGUAGES = de es nb pt_BR
+LANGUAGES = de es he nb pt_BR
 PO        = $(LANGUAGES:%=%.po)
 PY        = $(wildcard ../*.py) $(wildcard ../*/*.py)
 GLADE     = $(wildcard ../glade/*.glade) $(wildcard ../glade/*/*.glade)
