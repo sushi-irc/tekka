@@ -1554,7 +1554,9 @@ def setup_mainWindow():
 	iconPath = config.get("tekka","status_icon")
 	if iconPath:
 		try:
-			win.set_icon_from_file(iconPath)
+			# Explicitly add a 64x64 icon to work around a Compiz bug (LP: #312317)
+			gtk.window_set_default_icon_list(gtk.gdk.pixbuf_new_from_file_at_size(iconPath, 64, 64),
+			                                 gtk.gdk.pixbuf_new_from_file(iconPath))
 		except GError:
 			# file not found
 			pass
