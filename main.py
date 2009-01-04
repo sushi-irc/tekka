@@ -1020,8 +1020,9 @@ def mainWindow_size_allocate_cb(mainWindow, alloc):
 		at bottom anymore. So if the current tab
 		has auto scroll = True, scroll to bottom.
 	"""
-	config.set("tekka","window_width",alloc.width)
-	config.set("tekka","window_height",alloc.height)
+	if not mainWindow.window.get_state() & gtk.gdk.WINDOW_STATE_MAXIMIZED:
+		config.set("tekka","window_width",alloc.width)
+		config.set("tekka","window_height",alloc.height)
 
 	tab = gui.tabs.getCurrentTab()
 	if tab and tab.autoScroll:
