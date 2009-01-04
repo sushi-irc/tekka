@@ -3,9 +3,9 @@
 <!--Generated with glade3 3.4.5 on Mon Dec 15 01:06:23 2008 -->
 <glade-interface>
   <widget class="GtkWindow" id="mainWindow">
-    <property name="width_request">800</property>
-    <property name="height_request">600</property>
     <property name="title">tekka</property>
+    <property name="default_width">800</property>
+    <property name="default_height">600</property>
     <signal name="focus_in_event" handler="mainWindow_focus_in_event_cb"/>
     <signal name="size_allocate" handler="mainWindow_size_allocate_cb"/>
     <signal name="delete_event" handler="mainWindow_delete_event_cb"/>
