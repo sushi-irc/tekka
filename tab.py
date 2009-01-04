@@ -53,6 +53,7 @@ class tekkaTab(object):
 
 		self.inputHistory = []
 		self.historyPosition = -1
+		self.currentHistory = ""
 
 	""" I don't know if this is required but iirc
 	python is throwing the AttributeError exception if
@@ -83,6 +84,12 @@ class tekkaTab(object):
 		if len(self.inputHistory) > 20:
 			del self.inputHistory[20:]
 		self.historyPosition = -1
+
+	def getCurrentHistory(self):
+		return self.currentHistory
+
+	def setCurrentHistory(self, string):
+		self.currentHistory = string
 
 	def getNextHistory(self):
 		"""

@@ -1071,7 +1071,13 @@ def inputBar_key_press_event_cb(inputBar, event):
 		# get next input history item
 		if not tab: return
 
+		if tab.historyPosition == -1:
+			tab.setCurrentHistory(inputBar.get_text())
+
 		hist = tab.getNextHistory()
+
+		if tab.historyPosition == -1:
+			return
 
 		inputBar.set_text(hist)
 		inputBar.set_position(len(hist))
@@ -1084,6 +1090,9 @@ def inputBar_key_press_event_cb(inputBar, event):
 			return
 
 		hist = tab.getPrevHistory()
+
+		if tab.historyPosition == -1:
+			hist = tab.getCurrentHistory()
 
 		inputBar.set_text(hist)
 		inputBar.set_position(len(hist))
