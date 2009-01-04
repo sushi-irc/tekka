@@ -1385,6 +1385,8 @@ def output_shortcut_ctrl_l(output, shortcut):
 	"""
 	buf = output.get_buffer()
 	if buf: buf.set_text("")
+	buf = widgets.get_widget("generalOutput").get_buffer()
+	if buf: buf.set_text("")
 
 def serverTree_shortcut_ctrl_Page_Up(serverTree, shortcut):
 	"""
