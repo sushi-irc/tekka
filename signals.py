@@ -41,6 +41,37 @@ from helper import keyDialog
 sushi = None
 gui = None
 
+signals = {}
+
+def connect_signal (signal, handler):
+	""" connect handler to signal """
+	global signals
+	if type(signal) != type(""):
+		raise TypeError
+
+	if not signals.has_key (signal):
+	  	signals[signal] = {}
+
+	if signals[signal].has_key(handler):
+		# no doubles
+		return
+
+	signals[signal][handler] = sushi.connect_to_signal (signal, handler)
+	
+def disconnect_signal (signal, handler):
+	""" disconnect handler from signal """
+	global signals
+	if type(signal) != type(""):
+		raise TypeError
+
+	try:
+		ob = signals[signal][handler]
+	except KeyError:
+		return
+	else:
+		ob.remove()
+		del signals[signal][handler]
+
 def setup():
 	global gui, sushi
 
@@ -48,46 +79,46 @@ def setup():
 	sushi = com.sushi
 
 	# Message-Signals
-	sushi.connect_to_signal("message", userMessage)
-	sushi.connect_to_signal("own_message", ownMessage)
-	sushi.connect_to_signal("own_notice", ownNotice)
-	sushi.connect_to_signal("query", userQuery)
-	sushi.connect_to_signal("notice", userNotice)
-	sushi.connect_to_signal("action", userAction)
-	sushi.connect_to_signal("away_message", userAwayMessage)
-	sushi.connect_to_signal("ctcp", userCTCP)
-	sushi.connect_to_signal("own_ctcp", ownCTCP)
-	sushi.connect_to_signal("query_ctcp", queryCTCP)
-	sushi.connect_to_signal("query_notice", queryNotice)
-	sushi.connect_to_signal("no_such", noSuch)
-	sushi.connect_to_signal("cannot_join", cannotJoin)
+	connect_signal("message", userMessage)
+	connect_signal("own_message", ownMessage)
+	connect_signal("own_notice", ownNotice)
+	connect_signal("query", userQuery)
+	connect_signal("notice", userNotice)
+	connect_signal("action", userAction)
+	connect_signal("away_message", userAwayMessage)
+	connect_signal("ctcp", userCTCP)
+	connect_signal("own_ctcp", ownCTCP)
+	connect_signal("query_ctcp", queryCTCP)
+	connect_signal("query_notice", queryNotice)
+	connect_signal("no_such", noSuch)
+	connect_signal("cannot_join", cannotJoin)
 
 	# action signals
-	sushi.connect_to_signal("part", userPart)
-	sushi.connect_to_signal("join", userJoin)
-	sushi.connect_to_signal("names", userNames)
-	sushi.connect_to_signal("quit", userQuit)
-	sushi.connect_to_signal("kick", userKick)
-	sushi.connect_to_signal("nick", userNick)
-	sushi.connect_to_signal("away", userAway)
-	sushi.connect_to_signal("back", userBack)
-	sushi.connect_to_signal("mode", userMode)
-	sushi.connect_to_signal("oper", userOper)
+	connect_signal("part", userPart)
+	connect_signal("join", userJoin)
+	connect_signal("names", userNames)
+	connect_signal("quit", userQuit)
+	connect_signal("kick", userKick)
+	connect_signal("nick", userNick)
+	connect_signal("away", userAway)
+	connect_signal("back", userBack)
+	connect_signal("mode", userMode)
+	connect_signal("oper", userOper)
 
 
 	# Server-Signals
-	sushi.connect_to_signal("connect", serverConnect)
-	sushi.connect_to_signal("connected", serverConnected)
-	sushi.connect_to_signal("motd", serverMOTD)
-	sushi.connect_to_signal("list", list)
-	sushi.connect_to_signal("whois", whois)
+	connect_signal("connect", serverConnect)
+	connect_signal("connected", serverConnected)
+	connect_signal("motd", serverMOTD)
+	connect_signal("list", list)
+	connect_signal("whois", whois)
 
 	# Channel-Signals
-	sushi.connect_to_signal("topic", channelTopic)
-	sushi.connect_to_signal("banlist", channelBanlist)
+	connect_signal("topic", channelTopic)
+	connect_signal("banlist", channelBanlist)
 
 	# Maki signals
-	sushi.connect_to_signal("shutdown", makiShutdownSignal)
+	connect_signal("shutdown", makiShutdownSignal)
 
 	initServers()
 
