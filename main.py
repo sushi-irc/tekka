@@ -1801,6 +1801,9 @@ def setupGTK():
 	# set general output font
 	gui.setFont(widgets.get_widget("generalOutput"), config.get("tekka","general_output_font"))
 
+	# set input font
+	gui.setFont(widgets.get_widget("inputBar"), config.get("tekka","input_font"))
+
 	# setup general output
 	buffer = gui.tabs.getBuffer()
 	widgets.get_widget("generalOutput").set_buffer(buffer)
