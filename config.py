@@ -64,6 +64,7 @@ def setDefaults():
 	defaults["tekka"]["output_font"] = "Monospace 10"
 	defaults["tekka"]["general_output_font"] = "Monospace 10"
 	defaults["tekka"]["input_font"] = "Monospace 10"
+	defaults["tekka"]["history_font"] = "Monospace 10"
 	defaults["tekka"]["auto_expand"] = "True"
 	defaults["tekka"]["show_general_output"] = "True"
 	defaults["tekka"]["rgba"] = "False"
