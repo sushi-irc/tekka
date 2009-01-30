@@ -44,8 +44,6 @@ widgets = None
 currentServer = None
 filterExpression = None
 listView = None
-handler = None
-check = None
 cache = []  # /list cache
 
 def run(server):
@@ -57,9 +55,8 @@ def run(server):
 
 	global currentServer, cache
 
-	if currentServer != server:
-		# new server, reset list cache
-		cache = []
+	# clear the cache at the beginning
+	cache = []
 
 	currentServer = server
 
@@ -69,14 +66,12 @@ def run(server):
 
 	dialog.destroy()
 
-	return True # o.0
+	return True
 
 def resetSignal(*x):
 	""" reset the list signal to the original state """
-	global check
-	if not check:
-		check = com.sushi.connect_to_signal("list", signals.list)
-	handler.remove()
+	signals.disconnect_signal ("list", sushiList)
+	signals.connect_signal ("list", signals.list)
 
 def listButton_clicked_cb(button):
 	"""
@@ -102,24 +97,16 @@ def listButton_clicked_cb(button):
 		# use cached values
 		for (server, channel, user, topic) in cache:
 			sushiList(0, server, channel, user, topic)
-	else:
-		# redirect "list" signal
-		com.bus.remove_signal_receiver(
-				signals.list,
-				"list",
-				com.sushi.dbus_interface,
-				com.sushi.bus_name,
-				com.sushi.object_path)
-		global handler
-		handler = com.sushi.connect_to_signal("list", sushiList)
 
-		widgets.get_widget("channelList").connect("close",
-				resetSignal)
-		widgets.get_widget("channelList").connect("destroy",
-				resetSignal)
+	else:
+		signals.disconnect_signal ("list", signals.list)
+		signals.connect_signal("list", sushiList)
+
+		widgets.get_widget("channelList").connect("destroy",resetSignal)
 
 		try:
 			com.list(currentServer)
+
 		except BaseException, e:
 			print e
 			resetSignal()
@@ -152,9 +139,7 @@ def sushiList(time, server, channel, user, topic):
 	if user < 0:
 		# EOL, this is not reached if we use
 		# manual call.
-
-		resetSignal()
-
+		resetSignal ()
 		return
 
 	store = listView.get_model()
