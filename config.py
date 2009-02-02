@@ -229,7 +229,7 @@ def get(section, option=None, default=None):
 	# usually this is not reached
 	return default
 
-def getBool(section, option, default=None):
+def getBool(section, option, default=False):
 	"""
 		Returns True or False if the value is
 		set or unset.
@@ -237,12 +237,12 @@ def getBool(section, option, default=None):
 	res = get(section, option, default)
 
 	if res == default:
-		return False
+		return default
 
 	if res.lower() == "true" or res == "1":
 		return True
 
-	return False
+	return default
 
 def getDefault(section, option=None):
 	"""
