@@ -1128,14 +1128,6 @@ def topicBar_activate_cb(topicBar):
 
 	widgets.get_widget("inputBar").grab_focus()
 
-def output_button_press_event_cb(output, event):
-	"""
-		Button in output was pressed, set focus
-		to input entry.
-	"""
-	widgets.get_widget("inputBar").grab_focus()
-	return False
-
 def serverTree_misc_menu_reset_activate_cb(menuItem):
 	"""
 	reset the markup of all tabs
@@ -1774,8 +1766,6 @@ def setupGTK():
 		"inputBar_activate_cb" : inputBar_activate_cb,
 		"inputBar_key_press_event_cb" : inputBar_key_press_event_cb,
 		"topicBar_activate_cb" : topicBar_activate_cb,
-	# output signals
-		"output_button_press_event_cb" : output_button_press_event_cb,
 	# server tree signals
 		"serverTree_realize_cb" : lambda w: w.expand_all(),
 		"serverTree_button_press_event_cb" : serverTree_button_press_event_cb,
