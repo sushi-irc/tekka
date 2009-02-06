@@ -1444,10 +1444,10 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 	# FIXME:: because the tab which contains the output buffer is
 	# FIXME:: removed before the signal execution.
 	if tab.is_channel():
-		com.part(tab.server,tab.name)
+		com.part(tab.server,tab.name, config.get("chatting", "part_message", ""))
 
 	elif tab.is_server():
-		com.quitServer(tab.name)
+		com.quitServer(tab.name, config.get("chatting", "quit_message", ""))
 
 	gui.tabs.removeTab(tab)
 	gui.updateServerTreeShortcuts()
@@ -1745,7 +1745,7 @@ def setupGTK():
 		"menu_tekka_Quit_activate_cb" : gtk.main_quit,
 	# maki menu
 		"menu_maki_Connect_activate_cb" : lambda w: connectMaki(),
-		"menu_maki_Shutdown_activate_cb" : lambda w: com.shutdown(),
+		"menu_maki_Shutdown_activate_cb" : lambda w: com.shutdown(config.get("chatting", "quit_message", "")),
 	# view menu
 		"menu_View_showGeneralOutput_toggled_cb" : menu_View_showGeneralOutput_toggled_cb,
 		"menu_View_showStatusBar_toggled_cb" : menu_View_showStatusBar_toggled_cb,

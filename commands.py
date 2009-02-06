@@ -131,17 +131,23 @@ def makiQuit(currentServer, currentChannel, args):
 	if args:
 		# /quit <server> [<reason>]
 		if gui.tabs.searchTab(args[0]):
-			com.quitServer(args[0], " ".join(args[1:]))
+			reason = " ".join(args[1:])
+			if not reason:
+				reason = config.get("chatting", "quit_message", "")
+			com.quitServer(args[0], reason)
 		else:
 			# /quit [<reason>]
 			if not currentServer:
 				return gui.myPrint("Could not determine server.")
-			com.quitServer(currentServer.name, " ".join(args))
+			reason = " ".join(args)
+			if not reason:
+				reason = config.get("chatting", "quit_message", "")
+			com.quitServer(currentServer.name, reason)
 	else:
 		# /quit
 		if not currentServer:
 			return gui.myPrint("Could not determine server.")
-		com.quitServer(currentServer.name,"")
+		com.quitServer(currentServer.name, config.get("chatting", "quit_message", ""))
 
 def makiNick(currentServer, currentChannel, args):
 	"""
@@ -168,17 +174,23 @@ def makiPart(currentServer, currentChannel, args):
 	if args and currentServer:
 		# /part <channel> [<reason>]
 		if gui.tabs.searchTab(currentServer.name, args[0]):
-			com.part(currentServer.name, args[0], " ".join(args[1:]))
+			reason = " ".join(args[1:])
+			if not reason:
+				reason = config.get("chatting", "part_message", "")
+			com.part(currentServer.name, args[0], reason)
 		else:
 			# /part [<reason>]
 			if not currentChannel:
 				return gui.myPrint("Could not determine channel.")
-			com.part(currentServer.name, currentChannel.name, " ".join(args))
+			reason = " ".join(args)
+			if not reason:
+				reason = config.get("chatting", "part_message", "")
+			com.part(currentServer.name, currentChannel.name, reason)
 	else:
 		# /part
 		if not currentChannel:
 			return gui.myPrint("Could not determine channel.")
-		com.part(currentServer.name, currentChannel.name,"")
+		com.part(currentServer.name, currentChannel.name, config.get("chatting", "part_message", ""))
 
 def makiJoin(currentServer, currentChannel, args):
 	"""

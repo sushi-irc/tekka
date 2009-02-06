@@ -80,7 +80,7 @@ def serverTreeMenu_disconnectItem_activate_cb(menuItem):
 		quit server with default quit message.
 	"""
 	if serverTree_tabMenu_currentTab and serverTree_tabMenu_currentTab.is_server():
-		com.quitServer(serverTree_tabMenu_currentTab.name)
+		com.quitServer(serverTree_tabMenu_currentTab.name, config.get("chatting", "quit_message", ""))
 
 def serverTreeMenu_joinItem_activate_cb(menuItem):
 	"""
@@ -94,7 +94,7 @@ def serverTreeMenu_partItem_activate_cb(menuItem):
 		part channel with default part message
 	"""
 	if serverTree_tabMenu_currentTab and serverTree_tabMenu_currentTab.is_channel():
-		com.part(serverTree_tabMenu_currentTab.server, serverTree_tabMenu_currentTab.name)
+		com.part(serverTree_tabMenu_currentTab.server, serverTree_tabMenu_currentTab.name, config.get("chatting", "part_message", ""))
 
 def serverTreeMenu_closeItem_activate_cb(menuItem):
 	"""
@@ -105,9 +105,9 @@ def serverTreeMenu_closeItem_activate_cb(menuItem):
 		return
 
 	if serverTree_tabMenu_currentTab.is_channel() and serverTree_tabMenu_currentTab.joined:
-		com.part(serverTree_tabMenu_currentTab.server, serverTree_tabMenu_currentTab.name)
+		com.part(serverTree_tabMenu_currentTab.server, serverTree_tabMenu_currentTab.name, config.get("chatting", "part_message", ""))
 	elif serverTree_tabMenu_currentTab.is_server() and serverTree_tabMenu_currentTab.connected:
-		com.quitServer(serverTree_tabMenu_currentTab.name)
+		com.quitServer(serverTree_tabMenu_currentTab.name, config.get("chatting", "quit_message", ""))
 
 	gui.tabs.removeTab(serverTree_tabMenu_currentTab)
 	gui.updateServerTreeShortcuts()
