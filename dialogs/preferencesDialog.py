@@ -59,8 +59,6 @@ def fillColors():
 def fillChatting():
 	for key in ("quit_message", "part_message"):
 		val = config.get("chatting", key)
-		if not val:
-			continue
 		widgets.get_widget(key).set_text(val)
 
 	val = config.get("chatting", "last_log_lines", default=0)
@@ -176,19 +174,11 @@ def colors_default_nick_written(entry, event):
 
 def chatting_quit_message_written(entry, event):
 	text = entry.get_text()
-
-	if not text:
-		config.unset("chatting", "quit_message")
-	else:
-		config.set("chatting", "quit_message", text)
+	config.set("chatting", "quit_message", text)
 
 def chatting_part_message_written(entry, event):
 	text = entry.get_text()
-
-	if not text:
-		config.unset("chatting", "part_message")
-	else:
-		config.set("chatting", "part_message", text)
+	config.set("chatting", "part_message", text)
 
 def chatting_log_lines_changed(button):
 	value = int(button.get_value())
