@@ -28,6 +28,9 @@ install: all
 	$(MAKE) -C po $@
 
 clean:
+	$(RM) -f dialogs/*.pyc
+	$(RM) -f helper/*.pyc
+	$(RM) -f plugins/*.pyc
 	$(RM) -f *.pyc
 
 	$(MAKE) -C po $@
