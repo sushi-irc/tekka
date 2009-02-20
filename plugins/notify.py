@@ -28,9 +28,9 @@ SUCH DAMAGE.
 
 import tekka
 
+import gobject
 import pynotify
 
-# FIXME escape message/action
 # FIXME configurable highlight words
 
 class pluginNotify (tekka.plugin):
@@ -65,12 +65,12 @@ class pluginNotify (tekka.plugin):
 			return
 
 		if message.lower().find(self.nicks[server]) >= 0:
-			n = pynotify.Notification(channel, "&lt;%s&gt; %s" % (nick, message))
+			n = pynotify.Notification(channel, "&lt;%s&gt; %s" % (nick, gobject.markup_escape_text(message)))
 			n.show()
 
 	def query_cb (self, timestamp, server, nick, message):
 
-		n = pynotify.Notification(nick, message)
+		n = pynotify.Notification(nick, gobject.markup_escape_text(message))
 		n.show()
 
 	def action_cb (self, time, server, nick, channel, action):
@@ -79,7 +79,7 @@ class pluginNotify (tekka.plugin):
 			return
 
 		if action.lower().find(self.nicks[server]) >= 0:
-			n = pynotify.Notification(channel, "%s %s" % (nick, action))
+			n = pynotify.Notification(channel, "%s %s" % (nick, gobject.markup_escape_text(action)))
 			n.show()
 
 	def plugin_info(self):
