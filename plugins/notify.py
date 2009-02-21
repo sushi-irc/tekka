@@ -60,6 +60,16 @@ class pluginNotify (tekka.plugin):
 		self.get_dbus_interface().connect_to_signal("query", self.query_cb)
 		self.get_dbus_interface().connect_to_signal("action", self.action_cb)
 
+	def escape (self, message):
+		# Bold
+		message = message.replace(chr(2), "")
+		# Underline
+		message = message.replace(chr(31), "")
+
+		message = gobject.markup_escape_text(message)
+
+		return message
+
 	def nick_cb (self, timestamp, server, nick, new_nick):
 
 		if not nick:
@@ -73,14 +83,14 @@ class pluginNotify (tekka.plugin):
 			return
 
 		if message.lower().find(self.nicks[server]) >= 0:
-			n = pynotify.Notification(channel, "&lt;%s&gt; %s" % (nick, gobject.markup_escape_text(message)))
+			n = pynotify.Notification(channel, "&lt;%s&gt; %s" % (nick, self.escape(message)))
 			if self.pixbuf:
 				n.set_icon_from_pixbuf(self.pixbuf)
 			n.show()
 
 	def query_cb (self, timestamp, server, nick, message):
 
-		n = pynotify.Notification(nick, gobject.markup_escape_text(message))
+		n = pynotify.Notification(nick, self.escape(message))
 		if self.pixbuf:
 			n.set_icon_from_pixbuf(self.pixbuf)
 		n.show()
@@ -91,7 +101,7 @@ class pluginNotify (tekka.plugin):
 			return
 
 		if action.lower().find(self.nicks[server]) >= 0:
-			n = pynotify.Notification(channel, "%s %s" % (nick, gobject.markup_escape_text(action)))
+			n = pynotify.Notification(channel, "%s %s" % (nick, self.escape(action)))
 			if self.pixbuf:
 				n.set_icon_from_pixbuf(self.pixbuf)
 			n.show()
