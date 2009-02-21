@@ -28,7 +28,11 @@ SUCH DAMAGE.
 
 import tekka
 
+# tekka-specific
+import config
+
 import gobject
+import gtk
 import pynotify
 
 # FIXME configurable highlight words
@@ -40,6 +44,10 @@ class pluginNotify (tekka.plugin):
 		pynotify.init("tekka")
 
 		self.nicks = {}
+		try:
+			self.pixbuf = gtk.gdk.pixbuf_new_from_file(config.get("tekka", "status_icon"))
+		except:
+			self.pixbuf = None
 
 		self.get_dbus_interface().connect_to_signal("nick", self.nick_cb)
 
@@ -66,11 +74,15 @@ class pluginNotify (tekka.plugin):
 
 		if message.lower().find(self.nicks[server]) >= 0:
 			n = pynotify.Notification(channel, "&lt;%s&gt; %s" % (nick, gobject.markup_escape_text(message)))
+			if self.pixbuf:
+				n.set_icon_from_pixbuf(self.pixbuf)
 			n.show()
 
 	def query_cb (self, timestamp, server, nick, message):
 
 		n = pynotify.Notification(nick, gobject.markup_escape_text(message))
+		if self.pixbuf:
+			n.set_icon_from_pixbuf(self.pixbuf)
 		n.show()
 
 	def action_cb (self, time, server, nick, channel, action):
@@ -80,6 +92,8 @@ class pluginNotify (tekka.plugin):
 
 		if action.lower().find(self.nicks[server]) >= 0:
 			n = pynotify.Notification(channel, "%s %s" % (nick, gobject.markup_escape_text(action)))
+			if self.pixbuf:
+				n.set_icon_from_pixbuf(self.pixbuf)
 			n.show()
 
 	def plugin_info(self):
