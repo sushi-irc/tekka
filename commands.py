@@ -34,9 +34,10 @@ from gettext import gettext as _
 import config
 import com
 import __main__
+from types import MethodType, FunctionType
+from typecheck import types
 
 gui = None
-commands = {}
 
 def warnNoConnection(tab):
 	if not tab.buffer:
@@ -62,52 +63,6 @@ def warnNoConnection(tab):
 	})
 
 
-def parseInput(text):
-	"""
-	TODO: document
-	"""
-	if not text:
-		return
-
-	serverTab,channelTab = gui.tabs.getCurrentTabs()
-
-	if channelTab and not channelTab.connected:
-		warnNoConnection(channelTab)
-	elif serverTab and not serverTab.connected:
-		warnNoConnection(serverTab)
-
-	if text[0] != "/":
-		if not channelTab:
-			return
-
-		com.sendMessage(serverTab.name, channelTab.name, text)
-
-	elif text[:2] == "//":
-		if not channelTab:
-			return
-
-		com.sendMessage(serverTab.name, channelTab.name, text[1:])
-
-	else:
-		print "case 3"
-		list = text[1:].split(" ")
-		cmd = list[0]
-
-		if not cmd:
-			return gui.myPrint("No command given.")
-
-		elif not commands.has_key(cmd):
-			if not serverTab:
-				return gui.myPrint("No server active.")
-			raw = cmd.upper()
-			args = " ".join(list[1:])
-			if args:
-				raw = raw + " " + args
-			gui.myPrint(_(u"• Unknown command “%(command)s”, sending raw command “%(raw)s”.") % { "command": cmd, "raw": raw })
-			com.raw(serverTab.name, raw)
-
-		else:
-			commands[cmd](serverTab, channelTab, list[1:])
 
 def makiConnect(currentServer, currentChannel, args):
 	"""
@@ -488,65 +443,136 @@ def tekkaHelp(currentServer, currentTab, args):
 	else:
 		gui.myPrint("No help for %s available." % (args[0]))
 
+
+def setup():
+	"""
+	Setup: GUI is set up so we can import it now.
+	"""
+	global gui
+	gui = __main__.gui
+
+
+_commands = {
+	"connect" : makiConnect,
+	"nick" : makiNick,
+	"part" : makiPart,
+	"join" : makiJoin,
+		"j" : makiJoin,
+	"me"   : makiAction,
+	"kick" : makiKick,
+	"mode" : makiMode,
+	"topic": makiTopic,
+	"quit" : makiQuit,
+	"away" : makiAway,
+	"back" : makiBack,
+"nickserv" : makiNickserv,
+	"ctcp" : makiCTCP,
+	"notice" : makiNotice,
+	"msg" : makiMessage,
+	"oper" : makiOper,
+	"list" : makiList,
+	"raw" : makiRaw,
+	"whois" : makiWhois,
+	"query": tekkaQuery,
+	"clear": tekkaClear,
+	"help": tekkaHelp
+}
+
+_builtins = _commands.keys()
+
+@types(text=str)
+def parseInput(text):
+	"""
+	split text for blank, strip the command
+	and search for it in _commands-dict.
+	Call the underlying function if found.
+	"""
+	if not text:
+		return
+
+	serverTab,channelTab = gui.tabs.getCurrentTabs()
+
+	if ((channelTab and not channelTab.connected)
+		or (serverTab and not serverTab.connected)):
+		# there is no connection in this tab so
+		# if you're typing something, it would have
+		# no effect. So warn the user.
+		warnNoConnection(serverTab)
+
+	if text[0] != "/" or text[:2] == "//":
+		# this is no command
+
+		if not channelTab:
+			# no command AND no channel is nonsense.
+			# normal text is useless in context
+			# with server tabs
+			return
+
+		# strip first slash if it's a fake command
+		if text[0] == "/":
+			text = text[1:]
+
+		com.sendMessage(serverTab.name, channelTab.name, text)
+
+	else:
+		# we got a command here
+
+		argv = text[1:].split(" ")
+		cmd = argv[0]
+
+		if not cmd:
+			# / typed
+			return gui.myPrint("No command given.")
+
+		# search for the command
+		global _commands
+
+		if not _commands.has_key(cmd):
+			# command not found, look if we
+			# can send it as RAW.
+
+			if not serverTab:
+				return gui.myPrint("No server active.")
+
+			# build raw command
+			raw = cmd.upper() +  " " + " ".join(argv[1:])
+			gui.myPrint(_(
+				u"• Unknown command “%(command)s”, "\
+				"sending raw command “%(raw)s”.") % {
+					"command": cmd,
+					"raw": raw })
+			com.raw(serverTab.name, raw)
+
+		else:
+			_commands[cmd](serverTab, channelTab, argv[1:])
+
+
+@types(command=str,function=(MethodType,FunctionType))
 def addCommand(command, function):
 	"""
 		Add a command.
 		Returns True on success, otherwise False.
 	"""
-	global commands
+	global _commands
 
-	if commands.has_key(command):
+	if _commands.has_key(command):
 		return False
 
-	commands[command] = function
+	_commands[command] = function
 
 	return True
 
+@types(command=str)
 def removeCommand(command):
 	"""
 		Removes a command.
 		Returns True on success, otherwise False.
 	"""
-	global commands
+	global _commands, _builtins
 
-	if commands.has_key(command):
-		del commands[command]
+	if _commands.has_key(command) and command not in _builtins:
+		del _commands[command]
 		return True
 
 	return False
 
-def setup():
-	"""
-		Setup the command module.
-		  * Set modules
-		  * Set command mapping
-	"""
-	global gui, commands
-
-	gui = __main__.gui
-
-	commands = {
-		"connect" : makiConnect,
-		"nick" : makiNick,
-		"part" : makiPart,
-		"join" : makiJoin,
-			"j" : makiJoin,
-		"me"   : makiAction,
-		"kick" : makiKick,
-		"mode" : makiMode,
-		"topic": makiTopic,
-		"quit" : makiQuit,
-		"away" : makiAway,
-		"back" : makiBack,
-	"nickserv" : makiNickserv,
-		"ctcp" : makiCTCP,
-		"notice" : makiNotice,
-		"msg" : makiMessage,
-		"oper" : makiOper,
-		"list" : makiList,
-		"raw" : makiRaw,
-		"whois" : makiWhois,
-		"query": tekkaQuery,
-		"clear": tekkaClear,
-		"help": tekkaHelp
-	}
