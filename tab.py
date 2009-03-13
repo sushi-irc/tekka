@@ -155,7 +155,7 @@ class tekkaServer(tekkaTab):
 	def markup(self):
 		base = self.name
 		if not self.connected:
-			base = "("+base+")"
+			base = "<span strikethrough='true'>"+base+"</span>"
 		if self.newMessage:
 			base = "<b>"+base+"</b>"
 		if self.away:
@@ -194,7 +194,7 @@ class tekkaQuery(tekkaTab):
 		base = self.name
 
 		if not self.connected:
-			base = "("+base+")"
+			base = "<span strikethrough='true'>"+base+"</span>"
 
 		if "action" in self.newMessage:
 			italic = True
@@ -256,7 +256,7 @@ class tekkaChannel(tekkaTab):
 		base = self.name
 
 		if not self.joined:
-			base = "("+base+")"
+			base = "<span strikethrough='true'>"+base+"</span>"
 
 		if "action" in self.newMessage:
 			italic = True
