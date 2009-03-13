@@ -46,9 +46,9 @@ class TabClass(object):
 	to serverTree TreeView widget.
 	"""
 
-	import tab
-	from htmlbuffer import HTMLBuffer
-	from nickListStore import nickListStore
+	import lib.tab as tab
+	from lib.htmlbuffer import HTMLBuffer
+	from lib.nickListStore import nickListStore
 
 	def __init__(self, gui):
 		self.currentPath = ()
