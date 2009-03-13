@@ -57,7 +57,7 @@ def connect_signal (signal, handler):
 		return
 
 	signals[signal][handler] = sushi.connect_to_signal (signal, handler)
-	
+
 def disconnect_signal (signal, handler):
 	""" disconnect handler from signal """
 	global signals
@@ -222,10 +222,13 @@ def lastLog(server, channel, lines=0):
 	for line in com.fetchLog(
 				server,
 				channel,
-				UInt64(lines or config.get("chatting", "last_log_lines", default="0"))
+				UInt64(lines or config.get(
+					"chatting", "last_log_lines", default="0"))
 				):
 		buffer.insertHTML(buffer.get_end_iter(),
-		"<font foreground=\"#DDDDDD\">%s</font>" % gui.escape(line))
+			"<font foreground=\"%s\">%s</font>" % (
+				config.get("colors","last_log","#DDDDDD"),
+				gui.escape(line)))
 
 def updatePrefix(tab, nick, mode):
 	"""

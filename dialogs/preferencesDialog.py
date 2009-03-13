@@ -48,7 +48,8 @@ def fillTekka():
 def fillColors():
 	for key in ("own_nick", "own_text", "notification",
 				"text_message", "text_action", "nick",
-				"text_highlightmessage", "text_highlightaction"):
+				"text_highlightmessage", "text_highlightaction",
+				"last_log"):
 		val = config.get("colors", key)
 
 		if not val:
@@ -170,6 +171,9 @@ def colors_highlighted_actions_written(entry, event):
 def colors_default_nick_written(entry, event):
 	colors_set_color_from_entry(entry, "nick")
 
+def colors_last_log_written(entry, event):
+	colors_set_color_from_entry(entry, "last_log")
+
 """ chatting page signals """
 
 def chatting_quit_message_written(entry, event):
@@ -231,6 +235,7 @@ def setup():
 		"colors_highlighted_actions_written":
 				colors_highlighted_actions_written,
 		"colors_default_nick_written": colors_default_nick_written,
+		"colors_last_log_written": colors_last_log_written,
 	# chatting page
 		"chatting_quit_message_written": chatting_quit_message_written,
 		"chatting_part_message_written": chatting_part_message_written,

@@ -82,6 +82,7 @@ def setDefaults():
 	defaults["colors"]["text_highlightmessage"] = "#FF0000"
 	defaults["colors"]["text_highlightaction"] = "#0000FF"
 	defaults["colors"]["nick"] = "#2222AA" # default foreign nick color
+	defaults["colors"]["last_log"] = "#DDDDDD"
 
 	defaults["chatting"]={}
 	defaults["chatting"]["last_log_lines"] = "10"

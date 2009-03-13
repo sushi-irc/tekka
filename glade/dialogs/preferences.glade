@@ -1,6 +1,7 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
+<!--Generated with glade3 3.4.5 on Fri Mar 13 05:37:24 2009 -->
 <glade-interface>
-  <requires-version lib="gtk+" version="2.12"/>
   <widget class="GtkDialog" id="preferencesDialog">
     <property name="width_request">400</property>
     <property name="height_request">400</property>
@@ -192,15 +193,15 @@
                 <property name="use_underline">True</property>
               </widget>
               <packing>
-                <property name="tab_fill">False</property>
                 <property name="type">tab</property>
+                <property name="tab_fill">False</property>
               </packing>
             </child>
             <child>
               <widget class="GtkTable" id="colorsTable">
                 <property name="visible">True</property>
                 <property name="border_width">8</property>
-                <property name="n_rows">8</property>
+                <property name="n_rows">9</property>
                 <property name="n_columns">2</property>
                 <child>
                   <widget class="GtkEntry" id="nick">
@@ -388,6 +389,30 @@
                     <property name="label" translatable="yes">Own nick:</property>
                   </widget>
                 </child>
+                <child>
+                  <widget class="GtkLabel" id="label10">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Last log:</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">8</property>
+                    <property name="bottom_attach">9</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkEntry" id="last_log">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <signal name="focus_out_event" handler="colors_last_log_written"/>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">8</property>
+                    <property name="bottom_attach">9</property>
+                  </packing>
+                </child>
               </widget>
               <packing>
                 <property name="position">1</property>
@@ -400,9 +425,9 @@
                 <property name="use_underline">True</property>
               </widget>
               <packing>
+                <property name="type">tab</property>
                 <property name="position">1</property>
                 <property name="tab_fill">False</property>
-                <property name="type">tab</property>
               </packing>
             </child>
             <child>
@@ -490,9 +515,9 @@
                 <property name="use_underline">True</property>
               </widget>
               <packing>
+                <property name="type">tab</property>
                 <property name="position">2</property>
                 <property name="tab_fill">False</property>
-                <property name="type">tab</property>
               </packing>
             </child>
             <child>
@@ -534,9 +559,9 @@ Changes will be applied after closing this dialog.</property>
                 <property name="use_underline">True</property>
               </widget>
               <packing>
+                <property name="type">tab</property>
                 <property name="position">3</property>
                 <property name="tab_fill">False</property>
-                <property name="type">tab</property>
               </packing>
             </child>
             <child>
@@ -584,9 +609,9 @@ For some options it is neccessary to restart tekka for the changes to take effec
                 <property name="use_underline">True</property>
               </widget>
               <packing>
+                <property name="type">tab</property>
                 <property name="position">4</property>
                 <property name="tab_fill">False</property>
-                <property name="type">tab</property>
               </packing>
             </child>
           </widget>
