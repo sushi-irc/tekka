@@ -1,4 +1,3 @@
-# coding: UTF-8
 """
 Copyright (c) 2008 Marian Tietz
 All rights reserved.
@@ -32,13 +31,15 @@ import sys
 from xdg.BaseDirectory import xdg_config_home
 import ConfigParser
 
+from typecheck import types
+
 prefix = ""
 defaults = {}
 
-configParser = None
-configFile = ""
+config_parser = None
+config_file = ""
 
-def setDefaults():
+def set_defaults():
 	"""
 		Sets the default values.
 
@@ -57,9 +58,13 @@ def setDefaults():
 	"""
 	global defaults
 
+	defaults = {}
+
 	defaults["tekka"] = {}
-	defaults["tekka"]["locale_dir"] = os.path.join(prefix, "..", "..", "locale")
-	defaults["tekka"]["status_icon"] = os.path.join(prefix, "graphics", "icon.svg")
+	defaults["tekka"]["locale_dir"] = os.path.join(
+		prefix, "..", "..", "locale")
+	defaults["tekka"]["status_icon"] = os.path.join(
+		prefix, "graphics", "icon.svg")
 	defaults["tekka"]["plugin_dir"] = os.path.join(prefix, "plugins")
 	defaults["tekka"]["output_font"] = "Monospace 10"
 	defaults["tekka"]["general_output_font"] = "Monospace 10"
@@ -103,73 +108,126 @@ def setDefaults():
 	# so setting is easier
 	for section in defaults.keys():
 		try:
-			configParser.add_section(section)
+			config_parser.add_section(section)
 		except ConfigParser.DuplicateSectionError:
 			continue
 
-	# these section is not added to the configParser and
+	# sections defined below are not added to the configParser and
 	# can't be set by the set method (will raise NoSectionError)
 	defaults["gladefiles"] = {}
-	defaults["gladefiles"]["mainwindow"] = os.path.join(prefix, "glade", "mainwindow.glade")
-	defaults["gladefiles"]["dialogs"] = os.path.join(prefix, "glade", "dialogs") + os.path.sep
+	defaults["gladefiles"]["mainwindow"] = os.path.join(
+		prefix, "glade", "mainwindow.glade")
+	defaults["gladefiles"]["dialogs"] = os.path.join(
+		prefix, "glade", "dialogs") + os.path.sep
 
-def readConfigFile():
-	"""
-		Reads the config file.
-	"""
 
-	success = configParser.read([configFile])
+
+def read_config_file():
+	"""
+	Reads the config file.
+	"""
+	success = config_parser.read([config_file])
 
 	if not success:
-		print "Failed to parse config file '%s'" % configFile
+		print "Failed to parse config file '%s'" % config_file
 		return False
 
 	return True
 
-def writeConfigFile():
+def write_config_file():
 	"""
-		Writes the config file.
-		Special thanks to Captain Obvious...
+	Writes the config values from the
+	ConfigParser object into the given file (config_file)
 	"""
-	fp = file(configFile,"w")
+	if not config_parser:
+		print "Config module not loaded. I don't save anything."
+		return
 
-	configParser.write(fp)
+	f = file(config_file, "w")
+	config_parser.write(f)
+	f.close()
 
-	fp.close()
-
-def createSection(section):
+@types (section=str)
+def create_section(section):
 	"""
 		creates config section `section`.
 	"""
-	if configParser.has_section(section):
+	if not config_parser or config_parser.has_section(section):
 		return False
-	configParser.add_section(section)
+	config_parser.add_section(section)
 	return True
 
+@types (section=str)
+def remove_section(section):
+	"""
+		removes the section
+	"""
+	if not config_parser or not config_parser.has_section(section):
+		return False
+
+	config_parser.remove_section(section)
+	return True
+
+@types (section=str, option=str)
+#@on_fail (print_debug, "ConfigError while setting %s:%s to %s")
 def set(section, option, value):
 	"""
 		Sets in the section the option to value.
 		On success the method returns True.
 	"""
+	if not config_parser:
+		return False
+
 	try:
-		configParser.set(section, option, str(value))
+		config_parser.set(section, option, str(value))
 	except ConfigParser.NoSectionError:
 		return False
 	else:
 		return True
 
+@types (section=str, option=str, l=list)
+def set_list(section, option, l):
+	"""
+	join the list l to a string seperated
+	by , and set it as value to option.
+	Return False on error, else True
+	"""
+	s = ",".join(l)
+
+	if not s:
+		return False
+
+	set(section,option,s)
+
+@types (section=str, option=str, value=str)
+def append_list(section, option, value):
+	"""
+	add value to the list identified by option
+	"""
+	v = get_list(section, option)
+	v.append(value)
+	set_list(section, option, v)
+
+@types (section=str, option=str)
 def unset(section, option):
 	"""
 		Removes the option in the section.
 		Returns True on success otherwise False.
 	"""
+	if not config_parser:
+		return False
 	try:
-		configParser.remove_option(section, option)
-	except Exception:
+		config_parser.remove_option(section, option)
+	except BaseException,e:
+		# TODO: use more specified exception here
+		# TODO:: instead of catching everything
+		print "Exception occured while unsetting ('%s','%s'): %s"\
+			% (section,option,e)
 		return False
 	return True
 
-def get(section, option=None, default=None):
+@types (section=str, option=str)
+def get(section, option="", default=None):
 	"""
 		Returns the value for option in section, on
 		error the method returns default.
@@ -186,15 +244,18 @@ def get(section, option=None, default=None):
 		get("tekki") will return default
 	"""
 
+	if not config_parser:
+		return default
+
 	if not option:
 		# get the whole section
 
-		if configParser.has_section(section):
+		if config_parser.has_section(section):
 			# the section is noticed by the parser,
 			# merge with defaults (if any) and return
 			# the value-dict
 
-			new = dict(configParser.items(section))
+			new = dict(config_parser.items(section))
 
 			if defaults.has_key(section):
 				# merge defaults + config values together
@@ -217,7 +278,7 @@ def get(section, option=None, default=None):
 		# get specific option
 
 		try:
-			return configParser.get(section, option)
+			return config_parser.get(section, option)
 		except (ConfigParser.NoOptionError, ConfigParser.NoSectionError),e:
 			if defaults.has_key(section):
 				try:
@@ -230,7 +291,27 @@ def get(section, option=None, default=None):
 	# usually this is not reached
 	return default
 
-def getBool(section, option, default=False):
+@types (section=str, option=str)
+def get_list(section, option, default=[]):
+	"""
+		Splits the option in the section for ","
+		and returns a list if the splitting was
+		successful. Else the method will return
+		"default".
+	"""
+	res = get(section, option, default)
+
+	if res == default:
+		return default
+
+	list = res.split(",")
+
+	if not list:
+		return default
+	return list
+
+@types (section=str, option=str)
+def get_bool(section, option, default=False):
 	"""
 		Returns True or False if the value is
 		set or unset.
@@ -245,7 +326,8 @@ def getBool(section, option, default=False):
 
 	return default
 
-def getDefault(section, option=None):
+@types (section=str, option=str)
+def get_default(section, option=""):
 	"""
 	Returns the default value for the option
 	in the given section. If no option is given
@@ -262,11 +344,38 @@ def getDefault(section, option=None):
 				return defaults[section][option]
 	return None
 
+@types (path=str)
+def check_config_file(path):
+	""" check if config file exists and create it if not """
+	if not os.path.exists (path):
+		# create the directories
+		try:
+			os.makedirs (os.path.join (os.path.split (path)[0]))
+		except os.error:
+			print "Error while creating neccessary directories: %s"\
+				% (os.error)
+			return False
+
+		try:
+			f = file (path, "w")
+		except BaseException,e:
+			print "Error while creating config file: %s" % (e)
+			return False
+		else:
+			f.close()
+
+		return True
+	else:
+		return True
+	return False
+
 def setup():
 	"""
-		TODO: document
+	Find the usual location of the config dir
+	(XDG_CONFIG_HOME/sushi/tekka) and parse the
+	config file if found.
 	"""
-	global configParser, configFile
+	global config_parser, config_file
 	global prefix
 
 	if os.path.islink(sys.argv[0]):
@@ -279,42 +388,14 @@ def setup():
 	else:
 		prefix = os.path.dirname(os.path.abspath(sys.argv[0]))
 
-	configParser = ConfigParser.ConfigParser()
-	setDefaults()
-	configFile = os.path.join(xdg_config_home,"sushi","tekka")
+	config_parser = ConfigParser.ConfigParser()
+	set_defaults()
 
-	readConfigFile()
+	config_file = os.path.join (xdg_config_home, "sushi", "tekka")
 
+	if not check_config_file(config_file):
+		print "Config file creation failed. Aborting."
+		return
 
-if __name__ == "__main__":
-	setup()
-	readConfigFile()
+	read_config_file()
 
-	print "Without defaults:"
-	for section in configParser.sections():
-		print "section '%s':" % (section)
-		for (option,value) in configParser.items(section):
-			print "\t%s = %s" % (option, value)
-
-	print "With defaults:"
-
-	all={"tekka":("server_shortcuts","localeDir"),"gladefiles":(),"chatting":("lastLogLines",),"nickColors":()}
-
-	for section in configParser.sections():
-		print "section '%s':" % (section)
-		if all.has_key(section):
-			for item in all[section]:
-				print "get('%s','%s')" % (section,item)
-				print get(section, item)
-			else:
-				print "dump section '%s'" % (section)
-				print get(section)
-		else:
-			get(section)
-
-	print "private section 'gladefiles':"
-	print get("gladefiles")
-
-	print "setting server_shortcuts in section tekka to 1."
-	set("tekka","server_shortcuts","1")
-	print get("tekka","server_shortcuts")

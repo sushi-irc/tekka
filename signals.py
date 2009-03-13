@@ -255,7 +255,7 @@ def getNickColor(nick):
 		The returned color depends on the color mapping
 		set in config module.
 	"""
-	if not config.getBool("tekka","color_text"):
+	if not config.get_bool("tekka","color_text"):
 		return
 
 	colors = config.get("nick_colors", default={})
@@ -272,13 +272,13 @@ def getTextColor(nick):
 		Same as getNickColor but for text and defaults
 		to another value (text_message)
 	"""
-	if not config.getBool("tekka","color_text"):
+	if not config.get_bool("tekka","color_text"):
 		return
 
 	colors = config.get("nick_colors",default={})
 	colors = colors.values()
 
-	if not colors or not config.getBool("tekka","color_nick_text"):
+	if not colors or not config.get_bool("tekka","color_nick_text"):
 		return config.get("colors","text_message","#000000")
 	return colors[sum([ord(n) for n in nick]) % len(colors)]
 
@@ -1025,7 +1025,7 @@ def userJoin(timestamp, server, nick, channel):
 
 		gui.updateServerTreeMarkup(tab.path)
 
-		if config.getBool("tekka","switch_to_channel_after_join"):
+		if config.get_bool("tekka","switch_to_channel_after_join"):
 			gui.tabs.switchToPath(tab.path)
 
 		nickString = "You"
@@ -1200,7 +1200,7 @@ def cannotJoin(time, server, channel, reason):
 	elif reason == "b":
 		message = _("You are banned.")
 	elif reason == "k":
-		if config.getBool("tekka", "ask_for_key_on_cannotjoin"):
+		if config.get_bool("tekka", "ask_for_key_on_cannotjoin"):
 			# open a input dialog which asks for the key
 			d = keyDialog.KeyDialog(server, channel)
 			result = d.run()

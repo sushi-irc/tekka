@@ -467,7 +467,7 @@ def nickList_button_press_event_cb(nickList, event):
 			menu.append(leftSide)
 			leftSide.show()
 
-			if config.getBool("tekka", "nick_list_left"):
+			if config.get_bool("tekka", "nick_list_left"):
 				leftSide.set_active(True)
 
 			leftSide.connect("toggled", nickList_menu_leftSide_toggled_cb)
@@ -738,7 +738,7 @@ def setup_mainWindow():
 	"""
 	win = widgets.get_widget("mainWindow")
 
-	if config.getBool("tekka", "rgba"):
+	if config.get_bool("tekka", "rgba"):
 		colormap = win.get_screen().get_rgba_colormap()
 		if colormap:
 		    gtk.widget_set_default_colormap(colormap)
@@ -765,7 +765,7 @@ def setup_mainWindow():
 	if width and height:
 		win.resize(int(width),int(height))
 
-	if config.getBool("tekka","window_maximized"):
+	if config.get_bool("tekka","window_maximized"):
 		win.maximize()
 
 	win.show_all()
@@ -872,6 +872,8 @@ def connectMaki():
 	gui.setUseable(False)
 
 	if com.connect():
+		# init modules
+
 		signals.setup()
 		commands.setup()
 		dialog.setup()
@@ -880,6 +882,8 @@ def connectMaki():
 		gui.setUseable(True)
 
 		plugins.setup()
+
+	# TODO: print error message
 
 
 def setupGTK():
@@ -1019,24 +1023,24 @@ def setupGTK():
 	# setup menu bar stuff
 	btn = widgets.get_widget("menu_View_showGeneralOutput")
 
-	if config.getBool("tekka","show_general_output"):
+	if config.get_bool("tekka","show_general_output"):
 		btn.set_active(True)
 	btn.toggled()
 
 	btn = widgets.get_widget("menu_View_showStatusBar")
 
-	if config.getBool("tekka","show_status_bar"):
+	if config.get_bool("tekka","show_status_bar"):
 		btn.set_active(True)
 	btn.toggled()
 
 	btn = widgets.get_widget("menu_View_showStatusIcon")
 
-	if config.getBool("tekka","show_status_icon"):
+	if config.get_bool("tekka","show_status_icon"):
 		gui.setup_statusIcon()
 		btn.set_active(True)
 	btn.toggled()
 
-	if config.getBool("tekka", "nick_list_left"):
+	if config.get_bool("tekka", "nick_list_left"):
 		gui.moveNickList(left=True)
 
 	setup_shortcuts()
@@ -1062,10 +1066,10 @@ def main():
 	gtk.main()
 
 	# after main loop break, write config
-	config.writeConfigFile()
+	config.write_config_file()
 
 	# At last, close maki if requested
-	if config.getBool("tekka", "close_maki_on_close"):
+	if config.get_bool("tekka", "close_maki_on_close"):
 		com.shutdown(config.get("chatting", "quit_message", ""))
 
 if __name__ == "__main__":

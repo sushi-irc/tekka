@@ -145,7 +145,7 @@ class plugin(object):
 		return ("Basic plugin class", "0.1")
 
 	def set_option(self, option, value):
-		config.addSection(self.__name)
+		config.add_section(self.__name)
 		if value:
 			return config.set(self.__name, option, value)
 		else:

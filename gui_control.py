@@ -495,7 +495,7 @@ class GUIWrapper(object):
 		"""
 		Sets up the status icon.
 		"""
-		if config.getBool("tekka", "rgba"):
+		if config.get_bool("tekka", "rgba"):
 			gtk.widget_push_colormap(
 				widgets.get_widget("mainWindow")\
 				.get_screen()\
@@ -503,7 +503,7 @@ class GUIWrapper(object):
 
 		self.statusIcon = gtk.StatusIcon()
 
-		if config.getBool("tekka", "rgba"):
+		if config.get_bool("tekka", "rgba"):
 			gtk.widget_pop_colormap()
 
 		self.statusIcon.set_tooltip("tekka IRC client")
@@ -704,7 +704,7 @@ class GUIWrapper(object):
 
 		message = URLToTag(message)
 
-		if not config.getBool("tekka","color_text"):
+		if not config.get_bool("tekka","color_text"):
 			colorHack = ""
 		else:
 			colorHack = "foreground='%s'" % config.get("colors", "text_%s" % type, "#000000")
@@ -726,7 +726,7 @@ class GUIWrapper(object):
 
 		buffer.insertHTML(buffer.get_end_iter(), outputString)
 
-		if config.getBool("tekka","show_general_output"):
+		if config.get_bool("tekka","show_general_output"):
 			# write it to the general output, also
 
 			goBuffer = widgets.get_widget("generalOutput").get_buffer()
@@ -770,7 +770,7 @@ class GUIWrapper(object):
 
 		buffer.insertHTML(buffer.get_end_iter(), "[%s] %s" % (timestr,string))
 
-		if config.getBool("tekka","show_general_output"):
+		if config.get_bool("tekka","show_general_output"):
 			goBuffer = widgets.get_widget("generalOutput").get_buffer()
 			goBuffer.insertHTML(goBuffer.get_end_iter(), \
 					"[%s] &lt;%s&gt; %s" % (timestr, server, string))

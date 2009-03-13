@@ -34,7 +34,7 @@ def fillTekka():
 			continue
 
 		name = child.get_property("name")
-		bval = config.getBool("tekka", name)
+		bval = config.get_bool("tekka", name)
 
 		child.set_active(bval)
 
