@@ -80,16 +80,10 @@ def setup():
 
 	# Message-Signals
 	connect_signal("message", userMessage)
-	connect_signal("own_message", ownMessage)
-	connect_signal("own_notice", ownNotice)
-	connect_signal("query", userQuery)
 	connect_signal("notice", userNotice)
 	connect_signal("action", userAction)
 	connect_signal("away_message", userAwayMessage)
 	connect_signal("ctcp", userCTCP)
-	connect_signal("own_ctcp", ownCTCP)
-	connect_signal("query_ctcp", queryCTCP)
-	connect_signal("query_notice", queryNotice)
 	connect_signal("no_such", noSuch)
 	connect_signal("cannot_join", cannotJoin)
 
@@ -462,6 +456,13 @@ def userMessage(timestamp, server, nick, channel, message):
 	"""
 		PRIVMSGs are coming in here.
 	"""
+	if nick.lower() == com.getOwnNick(server).lower():
+		ownMessage(timestamp, server, channel, message)
+		return
+	elif channel.lower() == com.getOwnNick(server).lower():
+		userQuery(timestamp, server, nick, message)
+		return
+
 	message = gui.escape(message)
 
 	# highlight text if own nick is in message
@@ -654,6 +655,13 @@ def userCTCP(time, server,  nick, target, message):
 		I don't know a case in which target is not a channel
 		and not queried.
 	"""
+	if nick.lower() == com.getOwnNick(server).lower():
+		ownCTCP(time, server, target, message)
+		return
+	elif target.lower() == com.getOwnNick(server).lower():
+		queryCTCP(time, server, nick, message)
+		return
+
 	gui.channelPrint(time, server, target, \
 		"<font foreground='#00DD33'>CTCP from %s to Channel:</font> %s" % \
 			(gui.escape(nick), gui.escape(message)))
@@ -672,7 +680,7 @@ def ownCTCP(time, server, target, message):
 		textColor = config.get("colors","own_text","#000000")
 
 		gui.channelPrint(time, server, tab.name,
-			"&lt;CTCP:<font foreground='%s'>%s</font>&gt; "+
+			"&lt;CTCP:<font foreground='%s'>%s</font>&gt; "
 			"<font foreground='%s'>%s</font>" % \
 				(nickColor, com.getOwnNick(server),
 				textColor, gui.escape(message)))
@@ -692,7 +700,7 @@ def queryCTCP(time, server, nick, message):
 
 	if tab:
 		gui.channelPrint(time, server, tab.name, \
-				"&lt;CTCP:<font foreground='%s'>%s</font>&gt; "+
+				"&lt;CTCP:<font foreground='%s'>%s</font>&gt; "
 				"<font foreground='%s'>%s</font>" % \
 				(getNickColor(nick), gui.escape(nick),
 				getTextColor(nick), gui.escape(message)))
@@ -759,6 +767,13 @@ def userNotice(time, server, nick, target, message):
 	"""
 		A user noticed to a channel (target).
 	"""
+	if nick.lower() == com.getOwnNick(server).lower():
+		ownNotice(time, server, target, message)
+		return
+	elif target.lower() == com.getOwnNick(server).lower():
+		queryNotice(time, server, nick, message)
+		return
+
 	gui.channelPrint(time, server, target, \
 			"-<font foreground='%s'>%s</font>- "
 			"<font foreground='%s'>%s</font>" % \
