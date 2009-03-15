@@ -75,7 +75,9 @@ class pluginNotify (tekka.plugin):
 
 		return message
 
-	def nick_cb (self, timestamp, server, nick, new_nick):
+	def nick_cb (self, timestamp, server, from_str, new_nick):
+		nick = from_str.split("!")[0]
+
 		if not nick:
 			self.nicks[server] = new_nick.lower()
 		elif self.nicks.has_key(server) and self.nicks[server] == nick.lower():
