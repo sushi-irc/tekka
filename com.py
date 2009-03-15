@@ -34,6 +34,8 @@ import re
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
 
+from signals import parse_from
+
 dbus_loop = DBusGMainLoop()
 bus_address = os.getenv("SUSHI_REMOTE_BUS_ADDRESS")
 if bus_address:
@@ -98,7 +100,9 @@ def shutdown(quitmsg=""):
 Signals: nickchange (nick => _nickSignal)
 """
 
-def _nickSignal(time, server, nick, new_nick):
+def _nickSignal(time, server, from_str, new_nick):
+	nick = parse_from(from_str)[0]
+
 	if not nick or nick == getOwnNick(server):
 		cacheOwnNick(server, new_nick)
 

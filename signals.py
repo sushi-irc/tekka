@@ -43,6 +43,19 @@ gui = None
 
 signals = {}
 
+def parse_from (from_str):
+	h = from_str.split("!", 2)
+
+	if len(h) < 2:
+		return (h[0],)
+
+	t = h[1].split("@", 2)
+
+	if len(t) < 2:
+		return (h[0],)
+
+	return (h[0], t[0], t[1])
+
 def connect_signal (signal, handler):
 	""" connect handler to signal """
 	global signals
@@ -452,10 +465,12 @@ def userAwayMessage(timestamp, server, nick, message):
 	"""
 	gui.channelPrint(timestamp, server, nick, _(u"• %(nick)s is away (%(message)s).") % { "nick": nick, "message": gui.escape(message) }, "action")
 
-def userMessage(timestamp, server, nick, channel, message):
+def userMessage(timestamp, server, from_str, channel, message):
 	"""
 		PRIVMSGs are coming in here.
 	"""
+	nick = parse_from(from_str)[0]
+
 	if nick.lower() == com.getOwnNick(server).lower():
 		ownMessage(timestamp, server, channel, message)
 		return
@@ -556,10 +571,11 @@ def ownMessage(timestamp, server, channel, message):
 			message))
 
 
-def userQuery(timestamp, server, nick, message):
+def userQuery(timestamp, server, from_str, message):
 	"""
 		A user writes to us in a query.
 	"""
+	nick = parse_from(from_str)[0]
 	tab = gui.tabs.searchTab(server, nick)
 
 	if not tab:
@@ -583,7 +599,7 @@ def userQuery(timestamp, server, nick, message):
 
 	userMessage(timestamp,server,nick,nick,message)
 
-def userMode(time, server, nick, target, mode, param):
+def userMode(time, server, from_str, target, mode, param):
 	"""
 		Mode change on target from nick detected.
 		nick and param are optional arguments and
@@ -596,6 +612,7 @@ def userMode(time, server, nick, target, mode, param):
 
 		TODO: has to be colored and gettexted (o.0)
 	"""
+	nick = parse_from(from_str)[0]
 
 	# nick: /mode target +mode param
 
@@ -649,12 +666,14 @@ def userOper(time, server):
 	"""
 	gui.currentServerPrint(time, server, "• You got oper access.")
 
-def userCTCP(time, server,  nick, target, message):
+def userCTCP(time, server,  from_str, target, message):
 	"""
 		A user sends a CTCP request to target.
 		I don't know a case in which target is not a channel
 		and not queried.
 	"""
+	nick = parse_from(from_str)[0]
+
 	if nick.lower() == com.getOwnNick(server).lower():
 		ownCTCP(time, server, target, message)
 		return
@@ -690,12 +709,13 @@ def ownCTCP(time, server, target, message):
 			"CTCP request from you to %s: %s" % \
 			(gui.escape(target),gui.escape(message)))
 
-def queryCTCP(time, server, nick, message):
+def queryCTCP(time, server, from_str, message):
 	"""
 		A user sends us a CTCP request over a query.
 
 		If no query window is open, send it to the server tab.
 	"""
+	nick = parse_from(from_str)[0]
 	tab = gui.tabs.searchTab(server, nick)
 
 	if tab:
@@ -736,10 +756,11 @@ def ownNotice(time, server, target, message):
 				getTextColor(target), gui.escape(message)))
 
 
-def queryNotice(time, server, nick, message):
+def queryNotice(time, server, from_str, message):
 	"""
 		A user sends a notice directly to the maki user.
 	"""
+	nick = parse_from(from_str)[0]
 
 	tab = gui.tabs.searchTab(server, nick)
 	if tab:
@@ -763,10 +784,12 @@ def queryNotice(time, server, nick, message):
 				(getNickColor(nick), gui.escape(nick),
 				getTextColor(nick), gui.escape(message)))
 
-def userNotice(time, server, nick, target, message):
+def userNotice(time, server, from_str, target, message):
 	"""
 		A user noticed to a channel (target).
 	"""
+	nick = parse_from(from_str)[0]
+
 	if nick.lower() == com.getOwnNick(server).lower():
 		ownNotice(time, server, target, message)
 		return
@@ -780,10 +803,11 @@ def userNotice(time, server, nick, target, message):
 			(getNickColor(nick), gui.escape(nick),
 			getTextColor(nick), gui.escape(message)))
 
-def userAction(time, server, nick, channel, action):
+def userAction(time, server, from_str, channel, action):
 	"""
 		A user sent a action (text in third person)
 	"""
+	nick = parse_from(from_str)[0]
 	action = gui.escape(action)
 
 	if nick != com.getOwnNick(server):
@@ -798,12 +822,13 @@ def userAction(time, server, nick, channel, action):
 		"<font foreground='%s'>%s</font>" % \
 			(nickColor, nick, textColor, action))
 
-def userNick(time, server, nick, newNick):
+def userNick(time, server, from_str, newNick):
 	"""
 	A user (or the maki user) changed it's nick.
 	If a query window for this nick on this server
 	exists, it's name would be changed.
 	"""
+	nick = parse_from(from_str)[0]
 	# find a query
 	tab = gui.tabs.searchTab(server, nick)
 
@@ -852,12 +877,13 @@ def userNick(time, server, nick, newNick):
 			},
 			"action")
 
-def userKick(time, server, nick, channel, who, reason):
+def userKick(time, server, from_str, channel, who, reason):
 	"""
 		signal emitted if a user got kicked.
 		If the kicked user is ourself mark the channel as
 		joined=False
 	"""
+	nick = parse_from(from_str)[0]
 	tab = gui.tabs.searchTab(server, channel)
 
 	if not tab:
@@ -904,7 +930,7 @@ def userKick(time, server, nick, channel, who, reason):
 		gui.channelPrint(time, server, channel, message, "action")
 
 
-def userQuit(time, server, nick, reason):
+def userQuit(time, server, from_str, reason):
 	"""
 	The user identified by nick quit on the server "server" with
 	the reason "reason". "reason" can be empty ("").
@@ -915,6 +941,7 @@ def userQuit(time, server, nick, reason):
 	If another user quits on all channels on which the user was on
 	a message is generated.
 	"""
+	nick = parse_from(from_str)[0]
 	if nick == com.getOwnNick(server):
 		# set the connected flag to False for the server
 		serverTab = gui.tabs.searchTab(server)
@@ -1005,7 +1032,7 @@ def userQuit(time, server, nick, reason):
 					message, "action")
 
 
-def userJoin(timestamp, server, nick, channel):
+def userJoin(timestamp, server, from_str, channel):
 	"""
 	A user identified by "nick" joins the channel "channel" on
 	server "server.
@@ -1013,6 +1040,7 @@ def userJoin(timestamp, server, nick, channel):
 	If the nick is our we add the channeltab and set properties
 	on it, else we generate messages and stuff.
 	"""
+	nick = parse_from(from_str)[0]
 
 	if nick == com.getOwnNick(server):
 		# we joined a channel, fetch nicks and topic, create
@@ -1118,13 +1146,14 @@ def userNames(timestamp, server, nick, channel):
 
 	fetchPrefixes(server,channel,tab.nickList,[nick])
 
-def userPart(timestamp, server, nick, channel, reason):
+def userPart(timestamp, server, from_str, channel, reason):
 	"""
 	A user parted the channel.
 
 	If we are the user who parted, mark the channel
 	as parted (joined=False)
 	"""
+	nick = parse_from(from_str)[0]
 
 	tab = gui.tabs.searchTab(server, channel)
 

@@ -57,8 +57,13 @@ class pluginNotify (tekka.plugin):
 			self.get_dbus_interface().nick(server, "")
 
 		self.get_dbus_interface().connect_to_signal("message", self.message_cb)
-		self.get_dbus_interface().connect_to_signal("query", self.query_cb)
 		self.get_dbus_interface().connect_to_signal("action", self.action_cb)
+
+	def notify (self, subject, body):
+		n = pynotify.Notification(subject, body)
+		if self.pixbuf:
+			n.set_icon_from_pixbuf(self.pixbuf)
+		n.show()
 
 	def escape (self, message):
 		# Bold
@@ -71,40 +76,36 @@ class pluginNotify (tekka.plugin):
 		return message
 
 	def nick_cb (self, timestamp, server, nick, new_nick):
-
 		if not nick:
 			self.nicks[server] = new_nick.lower()
-		elif self.nicks.has_key(server) and self.nicks[server] == nick:
+		elif self.nicks.has_key(server) and self.nicks[server] == nick.lower():
 			self.nicks[server] = new_nick.lower()
 
-	def message_cb (self, timestamp, server, nick, channel, message):
+	def message_cb (self, timestamp, server, from_str, target, message):
+		nick = from_str.split("!")[0]
 
 		if not self.nicks.has_key(server):
 			return
+		elif self.nicks[server] == nick.lower():
+			return
 
-		if message.lower().find(self.nicks[server]) >= 0:
-			n = pynotify.Notification(channel, "&lt;%s&gt; %s" % (nick, self.escape(message)))
-			if self.pixbuf:
-				n.set_icon_from_pixbuf(self.pixbuf)
-			n.show()
+		if self.nicks[server] == target.lower():
+			self.notify(nick, self.escape(message))
+		elif message.lower().find(self.nicks[server]) >= 0:
+			self.notify(target, "&lt;%s&gt; %s" % (nick, self.escape(message)))
 
-	def query_cb (self, timestamp, server, nick, message):
-
-		n = pynotify.Notification(nick, self.escape(message))
-		if self.pixbuf:
-			n.set_icon_from_pixbuf(self.pixbuf)
-		n.show()
-
-	def action_cb (self, time, server, nick, channel, action):
+	def action_cb (self, time, server, from_str, target, action):
+		nick = from_str.split("!")[0]
 
 		if not self.nicks.has_key(server):
 			return
+		elif self.nicks[server] == nick.lower():
+			return
 
-		if action.lower().find(self.nicks[server]) >= 0:
-			n = pynotify.Notification(channel, "%s %s" % (nick, self.escape(action)))
-			if self.pixbuf:
-				n.set_icon_from_pixbuf(self.pixbuf)
-			n.show()
+		if self.nicks[server] == target.lower():
+			self.notify(nick, self.escape(action))
+		elif action.lower().find(self.nicks[server]) >= 0:
+			self.notify(target, "%s %s" % (nick, self.escape(action)))
 
 	def plugin_info(self):
 		return ("Notifies on highlight.", "1.0")
