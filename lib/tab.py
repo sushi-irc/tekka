@@ -263,6 +263,7 @@ class tekkaChannel(tekkaTab):
 		self.nickList = nicklist
 		self.topic = topic
 		self.topicSetter = topicsetter
+		self.joined = False
 
 		self.server = server
 

@@ -454,7 +454,7 @@ class TabClass(object):
 			widgets.get_widget("topicBar").hide()
 			widgets.get_widget("VBox_nickList").hide()
 
-			self.setTabUseable(tab, tab.connected)
+			self.setUseable(tab, tab.connected)
 
 		tab.setNewMessage(None)
 		self.gui.updateServerTreeMarkup(tab.path)
