@@ -555,7 +555,6 @@
     <child>
       <widget class="GtkMenuItem" id="setKeyItem">
         <property name="visible">True</property>
-        <property name="tooltip" translatable="yes">Opens a dialog which asks you for the channel key to set.</property>
         <property name="label" translatable="yes">Set Key</property>
         <property name="use_underline">True</property>
         <signal name="activate" handler="setKeyItem_activate_cb"/>
