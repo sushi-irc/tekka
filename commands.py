@@ -62,7 +62,23 @@ def warnNoConnection(tab):
 		"notification" : notification
 	})
 
+def warnNotJoined(cTab):
+	if not cTab.buffer:
+		return
 
+	notification = _(
+		"Warning: The channel %(channel)s is not joined, "
+		"everything you write will disappear." % {
+			'channel': cTab.name}
+		)
+	nColor = config.get('colors','notification','#000000')
+
+	cTab.buffer.insertHTML(
+		cTab.buffer.get_end_iter(),
+		'<font foreground="%(nf_color)s">'
+		'%(notification)s</font>' % {
+			'nf_color': nColor,
+			'notification': notification})
 
 def makiConnect(currentServer, currentChannel, args):
 	"""
@@ -511,6 +527,9 @@ def parseInput(text):
 		# strip first slash if it's a fake command
 		if text[0] == "/":
 			text = text[1:]
+
+		if not channelTab.joined:
+			warnNotJoined(channelTab)
 
 		com.sendMessage(serverTab.name, channelTab.name, text)
 
