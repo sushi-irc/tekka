@@ -421,13 +421,6 @@
       </widget>
     </child>
     <child>
-      <widget class="GtkCheckMenuItem" id="ignoreItem">
-        <property name="visible">True</property>
-        <property name="label" translatable="yes">Ignore</property>
-        <property name="use_underline">True</property>
-      </widget>
-    </child>
-    <child>
       <widget class="GtkMenuItem" id="kickItem">
         <property name="visible">True</property>
         <property name="label" translatable="yes">Kick</property>

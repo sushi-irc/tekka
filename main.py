@@ -698,7 +698,7 @@ def nickListRenderNicks(column, renderer, model, iter):
 		# do not render if no connection exists
 		return
 
-	# highlight ignores / own nick
+	# highlight own nick
 	serverTab = gui.tabs.getCurrentTabs()[0]
 
 	if not serverTab:
@@ -710,14 +710,6 @@ def nickListRenderNicks(column, renderer, model, iter):
 		return
 
 	nick = nick[0]
-
-	# highlight ignores
-	ignores = com.fetchIgnores(serverTab.name)
-
-	if nick+"!*" in ignores:
-		renderer.set_property("strikethrough", True)
-	else:
-		renderer.set_property("strikethrough", False)
 
 	# highlight own nick
 	if com.getOwnNick(serverTab.name) == nick:

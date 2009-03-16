@@ -414,37 +414,15 @@ def getNickListMenu(currentNick):
 	menu.insert(headerItem, 0)
 	headerItem.show()
 
-	ignoreItem = nickListMenu_widgets.get_widget("ignoreItem")
-	ignoreItem.set_active(False)
-
-	# TODO: replace pattern with real pattern matching
-	pattern = "%s!*" % (currentNick)
 	sTab,cTab = gui.tabs.getCurrentTabs()
 
 	if not sTab:
 		return None
 
-	ignores = com.fetchIgnores(sTab.name)
-
-	# TODO:  refresh nickList column/renderer after
-	# TODO:: setting/unsetting ignore on $nick
-	if pattern in ignores:
-		ignoreItem.set_active(True)
-		ignoreHandler = ignoreItem.connect("toggled",
-			lambda w,n,p: com.unignore(n, p), sTab.name, pattern)
-
-	else:
-		ignoreItem.set_active(False)
-		ignoreHandler = ignoreItem.connect_after("toggled",
-			lambda w,n,p: com.ignore(n, p), sTab.name, pattern)
-
 	global nickListMenu_deactivateHandlers
 
 	nickListMenu_deactivateHandlers.append(
 		(lambda menu,header: menu.remove(header), headerItem))
-
-	nickListMenu_deactivateHandlers.append(
-		(lambda menu,item,handler: idle_add(item.disconnect, handler), ignoreItem, ignoreHandler))
 
 	return menu
 
