@@ -26,6 +26,14 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+from typecheck import types
+
+gui = None
+
+def setup(gw):
+	global gui
+	gui = gw
+
 class tekkaTab(object):
 	"""
 		Provides basic attributes like the outputbuffer,
@@ -39,6 +47,12 @@ class tekkaTab(object):
 		connected: is the tab active or not
 		autoScroll: automatically scroll the buffer to the end
 	"""
+
+	@types(switch=bool)
+	def _set_connected(self, switch):
+		self._connected=switch
+		gui.tabs.setUseable(self,switch)
+	connected = property(lambda x: x._connected, _set_connected)
 
 	def __init__(self, name, buffer=None):
 		self.buffer = buffer
@@ -144,6 +158,7 @@ class tekkaServer(tekkaTab):
 	"""
 		A typically server tab.
 	"""
+
 	def __init__(self, name, buffer=None):
 		tekkaTab.__init__(self, name, buffer)
 
@@ -235,6 +250,13 @@ class tekkaChannel(tekkaTab):
 		A typically channel tab.
 	"""
 
+	@types(switch=bool)
+	def _set_joined(self, switch):
+		self._joined = switch
+		gui.tabs.setUseable (self, switch)
+
+	joined = property(lambda x: x._joined, _set_joined)
+
 	def __init__(self, name, server, buffer=None, nicklist=None, topic="", topicsetter=""):
 		tekkaTab.__init__(self, name, buffer)
 
@@ -243,7 +265,6 @@ class tekkaChannel(tekkaTab):
 		self.topicSetter = topicsetter
 
 		self.server = server
-		self.joined = False
 
 	def is_channel(self):
 		return True

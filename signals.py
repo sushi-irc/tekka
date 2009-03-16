@@ -1179,7 +1179,9 @@ def userPart(timestamp, server, from_str, channel, reason):
 		gui.updateServerTreeMarkup(tab.path)
 
 		gui.channelPrint(timestamp, server, channel,
-			message % { "channel": channelString, "reason": reasonString },
+			message % {
+				"channel": channelString,
+				"reason": reasonString },
 			"action")
 
 	else: # another user parted

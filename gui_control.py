@@ -54,6 +54,20 @@ class TabClass(object):
 		self.currentPath = ()
 		self.gui = gui
 
+	@types(tab=(
+		tab.tekkaTab,
+		tab.tekkaChannel,
+		tab.tekkaServer,
+		tab.tekkaQuery), switch=bool)
+	def setUseable(self, tab, switch):
+		if not tab is self.getCurrentTab():
+			return
+		widgetList = [
+			widgets.get_widget('nickList'),
+			widgets.get_widget('topicBar')]
+		for widget in widgetList:
+			widget.set_sensitive (switch)
+
 	def getNewBuffer(self):
 		"""
 		Returns a HTMLBuffer with assigned URL handler.
@@ -433,10 +447,14 @@ class TabClass(object):
 			widgets.get_widget("VBox_nickList").show_all()
 			widgets.get_widget("nickList").set_model(tab.nickList)
 
+			self.setUseable(tab, tab.joined and tab.connected)
+
 		elif tab.is_query() or tab.is_server():
 			# queries and server tabs don't have topics or nicklists
 			widgets.get_widget("topicBar").hide()
 			widgets.get_widget("VBox_nickList").hide()
+
+			self.setTabUseable(tab, tab.connected)
 
 		tab.setNewMessage(None)
 		self.gui.updateServerTreeMarkup(tab.path)
@@ -487,6 +505,7 @@ class GUIWrapper(object):
 		self.statusIcon = None
 		self.accelGroup = None
 		self.tabs = TabClass(self)
+		self.tabs.tab.setup(self)
 
 	def getWidgets(self):
 		return widgets
@@ -524,6 +543,7 @@ class GUIWrapper(object):
 			"activate",
 			__main__.statusIcon_activate_cb)
 
+	@types(switch=bool)
 	def setUseable(self, switch):
 		"""
 			Dis- or enable the widgets
