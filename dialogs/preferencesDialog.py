@@ -108,7 +108,7 @@ def tekka_hide_on_close_toggled(button):
 			str(button.get_active()).lower())
 
 def tekka_output_font_clicked(button):
-	output = gui.getWidgets().get_widget("output")
+	output = gui.widgets.get_widget("output")
 
 	font = button.get_font_name()
 
@@ -117,7 +117,7 @@ def tekka_output_font_clicked(button):
 		gui.setFont(output, font)
 
 def tekka_general_output_font_clicked(button):
-	output = gui.getWidgets().get_widget("generalOutput")
+	output = gui.widgets.get_widget("generalOutput")
 
 	font = button.get_font_name()
 

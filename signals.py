@@ -132,7 +132,7 @@ def initServers():
 		Adds all servers to tekka which are reported by maki.
 	"""
 	# in case we're reconnecting, clear all stuff
-	gui.getWidgets().get_widget("serverTree").get_model().clear()
+	gui.widgets.get_widget("serverTree").get_model().clear()
 
 	for server in com.fetchServers():
 

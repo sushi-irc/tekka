@@ -136,7 +136,7 @@ def menu_View_showGeneralOutput_toggled_cb(menuItem):
 		Deactivate or enable (hide/show) the general output
 		widget.
 	"""
-	sw = gui.getWidgets().get_widget("scrolledWindow_generalOutput")
+	sw = gui.widgets.get_widget("scrolledWindow_generalOutput")
 
 	if menuItem.get_active():
 		sw.show_all()
@@ -149,7 +149,7 @@ def menu_View_showStatusBar_toggled_cb(menuItem):
 	"""
 		hide or show the status bar.
 	"""
-	bar = gui.getWidgets().get_widget("statusBar")
+	bar = gui.widgets.get_widget("statusBar")
 	if menuItem.get_active():
 		bar.show()
 		config.set("tekka","show_status_bar","True")
@@ -889,7 +889,7 @@ def setupGTK():
 		Setup widgets.
 	"""
 	global commands, signals
-	global gui, widgets
+	global widgets
 
 	gladefiles = config.get("gladefiles", default={})
 

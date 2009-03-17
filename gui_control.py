@@ -520,9 +520,6 @@ class TabClass(object):
 
 tabs = TabClass()
 
-def getWidgets():
-	return widgets
-
 def setup_statusIcon():
 	"""
 	Sets up the status icon.
