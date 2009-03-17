@@ -91,6 +91,7 @@ class TabClass(object):
 		if not obj:
 			raise Exception, "Failed to create channel."
 
+		obj.connect("new_name", __main__.tekka_tab_new_name)
 		obj.connect("new_path", __main__.tekka_tab_new_path)
 		obj.connect("connected", __main__.tekka_tab_connected)
 		obj.connect("joined", __main__.tekka_channel_joined)
@@ -106,6 +107,7 @@ class TabClass(object):
 		if not obj:
 			raise Exception, "Failed to create Query."
 
+		obj.connect("new_name", __main__.tekka_tab_new_name)
 		obj.connect("new_path", __main__.tekka_tab_new_path)
 		obj.connect("connected", __main__.tekka_tab_connected)
 
@@ -119,6 +121,7 @@ class TabClass(object):
 		if not obj:
 			raise Exception, "Failed to create Server."
 
+		obj.connect("new_name", __main__.tekka_tab_new_name)
 		obj.connect("away", __main__.tekka_server_away)
 		obj.connect("new_path", __main__.tekka_tab_new_path)
 		obj.connect("connected", __main__.tekka_tab_connected)
@@ -865,70 +868,4 @@ class GUIWrapper(object):
 			output.insertHTML(output.get_end_iter(), string)
 
 		self.scrollOutput()
-
-
-	def moveNickList(self, left):
-		"""
-		Moves the nick list to the left side of the window if left is True
-		otherwise to the right bottom vpaned.
-		"""
-
-		# XXX: no move to the already set position (will crash....)
-
-		nl = widgets.get_widget("VBox_nickList")
-
-		vpaned = widgets.get_widget("listVPaned")
-		hbox = widgets.get_widget("mainHBox")
-		vbox = widgets.get_widget("mainVBox")
-
-		if left:
-			"""
-			remove the nick list packet from the vpaned on the right side,
-			remove the mainHBox (containing GO,output,input,vpaned from servertree,...)
-			from the mainVBox (containing all window stuff) and create
-			a hpaned.
-			Position one (left side) is filled with the nick list stuff
-			with new border (6px) and the right side is the main hbox.
-			After this, apply the new hpaned to the main vbox.
-			"""
-
-			vpaned.remove(nl)
-			vbox.remove(hbox)
-
-			nlHpaned = gtk.HPaned()
-			nlHpaned.pack1(nl)
-			nlHpaned.pack2(hbox)
-			nlHpaned.show()
-
-			nl.set_property("border-width", 6)
-
-			vbox.pack_start(nlHpaned)
-
-			# set to the middle (above status bar, under menu bar)
-			vbox.reorder_child(nlHpaned, 1)
-
-			widgets.get_widget("inputBar").grab_focus()
-
-			config.set("tekka", "nick_list_left", "True")
-
-		else:
-			nl.set_property("border-width", 0)
-
-			nlHpaned = vbox.get_children()[1]
-
-			nl = nlHpaned.get_child1()
-			nlHpaned.remove(nl)
-
-			# move nl box to the right vpaned
-			vpaned.pack2(nl, resize=True, shrink=False)
-
-			main = nlHpaned.get_child2()
-			nlHpaned.remove(main)
-
-			vbox.remove(nlHpaned)
-
-			vbox.pack_start(main)
-			vbox.reorder_child(main, 1)
-
-			config.set("tekka", "nick_list_left", "False")
 

@@ -467,6 +467,7 @@ def userMessage(timestamp, server, from_str, channel, message):
 	if nick.lower() == com.getOwnNick(server).lower():
 		ownMessage(timestamp, server, channel, message)
 		return
+
 	elif channel.lower() == com.getOwnNick(server).lower():
 		userQuery(timestamp, server, nick, message)
 		return
@@ -581,11 +582,7 @@ def userQuery(timestamp, server, from_str, message):
 	if tab.name != nick:
 		# the name of the tab differs from the
 		# real nick, correct this.
-
-		corrected = tab.copy()
-		corrected.name = nick
-
-		gui.tabs.replaceTab(tab, corrected)
+		tab.name = nick
 
 	# queries are important
 	gui.setUrgent(True)
@@ -759,10 +756,7 @@ def queryNotice(time, server, from_str, message):
 	if tab:
 		if tab.name != nick:
 			# correct notation of tab name
-
-			cTab = tab.copy()
-			cTab.name = nick
-			gui.tabs.replaceTab(tab,cTab)
+			tab.name = nick
 
 	if tab:
 		gui.channelPrint(time, server, tab.name,
@@ -827,10 +821,7 @@ def userNick(time, server, from_str, newNick):
 
 	# rename query if found
 	if tab and tab.is_query():
-		cTab = tab.copy()
-		cTab.name = newNick
-		gui.tabs.replaceTab(tab, cTab)
-		tab = cTab
+		tab.name = newNick
 
 	# we changed the nick
 	if newNick == com.getOwnNick(server):

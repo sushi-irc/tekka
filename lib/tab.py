@@ -26,6 +26,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+from dbus import String
 import gobject
 from typecheck import types
 
@@ -55,6 +56,12 @@ class tekkaTab(gobject.GObject):
 		self.emit ("new_path", path)
 	path = property(lambda x: x._path, _set_path)
 
+	@types(name=(str,String))
+	def _set_name(self, name):
+		self._name = name
+		self.emit ("new_name", name)
+	name = property(lambda x: x._name, _set_name)
+
 	def __init__(self, name, buffer=None):
 		gobject.GObject.__init__(self)
 
@@ -71,6 +78,9 @@ class tekkaTab(gobject.GObject):
 		self.inputHistory = []
 		self.historyPosition = -1
 		self.currentHistory = ""
+
+	def __repr__(self):
+		return "<tab '%s', path: '%s'>" % (self.name, self.path)
 
 	""" I don't know if this is required but iirc
 	python is throwing the AttributeError exception if
@@ -166,6 +176,11 @@ gobject.signal_new(
 	"new_path", tekkaTab,
 	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
 	(gobject.TYPE_PYOBJECT,))
+
+gobject.signal_new(
+	"new_name", tekkaTab,
+	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
+	(gobject.TYPE_STRING,))
 
 class tekkaServer(tekkaTab):
 	"""

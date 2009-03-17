@@ -80,6 +80,15 @@ def tekka_server_away(tab, msg):
 	if tab.path:
 		gui.updateServerTreeMarkup(tab.path)
 
+def tekka_tab_new_name(tab, name):
+	store = widgets.get_widget("serverTree").get_model()
+	try:
+		cell = store[tab.path]
+	except IndexError:
+		print "Error in renaming tab %s." % (tab)
+		return
+	store.set (cell.iter, 0, tab.markup(), 1, name)
+
 def tekka_tab_connected(tab, connected):
 	""" tab received a change on connected attribute """
 	gui.tabs.setUseable(tab, connected)
@@ -94,7 +103,7 @@ def tekka_channel_joined(tab, switch):
 
 def tekka_tab_new_path(tab, new_path):
 	""" a new path is set to the path """
-	pass
+	print "tab %s has now %s as path." % (tab, new_path)
 
 """
 Glade signals
@@ -433,19 +442,6 @@ def nickList_row_activated_cb(nickList, path, column):
 
 	gui.tabs.switchToPath(query.path)
 
-def nickList_menu_leftSide_toggled_cb(menuItem):
-	"""
-	move the nick list widget to the left hbox if menuItem
-	is toggled or move it to the vpaned
-	"""
-
-	if menuItem.get_active():
-		gui.moveNickList(left=True)
-
-	else:
-		gui.moveNickList(left=False)
-
-
 def nickList_button_press_event_cb(nickList, event):
 	"""
 		A button pressed inner nickList.
@@ -482,21 +478,6 @@ def nickList_button_press_event_cb(nickList, event):
 				return False
 
 			# finaly popup the menu
-			menu.popup(None, None, None, event.button, event.time)
-
-		else:
-			# display nick list menu
-
-			menu = gtk.Menu()
-			leftSide = gtk.CheckMenuItem(label="Show on _left side")
-			menu.append(leftSide)
-			leftSide.show()
-
-			if config.get_bool("tekka", "nick_list_left"):
-				leftSide.set_active(True)
-
-			leftSide.connect("toggled", nickList_menu_leftSide_toggled_cb)
-
 			menu.popup(None, None, None, event.button, event.time)
 
 	return False
@@ -1056,9 +1037,6 @@ def setupGTK():
 		gui.setup_statusIcon()
 		btn.set_active(True)
 	btn.toggled()
-
-	if config.get_bool("tekka", "nick_list_left"):
-		gui.moveNickList(left=True)
 
 	setup_shortcuts()
 
