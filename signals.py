@@ -168,7 +168,7 @@ def addChannels(server):
 	for channel in channels:
 
 		add = False
-		nicks = com.fetchNicks(server, channel)
+		nicks, prefixes = com.fetchNicks(server, channel)
 
 		tab = gui.tabs.searchTab(server, channel)
 
@@ -177,7 +177,7 @@ def addChannels(server):
 			add = True
 
 		tab.nickList.clear()
-		tab.nickList.addNicks(nicks)
+		tab.nickList.addNicks(nicks, prefixes)
 
 		if gui.tabs.isActive(tab):
 			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
@@ -190,24 +190,9 @@ def addChannels(server):
 			gui.tabs.addTab(server, tab)
 			lastLog(server, channel)
 
-		fetchPrefixes(server, channel, tab.nickList, nicks)
 		sushi.topic(server, channel, "")
 
 	gui.updateServerTreeShortcuts()
-
-
-def fetchPrefixes(server, channel, nicklist, nicks):
-	"""
-		Itearates over the list of nicks `nicks` and fetches the prefix
-		for every nick. After successful fetch the method adds the prefix
-		to the nick in the referenced nicklist `nicklist`
-	"""
-	for nick in nicks:
-		prefix = com.fetchPrefix(server,channel,nick)
-		if not prefix:
-			continue
-		nicklist.setPrefix(nick, prefix, sort=False)
-	nicklist.sortNicks()
 
 
 def lastLog(server, channel, lines=0):

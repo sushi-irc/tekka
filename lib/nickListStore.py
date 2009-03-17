@@ -45,7 +45,7 @@ class nickListStore(gtk.ListStore):
 	COLUMN_PREFIX=0
 	COLUMN_NICK=1
 
-	def __init__(self, nicks=None):
+	def __init__(self, nicks=None, prefixes=None):
 		gtk.ListStore.__init__(self, gobject.TYPE_STRING, gobject.TYPE_STRING)
 
 		# default modes:
@@ -56,8 +56,8 @@ class nickListStore(gtk.ListStore):
 		self.__opcount = 0
 		self.__has_ops = False
 
-		if nicks:
-			self.addNicks(nicks)
+		if nicks and prefixes:
+			self.addNicks(nicks, prefixes)
 
 	def __len__(self):
 		return self.__count
@@ -99,16 +99,17 @@ class nickListStore(gtk.ListStore):
 				return row
 		return None
 
-	def addNicks(self, nicks):
+	def addNicks(self, nicks, prefixes):
 		"""
 		Adds a list of nicks to the nickListStore.
 		After adding all nicks sortNicks is called.
 		"""
-		if not nicks:
+		if not nicks or not prefixes:
 			return
 
-		for nick in nicks:
-			self.appendNick(nick, sort=False)
+		for i in range(len(nicks)):
+			self.appendNick(nicks[i], sort=False)
+			self.setPrefix(nicks[i], prefixes[i], sort=False)
 
 		self.sortNicks()
 
