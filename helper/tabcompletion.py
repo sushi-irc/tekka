@@ -82,7 +82,7 @@ def _appendMatch(mode, text, word, match):
 
 def _removeLastCompletion(text):
 	lc = _current["lastCompletion"]
-	ib = main.gui.getWidgets().get_widget("inputBar")
+	ib = gui_control.widgets.get_widget("inputBar")
 
 	print "Last completion was: '%s'" %(lc)
 
@@ -234,7 +234,7 @@ def complete(currentTab, text):
 
 	# channel completion
 	if word[0] in com.sushi.support_chantypes(currentTab.server):
-		tabs = main.gui.tabs.getAllTabs()
+		tabs = gui_control.tabs.getAllTabs()
 
 		# find all matching tabs
 		matches = [tab.name for tab in tabs
