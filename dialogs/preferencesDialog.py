@@ -4,7 +4,7 @@ import config
 import gtk
 import gtk.glade
 
-from __main__ import gui
+import gui_control as gui
 
 from helper.expandingList import expandingList
 

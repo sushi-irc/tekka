@@ -28,12 +28,12 @@ SUCH DAMAGE.
 
 import gtk
 import gtk.glade
-import config
-import com
-
 from time import localtime
 import os
-from __main__ import gui
+
+import config
+import com
+import gui_control as gui
 
 widgets = None
 

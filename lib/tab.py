@@ -102,6 +102,7 @@ class tekkaTab(gobject.GObject):
 				self.newMessage.index(type)
 			except:
 				self.newMessage.append(type)
+		self.emit ("new_message", type)
 
 	def insertHistory(self, string):
 		"""
@@ -171,6 +172,11 @@ gobject.signal_new(
 	"connected", tekkaTab,
 	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
 	(gobject.TYPE_BOOLEAN,))
+
+gobject.signal_new(
+	"new_message", tekkaTab,
+	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
+	(gobject.TYPE_PYOBJECT,))
 
 gobject.signal_new(
 	"new_path", tekkaTab,

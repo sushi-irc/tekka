@@ -35,21 +35,7 @@ from helper import keyDialog
 
 import config
 import com
-import __main__
-
-"""
-	References to modules loaded by main script
-"""
-
-gui = None
-
-def setup():
-	"""
-	setup the module, make GUI module accessable.
-	"""
-	global gui
-
-	gui = __main__.gui
+import gui_control as gui
 
 """
 	Server tree tab menu.

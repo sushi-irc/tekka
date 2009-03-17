@@ -37,12 +37,6 @@ except:
 	print "GTK load failed."
 	sys.exit(1)
 
-def setup():
-	"""
-	No special meaning here.
-	"""
-	pass
-
 def loadDialog(name):
 	importName = "dialogs."+name
 	try:

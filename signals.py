@@ -35,11 +35,10 @@ import time as mtime
 
 import com
 import config
-import __main__
+import gui_control as gui
 from helper import keyDialog
 
 sushi = None
-gui = None
 
 signals = {}
 
@@ -86,9 +85,8 @@ def disconnect_signal (signal, handler):
 		del signals[signal][handler]
 
 def setup():
-	global gui, sushi
+	global sushi
 
-	gui = __main__.gui
 	sushi = com.sushi
 
 	# Message-Signals

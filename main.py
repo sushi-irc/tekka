@@ -54,7 +54,7 @@ from gettext import gettext as _
 from helper.shortcuts import addShortcut, removeShortcut
 from helper import tabcompletion
 
-import gui_control
+import gui_control as gui
 import config
 import com
 
@@ -65,8 +65,6 @@ import menus
 
 # plugin interface
 import tekka as plugins
-
-gui = None
 
 # TODO:  if a tab is closed the widgets remain the same.
 # TODO:: it would be nice if the tab would be switched
@@ -79,6 +77,9 @@ Tekka intern signals
 def tekka_server_away(tab, msg):
 	if tab.path:
 		gui.updateServerTreeMarkup(tab.path)
+
+def tekka_tab_new_message(tab, type):
+	gui.updateServerTreeMarkup(tab.path)
 
 def tekka_tab_new_name(tab, name):
 	store = widgets.get_widget("serverTree").get_model()
@@ -873,9 +874,6 @@ def connectMaki():
 		# init modules
 
 		signals.setup()
-		commands.setup()
-		dialog.setup()
-		menus.setup()
 
 		gui.setUseable(True)
 
@@ -908,7 +906,7 @@ def setupGTK():
 	gtk.glade.textdomain("tekka")
 
 	# parse glade file for main window
-	widgets = gui_control.load_widgets(
+	widgets = gui.load_widgets(
 		gladefiles["mainwindow"], "mainWindow")
 
 	setup_mainWindow()
@@ -994,13 +992,6 @@ def setupGTK():
 
 	setup_serverTree()
 	setup_nickList()
-
-	# create instance of wrapper class for easy
-	# accessing of frequently used widget magic
-	gui = gui_control.GUIWrapper()
-
-	if not gui:
-		raise Exception("GUIWrapper not successfully initialized!")
 
 	# set output font
 	gui.setFont(widgets.get_widget("output"),

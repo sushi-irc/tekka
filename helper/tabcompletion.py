@@ -29,7 +29,7 @@ SUCH DAMAGE.
 import commands
 import com
 import config
-import __main__ as main
+import gui_control
 
 # types identificating the current scroll position
 (
@@ -73,7 +73,7 @@ def _appendMatch(mode, text, word, match):
 
 	print "text: '%s' word: '%s' match: '%s'" % (text,word,match)
 
-	inputBar = main.gui.getWidgets().get_widget("inputBar")
+	inputBar = gui_control.widgets.get_widget("inputBar")
 	inputBar.set_text(text)
 	inputBar.set_position(len(text))
 
@@ -150,7 +150,7 @@ def complete(currentTab, text):
 		word = words[-1]
 
 		_current["needle"] = word
-	
+
 	print "word is: '%s'" % (word)
 
 	if not word:
@@ -237,9 +237,9 @@ def complete(currentTab, text):
 		tabs = main.gui.tabs.getAllTabs()
 
 		# find all matching tabs
-		matches = [tab.name for tab in tabs 
+		matches = [tab.name for tab in tabs
 			if tab and tab.name[:len(word)].lower() == word.lower()]
-		
+
 		if matches:
 			if _current["type"] == CHANNEL_TYPE:
 

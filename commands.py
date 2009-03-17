@@ -33,11 +33,9 @@ from gettext import gettext as _
 
 import config
 import com
-import __main__
+import gui_control as gui
 from types import MethodType, FunctionType
 from typecheck import types
-
-gui = None
 
 def warnNoConnection(tab):
 	if not tab.buffer:
@@ -458,14 +456,6 @@ def tekkaHelp(currentServer, currentTab, args):
 		gui.myPrint(commands[args[0]].__doc__.replace("\t",""))
 	else:
 		gui.myPrint("No help for %s available." % (args[0]))
-
-
-def setup():
-	"""
-	Setup: GUI is set up so we can import it now.
-	"""
-	global gui
-	gui = __main__.gui
 
 
 _commands = {

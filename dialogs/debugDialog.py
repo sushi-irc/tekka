@@ -26,9 +26,9 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
-from __main__ import gui
 import gtk
 from gettext import gettext as _
+import gui_control as gui
 
 def button_clicked_cb(button, textView):
 	"""

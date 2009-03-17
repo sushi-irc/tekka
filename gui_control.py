@@ -10,6 +10,7 @@ import time
 import pango
 import gettext
 from gobject import idle_add
+from dbus import String
 
 # local modules
 import config
@@ -23,6 +24,8 @@ from helper import URLHandler
 import __main__
 
 widgets = None
+statusIcon = None
+accelGroup = None
 
 @types(gladeFile=str, section=str)
 def load_widgets(gladeFile, section):
@@ -50,9 +53,8 @@ class TabClass(object):
 	from lib.htmlbuffer import HTMLBuffer
 	from lib.nickListStore import nickListStore
 
-	def __init__(self, gui):
+	def __init__(self):
 		self.currentPath = ()
-		self.gui = gui
 
 	@types(tab=(
 		tab.tekkaTab,
@@ -91,6 +93,7 @@ class TabClass(object):
 		if not obj:
 			raise Exception, "Failed to create channel."
 
+		obj.connect("new_message", __main__.tekka_tab_new_message)
 		obj.connect("new_name", __main__.tekka_tab_new_name)
 		obj.connect("new_path", __main__.tekka_tab_new_path)
 		obj.connect("connected", __main__.tekka_tab_connected)
@@ -107,6 +110,7 @@ class TabClass(object):
 		if not obj:
 			raise Exception, "Failed to create Query."
 
+		obj.connect("new_message", __main__.tekka_tab_new_message)
 		obj.connect("new_name", __main__.tekka_tab_new_name)
 		obj.connect("new_path", __main__.tekka_tab_new_path)
 		obj.connect("connected", __main__.tekka_tab_connected)
@@ -121,6 +125,7 @@ class TabClass(object):
 		if not obj:
 			raise Exception, "Failed to create Server."
 
+		obj.connect("new_message", __main__.tekka_tab_new_message)
 		obj.connect("new_name", __main__.tekka_tab_new_name)
 		obj.connect("away", __main__.tekka_server_away)
 		obj.connect("new_path", __main__.tekka_tab_new_path)
@@ -467,7 +472,7 @@ class TabClass(object):
 				they were hidden) and fill them with tab
 				specific data.
 			"""
-			self.gui.setUserCount(
+			setUserCount(
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
@@ -483,7 +488,7 @@ class TabClass(object):
 			widgets.get_widget("VBox_nickList").hide()
 
 		tab.setNewMessage(None)
-		self.gui.updateServerTreeMarkup(tab.path)
+		updateServerTreeMarkup(tab.path)
 
 		adj = widgets.get_widget("scrolledWindow_output").get_vadjustment()
 
@@ -494,7 +499,7 @@ class TabClass(object):
 			idle_add(adj.set_value,tab.buffer.scrollPosition)
 		else:
 			print "scrolling with narf(tab) in switchToPath(%s)" % tab.name
-			self.gui.scrollOutput()
+			scrollOutput()
 			def narf(tab):
 				tab.autoScroll=True
 				return False
@@ -504,368 +509,374 @@ class TabClass(object):
 		# NOTE:: If it wouldn't be used the scrolling would not work due
 		# NOTE:: to modifications of the scroll position by the base class.
 
-		self.gui.setWindowTitle(tab.name)
+		setWindowTitle(tab.name)
 
 		if not tab.is_server():
-			self.gui.setNick(com.getOwnNick(tab.server))
+			setNick(com.getOwnNick(tab.server))
 		else:
-			self.gui.setNick(com.getOwnNick(tab.name))
+			setNick(com.getOwnNick(tab.name))
 
 
 
+tabs = TabClass()
 
+def getWidgets():
+	return widgets
 
-
-
-class GUIWrapper(object):
+def setup_statusIcon():
 	"""
-		The gui wrapper class is instanced one time
-		and acts as interface to the gtk widgets
-		for modules like the signals-module.
-
-		gui = wrapper class
-		gui.tabs = tab management (channels and servers)
+	Sets up the status icon.
 	"""
+	if config.get_bool("tekka", "rgba"):
+		gtk.widget_push_colormap(
+			widgets.get_widget("mainWindow")\
+			.get_screen()\
+			.get_rgb_colormap())
 
-	def __init__(self):
-		self.statusIcon = None
-		self.accelGroup = None
-		self.tabs = TabClass(self)
+	global statusIcon
+	statusIcon = gtk.StatusIcon()
 
-	def getWidgets(self):
-		return widgets
+	if config.get_bool("tekka", "rgba"):
+		gtk.widget_pop_colormap()
 
-	def setup_statusIcon(self):
-		"""
-		Sets up the status icon.
-		"""
-		if config.get_bool("tekka", "rgba"):
-			gtk.widget_push_colormap(
-				widgets.get_widget("mainWindow")\
-				.get_screen()\
-				.get_rgb_colormap())
+	statusIcon.set_tooltip("tekka IRC client")
 
-		self.statusIcon = gtk.StatusIcon()
+	statusIcon.connect(
+		"popup-menu",
+		__main__.statusIcon_popup_menu_cb)
 
-		if config.get_bool("tekka", "rgba"):
-			gtk.widget_pop_colormap()
+	try:
+		statusIcon.set_from_file(
+			config.get("tekka","status_icon"))
+	except BaseException,e:
+		# unknown, print it
+		print e
+		return
 
-		self.statusIcon.set_tooltip("tekka IRC client")
+	statusIcon.connect(
+		"activate",
+		__main__.statusIcon_activate_cb)
 
-		self.statusIcon.connect(
-			"popup-menu",
-			__main__.statusIcon_popup_menu_cb)
+@types(switch=bool)
+def setUseable(switch):
+	"""
+		Dis- or enable the widgets
+		which emit or receive signals
+		to/from maki.
+	"""
+	widgetList = [
+		widgets.get_widget("topicBar"),
+		widgets.get_widget("inputBar"),
+		widgets.get_widget("serverTree"),
+		widgets.get_widget("nickList"),
+		widgets.get_widget("output"),
+		widgets.get_widget("generalOutput")
+	]
 
-		try:
-			self.statusIcon.set_from_file(
-				config.get("tekka","status_icon"))
-		except BaseException,e:
-			# unknown, print it
-			print e
+	for widget in widgetList:
+		widget.set_sensitive(switch)
+
+	if switch: widgets.get_widget("inputBar").grab_focus()
+
+@types(switch=bool)
+def setStatusIcon(switch):
+	""" enables / disables status icon """
+	if switch:
+		if not statusIcon:
+			setup_statusIcon()
+		statusIcon.set_visible(True)
+
+	else:
+		if not statusIcon:
+			return
+		statusIcon.set_visible(False)
+
+@types(switch=bool)
+def setUrgent(switch):
+	"""
+		Sets or unsets the urgent
+		status to the main window.
+		If the status icon is enabled
+		it will be set flashing (or
+		if switch is False the flashing
+		will stop)
+	"""
+	win = widgets.get_widget("mainWindow")
+
+	if win.has_toplevel_focus():
+		# urgent toplevel windows suck ass
+		return
+
+	win.set_urgency_hint(switch)
+
+	if statusIcon:
+		statusIcon.set_blinking(switch)
+
+@types(title=(str,String))
+def setWindowTitle(title):
+	"""
+		Sets the window title to the main
+		window.
+	"""
+	widgets.get_widget("mainWindow").set_title(title)
+
+@types(nick=(str, String))
+def setNick(nick):
+	"""
+		Sets nick as label text of nickLabel.
+	"""
+	widgets.get_widget("nickLabel").set_text(nick)
+
+@types(normal=int, ops=int)
+def setUserCount(normal, ops):
+	"""
+	sets the amount of users in the current channel.
+	"""
+	m_users = gettext.ngettext(
+		"%d User", "%d Users", normal) % (normal)
+	m_ops = gettext.ngettext(
+		"%d Operator", "%d Operators", ops) % (ops)
+
+	widgets.get_widget("nickList_label").set_text(
+		"%(users)s – %(ops)s" % {
+			"users": m_users, "ops": m_ops })
+
+def setFont(textView, font):
+	"""
+		Sets the font of the textView to
+		the font identified by fontFamily
+	"""
+	fd = pango.FontDescription(font)
+
+	if not fd:
+		print "Font _not_ modified (previous error)"
+		return
+
+	textView.modify_font(fd)
+
+@types(string=str)
+def setTopic(string):
+	"""
+		Sets the given string as text in
+		the topic bar.
+	"""
+	tb = widgets.get_widget("topicBar")
+	tb.set_text(string)
+	tb.set_position(len(string))
+
+def updateServerTreeShortcuts():
+	"""
+		Iterates through the TreeModel
+		of the server tree and sets 9
+		shortcuts to tabs for switching.
+	"""
+	global accelGroup
+
+	tabList = tabs.getAllTabs()
+	st = widgets.get_widget("serverTree")
+
+	for i in range(1,10):
+		removeShortcut(accelGroup, st, "<alt>%d" % (i))
+
+	c = 1
+	for tab in tabList:
+		if c == 10:
+			break
+
+		if (tab.is_server()
+			and not config.get("tekka","server_shortcuts")):
+			continue
+
+		addShortcut(accelGroup, st, "<alt>%d" % (c),
+			lambda w,s,p: tabs.switchToPath(p), tab.path)
+
+		c+=1
+
+@types(path=tuple)
+def updateServerTreeMarkup(path):
+	"""
+		Updates the first column of the row in
+		gtk.TreeModel of serverTree identified by path.
+	"""
+	store = widgets.get_widget("serverTree").get_model()
+	iter = store.get_iter(path)
+	try:
+		store.set_value(iter, 0, store[path][2].markup())
+	except IndexError:
+		print "updateServerTreeMarkup(%s): IndexError" % (
+			repr(path))
+		return
+
+def scrollGeneralOutput():
+	"""
+		Scrolls the general output text view to it's end.
+	"""
+	tv = widgets.get_widget("generalOutput")
+	tb = tv.get_buffer()
+
+	mark = tb.create_mark("end", tb.get_end_iter(), False)
+	tv.scroll_to_mark(mark, 0.05, True, 0.0, 1.0)
+	tb.delete_mark(mark)
+
+def scrollOutput():
+	"""
+		Scrolls the output text view to it's end.
+	"""
+	tv = widgets.get_widget("output")
+	tb = tv.get_buffer()
+
+	mark = tb.create_mark("end", tb.get_end_iter(), False)
+	tv.scroll_to_mark(mark, 0.05, True, 0.0, 1.0)
+	tb.delete_mark(mark)
+
+def escape(msg):
+	"""
+		Converts special characters in msg in-place.
+	"""
+	msg = msg.replace("&","&amp;")
+	msg = msg.replace("<","&lt;")
+	msg = msg.replace(">","&gt;")
+	msg = msg.replace(chr(2), "<sb/>") # bold-char
+	msg = msg.replace(chr(31), "<su/>") # underline-char
+	msg = msg.replace(chr(1), "")
+	return msg
+
+def channelPrint(timestamp, server, channel, message, type="message"):
+	"""
+		Inserts a string formatted like "[H:M] <message>\n"
+		into the htmlbuffer of the channel `channel` on server
+		`server`.
+	"""
+	timestring = time.strftime("%H:%M", time.localtime(timestamp))
+
+	message = URLToTag(message)
+
+	if not config.get_bool("tekka","color_text"):
+		colorHack = ""
+	else:
+		colorHack = "foreground='%s'" % (
+			config.get("colors", "text_%s" % type, "#000000"))
+
+	outputString = "[%s] <font %s>%s</font>" % (
+		timestring,
+		colorHack,
+		message)
+
+	channelTab = tabs.searchTab(server, channel)
+
+	if not channelTab:
+		print "No such channel %s:%s" % (server,channel)
+		return
+
+	buffer = channelTab.buffer
+
+	if not buffer:
+		print "channelPrint(): Channel %s on %s "\
+			"has no buffer." % (channel, server)
+		return
+
+	buffer.insertHTML(buffer.get_end_iter(), outputString)
+
+	if config.get_bool("tekka","show_general_output"):
+		# write it to the general output, also
+
+		goBuffer = widgets.get_widget("generalOutput").get_buffer()
+		goBuffer.insertHTML(goBuffer.get_end_iter(),
+				"[%s] &lt;%s:%s&gt; %s" % (
+					timestring, server, channel, message
+				))
+
+		scrollGeneralOutput()
+
+	# notification in server/channel list
+	if tabs.isActive(channelTab):
+		if channelTab.autoScroll:
+			scrollOutput()
+
+	else:
+		if type in channelTab.newMessage:
 			return
 
-		self.statusIcon.connect(
-			"activate",
-			__main__.statusIcon_activate_cb)
+		channelTab.setNewMessage(type)
+		updateServerTreeMarkup(channelTab.path)
 
-	@types(switch=bool)
-	def setUseable(self, switch):
-		"""
-			Dis- or enable the widgets
-			which emit or receive signals
-			to/from maki.
-		"""
-		widgetList = [
-			widgets.get_widget("topicBar"),
-			widgets.get_widget("inputBar"),
-			widgets.get_widget("serverTree"),
-			widgets.get_widget("nickList"),
-			widgets.get_widget("output"),
-			widgets.get_widget("generalOutput")
-		]
+def serverPrint(timestamp, server, string, type="message"):
+	"""
+		prints 'string' with "%H:%M' formatted 'timestamp' to the server-output
+		identified by 'server'
+	"""
+	serverTab = tabs.searchTab(server)
 
-		for widget in widgetList:
-			widget.set_sensitive(switch)
+	if not serverTab:
+		print "Server %s does not exist." % server
+		return
 
-		if switch: widgets.get_widget("inputBar").grab_focus()
+	buffer = serverTab.buffer
 
-	def setStatusIcon(self, switch):
-		""" enables / disables status icon """
-		if switch:
-			if not self.statusIcon:
-				self.setup_statusIcon()
-			self.statusIcon.set_visible(True)
+	if not buffer:
+		print "serverPrint(): No output buffer for "\
+			"server %s." % server
+		return
 
-		else:
-			if not self.statusIcon:
-				return
-			self.statusIcon.set_visible(False)
+	timestr = time.strftime("%H:%M", time.localtime(timestamp))
 
-	def setUrgent(self, switch):
-		"""
-			Sets or unsets the urgent
-			status to the main window.
-			If the status icon is enabled
-			it will be set flashing (or
-			if switch is False the flashing
-			will stop)
-		"""
-		win = widgets.get_widget("mainWindow")
+	buffer.insertHTML(buffer.get_end_iter(), "[%s] %s" % (
+		timestr,string))
 
-		if win.has_toplevel_focus():
-			# urgent toplevel windows suck ass
+	if config.get_bool("tekka","show_general_output"):
+		goBuffer = widgets.get_widget("generalOutput").get_buffer()
+		goBuffer.insertHTML(goBuffer.get_end_iter(), \
+				"[%s] &lt;%s&gt; %s" % (timestr, server, string))
+
+		scrollGeneralOutput()
+
+	if tabs.isActive(serverTab):
+		if serverTab.autoScroll:
+			print "scrolling in serverPrint"
+			scrollOutput()
+
+	else:
+		if type in serverTab.newMessage:
+			# don't need to repeat setting
 			return
+		serverTab.setNewMessage(type)
+		updateServerTreeMarkup(serverTab.path)
 
-		win.set_urgency_hint(switch)
+def currentServerPrint(timestamp, server, string, type="message"):
+	"""
+		Prints the string on the current tab of server (if any).
+		Otherwise it prints directly in the server tab.
+	"""
+	serverTab,channelTab = tabs.getCurrentTabs()
 
-		if self.statusIcon:
-			self.statusIcon.set_blinking(switch)
+	if (serverTab
+		and serverTab.name.lower() == server.lower()
+		and channelTab):
+		# print in current channel
+		channelPrint(
+			timestamp, server,
+			channelTab.name, string, type)
+	else:
+		# print to server tab
+		serverPrint(timestamp, server, string, type)
 
-	def setWindowTitle(self, title):
-		"""
-			Sets the window title to the main
-			window.
-		"""
-		widgets.get_widget("mainWindow").set_title(title)
+def myPrint(string, html=False):
+	"""
+		prints the string `string` in the current output
+		buffer. If html is true the string would be inserted via
+		the insertHTML-method.
+	"""
+	output = widgets.get_widget("output").get_buffer()
 
-	def setNick(self, nick):
-		"""
-			Sets nick as label text of nickLabel.
-		"""
-		widgets.get_widget("nickLabel").set_text(nick)
+	if not output:
+		print "No output buffer here!"
+		return
 
-	def setUserCount(self, normal, ops):
-		"""
-		sets the amount of users in the current channel.
-		"""
-		m_users = gettext.ngettext("%d User", "%d Users", normal) % (normal)
-		m_ops = gettext.ngettext("%d Operator", "%d Operators", ops) % (ops)
+	if not html:
+		output.insert(output.get_end_iter(), "\n"+string)
 
-		widgets.get_widget("nickList_label").set_text(
-			"%(users)s – %(ops)s" % { "users": m_users, "ops": m_ops })
+	else:
+		output.insertHTML(output.get_end_iter(), string)
 
-
-	def setFont(self, textView, font):
-		"""
-			Sets the font of the textView to
-			the font identified by fontFamily
-		"""
-		fd = pango.FontDescription(font)
-
-		if not fd:
-			print "Font _not_ modified (previous error)"
-			return
-
-		textView.modify_font(fd)
-
-	def setTopic(self, string):
-		"""
-			Sets the given string as text in
-			the topic bar.
-		"""
-		tb = widgets.get_widget("topicBar")
-		tb.set_text(string)
-		tb.set_position(len(string))
-
-	def updateServerTreeShortcuts(self):
-		"""
-			Iterates through the TreeModel
-			of the server tree and sets 9
-			shortcuts to tabs for switching.
-		"""
-		tabs = self.tabs.getAllTabs()
-		st = widgets.get_widget("serverTree")
-
-		for i in range(1,10):
-			removeShortcut(self.accelGroup, st, "<alt>%d" % (i))
-
-		c = 1
-		for tab in tabs:
-			if c == 10:
-				break
-
-			if tab.is_server() and not config.get("tekka","server_shortcuts"):
-				continue
-
-			addShortcut(self.accelGroup, st, "<alt>%d" % (c),
-				lambda w,s,p: self.tabs.switchToPath(p), tab.path)
-
-			c+=1
-
-	def updateServerTreeMarkup(self, path):
-		"""
-			Updates the first column of the row in
-			gtk.TreeModel of serverTree identified by path.
-		"""
-		store = widgets.get_widget("serverTree").get_model()
-		iter = store.get_iter(path)
-		try:
-			store.set_value(iter, 0, store[path][2].markup())
-		except IndexError:
-			print "updateServerTreeMarkup(%s): IndexError" % (repr(path))
-			return
-
-	def scrollGeneralOutput(self):
-		"""
-			Scrolls the general output text view to it's end.
-		"""
-		tv = widgets.get_widget("generalOutput")
-		tb = tv.get_buffer()
-
-		mark = tb.create_mark("end", tb.get_end_iter(), False)
-		tv.scroll_to_mark(mark, 0.05, True, 0.0, 1.0)
-		tb.delete_mark(mark)
-
-	def scrollOutput(self):
-		"""
-			Scrolls the output text view to it's end.
-		"""
-		tv = widgets.get_widget("output")
-		tb = tv.get_buffer()
-
-		mark = tb.create_mark("end", tb.get_end_iter(), False)
-		tv.scroll_to_mark(mark, 0.05, True, 0.0, 1.0)
-		tb.delete_mark(mark)
-
-	def escape(self, msg):
-		"""
-			Converts special characters in msg in-place.
-		"""
-		msg = msg.replace("&","&amp;")
-		msg = msg.replace("<","&lt;")
-		msg = msg.replace(">","&gt;")
-		msg = msg.replace(chr(2), "<sb/>") # bold-char
-		msg = msg.replace(chr(31), "<su/>") # underline-char
-		msg = msg.replace(chr(1), "")
-		return msg
-
-	def channelPrint(self, timestamp, server, channel, message, type="message"):
-		"""
-			Inserts a string formatted like "[H:M] <message>\n"
-			into the htmlbuffer of the channel `channel` on server
-			`server`.
-		"""
-		timestring = time.strftime("%H:%M", time.localtime(timestamp))
-
-		message = URLToTag(message)
-
-		if not config.get_bool("tekka","color_text"):
-			colorHack = ""
-		else:
-			colorHack = "foreground='%s'" % config.get("colors", "text_%s" % type, "#000000")
-
-		outputString = "[%s] <font %s>%s</font>" % \
-			(timestring, colorHack, message)
-
-		channelTab = self.tabs.searchTab(server, channel)
-
-		if not channelTab:
-			print "No such channel %s:%s" % (server,channel)
-			return
-
-		buffer = channelTab.buffer
-
-		if not buffer:
-			print "channelPrint(): Channel %s on %s has no buffer." % (channel, server)
-			return
-
-		buffer.insertHTML(buffer.get_end_iter(), outputString)
-
-		if config.get_bool("tekka","show_general_output"):
-			# write it to the general output, also
-
-			goBuffer = widgets.get_widget("generalOutput").get_buffer()
-			goBuffer.insertHTML(goBuffer.get_end_iter(),
-					"[%s] &lt;%s:%s&gt; %s" % (
-						timestring, server, channel, message
-					))
-
-			self.scrollGeneralOutput()
-
-		# notification in server/channel list
-		if self.tabs.isActive(channelTab):
-			if channelTab.autoScroll:
-				self.scrollOutput()
-
-		else:
-			if type in channelTab.newMessage:
-				return
-
-			channelTab.setNewMessage(type)
-			self.updateServerTreeMarkup(channelTab.path)
-
-	def serverPrint(self, timestamp, server, string, type="message"):
-		"""
-			prints 'string' with "%H:%M' formatted 'timestamp' to the server-output
-			identified by 'server'
-		"""
-		serverTab = self.tabs.searchTab(server)
-
-		if not serverTab:
-			print "Server %s does not exist." % server
-			return
-
-		buffer = serverTab.buffer
-
-		if not buffer:
-			print "serverPrint(): No output buffer for server %s." % server
-			return
-
-		timestr = time.strftime("%H:%M", time.localtime(timestamp))
-
-		buffer.insertHTML(buffer.get_end_iter(), "[%s] %s" % (timestr,string))
-
-		if config.get_bool("tekka","show_general_output"):
-			goBuffer = widgets.get_widget("generalOutput").get_buffer()
-			goBuffer.insertHTML(goBuffer.get_end_iter(), \
-					"[%s] &lt;%s&gt; %s" % (timestr, server, string))
-
-			self.scrollGeneralOutput()
-
-		if self.tabs.isActive(serverTab):
-			if serverTab.autoScroll:
-				print "scrolling in serverPrint"
-				#idle_add(lambda: self.scrollOutput())
-				self.scrollOutput()
-
-		else:
-			if type in serverTab.newMessage:
-				# don't need to repeat setting
-				return
-			serverTab.setNewMessage(type)
-			self.updateServerTreeMarkup(serverTab.path)
-
-	def currentServerPrint(self, timestamp, server, string, type="message"):
-		"""
-			Prints the string on the current tab of server (if any).
-			Otherwise it prints directly in the server tab.
-		"""
-		serverTab,channelTab = self.tabs.getCurrentTabs()
-
-		if serverTab and serverTab.name.lower() == server.lower() and channelTab:
-			# print in current channel
-			self.channelPrint(timestamp, server, channelTab.name, string, type)
-		else:
-			# print to server tab
-			self.serverPrint(timestamp, server, string, type)
-
-	def myPrint(self, string, html=False):
-		"""
-			prints the string `string` in the current output
-			buffer. If html is true the string would be inserted via
-			the insertHTML-method.
-		"""
-		output = widgets.get_widget("output").get_buffer()
-
-		if not output:
-			print "No output buffer here!"
-			return
-
-		if not html:
-			output.insert(output.get_end_iter(), "\n"+string)
-
-		else:
-			output.insertHTML(output.get_end_iter(), string)
-
-		self.scrollOutput()
+	scrollOutput()
 

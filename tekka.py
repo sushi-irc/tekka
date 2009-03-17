@@ -40,12 +40,12 @@ SUCH DAMAGE.
 
 import sys
 import imp
+
 import config
 import com
 import commands
-import __main__
+import gui_control as gui
 
-gui = None
 pluginPaths = []
 _plugins = {}
 
@@ -315,9 +315,8 @@ def setup():
 	"""
 		module setup function.
 	"""
-	global gui, pluginPaths
+	global pluginPaths
 
-	gui = __main__.gui
 
 	# if the call is a re-setup reload all plugins
 	# TODO: check if this is needed.
