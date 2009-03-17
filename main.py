@@ -110,6 +110,12 @@ def tekka_tab_new_path(tab, new_path):
 Glade signals
 """
 
+def save_allocation(widget, rect):
+	""" listVPaned, generalOutput or serverTree got new allocation.
+		Save it to config.
+	"""
+	print widget.name
+
 def menu_tekka_Connect_activate_cb(menuItem):
 	"""
 		menuBar -> tekka -> connect was clicked,
@@ -980,6 +986,14 @@ def setupGTK():
 			nickList_row_activated_cb,
 		"nickList_button_press_event_cb":
 			nickList_button_press_event_cb,
+
+		# size allocations
+		"serverTree_size_allocate_cb":
+			save_allocation,
+		"listVPaned_size_allocate_cb":
+			save_allocation,
+		"generalOutput_size_allocate_cb":
+			save_allocation,
 	}
 
 	widgets.signal_autoconnect(sigdic)

@@ -235,6 +235,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
                                 <property name="cursor_visible">False</property>
+								<signal name="size_allocate" handler="generalOutput_size_allocate_cb"/>
                               </widget>
                             </child>
                           </widget>
@@ -320,6 +321,7 @@
                     <property name="visible">True</property>
                     <property name="border_width">6</property>
                     <property name="position_set">True</property>
+					<signal name="size_allocate" handler="listVPaned_size_allocate_cb"/>
                     <child>
                       <widget class="GtkScrolledWindow" id="scrolledWindow_serverTree">
                         <property name="height_request">180</property>
@@ -335,6 +337,7 @@
                             <property name="headers_clickable">True</property>
                             <signal name="button_press_event" handler="serverTree_button_press_event_cb"/>
                             <signal name="row_activated" handler="serverTree_row_activated_cb"/>
+							<signal name="size_allocate" handler="serverTree_size_allocate_cb"/>
                           </widget>
                         </child>
                       </widget>
