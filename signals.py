@@ -1089,7 +1089,7 @@ def userJoin(timestamp, server, from_str, channel):
 
 	gui.channelPrint(timestamp, server, channel, message, "action")
 
-def userNames(timestamp, server, nick, channel, prefix):
+def userNames(timestamp, server, channel, nicks, prefixes):
 	"""
 	this signal is called for each nick in the channel.
 	remove the nick to make sure it isn't there (hac--workaround),
@@ -1114,19 +1114,21 @@ def userNames(timestamp, server, nick, channel, prefix):
 		tab.connected = True
 		gui.updateServerTreeShortcuts()
 
-	if not nick:
+	if not nicks:
 		tab.nickList.sortNicks()
 		return
 
-	# FIXME
-	tab.nickList.removeNick(nick)
-	tab.nickList.appendNick(nick, sort=False)
+	for i in xrange(len(nicks)):
+		# FIXME
+		tab.nickList.removeNick(nicks[i])
+		tab.nickList.appendNick(nicks[i], sort=False)
+
+		if prefixes[i]:
+			tab.nickList.setPrefix(nicks[i], prefixes[i], sort=False)
 
 	if gui.tabs.isActive(tab):
 		gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
 
-	if prefix:
-		tab.nickList.setPrefix(nick, prefix, sort=False)
 
 def userPart(timestamp, server, from_str, channel, reason):
 	"""
