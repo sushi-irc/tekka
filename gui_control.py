@@ -472,6 +472,8 @@ class TabClass(object):
 				they were hidden) and fill them with tab
 				specific data.
 			"""
+			self.setUseable(tab, tab.joined)
+
 			setUserCount(
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
@@ -484,6 +486,8 @@ class TabClass(object):
 
 		elif tab.is_query() or tab.is_server():
 			# queries and server tabs don't have topics or nicklists
+			self.setUseable(tab, tab.connected)
+
 			widgets.get_widget("topicBar").hide()
 			widgets.get_widget("VBox_nickList").hide()
 
