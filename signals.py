@@ -272,6 +272,50 @@ def getTextColor(nick):
 		return config.get("colors","text_message","#000000")
 	return colors[sum([ord(n) for n in nick]) % len(colors)]
 
+def isHighlighted (server, text):
+	# TODO:  make this global so the method hasn't
+	# TODO:: to fetch the mapping every time
+	highlightwords = config.get("highlight_words", default={})
+	highlightwords = highlightwords.values()
+
+	highlightwords.append(com.getOwnNick(server))
+
+	for word in highlightwords:
+		i = text.find(word)
+
+		if i >= 0:
+			return True
+
+	return False
+
+def createTab (server, name):
+	tab = gui.tabs.searchTab(server, name)
+
+	if not tab:
+		if name[0] in sushi.support_chantypes(server):
+			tab = gui.tabs.createChannel(server, name)
+		else:
+			tab = gui.tabs.createQuery(server, name)
+
+		tab.connected = True
+		gui.tabs.addTab(server, tab)
+		gui.updateServerTreeShortcuts()
+		lastLog(server, name)
+
+	if tab.name != name:
+		# the name of the tab differs from the
+		# real nick, correct this.
+		tab.name = name
+
+	return tab
+
+def getPrefix(server, channel, nick):
+	tab = gui.tabs.searchTab(server, channel)
+
+	if tab and tab.is_channel():
+		return tab.nickList.getPrefix(nick)
+	else:
+		return ""
 """
 Server signals
 """
@@ -452,35 +496,19 @@ def userMessage(timestamp, server, from_str, channel, message):
 		return
 
 	elif channel.lower() == com.getOwnNick(server).lower():
-		userQuery(timestamp, server, nick, message)
+		userQuery(timestamp, server, from_str, message)
 		return
 
 	message = gui.escape(message)
 
-	# highlight text if own nick is in message
-	i = -1
-
-	# TODO:  make this global so the method hasn't
-	# TODO:: to fetch the mapping every time
-	highlightwords = config.get("highlight_words", default={})
-	highlightwords = highlightwords.values()
-
-	highlightwords.append(com.getOwnNick(server))
-
-	for word in highlightwords:
-		i = message.find(word)
-		if i >= 0:
-			break
-
-	if i >= 0:
+	if isHighlighted(server, message):
 		# set mode to highlight and disable setting
 		# of text color for the main message (would
 		# override channelPrint() highlight color)
 
 		type = "highlightmessage"
-		gui.setUrgent(True)
 		messageString = message
-
+		gui.setUrgent(True)
 	else:
 		# no highlight, normal message type and
 		# text color is allowed.
@@ -489,18 +517,9 @@ def userMessage(timestamp, server, from_str, channel, message):
 		messageString = "<font foreground='%s'>%s</font>" % (
 			getTextColor(nick), message)
 
-	tab = gui.tabs.searchTab(server, channel)
-
-	if tab and tab.is_channel():
-		prefix = tab.nickList.getPrefix(nick)
-
-	else:
-		# queries don't support prefixes..
-		prefix = ""
-
 	gui.channelPrint(timestamp, server, channel,
 		"&lt;%s<font foreground='%s'>%s</font>&gt; %s" % (
-			prefix,
+			getPrefix(server, channel, nick),
 			getNickColor(nick),
 			gui.escape(nick),
 			messageString,
@@ -510,67 +529,34 @@ def ownMessage(timestamp, server, channel, message):
 	"""
 		The maki user wrote something on a channel or a query
 	"""
-	message = gui.escape(message)
-
+	createTab(server, channel)
 	nick = com.getOwnNick(server)
 
-	tab = gui.tabs.searchTab(server, channel)
-
-	if not tab:
-		if channel[0] in sushi.support_chantypes(server):
-			tab = gui.tabs.createChannel(server, channel)
-		else:
-			tab = gui.tabs.createQuery(server, channel)
-
-		tab.connected = True
-		gui.tabs.addTab(server, tab)
-		lastLog(server, channel)
-
-	if tab.is_channel():
-		prefix = tab.nickList.getPrefix(nick)
-
-		# <prefixnick> message
-		gui.channelPrint(timestamp, server, channel,
-			"&lt;%s<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" % (
-			prefix,
-			config.get("colors","own_nick","#000000"),
-			nick,
-			config.get("colors","own_text","#000000"),
-			message))
-
-	elif tab.is_query():
-		# <nick> message
-		gui.channelPrint(timestamp, server, tab.name,
-			"&lt;<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" % (
-			config.get("colors","own_nick","#000000"),
-			nick,
-			config.get("colors","own_text","#000000"),
-			message))
-
+	gui.channelPrint(timestamp, server, channel,
+		"&lt;%s<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" % (
+		getPrefix(server, channel, nick),
+		config.get("colors","own_nick","#000000"),
+		nick,
+		config.get("colors","own_text","#000000"),
+		gui.escape(message)))
 
 def userQuery(timestamp, server, from_str, message):
 	"""
 		A user writes to us in a query.
 	"""
 	nick = parse_from(from_str)[0]
-	tab = gui.tabs.searchTab(server, nick)
 
-	if not tab:
-		tab = gui.tabs.createQuery(server, nick)
-		tab.connected = True
-		gui.tabs.addTab(server, tab)
-		gui.updateServerTreeShortcuts()
-		lastLog(server, nick)
+	createTab(server, nick)
 
-	if tab.name != nick:
-		# the name of the tab differs from the
-		# real nick, correct this.
-		tab.name = nick
+	gui.channelPrint(timestamp, server, nick,
+		"&lt;<font foreground='%s'>%s</font>&gt; %s" % (
+			getNickColor(nick),
+			gui.escape(nick),
+			gui.escape(message)
+		), "message")
 
 	# queries are important
 	gui.setUrgent(True)
-
-	userMessage(timestamp,server,nick,nick,message)
 
 def userMode(time, server, from_str, target, mode, param):
 	"""
@@ -651,7 +637,7 @@ def userCTCP(time, server,  from_str, target, message):
 		ownCTCP(time, server, target, message)
 		return
 	elif target.lower() == com.getOwnNick(server).lower():
-		queryCTCP(time, server, nick, message)
+		queryCTCP(time, server, from_str, message)
 		return
 
 	gui.channelPrint(time, server, target, \
@@ -764,7 +750,7 @@ def userNotice(time, server, from_str, target, message):
 		ownNotice(time, server, target, message)
 		return
 	elif target.lower() == com.getOwnNick(server).lower():
-		queryNotice(time, server, nick, message)
+		queryNotice(time, server, from_str, message)
 		return
 
 	gui.channelPrint(time, server, target, \
@@ -773,24 +759,57 @@ def userNotice(time, server, from_str, target, message):
 			(getNickColor(nick), gui.escape(nick),
 			getTextColor(nick), gui.escape(message)))
 
+def ownAction(time, server, channel, action):
+
+	createTab(server, channel)
+
+	nickColor = config.get("colors","own_nick","#000000")
+	textColor = config.get("colors","own_text","#000000")
+
+	gui.channelPrint(time, server, channel,
+		"<font foreground='%s'>%s</font> "
+		"<font foreground='%s'>%s</font>" % \
+			(nickColor, com.getOwnNick(server), textColor, gui.escape(action)))
+
+def actionQuery(time, server, from_str, action):
+
+	nick = parse_from(from_str)[0]
+
+	createTab(server, nick)
+
+	gui.channelPrint(time, server, nick,
+		"%s %s" % (nick, gui.escape(action)))
+
+	gui.setUrgent(True)
+
 def userAction(time, server, from_str, channel, action):
 	"""
 		A user sent a action (text in third person)
 	"""
 	nick = parse_from(from_str)[0]
+
+	if nick.lower() == com.getOwnNick(server).lower():
+		ownAction(time, server, channel, action)
+		return
+
+	elif channel.lower() == com.getOwnNick(server).lower():
+		actionQuery(time, server, from_str, action)
+		return
+
 	action = gui.escape(action)
 
-	if nick != com.getOwnNick(server):
-		nickColor = getNickColor(nick)
-		textColor = getTextColor(nick)
+	if isHighlighted(server, action):
+		type = "highlightaction"
+		actionString = action
+		gui.setUrgent(True)
 	else:
-		nickColor = config.get("colors","own_nick","#000000")
-		textColor = config.get("colors","own_text","#000000")
+		type = "action"
+		actionString = "<font foreground='%s'>%s</font>" % (
+			getTextColor(nick), action)
 
 	gui.channelPrint(time, server, channel,
-		"<font foreground='%s'>%s</font> "
-		"<font foreground='%s'>%s</font>" % \
-			(nickColor, nick, textColor, action))
+		"<font foreground='%s'>%s</font> %s" % (
+			getNickColor(nick), nick, actionString), type)
 
 def userNick(time, server, from_str, newNick):
 	"""

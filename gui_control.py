@@ -609,7 +609,7 @@ def setUrgent(switch):
 	if statusIcon:
 		statusIcon.set_blinking(switch)
 
-@types(title=(str,String))
+@types(title=(str,String,unicode))
 def setWindowTitle(title):
 	"""
 		Sets the window title to the main
@@ -617,7 +617,7 @@ def setWindowTitle(title):
 	"""
 	widgets.get_widget("mainWindow").set_title(title)
 
-@types(nick=(str, String))
+@types(nick=(str, String, unicode))
 def setNick(nick):
 	"""
 		Sets nick as label text of nickLabel.
@@ -651,7 +651,7 @@ def setFont(textView, font):
 
 	textView.modify_font(fd)
 
-@types(string=(str, String))
+@types(string=(str, String, unicode))
 def setTopic(string):
 	"""
 		Sets the given string as text in

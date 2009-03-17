@@ -56,7 +56,7 @@ class tekkaTab(gobject.GObject):
 		self.emit ("new_path", path)
 	path = property(lambda x: x._path, _set_path)
 
-	@types(name=(str,String))
+	@types(name=(str,String,unicode))
 	def _set_name(self, name):
 		self._name = name
 		self.emit ("new_name", name)
