@@ -651,7 +651,7 @@ def setFont(textView, font):
 
 	textView.modify_font(fd)
 
-@types(string=str)
+@types(string=(str, String))
 def setTopic(string):
 	"""
 		Sets the given string as text in
