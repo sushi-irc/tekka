@@ -310,7 +310,6 @@ def serverConnect(time, server):
 
 	if tab.connected:
 		tab.connected = False
-		gui.updateServerTreeMarkup(tab.path)
 
 		channels = gui.tabs.getAllTabs(server)[1:]
 
@@ -319,7 +318,6 @@ def serverConnect(time, server):
 				if channelTab.is_channel():
 					channelTab.joined=False
 				channelTab.connected=False
-				gui.updateServerTreeMarkup(channelTab.path)
 
 	gui.serverPrint(time, server, "Connecting...")
 
@@ -337,14 +335,12 @@ def serverConnected(time, server):
 		gui.tabs.addTab(None, tab)
 
 	tab.connected = True
-	gui.updateServerTreeMarkup(tab.path)
 
 	addChannels(server)
 
 	# iterate over tabs, set the connected flag to queries
 	for query in [tab for tab in gui.tabs.getAllTabs(server)[1:] if tab.is_query()]:
 		query.connected = True
-		gui.updateServerTreeMarkup(query.path)
 
 	# TODO: implement status bar messages
 	#gui.statusBar.pop(gui.STATUSBAR_CONNECTING)
@@ -444,7 +440,6 @@ def userAway(time, server):
 
 	if tab:
 		tab.away = "WE ARE AWAY. HERE SHOULD BE A MESSAGE BUT IT'S NOT IMPLEMENTED YET, SRY!"
-		gui.updateServerTreeMarkup(tab.path)
 
 
 def userBack(time, server):
@@ -455,8 +450,6 @@ def userBack(time, server):
 
 	if tab:
 		tab.away = ""
-		gui.updateServerTreeMarkup(tab.path)
-
 
 def userAwayMessage(timestamp, server, nick, message):
 	"""
@@ -902,8 +895,6 @@ def userKick(time, server, from_str, channel, who, reason):
 	if who == com.getOwnNick(server):
 		tab.joined = False
 
-		gui.updateServerTreeMarkup(tab.path)
-
 		message = _(u"« You have been kicked from %(channel)s "
 			"by %(nick)s (%(reason)s)." % {
 				"channel": channelString,
@@ -951,7 +942,6 @@ def userQuit(time, server, from_str, reason):
 			return
 
 		serverTab.connected = False
-		gui.updateServerTreeMarkup(serverTab.path)
 
 		# walk through all channels and set joined = False on them
 		channels = gui.tabs.getAllTabs(server)[1:]
@@ -970,7 +960,7 @@ def userQuit(time, server, from_str, reason):
 				channelTab.joined=False
 
 			channelTab.connected=False
-			gui.updateServerTreeMarkup(channelTab.path)
+
 			gui.channelPrint(time, server, channelTab.name, message % { "reason": reason }, type="action")
 
 	else: # another user quit the network
@@ -1056,7 +1046,6 @@ def userJoin(timestamp, server, from_str, channel):
 				return
 
 			lastLog(server, channel)
-			gui.updateServerTreeShortcuts()
 
 		tab.nickList.clear()
 
@@ -1066,7 +1055,6 @@ def userJoin(timestamp, server, from_str, channel):
 		tab.joined = True
 		tab.connected = True
 
-		gui.updateServerTreeMarkup(tab.path)
 
 		if config.get_bool("tekka","switch_to_channel_after_join"):
 			gui.tabs.switchToPath(tab.path)
@@ -1132,7 +1120,6 @@ def userNames(timestamp, server, nick, channel, prefix):
 		tab.joined = True
 		tab.connected = True
 		gui.updateServerTreeShortcuts()
-		gui.updateServerTreeMarkup(tab.path)
 
 	if not nick:
 		tab.nickList.sortNicks()
@@ -1178,7 +1165,6 @@ def userPart(timestamp, server, from_str, channel, reason):
 			message = _(u"« You have left %(channel)s.")
 
 		tab.joined = False
-		gui.updateServerTreeMarkup(tab.path)
 
 		gui.channelPrint(timestamp, server, channel,
 			message % {

@@ -26,15 +26,10 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+import gobject
 from typecheck import types
 
-gui = None
-
-def setup(gw):
-	global gui
-	gui = gw
-
-class tekkaTab(object):
+class tekkaTab(gobject.GObject):
 	"""
 		Provides basic attributes like the outputbuffer,
 		the name of the tab and a flag if a new message is received.
@@ -51,10 +46,18 @@ class tekkaTab(object):
 	@types(switch=bool)
 	def _set_connected(self, switch):
 		self._connected=switch
-		gui.tabs.setUseable(self,switch)
+		self.emit ("connected", switch)
 	connected = property(lambda x: x._connected, _set_connected)
 
+	@types(path=tuple)
+	def _set_path(self, path):
+		self._path = path
+		self.emit ("new_path", path)
+	path = property(lambda x: x._path, _set_path)
+
 	def __init__(self, name, buffer=None):
+		gobject.GObject.__init__(self)
+
 		self.buffer = buffer
 
 		self.path = ()
@@ -154,10 +157,27 @@ class tekkaTab(object):
 
 		return copy
 
+gobject.signal_new(
+	"connected", tekkaTab,
+	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
+	(gobject.TYPE_BOOLEAN,))
+
+gobject.signal_new(
+	"new_path", tekkaTab,
+	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
+	(gobject.TYPE_PYOBJECT,))
+
 class tekkaServer(tekkaTab):
 	"""
 		A typically server tab.
 	"""
+
+	@types(msg=str)
+	def _set_away(self, msg):
+		self._away = msg
+		self.emit("away", msg)
+
+	away = property(lambda x: x._away, _set_away)
 
 	def __init__(self, name, buffer=None):
 		tekkaTab.__init__(self, name, buffer)
@@ -188,6 +208,12 @@ class tekkaServer(tekkaTab):
 		copy.historyPosition = self.historyPosition
 		copy.away = str(self.away)
 		return copy
+
+gobject.signal_new(
+	"away",
+	tekkaServer, gobject.SIGNAL_ACTION,
+	gobject.TYPE_NONE, (gobject.TYPE_STRING,))
+
 
 class tekkaQuery(tekkaTab):
 	"""
@@ -253,7 +279,7 @@ class tekkaChannel(tekkaTab):
 	@types(switch=bool)
 	def _set_joined(self, switch):
 		self._joined = switch
-		gui.tabs.setUseable (self, switch)
+		self.emit("joined", switch)
 
 	joined = property(lambda x: x._joined, _set_joined)
 
@@ -317,3 +343,10 @@ class tekkaChannel(tekkaTab):
 		copy.joined = self.joined
 		copy.server = str(self.server)
 		return copy
+
+
+gobject.signal_new(
+	"joined", tekkaChannel,
+	gobject.SIGNAL_ACTION,
+	gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,))
+

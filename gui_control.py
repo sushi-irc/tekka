@@ -82,22 +82,48 @@ class TabClass(object):
 		# TODO: cache prefixes
 		ns.set_modes(list(com.sushi.support_prefix(server)[1]))
 
-		return self.tab.tekkaChannel(
+		obj = self.tab.tekkaChannel(
 			name,
 			server,
 			nicklist=ns,
 			buffer=self.getNewBuffer())
 
+		if not obj:
+			raise Exception, "Failed to create channel."
+
+		obj.connect("new_path", __main__.tekka_tab_new_path)
+		obj.connect("connected", __main__.tekka_tab_connected)
+		obj.connect("joined", __main__.tekka_channel_joined)
+
+		return obj
+
 	def createQuery(self, server, name):
-		return self.tab.tekkaQuery(
+		obj = self.tab.tekkaQuery(
 			name,
 			server,
 			buffer=self.getNewBuffer())
 
+		if not obj:
+			raise Exception, "Failed to create Query."
+
+		obj.connect("new_path", __main__.tekka_tab_new_path)
+		obj.connect("connected", __main__.tekka_tab_connected)
+
+		return obj
+
 	def createServer(self, server):
-		return self.tab.tekkaServer(
+		obj = self.tab.tekkaServer(
 			server,
 			buffer=self.getNewBuffer())
+
+		if not obj:
+			raise Exception, "Failed to create Server."
+
+		obj.connect("away", __main__.tekka_server_away)
+		obj.connect("new_path", __main__.tekka_tab_new_path)
+		obj.connect("connected", __main__.tekka_tab_connected)
+
+		return obj
 
 	def searchTab(self, server, name=""):
 		"""
@@ -254,6 +280,7 @@ class TabClass(object):
 
 		return True
 
+	@types(server=str, object=str)
 	def removeTabByString(self, server, object):
 		"""
 			server: string
@@ -447,14 +474,10 @@ class TabClass(object):
 			widgets.get_widget("VBox_nickList").show_all()
 			widgets.get_widget("nickList").set_model(tab.nickList)
 
-			self.setUseable(tab, tab.joined and tab.connected)
-
 		elif tab.is_query() or tab.is_server():
 			# queries and server tabs don't have topics or nicklists
 			widgets.get_widget("topicBar").hide()
 			widgets.get_widget("VBox_nickList").hide()
-
-			self.setUseable(tab, tab.connected)
 
 		tab.setNewMessage(None)
 		self.gui.updateServerTreeMarkup(tab.path)
@@ -505,7 +528,6 @@ class GUIWrapper(object):
 		self.statusIcon = None
 		self.accelGroup = None
 		self.tabs = TabClass(self)
-		self.tabs.tab.setup(self)
 
 	def getWidgets(self):
 		return widgets

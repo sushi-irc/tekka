@@ -72,6 +72,29 @@ gui = None
 # TODO:: it would be nice if the tab would be switched
 # TODO:: to an active on (for error prevention too).
 
+"""
+Tekka intern signals
+"""
+
+def tekka_server_away(tab, msg):
+	if tab.path:
+		gui.updateServerTreeMarkup(tab.path)
+
+def tekka_tab_connected(tab, connected):
+	""" tab received a change on connected attribute """
+	gui.tabs.setUseable(tab, connected)
+	if tab.path:
+		gui.updateServerTreeMarkup(tab.path)
+
+def tekka_channel_joined(tab, switch):
+	""" channel received a change on joined attribute """
+	gui.tabs.setUseable(tab, switch)
+	if tab.path:
+		gui.updateServerTreeMarkup(tab.path)
+
+def tekka_tab_new_path(tab, new_path):
+	""" a new path is set to the path """
+	pass
 
 """
 Glade signals
@@ -84,7 +107,9 @@ def menu_tekka_Connect_activate_cb(menuItem):
 		returned server (if any).
 	"""
 	if not com.getConnected():
-		err = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, buttons=gtk.BUTTONS_CLOSE,
+		err = gtk.MessageDialog(
+			type=gtk.MESSAGE_ERROR,
+			buttons=gtk.BUTTONS_CLOSE,
 			message_format="There is no connection to maki!")
 		err.run()
 		err.destroy()
