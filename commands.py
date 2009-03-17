@@ -528,7 +528,7 @@ def parseInput(text):
 		if text[0] == "/":
 			text = text[1:]
 
-		if not channelTab.joined:
+		if channelTab.is_channel() and not channelTab.joined:
 			warnNotJoined(channelTab)
 
 		com.sendMessage(serverTab.name, channelTab.name, text)
