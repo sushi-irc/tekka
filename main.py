@@ -908,8 +908,10 @@ def load_paned_positions():
 		widgets.get_widget("outputVPaned")]
 
 	for paned in paneds:
+		paned.set_property("position-set", True)
 		position = config.get("sizes", paned.name, None)
 		if position == None:
+			print "No position for paned %s" % (paned.name)
 			continue
 		try:
 			paned.set_position(int(position))
@@ -944,8 +946,6 @@ def setupGTK():
 	# parse glade file for main window
 	widgets = gui.load_widgets(
 		gladefiles["mainwindow"], "mainWindow")
-
-	load_paned_positions()
 
 	setup_mainWindow()
 
@@ -1071,6 +1071,8 @@ def setupGTK():
 
 	# disable the GUI and wait for commands :-)
 	gui.setUseable(False)
+
+	idle_add(load_paned_positions)
 
 def main():
 	"""
