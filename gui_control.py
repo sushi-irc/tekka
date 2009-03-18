@@ -861,11 +861,13 @@ def currentServerPrint(timestamp, server, string, type="message"):
 		# print to server tab
 		serverPrint(timestamp, server, string, type)
 
+@types(string=str, html=bool)
 def myPrint(string, html=False):
 	"""
 		prints the string `string` in the current output
 		buffer. If html is true the string would be inserted via
-		the insertHTML-method.
+		the insertHTML-method falling back to normal insert
+		if it's not possible to insert via insertHTML.
 	"""
 	output = widgets.get_widget("output").get_buffer()
 
@@ -877,7 +879,35 @@ def myPrint(string, html=False):
 		output.insert(output.get_end_iter(), "\n"+string)
 
 	else:
-		output.insertHTML(output.get_end_iter(), string)
+		try:
+			output.insertHTML(output.get_end_iter(), string)
+		except AttributeError:
+			print "No HTML buffer, printing normal."
+			output.insert(output.get_end_iter(), "\n"+string)
 
 	scrollOutput()
+
+@types(string=str, force_dialog=bool)
+def errorMessage(string, force_dialog=False):
+	""" if GUI is initialized, and the output widget
+		has an buffer, print the error there,
+		else raise an error dialog with the given message.
+		You can force the usage of an dialog
+		with the force_dialog parameter.
+	"""
+	output = widgets.get_widget("output")
+	if output.get_buffer() and not force_dialog:
+		myPrint(
+			gettext.gettext(
+				"<font foreground='%(color)s'>Error: %(message)s</font>" % {
+					"color": config.get("colors","error","#FF0000"),
+					"message": string}),
+			html=True)
+	else:
+		err = gtk.MessageDialog(
+			type=gtk.MESSAGE_ERROR,
+			buttons=gtk.BUTTONS_CLOSE,
+			message_format=gettext.gettext("Error: %s" % string))
+		err.run()
+		err.destroy()
 
