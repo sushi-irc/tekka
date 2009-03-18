@@ -892,6 +892,7 @@ def paned_notify(paned, gparam):
 		to the config.
 	"""
 	if gparam.name == "position":
+		print "new position for paned %s." % (paned.name)
 		config.set("sizes", paned.name, paned.get_property("position"))
 
 def load_paned_positions():
@@ -916,8 +917,21 @@ def load_paned_positions():
 			print "Failed to set position for paned %s" % (paned.name)
 			continue
 
-	return False
+def setup_paneds():
+	load_paned_positions()
 
+	sigdic = {
+		# watch for position change of paneds
+		"listVPaned_notify_cb":
+			paned_notify,
+		"mainHPaned_notify_cb":
+			paned_notify,
+		"outputVPaned_notify_cb":
+			paned_notify,
+		}
+	widgets.signal_autoconnect(sigdic)
+
+	return False
 
 def setupGTK():
 	"""
@@ -1018,13 +1032,6 @@ def setupGTK():
 		"nickList_button_press_event_cb":
 			nickList_button_press_event_cb,
 
-		# watch for position change of paneds
-		"listVPaned_notify_cb":
-			paned_notify,
-		"mainHPaned_notify_cb":
-			paned_notify,
-		"outputVPaned_notify_cb":
-			paned_notify,
 	}
 
 	widgets.signal_autoconnect(sigdic)
@@ -1079,7 +1086,7 @@ def setupGTK():
 	# disable the GUI and wait for commands :-)
 	gui.setUseable(False)
 
-	idle_add(load_paned_positions)
+	idle_add(setup_paneds)
 
 def main():
 	"""
