@@ -214,7 +214,9 @@ def mainWindow_delete_event_cb(mainWindow, event):
 		will be hidden, otherwise the main looped
 		will be stopped.
 	"""
-	if config.get("tekka", "hide_on_close") and gui.statusIcon and gui.statusIcon.get_visible():
+	if (config.get_bool("tekka", "hide_on_close")
+		and gui.statusIcon
+		and gui.statusIcon.get_visible()):
 		mainWindow.hide()
 		return True
 
