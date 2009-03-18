@@ -869,7 +869,7 @@ def currentServerPrint(timestamp, server, string, type="message"):
 		# print to server tab
 		serverPrint(timestamp, server, string, type)
 
-@types(string=str, html=bool)
+@types(string=(str,unicode), html=bool)
 def myPrint(string, html=False):
 	"""
 		prints the string `string` in the current output
