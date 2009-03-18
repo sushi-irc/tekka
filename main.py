@@ -885,19 +885,14 @@ def connectMaki():
 	# TODO: print error message
 
 
-def save_paned_positions():
-	""" save position of the paned dividers
-		of the list, main and output paned
-		so the values can be restored next
-		time tekka is started.
+def paned_notify(paned, gparam):
+	""" watch every property set for
+		paned. If the property equals
+		position, save the new value
+		to the config.
 	"""
-	paneds = [
-		widgets.get_widget("listVPaned"),
-		widgets.get_widget("mainHPaned"),
-		widgets.get_widget("outputVPaned")]
-
-	for paned in paneds:
-		config.set("sizes", paned.name, str(paned.get_position()))
+	if gparam.name == "position":
+		config.set("sizes", paned.name, paned.get_property("position"))
 
 def load_paned_positions():
 	""" restore the positions of the
@@ -920,6 +915,8 @@ def load_paned_positions():
 		except ValueError:
 			print "Failed to set position for paned %s" % (paned.name)
 			continue
+
+	return False
 
 
 def setupGTK():
@@ -1020,6 +1017,14 @@ def setupGTK():
 			nickList_row_activated_cb,
 		"nickList_button_press_event_cb":
 			nickList_button_press_event_cb,
+
+		# watch for position change of paneds
+		"listVPaned_notify_cb":
+			paned_notify,
+		"mainHPaned_notify_cb":
+			paned_notify,
+		"outputVPaned_notify_cb":
+			paned_notify,
 	}
 
 	widgets.signal_autoconnect(sigdic)
@@ -1092,8 +1097,6 @@ def main():
 
 	# start main loop
 	gtk.main()
-
-	save_paned_positions()
 
 	# after main loop break, write config
 	config.write_config_file()

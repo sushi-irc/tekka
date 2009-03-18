@@ -201,6 +201,7 @@
             <child>
               <widget class="GtkHPaned" id="mainHPaned">
                 <property name="visible">True</property>
+				<signal name="notify" handler="mainHPaned_notify_cb"/>
                 <child>
                   <widget class="GtkVBox" id="outputVBox">
                     <property name="width_request">300</property>
@@ -220,6 +221,7 @@
                     <child>
                       <widget class="GtkVPaned" id="outputVPaned">
                         <property name="visible">True</property>
+						<signal name="notify" handler="outputVPaned_notify_cb"/>
                         <child>
                           <widget class="GtkScrolledWindow" id="scrolledWindow_generalOutput">
                             <property name="height_request">150</property>
@@ -228,7 +230,6 @@
                             <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
                             <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                             <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
-
                             <child>
                               <widget class="GtkTextView" id="generalOutput">
                                 <property name="visible">True</property>
@@ -322,6 +323,7 @@
                     <property name="visible">True</property>
                     <property name="border_width">6</property>
                     <property name="position_set">True</property>
+					<signal name="notify" handler="listVPaned_notify_cb"/>
                     <child>
                       <widget class="GtkScrolledWindow" id="scrolledWindow_serverTree">
                         <property name="height_request">180</property>
