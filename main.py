@@ -104,36 +104,11 @@ def tekka_channel_joined(tab, switch):
 
 def tekka_tab_new_path(tab, new_path):
 	""" a new path is set to the path """
-	print "tab %s has now %s as path." % (tab, new_path)
+	pass
 
 """
 Glade signals
 """
-
-def save_paned_positions():
-	paneds = [
-		widgets.get_widget("listVPaned"),
-		widgets.get_widget("mainHPaned"),
-		widgets.get_widget("outputVPaned")]
-
-	for paned in paneds:
-		config.set("sizes", paned.name, str(paned.get_position()))
-
-def load_paned_positions():
-	paneds = [
-		widgets.get_widget("listVPaned"),
-		widgets.get_widget("mainHPaned"),
-		widgets.get_widget("outputVPaned")]
-
-	for paned in paneds:
-		position = config.get("sizes", paned.name, None)
-		if position == None:
-			continue
-		try:
-			paned.set_position(int(position))
-		except ValueError:
-			print "Failed to set position for paned %s" % (paned.name)
-			continue
 
 def menu_tekka_Connect_activate_cb(menuItem):
 	"""
@@ -886,6 +861,7 @@ def setup_shortcuts():
 	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"),
 		"<ctrl>c", inputBar_shortcut_ctrl_c)
 
+
 def connectMaki():
 	"""
 		Tries to connect to maki over DBus.
@@ -905,6 +881,42 @@ def connectMaki():
 		plugins.setup()
 
 	# TODO: print error message
+
+
+def save_paned_positions():
+	""" save position of the paned dividers
+		of the list, main and output paned
+		so the values can be restored next
+		time tekka is started.
+	"""
+	paneds = [
+		widgets.get_widget("listVPaned"),
+		widgets.get_widget("mainHPaned"),
+		widgets.get_widget("outputVPaned")]
+
+	for paned in paneds:
+		config.set("sizes", paned.name, str(paned.get_position()))
+
+def load_paned_positions():
+	""" restore the positions of the
+		paned dividers for the list,
+		main and output paneds.
+	"""
+	paneds = [
+		widgets.get_widget("listVPaned"),
+		widgets.get_widget("mainHPaned"),
+		widgets.get_widget("outputVPaned")]
+
+	for paned in paneds:
+		position = config.get("sizes", paned.name, None)
+		if position == None:
+			continue
+		try:
+			paned.set_position(int(position))
+		except ValueError:
+			print "Failed to set position for paned %s" % (paned.name)
+			continue
+
 
 def setupGTK():
 	"""
