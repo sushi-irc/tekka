@@ -178,7 +178,7 @@ class TabClass(object):
 							return (row[2], channel[2])
 		return (None, None)
 
-	def addTab(self, server, object):
+	def addTab(self, server, object, update_shortcuts=True):
 		"""
 			server: string
 			object: tekkaTab
@@ -207,7 +207,12 @@ class TabClass(object):
 
 		if server and config.get("tekka", "auto_expand"):
 			# expand the whole server tab
-			widgets.get_widget("serverTree").expand_row(store.get_path(store.iter_parent(iter)),True)
+			widgets.get_widget("serverTree").expand_row(
+				store.get_path(store.iter_parent(iter)),
+				True)
+
+		if update_shortcuts:
+			updateServerTreeShortcuts()
 
 		return object.path
 
@@ -252,7 +257,7 @@ class TabClass(object):
 					nextIter = store.iter_next(temp)
 
 
-	def removeTab(self, tab):
+	def removeTab(self, tab, update_shortcuts=True):
 		"""
 			tab: tekkaTab
 
@@ -285,6 +290,9 @@ class TabClass(object):
 		# does not work yet. Update all rows under
 		# the deleted to the new path.
 		self.__updateLowerRows(store,nextIter)
+
+		if update_shortcuts:
+			updateServerTreeShortcuts()
 
 		return True
 

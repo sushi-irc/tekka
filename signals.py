@@ -185,7 +185,7 @@ def addChannels(server):
 		tab.connected=True
 
 		if add:
-			gui.tabs.addTab(server, tab)
+			gui.tabs.addTab(server, tab, update_shortcuts=False)
 			lastLog(server, channel)
 
 		sushi.topic(server, channel, "")
@@ -299,7 +299,6 @@ def createTab (server, name):
 
 		tab.connected = True
 		gui.tabs.addTab(server, tab)
-		gui.updateServerTreeShortcuts()
 		lastLog(server, name)
 
 	if tab.name != name:
@@ -328,12 +327,13 @@ def serverConnect(time, server):
 
 	if not tab:
 		tab = gui.tabs.createServer(server)
-		gui.tabs.addTab(None, tab)
 
-		if config.get("tekka","server_shortcuts"):
-			# update is only neccessary if server tabs
-			# shall be shortcutted
-			gui.updateServerTreeShortcuts()
+		# add tab and update shortcuts only
+		# if it's necessary
+		gui.tabs.addTab(
+			None, tab,
+			update_shortcuts = config.get_bool("tekka","server_shortcuts"))
+
 
 	if tab.connected:
 		tab.connected = False
@@ -1048,7 +1048,6 @@ def userJoin(timestamp, server, from_str, channel):
 		tab.joined = True
 		tab.connected = True
 
-
 		if config.get_bool("tekka","switch_to_channel_after_join"):
 			gui.tabs.switchToPath(tab.path)
 
@@ -1112,7 +1111,6 @@ def userNames(timestamp, server, channel, nicks, prefixes):
 
 		tab.joined = True
 		tab.connected = True
-		gui.updateServerTreeShortcuts()
 
 	if not nicks:
 		tab.nickList.sortNicks()
