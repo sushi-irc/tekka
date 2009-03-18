@@ -110,11 +110,30 @@ def tekka_tab_new_path(tab, new_path):
 Glade signals
 """
 
-def save_allocation(widget, rect):
-	""" listVPaned, generalOutput or serverTree got new allocation.
-		Save it to config.
-	"""
-	print widget.name
+def save_paned_positions():
+	paneds = [
+		widgets.get_widget("listVPaned"),
+		widgets.get_widget("mainHPaned"),
+		widgets.get_widget("outputVPaned")]
+
+	for paned in paneds:
+		config.set("sizes", paned.name, str(paned.get_position()))
+
+def load_paned_positions():
+	paneds = [
+		widgets.get_widget("listVPaned"),
+		widgets.get_widget("mainHPaned"),
+		widgets.get_widget("outputVPaned")]
+
+	for paned in paneds:
+		position = config.get("sizes", paned.name, None)
+		if position == None:
+			continue
+		try:
+			paned.set_position(int(position))
+		except ValueError:
+			print "Failed to set position for paned %s" % (paned.name)
+			continue
 
 def menu_tekka_Connect_activate_cb(menuItem):
 	"""
@@ -249,8 +268,8 @@ def mainWindow_size_allocate_cb(mainWindow, alloc):
 		has auto scroll = True, scroll to bottom.
 	"""
 	if not mainWindow.window.get_state() & gtk.gdk.WINDOW_STATE_MAXIMIZED:
-		config.set("tekka","window_width",alloc.width)
-		config.set("tekka","window_height",alloc.height)
+		config.set("sizes","window_width",alloc.width)
+		config.set("sizes","window_height",alloc.height)
 
 	tab = gui.tabs.getCurrentTab()
 	if tab and tab.autoScroll:
@@ -764,8 +783,8 @@ def setup_mainWindow():
 			# file not found
 			pass
 
-	width = config.get("tekka","window_width")
-	height = config.get("tekka","window_height")
+	width = config.get("sizes","window_width")
+	height = config.get("sizes","window_height")
 
 	if width and height:
 		win.resize(int(width),int(height))
@@ -887,7 +906,6 @@ def connectMaki():
 
 	# TODO: print error message
 
-
 def setupGTK():
 	"""
 		Set locale, parse glade files.
@@ -914,6 +932,8 @@ def setupGTK():
 	# parse glade file for main window
 	widgets = gui.load_widgets(
 		gladefiles["mainwindow"], "mainWindow")
+
+	load_paned_positions()
 
 	setup_mainWindow()
 
@@ -986,14 +1006,6 @@ def setupGTK():
 			nickList_row_activated_cb,
 		"nickList_button_press_event_cb":
 			nickList_button_press_event_cb,
-
-		# size allocations
-		"serverTree_size_allocate_cb":
-			save_allocation,
-		"listVPaned_size_allocate_cb":
-			save_allocation,
-		"generalOutput_size_allocate_cb":
-			save_allocation,
 	}
 
 	widgets.signal_autoconnect(sigdic)
@@ -1064,6 +1076,8 @@ def main():
 
 	# start main loop
 	gtk.main()
+
+	save_paned_positions()
 
 	# after main loop break, write config
 	config.write_config_file()

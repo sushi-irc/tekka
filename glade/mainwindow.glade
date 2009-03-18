@@ -199,7 +199,7 @@
           <widget class="GtkHBox" id="mainHBox">
             <property name="visible">True</property>
             <child>
-              <widget class="GtkHPaned" id="hpaned1">
+              <widget class="GtkHPaned" id="mainHPaned">
                 <property name="visible">True</property>
                 <child>
                   <widget class="GtkVBox" id="outputVBox">
@@ -218,7 +218,7 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkVPaned" id="vpaned1">
+                      <widget class="GtkVPaned" id="outputVPaned">
                         <property name="visible">True</property>
                         <child>
                           <widget class="GtkScrolledWindow" id="scrolledWindow_generalOutput">
@@ -228,6 +228,7 @@
                             <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
                             <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                             <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+
                             <child>
                               <widget class="GtkTextView" id="generalOutput">
                                 <property name="visible">True</property>
@@ -235,7 +236,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
                                 <property name="cursor_visible">False</property>
-								<signal name="size_allocate" handler="generalOutput_size_allocate_cb"/>
+
                               </widget>
                             </child>
                           </widget>
@@ -321,7 +322,6 @@
                     <property name="visible">True</property>
                     <property name="border_width">6</property>
                     <property name="position_set">True</property>
-					<signal name="size_allocate" handler="listVPaned_size_allocate_cb"/>
                     <child>
                       <widget class="GtkScrolledWindow" id="scrolledWindow_serverTree">
                         <property name="height_request">180</property>
@@ -330,6 +330,7 @@
                         <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                         <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                         <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+
                         <child>
                           <widget class="GtkTreeView" id="serverTree">
                             <property name="visible">True</property>
@@ -337,7 +338,6 @@
                             <property name="headers_clickable">True</property>
                             <signal name="button_press_event" handler="serverTree_button_press_event_cb"/>
                             <signal name="row_activated" handler="serverTree_row_activated_cb"/>
-							<signal name="size_allocate" handler="serverTree_size_allocate_cb"/>
                           </widget>
                         </child>
                       </widget>

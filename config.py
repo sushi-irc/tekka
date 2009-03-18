@@ -78,6 +78,13 @@ def set_defaults():
 	defaults["tekka"]["color_nick_text"] = "False" 	# color the text as well as the nick
 	defaults["tekka"]["ask_for_key_on_cannotjoin"] = "True"
 
+	defaults["sizes"] = {}
+	"""
+	[window_height]
+	[window_width]
+	[$(paned)] = <paned position>
+	"""
+
 	defaults["colors"]={}
 	defaults["colors"]["own_nick"] = "#444444"
 	defaults["colors"]["own_text"] = "#444444"
