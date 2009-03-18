@@ -26,18 +26,24 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
-import tekka
+plugin_info = (
+	"Writes the current playing song to the channel after typing /np",
+	"0.1",
+	"Marian Tietz")
 
-class pluginNP(tekka.plugin):
+class np(object):
 
-	def __init__(self, name):
-		tekka.plugin.__init__(self, name)
+	def __init__(self, plugin_interface):
+		plugin_interface.add_command("np", self.np_command)
 
-		self.register_command("np", self.np_command)
+		self.pi = plugin_interface
 
 		self.mpd_host = "localhost"
 		self.mpd_port = 6600
-		self.mpd_password = "fh482"
+		self.mpd_password = ""
+
+	def unload(self):
+		self.pi.remove_command("np")
 
 	def np_command(self, currentServer, currentTab, args):
 		try:
@@ -58,7 +64,10 @@ class pluginNP(tekka.plugin):
 
 			fstring = "np: %(artist)s - %(title)s" % data
 
-			self.get_dbus_interface().message(currentServer.name, currentTab.name, fstring)
+			self.pi.get_dbus().message(
+				currentServer.name,
+				currentTab.name,
+				fstring)
 
 			client.disconnect()
 
@@ -71,18 +80,18 @@ class pluginNP(tekka.plugin):
 			import os
 			from xdg.BaseDirectory import xdg_config_home
 
-			f = open(os.path.join(xdg_config_home, "decibel-audio-player", "now-playing.txt"))
+			f = open(os.path.join(
+				xdg_config_home,
+				"decibel-audio-player",
+				"now-playing.txt"))
 			s = f.read().replace("\n", " ")
 			f.close()
 
-			self.get_dbus_interface().message(currentServer.name, currentTab.name, "np: %s" % (s))
+			self.get_dbus().message(
+				currentServer.name,
+				currentTab.name,
+				"np: %s" % (s))
 
 			return
 		except:
 			pass
-
-	def plugin_info(self):
-		return ("Writes the current playing song to the channel after typing /np", "0.1")
-
-def load():
-	np = pluginNP("np")

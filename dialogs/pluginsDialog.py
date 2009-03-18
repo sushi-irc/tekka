@@ -28,10 +28,11 @@ SUCH DAMAGE.
 
 import gtk
 import gtk.glade
-import tekka as plugins
 import os
-import config
 from gobject import TYPE_BOOLEAN
+
+import plugin_interface as pinterface
+import config
 
 widgets = None
 
@@ -40,11 +41,13 @@ COL_AUTOLOAD,
 COL_NAME,
 COL_PATH,
 COL_VERSION,
-COL_DESC) = range(6)
+COL_DESC,
+COL_AUTHOR) = range(7)
 
 def run():
 	dialog = widgets.get_widget("plugins")
 
+	# FIXME
 	while True:
 		result = dialog.run()
 		if result in (gtk.RESPONSE_CANCEL, gtk.RESPONSE_DELETE_EVENT):
@@ -62,11 +65,8 @@ def loadPlugin_clicked_cb(button):
 
 	print "loading plugin '%s'..." % (store[path][COL_NAME])
 
-	if plugins.loadPlugin(store[path][COL_NAME]):
+	if pinterface.load(store[path][COL_NAME]):
 		store.set(store.get_iter(path), COL_LOADED, True)
-	else:
-		# TODO: print error in msgbox
-		pass
 
 def unloadPlugin_clicked_cb(button):
 	view = widgets.get_widget("pluginView")
@@ -78,7 +78,8 @@ def unloadPlugin_clicked_cb(button):
 		return
 
 	print "unloading plugin '%s'..." % (store[path][COL_NAME])
-	if plugins.unloadPlugin(store[path][COL_NAME]):
+
+	if pinterface.unload(store[path][COL_NAME]):
 		store.set(store.get_iter(path), COL_LOADED, False)
 
 def cellRendererToggle_toggled_cb(renderer, path, pluginView):
@@ -93,8 +94,10 @@ def cellRendererToggle_toggled_cb(renderer, path, pluginView):
 
 	if not value:
 		i = [i for (i,v) in list if v == name]
-		if i: i = i[0]
-		else: return
+		if i:
+			i = i[0]
+		else:
+			return
 		config.unset("autoload_plugins", str(i))
 	else:
 		# activated
@@ -105,41 +108,52 @@ def loadPluginList():
 
 	view.get_model().clear()
 
-	# TODO:  replace this with "plugin_path",
-	# TODO:: a string seperated by ':'.
-	path = config.get("tekka", "plugin_dir")
+	paths = config.get_list("tekka", "plugin_dirs")
 
-	if not path:
-		print "no plugin path!"
+	if not paths:
+		print "no plugin paths!"
 		return False
 
 	list = config.get("autoload_plugins", default={}).values()
 
-	try:
-		for item in os.listdir(path):
-			if item[-3:] == ".py":
-				name = item[:-3]
+	for path in paths:
+		try:
+			for item in os.listdir(path):
 
-				loaded = plugins.isLoaded(name)
+				if item[-3:] != ".py":
+					continue
+
+				# we got a module here
+
+				loaded = pinterface.is_loaded(item)
 
 				try:
-					i = list.index(name)
+					i = list.index(item)
 				except ValueError:
 					autoload = False
 				else:
 					autoload = True
 
-				info = plugins.getInfo(name)
+				info = pinterface.get_info(item)
+
 				if not info:
-					print "no info for plugin '%s'" % name
+					print "no info for plugin '%s'" % (info)
 					version = "N/A"
 					desc = "N/A"
+					author = "N/A"
 				else:
-					desc,version = info
+					desc, version, author = info
 
-				view.get_model().append((loaded, autoload, name, path+"/"+item, version, desc))
-	except OSError:
-		return False
+				view.get_model().append(
+					(loaded,
+					autoload,
+					item,
+					os.path.join(path,item),
+					version,
+					desc,
+					author))
+		except OSError:
+			return False
 
 	return True
 
@@ -157,8 +171,8 @@ def setup():
 	widgets.signal_autoconnect(sigdic)
 
 	pluginView = widgets.get_widget("pluginView")
-	model = gtk.ListStore(TYPE_BOOLEAN, TYPE_BOOLEAN, str, str, str, str)
-		# chkbutton | chkbutton | channel | user | topic
+	model = gtk.ListStore(TYPE_BOOLEAN, TYPE_BOOLEAN, str, str, str, str, str)
+		# chkbutton | chkbutton | name | path | version | description | author
 	pluginView.set_model(model)
 
 	# isLoaded column
@@ -169,7 +183,7 @@ def setup():
 	pluginView.append_column(column)
 
 	c = 1
-	for name in ("Autoload","Name","Path","Version","Description"):
+	for name in ("Autoload","Name","Path","Version","Description", "Author"):
 		if c == 1:
 			renderer = gtk.CellRendererToggle()
 			renderer.set_data("column", c)

@@ -65,7 +65,7 @@ def set_defaults():
 		prefix, "..", "..", "locale")
 	defaults["tekka"]["status_icon"] = os.path.join(
 		prefix, "graphics", "icon.svg")
-	defaults["tekka"]["plugin_dir"] = os.path.join(prefix, "plugins")
+	defaults["tekka"]["plugin_dirs"] = os.path.join(prefix, "plugins")
 	defaults["tekka"]["output_font"] = "Monospace 10"
 	defaults["tekka"]["general_output_font"] = "Monospace 10"
 	defaults["tekka"]["input_font"] = "Monospace 10"

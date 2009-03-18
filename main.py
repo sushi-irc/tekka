@@ -63,8 +63,7 @@ import signals
 import commands
 import menus
 
-# plugin interface
-import tekka as plugins
+import plugin_interface
 
 # TODO:  if a tab is closed the widgets remain the same.
 # TODO:: it would be nice if the tab would be switched
@@ -880,8 +879,6 @@ def connectMaki():
 
 		gui.setUseable(True)
 
-		plugins.setup()
-
 	# TODO: print error message
 
 
@@ -892,7 +889,6 @@ def paned_notify(paned, gparam):
 		to the config.
 	"""
 	if gparam.name == "position":
-		print "new position for paned %s." % (paned.name)
 		config.set("sizes", paned.name, paned.get_property("position"))
 
 def load_paned_positions():
@@ -1101,6 +1097,8 @@ def main():
 
 	# connect to maki daemon
 	connectMaki()
+
+	plugin_interface.load_autoloads()
 
 	# start main loop
 	gtk.main()
