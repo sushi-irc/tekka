@@ -24,12 +24,12 @@ from gui_control import errorMessage
 _module_prefix = "tekkaplugin_"
 _plugins = {}
 
-PLUGIN_MODNAME=0
-PLUGIN_MODULE=1
-PLUGIN_INSTANCE=2
-
-# entries of info tuple
-PLUGIN_INFO_LENGTH=3
+(
+	PLUGIN_MODNAME,
+	PLUGIN_MODULE,
+	PLUGIN_INSTANCE,
+	PLUGIN_INFO_LENGTH
+) = range(4)
 
 def strip_suffix(filename):
 	""" foo.py -> foo """

@@ -12,8 +12,11 @@ class Plugin (object):
 		return com.sushi
 
 	def add_command(self, command, func):
+		def func_proxy (server, target, args):
+			return func(server.name, target.name, args)
+
 #		self.emit("command_add", command, func)
-		return commands.addCommand(command, func)
+		return commands.addCommand(command, func_proxy)
 
 	def remove_command(self, command):
 #		self.emit("command_remove", command, func)

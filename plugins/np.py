@@ -48,7 +48,7 @@ class np (sushi.Plugin):
 	def unload(self):
 		self.remove_command("np")
 
-	def np_command(self, currentServer, currentTab, args):
+	def np_command(self, server, target, args):
 		try:
 			import mpd
 
@@ -68,15 +68,14 @@ class np (sushi.Plugin):
 			fstring = "np: %(artist)s - %(title)s" % data
 
 			self.get_bus().message(
-				currentServer.name,
-				currentTab.name,
+				server,
+				target,
 				fstring)
 
 			client.disconnect()
 
 			return
-		except BaseException, e:
-			print e
+		except:
 			pass
 
 		try:
@@ -91,8 +90,8 @@ class np (sushi.Plugin):
 			f.close()
 
 			self.get_bus().message(
-				currentServer.name,
-				currentTab.name,
+				server,
+				target,
 				"np: %s" % (s))
 
 			return
