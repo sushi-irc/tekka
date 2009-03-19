@@ -77,7 +77,7 @@ def _load_module(filename, mod_info):
 		plugin = imp.load_module(modname, *mod_info)
 
 	except ImportError,e:
-		errorMessage("Failure while loading plugin '%s': " % (name), e)
+		errorMessage("Failure while loading plugin '%s': %s" % (name, e))
 
 	try:
 		mod_info[0].close()
