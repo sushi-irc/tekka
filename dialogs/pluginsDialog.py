@@ -31,7 +31,7 @@ import gtk.glade
 import os
 from gobject import TYPE_BOOLEAN
 
-import plugin_interface as pinterface
+import plugin_control as pinterface
 import config
 
 widgets = None

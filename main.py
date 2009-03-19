@@ -58,12 +58,12 @@ import gui_control as gui
 import config
 import com
 
-import dialog_interface
+import dialog_control
 import signals
 import commands
 import menus
 
-import plugin_interface
+import plugin_control
 
 # TODO:  if a tab is closed the widgets remain the same.
 # TODO:: it would be nice if the tab would be switched
@@ -124,7 +124,7 @@ def menu_tekka_Connect_activate_cb(menuItem):
 		err.destroy()
 		return
 
-	serverList = dialog_interface.showServerDialog()
+	serverList = dialog_control.showServerDialog()
 
 	if serverList:
 		for server in serverList:
@@ -182,19 +182,19 @@ def menu_Dialogs_channelList_activate_cb(menuItem):
 
 	sTab,cTab = gui.tabs.getCurrentTabs()
 	if not sTab: return
-	dialog_interface.showChannelListDialog(sTab.name)
+	dialog_control.showChannelListDialog(sTab.name)
 
 def menu_Dialogs_plugins_activate_cb(menuItem):
 	"""
 	show plugin load/unload/list dialog.
 	"""
-	dialog_interface.showPluginsDialog()
+	dialog_control.showPluginsDialog()
 
 def menu_Dialogs_debug_activate_cb(menuItem):
-	dialog_interface.showDebugDialog()
+	dialog_control.showDebugDialog()
 
 def menu_Dialogs_preferences_activate_cb(menuItem):
-	dialog_interface.showPreferencesDialog()
+	dialog_control.showPreferencesDialog()
 
 def menu_Help_about_activate_cb(menuItem):
 	"""
@@ -1098,7 +1098,7 @@ def main():
 	# connect to maki daemon
 	connectMaki()
 
-	plugin_interface.load_autoloads()
+	plugin_control.load_autoloads()
 
 	# start main loop
 	gtk.main()
