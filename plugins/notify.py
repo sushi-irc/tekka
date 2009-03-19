@@ -26,7 +26,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
-import tekka
+import sushi
 
 # tekka-specific
 import config
@@ -37,32 +37,47 @@ import pynotify
 
 # FIXME configurable highlight words
 
-class pluginNotify (tekka.plugin):
+plugin_info = (
+	"Notifies on highlight.",
+	"1.0",
+	"Michael Kuhn"
+)
 
-	def __init__ (self, name):
-		tekka.plugin.__init__(self, name)
+class notify (sushi.Plugin):
+
+	def __init__ (self):
+		sushi.Plugin.__init__(self, "notify")
+
 		pynotify.init("tekka")
 
 		self.nicks = {}
+
 		try:
 			self.pixbuf = gtk.gdk.pixbuf_new_from_file(config.get("tekka", "status_icon"))
 		except:
 			self.pixbuf = None
 
-		self.get_dbus_interface().connect_to_signal("nick", self.nick_cb)
+		self.connect_signal("nick", self.nick_cb)
 
-		servers = self.get_dbus_interface().servers()
+		servers = self.get_bus().servers()
 
 		for server in servers:
-			self.get_dbus_interface().nick(server, "")
+			self.get_bus().nick(server, "")
 
-		self.get_dbus_interface().connect_to_signal("message", self.message_cb)
-		self.get_dbus_interface().connect_to_signal("action", self.action_cb)
+		self.connect_signal("message", self.message_cb)
+		self.connect_signal("action", self.action_cb)
+
+	def unload (self):
+		self.disconnect_signal("nick", self.nick_cb)
+		self.disconnect_signal("message", self.message_cb)
+		self.disconnect_signal("action", self.action_cb)
 
 	def notify (self, subject, body):
 		n = pynotify.Notification(subject, body)
+
 		if self.pixbuf:
 			n.set_icon_from_pixbuf(self.pixbuf)
+
 		n.show()
 
 	def escape (self, message):
@@ -108,9 +123,3 @@ class pluginNotify (tekka.plugin):
 			self.notify(nick, self.escape(action))
 		elif action.lower().find(self.nicks[server]) >= 0:
 			self.notify(target, "%s %s" % (nick, self.escape(action)))
-
-	def plugin_info(self):
-		return ("Notifies on highlight.", "1.0")
-
-def load ():
-	np = pluginNotify("notify")

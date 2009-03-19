@@ -26,24 +26,27 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+import sushi
+
 plugin_info = (
 	"Writes the current playing song to the channel after typing /np",
 	"0.1",
-	"Marian Tietz")
+	"Marian Tietz"
+)
 
-class np(object):
+class np (sushi.Plugin):
 
-	def __init__(self, plugin_interface):
-		plugin_interface.add_command("np", self.np_command)
+	def __init__(self):
+		sushi.Plugin.__init__(self, "np")
 
-		self.pi = plugin_interface
+		self.add_command("np", self.np_command)
 
 		self.mpd_host = "localhost"
 		self.mpd_port = 6600
 		self.mpd_password = ""
 
 	def unload(self):
-		self.pi.remove_command("np")
+		self.remove_command("np")
 
 	def np_command(self, currentServer, currentTab, args):
 		try:
@@ -64,7 +67,7 @@ class np(object):
 
 			fstring = "np: %(artist)s - %(title)s" % data
 
-			self.pi.get_dbus().message(
+			self.get_bus().message(
 				currentServer.name,
 				currentTab.name,
 				fstring)
@@ -87,7 +90,7 @@ class np(object):
 			s = f.read().replace("\n", " ")
 			f.close()
 
-			self.get_dbus().message(
+			self.get_bus().message(
 				currentServer.name,
 				currentTab.name,
 				"np: %s" % (s))
