@@ -28,6 +28,9 @@ PLUGIN_MODNAME=0
 PLUGIN_MODULE=1
 PLUGIN_INSTANCE=2
 
+# entries of info tuple
+PLUGIN_INFO_LENGTH=3
+
 def strip_suffix(filename):
 	""" foo.py -> foo """
 	return os.path.split(filename)[-1].split(".")[0]
@@ -143,6 +146,13 @@ def unload(filename):
 	# unregister locally
 	return _unregister_plugin(filename)
 
+def _check_info_tuple(info):
+	if (type(info) != tuple
+		or len(info) != PLUGIN_INFO_LENGTH
+		or len([n for n in info if type(n) != str])):
+		return False
+	return True
+
 def get_info(filename):
 	""" return the plugin info from the plugin.
 		If any error occurs, this function
@@ -155,11 +165,11 @@ def get_info(filename):
 
 	if _plugins.has_key(filename):
 		try:
-			info = _plugins[filename][PLUGIN_INSTANCE].plugin_info()
+			info = _plugins[filename][PLUGIN_MODULE].plugin_info
 		except:
 			return None
 
-		if type(info) != tuple or len(info) != 2:
+		if not _check_info_tuple(info):
 			return None
 		return info
 	else:
@@ -182,9 +192,7 @@ def get_info(filename):
 
 		# return None if the attribute is not a tuple
 		# or any item in the tuple is not a string
-		if (type(info) != tuple
-			or len(info) != 3
-			or len([n for n in info if type(n) != str])):
+		if not _check_info_tuple(info):
 			_unload_module(modname)
 			return None
 
