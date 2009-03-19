@@ -32,6 +32,7 @@ install: all
 clean:
 	$(RM) -f dialogs/*.pyc
 	$(RM) -f helper/*.pyc
+	$(RM) -f lib/*.pyc
 	$(RM) -f plugins/*.pyc
 	$(RM) -f *.pyc
 
