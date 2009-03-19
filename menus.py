@@ -30,7 +30,7 @@ import gtk
 import gtk.glade
 from gobject import idle_add
 
-import dialog
+import dialog_interface
 from helper import keyDialog
 
 import config
@@ -128,7 +128,7 @@ def serverTreeMenu_historyItem_activate_cb(menuItem):
 	if not serverTree_tabMenu_currentTab or serverTree_tabMenu_currentTab.is_server():
 		return
 
-	dialog.showHistoryDialog(serverTree_tabMenu_currentTab)
+	dialog_interface.showHistoryDialog(serverTree_tabMenu_currentTab)
 
 def serverTreeMenu_setKeyItem_activate_cb(menuItem):
 	""" show up dialog for key setting """

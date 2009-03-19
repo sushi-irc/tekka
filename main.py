@@ -58,7 +58,7 @@ import gui_control as gui
 import config
 import com
 
-import dialog
+import dialog_interface
 import signals
 import commands
 import menus
@@ -124,7 +124,7 @@ def menu_tekka_Connect_activate_cb(menuItem):
 		err.destroy()
 		return
 
-	serverList = dialog.showServerDialog()
+	serverList = dialog_interface.showServerDialog()
 
 	if serverList:
 		for server in serverList:
@@ -182,19 +182,19 @@ def menu_Dialogs_channelList_activate_cb(menuItem):
 
 	sTab,cTab = gui.tabs.getCurrentTabs()
 	if not sTab: return
-	dialog.showChannelListDialog(sTab.name)
+	dialog_interface.showChannelListDialog(sTab.name)
 
 def menu_Dialogs_plugins_activate_cb(menuItem):
 	"""
 	show plugin load/unload/list dialog.
 	"""
-	dialog.showPluginsDialog()
+	dialog_interface.showPluginsDialog()
 
 def menu_Dialogs_debug_activate_cb(menuItem):
-	dialog.showDebugDialog()
+	dialog_interface.showDebugDialog()
 
 def menu_Dialogs_preferences_activate_cb(menuItem):
-	dialog.showPreferencesDialog()
+	dialog_interface.showPreferencesDialog()
 
 def menu_Help_about_activate_cb(menuItem):
 	"""
