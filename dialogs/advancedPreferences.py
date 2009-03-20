@@ -34,7 +34,7 @@ def fillConfigView():
 			continue
 
 		for (key, value) in cDict.items():
-			default = str(config.getDefault(category, key))
+			default = str(config.get_default(category, key))
 			configStore.append(iter, row=(key, value, default))
 
 def renderOption(column, renderer, model, iter):
