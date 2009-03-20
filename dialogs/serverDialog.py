@@ -29,7 +29,7 @@ SUCH DAMAGE.
 import gtk
 import gtk.glade
 import com
-import dialog
+import dialog_control
 import config
 
 widgets = None
@@ -166,7 +166,7 @@ def deleteServer(servername):
 			com.deleteServer(servername)
 
 def openAddDialog(widget):
-	dialog.showAddServerDialog()
+	dialog_control.showAddServerDialog()
 	retrieveServerlist()
 
 def openEditDialog(widget):
@@ -184,7 +184,7 @@ def openEditDialog(widget):
 	else:
 		servername = serverList[path][0]
 
-	data = dialog.showEditServerDialog(servername)
+	data = dialog_control.showEditServerDialog(servername)
 
 	if not servername:
 		print "Error in retrieving the servername"
@@ -211,7 +211,7 @@ def openDeleteDialog(widget):
 		print "Error in retrieving the servername"
 		return
 
-	result = dialog.showDeleteServerDialog()
+	result = dialog_control.showDeleteServerDialog()
 	# result = True if answer = Yes
 
 	if result:

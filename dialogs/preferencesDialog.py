@@ -5,6 +5,7 @@ import gtk
 import gtk.glade
 
 import gui_control as gui
+import dialog_control
 
 from helper.expandingList import expandingList
 
@@ -195,8 +196,7 @@ def chatting_log_lines_changed(button):
 """ advanced page signals """
 
 def advanced_advancedSettingsClicked(button):
-	import dialog
-	d = dialog.loadDialog("advancedPreferences")
+	d = dialog_control.loadDialog("advancedPreferences")
 	if not d:
 		print "dialog setup failed"
 		return
