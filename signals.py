@@ -404,12 +404,13 @@ Signals for channel interaction
 """
 
 
-def channelTopic(time, server, nick, channel, topic):
+def channelTopic(time, server, from_str, channel, topic):
 	"""
 		The topic was set on server "server" in channel "channel" by
 		user "nick" to "topic".
 		Apply this!
 	"""
+	nick = parse_from(from_str)[0]
 	channelTab = gui.tabs.searchTab(server, channel)
 
 	if not channelTab:
