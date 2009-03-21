@@ -53,6 +53,7 @@ class notify (sushi.Plugin):
 		self.nicks = {}
 		self.notification = None
 		self.subject = None
+		self.caps = pynotify.get_server_caps()
 
 		try:
 			self.pixbuf = gtk.gdk.pixbuf_new_from_file(config.get("tekka", "status_icon"))
@@ -81,8 +82,11 @@ class notify (sushi.Plugin):
 			if self.pixbuf:
 				self.notification.set_icon_from_pixbuf(self.pixbuf)
 
-			self.notification.set_hint_string("append", "allowed")
-			self.notification.set_hint_string("x-canonical-append", "allowed")
+			if "append" in self.caps:
+				self.notification.set_hint_string("append", "allowed")
+
+			if "x-canonical-append" in self.caps:
+				self.notification.set_hint_string("x-canonical-append", "allowed")
 
 		self.subject = subject
 
