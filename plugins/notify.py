@@ -50,7 +50,6 @@ class notify (sushi.Plugin):
 
 		pynotify.init("tekka")
 
-		self.nicks = {}
 		self.notification = None
 		self.subject = None
 		self.caps = pynotify.get_server_caps()
@@ -60,18 +59,10 @@ class notify (sushi.Plugin):
 		except:
 			self.pixbuf = None
 
-		self.connect_signal("nick", self.nick_cb)
-
-		servers = self.get_bus().servers()
-
-		for server in servers:
-			self.get_bus().nick(server, "")
-
 		self.connect_signal("message", self.message_cb)
 		self.connect_signal("action", self.action_cb)
 
 	def unload (self):
-		self.disconnect_signal("nick", self.nick_cb)
 		self.disconnect_signal("message", self.message_cb)
 		self.disconnect_signal("action", self.action_cb)
 
@@ -103,36 +94,36 @@ class notify (sushi.Plugin):
 
 		return message
 
-	def nick_cb (self, timestamp, server, from_str, new_nick):
-		nick = from_str.split("!")[0]
-
-		if not nick:
-			self.nicks[server] = new_nick.lower()
-		elif self.nicks.has_key(server) and self.nicks[server] == nick.lower():
-			self.nicks[server] = new_nick.lower()
-
 	def message_cb (self, timestamp, server, from_str, target, message):
 		nick = from_str.split("!")[0]
+		own_nick = self.get_nick(server)
 
-		if not self.nicks.has_key(server):
+		if own_nick:
+			own_nick = own_nick.lower()
+
+		if not own_nick:
 			return
-		elif self.nicks[server] == nick.lower():
+		elif own_nick == nick.lower():
 			return
 
-		if self.nicks[server] == target.lower():
+		if own_nick == target.lower():
 			self.notify(nick, self.escape(message))
-		elif message.lower().find(self.nicks[server]) >= 0:
+		elif message.lower().find(own_nick) >= 0:
 			self.notify(target, "&lt;%s&gt; %s" % (nick, self.escape(message)))
 
 	def action_cb (self, time, server, from_str, target, action):
 		nick = from_str.split("!")[0]
+		own_nick = self.get_nick(server)
 
-		if not self.nicks.has_key(server):
+		if own_nick:
+			own_nick = own_nick.lower()
+
+		if not own_nick:
 			return
-		elif self.nicks[server] == nick.lower():
+		elif own_nick == nick.lower():
 			return
 
-		if self.nicks[server] == target.lower():
+		if own_nick == target.lower():
 			self.notify(nick, self.escape(action))
-		elif action.lower().find(self.nicks[server]) >= 0:
+		elif action.lower().find(own_nick) >= 0:
 			self.notify(target, "%s %s" % (nick, self.escape(action)))

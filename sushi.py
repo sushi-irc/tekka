@@ -11,6 +11,14 @@ class Plugin (object):
 	def get_bus(self):
 		return com.sushi
 
+	def get_nick(self, server):
+		nick = com.getOwnNick(server)
+
+		if not nick:
+			return None
+
+		return nick
+
 	def add_command(self, command, func):
 		def func_proxy (server, target, args):
 			return func(server.name, target.name, args)
