@@ -3,6 +3,7 @@
 import config
 import gtk
 import gtk.glade
+from gobject import idle_add
 
 import gui_control as gui
 import dialog_control
@@ -45,6 +46,12 @@ def fillTekka():
 
 	gFont = config.get("tekka", "general_output_font")
 	widgets.get_widget("fontSelectButton_generalOutput").set_font_name(gFont)
+
+	iFont = config.get("tekka", "input_font")
+	widgets.get_widget("fontSelectButton_inputBar").set_font_name(iFont)
+
+	if config.get_bool("tekka", "input_font_is_output_font"):
+		widgets.get_widget("fontSelectButton_inputBar").set_sensitive(False)
 
 def fillColors():
 	for key in ("own_nick", "own_text", "notification",
@@ -117,6 +124,9 @@ def tekka_output_font_clicked(button):
 		config.set("tekka", "output_font", font)
 		gui.setFont(output, font)
 
+		if config.get_bool("tekka","input_font_is_output_font"):
+			gui.setFont(gui.widgets.get_widget("inputBar"), font)
+
 def tekka_general_output_font_clicked(button):
 	output = gui.widgets.get_widget("generalOutput")
 
@@ -125,6 +135,29 @@ def tekka_general_output_font_clicked(button):
 	if font:
 		config.set("tekka", "general_output_font", font)
 		gui.setFont(output, font)
+
+def tekka_input_bar_font_clicked(button):
+	font = button.get_font_name()
+	widget = gui.widgets.get_widget("inputBar")
+
+	if font:
+		config.set("tekka","input_font",font)
+		gui.setFont(widget, font)
+
+def tekka_input_font_is_output_font_toggled(button):
+	config.set("tekka", "input_font_is_output_font",
+			str(button.get_active()).lower())
+	widget = gui.widgets.get_widget("inputBar")
+
+	if button.get_active():
+		# apply the new font and save the old
+		gui.setFont(widget, config.get("tekka","output_font"))
+		widgets.get_widget("fontSelectButton_inputBar").set_sensitive(False)
+
+	else:
+		# reset to the old font
+		gui.setFont(widget, config.get("tekka","input_font"))
+		widgets.get_widget("fontSelectButton_inputBar").set_sensitive(True)
 
 def tekka_auto_expand_toggled(button):
 	config.set("tekka", "auto_expand",
@@ -221,6 +254,8 @@ def setup():
 		"tekka_hide_on_close_toggled": tekka_hide_on_close_toggled,
 		"tekka_output_font_clicked": tekka_output_font_clicked,
 		"tekka_general_output_font_clicked": tekka_general_output_font_clicked,
+		"tekka_input_bar_font_clicked": tekka_input_bar_font_clicked,
+		"tekka_input_font_is_output_font_toggled": tekka_input_font_is_output_font_toggled,
 		"tekka_auto_expand_toggled": tekka_auto_expand_toggled,
 		"tekka_rgba_toggled": tekka_rgba_toggled,
 		"tekka_close_maki_on_close_toggled": tekka_close_maki_on_close_toggled,
