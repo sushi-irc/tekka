@@ -51,6 +51,8 @@ class notify (sushi.Plugin):
 		pynotify.init("tekka")
 
 		self.nicks = {}
+		self.notification = None
+		self.subject = None
 
 		try:
 			self.pixbuf = gtk.gdk.pixbuf_new_from_file(config.get("tekka", "status_icon"))
@@ -73,12 +75,19 @@ class notify (sushi.Plugin):
 		self.disconnect_signal("action", self.action_cb)
 
 	def notify (self, subject, body):
-		n = pynotify.Notification(subject, body)
+		if not self.notification or self.subject != subject:
+			self.notification = pynotify.Notification(subject, body)
 
-		if self.pixbuf:
-			n.set_icon_from_pixbuf(self.pixbuf)
+			if self.pixbuf:
+				self.notification.set_icon_from_pixbuf(self.pixbuf)
 
-		n.show()
+			self.notification.set_hint_string("append", "allowed")
+			self.notification.set_hint_string("x-canonical-append", "allowed")
+
+		self.subject = subject
+
+		self.notification.update(subject, body)
+		self.notification.show()
 
 	def escape (self, message):
 		# Bold
