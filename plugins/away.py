@@ -48,9 +48,9 @@ class away (sushi.Plugin):
 
 		try:
 			self.handler = bus.add_signal_receiver(
-				self.session_idle_changed_cb,
-				"SessionIdleChanged",
-				"org.gnome.ScreenSaver"
+				self.status_changed_cb,
+				"StatusChanged",
+				"org.gnome.SessionManager.Presence"
 			)
 		except:
 			self.handler = None
@@ -59,11 +59,11 @@ class away (sushi.Plugin):
 		if self.handler:
 			self.handler.remove()
 
-	def session_idle_changed_cb (self, state):
+	def status_changed_cb (self, status):
 		servers = self.get_bus().servers()
 
 		for server in servers:
-			if state:
+			if status == 3:
 				self.get_bus().away(server, "Auto-away")
 			else:
 				self.get_bus().back(server)
