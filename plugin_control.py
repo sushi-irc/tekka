@@ -36,9 +36,11 @@ def strip_suffix(filename):
 	return os.path.split(filename)[-1].split(".")[0]
 
 def is_loaded(filename):
+	""" returns True if the plugin is loaded, otherwise False """
 	return _plugins.has_key(filename)
 
 def _register_plugin(filename, modname, module, instance):
+	""" add plugin to local plugin dict, key is filename """
 	global _plugins
 	if _plugins.has_key(filename):
 		return False
@@ -46,6 +48,7 @@ def _register_plugin(filename, modname, module, instance):
 	return True
 
 def _unregister_plugin(filename):
+	""" remove plugin from local plugin dict """
 	global _plugins
 	if not _plugins.has_key(filename):
 		return False
@@ -53,6 +56,11 @@ def _unregister_plugin(filename):
 	return True
 
 def _find_module(filename):
+	""" wrapper for imp.find_module.
+		Searches for the module named after
+		filename in the configured search
+		path (tekka, plugin_dirs).
+	"""
 	# get the name of the module to search for
 	name = strip_suffix(filename)
 
@@ -72,6 +80,12 @@ def _find_module(filename):
 	return mod_info
 
 def _load_module(filename, mod_info):
+	""" wrapper for imp.load_module.
+		Returns a tuple with the identifying
+		name of the loaded module and the
+		module itself if loading was successful.
+		Otherwise the function returns (None,None).
+	"""
 	name = strip_suffix(filename)
 	plugin = None
 	modname = _module_prefix + name
@@ -90,11 +104,22 @@ def _load_module(filename, mod_info):
 	return modname, plugin
 
 def _unload_module(name):
-	""" unload the module loaded by imp.load_module """
+	""" unload the module loaded by imp.load_module
+		by deleting it's reference from sys.modules
+	"""
 	del sys.modules[name]
 
 
 def load(filename):
+	""" load a module named after filename in the
+		configured search path (tekka, plugin_dirs),
+		instance the class named after the module
+		(np for np.py) and register the bunch.
+
+		On error this function calls errorMessage()
+		with an specific error message and returns
+		False. Otherwise this function returns True.
+	"""
 	global _plugins
 
 	if _plugins.has_key(filename):
@@ -127,6 +152,11 @@ def load(filename):
 	return True
 
 def unload(filename):
+	""" Call unload() in the plugin instance,
+		unload the module and unregister it.
+		On success this function returns True,
+		otherwise it returns False.
+	"""
 	global _plugins
 
 	try:

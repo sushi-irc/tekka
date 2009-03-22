@@ -507,10 +507,8 @@ class TabClass(object):
 		#print "position before switch: %s" % (tab.buffer.scrollPosition)
 
 		if tab.buffer.scrollPosition != None and not tab.autoScroll:
-			print "scrolling in switchToPath(%s) to %f" % (tab.name,tab.buffer.scrollPosition)
 			idle_add(adj.set_value,tab.buffer.scrollPosition)
 		else:
-			print "scrolling with narf(tab) in switchToPath(%s)" % tab.name
 			scrollOutput()
 			def narf(tab):
 				tab.autoScroll=True
