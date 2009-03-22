@@ -38,9 +38,14 @@ class Plugin (object):
 #		self.emit("signal_disconnect", signal, func)
 		return signals.disconnect_signal(signal, func)
 
-	def set_config_value(self, name, value):
-		config.create_section("plugin_%s" % (self._plugin_name))
-		return config.set("plugin_%s" % (self._plugin_name), name, value)
+	def set_config(self, name, value):
+		section = "plugin_%s" % (self._plugin_name)
 
-	def get_config_value(self, name):
-		return config.get("plugin_%s" % (self._plugin_name), name)
+		config.create_section(section)
+
+		return config.set(section, name, value)
+
+	def get_config(self, name):
+		section = "plugin_%s" % (self._plugin_name)
+
+		return config.get(section, name)
