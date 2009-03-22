@@ -756,7 +756,7 @@ def channelPrint(timestamp, server, channel, message, type="message"):
 		into the htmlbuffer of the channel `channel` on server
 		`server`.
 	"""
-	timestring = time.strftime("%H:%M", time.localtime(timestamp))
+	timestring = time.strftime(config.get("tekka", "time_format", "%H:%M"), time.localtime(timestamp))
 
 	message = URLToTag(message)
 
@@ -827,7 +827,7 @@ def serverPrint(timestamp, server, string, type="message"):
 			"server %s." % server
 		return
 
-	timestr = time.strftime("%H:%M", time.localtime(timestamp))
+	timestr = time.strftime(config.get("tekka", "time_format", "%H:%M"), time.localtime(timestamp))
 
 	buffer.insertHTML(buffer.get_end_iter(), "[%s] %s" % (
 		timestr,string))

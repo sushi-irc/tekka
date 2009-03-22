@@ -78,6 +78,7 @@ def set_defaults():
 	defaults["tekka"]["color_nick_text"] = "False" 	# color the text as well as the nick
 	defaults["tekka"]["ask_for_key_on_cannotjoin"] = "True"
 	defaults["tekka"]["input_font_is_output_font"] = "True"
+	defaults["tekka"]["time_format"] = "%H:%M"
 
 	defaults["sizes"] = {}
 	"""
