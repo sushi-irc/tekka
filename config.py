@@ -32,6 +32,7 @@ from xdg.BaseDirectory import xdg_config_home
 import ConfigParser
 
 from typecheck import types
+from helper.escape import unescape_split
 
 prefix = ""
 defaults = {}
@@ -97,6 +98,7 @@ def set_defaults():
 	defaults["colors"]["text_highlightaction"] = "#0000FF"
 	defaults["colors"]["nick"] = "#2222AA" # default foreign nick color
 	defaults["colors"]["last_log"] = "#DDDDDD"
+	defaults["colors"]["nick_colors"] = "#AA0000,#2222AA,#44AA44,#123456,#987654"
 
 	defaults["chatting"]={}
 	defaults["chatting"]["last_log_lines"] = "10"
@@ -104,14 +106,6 @@ def set_defaults():
 	defaults["chatting"]["part_message"] = "Partitioning."
 
 	defaults["autoload_plugins"] = {}
-
-	defaults["nick_colors"]={
-		"1":"#AA0000",
-		"2":"#2222AA",
-		"3":"#44AA44",
-		"4":"#123456",
-		"5":"#987654"
-		}
 
 	# Add default sections to config parser
 	# so setting is easier
@@ -199,14 +193,14 @@ def set_list(section, option, l):
 	"""
 	join the list l to a string seperated
 	by , and set it as value to option.
-	Return False on error, else True
+	Return False on error, else True.
 	"""
-	s = ",".join(l)
+	s = ",".join([n.replace(",","\\,") for n in l])
 
 	if not s:
 		return False
 
-	set(section,option,s)
+	set(section, option, s)
 
 @types (section=str, option=str, value=str)
 def append_list(section, option, value):
@@ -313,7 +307,7 @@ def get_list(section, option, default=[]):
 	if res == default:
 		return default
 
-	list = res.split(",")
+	list = unescape_split(",", res)
 
 	if not list:
 		return default

@@ -515,6 +515,9 @@ def scrolledWindow_output_vscrollbar_valueChanged_cb(range):
 
 	#print "scrollPosition is now %d" % (tab.buffer.scrollPosition)
 
+def output_move_viewport(tv, scrollstep, count, *x):
+	print "tv moved: %s * %d" % (scrollstep, count)
+
 def statusIcon_activate_cb(statusIcon):
 	"""
 		Click on status icon
@@ -1032,11 +1035,15 @@ def setupGTK():
 
 	widgets.signal_autoconnect(sigdic)
 
+	"""
 	vbar = widgets.get_widget(
 		"scrolledWindow_output").get_vscrollbar()
 	vbar.connect(
 		"value-changed",
 		scrolledWindow_output_vscrollbar_valueChanged_cb)
+	"""
+	output = widgets.get_widget("output")
+	output.connect("move-viewport", output_move_viewport)
 
 	setup_serverTree()
 	setup_nickList()

@@ -248,9 +248,7 @@ def getNickColor(nick):
 	if not config.get_bool("tekka","color_text"):
 		return
 
-	colors = config.get("nick_colors", default={})
-
-	colors = colors.values()
+	colors = config.get_list("colors", "nick_colors")
 
 	if not colors:
 		return config.get("colors","nick","#000000")
@@ -265,8 +263,7 @@ def getTextColor(nick):
 	if not config.get_bool("tekka","color_text"):
 		return
 
-	colors = config.get("nick_colors",default={})
-	colors = colors.values()
+	colors = config.get_list("colors", "nick_colors")
 
 	if not colors or not config.get_bool("tekka","color_nick_text"):
 		return config.get("colors","text_message","#000000")

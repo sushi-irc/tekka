@@ -74,35 +74,20 @@ def fillChatting():
 	widgets.get_widget("last_log_lines").set_value(float(val))
 
 def fillNickColors():
-	colors = config.get("nick_colors", default={})
+	colors = config.get_list("colors", "nick_colors")
 
 	if not colors:
 		return
 
 	i = 0
-	for color in colors.values():
+	for color in colors:
 		nickColorsList.get_widget_matrix()[i][0].set_text(color)
 		nickColorsList.add_row()
 		i+=1
 	nickColorsList.remove_row(i)
 
 def applyNickColors():
-	toClear = config.get("nick_colors", default={})
-	for key in toClear:
-		config.unset("nick_colors", key)
-
-	i = 1
-	for row in nickColorsList.get_widget_matrix():
-		entry = row[0]
-
-		text = entry.get_text()
-
-		if not text:
-			continue
-
-		config.set("nick_colors", str(i), text)
-
-		i+=1
+	config.set_list("colors","nick_colors", [n[0].get_text() for n in nickColorsList.get_widget_matrix() if n and len(n) >= 1 and n[0].get_text()])
 
 """ tekka page signals """
 
