@@ -300,7 +300,11 @@ def whoisItem_activate_cb(menuItem):
 	if not sTab:
 		return
 
-	com.sushi.whois(sTab.name, nickListMenu_currentNick)
+	if config.get_bool("tekka", "whois_dialog"):
+		dialog_control.showWhoisDialog(sTab.name, nickListMenu_currentNick)
+
+	else:
+		com.sushi.whois(sTab.name, nickListMenu_currentNick)
 
 def deVoiceItem_activate_cb(menuItem):
 	sTab,cTab = gui.tabs.getCurrentTabs()
