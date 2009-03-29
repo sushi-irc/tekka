@@ -1035,13 +1035,12 @@ def setupGTK():
 
 	widgets.signal_autoconnect(sigdic)
 
-	"""
 	vbar = widgets.get_widget(
 		"scrolledWindow_output").get_vscrollbar()
 	vbar.connect(
 		"value-changed",
 		scrolledWindow_output_vscrollbar_valueChanged_cb)
-	"""
+
 	output = widgets.get_widget("output")
 	output.connect("move-viewport", output_move_viewport)
 

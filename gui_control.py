@@ -73,7 +73,6 @@ class TabClass(object):
 	def getNewBuffer(self):
 		"""
 		Returns a HTMLBuffer with assigned URL handler.
-		XXX: for what is this?
 		"""
 		buffer = self.HTMLBuffer(handler = URLHandler.URLHandler)
 		return buffer
@@ -436,15 +435,15 @@ class TabClass(object):
 		if not serverTab or (not channelTab and tab.is_channel()):
 			return False
 
-		if tab.is_server() \
-		and tab.name.lower() == serverTab.name.lower() \
-		and not channelTab:
+		if (tab.is_server()
+			and tab.name.lower() == serverTab.name.lower()
+			and not channelTab):
 			return True
 
-		if ( tab.is_channel() or tab.is_query() ) \
-		and channelTab \
-		and tab.name.lower() == channelTab.name.lower() \
-		and tab.server.lower() == serverTab.name.lower():
+		if (( tab.is_channel() or tab.is_query() )
+			and channelTab
+			and tab.name.lower() == channelTab.name.lower()
+			and tab.server.lower() == serverTab.name.lower()):
 			return True
 
 		return False
@@ -510,9 +509,11 @@ class TabClass(object):
 			idle_add(adj.set_value,tab.buffer.scrollPosition)
 		else:
 			scrollOutput()
+
 			def narf(tab):
 				tab.autoScroll=True
 				return False
+
 			idle_add(narf,tab)
 
 		# NOTE:  to avoid race conditions the idle_add() method is used.
