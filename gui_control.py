@@ -749,6 +749,24 @@ def escape(msg):
 	msg = msg.replace(chr(1), "")
 	return msg
 
+def write_to_general_output(type, timestring, server, channel, message):
+	goBuffer = widgets.get_widget("generalOutput").get_buffer()
+
+	# TODO: add filter
+
+	if channel:
+		# channel print
+		goBuffer.insertHTML(goBuffer.get_end_iter(),
+			"[%s] &lt;%s:%s&gt; %s" % (
+				timestring, server, channel, message))
+	else:
+		# server print
+		goBuffer.insertHTML(goBuffer.get_end_iter(),
+			"[%s] &lt;%s&gt; %s" % (timestring, server, message))
+
+
+	scrollGeneralOutput()
+
 def channelPrint(timestamp, server, channel, message, type="message"):
 	"""
 		Inserts a string formatted like "[H:M] <message>\n"
@@ -788,13 +806,7 @@ def channelPrint(timestamp, server, channel, message, type="message"):
 	if config.get_bool("tekka","show_general_output"):
 		# write it to the general output, also
 
-		goBuffer = widgets.get_widget("generalOutput").get_buffer()
-		goBuffer.insertHTML(goBuffer.get_end_iter(),
-				"[%s] &lt;%s:%s&gt; %s" % (
-					timestring, server, channel, message
-				))
-
-		scrollGeneralOutput()
+		write_to_general_output(type, timestring, server, channel, message)
 
 	# notification in server/channel list
 	if tabs.isActive(channelTab):
@@ -826,21 +838,16 @@ def serverPrint(timestamp, server, string, type="message"):
 			"server %s." % server
 		return
 
-	timestr = time.strftime(config.get("tekka", "time_format", "%H:%M"), time.localtime(timestamp))
+	timestr = time.strftime(config.get("tekka", "time_format", "%H:%M"), 
+		time.localtime(timestamp))
 
-	buffer.insertHTML(buffer.get_end_iter(), "[%s] %s" % (
-		timestr,string))
+	buffer.insertHTML(buffer.get_end_iter(), "[%s] %s" % (timestr,string))
 
 	if config.get_bool("tekka","show_general_output"):
-		goBuffer = widgets.get_widget("generalOutput").get_buffer()
-		goBuffer.insertHTML(goBuffer.get_end_iter(), \
-				"[%s] &lt;%s&gt; %s" % (timestr, server, string))
-
-		scrollGeneralOutput()
+		write_to_general_output(type, timestr, server, "", string)
 
 	if tabs.isActive(serverTab):
 		if serverTab.autoScroll:
-			print "scrolling in serverPrint"
 			scrollOutput()
 
 	else:
