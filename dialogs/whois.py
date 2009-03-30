@@ -1,76 +1,98 @@
 import gtk
+from gobject import TYPE_STRING
+from gettext import gettext as _
+
 import signals
 import com
 
-from gettext import gettext as _
+
 
 class WhoisDialog(gtk.Dialog):
 
-	def __init__(self, nick):
+	def __init__(self, server, nick):
 		gtk.Dialog.__init__(self,
 			flags=gtk.DIALOG_DESTROY_WITH_PARENT,
 			buttons=(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE))
 
 		self.set_default_size(350, 200)
 
-		self.get_action_area().get_children()[0].connect(
-			"clicked", lambda x,w: w.emit("close"), self)
-
-		self.set_nick(nick)
-
 		self.end = False
 
-		self.textview = gtk.TextView()
-		self.textview.set_property("wrap-mode", gtk.WRAP_WORD)
+		self.treeview = self._setup_treeview()
+
 		self.scrolled_window = gtk.ScrolledWindow()
-		self.scrolled_window.add(self.textview)
+		self.scrolled_window.add(self.treeview)
 
 		self.get_content_area().add(self.scrolled_window)
 
-	def set_nick(self, nick):
+		self.set_data(server, nick)
+
+
+	def _setup_treeview(self):
+		treeview = gtk.TreeView()
+		treeview.set_model(gtk.ListStore(TYPE_STRING))
+
+		renderer = gtk.CellRendererText()
+		column = gtk.TreeViewColumn(
+			"Data", renderer, text=0)
+		
+		treeview.append_column(column)
+
+		return treeview
+
+	def set_data(self, server, nick):
 		self.nick = nick
-		self.set_title(_("Whois for %(nick)s" % {"nick":nick}))
+		self.server = server
+		self.set_title(_("Whois on %(server)s" % {
+			"server":server}))
+
+		label = gtk.Label()
+		label.set_use_underline(False)
+		label.set_text(_("Whois data of %(nick)s" % {
+				"nick":nick}))
+		label.show()
+
+		self.treeview.get_column(0).set_widget(label)
 
 	def whois_input(self, time, server, nick, message):
 		# message == "" -> EOL
 		if self.end:
-			buffer = self.textview.get_buffer()
-			buffer.set_text("")
+			self.treeview.get_model().clear()
 			self.end = False
 
 		if message:
-			buffer = self.textview.get_buffer()
-			buffer.insert(buffer.get_end_iter(),
-				message+"\n"+("-"*24)+"\n")
+			self.treeview.get_model().append(row=(message,))
 
 		else:
 			self.end = True
 
 diag = None
 
-def dialog_closed_cb(dialog, *x):
-	global diag
-	signals.disconnect_signal("whois", dialog.whois_input)
-	signals.connect_signal("whois", signals.whois)
+def dialog_response_cb(dialog, id):
+	if id in (gtk.RESPONSE_NONE, gtk.RESPONSE_CLOSE):
+		global diag
+		signals.disconnect_signal("whois", dialog.whois_input)
+		signals.connect_signal("whois", signals.whois)
 
-	diag = None
-	dialog.destroy()
+		diag = None
+		dialog.destroy()
 
 def run(server, nick):
 	global diag
 
 	if not diag:
-		diag = WhoisDialog(nick)
-		diag.connect("delete-event", dialog_closed_cb)
-		diag.connect("close", dialog_closed_cb)
+		diag = WhoisDialog(server, nick)
+		diag.connect("response", dialog_response_cb)
 
 		signals.disconnect_signal("whois", signals.whois)
 		signals.connect_signal("whois", diag.whois_input)
 
 	else:
-		diag.set_nick(nick)
+		diag.set_data(server, nick)
 
 	com.sushi.whois(server, nick)
+	diag.whois_input(0, "", "",_("Loading..."))
+	diag.end = True
 	
 	diag.show_all()
 
