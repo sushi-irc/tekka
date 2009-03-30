@@ -39,6 +39,7 @@ import gtk.glade
 import signals
 import com
 import config
+from gui_control import errorMessage
 
 widgets = None
 currentServer = None
@@ -62,9 +63,7 @@ def run(server):
 
 	dialog = widgets.get_widget("channelList")
 
-	dialog.run()
-
-	dialog.destroy()
+	dialog.show_all()
 
 	return True
 
@@ -88,8 +87,7 @@ def listButton_clicked_cb(button):
 	try:
 		filterExpression = compile(widgets.get_widget("regexpEntry").get_text())
 	except: # TODO: sre_constants.error?
-		# TODO: print error msg in message box
-		pass
+		errorMessage("Syntaxerror in search string.", force_dialog=True)
 
 	listView.get_model().clear()
 
@@ -101,8 +99,6 @@ def listButton_clicked_cb(button):
 	else:
 		signals.disconnect_signal ("list", signals.list)
 		signals.connect_signal("list", sushiList)
-
-		widgets.get_widget("channelList").connect("destroy",resetSignal)
 
 		try:
 			com.list(currentServer)
@@ -143,12 +139,16 @@ def sushiList(time, server, channel, user, topic):
 		return
 
 	store = listView.get_model()
-	if not filterExpression or (
-		filterExpression and (
-			filterExpression.search(channel) or filterExpression.search(topic)
-			)
-		):
+	if (not filterExpression
+		or (filterExpression 
+			and (filterExpression.search(channel) 
+				or filterExpression.search(topic)))):
 		store.append(row=(channel, int(user), topic))
+
+def dialog_response_cb(dialog, id):
+	if id in (gtk.RESPONSE_NONE, gtk.RESPONSE_DELETE_EVENT, gtk.RESPONSE_CLOSE):
+		resetSignal()
+		dialog.destroy()
 
 def setup():
 	global widgets, listView
@@ -163,6 +163,9 @@ def setup():
 	}
 
 	widgets.signal_autoconnect(sigdic)
+
+	diag = widgets.get_widget("channelList")
+	diag.connect("response", dialog_response_cb)
 
 	listView = widgets.get_widget("listView")
 	model = gtk.ListStore(str, int, str) # channel | user | topic
