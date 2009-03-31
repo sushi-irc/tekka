@@ -20,12 +20,19 @@ from typecheck import types
 from helper.shortcuts import addShortcut, removeShortcut
 from helper.url import URLToTag
 from helper import URLHandler
+from helper.searchToolbar import SearchBar
 
 import __main__
 
 widgets = None
 statusIcon = None
 accelGroup = None
+searchToolbar = None
+
+def custom_handler(glade, function_name, widget_name, *x):
+	if widget_name == "searchToolbar":
+		return setup_searchToolbar()
+	return None
 
 @types(gladeFile=str, section=str)
 def load_widgets(gladeFile, section):
@@ -35,6 +42,7 @@ def load_widgets(gladeFile, section):
 		to initialize the GUI
 	"""
 	global widgets
+	gtk.glade.set_custom_handler(custom_handler)
 	widgets = gtk.glade.XML(gladeFile, section)
 	return widgets
 
@@ -530,6 +538,11 @@ class TabClass(object):
 
 
 tabs = TabClass()
+
+def setup_searchToolbar():
+	global searchToolbar
+	searchToolbar = SearchBar(None)
+	return searchToolbar
 
 def setup_statusIcon():
 	"""

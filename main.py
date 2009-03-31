@@ -579,6 +579,19 @@ def output_shortcut_ctrl_l(output, shortcut):
 	buf = widgets.get_widget("generalOutput").get_buffer()
 	if buf: buf.set_text("")
 
+def output_shortcut_ctrl_f(output, shortcut):
+	""" show the search toolbar """
+	if gui.searchToolbar.get_property("visible"):
+		gui.searchToolbar.hide()
+		return
+
+	gui.searchToolbar.show_all()
+	gui.searchToolbar.grab_focus()
+
+def output_shortcut_ctrl_g(output, shortcut):
+	""" search further """
+	gui.searchToolbar.search_further()
+
 def serverTree_shortcut_ctrl_Page_Up(serverTree, shortcut):
 	"""
 		Ctrl+Page_Up was hit, go up in server tree
@@ -849,6 +862,10 @@ def setup_shortcuts():
 		inputBar_shortcut_ctrl_u)
 	addShortcut(gui.accelGroup, widgets.get_widget("output"), "<ctrl>l",
 		output_shortcut_ctrl_l)
+	addShortcut(gui.accelGroup, widgets.get_widget("output"), "<ctrl>f",
+		output_shortcut_ctrl_f)
+	addShortcut(gui.accelGroup, widgets.get_widget("output"), "<ctrl>g",
+		output_shortcut_ctrl_g)
 
 	addShortcut(gui.accelGroup, widgets.get_widget("serverTree"),
 		"<ctrl>Page_Up", serverTree_shortcut_ctrl_Page_Up)
@@ -960,6 +977,10 @@ def setupGTK():
 		gladefiles["mainwindow"], "mainWindow")
 
 	setup_mainWindow()
+
+	# to some setup on the search toolbar
+	gui.searchToolbar.hide()
+	gui.searchToolbar.textview = gui.widgets.get_widget("output")
 
 	# connect main window signals:
 	sigdic = {
