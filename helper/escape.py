@@ -18,6 +18,9 @@ def unescape_splitted(separator, splitted, escape_char):
 	i = 0
 
 	for split in splitted:
+		if not split:
+			continue
+
 		if split[-1] == escape_char:
 			count = get_escape_char_count(split, escape_char)
 
