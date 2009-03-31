@@ -82,6 +82,14 @@ def set_defaults():
 	defaults["tekka"]["time_format"] = "%H:%M"
 	defaults["tekka"]["whois_dialog"] = "true"
 
+	defaults["general_output"] = {}
+	defaults["general_output"]["filters"] = ""
+	"""
+	filters take place here.
+	'type == "message" and server == "euIRC" and channel == "#bsdunix"'
+	'not (type == "action" and server == "Freenode" and channel == "#sushi-irc")'
+	"""
+
 	defaults["sizes"] = {}
 	"""
 	[window_height]

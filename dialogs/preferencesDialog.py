@@ -13,6 +13,11 @@ from helper.expandingList import expandingList
 widgets = None
 nickColorsList = None
 
+def generalOutputFilterList_instanced_widget_cb(elist, row, column, obj):
+	print "instanced %d:%d (%s)" % (row, column, obj)
+	if column == 0:
+		obj.set_property("label", "Negate")
+
 def customHandler(glade, function_name, widget_name, *x):
 	if widget_name == "nickColorsList":
 		global nickColorsList
@@ -20,6 +25,26 @@ def customHandler(glade, function_name, widget_name, *x):
 		nickColorsList = expandingList(gtk.Entry)
 		sw = gtk.ScrolledWindow()
 		sw.add_with_viewport(nickColorsList)
+		sw.show_all()
+
+		return sw
+
+	elif widget_name == "generalOutputFilterList":
+		global generalOutputFilterList
+
+		# negate, type, server, channel
+		generalOutputFilterList = expandingList(
+			gtk.ToggleButton, gtk.Entry,
+			gtk.Entry, gtk.Entry, 
+			no_firstrow=True)
+
+		generalOutputFilterList.connect("instanced_widget", 
+			generalOutputFilterList_instanced_widget_cb)
+
+		generalOutputFilterList.add_row(0)
+
+		sw = gtk.ScrolledWindow()
+		sw.add_with_viewport(generalOutputFilterList)
 		sw.show_all()
 
 		return sw
@@ -86,8 +111,80 @@ def fillNickColors():
 		i+=1
 	nickColorsList.remove_row(i)
 
+def fillGeneralOutputFilters():
+	filter = config.get_list("general_output", "filter")
+
+	if not filter:
+		return
+
+	i=0
+	for filter_rule in filter:
+		pairs = filter_rule.split(" and ")
+		for pair in pairs:
+			def set_negated(i):
+				generalOutputFilterList.get_widget_matrix()[i][0].set_active(True)
+
+			key, value = pair.split(" == ")
+
+			if key[0] == "(":
+				key = key[1:]
+				set_negated(i)
+
+			if value[-1] == ")":
+				value = value[:-1]
+				set_negated(i)
+
+			if key == "type":
+				generalOutputFilterList.get_widget_matrix()[i][1].set_text(value)
+
+			elif key == "server":
+				generalOutputFilterList.get_widget_matrix()[i][2].set_text(value)
+
+			elif key == "channel":
+				generalOutputFilterList.get_widget_matrix()[i][3].set_text(value)
+
+			else:
+				raise ValueError, "Invalid key '%s'" % (key)
+
+		generalOutputFilterList.add_row()
+		i+=1
+	generalOutputFilterList.remove_row(i)
+
+
 def applyNickColors():
 	config.set_list("colors","nick_colors", [n[0].get_text() for n in nickColorsList.get_widget_matrix() if n and len(n) >= 1 and n[0].get_text()])
+
+def applyGeneralOutputFilter():
+	filter_list = []
+	header = ("type", "server", "channel")
+
+	for row in generalOutputFilterList.get_widget_matrix():
+		n_c = 0
+		rule = ""
+		c_l = len(row[1:len(header)])
+
+		if not row:
+			continue
+
+		for col in row[1:len(header)]:
+			if not col.get_text():
+				continue
+
+			# XXX: yep, this is a hole.
+			rule += "%s == \"\"\"%s\"\"\"" % (header[n_c],col.get_text())
+			n_c += 1
+
+			if n_c != c_l:
+				rule += " and "
+
+		if row[0].get_active():
+			rule = "not (%s)" % (rule)
+
+		filter_list.append(rule)
+
+		print filter_list
+		config.set_list("general_output", "filter", filter_list)
+
 
 """ tekka page signals """
 
@@ -273,10 +370,12 @@ def run():
 	fillColors()
 	fillChatting()
 	fillNickColors()
+	fillGeneralOutputFilters()
 
 	dialog.run()
 
 	applyNickColors()
+	applyGeneralOutputFilter()
 
 	dialog.destroy()
 

@@ -3,8 +3,8 @@
 <!--Generated with glade3 3.4.5 on Sat Mar 21 01:50:16 2009 -->
 <glade-interface>
   <widget class="GtkDialog" id="preferencesDialog">
-    <property name="width_request">400</property>
-    <property name="height_request">400</property>
+    <property name="default-height">400</property>
+    <property name="default-width">400</property>
     <property name="border_width">4</property>
     <property name="title" translatable="yes">Preferences</property>
     <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
@@ -607,6 +607,50 @@ Changes will be applied after closing this dialog.</property>
               <widget class="GtkLabel" id="label6">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_Nick Colors</property>
+                <property name="use_underline">True</property>
+              </widget>
+              <packing>
+                <property name="type">tab</property>
+                <property name="position">3</property>
+                <property name="tab_fill">False</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkTable" id="generalOutputFilterTable">
+                <property name="visible">True</property>
+                <property name="border_width">8</property>
+                <property name="n_rows">2</property>
+                <child>
+                  <widget class="Custom" id="generalOutputFilterList">
+                    <property name="visible">True</property>
+                    <property name="creation_function">createGeneralOutputFilterList</property>
+                  </widget>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label7">
+                    <property name="visible">True</property>
+                    <property name="xalign">0.11999999731779099</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Notice:&lt;/b&gt;
+First field is type, second field is server, third is the channel.</property>
+                    <property name="use_markup">True</property>
+                    <property name="wrap">True</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                    <property name="y_options">GTK_SHRINK</property>
+                    <property name="y_padding">6</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="label6">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_General Output</property>
                 <property name="use_underline">True</property>
               </widget>
               <packing>
