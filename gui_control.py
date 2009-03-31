@@ -758,7 +758,7 @@ def write_to_general_output(type, timestring, server, channel, message):
 			if not eval(rule):
 				return
 		except BaseException,e:
-			errorMessage("Error in general output filter rule: '%s'." % (e))
+			errorMessage("Error in general output filter rule '%s': '%s'." % (rule, e))
 			return
 
 	if channel:
