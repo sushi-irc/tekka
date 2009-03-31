@@ -26,10 +26,11 @@ SUCH DAMAGE.
 """
 
 import gtk
+import gobject
 
 class expandingList(gtk.Table):
 
-	def __init__(self, *widgets):
+	def __init__(self, *widgets, **kwargs):
 
 		if not widgets:
 			raise Exception("init takes at least one widget type.")
@@ -42,7 +43,12 @@ class expandingList(gtk.Table):
 
 		gtk.Table.__init__(self, rows=1, columns=self._columns)
 
-		self._add_row(row=0)
+		try:
+			kwargs["no_firstrow"]
+		except KeyError:
+			self._add_row(row=0)
+		else:
+			pass
 
 	def get_widget_matrix(self):
 		return self._matrix
@@ -64,6 +70,7 @@ class expandingList(gtk.Table):
 			except:
 				print "expandingList: error while instancing %s" % widget
 				continue
+			self.emit("instanced_widget", row, column, instance)
 
 			print "attaching instance of %s" % widget
 			self.attach(instance, column, column+1, row, row+1)
@@ -206,6 +213,9 @@ class expandingList(gtk.Table):
 		a.connect("clicked", self._button_remove_clicked)
 		self._matrix[row].append(a)
 		self.attach(a, column, column+1, row, row+1)
+
+gobject.signal_new("instanced_widget", expandingList, gobject.SIGNAL_ACTION,
+	gobject.TYPE_NONE, (gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_PYOBJECT))
 
 if __name__ == "__main__":
 	win = gtk.Window()
