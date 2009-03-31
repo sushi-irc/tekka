@@ -752,7 +752,14 @@ def escape(msg):
 def write_to_general_output(type, timestring, server, channel, message):
 	goBuffer = widgets.get_widget("generalOutput").get_buffer()
 
-	# TODO: add filter
+	filter = config.get_list("general_output", "filter")
+	for rule in filter:
+		try:
+			if not eval(rule):
+				return
+		except BaseException,e:
+			errorMessage("Error in general output filter rule: '%s'." % (e))
+			return
 
 	if channel:
 		# channel print

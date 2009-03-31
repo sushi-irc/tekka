@@ -14,7 +14,6 @@ widgets = None
 nickColorsList = None
 
 def generalOutputFilterList_instanced_widget_cb(elist, row, column, obj):
-	print "instanced %d:%d (%s)" % (row, column, obj)
 	if column == 0:
 		obj.set_property("label", "Negate")
 
@@ -41,7 +40,7 @@ def customHandler(glade, function_name, widget_name, *x):
 		generalOutputFilterList.connect("instanced_widget", 
 			generalOutputFilterList_instanced_widget_cb)
 
-		generalOutputFilterList.add_row(0)
+		generalOutputFilterList._add_row(0)
 
 		sw = gtk.ScrolledWindow()
 		sw.add_with_viewport(generalOutputFilterList)
@@ -119,20 +118,30 @@ def fillGeneralOutputFilters():
 
 	i=0
 	for filter_rule in filter:
+
+		if not filter_rule:
+			continue
+			
 		pairs = filter_rule.split(" and ")
+
 		for pair in pairs:
 			def set_negated(i):
-				generalOutputFilterList.get_widget_matrix()[i][0].set_active(True)
+					generalOutputFilterList.get_widget_matrix()[i][0].set_active(True)
+
+			if not pair:
+				continue
 
 			key, value = pair.split(" == ")
 
-			if key[0] == "(":
-				key = key[1:]
+			if key.startswith("not ("):
+				key = key[len("not ("):]
 				set_negated(i)
 
 			if value[-1] == ")":
 				value = value[:-1]
 				set_negated(i)
+
+			value = value.strip('"')
 
 			if key == "type":
 				generalOutputFilterList.get_widget_matrix()[i][1].set_text(value)

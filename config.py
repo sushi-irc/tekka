@@ -204,7 +204,7 @@ def set_list(section, option, l):
 	by , and set it as value to option.
 	Return False on error, else True.
 	"""
-	s = ",".join([n.replace(",","\\,") for n in l])
+	s = ",".join([n.replace(",","\\,") for n in l if n])
 
 	if not s:
 		return False
