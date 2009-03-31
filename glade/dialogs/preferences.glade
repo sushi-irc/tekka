@@ -631,7 +631,8 @@ Changes will be applied after closing this dialog.</property>
                     <property name="visible">True</property>
                     <property name="xalign">0.11999999731779099</property>
                     <property name="label" translatable="yes">&lt;b&gt;Notice:&lt;/b&gt;
-First field is type, second field is server, third is the channel.</property>
+First field is type, second field is server, third is the channel.
+Everything matching passes the filter and will be shown except the row is negated.</property>
                     <property name="use_markup">True</property>
                     <property name="wrap">True</property>
                   </widget>

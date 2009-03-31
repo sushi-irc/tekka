@@ -4,6 +4,7 @@ import config
 import gtk
 import gtk.glade
 from gobject import idle_add
+import re
 
 import gui_control as gui
 import dialog_control
@@ -112,6 +113,7 @@ def fillNickColors():
 
 def fillGeneralOutputFilters():
 	filter = config.get_list("general_output", "filter")
+	pattern = re.compile("^not \((.+)\)")
 
 	if not filter:
 		return
@@ -121,28 +123,17 @@ def fillGeneralOutputFilters():
 
 		if not filter_rule:
 			continue
+
+		match = pattern.match(filter_rule)
+
+		if match:
+			filter_rule = match.groups()[0]
+			generalOutputFilterList.get_widget_matrix()[i][0].set_active(True)
 			
-		pairs = filter_rule.split(" and ")
+		vars = dict([ pair.split(" == ") for pair in filter_rule.split(" and ") ])
 
-		for pair in pairs:
-			def set_negated(i):
-					generalOutputFilterList.get_widget_matrix()[i][0].set_active(True)
-
-			if not pair:
-				continue
-
-			key, value = pair.split(" == ")
-
-			if key.startswith("not ("):
-				key = key[len("not ("):]
-				set_negated(i)
-
-			if value[-1] == ")":
-				value = value[:-1]
-				set_negated(i)
-
+		for (key,value) in vars.items():
 			value = value.strip('"')
-
 			if key == "type":
 				generalOutputFilterList.get_widget_matrix()[i][1].set_text(value)
 
