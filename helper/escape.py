@@ -30,7 +30,7 @@ def unescape_splitted(separator, splitted, escape_char):
 				# merge this and the next split together.
 				# add the escaped separator and remove the escape
 				new_split = [split[:-1] + separator + splitted[i+1]]
-				return escaped + escape_splitted(
+				return escaped + unescape_splitted(
 					separator,
 					new_split + splitted[i+2:],
 					escape_char)
