@@ -35,6 +35,8 @@ from cStringIO import StringIO
 
 import xml.sax, xml.sax.handler
 
+# TODO: add line limitation
+
 def rindex(l, i):
 	tl = list(l)
 	tl.reverse()
