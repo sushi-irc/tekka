@@ -66,20 +66,14 @@ class tekkaTab(gobject.GObject):
 		gobject.GObject.__init__(self)
 
 		self.buffer = buffer
-
 		self.path = ()
-
 		self.name = name
 		self.newMessage = []
 		self.connected = False
-
 		self.autoScroll = True
-
 		self.input_text = ""
 
-		self.inputHistory = []
-		self.historyPosition = -1
-		self.currentHistory = ""
+		self.input_history = None
 
 	def __repr__(self):
 		return "<tab '%s', path: '%s'>" % (self.name, self.path)
@@ -112,50 +106,6 @@ class tekkaTab(gobject.GObject):
 			except:
 				self.newMessage.append(type)
 		self.emit ("new_message", type)
-
-	def insertHistory(self, string):
-		"""
-			Inserts a new input history string.
-		"""
-		self.inputHistory.insert(0, string)
-		if len(self.inputHistory) > 20:
-			del self.inputHistory[20:]
-		self.historyPosition = -1
-
-	def getCurrentHistory(self):
-		return self.currentHistory
-
-	def setCurrentHistory(self, string):
-		self.currentHistory = string
-
-	def getNextHistory(self):
-		"""
-			Gets the next item in history
-		"""
-		if not self.inputHistory:
-			return ""
-
-		print self.historyPosition
-
-		if self.historyPosition + 1 == len(self.inputHistory):
-			return self.inputHistory[self.historyPosition]
-		else:
-			self.historyPosition += 1
-			return self.inputHistory[self.historyPosition]
-
-	def getPrevHistory(self):
-		"""
-			Gets the previous item in history
-		"""
-
-		print self.historyPosition
-
-		if not self.inputHistory or self.historyPosition - 1 < 0:
-			self.historyPosition = -1
-			return ""
-		else:
-			self.historyPosition -= 1
-			return self.inputHistory[self.historyPosition]
 
 	def markup(self):
 		if self.newMessage:

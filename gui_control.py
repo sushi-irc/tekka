@@ -22,6 +22,7 @@ from helper.shortcuts import addShortcut, removeShortcut
 from helper.url import URLToTag
 from helper import URLHandler
 from helper.searchToolbar import SearchBar
+from helper.input_history import InputHistory
 
 import __main__
 
@@ -46,9 +47,6 @@ def load_widgets(gladeFile, section):
 	gtk.glade.set_custom_handler(custom_handler)
 	widgets = gtk.glade.XML(gladeFile, section)
 	return widgets
-
-
-
 
 class TabClass(gobject.GObject):
 	"""
@@ -103,6 +101,9 @@ class TabClass(gobject.GObject):
 		if not obj:
 			raise Exception, "Failed to create channel."
 
+		obj.input_history = InputHistory(
+			text_callback = widgets.get_widget("inputBar").get_text)
+
 		obj.connect("new_message", __main__.tekka_tab_new_message)
 		obj.connect("new_name", __main__.tekka_tab_new_name)
 		obj.connect("new_path", __main__.tekka_tab_new_path)
@@ -120,6 +121,9 @@ class TabClass(gobject.GObject):
 		if not obj:
 			raise Exception, "Failed to create Query."
 
+		obj.input_history = InputHistory(
+			text_callback = widgets.get_widget("inputBar").get_text)
+
 		obj.connect("new_message", __main__.tekka_tab_new_message)
 		obj.connect("new_name", __main__.tekka_tab_new_name)
 		obj.connect("new_path", __main__.tekka_tab_new_path)
@@ -134,6 +138,9 @@ class TabClass(gobject.GObject):
 
 		if not obj:
 			raise Exception, "Failed to create Server."
+
+		obj.input_history = InputHistory(
+			text_callback = widgets.get_widget("inputBar").get_text)
 
 		obj.connect("new_message", __main__.tekka_tab_new_message)
 		obj.connect("new_name", __main__.tekka_tab_new_name)

@@ -325,7 +325,8 @@ def inputBar_activate_cb(inputBar):
 	commands.parseInput(text)
 
 	if tab:
-		tab.insertHistory(text)
+		tab.input_history.add_entry(text)
+		tab.input_history.reset()
 
 	inputBar.set_text("")
 
@@ -343,12 +344,9 @@ def inputBar_key_press_event_cb(inputBar, event):
 		# get next input history item
 		if not tab: return
 
-		if tab.historyPosition == -1:
-			tab.setCurrentHistory(inputBar.get_text())
+		hist = tab.input_history.get_previous()
 
-		hist = tab.getNextHistory()
-
-		if tab.historyPosition == -1:
+		if hist == None:
 			return
 
 		inputBar.set_text(hist)
@@ -358,17 +356,13 @@ def inputBar_key_press_event_cb(inputBar, event):
 		# get previous input history item
 		if not tab: return
 
-		if tab.historyPosition == -1:
+		hist = tab.input_history.get_next()
+
+		if hist == None:
 			return
-
-		hist = tab.getPrevHistory()
-
-		if tab.historyPosition == -1:
-			hist = tab.getCurrentHistory()
 
 		inputBar.set_text(hist)
 		inputBar.set_position(len(hist))
-
 
 	elif key == "Tab":
 		# tab completion comes here.
