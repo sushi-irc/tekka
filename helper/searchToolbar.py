@@ -27,6 +27,11 @@ SUCH DAMAGE.
 
 import gtk
 
+try:
+	from sexy import SpellEntry
+except ImportError:
+	pass
+
 class SearchBar(gtk.Table):
 
 	def set_textview(self, textview):
@@ -39,7 +44,7 @@ class SearchBar(gtk.Table):
 	textview_callback = None
 	textview = property(lambda s: s._textview, set_textview)
 
-	search_term = property(lambda s: s.search_entry.get_text(), 
+	search_term = property(lambda s: s.search_entry.get_text(),
 		lambda s,x: s.search_entry.set_text(x))
 
 	last_iter = None
@@ -63,7 +68,11 @@ class SearchBar(gtk.Table):
 			self.attach(self.top_hseparator, 0, 2, 0, 1)
 			self.child_set_property(self.top_hseparator, "y-options", gtk.FILL)
 
-		self.search_entry = gtk.Entry()
+		try:
+			self.search_entry = SpellEntry()
+		except NameError:
+			self.search_entry = gtk.Entry()
+
 		self.attach(self.search_entry, 0, 1, 1, 2)
 		self.child_set_property(self.search_entry, "y-options", gtk.SHRINK)
 		self.search_entry.connect("focus-out-event", self.search_entry_focus_out_cb)
