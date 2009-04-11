@@ -209,10 +209,9 @@
                     <property name="border_width">6</property>
                     <property name="spacing">6</property>
                     <child>
-                      <widget class="GtkEntry" id="topicBar">
+                      <widget class="Custom" id="topicBar">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <signal name="activate" handler="topicBar_activate_cb"/>
+                        <property name="creation_function">create_topicbar</property>
                       </widget>
                       <packing>
                         <property name="expand">False</property>
@@ -302,7 +301,7 @@
                         <child>
                           <widget class="Custom" id="inputBar">
                             <property name="visible">True</property>
-                            <property name="create_function">create_inputbar</property>
+                            <property name="creation_function">create_inputbar</property>
                           </widget>
                           <packing>
                             <property name="position">2</property>

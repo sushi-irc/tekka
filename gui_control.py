@@ -39,6 +39,7 @@ searchToolbar = None
 def custom_handler(glade, function_name, widget_name, *x):
 	if widget_name == "searchToolbar":
 		return setup_searchToolbar()
+
 	elif widget_name == "inputBar":
 		try:
 			bar = SpellEntry()
@@ -50,6 +51,17 @@ def custom_handler(glade, function_name, widget_name, *x):
 		bar.connect("activate", __main__.inputBar_activate_cb)
 
 		return bar
+
+	elif widget_name == "topicBar":
+		try:
+			bar = SpellEntry()
+		except NameError:
+			bar = gtk.Entry()
+
+		bar.connect("activate", __main__.topicBar_activate_cb)
+
+		return bar
+
 	return None
 
 @types(gladeFile=str, section=str)

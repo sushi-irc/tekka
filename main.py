@@ -1079,10 +1079,6 @@ def setupGTK():
 		"mainWindow_window_state_event_cb":
 			mainWindow_window_state_event_cb,
 
-		# input signals
-		"topicBar_activate_cb":
-			topicBar_activate_cb,
-
 		# server tree signals
 		"serverTree_realize_cb":
 			lambda w: w.expand_all(),
