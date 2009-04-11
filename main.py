@@ -53,6 +53,7 @@ from gettext import gettext as _
 
 from helper.shortcuts import addShortcut, removeShortcut
 from helper import tabcompletion
+from helper.iowatch import IOWatch
 
 import gui_control as gui
 import config
@@ -65,9 +66,37 @@ import menus
 
 import plugin_control
 
+error_pipe = IOWatch([])
+error_history = ""
+
 # TODO:  if a tab is closed the widgets remain the same.
 # TODO:: it would be nice if the tab would be switched
 # TODO:: to an active on (for error prevention too).
+
+def get_error_history():
+	global error_history
+	return error_history
+
+def add_error_handler(handler):
+	global error_pipe
+	try:
+		error_pipe.callbacks.index(handler)
+	except ValueError:
+		error_pipe.callbacks.append(handler)
+
+def remove_error_handler(handler):
+	global error_pipe
+	try:
+		i = error_pipe.callbacks.index(handler)
+	except ValueError:
+		return
+	else:
+		del error_pipe.callbacks[i]
+
+def log_error(s):
+	global error_history
+	error_history += s
+	print s,
 
 """
 Tekka intern signals
@@ -1122,6 +1151,10 @@ def main():
 	"""
 	Entry point. The program starts here.
 	"""
+
+	# setup stderr pipe
+	sys.stderr = error_pipe
+	add_error_handler(log_error)
 
 	# load config file, apply defaults
 	config.setup()
