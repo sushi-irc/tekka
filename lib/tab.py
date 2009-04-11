@@ -75,6 +75,8 @@ class tekkaTab(gobject.GObject):
 
 		self.autoScroll = True
 
+		self.input_text = ""
+
 		self.inputHistory = []
 		self.historyPosition = -1
 		self.currentHistory = ""
@@ -93,6 +95,13 @@ class tekkaTab(gobject.GObject):
 		return False
 	def is_channel(s):
 		return False
+
+	@types(text = str)
+	def set_input_text(self, text):
+		self.input_text = text
+
+	def get_input_text(self):
+		return self.input_text
 
 	def setNewMessage(self, type):
 		if not type:

@@ -9,6 +9,7 @@ import gtk.glade
 import time
 import pango
 import gettext
+import gobject
 from gobject import idle_add
 from dbus import String
 
@@ -49,7 +50,7 @@ def load_widgets(gladeFile, section):
 
 
 
-class TabClass(object):
+class TabClass(gobject.GObject):
 	"""
 	Add/remove/replace tabs.
 	Tabs are objects defined in tab.py.
@@ -61,7 +62,9 @@ class TabClass(object):
 	from lib.htmlbuffer import HTMLBuffer
 	from lib.nickListStore import nickListStore
 
+
 	def __init__(self):
+		gobject.GObject.__init__(self)
 		self.currentPath = ()
 
 	@types(tab=(
@@ -476,10 +479,14 @@ class TabClass(object):
 			print "switchToPath(): tab not found in store, aborting."
 			return
 
+		old_tab = self.getCurrentTab()
+
 		serverTree.set_cursor(path)
 		self.currentPath = path
 
 		widgets.get_widget("output").set_buffer(tab.buffer)
+
+		self.emit("tab_switched", old_tab, tab)
 
 		if tab.is_channel():
 			"""
@@ -535,7 +542,8 @@ class TabClass(object):
 		else:
 			setNick(com.getOwnNick(tab.name))
 
-
+gobject.signal_new("tab_switched", TabClass, gobject.SIGNAL_ACTION,
+	None, (gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT))
 
 tabs = TabClass()
 
@@ -858,7 +866,7 @@ def serverPrint(timestamp, server, string, type="message"):
 			"server %s." % server
 		return
 
-	timestr = time.strftime(config.get("tekka", "time_format", "%H:%M"), 
+	timestr = time.strftime(config.get("tekka", "time_format", "%H:%M"),
 		time.localtime(timestamp))
 
 	buffer.insertHTML(buffer.get_end_iter(), "[%s] %s" % (timestr,string))

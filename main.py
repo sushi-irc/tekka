@@ -73,6 +73,10 @@ error_history = ""
 # TODO:: it would be nice if the tab would be switched
 # TODO:: to an active on (for error prevention too).
 
+"""
+error message handling
+"""
+
 def get_error_history():
 	global error_history
 	return error_history
@@ -133,6 +137,21 @@ def tekka_channel_joined(tab, switch):
 def tekka_tab_new_path(tab, new_path):
 	""" a new path is set to the path """
 	pass
+
+def tekka_tab_switched(tabclass, old, new):
+	""" switched from tab old to tab new """
+	inputBar = widgets.get_widget("inputBar")
+
+	if old:
+		itext = inputBar.get_text()
+		old.set_input_text(itext)
+
+	inputBar.set_text("")
+	inputBar.set_position(1)
+
+	if new:
+		inputBar.set_text(new.get_input_text())
+		inputBar.set_position(len(inputBar.get_text()))
 
 """
 Glade signals
@@ -1010,6 +1029,9 @@ def setupGTK():
 	# to some setup on the search toolbar
 	gui.searchToolbar.hide()
 	gui.searchToolbar.textview = gui.widgets.get_widget("output")
+
+	# connect tab control signals
+	gui.tabs.connect("tab_switched", tekka_tab_switched)
 
 	# connect main window signals:
 	sigdic = {
