@@ -1080,10 +1080,6 @@ def setupGTK():
 			mainWindow_window_state_event_cb,
 
 		# input signals
-		"inputBar_activate_cb":
-			inputBar_activate_cb,
-		"inputBar_key_press_event_cb":
-			inputBar_key_press_event_cb,
 		"topicBar_activate_cb":
 			topicBar_activate_cb,
 

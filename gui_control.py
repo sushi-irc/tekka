@@ -13,6 +13,11 @@ import gobject
 from gobject import idle_add
 from dbus import String
 
+try:
+	from sexy import SpellEntry
+except ImportError:
+	print "Spell checking disabled."
+
 # local modules
 import config
 import com
@@ -34,6 +39,17 @@ searchToolbar = None
 def custom_handler(glade, function_name, widget_name, *x):
 	if widget_name == "searchToolbar":
 		return setup_searchToolbar()
+	elif widget_name == "inputBar":
+		try:
+			bar = SpellEntry()
+		except NameError:
+			bar = gtk.Entry()
+		bar.grab_focus()
+
+		bar.connect("key-press-event", __main__.inputBar_key_press_event_cb)
+		bar.connect("activate", __main__.inputBar_activate_cb)
+
+		return bar
 	return None
 
 @types(gladeFile=str, section=str)
