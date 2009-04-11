@@ -278,7 +278,7 @@ def isHighlighted (server, text):
 	highlightwords.append(com.getOwnNick(server))
 
 	for word in highlightwords:
-		i = text.find(word)
+		i = text.lower().find(word.lower())
 
 		if i >= 0:
 			return True

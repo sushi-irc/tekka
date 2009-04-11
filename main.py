@@ -783,6 +783,8 @@ def nickListRenderNicks(column, renderer, model, iter):
 	else:
 		renderer.set_property("weight", pango.WEIGHT_NORMAL)
 
+	# TODO: highlighing of users which are away
+
 """
 Initial setup routines
 """
