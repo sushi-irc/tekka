@@ -249,10 +249,13 @@ def menu_Help_about_activate_cb(menuItem):
 	"""
 		Show the about dialog!
 	"""
+	def about_response_cb(dialog, response_id):
+		dialog.destroy()
+
 	widgets = gtk.glade.XML(config.get("gladefiles","dialogs") + "about.glade")
 	d = widgets.get_widget("aboutDialog")
-	d.run()
-	d.destroy()
+	d.connect("response", about_response_cb)
+	d.show_all()
 
 def mainWindow_delete_event_cb(mainWindow, event):
 	"""
