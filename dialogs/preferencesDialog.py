@@ -318,6 +318,12 @@ def setup():
 
 	widgets.signal_autoconnect(sigdic)
 
+def dialog_response_cb(dialog, response_id):
+	applyNickColors()
+	applyGeneralOutputFilter()
+
+	dialog.destroy()
+
 def run():
 	dialog = widgets.get_widget("preferencesDialog")
 
@@ -327,11 +333,7 @@ def run():
 	fillNickColors()
 	fillGeneralOutputFilters()
 
-	dialog.run()
-
-	applyNickColors()
-	applyGeneralOutputFilter()
-
-	dialog.destroy()
+	dialog.connect("response", dialog_response_cb)
+	dialog.show_all()
 
 
