@@ -106,6 +106,15 @@ def log_error(s):
 Tekka intern signals
 """
 
+def maki_connect_callback(sushi):
+	""" connection to maki etablished """
+	signals.setup()
+	gui.setUseable(True)
+
+def maki_disconnect_callback():
+	""" connection to maki lost """
+	gui.setUseable(False)
+
 def tekka_server_away(tab, msg):
 	if tab.path:
 		gui.updateServerTreeMarkup(tab.path)
@@ -169,12 +178,7 @@ def menu_tekka_Connect_activate_cb(menuItem):
 		returned server (if any).
 	"""
 	if not com.getConnected():
-		err = gtk.MessageDialog(
-			type=gtk.MESSAGE_ERROR,
-			buttons=gtk.BUTTONS_CLOSE,
-			message_format="There is no connection to maki!")
-		err.run()
-		err.destroy()
+		gui.errorMessage("No connection to maki!", force_dialog=True)
 		return
 
 	dialog_control.showServerDialog(server_dialog_callback)
@@ -938,17 +942,7 @@ def connectMaki():
 		and signals, dialogs, menus as well as the commands module
 		were set up.
 	"""
-	gui.setUseable(False)
-
-	if com.connect():
-		# init modules
-
-		signals.setup()
-
-		gui.setUseable(True)
-
-	# TODO: print error message
-
+	com.connect()
 
 def paned_notify(paned, gparam):
 	""" watch every property set for
@@ -1121,7 +1115,7 @@ def setupGTK():
 	gui.setFont(widgets.get_widget("generalOutput"), gui.get_font())
 
 	# setup general output
-	buffer = gui.tabs.getNewBuffer()
+	buffer = gui.getNewBuffer()
 	widgets.get_widget("generalOutput").set_buffer(buffer)
 
 	# setup menu bar stuff
@@ -1162,6 +1156,9 @@ def main():
 
 	# load config file, apply defaults
 	config.setup()
+
+	# setup callbacks
+	com.setup( [maki_connect_callback], [maki_disconnect_callback])
 
 	# build graphical interface
 	setupGTK()
