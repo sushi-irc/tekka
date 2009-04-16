@@ -58,30 +58,39 @@ def setup():
 	gtk.glade.set_custom_handler(createCommandList)
 	widgets = gtk.glade.XML(path)
 
+def dialog_response_cb(dialog, response_id, server):
+	newServer = {}
+
+	if response_id == gtk.RESPONSE_OK:
+		# apply the data
+		for key in ("address","port","name","nick","nickserv"):
+			exec ("value = widgets.get_widget('%sEntry').get_text()" % key)
+			com.sushi.server_set(server, "server", key, value)
+
+		com.sushi.server_set(server, "server", "autoconnect",
+				str(widgets.get_widget("autoConnectCheckButton").get_active()))
+
+		# apply commands
+		list = [i[0].get_text() for i in commandList.get_widget_matrix() if i[0].get_text()]
+		com.sushi.server_set_list(server, "server", "commands", list)
+
+	dialog.destroy()
+
+
 def run(server):
 	serverdata = com.fetchServerInfo(server)
 
-	addressInput = widgets.get_widget("addressEntry")
-	portInput = widgets.get_widget("portEntry")
-	nameInput = widgets.get_widget("realNameEntry")
-	nickInput = widgets.get_widget("nickEntry")
-	nickservInput = widgets.get_widget("nickServEntry")
 	autoconnectInput = widgets.get_widget("autoConnectCheckButton")
 	# TODO: implement nickserv ghost flag
 
-	try:
-		addressInput.set_text(serverdata["address"])
-		portInput.set_text(serverdata["port"])
-		nameInput.set_text(serverdata["name"])
-		nickInput.set_text(serverdata["nick"])
-		nickservInput.set_text(serverdata["nickserv"])
+	# Fill entries with given data.
+	for key in ("address","port","name","nick","nickserv"):
+		widgets.get_widget("%sEntry" % key).set_text(serverdata[key])
 
-		if serverdata["autoconnect"] == "true":
-			autoconnectInput.set_active(True)
-		else:
-			autoconnectInput.set_active(False)
-	except KeyError, e:
-		print "editServer reported missing: ", e
+	if serverdata["autoconnect"].lower() == "true":
+		autoconnectInput.set_active(True)
+	else:
+		autoconnectInput.set_active(False)
 
 	i = 0
 	for command in com.sushi.server_get_list(server, "server", "commands"):
@@ -90,23 +99,6 @@ def run(server):
 		i += 1
 
 	dialog = widgets.get_widget("serverEdit")
-	result = dialog.run()
-
-	newServer = {}
-
-	if result == gtk.RESPONSE_OK:
-		# apply the data
-		for key in ("address","port","name","nick","nickserv"):
-			exec ("value = %sInput.get_text()" % key)
-			com.sushi.server_set(server, "server", key, value)
-
-		com.sushi.server_set(server, "server", "autoconnect",
-				str(autoconnectInput.get_active()).lower())
-
-		# apply commands
-		list = [i[0].get_text() for i in commandList.get_widget_matrix() if i[0].get_text()]
-		com.sushi.server_set_list(server, "server", "commands", list)
-
-	dialog.destroy()
-
+	dialog.connect("response", dialog_response_cb, server)
+	dialog.show_all()
 

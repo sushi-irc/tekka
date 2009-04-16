@@ -25,7 +25,7 @@
                 <property name="n_rows">6</property>
                 <property name="n_columns">2</property>
                 <child>
-                  <widget class="GtkEntry" id="nickServEntry">
+                  <widget class="GtkEntry" id="nickservEntry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="visibility">False</property>
@@ -38,7 +38,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="realNameEntry">
+                  <widget class="GtkEntry" id="nameEntry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                   </widget>
