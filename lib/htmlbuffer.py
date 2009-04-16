@@ -252,7 +252,10 @@ class HTMLBuffer(gtk.TextBuffer):
 	def insertHTML(self, iter, text):
 		startoffset = iter.get_offset()
 
-		text = "<msg><br/>%s</msg>" % text
+		if gtk.TextBuffer.get_char_count(self) > 0:
+			text = "<br/>" + text
+
+		text = "<msg>%s</msg>" % text
 
 		# check for last line text
 

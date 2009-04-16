@@ -544,7 +544,11 @@ def parseInput(text):
 				return gui.myPrint("No server active.")
 
 			# build raw command
-			raw = cmd.upper() +  " " + " ".join(argv[1:])
+			raw = cmd.upper()
+
+			if len(argv) > 1:
+				raw +=  " " + " ".join(argv[1:])
+
 			gui.myPrint(_(
 				u"• Unknown command “%(command)s”, "\
 				"sending raw command “%(raw)s”.") % {

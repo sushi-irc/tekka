@@ -972,7 +972,10 @@ def myPrint(string, html=False):
 		return
 
 	if not html:
-		output.insert(output.get_end_iter(), "\n"+string)
+		if output.get_char_count() > 0:
+			string = "\n" + string
+
+		output.insert(output.get_end_iter(), string)
 
 	else:
 		try:
