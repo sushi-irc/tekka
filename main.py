@@ -227,10 +227,8 @@ def menu_Dialogs_channelList_activate_cb(menuItem):
 		show channel list dialog.
 	"""
 	if not com.getConnected():
-		err = gtk.MessageDialog(type=gtk.MESSAGE_ERROR, buttons=gtk.BUTTONS_CLOSE,
-			message_format="There is no connection to maki!")
-		err.run()
-		err.destroy()
+		gui.errorMessage("There is no connection to maki!",
+			force_dialog=True)
 		return
 
 	sTab,cTab = gui.tabs.getCurrentTabs()
@@ -683,7 +681,31 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 	"""
 		Ctrl+W was hit, close the current tab (if any)
 	"""
+	def response_handler(dialog, response_id):
+
+		if response_id == gtk.RESPONSE_YES:
+
+			# FIXME:  if you close a tab no part message will be shown up
+			# FIXME:: because the tab which contains the output buffer is
+			# FIXME:: removed before the signal execution.
+			if tab.is_channel():
+				com.part(tab.server,tab.name,
+					config.get("chatting", "part_message", ""))
+
+			elif tab.is_server():
+				com.quitServer(tab.name,
+					config.get("chatting", "quit_message", ""))
+
+			gui.tabs.removeTab(tab)
+			gui.updateServerTreeShortcuts()
+
+			# TODO:  automagically switch to the next active tab
+			# TODO:: around the old tab.
+
+		dialog.destroy()
+
 	tab = gui.tabs.getCurrentTab()
+
 	if not tab:
 		return
 
@@ -694,28 +716,12 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 	elif tab.is_server():
 		message = _(u"Do you really want to close server “%(name)s”?")
 
-	dialog = gtk.MessageDialog(type=gtk.MESSAGE_QUESTION, buttons=gtk.BUTTONS_YES_NO,
-		message_format=message % { "name": tab.name })
-	res = dialog.run()
-	dialog.destroy()
-
-	if res != gtk.RESPONSE_YES:
-		return
-
-	# FIXME:  if you close a tab no part message will be shown up
-	# FIXME:: because the tab which contains the output buffer is
-	# FIXME:: removed before the signal execution.
-	if tab.is_channel():
-		com.part(tab.server,tab.name, config.get("chatting", "part_message", ""))
-
-	elif tab.is_server():
-		com.quitServer(tab.name, config.get("chatting", "quit_message", ""))
-
-	gui.tabs.removeTab(tab)
-	gui.updateServerTreeShortcuts()
-
-	# TODO:  automagically switch to the next active tab
-	# TODO:: around the old tab.
+	dialog = gtk.MessageDialog(
+		type= gtk.MESSAGE_QUESTION,
+		buttons= gtk.BUTTONS_YES_NO,
+		message_format= message % { "name": tab.name })
+	dialog.connect("response", response_handler)
+	dialog.show_all()
 
 def output_shortcut_Page_Up(output, shortcut):
 	"""
