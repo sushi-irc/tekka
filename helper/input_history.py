@@ -52,6 +52,9 @@ class InputHistory (object):
 	@types (size=int)
 	def __init__ (self, size=20, text_callback=lambda: ""):
 		self._size = size
+		self._history = []
+		self._position = None
+		self._origin_text = ""
 		self._get_text_callback = text_callback
 
 	def reset(self):
