@@ -26,15 +26,16 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
-# TODO: add shutdown signal
-
 import os
 import re
 
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
 
+from typecheck import types
 from signals import parse_from
+
+import gui_control
 
 dbus_loop = DBusGMainLoop()
 required_version = (1, 0, 0)
@@ -45,7 +46,17 @@ else:
 	bus = dbus.SessionBus(mainloop=dbus_loop)
 sushi = None
 myNick = {}
+
+_shutdown_callback = None
+_nick_callback = None
+_callbacks = []
 __connected = False
+
+@types (connect_callbacks = list, disconnect_callbacks = list)
+def setup(connect_callbacks, disconnect_callbacks):
+	global _connect_callbacks, _disconnect_callbacks
+	_connect_callbacks = connect_callbacks
+	_disconnect_callbacks = disconnect_callbacks
 
 def connect():
 	"""
@@ -53,14 +64,15 @@ def connect():
 		Returns True if the connection attempt
 		was succesful.
 	"""
-	global sushi
+	global sushi, _shutdown_callback, _nick_callback
 
 	proxy = None
 	try:
 		proxy = bus.get_object("de.ikkoku.sushi", "/de/ikkoku/sushi")
 	except dbus.exceptions.DBusException, e:
-		print e
-		print "Is maki running?"
+		gui_control.errorMessage("Can't etablish connection to maki:\n\n"\
+			"%(error_message)s\n\nIs maki running?" % {
+				"error_message": str(e)})
 
 	if not proxy:
 		return False
@@ -73,7 +85,8 @@ def connect():
 		sushi = None
 		return False
 
-	sushi.connect_to_signal("nick", _nickSignal)
+	_shutdown_callback = sushi.connect_to_signal("shutdown", _shutdownSignal)
+	_nick_callback = sushi.connect_to_signal("nick", _nickSignal)
 
 	for server in fetchServers():
 		fetchOwnNick(server)
@@ -81,7 +94,24 @@ def connect():
 	global __connected
 	__connected = True
 
+	for callback in _connect_callbacks:
+		callback(sushi)
+
 	return True
+
+def disconnect():
+	global __connected, sushi, _shutdown_callback, _nick_callback
+	__connected = False
+	sushi = None
+
+	if _shutdown_callback:
+		_shutdown_callback.remove()
+
+	if _nick_callback:
+		_nick_callback.remove()
+
+	for callback in _disconnect_callbacks:
+		callback()
 
 def getConnected():
 	"""
@@ -106,6 +136,9 @@ def shutdown(quitmsg=""):
 """
 Signals: nickchange (nick => _nickSignal)
 """
+
+def _shutdownSignal(time):
+	disconnect()
 
 def _nickSignal(time, server, from_str, new_nick):
 	nick = parse_from(from_str)[0]
