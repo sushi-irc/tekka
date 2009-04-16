@@ -35,10 +35,10 @@ def customHandler(glade, function_name, widget_name, *x):
 		# negate, type, server, channel
 		generalOutputFilterList = expandingList(
 			gtk.ToggleButton, gtk.Entry,
-			gtk.Entry, gtk.Entry, 
+			gtk.Entry, gtk.Entry,
 			no_firstrow=True)
 
-		generalOutputFilterList.connect("instanced_widget", 
+		generalOutputFilterList.connect("instanced_widget",
 			generalOutputFilterList_instanced_widget_cb)
 
 		generalOutputFilterList._add_row(0)
@@ -66,17 +66,8 @@ def fillTekka():
 		child.set_active(bval)
 
 	# set font labels
-	oFont = config.get("tekka", "output_font")
-	widgets.get_widget("fontSelectButton").set_font_name(oFont)
-
-	gFont = config.get("tekka", "general_output_font")
-	widgets.get_widget("fontSelectButton_generalOutput").set_font_name(gFont)
-
-	iFont = config.get("tekka", "input_font")
-	widgets.get_widget("fontSelectButton_inputBar").set_font_name(iFont)
-
-	if config.get_bool("tekka", "input_font_is_output_font"):
-		widgets.get_widget("fontSelectButton_inputBar").set_sensitive(False)
+	font = config.get("tekka", "font")
+	widgets.get_widget("fontSelectButton").set_font_name(font)
 
 def fillColors():
 	for key in ("own_nick", "own_text", "notification",
@@ -129,7 +120,7 @@ def fillGeneralOutputFilters():
 		if match:
 			filter_rule = match.groups()[0]
 			generalOutputFilterList.get_widget_matrix()[i][0].set_active(True)
-			
+
 		vars = dict([ pair.split(" == ") for pair in filter_rule.split(" and ") ])
 
 		for (key,value) in vars.items():
@@ -197,49 +188,16 @@ def tekka_hide_on_close_toggled(button):
 	config.set("tekka", "hide_on_close",
 			str(button.get_active()).lower())
 
-def tekka_output_font_clicked(button):
-	output = gui.widgets.get_widget("output")
-
+def tekka_font_clicked(button):
 	font = button.get_font_name()
 
 	if font:
-		config.set("tekka", "output_font", font)
-		gui.setFont(output, font)
+		config.set("tekka", "font", font)
 
-		if config.get_bool("tekka","input_font_is_output_font"):
+		if not config.get_bool("tekka", "use_default_font"):
+			gui.setFont(gui.widgets.get_widget("output"), font)
 			gui.setFont(gui.widgets.get_widget("inputBar"), font)
-
-def tekka_general_output_font_clicked(button):
-	output = gui.widgets.get_widget("generalOutput")
-
-	font = button.get_font_name()
-
-	if font:
-		config.set("tekka", "general_output_font", font)
-		gui.setFont(output, font)
-
-def tekka_input_bar_font_clicked(button):
-	font = button.get_font_name()
-	widget = gui.widgets.get_widget("inputBar")
-
-	if font:
-		config.set("tekka","input_font",font)
-		gui.setFont(widget, font)
-
-def tekka_input_font_is_output_font_toggled(button):
-	config.set("tekka", "input_font_is_output_font",
-			str(button.get_active()).lower())
-	widget = gui.widgets.get_widget("inputBar")
-
-	if button.get_active():
-		# apply the new font and save the old
-		gui.setFont(widget, config.get("tekka","output_font"))
-		widgets.get_widget("fontSelectButton_inputBar").set_sensitive(False)
-
-	else:
-		# reset to the old font
-		gui.setFont(widget, config.get("tekka","input_font"))
-		widgets.get_widget("fontSelectButton_inputBar").set_sensitive(True)
+			gui.setFont(gui.widgets.get_widget("generalOutput"), font)
 
 def tekka_auto_expand_toggled(button):
 	config.set("tekka", "auto_expand",
@@ -334,10 +292,7 @@ def setup():
 	# tekka page
 		"tekka_show_status_icon_toggled": tekka_show_status_icon_toggled,
 		"tekka_hide_on_close_toggled": tekka_hide_on_close_toggled,
-		"tekka_output_font_clicked": tekka_output_font_clicked,
-		"tekka_general_output_font_clicked": tekka_general_output_font_clicked,
-		"tekka_input_bar_font_clicked": tekka_input_bar_font_clicked,
-		"tekka_input_font_is_output_font_toggled": tekka_input_font_is_output_font_toggled,
+		"tekka_font_clicked": tekka_font_clicked,
 		"tekka_auto_expand_toggled": tekka_auto_expand_toggled,
 		"tekka_rgba_toggled": tekka_rgba_toggled,
 		"tekka_close_maki_on_close_toggled": tekka_close_maki_on_close_toggled,

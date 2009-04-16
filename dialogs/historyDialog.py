@@ -168,4 +168,4 @@ def setup():
 	widgets.signal_autoconnect(sigdic)
 	widgets.get_widget("calendar").connect("realize", calendar_realize_cb)
 
-	gui.setFont(widgets.get_widget("historyView"), config.get("tekka","history_font"))
+	gui.setFont(widgets.get_widget("historyView"), gui.get_font())

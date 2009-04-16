@@ -67,10 +67,8 @@ def set_defaults():
 	defaults["tekka"]["status_icon"] = os.path.join(
 		prefix, "graphics", "icon.svg")
 	defaults["tekka"]["plugin_dirs"] = os.path.join(prefix, "plugins")
-	defaults["tekka"]["output_font"] = "Monospace 10"
-	defaults["tekka"]["general_output_font"] = "Monospace 10"
-	defaults["tekka"]["input_font"] = "Monospace 10"
-	defaults["tekka"]["history_font"] = "Monospace 10"
+	defaults["tekka"]["use_default_font"] = "True"
+	defaults["tekka"]["font"] = "Monospace 10"
 	defaults["tekka"]["auto_expand"] = "True"
 	defaults["tekka"]["show_general_output"] = "True"
 	defaults["tekka"]["rgba"] = "False"
@@ -78,7 +76,6 @@ def set_defaults():
 	defaults["tekka"]["color_text"] = "True" 		# colors enabled?
 	defaults["tekka"]["color_nick_text"] = "False" 	# color the text as well as the nick
 	defaults["tekka"]["ask_for_key_on_cannotjoin"] = "True"
-	defaults["tekka"]["input_font_is_output_font"] = "True"
 	defaults["tekka"]["time_format"] = "%H:%M"
 	defaults["tekka"]["whois_dialog"] = "true"
 

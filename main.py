@@ -1108,23 +1108,13 @@ def setupGTK():
 	setup_nickList()
 
 	# set output font
-	gui.setFont(widgets.get_widget("output"),
-		config.get("tekka","output_font"))
+	gui.setFont(widgets.get_widget("output"), gui.get_font())
 
-	# set input font to output font if wanted
-	if config.get_bool("tekka","input_font_is_output_font"):
-		gui.setFont(widgets.get_widget("inputBar"),
-			config.get("tekka","output_font"))
-	else:
-		# set input font
-		gui.setFont(widgets.get_widget("inputBar"),
-			config.get("tekka","input_font"))
-
+	# set input font
+	gui.setFont(widgets.get_widget("inputBar"), gui.get_font())
 
 	# set general output font
-	gui.setFont(widgets.get_widget("generalOutput"),
-		config.get("tekka","general_output_font"))
-
+	gui.setFont(widgets.get_widget("generalOutput"), gui.get_font())
 
 	# setup general output
 	buffer = gui.tabs.getNewBuffer()

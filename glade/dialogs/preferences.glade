@@ -3,12 +3,12 @@
 <!--Generated with glade3 3.4.5 on Sat Mar 21 01:50:16 2009 -->
 <glade-interface>
   <widget class="GtkDialog" id="preferencesDialog">
-    <property name="default-height">400</property>
-    <property name="default-width">400</property>
     <property name="border_width">4</property>
     <property name="title" translatable="yes">Preferences</property>
     <property name="window_position">GTK_WIN_POS_CENTER_ON_PARENT</property>
     <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+    <property name="default_width">400</property>
+    <property name="default_height">400</property>
     <property name="has_separator">False</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox9">
@@ -23,101 +23,18 @@
               <widget class="GtkTable" id="tekkaTable">
                 <property name="visible">True</property>
                 <property name="border_width">8</property>
-                <property name="n_rows">11</property>
+                <property name="n_rows">9</property>
                 <property name="n_columns">2</property>
                 <property name="column_spacing">6</property>
-                <child>
-                  <widget class="GtkFontButton" id="fontSelectButton_inputBar">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="response_id">0</property>
-                    <property name="font_name">Monospace 10</property>
-                    <property name="use_font">True</property>
-                    <property name="use_size">True</property>
-                    <signal name="font_set" handler="tekka_input_bar_font_clicked"/>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">5</property>
-                    <property name="bottom_attach">6</property>
-                    <property name="x_options"></property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label11">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Input font:</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">5</property>
-                    <property name="bottom_attach">6</property>
-                    <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
-                  </packing>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <widget class="GtkCheckButton" id="input_font_is_output_font">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">_Input font is output font</property>
-                    <property name="use_underline">True</property>
-                    <property name="response_id">0</property>
-                    <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="tekka_input_font_is_output_font_toggled"/>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">6</property>
-                    <property name="bottom_attach">7</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkFontButton" id="fontSelectButton_generalOutput">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="response_id">0</property>
-                    <property name="font_name">Monospace 10</property>
-                    <property name="use_font">True</property>
-                    <property name="use_size">True</property>
-                    <signal name="font_set" handler="tekka_general_output_font_clicked"/>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">4</property>
-                    <property name="bottom_attach">5</property>
-                    <property name="x_options"></property>
-                    <property name="y_options"></property>
-                  </packing>
-                </child>
                 <child>
                   <widget class="GtkFontButton" id="fontSelectButton">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="response_id">0</property>
                     <property name="font_name">Monospace 10</property>
                     <property name="use_font">True</property>
                     <property name="use_size">True</property>
-                    <signal name="font_set" handler="tekka_output_font_clicked"/>
+                    <signal name="font_set" handler="tekka_font_clicked"/>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
@@ -130,39 +47,27 @@
                 </child>
                 <child>
                   <widget class="GtkCheckButton" id="rgba">
+                    <property name="label" translatable="yes">Use _RGBA</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Use _RGBA</property>
+                    <property name="receives_default">False</property>
                     <property name="use_underline">True</property>
-                    <property name="response_id">0</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="tekka_rgba_toggled"/>
                   </widget>
                   <packing>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">9</property>
-                    <property name="bottom_attach">10</property>
+                    <property name="top_attach">7</property>
+                    <property name="bottom_attach">8</property>
                     <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                     <property name="y_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label24">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="label" translatable="yes">General Output font:</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">4</property>
-                    <property name="bottom_attach">5</property>
-                    <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                   </packing>
                 </child>
                 <child>
                   <widget class="GtkLabel" id="label21">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
-                    <property name="label" translatable="yes">Output font:</property>
+                    <property name="label" translatable="yes">Font:</property>
                     <property name="ellipsize">PANGO_ELLIPSIZE_START</property>
                   </widget>
                   <packing>
@@ -173,11 +78,11 @@
                 </child>
                 <child>
                   <widget class="GtkCheckButton" id="hide_on_close">
+                    <property name="label" translatable="yes">_Hide on close</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">_Hide on close</property>
+                    <property name="receives_default">False</property>
                     <property name="use_underline">True</property>
-                    <property name="response_id">0</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="tekka_hide_on_close_toggled"/>
                   </widget>
@@ -189,11 +94,11 @@
                 </child>
                 <child>
                   <widget class="GtkCheckButton" id="show_status_icon">
+                    <property name="label" translatable="yes">_Show status icon</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">_Show status icon</property>
+                    <property name="receives_default">False</property>
                     <property name="use_underline">True</property>
-                    <property name="response_id">0</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="tekka_show_status_icon_toggled"/>
                   </widget>
@@ -203,37 +108,55 @@
                 </child>
                 <child>
                   <widget class="GtkCheckButton" id="auto_expand">
+                    <property name="label" translatable="yes">A_uto expand server tree</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">A_uto expand server tree</property>
+                    <property name="receives_default">False</property>
                     <property name="use_underline">True</property>
-                    <property name="response_id">0</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="tekka_auto_expand_toggled"/>
                   </widget>
                   <packing>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">8</property>
-                    <property name="bottom_attach">9</property>
+                    <property name="top_attach">6</property>
+                    <property name="bottom_attach">7</property>
                     <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                     <property name="y_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                   </packing>
                 </child>
                 <child>
                   <widget class="GtkCheckButton" id="close_maki_on_close">
+                    <property name="label" translatable="yes">Shutdown _maki on close</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="label" translatable="yes">Shutdown _maki on close</property>
+                    <property name="receives_default">False</property>
                     <property name="use_underline">True</property>
-                    <property name="response_id">0</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="tekka_close_maki_on_close_toggled"/>
                   </widget>
                   <packing>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">10</property>
-                    <property name="bottom_attach">11</property>
+                    <property name="top_attach">8</property>
+                    <property name="bottom_attach">9</property>
                   </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
                 </child>
               </widget>
             </child>
@@ -244,8 +167,8 @@
                 <property name="use_underline">True</property>
               </widget>
               <packing>
-                <property name="type">tab</property>
                 <property name="tab_fill">False</property>
+                <property name="type">tab</property>
               </packing>
             </child>
             <child>
@@ -476,9 +399,9 @@
                 <property name="use_underline">True</property>
               </widget>
               <packing>
-                <property name="type">tab</property>
                 <property name="position">1</property>
                 <property name="tab_fill">False</property>
+                <property name="type">tab</property>
               </packing>
             </child>
             <child>
@@ -566,9 +489,9 @@
                 <property name="use_underline">True</property>
               </widget>
               <packing>
-                <property name="type">tab</property>
                 <property name="position">2</property>
                 <property name="tab_fill">False</property>
+                <property name="type">tab</property>
               </packing>
             </child>
             <child>
@@ -610,9 +533,9 @@ Changes will be applied after closing this dialog.</property>
                 <property name="use_underline">True</property>
               </widget>
               <packing>
-                <property name="type">tab</property>
                 <property name="position">3</property>
                 <property name="tab_fill">False</property>
+                <property name="type">tab</property>
               </packing>
             </child>
             <child>
@@ -627,7 +550,7 @@ Changes will be applied after closing this dialog.</property>
                   </widget>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="label7">
+                  <widget class="GtkLabel" id="label8">
                     <property name="visible">True</property>
                     <property name="xalign">0.11999999731779099</property>
                     <property name="label" translatable="yes">&lt;b&gt;Notice:&lt;/b&gt;
@@ -649,15 +572,15 @@ Everything matching passes the filter and will be shown except the row is negate
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="label6">
+              <widget class="GtkLabel" id="label9">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_General Output</property>
                 <property name="use_underline">True</property>
               </widget>
               <packing>
-                <property name="type">tab</property>
                 <property name="position">3</property>
                 <property name="tab_fill">False</property>
+                <property name="type">tab</property>
               </packing>
             </child>
             <child>
@@ -667,12 +590,11 @@ Everything matching passes the filter and will be shown except the row is negate
                 <property name="n_rows">2</property>
                 <child>
                   <widget class="GtkButton" id="advancedSettingsButton">
+                    <property name="label" translatable="yes">Ad_vanced Settings</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <property name="label" translatable="yes">Ad_vanced Settings</property>
                     <property name="use_underline">True</property>
-                    <property name="response_id">0</property>
                     <signal name="clicked" handler="advanced_advancedSettingsClicked"/>
                   </widget>
                   <packing>
@@ -683,7 +605,7 @@ Everything matching passes the filter and will be shown except the row is negate
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="label9">
+                  <widget class="GtkLabel" id="label12">
                     <property name="visible">True</property>
                     <property name="label" translatable="yes">If you want to have control about &lt;u&gt;all&lt;/u&gt; settings you can use the advanced settings dialog.
 
@@ -699,15 +621,15 @@ For some options it is neccessary to restart tekka for the changes to take effec
               </packing>
             </child>
             <child>
-              <widget class="GtkLabel" id="label8">
+              <widget class="GtkLabel" id="label13">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_Advanced</property>
                 <property name="use_underline">True</property>
               </widget>
               <packing>
-                <property name="type">tab</property>
                 <property name="position">4</property>
                 <property name="tab_fill">False</property>
+                <property name="type">tab</property>
               </packing>
             </child>
           </widget>
@@ -721,18 +643,24 @@ For some options it is neccessary to restart tekka for the changes to take effec
             <property name="layout_style">GTK_BUTTONBOX_END</property>
             <child>
               <widget class="GtkButton" id="button2">
+                <property name="label" translatable="yes">gtk-close</property>
+                <property name="response_id">-6</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">gtk-close</property>
                 <property name="use_stock">True</property>
-                <property name="response_id">-6</property>
               </widget>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
             </child>
           </widget>
           <packing>
             <property name="expand">False</property>
             <property name="pack_type">GTK_PACK_END</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </widget>

@@ -36,6 +36,21 @@ statusIcon = None
 accelGroup = None
 searchToolbar = None
 
+def get_font ():
+	if not config.get_bool("tekka", "use_default_font"):
+		return config.get("tekka", "font")
+
+	try:
+		import gconf
+
+		client = gconf.Client()
+
+		font = client.get_string("/desktop/gnome/interface/monospace_font_name")
+
+		return font
+	except:
+		return config.get("tekka", "font")
+
 def custom_handler(glade, function_name, widget_name, *x):
 	if widget_name == "searchToolbar":
 		return setup_searchToolbar()
