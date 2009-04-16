@@ -28,6 +28,7 @@ from helper.url import URLToTag
 from helper import URLHandler
 from helper.searchToolbar import SearchBar
 from helper.input_history import InputHistory
+from lib.htmlbuffer import HTMLBuffer
 
 import __main__
 
@@ -35,6 +36,13 @@ widgets = None
 statusIcon = None
 accelGroup = None
 searchToolbar = None
+
+def getNewBuffer():
+	"""
+	Returns a HTMLBuffer with assigned URL handler.
+	"""
+	buffer = HTMLBuffer(handler = URLHandler.URLHandler)
+	return buffer
 
 def get_font ():
 	if not config.get_bool("tekka", "use_default_font"):
@@ -89,6 +97,9 @@ def load_widgets(gladeFile, section):
 	global widgets
 	gtk.glade.set_custom_handler(custom_handler)
 	widgets = gtk.glade.XML(gladeFile, section)
+
+	widgets.get_widget("output").set_buffer(getNewBuffer())
+
 	return widgets
 
 class TabClass(gobject.GObject):
@@ -100,9 +111,7 @@ class TabClass(gobject.GObject):
 	"""
 
 	import lib.tab as tab
-	from lib.htmlbuffer import HTMLBuffer
 	from lib.nickListStore import nickListStore
-
 
 	def __init__(self):
 		gobject.GObject.__init__(self)
@@ -122,12 +131,7 @@ class TabClass(gobject.GObject):
 		for widget in widgetList:
 			widget.set_sensitive (switch)
 
-	def getNewBuffer(self):
-		"""
-		Returns a HTMLBuffer with assigned URL handler.
-		"""
-		buffer = self.HTMLBuffer(handler = URLHandler.URLHandler)
-		return buffer
+
 
 	def createChannel(self, server, name):
 		ns = self.nickListStore()
@@ -139,7 +143,7 @@ class TabClass(gobject.GObject):
 			name,
 			server,
 			nicklist=ns,
-			buffer=self.getNewBuffer())
+			buffer=getNewBuffer())
 
 		if not obj:
 			raise Exception, "Failed to create channel."
@@ -159,7 +163,7 @@ class TabClass(gobject.GObject):
 		obj = self.tab.tekkaQuery(
 			name,
 			server,
-			buffer=self.getNewBuffer())
+			buffer=getNewBuffer())
 
 		if not obj:
 			raise Exception, "Failed to create Query."
@@ -177,7 +181,7 @@ class TabClass(gobject.GObject):
 	def createServer(self, server):
 		obj = self.tab.tekkaServer(
 			server,
-			buffer=self.getNewBuffer())
+			buffer=getNewBuffer())
 
 		if not obj:
 			raise Exception, "Failed to create Server."
