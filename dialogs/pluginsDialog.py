@@ -44,15 +44,15 @@ COL_VERSION,
 COL_DESC,
 COL_AUTHOR) = range(7)
 
+def dialog_response_cb(dialog, response_id):
+	if response_id != 0:
+		dialog.destroy()
+
 def run():
 	dialog = widgets.get_widget("plugins")
 
-	# FIXME
-	while True:
-		result = dialog.run()
-		if result in (gtk.RESPONSE_CANCEL, gtk.RESPONSE_DELETE_EVENT):
-			dialog.destroy()
-			break
+	dialog.connect("response", dialog_response_cb)
+	dialog.show_all()
 
 def loadPlugin_clicked_cb(button):
 	view = widgets.get_widget("pluginView")
