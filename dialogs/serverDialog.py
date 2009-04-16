@@ -83,7 +83,7 @@ def dialog_response_cb(dialog, response_id, callback):
 		paths = serverSelection.get_selected_rows()[1]
 
 		if not paths:
-			gui_control.errorMessage("No servers selected!")
+			gui_control.errorMessage("No servers selected!", force_dialog=True)
 			return
 
 		toConnect = []
@@ -167,9 +167,12 @@ def deleteServer(servername):
 			serverList.remove(row.iter)
 			com.deleteServer(servername)
 
-def openAddDialog(widget):
-	dialog_control.showAddServerDialog()
+def add_dialog_cb():
+	""" indicates, server was added """
 	retrieveServerlist()
+
+def openAddDialog(widget):
+	dialog_control.showAddServerDialog(add_dialog_cb)
 
 def openEditDialog(widget):
 	view = widgets.get_widget("serverList")

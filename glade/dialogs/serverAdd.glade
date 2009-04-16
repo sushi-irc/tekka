@@ -25,7 +25,7 @@
                 <property name="n_rows">7</property>
                 <property name="n_columns">2</property>
                 <child>
-                  <widget class="GtkEntry" id="nickServEntry">
+                  <widget class="GtkEntry" id="nickservEntry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="visibility">False</property>
@@ -38,7 +38,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="nickServLabel">
+                  <widget class="GtkLabel" id="nickservLabel">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="xpad">12</property>
@@ -51,7 +51,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="realNameLabel">
+                  <widget class="GtkLabel" id="nameLabel">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="xpad">12</property>
@@ -64,7 +64,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="nickNameLabel">
+                  <widget class="GtkLabel" id="nickLabel">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="xpad">12</property>
@@ -77,7 +77,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="realNameEntry">
+                  <widget class="GtkEntry" id="nameEntry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                   </widget>
@@ -89,7 +89,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="nickNameEntry">
+                  <widget class="GtkEntry" id="nickEntry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                   </widget>
@@ -101,7 +101,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="nameLabel">
+                  <widget class="GtkLabel" id="servernameLabel">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="xpad">12</property>
@@ -138,7 +138,7 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="nameEntry">
+                  <widget class="GtkEntry" id="servernameEntry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                   </widget>

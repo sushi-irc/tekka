@@ -59,10 +59,10 @@ def showEditServerDialog(server):
 
 	return d.run(server)
 
-def showAddServerDialog():
+def showAddServerDialog(callback):
 	d = loadDialog("addServer")
 
-	return d.run()
+	return d.run(callback)
 
 def showDeleteServerDialog():
 	d = loadDialog("deleteServer")

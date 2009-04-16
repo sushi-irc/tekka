@@ -29,6 +29,7 @@ SUCH DAMAGE.
 import gtk.glade
 import com
 import config
+import gui_control
 
 from helper.expandingList import expandingList
 
@@ -65,41 +66,38 @@ def setup():
 	widgets = gtk.glade.XML(path)
 
 
-def run():
-	data = None
+def dialog_response_cb(dialog, response_id, callback):
+	if response_id == RESPONSE_ADD:
 
-	dialog = widgets.get_widget("serverAdd")
-
-	servernameInput = widgets.get_widget("nameEntry")
-	addressInput = widgets.get_widget("addressEntry")
-	portInput = widgets.get_widget("portEntry")
-	autoconnectInput = widgets.get_widget("autoConnectCheckButton")
-	nickInput = widgets.get_widget("nickNameEntry")
-	nameInput = widgets.get_widget("realNameEntry")
-	nickservInput = widgets.get_widget("nickServEntry")
-
-	result = dialog.run()
-
-	if result == RESPONSE_ADD:
-
-		server = servernameInput.get_text()
+		server = widgets.get_widget("servernameEntry").get_text()
 
 		if not server:
+			gui_control.errorMessage("No server name given.", force_dialog=True)
 			return
 
 		# set text values
 		for key in ("address","port","nick","name","nickserv"):
-			exec ("value = %sInput.get_text()" % key)
+			exec ("value = widgets.get_widget('%sEntry').get_text()" % key)
 			if value:
 				com.sushi.server_set(server, "server", key, value)
 
 		# set autoconnect bool
 		com.sushi.server_set(server, "server", "autoconnect",
-				str (autoconnectInput.get_active()).lower())
+			str (widgets.get_widget("autoConnectCheckButton").get_active()))
 
 		# set up commands
 		list = [i[0].get_text() for i in commandList.get_widget_matrix() if i[0].get_text()]
 		com.sushi.server_set_list(server, "server", "commands", list)
+		callback()
 
 	dialog.destroy()
+
+
+def run(callback):
+	data = None
+
+	dialog = widgets.get_widget("serverAdd")
+
+	dialog.connect("response", dialog_response_cb, callback)
+	dialog.show_all()
 
