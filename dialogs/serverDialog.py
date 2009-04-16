@@ -31,6 +31,7 @@ import gtk.glade
 import com
 import dialog_control
 import config
+import gui_control
 
 widgets = None
 serverSelection = None
@@ -74,7 +75,29 @@ def retrieveServerlist():
 	for server in servers:
 		addServer(server)
 
-def run():
+def dialog_response_cb(dialog, response_id, callback):
+	if response_id == RESPONSE_CONNECT:
+		# get the selected server(s)
+
+		serverList = widgets.get_widget("serverList").get_model()
+		paths = serverSelection.get_selected_rows()[1]
+
+		if not paths:
+			gui_control.errorMessage("No servers selected!")
+			return
+
+		toConnect = []
+		for path in paths:
+			toConnect.append(serverList[path][0])
+
+		callback(toConnect)
+
+	else:
+		callback(None)
+
+	dialog.destroy()
+
+def run(callback):
 	dialog = widgets.get_widget("serverDialog")
 
 	# get the treeview
@@ -97,30 +120,9 @@ def run():
 
 	retrieveServerlist()
 
-	result = dialog.run()
+	dialog.connect("response", dialog_response_cb, callback)
+	dialog.show_all()
 
-	server = None
-
-	if result == RESPONSE_CONNECT:
-		# get the selected server(s)
-
-		paths = serverSelection.get_selected_rows()[1]
-
-		if not paths:
-			print "no server(s) selected"
-			return
-
-		toConnect = []
-		for path in paths:
-			toConnect.append(serverList[path][0])
-
-		dialog.destroy()
-
-		return toConnect
-
-	else:
-		dialog.destroy()
-		return []
 
 def serverNameEdit(cellrenderertext, path, newText):
 	"""

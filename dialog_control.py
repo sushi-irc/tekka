@@ -69,13 +69,13 @@ def showDeleteServerDialog():
 
 	return d.run()
 
-def showServerDialog():
+def showServerDialog(callback):
 	"""
 		Shows up the server dialog.
 	"""
 	d = loadDialog("serverDialog")
 
-	return d.run()
+	return d.run(callback)
 
 def showChannelListDialog(server):
 	"""

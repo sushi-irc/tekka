@@ -157,6 +157,11 @@ def tekka_tab_switched(tabclass, old, new):
 Glade signals
 """
 
+def server_dialog_callback(server_list):
+	if server_list:
+		for server in server_list:
+			com.connectServer(server)
+
 def menu_tekka_Connect_activate_cb(menuItem):
 	"""
 		menuBar -> tekka -> connect was clicked,
@@ -172,11 +177,7 @@ def menu_tekka_Connect_activate_cb(menuItem):
 		err.destroy()
 		return
 
-	serverList = dialog_control.showServerDialog()
-
-	if serverList:
-		for server in serverList:
-			com.connectServer(server)
+	dialog_control.showServerDialog(server_dialog_callback)
 
 def menu_View_showGeneralOutput_toggled_cb(menuItem):
 	"""
