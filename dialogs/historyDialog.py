@@ -37,38 +37,36 @@ import gui_control as gui
 
 widgets = None
 
-def dialog_response_cb(dialog, responseID, fd):
+def dialog_response_cb(dialog, responseID):
 	"""
 	destroy the dialog and close the fd on gtk.RESPONSE_CANCEL
 	"""
 	if responseID == gtk.RESPONSE_CANCEL:
-		fd.close()
 		dialog.destroy()
 
-def readLog(tab):
+def readLog(calendar):
+	(year, month) = calendar.get_properties("year","month")
 	logDir = com.sushi.config_get("directories","logs")
+	name = os.path.join(logDir, calendar.tab.server, calendar.tab.name, "%04d-%02d.txt" % (year, month+1))
 
-	if tab.is_server():
-		return
-
-	name = os.path.join(logDir, tab.server, "%s.txt" % (tab.name))
 	try:
-		fd = file(name,"r")
+		fd = open(name,"r")
 	except IOError:
 		print "IOERROR WHILE READING '%s'" % (name)
-		return None
+		calendar.fd = None
+		calendar.offsets = {}
+		return
 
 	dateOffsets = {}
 	lastDate = ""
 	offset = 0
-	startOffset = None
+	startOffset = 0L
 
 	for line in fd:
 		date = line.split(" ")[0]
 
 		if not lastDate:
 			lastDate = date
-			startOffset = 0L
 
 		if lastDate != date:
 			# close lastDate
@@ -76,13 +74,14 @@ def readLog(tab):
 			dateOffsets[lastDate] = (startOffset, offset)
 
 			lastDate = date
-			startOffset = offset + len(line)
+			startOffset = offset
 
 		offset += len(line)
 
-	dateOffsets[lastDate] = (startOffset, offset + len(line))
+	dateOffsets[lastDate] = (startOffset, offset)
 
-	return (fd, dateOffsets)
+	calendar.fd = fd
+	calendar.offsets = dateOffsets
 
 def fillCalendar(calendar):
 	(year, month) = calendar.get_properties("year","month")
@@ -99,7 +98,7 @@ def calendar_realize_cb(calendar):
 	"""
 		initial fill.
 	"""
-	fillCalendar(calendar)
+	calendar_month_changed_cb(calendar)
 	calendar_day_selected_cb(calendar)
 
 def calendar_month_changed_cb(calendar):
@@ -107,6 +106,13 @@ def calendar_month_changed_cb(calendar):
 		get all days which have a history and
 		highlight them.
 	"""
+	if calendar.fd:
+		calendar.fd.close()
+
+		calendar.fd = None
+		calendar.offsets = {}
+
+	readLog(calendar)
 	fillCalendar(calendar)
 
 def calendar_day_selected_cb(calendar):
@@ -125,31 +131,28 @@ def calendar_day_selected_cb(calendar):
 
 	(start,end) = calendar.offsets[key]
 	calendar.fd.seek(start)
-	buffer.set_text(calendar.fd.read(end-start))
+	# -1 eliminates trailing newline
+	buffer.set_text(calendar.fd.read(end-start-1))
 
 def run(tab):
-	calendar = widgets.get_widget("calendar")
-	calendar.tab = tab
-
-	fdata = readLog(tab)
-
-	if not fdata:
-		# TODO: error dialog
+	if tab.is_server():
 		return
 
-	calendar.fd = fdata[0]
-	calendar.offsets = fdata[1]
+	calendar = widgets.get_widget("calendar")
+	calendar.tab = tab
+	calendar.fd = None
+	calendar.offsets = {}
 
 	ltime = localtime()
 
-	calendar.select_month(ltime[1]-1, ltime[0])
-	calendar.select_day(ltime[2])
+	calendar.select_month(ltime.tm_mon-1, ltime.tm_year)
+	calendar.select_day(ltime.tm_mday)
 
 	dialog = widgets.get_widget("historyDialog")
 
-	dialog.set_title("History for "+tab.name)
+	dialog.set_title(tab.name)
 
-	dialog.connect("response", dialog_response_cb, fdata[0])
+	dialog.connect("response", dialog_response_cb)
 
 	# non modal..
 	dialog.show_all()
