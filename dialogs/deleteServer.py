@@ -37,11 +37,19 @@ def setup():
 	path = config.get("gladefiles","dialogs") + "serverDelete.glade"
 	widgets = gtk.glade.XML(path)
 
-def run():
+def dialog_response_cb(dialog, response_id, servername, callback):
+	if response_id == gtk.RESPONSE_YES:
+		callback(servername)
+	dialog.destroy()
+
+def run(servername, callback):
 	"""
 		Returns True if the server should be deleted, otherwise False
 	"""
 	dialog = widgets.get_widget("serverDelete")
-	result = dialog.run()
-	dialog.destroy()
-	return (result == gtk.RESPONSE_YES)
+
+	label = widgets.get_widget("warningLabel")
+	label.set_text(label.get_text() % {"server": servername})
+
+	dialog.connect("response", dialog_response_cb, servername, callback)
+	dialog.show_all()

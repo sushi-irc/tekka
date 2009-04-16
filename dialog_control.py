@@ -64,10 +64,10 @@ def showAddServerDialog(callback):
 
 	return d.run(callback)
 
-def showDeleteServerDialog():
+def showDeleteServerDialog(servername, callback):
 	d = loadDialog("deleteServer")
 
-	return d.run()
+	return d.run(servername, callback)
 
 def showServerDialog(callback):
 	"""

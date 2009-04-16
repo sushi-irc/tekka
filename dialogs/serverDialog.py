@@ -199,6 +199,11 @@ def openEditDialog(widget):
 		print "User edited server"
 		retrieveServerlist()
 
+def delete_dialog_cb(servername):
+	""" indicates that the server can be deleted """
+	print "Deleting server %s" % servername
+	deleteServer(servername)
+
 def openDeleteDialog(widget):
 	view = widgets.get_widget("serverList")
 
@@ -213,13 +218,8 @@ def openDeleteDialog(widget):
 		servername = view.get_model()[path][0]
 
 	if not servername:
-		print "Error in retrieving the servername"
+		gui_control.errorMessage("Error while retrieving server name.",
+			force_dialog = True)
 		return
 
-	result = dialog_control.showDeleteServerDialog()
-	# result = True if answer = Yes
-
-	if result:
-		print "Deleting server %s" % servername
-		deleteServer(servername)
-
+	dialog_control.showDeleteServerDialog(servername, delete_dialog_cb)
