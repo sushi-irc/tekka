@@ -247,7 +247,19 @@ class HTMLBuffer(gtk.TextBuffer):
 
 				# XXX: this may cause problems if iter.get_line() is 0
 
+		siter = self.get_selection_bounds()
+
+		if siter:
+			soff = siter[0].get_offset()
+			ioff = siter[1].get_offset()
+
 		gtk.TextBuffer.insert(self, iter, text, *x)
+
+		if siter:
+			self.select_range(
+				self.get_iter_at_offset(soff),
+				self.get_iter_at_offset(ioff)
+			)
 
 	def insertHTML(self, iter, text):
 		startoffset = iter.get_offset()
