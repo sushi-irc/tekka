@@ -37,6 +37,7 @@ from dbus.mainloop.glib import DBusGMainLoop
 from signals import parse_from
 
 dbus_loop = DBusGMainLoop()
+required_version = (1, 0, 0)
 bus_address = os.getenv("SUSHI_REMOTE_BUS_ADDRESS")
 if bus_address:
 	bus = dbus.bus.BusConnection(bus_address, mainloop=dbus_loop)
@@ -65,6 +66,12 @@ def connect():
 		return False
 
 	sushi = dbus.Interface(proxy, "de.ikkoku.sushi")
+
+	version = tuple([int(v) for v in sushi.version()])
+
+	if not version or version < required_version:
+		sushi = None
+		return False
 
 	sushi.connect_to_signal("nick", _nickSignal)
 
