@@ -194,10 +194,9 @@ def tekka_font_clicked(button):
 	if font:
 		config.set("tekka", "font", font)
 
-		if not config.get_bool("tekka", "use_default_font"):
-			gui.setFont(gui.widgets.get_widget("output"), font)
-			gui.setFont(gui.widgets.get_widget("inputBar"), font)
-			gui.setFont(gui.widgets.get_widget("generalOutput"), font)
+		gui.setFont(gui.widgets.get_widget("output"), gui.get_font())
+		gui.setFont(gui.widgets.get_widget("inputBar"), gui.get_font())
+		gui.setFont(gui.widgets.get_widget("generalOutput"), gui.get_font())
 
 def tekka_auto_expand_toggled(button):
 	config.set("tekka", "auto_expand",
