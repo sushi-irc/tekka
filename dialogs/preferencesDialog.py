@@ -181,12 +181,12 @@ def applyGeneralOutputFilter():
 
 def tekka_show_status_icon_toggled(button):
 	config.set("tekka", "show_status_icon",
-			str(button.get_active()).lower())
+			str(button.get_active()))
 	gui.setStatusIcon(button.get_active())
 
 def tekka_hide_on_close_toggled(button):
 	config.set("tekka", "hide_on_close",
-			str(button.get_active()).lower())
+			str(button.get_active()))
 
 def tekka_font_clicked(button):
 	font = button.get_font_name()
@@ -198,17 +198,25 @@ def tekka_font_clicked(button):
 		gui.setFont(gui.widgets.get_widget("inputBar"), gui.get_font())
 		gui.setFont(gui.widgets.get_widget("generalOutput"), gui.get_font())
 
+def tekka_use_default_font_toggled(button):
+	config.set("tekka", "use_default_font",
+			str(button.get_active()))
+
+	gui.setFont(gui.widgets.get_widget("output"), gui.get_font())
+	gui.setFont(gui.widgets.get_widget("inputBar"), gui.get_font())
+	gui.setFont(gui.widgets.get_widget("generalOutput"), gui.get_font())
+
 def tekka_auto_expand_toggled(button):
 	config.set("tekka", "auto_expand",
-			str(button.get_active()).lower())
+			str(button.get_active()))
 
 def tekka_rgba_toggled(button):
 	config.set("tekka", "rgba",
-			str(button.get_active()).lower())
+			str(button.get_active()))
 
 def tekka_close_maki_on_close_toggled(button):
 	config.set("tekka", "close_maki_on_close",
-			str(button.get_active()).lower())
+			str(button.get_active()))
 
 """ colors page signals """
 
@@ -292,6 +300,7 @@ def setup():
 		"tekka_show_status_icon_toggled": tekka_show_status_icon_toggled,
 		"tekka_hide_on_close_toggled": tekka_hide_on_close_toggled,
 		"tekka_font_clicked": tekka_font_clicked,
+		"tekka_use_default_font_toggled": tekka_use_default_font_toggled,
 		"tekka_auto_expand_toggled": tekka_auto_expand_toggled,
 		"tekka_rgba_toggled": tekka_rgba_toggled,
 		"tekka_close_maki_on_close_toggled": tekka_close_maki_on_close_toggled,
