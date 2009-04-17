@@ -503,6 +503,9 @@ class TabClass(gobject.GObject):
 			Switches in TreeModel of serverTree to the
 			tab identified by path.
 		"""
+		if not gui_is_useable:
+			return
+
 		serverTree = widgets.get_widget("serverTree")
 		store = serverTree.get_model()
 
@@ -619,6 +622,8 @@ def setUseable(switch):
 		which emit or receive signals
 		to/from maki.
 	"""
+	global gui_is_useable
+
 	widgetList = [
 		widgets.get_widget("topicBar"),
 		widgets.get_widget("inputBar"),
@@ -628,10 +633,16 @@ def setUseable(switch):
 		widgets.get_widget("generalOutput")
 	]
 
+	current_textview = get_current_output_textview()
+	if current_textview:
+		widgetList.append(current_textview)
+
 	for widget in widgetList:
 		widget.set_sensitive(switch)
 
 	if switch: widgets.get_widget("inputBar").grab_focus()
+
+	gui_is_useable = switch
 
 @types(switch=bool)
 def setStatusIcon(switch):

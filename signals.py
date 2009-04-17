@@ -84,7 +84,18 @@ def disconnect_signal (signal, handler):
 		ob.remove()
 		del signals[signal][handler]
 
-def setup():
+def handle_maki_disconnect():
+	global sushi, signals
+
+	sushi = None
+
+	for signal in signals:
+		for handler in signals[signal]:
+			signals[signal][handler].remove()
+
+	signals = {}
+
+def handle_maki_connect():
 	global sushi
 
 	sushi = com.sushi
@@ -109,7 +120,6 @@ def setup():
 	connect_signal("back", userBack)
 	connect_signal("mode", userMode)
 	connect_signal("oper", userOper)
-
 
 	# Server-Signals
 	connect_signal("connect", serverConnect)

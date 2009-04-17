@@ -108,11 +108,12 @@ Tekka intern signals
 
 def maki_connect_callback(sushi):
 	""" connection to maki etablished """
-	signals.setup()
+	signals.handle_maki_connect()
 	gui.setUseable(True)
 
 def maki_disconnect_callback():
 	""" connection to maki lost """
+	signals.handle_maki_disconnect()
 	gui.setUseable(False)
 
 def tekka_server_away(tab, msg):
