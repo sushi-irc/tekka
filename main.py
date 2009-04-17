@@ -532,10 +532,6 @@ def nickList_button_press_event_cb(nickList, event):
 
 	return False
 
-
-def otv_set_scroll_adjustments(textview, hadjustment, vadjustment):
-	print "OHAI"
-
 def scrolledWindow_output_vscrollbar_valueChanged_cb(range):
 	"""
 		The vertical scrollbar of the surrounding scrolled window
