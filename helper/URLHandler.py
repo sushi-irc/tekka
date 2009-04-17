@@ -33,6 +33,8 @@ eventIDs = {}
 
 def _resetCursor(widget, event, window, cursor):
 	window.set_cursor(cursor)
+	widget.disconnect(eventIDs[widget])
+	del eventIDs[widget]
 
 def URLHandler(texttag, widget, event, iter, url):
 	""" do URL specific stuff """
