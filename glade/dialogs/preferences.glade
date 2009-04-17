@@ -188,19 +188,6 @@
                 <property name="n_rows">9</property>
                 <property name="n_columns">2</property>
                 <child>
-                  <widget class="GtkEntry" id="last_log">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="colors_last_log_written"/>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">8</property>
-                    <property name="bottom_attach">9</property>
-                  </packing>
-                </child>
-                <child>
                   <widget class="GtkLabel" id="label10">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
@@ -217,17 +204,6 @@
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Own nick:</property>
                   </widget>
-                </child>
-                <child>
-                  <widget class="GtkEntry" id="own_nick">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="colors_own_nick_written"/>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                  </packing>
                 </child>
                 <child>
                   <widget class="GtkLabel" id="label27">
@@ -247,32 +223,6 @@
                     <property name="label" translatable="yes">Notification:</property>
                   </widget>
                   <packing>
-                    <property name="top_attach">2</property>
-                    <property name="bottom_attach">3</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkEntry" id="own_text">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="colors_own_text_written"/>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkEntry" id="notification">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="colors_notification_written"/>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
                     <property name="top_attach">2</property>
                     <property name="bottom_attach">3</property>
                   </packing>
@@ -333,10 +283,55 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="text_message">
+                  <widget class="GtkColorButton" id="own_nick">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="colors_messages_written"/>
+                    <property name="receives_default">True</property>
+                    <property name="color">#000000000000</property>
+                    <signal name="color_set" handler="colors_own_nick_written"/>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkColorButton" id="own_text">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="color">#000000000000</property>
+                    <signal name="color_set" handler="colors_own_text_written"/>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkColorButton" id="notification">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="color">#000000000000</property>
+                    <signal name="color_set" handler="colors_notification_written"/>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkColorButton" id="text_message">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="color">#000000000000</property>
+                    <signal name="color_set" handler="colors_messages_written"/>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
@@ -346,10 +341,12 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="text_action">
+                  <widget class="GtkColorButton" id="text_action">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="colors_actions_written"/>
+                    <property name="receives_default">True</property>
+                    <property name="color">#000000000000</property>
+                    <signal name="color_set" handler="colors_actions_written"/>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
@@ -359,10 +356,12 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="text_highlightmessage">
+                  <widget class="GtkColorButton" id="text_highlightmessage">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="colors_highlighted_messages_written"/>
+                    <property name="receives_default">True</property>
+                    <property name="color">#000000000000</property>
+                    <signal name="color_set" handler="colors_highlighted_messages_written"/>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
@@ -372,10 +371,12 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="text_highlightaction">
+                  <widget class="GtkColorButton" id="text_highlightaction">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="colors_highlighted_actions_written"/>
+                    <property name="receives_default">True</property>
+                    <property name="color">#000000000000</property>
+                    <signal name="color_set" handler="colors_highlighted_actions_written"/>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
@@ -385,16 +386,33 @@
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkEntry" id="nick">
+                  <widget class="GtkColorButton" id="nick">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="colors_default_nick_written"/>
+                    <property name="receives_default">True</property>
+                    <property name="color">#000000000000</property>
+                    <signal name="color_set" handler="colors_default_nick_written"/>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
                     <property name="top_attach">7</property>
                     <property name="bottom_attach">8</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkColorButton" id="last_log">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="color">#000000000000</property>
+                    <signal name="color_set" handler="colors_last_log_written"/>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">8</property>
+                    <property name="bottom_attach">9</property>
                   </packing>
                 </child>
               </widget>

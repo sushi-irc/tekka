@@ -76,10 +76,12 @@ def fillColors():
 				"last_log"):
 		val = config.get("colors", key)
 
-		if not val:
-			continue
+		try:
+			color = gtk.gdk.Color(val)
+		except:
+			color = gtk.gdk.Color()
 
-		widgets.get_widget(key).set_text(val)
+		widgets.get_widget(key).set_color(color)
 
 def fillChatting():
 	for key in ("quit_message", "part_message"):
@@ -220,40 +222,37 @@ def tekka_close_maki_on_close_toggled(button):
 
 """ colors page signals """
 
-def colors_set_color_from_entry(entry, key):
-	text = entry.get_text()
+def colors_set_color_from_button(button, key):
+	color = button.get_color()
 
-	if not text:
-		config.unset("colors", key)
-	else:
-		config.set("colors", key, text)
+	config.set("colors", key, color.to_string())
 
-def colors_own_text_written(entry, event):
-	colors_set_color_from_entry(entry, "own_text")
+def colors_own_text_written(button):
+	colors_set_color_from_button(button, "own_text")
 
-def colors_own_nick_written(entry, event):
-	colors_set_color_from_entry(entry, "own_nick")
+def colors_own_nick_written(button):
+	colors_set_color_from_button(button, "own_nick")
 
-def colors_notification_written(entry, event):
-	colors_set_color_from_entry(entry, "notification")
+def colors_notification_written(button):
+	colors_set_color_from_button(button, "notification")
 
-def colors_messages_written(entry, event):
-	colors_set_color_from_entry(entry, "text_message")
+def colors_messages_written(button):
+	colors_set_color_from_button(button, "text_message")
 
-def colors_actions_written(entry, event):
-	colors_set_color_from_entry(entry, "text_action")
+def colors_actions_written(button):
+	colors_set_color_from_button(button, "text_action")
 
-def colors_highlighted_messages_written(entry, event):
-	colors_set_color_from_entry(entry, "text_highlightmessage")
+def colors_highlighted_messages_written(button):
+	colors_set_color_from_button(button, "text_highlightmessage")
 
-def colors_highlighted_actions_written(entry, event):
-	colors_set_color_from_entry(entry, "text_highlightaction")
+def colors_highlighted_actions_written(button):
+	colors_set_color_from_button(button, "text_highlightaction")
 
-def colors_default_nick_written(entry, event):
-	colors_set_color_from_entry(entry, "nick")
+def colors_default_nick_written(button):
+	colors_set_color_from_button(button, "nick")
 
-def colors_last_log_written(entry, event):
-	colors_set_color_from_entry(entry, "last_log")
+def colors_last_log_written(button):
+	colors_set_color_from_button(button, "last_log")
 
 """ chatting page signals """
 
