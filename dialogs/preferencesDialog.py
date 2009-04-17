@@ -22,7 +22,7 @@ def customHandler(glade, function_name, widget_name, *x):
 	if widget_name == "nickColorsList":
 		global nickColorsList
 
-		nickColorsList = expandingList(gtk.Entry)
+		nickColorsList = expandingList(gtk.ColorButton)
 		sw = gtk.ScrolledWindow()
 		sw.add_with_viewport(nickColorsList)
 		sw.show_all()
@@ -98,10 +98,17 @@ def fillNickColors():
 		return
 
 	i = 0
+
 	for color in colors:
-		nickColorsList.get_widget_matrix()[i][0].set_text(color)
+		try:
+			c = gtk.gdk.Color(color)
+		except:
+			c = gtk.gdk.Color()
+
+		nickColorsList.get_widget_matrix()[i][0].set_color(c)
 		nickColorsList.add_row()
 		i+=1
+
 	nickColorsList.remove_row(i)
 
 def fillGeneralOutputFilters():
@@ -145,7 +152,7 @@ def fillGeneralOutputFilters():
 
 
 def applyNickColors():
-	config.set_list("colors","nick_colors", [n[0].get_text() for n in nickColorsList.get_widget_matrix() if n and len(n) >= 1 and n[0].get_text()])
+	config.set_list("colors","nick_colors", [n[0].get_color().to_string() for n in nickColorsList.get_widget_matrix() if n and len(n) >= 1])
 
 def applyGeneralOutputFilter():
 	filter_list = []
