@@ -303,7 +303,7 @@ def mainWindow_size_allocate_cb(mainWindow, alloc):
 
 	tab = gui.tabs.getCurrentTab()
 	if tab and tab.autoScroll:
-		idle_add(lambda: gui.scrollOutput())
+		tab.textview.scroll_to_bottom()
 
 def mainWindow_window_state_event_cb(mainWindow, event):
 	"""
@@ -485,7 +485,7 @@ def nickList_row_activated_cb(nickList, path, column):
 	gui.tabs.addTab(serverTab.name, query)
 	gui.updateServerTreeShortcuts()
 
-	output = query.buffer
+	output = query.textview.get_buffer()
 
 	for line in com.fetchLog(serverTab.name, name, dbus.UInt64(config.get("chatting", "last_log_lines", "10"))):
 		output.insertHTML(output.get_end_iter(), "<font foreground='#DDDDDD'>%s</font>" % gui.escape(line))
@@ -533,14 +533,15 @@ def nickList_button_press_event_cb(nickList, event):
 	return False
 
 
+def otv_set_scroll_adjustments(textview, hadjustment, vadjustment):
+	print "OHAI"
+
 def scrolledWindow_output_vscrollbar_valueChanged_cb(range):
 	"""
 		The vertical scrollbar of the surrounding scrolled window
 		of the output text view was moved.
 		Disable the autoscroll if the scroll bar is not at the
 		bottom.
-		Also the method sets the current scroll position
-		to the buffer in the tab.
 	"""
 	tab = gui.tabs.getCurrentTab()
 
@@ -550,21 +551,18 @@ def scrolledWindow_output_vscrollbar_valueChanged_cb(range):
 
 	adjust = range.get_property("adjustment")
 
-	if (adjust.upper - adjust.page_size) == range.get_value():
-		# bottom reached
-		tab.autoScroll = True
-		#print "autoscroll for %s = True" % (tab.name)
-	else:
-		tab.autoScroll = False
-		#print "autoScroll for %s = False" % (tab.name)
+	def determine_auto_scroll(tab):
+		if (adjust.upper - adjust.page_size) == range.get_value():
+			# bottom reached
+			tab.autoScroll = True
+			print "autoscroll for tab %s ENABLED." % (tab.name)
+		else:
+			tab.autoScroll = False
+			print "autoscroll for tab %s DISABLED." % (tab.name)
 
-	# cache the last position to set after switch
-	tab.buffer.scrollPosition=range.get_value()
+		return False
 
-	#print "scrollPosition is now %d" % (tab.buffer.scrollPosition)
-
-def output_move_viewport(tv, scrollstep, count, *x):
-	print "tv moved: %s * %d" % (scrollstep, count)
+	idle_add(determine_auto_scroll, tab)
 
 def statusIcon_activate_cb(statusIcon):
 	"""
@@ -618,16 +616,18 @@ def inputBar_shortcut_ctrl_u(inputBar, shortcut):
 	"""
 	widgets.get_widget("inputBar").set_text("")
 
-def output_shortcut_ctrl_l(output, shortcut):
+def output_shortcut_ctrl_l(inputBar, shortcut):
 	"""
 		Ctrl+L was hit, clear the output.
 	"""
+	output = gui.get_current_output_textview()
+
 	buf = output.get_buffer()
 	if buf: buf.set_text("")
 	buf = widgets.get_widget("generalOutput").get_buffer()
 	if buf: buf.set_text("")
 
-def output_shortcut_ctrl_f(output, shortcut):
+def output_shortcut_ctrl_f(inputBar, shortcut):
 	""" show the search toolbar """
 	if gui.searchToolbar.get_property("visible"):
 		gui.searchToolbar.hide()
@@ -636,7 +636,7 @@ def output_shortcut_ctrl_f(output, shortcut):
 	gui.searchToolbar.show_all()
 	gui.searchToolbar.grab_focus()
 
-def output_shortcut_ctrl_g(output, shortcut):
+def output_shortcut_ctrl_g(inputBar, shortcut):
 	""" search further """
 	gui.searchToolbar.search_further()
 
@@ -723,7 +723,7 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 	dialog.connect("response", response_handler)
 	dialog.show_all()
 
-def output_shortcut_Page_Up(output, shortcut):
+def output_shortcut_Page_Up(inputBar, shortcut):
 	"""
 		Page_Up was hit, scroll up in output
 	"""
@@ -736,7 +736,7 @@ def output_shortcut_Page_Up(output, shortcut):
 	if n < 0: n = 0
 	idle_add(vadj.set_value,n)
 
-def output_shortcut_Page_Down(output, shortcut):
+def output_shortcut_Page_Down(inputBar, shortcut):
 	"""
 		Page_Down was hit, scroll down in output
 	"""
@@ -756,7 +756,7 @@ def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 		and copy the selection to clipboard.
 		FIXME: this solution sucks ass.
 	"""
-	buffer = widgets.get_widget("output").get_buffer()
+	buffer = gui.get_current_output_textview().get_buffer()
 	goBuffer = widgets.get_widget("generalOutput").get_buffer()
 	topicBar = widgets.get_widget("topicBar")
 	cb = gtk.Clipboard()
@@ -918,11 +918,11 @@ def setup_shortcuts():
 
 	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"), "<ctrl>u",
 		inputBar_shortcut_ctrl_u)
-	addShortcut(gui.accelGroup, widgets.get_widget("output"), "<ctrl>l",
+	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"), "<ctrl>l",
 		output_shortcut_ctrl_l)
-	addShortcut(gui.accelGroup, widgets.get_widget("output"), "<ctrl>f",
+	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"), "<ctrl>f",
 		output_shortcut_ctrl_f)
-	addShortcut(gui.accelGroup, widgets.get_widget("output"), "<ctrl>g",
+	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"), "<ctrl>g",
 		output_shortcut_ctrl_g)
 
 	addShortcut(gui.accelGroup, widgets.get_widget("serverTree"),
@@ -932,9 +932,9 @@ def setup_shortcuts():
 	addShortcut(gui.accelGroup, widgets.get_widget("serverTree"),
 		"<ctrl>w", serverTree_shortcut_ctrl_w)
 
-	addShortcut(gui.accelGroup, widgets.get_widget("output"),
+	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"),
 		"Page_Up", output_shortcut_Page_Up)
-	addShortcut(gui.accelGroup, widgets.get_widget("output"),
+	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"),
 		"Page_Down", output_shortcut_Page_Down)
 
 	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"),
@@ -1104,9 +1104,6 @@ def setupGTK():
 	vbar.connect(
 		"value-changed",
 		scrolledWindow_output_vscrollbar_valueChanged_cb)
-
-	output = widgets.get_widget("output")
-	output.connect("move-viewport", output_move_viewport)
 
 	setup_serverTree()
 	setup_nickList()

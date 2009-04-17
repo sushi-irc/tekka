@@ -32,16 +32,16 @@ from typecheck import types
 
 class tekkaTab(gobject.GObject):
 	"""
-		Provides basic attributes like the outputbuffer,
+		Provides basic attributes like the output textview,
 		the name of the tab and a flag if a new message is received.
 
 		Attributes:
-		buffer: the output buffer
+		textview: the textview bound to this tag
 		path: the identifying path in gtk.TreeModel
 		name: the identifying name
 		newMessage: a list containing message "flags"
 		connected: is the tab active or not
-		autoScroll: automatically scroll the buffer to the end
+		autoScroll: automatically scroll the textview to the end
 	"""
 
 	@types(switch=bool)
@@ -62,10 +62,10 @@ class tekkaTab(gobject.GObject):
 		self.emit ("new_name", name)
 	name = property(lambda x: x._name, _set_name)
 
-	def __init__(self, name, buffer=None):
+	def __init__(self, name, textview=None):
 		gobject.GObject.__init__(self)
 
-		self.buffer = buffer
+		self.textview = textview
 		self.path = ()
 		self.name = name
 		self.newMessage = []
@@ -112,21 +112,6 @@ class tekkaTab(gobject.GObject):
 			return "<b>"+self.name+"</b>"
 		return self.name
 
-	def copy(self):
-		"""
-			Returns a copy of this tab.
-		"""
-		copy = tekkaTab(str(self.name))
-		copy.buffer = self.buffer # XXX: Not a copy!
-		copy.newMessage = list(self.newMessage)
-		copy.connected = self.connected
-		copy.path = self.path
-		copy.autoScroll = self.autoScroll
-		copy.inputHistory = list(self.inputHistory)
-		copy.historyPosition = self.historyPosition
-
-		return copy
-
 gobject.signal_new(
 	"connected", tekkaTab,
 	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
@@ -159,8 +144,8 @@ class tekkaServer(tekkaTab):
 
 	away = property(lambda x: x._away, _set_away)
 
-	def __init__(self, name, buffer=None):
-		tekkaTab.__init__(self, name, buffer)
+	def __init__(self, name, textview=None):
+		tekkaTab.__init__(self, name, textview)
 
 		self.away = ""
 
@@ -177,18 +162,6 @@ class tekkaServer(tekkaTab):
 			base = "<i>"+base+"</i>"
 		return base
 
-	def copy(self):
-		copy = tekkaServer(str(self.name))
-		copy.buffer = self.buffer # XXX: Not a copy!
-		copy.newMessage = list(self.newMessage)
-		copy.connected = self.connected
-		copy.path = self.path
-		copy.autoScroll = self.autoScroll
-		copy.inputHistory = list(self.inputHistory)
-		copy.historyPosition = self.historyPosition
-		copy.away = str(self.away)
-		return copy
-
 gobject.signal_new(
 	"away",
 	tekkaServer, gobject.SIGNAL_ACTION,
@@ -199,8 +172,8 @@ class tekkaQuery(tekkaTab):
 	"""
 		Class for typical query-tabs.
 	"""
-	def __init__(self, name, server, buffer=None):
-		tekkaTab.__init__(self, name, buffer)
+	def __init__(self, name, server, textview=None):
+		tekkaTab.__init__(self, name, textview)
 
 		self.server = server
 
@@ -239,18 +212,6 @@ class tekkaQuery(tekkaTab):
 
 		return markup
 
-	def copy(self):
-		copy = tekkaQuery(self, str(self.name))
-		copy.buffer = self.buffer # XXX: Not a copy!
-		copy.newMessage = list(self.newMessage)
-		copy.connected = self.connected
-		copy.path = self.path
-		copy.autoScroll = self.autoScroll
-		copy.inputHistory = list(self.inputHistory)
-		copy.historyPosition = self.historyPosition
-		copy.server = str(self.server)
-		return copy
-
 class tekkaChannel(tekkaTab):
 	"""
 		A typically channel tab.
@@ -263,8 +224,9 @@ class tekkaChannel(tekkaTab):
 
 	joined = property(lambda x: x._joined, _set_joined)
 
-	def __init__(self, name, server, buffer=None, nicklist=None, topic="", topicsetter=""):
-		tekkaTab.__init__(self, name, buffer)
+	def __init__(self, name, server, textview=None,
+		nicklist=None, topic="", topicsetter=""):
+		tekkaTab.__init__(self, name, textview)
 
 		self.nickList = nicklist
 		self.topic = topic
@@ -307,23 +269,6 @@ class tekkaChannel(tekkaTab):
 		markup += ">%s</span>" % base
 
 		return markup
-
-	def copy(self):
-		copy = tekkaChannel(str(self.name))
-		copy.buffer = self.buffer # XXX: Not a copy!
-		copy.newMessage = list(self.newMessage)
-		copy.connected = self.connected
-		copy.path = self.path
-		copy.autoScroll = self.autoScroll
-		copy.inputHistory = list(self.inputHistory)
-		copy.historyPosition = self.historyPosition
-		copy.nickList = self.nickList # FIXME: this is only a reference, no copy...
-		copy.topic = str(self.topic)
-		copy.topicSetter = str(self.topicSetter)
-		copy.joined = self.joined
-		copy.server = str(self.server)
-		return copy
-
 
 gobject.signal_new(
 	"joined", tekkaChannel,

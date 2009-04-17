@@ -28,6 +28,8 @@ from helper.url import URLToTag
 from helper import URLHandler
 from helper.searchToolbar import SearchBar
 from helper.input_history import InputHistory
+
+from lib.output_textview import OutputTextView
 from lib.htmlbuffer import HTMLBuffer
 
 import __main__
@@ -62,6 +64,11 @@ def get_font ():
 def custom_handler(glade, function_name, widget_name, *x):
 	if widget_name == "searchToolbar":
 		return setup_searchToolbar()
+
+	elif widget_name in ("generalOutput", "output"):
+		go = OutputTextView()
+
+		return go
 
 	elif widget_name == "inputBar":
 		try:
@@ -98,9 +105,13 @@ def load_widgets(gladeFile, section):
 	gtk.glade.set_custom_handler(custom_handler)
 	widgets = gtk.glade.XML(gladeFile, section)
 
-	widgets.get_widget("output").set_buffer(getNewBuffer())
-
 	return widgets
+
+def replace_output_textview(textview):
+	sw = widgets.get_widget("scrolledWindow_output")
+	sw.remove(sw.get_children()[0])
+	sw.add(textview)
+	searchToolbar.textview = textview
 
 class TabClass(gobject.GObject):
 	"""
@@ -131,7 +142,22 @@ class TabClass(gobject.GObject):
 		for widget in widgetList:
 			widget.set_sensitive (switch)
 
+	def _createTab(self, tabtype, name, *args, **kwargs):
+		tab = tabtype(name, *args, **kwargs)
 
+		tab.textview = OutputTextView()
+		tab.textview.show()
+		setFont(tab.textview, get_font())
+
+		tab.connect("new_message", __main__.tekka_tab_new_message)
+		tab.connect("new_name", __main__.tekka_tab_new_name)
+		tab.connect("new_path", __main__.tekka_tab_new_path)
+		tab.connect("connected", __main__.tekka_tab_connected)
+
+		tab.input_history = InputHistory(
+			text_callback = widgets.get_widget("inputBar").get_text)
+
+		return tab
 
 	def createChannel(self, server, name):
 		ns = self.nickListStore()
@@ -139,63 +165,20 @@ class TabClass(gobject.GObject):
 		# TODO: cache prefixes
 		ns.set_modes(list(com.sushi.support_prefix(server)[1]))
 
-		obj = self.tab.tekkaChannel(
-			name,
-			server,
-			nicklist=ns,
-			buffer=getNewBuffer())
+		tab = self._createTab(self.tab.tekkaChannel, name, server, nicklist = ns)
+		tab.connect("joined", __main__.tekka_channel_joined)
 
-		if not obj:
-			raise Exception, "Failed to create channel."
-
-		obj.input_history = InputHistory(
-			text_callback = widgets.get_widget("inputBar").get_text)
-
-		obj.connect("new_message", __main__.tekka_tab_new_message)
-		obj.connect("new_name", __main__.tekka_tab_new_name)
-		obj.connect("new_path", __main__.tekka_tab_new_path)
-		obj.connect("connected", __main__.tekka_tab_connected)
-		obj.connect("joined", __main__.tekka_channel_joined)
-
-		return obj
+		return tab
 
 	def createQuery(self, server, name):
-		obj = self.tab.tekkaQuery(
-			name,
-			server,
-			buffer=getNewBuffer())
-
-		if not obj:
-			raise Exception, "Failed to create Query."
-
-		obj.input_history = InputHistory(
-			text_callback = widgets.get_widget("inputBar").get_text)
-
-		obj.connect("new_message", __main__.tekka_tab_new_message)
-		obj.connect("new_name", __main__.tekka_tab_new_name)
-		obj.connect("new_path", __main__.tekka_tab_new_path)
-		obj.connect("connected", __main__.tekka_tab_connected)
-
-		return obj
+		tab = self._createTab(self.tab.tekkaQuery, name, server)
+		return tab
 
 	def createServer(self, server):
-		obj = self.tab.tekkaServer(
-			server,
-			buffer=getNewBuffer())
+		tab = self._createTab(self.tab.tekkaServer, server)
 
-		if not obj:
-			raise Exception, "Failed to create Server."
-
-		obj.input_history = InputHistory(
-			text_callback = widgets.get_widget("inputBar").get_text)
-
-		obj.connect("new_message", __main__.tekka_tab_new_message)
-		obj.connect("new_name", __main__.tekka_tab_new_name)
-		obj.connect("away", __main__.tekka_server_away)
-		obj.connect("new_path", __main__.tekka_tab_new_path)
-		obj.connect("connected", __main__.tekka_tab_connected)
-
-		return obj
+		tab.connect("away", __main__.tekka_server_away)
+		return tab
 
 	def searchTab(self, server, name=""):
 		"""
@@ -538,7 +521,7 @@ class TabClass(gobject.GObject):
 		serverTree.set_cursor(path)
 		self.currentPath = path
 
-		widgets.get_widget("output").set_buffer(tab.buffer)
+		replace_output_textview(tab.textview)
 
 		self.emit("tab_switched", old_tab, tab)
 
@@ -570,25 +553,6 @@ class TabClass(gobject.GObject):
 		tab.setNewMessage(None)
 		updateServerTreeMarkup(tab.path)
 
-		adj = widgets.get_widget("scrolledWindow_output").get_vadjustment()
-
-		#print "position before switch: %s" % (tab.buffer.scrollPosition)
-
-		if tab.buffer.scrollPosition != None and not tab.autoScroll:
-			idle_add(adj.set_value,tab.buffer.scrollPosition)
-		else:
-			scrollOutput()
-
-			def narf(tab):
-				tab.autoScroll=True
-				return False
-
-			idle_add(narf,tab)
-
-		# NOTE:  to avoid race conditions the idle_add() method is used.
-		# NOTE:: If it wouldn't be used the scrolling would not work due
-		# NOTE:: to modifications of the scroll position by the base class.
-
 		setWindowTitle(tab.name)
 
 		if not tab.is_server():
@@ -600,6 +564,14 @@ gobject.signal_new("tab_switched", TabClass, gobject.SIGNAL_ACTION,
 	None, (gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT))
 
 tabs = TabClass()
+
+def get_current_output_textview():
+	tab = tabs.getCurrentTab()
+
+	if not tab:
+		return widgets.get_widget("output")
+	else:
+		return tab.textview
 
 def setup_searchToolbar():
 	global searchToolbar
@@ -790,28 +762,6 @@ def updateServerTreeMarkup(path):
 			repr(path))
 		return
 
-def scrollGeneralOutput():
-	"""
-		Scrolls the general output text view to it's end.
-	"""
-	tv = widgets.get_widget("generalOutput")
-	tb = tv.get_buffer()
-
-	mark = tb.create_mark("end", tb.get_end_iter(), False)
-	tv.scroll_to_mark(mark, 0.05, True, 0.0, 1.0)
-	tb.delete_mark(mark)
-
-def scrollOutput():
-	"""
-		Scrolls the output text view to it's end.
-	"""
-	tv = widgets.get_widget("output")
-	tb = tv.get_buffer()
-
-	mark = tb.create_mark("end", tb.get_end_iter(), False)
-	tv.scroll_to_mark(mark, 0.05, True, 0.0, 1.0)
-	tb.delete_mark(mark)
-
 def escape(msg):
 	"""
 		Converts special characters in msg in-place.
@@ -847,7 +797,7 @@ def write_to_general_output(type, timestring, server, channel, message):
 			"[%s] &lt;%s&gt; %s" % (timestring, server, message))
 
 
-	scrollGeneralOutput()
+	widgets.get_widget("generalOutput").scroll_to_bottom()
 
 def channelPrint(timestamp, server, channel, message, type="message"):
 	"""
@@ -876,13 +826,7 @@ def channelPrint(timestamp, server, channel, message, type="message"):
 		print "No such channel %s:%s" % (server,channel)
 		return
 
-	buffer = channelTab.buffer
-
-	if not buffer:
-		print "channelPrint(): Channel %s on %s "\
-			"has no buffer." % (channel, server)
-		return
-
+	buffer = channelTab.textview.get_buffer()
 	buffer.insertHTML(buffer.get_end_iter(), outputString)
 
 	if config.get_bool("tekka","show_general_output"):
@@ -893,7 +837,7 @@ def channelPrint(timestamp, server, channel, message, type="message"):
 	# notification in server/channel list
 	if tabs.isActive(channelTab):
 		if channelTab.autoScroll:
-			scrollOutput()
+			channelTab.textview.scroll_to_bottom()
 
 	else:
 		if type in channelTab.newMessage:
@@ -913,12 +857,7 @@ def serverPrint(timestamp, server, string, type="message"):
 		print "Server %s does not exist." % server
 		return
 
-	buffer = serverTab.buffer
-
-	if not buffer:
-		print "serverPrint(): No output buffer for "\
-			"server %s." % server
-		return
+	buffer = serverTab.textview.get_buffer()
 
 	timestr = time.strftime(config.get("tekka", "time_format", "%H:%M"),
 		time.localtime(timestamp))
@@ -930,7 +869,7 @@ def serverPrint(timestamp, server, string, type="message"):
 
 	if tabs.isActive(serverTab):
 		if serverTab.autoScroll:
-			scrollOutput()
+			serverTab.textview.scroll_to_bottom()
 
 	else:
 		if type in serverTab.newMessage:
@@ -965,7 +904,8 @@ def myPrint(string, html=False):
 		the insertHTML-method falling back to normal insert
 		if it's not possible to insert via insertHTML.
 	"""
-	output = widgets.get_widget("output").get_buffer()
+	textview = get_current_output_textview()
+	output = textview.get_buffer()
 
 	if not output:
 		print "No output buffer here!"
@@ -984,7 +924,7 @@ def myPrint(string, html=False):
 			print "No HTML buffer, printing normal."
 			output.insert(output.get_end_iter(), "\n"+string)
 
-	scrollOutput()
+	textview.scroll_to_bottom()
 
 @types(string=str, force_dialog=bool)
 def errorMessage(string, force_dialog=False):
@@ -994,7 +934,7 @@ def errorMessage(string, force_dialog=False):
 		You can force the usage of an dialog
 		with the force_dialog parameter.
 	"""
-	output = widgets.get_widget("output")
+	output = get_current_output_textview().get_buffer()
 	if output.get_buffer() and not force_dialog:
 		myPrint(
 			gettext.gettext(

@@ -38,8 +38,7 @@ from types import MethodType, FunctionType
 from typecheck import types
 
 def warnNoConnection(tab):
-	if not tab.buffer:
-		return
+	buffer = tab.textview.get_buffer()
 
 	if tab.is_server():
 		name = tab.name
@@ -53,7 +52,7 @@ def warnNoConnection(tab):
 
 	nColor = config.get("colors","notification","#000000")
 
-	tab.buffer.insertHTML(tab.buffer.get_end_iter(),
+	buffer.insertHTML(buffer.get_end_iter(),
 		'<font foreground="%(nf_color)s">'
 		'%(notification)s</font>' % {
 		"nf_color" : nColor,
@@ -61,8 +60,7 @@ def warnNoConnection(tab):
 	})
 
 def warnNotJoined(cTab):
-	if not cTab.buffer:
-		return
+	buffer = cTab.textview.get_buffer()
 
 	notification = _(
 		"Warning: The channel %(channel)s is not joined, "
@@ -71,8 +69,8 @@ def warnNotJoined(cTab):
 		)
 	nColor = config.get('colors','notification','#000000')
 
-	cTab.buffer.insertHTML(
-		cTab.buffer.get_end_iter(),
+	buffer.insertHTML(
+		buffer.get_end_iter(),
 		'<font foreground="%(nf_color)s">'
 		'%(notification)s</font>' % {
 			'nf_color': nColor,
@@ -426,7 +424,7 @@ def tekkaQuery(currentServer, currentTab, args):
 		gui.tabs.addTab(currentServer.name, tab)
 		gui.updateServerTreeShortcuts()
 
-		output = tab.buffer
+		output = tab.textview.get_buffer()
 
 		# fetch and write history to query (if any)
 		for line in com.fetchLog(currentServer.name, nick,
@@ -441,8 +439,10 @@ def tekkaClear(currentServer, currentTab, args):
 
 		Usage: /clear
 	"""
-	if currentTab: currentTab.buffer.set_text("")
-	elif currentServer: currentServer.buffer.set_text("")
+	if currentTab:
+		currentTab.textview.get_buffer().set_text("")
+	elif currentServer:
+		currentServer.textview.get_buffer().set_text("")
 
 def tekkaHelp(currentServer, currentTab, args):
 	"""

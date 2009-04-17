@@ -230,13 +230,9 @@
                             <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
                             <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
                             <child>
-                              <widget class="GtkTextView" id="generalOutput">
+                              <widget class="Custom" id="generalOutput">
                                 <property name="visible">True</property>
-                                <property name="editable">False</property>
-                                <property name="can_focus">False</property>
-                                <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
-                                <property name="cursor_visible">False</property>
-
+                                <property name="creation_function">create_generalOutput</property>
                               </widget>
                             </child>
                           </widget>
@@ -254,12 +250,9 @@
                             <property name="window_placement">GTK_CORNER_BOTTOM_LEFT</property>
                             <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
                             <child>
-                              <widget class="GtkTextView" id="output">
+                              <widget class="Custom" id="output">
                                 <property name="visible">True</property>
-                                <property name="editable">False</property>
-                                <property name="can_focus">False</property>
-                                <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
-                                <property name="cursor_visible">False</property>
+								<property name="creation_function">create_output</property>
                               </widget>
                             </child>
                           </widget>

@@ -203,7 +203,7 @@ def lastLog(server, channel, lines=0):
 	if not tab:
 		return
 
-	buffer = tab.buffer
+	buffer = tab.textview.get_buffer()
 
 	if not buffer:
 		print "lastLog('%s','%s'): no buffer" % (server,channel)
