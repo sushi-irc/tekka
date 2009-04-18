@@ -51,7 +51,7 @@ def get_font ():
 	try:
 		import gconf
 
-		client = gconf.Client()
+		client = gconf.client_get_default()
 
 		font = client.get_string("/desktop/gnome/interface/monospace_font_name")
 

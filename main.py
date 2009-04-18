@@ -1111,6 +1111,24 @@ def setupGTK():
 	setup_serverTree()
 	setup_nickList()
 
+	try:
+		import gconf
+
+		def default_font_cb (client, id, entry, data):
+			if not config.get_bool("tekka", "use_default_font"):
+				return
+
+			gui.setFont(widgets.get_widget("output"), gui.get_font())
+			gui.setFont(widgets.get_widget("inputBar"), gui.get_font())
+			gui.setFont(widgets.get_widget("generalOutput"), gui.get_font())
+
+		c = gconf.client_get_default()
+
+		c.add_dir("/desktop/gnome/interface", gconf.CLIENT_PRELOAD_NONE)
+		c.notify_add("/desktop/gnome/interface/monospace_font_name", default_font_cb)
+	except:
+		pass
+
 	# set output font
 	gui.setFont(widgets.get_widget("output"), gui.get_font())
 
