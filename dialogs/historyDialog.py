@@ -34,6 +34,7 @@ import os
 import config
 import com
 import gui_control as gui
+from helper.searchToolbar import SearchBar
 
 widgets = None
 
@@ -157,10 +158,17 @@ def run(tab):
 	# non modal..
 	dialog.show_all()
 
+def custom_handler(glade, function_name, widget_name, *x):
+	if widget_name == "searchBar":
+		return SearchBar(None)
+	return None
+
 def setup():
 	global widgets
 
 	path = config.get("gladefiles","dialogs") + "history.glade"
+
+	gtk.glade.set_custom_handler(custom_handler)
 	widgets = gtk.glade.XML(path)
 
 	sigdic = {
@@ -169,6 +177,8 @@ def setup():
 	}
 
 	widgets.signal_autoconnect(sigdic)
+
+	widgets.get_widget("searchBar").textview = widgets.get_widget("historyView")
 	widgets.get_widget("calendar").connect("realize", calendar_realize_cb)
 
 	gui.setFont(widgets.get_widget("historyView"), gui.get_font())
