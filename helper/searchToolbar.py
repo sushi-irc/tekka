@@ -118,7 +118,7 @@ class SearchBar(gtk.Table):
 		self.textview.get_buffer().select_range(*result)
 
 		# scroll the textview
-		self.textview.scroll_to_iter(result[0], 0.4)
+		self.textview.scroll_to_iter(result[0], 0.0)
 
 	def grab_focus(self):
 		self.search_entry.grab_focus()
