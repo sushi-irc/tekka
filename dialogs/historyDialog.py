@@ -160,7 +160,7 @@ def run(tab):
 
 def custom_handler(glade, function_name, widget_name, *x):
 	if widget_name == "searchBar":
-		return SearchBar(None)
+		return SearchBar(None, autohide=False)
 	return None
 
 def setup():

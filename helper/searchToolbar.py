@@ -50,7 +50,10 @@ class SearchBar(gtk.Table):
 	last_iter = None
 	last_result = ""
 
-	def __init__(self, textview, textview_callback = None, separator=False):
+	def __init__(self, textview,
+		textview_callback = None,
+		separator=False,
+		autohide=True):
 		if separator:
 			rows = 3
 		else:
@@ -75,7 +78,9 @@ class SearchBar(gtk.Table):
 
 		self.attach(self.search_entry, 0, 1, 1, 2)
 		self.child_set_property(self.search_entry, "y-options", gtk.SHRINK)
-		self.search_entry.connect("focus-out-event", self.search_entry_focus_out_cb)
+		if autohide:
+			self.search_entry.connect("focus-out-event",
+				self.search_entry_focus_out_cb)
 		self.search_entry.connect("activate", self.search_button_clicked_cb)
 
 		self.search_button = gtk.ToolButton(stock_id = gtk.STOCK_FIND)
