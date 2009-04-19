@@ -945,7 +945,8 @@ def errorMessage(string, force_dialog=False):
 		You can force the usage of an dialog
 		with the force_dialog parameter.
 	"""
-	output = get_current_output_textview().get_buffer()
+	output = get_current_output_textview()
+
 	if output.get_buffer() and not force_dialog:
 		myPrint(
 			gettext.gettext(
