@@ -40,9 +40,14 @@ class SearchBar(gtk.Table):
 		else:
 			self._textview = textview
 
+	def get_textview(self):
+		if self.textview_callback:
+			return self.textview_callback()
+		return self._textview
+
 	_textview = None
 	textview_callback = None
-	textview = property(lambda s: s._textview, set_textview)
+	textview = property(get_textview, set_textview)
 
 	search_term = property(lambda s: s.search_entry.get_text(),
 		lambda s,x: s.search_entry.set_text(x))
