@@ -450,10 +450,11 @@ def tekkaHelp(currentServer, currentTab, args):
 
 		Usage: /help <command>
 	"""
+	global _commands
 	if not args:
 		return gui.myPrint("Usage: /help <command>")
-	if commands.has_key(args[0]):
-		gui.myPrint(commands[args[0]].__doc__.replace("\t",""))
+	if _commands.has_key(args[0]):
+		gui.myPrint(_commands[args[0]].__doc__.replace("\t",""))
 	else:
 		gui.myPrint("No help for %s available." % (args[0]))
 
