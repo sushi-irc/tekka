@@ -897,7 +897,7 @@ def userKick(time, server, from_str, channel, who, reason):
 		tab.joined = False
 
 		message = _(u"« You have been kicked from %(channel)s "
-			"by %(nick)s (%(reason)s)." % {
+			u"by %(nick)s (%(reason)s)." % {
 				"channel": channelString,
 				"nick": nickString,
 				"reason": reasonString })

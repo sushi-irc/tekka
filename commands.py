@@ -551,7 +551,7 @@ def parseInput(text):
 
 			gui.myPrint(_(
 				u"• Unknown command “%(command)s”, "\
-				"sending raw command “%(raw)s”.") % {
+				u"sending raw command “%(raw)s”.") % {
 					"command": cmd,
 					"raw": raw })
 			com.raw(serverTab.name, raw)
