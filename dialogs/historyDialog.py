@@ -99,107 +99,148 @@ class HistorySearchBar(SearchBar):
 		if not self.search_term or not self.textview or not self.calendar:
 			return
 
-		found = False
-		i = 0
-		fd = None
+		"""
+		ueber files iterieren:
+		  wenn textiterator besteht:
+		    textiteratorsuche auf suchstring
+			wenn kein ergebnis:
+			  textiterator loeschen
+			ansonsten:
+			  speichern des textiterator
+			  abbruch der iteration
+
+		  zum letzt bekannten offset springen;
+
+		  wenn suchstring in text gefunden:
+		    datum herausfinden
+			datum in view laden
+			textiterator erstellen
+			textiteratorsuche auf suchstring
+
+		wenn gar kein ergebnis:
+		  meldung
+		"""
+		success = False
+		file_index = 0
 		offset = 0L
+		textiter = None
 
 		if self.last:
-			file, offset = self.last
+			file, offset, textiter = self.last
 			try:
-				i = self.calendar.files.index(file)
-			except IndexError:
+				file_index = self.calendar.files.index(file)
+			except ValueError:
 				pass
 
-		for file in self.calendar.files[i:]:
-			try:
-				fd = codecs.open(os.path.join(
-					self.calendar.log_dir, file), "r", "utf-8")
-			except IOError,e:
-				print "Failed to open file %s: %s" % (file,e)
-				continue
+		for file in self.calendar.files[file_index:]:
+
+			if textiter:
+				search_result = textiter.forward_search(
+					self.search_term,
+					gtk.TEXT_SEARCH_TEXT_ONLY)
+
+				if not search_result:
+					print "Not found with iter, continue."
+					textiter = None
+
+				else:
+					print "Found by textiter."
+					success = True
+					self.last = (file, offset, search_result[1])
+
+					self.textview.get_buffer().select_range(*search_result)
+					self.textview.scroll_to_iter(search_result[0], 0.0)
+					break
+
+			fd = calendar_open_file(self.calendar, file)
+			print "In file %s" % (file)
+
+
+			if not fd:
+				self.last = ()
+				break
+
 			fd.seek(offset)
+			text = fd.read()
 
-			try:
-				text = fd.read()
-			except UnicodeDecodeError,e:
-				print "There was an error while reading file %s: %s" % (
-					file, e)
-				continue
-
-			print "Searching in file %s... From %d" % (file, offset)
+			print "offset for file = %d" % (offset)
 
 			index = text.find(self.search_term)
 
 			if index >= 0:
-				# found
+				print "Term found at %d." % (index)
+
+				calendar_set_file(self.calendar, file)
 
 				date = self._get_date(text, index)
 
 				if not date:
-					print "Failed to find date!"
-					continue
+					print "Could not find date for index %d on file %s" %(
+						index, file)
+					print "textdump: %s" % (text[index-45:index+len(self.search_term)])
+					break
 
 				year, month, day = date
 				year, month, day = int(year), int(month), int(day)
 
-				calendar_set_file(self.calendar, file, fd = fd)
+				print "Found date %d-%d-%d" % (year, month, day)
+
+				(d_start, d_end) = get_calendar_offsets(
+					self.calendar, year, month-1, day)
+				print "Calendar offsets: %s" % (self.calendar.offsets.keys())
+				print "Request: %d-%d-%d" % (year, month, day)
 
 				self.calendar.select_month(month-1, year)
 				self.calendar.select_day(day)
 
-				d_start, d_end = get_calendar_offsets(
-					self.calendar, year, month-1, day)
+				textiter = self.textview.get_buffer().get_start_iter()
 
-				if None in (d_start, d_end):
-					print "No offsets for %d:%d:%d" % (year, month-1, day)
-					return
+				search_result = textiter.forward_search(
+					self.search_term,
+					gtk.TEXT_SEARCH_TEXT_ONLY)
 
-				view_index = (index + offset) - d_start
+				if not search_result:
+					# This should definitively not happen..
+					print "No search result with textiter for '%s'" % (
+						self.search_term)
+					break
 
-				view = widgets.get_widget("historyView")
-				buffer = view.get_buffer()
-				btext = buffer.get_property("text")
+				self.textview.get_buffer().select_range(*search_result)
 
-				""" DEBUG
-				print "Found: index is %d (%s), view_index is %d (%s)" % (
-					index,
-					text[index:index+len(self.search_term)],
-					view_index,
-					btext[view_index:view_index+len(self.search_term)])
-				"""
-
-				iterA = buffer.get_iter_at_offset(view_index)
-				iterB = buffer.get_iter_at_offset(view_index+len(self.search_term))
-
-				buffer.select_range(iterA, iterB)
-
-				def doit(self, iter):
-					view.scroll_to_iter(iter, 0.0)
+				def scroll(tv,search_result):
+					tv.scroll_to_iter(search_result, 0.0)
 					return False
 
-				gobject.idle_add(doit, view, iterA)
+				gobject.idle_add(scroll, self.textview, search_result[0])
 
-				self.last = (file, offset + index + len(self.search_term))
-				found = True
-
+				self.last = (
+					file,
+					offset+d_end,
+					search_result[1])
+				success = True
 				break
 
-			else:
-				# next file
-				continue
+			# new file, new offset/textiter
+			offset = 0L
+			textiter = None
+			print "Next file!"
 
-		if not found:
-			print "not found :["
-			self.last = ()
+		if not success:
+			print "NO RESULTS"
 
-def calendar_set_file(calendar, file, fd = None):
-	if not fd:
-		try:
-			fd = codecs.open(os.path.join(calendar.log_dir, file), "r", "utf-8")
-		except IOError,e:
-			print "Failed to open file %s: %s" % (file, e)
-			return
+
+def calendar_open_file(calendar, file):
+	try:
+		fd = codecs.open(os.path.join(calendar.log_dir, file), "r", "utf-8")
+	except IOError,e:
+		print "Failed to open file %s: %s" % (file, e)
+		return None
+	return fd
+
+def calendar_set_file(calendar, file):
+	fd = calendar_open_file(calendar, file)
+	if fd == None:
+		return
 
 	calendar.offsets = calendar_parse_offsets(fd)
 	calendar.fd = fd
@@ -216,6 +257,7 @@ def calendar_parse_offsets(fd):
 		date = line.split(" ")[0]
 
 		if not date_pattern.match(date):
+			offset += len(line)
 			continue
 
 		if not lastDate:
@@ -223,6 +265,7 @@ def calendar_parse_offsets(fd):
 
 		if lastDate != date:
 			# close lastDate
+			print "NEW DATE: %s (%d - %d)" % (lastDate, startOffset, offset)
 
 			dateOffsets[lastDate] = (startOffset, offset)
 
