@@ -841,6 +841,19 @@ def setup_mainWindow():
 
 	win.show_all()
 
+def treemodel_rows_reordered_cb(treemodel, path, iter, new_order):
+	""" new_order is not accessible, so hack arround it... """
+	for row in treemodel:
+		if not row[2]:
+			continue
+
+		row[2].path = row.path
+		for child in row.iterchildren():
+			if not child[2]:
+				continue
+			child[2].path = child.path
+	#gui.updateServerTreeShortcuts()
+
 def setup_serverTree():
 	"""
 		Sets up a treemodel with three columns.
@@ -851,7 +864,6 @@ def setup_serverTree():
 	"""
 	tm = gtk.TreeStore(TYPE_STRING, TYPE_STRING, TYPE_PYOBJECT)
 
-	"""
 	# Sorting
 	def cmpl(m,i1,i2):
 		" compare columns lower case "
@@ -865,7 +877,7 @@ def setup_serverTree():
 	tm.set_sort_func(1,
 		lambda m,i1,i2,*x: cmpl(m,i1,i2))
 	tm.set_sort_column_id(1, gtk.SORT_ASCENDING)
-	"""
+	tm.connect("rows-reordered", treemodel_rows_reordered_cb)
 
 	# further stuff (set model to treeview, add columns)
 
