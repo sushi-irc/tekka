@@ -100,25 +100,25 @@ class HistorySearchBar(SearchBar):
 			return
 
 		"""
-		ueber files iterieren:
-		  wenn textiterator besteht:
-		    textiteratorsuche auf suchstring
-			wenn kein ergebnis:
-			  textiterator loeschen
-			ansonsten:
-			  speichern des textiterator
-			  abbruch der iteration
+		iterate over files:
+		  if textiterator exists:
+		    search by textiterator
+			no result:
+			  delete textiterator
+			else:
+			  save textiterator
+			  break iteration
 
-		  zum letzt bekannten offset springen;
+		  jump to last known offset;
 
-		  wenn suchstring in text gefunden:
-		    datum herausfinden
-			datum in view laden
-			textiterator erstellen
-			textiteratorsuche auf suchstring
+		  if search term found in text:
+		    find date of line
+			load date in history view
+			create textiterator
+			search by textiterator
 
-		wenn gar kein ergebnis:
-		  meldung
+		no result:
+		  notification
 		"""
 		success = False
 		file_index = 0
@@ -140,11 +140,9 @@ class HistorySearchBar(SearchBar):
 					gtk.TEXT_SEARCH_TEXT_ONLY)
 
 				if not search_result:
-					print "Not found with iter, continue."
 					textiter = None
 
 				else:
-					print "Found by textiter."
 					success = True
 					self.last = (file, offset, search_result[1])
 
@@ -153,8 +151,6 @@ class HistorySearchBar(SearchBar):
 					break
 
 			fd = calendar_open_file(self.calendar, file)
-			print "In file %s" % (file)
-
 
 			if not fd:
 				self.last = ()
@@ -163,32 +159,25 @@ class HistorySearchBar(SearchBar):
 			fd.seek(offset)
 			text = fd.read()
 
-			print "offset for file = %d" % (offset)
-
 			index = text.find(self.search_term)
 
 			if index >= 0:
-				print "Term found at %d." % (index)
-
-				calendar_set_file(self.calendar, file)
+				if self.calendar.fd.name != os.path.join(
+					self.calendar.log_dir, file):
+					calendar_set_file(self.calendar, file)
 
 				date = self._get_date(text, index)
 
 				if not date:
 					print "Could not find date for index %d on file %s" %(
 						index, file)
-					print "textdump: %s" % (text[index-45:index+len(self.search_term)])
 					break
 
 				year, month, day = date
 				year, month, day = int(year), int(month), int(day)
 
-				print "Found date %d-%d-%d" % (year, month, day)
-
 				(d_start, d_end) = get_calendar_offsets(
 					self.calendar, year, month-1, day)
-				print "Calendar offsets: %s" % (self.calendar.offsets.keys())
-				print "Request: %d-%d-%d" % (year, month, day)
 
 				self.calendar.select_month(month-1, year)
 				self.calendar.select_day(day)
@@ -223,7 +212,6 @@ class HistorySearchBar(SearchBar):
 			# new file, new offset/textiter
 			offset = 0L
 			textiter = None
-			print "Next file!"
 
 		if not success:
 			print "NO RESULTS"
@@ -267,7 +255,6 @@ def calendar_parse_offsets(fd):
 
 		if lastDate != date:
 			# close lastDate
-			print "NEW DATE: %s (%d - %d)" % (lastDate, startOffset, offset)
 
 			dateOffsets[lastDate] = (startOffset, offset)
 
