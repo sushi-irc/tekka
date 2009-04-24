@@ -227,11 +227,13 @@ class HistorySearchBar(SearchBar):
 
 		if not success:
 			print "NO RESULTS"
+			self.last = ()
 
 
 def calendar_open_file(calendar, file):
 	try:
-		fd = codecs.open(os.path.join(calendar.log_dir, file), "r", "utf-8")
+#		fd = codecs.open(os.path.join(calendar.log_dir, file), "r", "utf-8")
+		fd = open(os.path.join(calendar.log_dir, file), "r")
 	except IOError,e:
 		print "Failed to open file %s: %s" % (file, e)
 		return None
