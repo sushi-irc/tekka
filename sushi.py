@@ -2,11 +2,16 @@ import com
 import commands
 import signals
 import config
+import gui_control
 
 class Plugin (object):
 
 	def __init__(self, plugin_name):
 		self._plugin_name = plugin_name
+
+	def display_error(self, message):
+		gui_control.errorMessage("Plugin %s: %s" % (
+			self._plugin_name, message))
 
 	def get_bus(self):
 		return com.sushi
