@@ -57,7 +57,7 @@ def _reset(full=False):
 	_current["needle"] = None
 	_current["lastCompletion"] = None
 
-def _appendMatch(mode, text, word, match):
+def _appendMatch(entry, mode, text, word, match):
 	"""
 	Complete `word` in `text` with `match` and
 	apply it to the input bar widget.
@@ -69,33 +69,42 @@ def _appendMatch(mode, text, word, match):
 	elif mode == "n":
 		separator = config.get("tekka","nick_seperator", ": ")
 
-	text = text[:-len(word)] + match + separator
+	new_text = text[0:entry.get_position()-len(word)] + match + separator + text[entry.get_position():]
+#	text = text[:-len(word)] + match + separator
 
 	print "text: '%s' word: '%s' match: '%s'" % (text,word,match)
 
-	inputBar = gui_control.widgets.get_widget("inputBar")
-	inputBar.set_text(text)
-	inputBar.set_position(len(text))
+	old_position = entry.get_position()
+	entry.set_text(new_text)
+
+	entry.set_position(old_position + len(match+separator) -len(word))
 
 	global _current
 	_current["lastCompletion"] = match + separator
 
-def _removeLastCompletion(text):
+def _removeLastCompletion(entry, text):
+	""" this function assumes, we're on the position _after_
+		the completion...
+	"""
 	lc = _current["lastCompletion"]
-	ib = gui_control.widgets.get_widget("inputBar")
 
-	print "Last completion was: '%s'" %(lc)
+	print "Last completion was: '%s'" % (lc)
 
 	# strip of the match, keep the needle:
 	# 'n'<Tab> => 'nemo: ' => strip 'emo: '
-	text = text[:-(len(lc)-len(_current["needle"]))]
+	print "text = %s, position = %d last_complete: %d (%s), needle: %d (%s)" % (
+		text, entry.get_position(), len(lc), lc, len(_current["needle"]), _current["needle"])
+	needle = _current["needle"]
+	skip = (entry.get_position() - len(lc)) + len(needle)
+	new_text = text[:skip]+text[entry.get_position():]
+	#text = text[:-(len(lc)-len(_current["needle"]))]
 
 	print "Cleaned text is: '%s'" % (text)
 
-	ib.set_text(text)
-	ib.set_position(len(text))
+	entry.set_text(new_text)
+	entry.set_position(skip)
 
-	return text
+	return new_text
 
 def stopIteration():
 	"""
@@ -105,7 +114,7 @@ def stopIteration():
 	_reset()
 	#_current["needle"] = None
 
-def complete(currentTab, text):
+def complete(currentTab, entry, text):
 	"""
 	The user pressed tab after `text`.
 	* If currentTab is a channel, find a suitable nickname
@@ -136,18 +145,13 @@ def complete(currentTab, text):
 	if _current["needle"]:
 		# continue searching for `needle`
 		word = _current["needle"]
-		text = _removeLastCompletion(text)
+		text = _removeLastCompletion(entry, text)
 		print "Continue iterating! Needle is '%s'" % (word)
 
 	else:
 		# get the word to complete
-		words = text.strip(" ").split(" ")
-
-		if not words:
-			print "No words!"
-			return
-
-		word = words[-1]
+		# "f|<tab> || f |<tab>"
+		word = text[0:entry.get_position()].split(" ")[-1].strip()
 
 		_current["needle"] = word
 
@@ -194,7 +198,7 @@ def complete(currentTab, text):
 			else:
 				mode = "n"
 
-			_appendMatch(mode, text, word, match)
+			_appendMatch(entry, mode, text, word, match)
 
 			return True
 
@@ -226,14 +230,16 @@ def complete(currentTab, text):
 			else:
 				mode = "n"
 
-			_appendMatch(mode, text, word, match)
+			_appendMatch(entry, mode, text, word, match)
 
 			return True
 
 	# ** no successful completion so far **
 
 	# channel completion
-	if word[0] in com.sushi.support_chantypes(currentTab.server):
+	if (currentTab
+		and not currentTab.is_server()
+		and word[0] in com.sushi.support_chantypes(currentTab.server)):
 		tabs = gui_control.tabs.getAllTabs()
 
 		# find all matching tabs
@@ -256,7 +262,7 @@ def complete(currentTab, text):
 			match = matches[_current["position"]]
 
 		if match:
-			_appendMatch("c", text, word, match)
+			_appendMatch(entry, "c", text, word, match)
 			return True
 
 	# *** command completion ***
@@ -265,7 +271,7 @@ def complete(currentTab, text):
 		return False
 
 	needle = word[1:]
-	matches = [cmd for cmd in commands.commands.keys()
+	matches = [cmd for cmd in commands._commands.keys()
 		if cmd[:len(needle)].lower()==needle.lower()]
 
 	if matches:
@@ -283,7 +289,7 @@ def complete(currentTab, text):
 		match = matches[_current["position"]]
 
 	if match:
-		_appendMatch("c",text, word, "/"+match)
+		_appendMatch(entry, "c",text, word, "/"+match)
 
 		return True
 

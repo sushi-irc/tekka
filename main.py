@@ -374,7 +374,7 @@ def inputBar_key_press_event_cb(inputBar, event):
 	elif key == "Tab":
 		# tab completion comes here.
 
-		tabcompletion.complete(tab, text)
+		tabcompletion.complete(tab, inputBar, text)
 		return True
 
 	if key != "Tab":
