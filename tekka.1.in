@@ -13,7 +13,7 @@ tekka \- Graphical IRC client
 .SH SEE ALSO
 \fBmaki\fP(1), \fBnigiri\fP(1), \fBmaki-remote\fP(1), \fBsushi-remote\fP(1)
 
-.SH AUTHOR
+.SH AUTHORS
 Marian Tietz
 .br
 Michael Kuhn
