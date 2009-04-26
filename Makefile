@@ -13,6 +13,7 @@ install: all
 	$(INSTALL) -d -m 755 '$(DESTDIR)$(sharedir)/sushi/tekka/lib'
 	$(INSTALL) -d -m 755 '$(DESTDIR)$(sharedir)/sushi/tekka/plugins'
 	$(INSTALL) -d -m 755 '$(DESTDIR)$(sharedir)/applications'
+	$(INSTALL) -d -m 755 '$(DESTDIR)$(mandir)/man1'
 	$(INSTALL) -m 644 *.py '$(DESTDIR)$(sharedir)/sushi/tekka'
 	$(INSTALL) -m 644 dialogs/*.py '$(DESTDIR)$(sharedir)/sushi/tekka/dialogs'
 	$(INSTALL) -m 644 glade/*.glade '$(DESTDIR)$(sharedir)/sushi/tekka/glade'
@@ -26,6 +27,7 @@ install: all
 	$(SED) -e 's#@bindir@#$(bindir)#' -e 's#@sharedir@#$(sharedir)#' 'tekka.desktop.in' > '$(DESTDIR)$(sharedir)/applications/tekka.desktop'
 	$(CHMOD) +x '$(DESTDIR)$(sharedir)/sushi/tekka/main.py'
 	$(LN) -sf '$(sharedir)/sushi/tekka/main.py' '$(DESTDIR)$(bindir)/tekka'
+	$(SED) 's#@SUSHI_VERSION@#$(SUSHI_VERSION)#' 'tekka.1.in' | $(GZIP) > '$(DESTDIR)$(mandir)/man1/tekka.1.gz'
 
 	$(MAKE) -C po $@
 
