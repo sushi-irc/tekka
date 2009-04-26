@@ -30,7 +30,7 @@ import sushi
 
 plugin_info = (
 	"Writes the current playing song to the channel after typing /np",
-	"0.1",
+	"1.0",
 	"Marian Tietz"
 )
 

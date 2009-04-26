@@ -1,3 +1,4 @@
+# coding: UTF-8
 """
 Copyright (c) 2008 Marian Tietz
 All rights reserved.
