@@ -866,22 +866,19 @@ def channelPrint(timestamp, server, channel, message, type="message"):
 	buffer = channelTab.textview.get_buffer()
 	buffer.insertHTML(buffer.get_end_iter(), outputString)
 
-	if config.get_bool("tekka","show_general_output"):
-		# write it to the general output, also
-
-		write_to_general_output(type, timestring, server, channel, message)
-
 	# notification in server/channel list
 	if tabs.isActive(channelTab):
 		if channelTab.autoScroll:
 			channelTab.textview.scroll_to_bottom()
 
 	else:
-		if type in channelTab.newMessage:
-			return
+		if config.get_bool("tekka","show_general_output"):
+			# write it to the general output, also
+			write_to_general_output(type, timestring, server, channel, message)
 
-		channelTab.setNewMessage(type)
-		updateServerTreeMarkup(channelTab.path)
+		if not type in channelTab.newMessage:
+			channelTab.setNewMessage(type)
+			updateServerTreeMarkup(channelTab.path)
 
 def serverPrint(timestamp, server, string, type="message"):
 	"""
@@ -901,19 +898,18 @@ def serverPrint(timestamp, server, string, type="message"):
 
 	buffer.insertHTML(buffer.get_end_iter(), "[%s] %s" % (timestr,string))
 
-	if config.get_bool("tekka","show_general_output"):
-		write_to_general_output(type, timestr, server, "", string)
 
 	if tabs.isActive(serverTab):
 		if serverTab.autoScroll:
 			serverTab.textview.scroll_to_bottom()
 
 	else:
-		if type in serverTab.newMessage:
-			# don't need to repeat setting
-			return
-		serverTab.setNewMessage(type)
-		updateServerTreeMarkup(serverTab.path)
+		if config.get_bool("tekka","show_general_output"):
+			write_to_general_output(type, timestr, server, "", string)
+
+		if not type in serverTab.newMessage:
+			serverTab.setNewMessage(type)
+			updateServerTreeMarkup(serverTab.path)
 
 def currentServerPrint(timestamp, server, string, type="message"):
 	"""
