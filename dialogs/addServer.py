@@ -83,7 +83,7 @@ def dialog_response_cb(dialog, response_id, callback):
 
 		# set autoconnect bool
 		com.sushi.server_set(server, "server", "autoconnect",
-			str (widgets.get_widget("autoConnectCheckButton").get_active()))
+			str (widgets.get_widget("autoConnectCheckButton").get_active()).lower())
 
 		# set up commands
 		list = [i[0].get_text() for i in commandList.get_widget_matrix() if i[0].get_text()]
