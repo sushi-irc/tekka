@@ -282,13 +282,12 @@ def getTextColor(nick):
 def isHighlighted (server, text):
 	# TODO:  make this global so the method hasn't
 	# TODO:: to fetch the mapping every time
-	highlightwords = config.get("highlight_words", default={})
-	highlightwords = highlightwords.values()
-
+	highlightwords = config.get_list("chatting", "highlight_words")
 	highlightwords.append(com.getOwnNick(server))
 
+	search_text = text.lower()
 	for word in highlightwords:
-		i = text.lower().find(word.lower())
+		i = search_text.find(word.lower())
 
 		if i >= 0:
 			return True

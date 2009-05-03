@@ -41,6 +41,7 @@ from helper.expandingList import expandingList
 
 widgets = None
 nickColorsList = None
+highlightList = None
 
 def generalOutputFilterList_instanced_widget_cb(elist, row, column, obj):
 	if column == 0:
@@ -53,6 +54,16 @@ def customHandler(glade, function_name, widget_name, *x):
 		nickColorsList = expandingList(gtk.ColorButton)
 		sw = gtk.ScrolledWindow()
 		sw.add_with_viewport(nickColorsList)
+		sw.show_all()
+
+		return sw
+
+	elif widget_name == "highlightList":
+		global highlightList
+
+		highlightList = expandingList(gtk.Entry)
+		sw = gtk.ScrolledWindow()
+		sw.add_with_viewport(highlightList)
 		sw.show_all()
 
 		return sw
@@ -115,6 +126,14 @@ def fillChatting():
 	for key in ("quit_message", "part_message"):
 		val = config.get("chatting", key)
 		widgets.get_widget(key).set_text(val)
+
+	i = 0
+	for highlight in config.get_list("chatting", "highlight_words"):
+		highlightList.get_widget_matrix()[i][0].set_text(highlight)
+		highlightList.add_row()
+		i+=1
+
+	highlightList.remove_row(i)
 
 	val = config.get("chatting", "last_log_lines", default=0)
 	widgets.get_widget("last_log_lines").set_value(float(val))
@@ -181,6 +200,9 @@ def fillGeneralOutputFilters():
 
 def applyNickColors():
 	config.set_list("colors","nick_colors", [n[0].get_color().to_string() for n in nickColorsList.get_widget_matrix() if n and len(n) >= 1])
+
+def applyChatting():
+	config.set_list("chatting", "highlight_words", [n[0].get_text() for n in highlightList.get_widget_matrix() if n])
 
 def applyGeneralOutputFilter():
 	filter_list = []
@@ -368,6 +390,7 @@ def setup():
 def dialog_response_cb(dialog, response_id):
 	applyNickColors()
 	applyGeneralOutputFilter()
+	applyChatting()
 
 	dialog.destroy()
 
