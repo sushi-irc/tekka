@@ -1169,7 +1169,10 @@ def tekka_excepthook(extype, exobj, extb):
 		def set_message(self, msg):
 			self.tv.get_buffer().set_text(msg)
 
-	message = "".join(traceback.format_tb(extb))
+	message = "%s\n%s: %s\n" % (
+		"".join(traceback.format_tb(extb)),
+		extype.__name__,
+		str(exobj))
 
 	try:
 		dialog = tekka_excepthook.dialog
