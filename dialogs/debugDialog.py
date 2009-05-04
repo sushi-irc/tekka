@@ -40,17 +40,7 @@ def button_clicked_cb(button, textView):
 	print "compile and run!"
 	exec(textView.get_buffer().get_property("text"))
 
-def error_log(s):
-	buf = error_textview.get_buffer()
-	buf.insert(buf.get_end_iter(), s)
-
-def connect_error_pipe():
-	global error_textview
-	error_textview.get_buffer().set_text(__main__.get_error_history())
-	__main__.add_error_handler(error_log)
-
 def destroy_dialog(dialog, rid):
-	__main__.remove_error_handler(error_log)
 	dialog.destroy()
 
 def run():
@@ -68,22 +58,13 @@ def run():
 		print "Dialog creation failed!"
 		return
 
-	hpaned = gtk.HPaned()
-	error_sw = gtk.ScrolledWindow()
-	error_sw.add(error_textview)
-
 	code_vbox = gtk.VBox()
 	textView = gtk.TextView()
 	button = gtk.Button(label=_("C_ompile and run"))
 
-	code_vbox.pack_start(textView)
-	code_vbox.pack_end(button)
-	code_vbox.set_child_packing(button, False, True, 0L, gtk.PACK_END)
-
-	hpaned.add1(code_vbox)
-	hpaned.add2(error_sw)
-
-	dialog.vbox.pack_start(hpaned)
+	dialog.vbox.pack_start(textView)
+	dialog.vbox.pack_end(button)
+	dialog.vbox.set_child_packing(button, False, True, 0L, gtk.PACK_END)
 	dialog.vbox.show_all()
 
 	button.connect("clicked", button_clicked_cb, textView)
@@ -92,8 +73,6 @@ def run():
 	dialog.connect("response", destroy_dialog)
 
 	dialog.show_all()
-
-	connect_error_pipe()
 
 def setup():
 	pass
