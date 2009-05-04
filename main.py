@@ -42,6 +42,7 @@ except:
 
 import dbus
 import time
+import traceback
 
 import gtk.glade
 from gobject import TYPE_STRING, TYPE_PYOBJECT, idle_add,GError
@@ -53,7 +54,6 @@ from gettext import gettext as _
 
 from helper.shortcuts import addShortcut, removeShortcut
 from helper import tabcompletion
-from helper.iowatch import IOWatch
 
 import gui_control as gui
 import config
@@ -66,41 +66,9 @@ import menus
 
 import plugin_control
 
-error_pipe = IOWatch([])
-error_history = ""
-
 # TODO:  if a tab is closed the widgets remain the same.
 # TODO:: it would be nice if the tab would be switched
 # TODO:: to an active on (for error prevention too).
-
-"""
-error message handling
-"""
-
-def get_error_history():
-	global error_history
-	return error_history
-
-def add_error_handler(handler):
-	global error_pipe
-	try:
-		error_pipe.callbacks.index(handler)
-	except ValueError:
-		error_pipe.callbacks.append(handler)
-
-def remove_error_handler(handler):
-	global error_pipe
-	try:
-		i = error_pipe.callbacks.index(handler)
-	except ValueError:
-		return
-	else:
-		del error_pipe.callbacks[i]
-
-def log_error(s):
-	global error_history
-	error_history += s
-	print s,
 
 """
 Tekka intern signals
@@ -1175,14 +1143,47 @@ def setupGTK():
 
 	idle_add(setup_paneds)
 
+def tekka_excepthook(extype, exobj, extb):
+	""" we got an exception, print it in a dialog box """
+
+	def dialog_response_cb(dialog, rid):
+		del tekka_excepthook.dialog
+		dialog.destroy()
+
+	class ErrorDialog(gtk.Dialog):
+		def __init__(self, message):
+			gtk.Dialog.__init__(self,
+				parent = widgets.get_widget("mainWindow"),
+				title = _("Error occured"),
+				buttons = (gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE))
+
+			self.set_default_size(400,300)
+
+			self.tv = gtk.TextView()
+			self.tv.get_buffer().set_text(message)
+			self.sw = gtk.ScrolledWindow()
+			self.sw.add(self.tv)
+			self.vbox.pack_start(self.sw)
+			self.vbox.show_all()
+
+		def set_message(self, msg):
+			self.tv.get_buffer().set_text(msg)
+
+	message = "".join(traceback.format_tb(extb))
+
+	try:
+		dialog = tekka_excepthook.dialog
+	except AttributeError:
+		dialog = tekka_excepthook.dialog = ErrorDialog(message)
+		dialog.connect("response", dialog_response_cb)
+		dialog.show_all()
+	else:
+		tekka_excepthook.dialog.set_message(message)
+
 def main():
 	"""
 	Entry point. The program starts here.
 	"""
-
-	# setup stderr pipe
-	sys.stderr = error_pipe
-	add_error_handler(log_error)
 
 	# load config file, apply defaults
 	config.setup()
@@ -1192,6 +1193,11 @@ def main():
 
 	# build graphical interface
 	setupGTK()
+
+	# setup exception handler
+	global save_excepthook
+	save_excepthook = sys.excepthook
+	sys.excepthook = tekka_excepthook
 
 	# connect to maki daemon
 	connectMaki()
