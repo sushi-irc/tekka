@@ -1198,8 +1198,6 @@ def main():
 	setupGTK()
 
 	# setup exception handler
-	global save_excepthook
-	save_excepthook = sys.excepthook
 	sys.excepthook = tekka_excepthook
 
 	# connect to maki daemon
