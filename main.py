@@ -52,6 +52,8 @@ import locale
 import gettext
 from gettext import gettext as _
 
+import webbrowser
+
 from helper.shortcuts import addShortcut, removeShortcut
 from helper import tabcompletion
 
@@ -1000,6 +1002,11 @@ def setupGTK():
 	# parse glade file for main window
 	widgets = gui.load_widgets(
 		gladefiles["mainwindow"], "mainWindow")
+
+	def about_dialog_url_hook (dialog, link, data):
+		webbrowser.open(link)
+
+	gtk.about_dialog_set_url_hook(about_dialog_url_hook, None)
 
 	setup_mainWindow()
 
