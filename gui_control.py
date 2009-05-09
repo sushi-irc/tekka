@@ -811,10 +811,11 @@ def escape(msg):
 	msg = msg.replace(chr(1), "")
 	return msg
 
-def write_to_general_output(type, timestring, server, channel, message):
+def write_to_general_output(msgtype, timestring, server, channel, message):
 	goBuffer = widgets.get_widget("generalOutput").get_buffer()
 
 	filter = config.get_list("general_output", "filter")
+	print "filter: %s" % (filter)
 	for rule in filter:
 		try:
 			if not eval(rule):
@@ -836,13 +837,14 @@ def write_to_general_output(type, timestring, server, channel, message):
 
 	widgets.get_widget("generalOutput").scroll_to_bottom()
 
-def channelPrint(timestamp, server, channel, message, type="message"):
+def channelPrint(timestamp, server, channel, message, msgtype="message"):
 	"""
 		Inserts a string formatted like "[H:M] <message>\n"
 		into the htmlbuffer of the channel `channel` on server
 		`server`.
 	"""
-	timestring = time.strftime(config.get("tekka", "time_format", "%H:%M"), time.localtime(timestamp))
+	timestring = time.strftime(config.get("tekka", "time_format", "%H:%M"),
+		time.localtime(timestamp))
 
 	message = URLToTag(message)
 
@@ -850,7 +852,7 @@ def channelPrint(timestamp, server, channel, message, type="message"):
 		colorHack = ""
 	else:
 		colorHack = "foreground='%s'" % (
-			config.get("colors", "text_%s" % type, "#000000"))
+			config.get("colors", "text_%s" % msgtype, "#000000"))
 
 	outputString = "[%s] <font %s>%s</font>" % (
 		timestring,
@@ -874,13 +876,13 @@ def channelPrint(timestamp, server, channel, message, type="message"):
 	else:
 		if config.get_bool("tekka","show_general_output"):
 			# write it to the general output, also
-			write_to_general_output(type, timestring, server, channel, message)
+			write_to_general_output(msgtype, timestring, server, channel, message)
 
-		if not type in channelTab.newMessage:
-			channelTab.setNewMessage(type)
+		if not msgtype in channelTab.newMessage:
+			channelTab.setNewMessage(msgtype)
 			updateServerTreeMarkup(channelTab.path)
 
-def serverPrint(timestamp, server, string, type="message"):
+def serverPrint(timestamp, server, string, msgtype="message"):
 	"""
 		prints 'string' with "%H:%M' formatted 'timestamp' to the server-output
 		identified by 'server'
@@ -905,13 +907,13 @@ def serverPrint(timestamp, server, string, type="message"):
 
 	else:
 		if config.get_bool("tekka","show_general_output"):
-			write_to_general_output(type, timestr, server, "", string)
+			write_to_general_output(msgtype, timestr, server, "", string)
 
-		if not type in serverTab.newMessage:
-			serverTab.setNewMessage(type)
+		if not msgtype in serverTab.newMessage:
+			serverTab.setNewMessage(msgtype)
 			updateServerTreeMarkup(serverTab.path)
 
-def currentServerPrint(timestamp, server, string, type="message"):
+def currentServerPrint(timestamp, server, string, msgtype="message"):
 	"""
 		Prints the string on the current tab of server (if any).
 		Otherwise it prints directly in the server tab.
@@ -924,10 +926,10 @@ def currentServerPrint(timestamp, server, string, type="message"):
 		# print in current channel
 		channelPrint(
 			timestamp, server,
-			channelTab.name, string, type)
+			channelTab.name, string, msgtype)
 	else:
 		# print to server tab
-		serverPrint(timestamp, server, string, type)
+		serverPrint(timestamp, server, string, msgtype)
 
 @types(string=(str,unicode), html=bool)
 def myPrint(string, html=False):
@@ -959,7 +961,7 @@ def myPrint(string, html=False):
 
 	textview.scroll_to_bottom()
 
-@types(string=str, force_dialog=bool)
+@types(string=(str, unicode), force_dialog=bool)
 def errorMessage(string, force_dialog=False):
 	""" if GUI is initialized, and the output widget
 		has an buffer, print the error there,
