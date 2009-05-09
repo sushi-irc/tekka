@@ -41,6 +41,8 @@ class OutputTextView(gtk.TextView):
 		self.set_property("wrap-mode", gtk.WRAP_WORD_CHAR)
 		self.set_property("cursor-visible", False)
 
+		self.read_line = ()
+
 	def scroll_to_bottom(self):
 		tb = self.get_buffer()
 
@@ -48,4 +50,20 @@ class OutputTextView(gtk.TextView):
 		self.scroll_to_mark(mark, 0.05, True, 0.0, 1.0)
 		tb.delete_mark(mark)
 
+	def set_read_line(self):
+		buffer = self.get_buffer()
 
+		if self.read_line:
+			iterA,iterB = self.read_line[1:]
+			buffer.delete(*self.read_line[1:])
+			buffer.remove_tag(*self.read_line)
+
+		tag = buffer.create_tag(None, justification = gtk.JUSTIFY_CENTER,
+			strikethrough = True)
+		end_iter = buffer.get_end_iter()
+		offset = end_iter.get_offset()
+
+		buffer.insert_with_tags(end_iter,
+			"\n"+" "*int(config.get("tekka","divider_length")), tag)
+
+		self.read_line = (tag, buffer.get_iter_at_offset(offset), buffer.get_end_iter().copy())

@@ -79,6 +79,7 @@ def set_defaults():
 	defaults["tekka"]["ask_for_key_on_cannotjoin"] = "True"
 	defaults["tekka"]["time_format"] = "%H:%M"
 	defaults["tekka"]["whois_dialog"] = "true"
+	defaults["tekka"]["divider_length"] = "30"
 
 	defaults["general_output"] = {}
 	defaults["general_output"]["filters"] = ""

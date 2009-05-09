@@ -125,6 +125,7 @@ def tekka_tab_switched(tabclass, old, new):
 	if old:
 		itext = inputBar.get_text()
 		old.set_input_text(itext)
+		old.textview.set_read_line()
 
 	inputBar.set_text("")
 	inputBar.set_position(1)
