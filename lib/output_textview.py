@@ -29,6 +29,7 @@ SUCH DAMAGE.
 import gtk
 from lib.htmlbuffer import HTMLBuffer
 from helper import URLHandler
+import config
 
 class OutputTextView(gtk.TextView):
 
