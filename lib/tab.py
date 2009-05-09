@@ -78,11 +78,6 @@ class tekkaTab(gobject.GObject):
 	def __repr__(self):
 		return "<tab '%s', path: '%s'>" % (self.name, self.path)
 
-	""" I don't know if this is required but iirc
-	python is throwing the AttributeError exception if
-	anyone tries to call up a function which does not exist
-	in the object so we can't easily write 'if tab.is_server()'
-	without the following lines of code. """
 	def is_server(s):
 		return False
 	def is_query(s):
@@ -97,15 +92,23 @@ class tekkaTab(gobject.GObject):
 	def get_input_text(self):
 		return self.input_text
 
-	def setNewMessage(self, type):
-		if not type:
+	@types(status = (str, type(None)))
+	def setNewMessage(self, status):
+		""" the new message status is only set if the tab is
+			not active. At the moment there the following
+			states are implemented:
+			- "action" and "highlightaction"
+			- "message" and "highlightmessage"
+		"""
+		if not status:
 			self.newMessage = []
+			self.emit ("new_message", status)
 		else:
 			try:
-				self.newMessage.index(type)
-			except:
-				self.newMessage.append(type)
-		self.emit ("new_message", type)
+				self.newMessage.index(status)
+			except ValueError:
+				self.newMessage.append(status)
+				self.emit ("new_message", status)
 
 	def markup(self):
 		if self.newMessage:
@@ -117,6 +120,12 @@ gobject.signal_new(
 	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
 	(gobject.TYPE_BOOLEAN,))
 
+""" The second parameter (type) of this signal represents
+	the named type of the message (can be "action" or
+	"highlight message" etc.
+	new_message can be None, this means the messages
+	are read.
+"""
 gobject.signal_new(
 	"new_message", tekkaTab,
 	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
@@ -169,9 +178,8 @@ gobject.signal_new(
 
 
 class tekkaQuery(tekkaTab):
-	"""
-		Class for typical query-tabs.
-	"""
+	""" Class for typical query-tabs """
+
 	def __init__(self, name, server, textview=None):
 		tekkaTab.__init__(self, name, textview)
 
