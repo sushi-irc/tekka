@@ -971,10 +971,12 @@ def errorMessage(string, force_dialog=False):
 	"""
 	output = get_current_output_textview()
 
+	message = gettext.gettext("Error: %(message)s")
+
 	if output.get_buffer() and not force_dialog:
 		myPrint(
 			gettext.gettext(
-				"<font foreground='%(color)s'>Error: %(message)s</font>" % {
+				"<font foreground='%(color)s'>" + message + "</font>" % {
 					"color": config.get("colors","error","#FF0000"),
 					"message": string}),
 			html=True)
@@ -982,7 +984,7 @@ def errorMessage(string, force_dialog=False):
 		err = gtk.MessageDialog(
 			type=gtk.MESSAGE_ERROR,
 			buttons=gtk.BUTTONS_CLOSE,
-			message_format=gettext.gettext("Error: %s" % string))
+			message_format=message % { "message": string })
 		err.run()
 		err.destroy()
 
