@@ -814,7 +814,7 @@ def escape(msg):
 def write_to_general_output(msgtype, timestring, server, channel, message):
 	goBuffer = widgets.get_widget("generalOutput").get_buffer()
 
-	filter = config.get_list("general_output", "filter")
+	filter = config.get_list("general_output", "filter", default=[])
 	print "filter: %s" % (filter)
 	for rule in filter:
 		try:
