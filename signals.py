@@ -961,7 +961,7 @@ def userQuit(time, server, from_str, reason):
 
 			channelTab.connected=False
 
-			gui.channelPrint(time, server, channelTab.name, message % { "reason": reason }, type="action")
+			gui.channelPrint(time, server, channelTab.name, message % { "reason": reason }, "action")
 
 	else: # another user quit the network
 
