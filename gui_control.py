@@ -522,6 +522,19 @@ class TabClass(gobject.GObject):
 
 		return False
 
+	def getNextTab(self, tab):
+		""" get the next left tab near to tab. """
+		if not tab or not tab.path:
+			return None
+		tablist = self.getAllTabs()
+		if not tablist or len(tablist) == 1:
+			return None
+		try:
+			i = tablist.index(tab)
+		except ValueError:
+			return None
+		return tablist[i-1]
+
 	def switchToPath(self, path):
 		"""
 			path: tuple
@@ -588,6 +601,11 @@ class TabClass(gobject.GObject):
 			setNick(com.getOwnNick(tab.server))
 		else:
 			setNick(com.getOwnNick(tab.name))
+
+	def switchToTab(self, tab):
+		if not tab or not tab.path:
+			return
+		self.switchToPath(tab.path)
 
 gobject.signal_new("tab_switched", TabClass, gobject.SIGNAL_ACTION,
 	None, (gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT))

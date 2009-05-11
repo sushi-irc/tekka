@@ -677,6 +677,8 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 				com.quitServer(tab.name,
 					config.get("chatting", "quit_message", ""))
 
+			gui.tabs.switchToTab(gui.tabs.getNextTab(tab))
+
 			gui.tabs.removeTab(tab)
 			gui.updateServerTreeShortcuts()
 
