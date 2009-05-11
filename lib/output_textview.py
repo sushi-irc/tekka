@@ -58,6 +58,10 @@ class OutputTextView(gtk.TextView):
 			offsetA ,offsetB = self.read_line[1:]
 			iterA = buffer.get_iter_at_offset(offsetA)
 			iterB = buffer.get_iter_at_offset(offsetB)
+
+			if None in (iterA, iterB):
+				return
+
 			buffer.delete(iterA, iterB)
 			buffer.remove_tag(self.read_line[0], iterA, iterB)
 
