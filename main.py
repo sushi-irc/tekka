@@ -238,11 +238,19 @@ def mainWindow_delete_event_cb(mainWindow, event):
 		"hideOnClose" option is set the window
 		will be hidden, otherwise the main looped
 		will be stopped.
+		On hide there is an read-line inserted
+		in every tab so the user does not have to
+		search were he was reading last time.
 	"""
 	if (config.get_bool("tekka", "hide_on_close")
 		and gui.statusIcon
 		and gui.statusIcon.get_visible()):
+
+		for tab in gui.tabs.getAllTabs():
+			tab.textview.set_read_line()
+
 		mainWindow.hide()
+
 		return True
 
 	else:
@@ -459,8 +467,13 @@ def nickList_row_activated_cb(nickList, path, column):
 
 	output = query.textview.get_buffer()
 
-	for line in com.fetchLog(serverTab.name, name, dbus.UInt64(config.get("chatting", "last_log_lines", "10"))):
-		output.insertHTML(output.get_end_iter(), "<font foreground='#DDDDDD'>%s</font>" % gui.escape(line))
+	for line in com.fetchLog(
+		serverTab.name,
+		name,
+		dbus.UInt64(config.get("chatting", "last_log_lines"))):
+
+		output.insertHTML(output.get_end_iter(),
+			"<font foreground='#DDDDDD'>%s</font>" % gui.escape(line))
 
 	gui.tabs.switchToPath(query.path)
 
@@ -586,7 +599,7 @@ def inputBar_shortcut_ctrl_u(inputBar, shortcut):
 
 def output_shortcut_ctrl_l(inputBar, shortcut):
 	"""
-		Ctrl+L was hit, clear the output.
+		Ctrl+L was hit, clear the outputs.
 	"""
 	output = gui.get_current_output_textview()
 
@@ -596,7 +609,7 @@ def output_shortcut_ctrl_l(inputBar, shortcut):
 	if buf: buf.set_text("")
 
 def output_shortcut_ctrl_f(inputBar, shortcut):
-	""" show the search toolbar """
+	""" show/hide the search toolbar """
 	if gui.searchToolbar.get_property("visible"):
 		gui.searchToolbar.hide()
 		return
