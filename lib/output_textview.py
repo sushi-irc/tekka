@@ -55,9 +55,11 @@ class OutputTextView(gtk.TextView):
 		buffer = self.get_buffer()
 
 		if self.read_line:
-			iterA,iterB = self.read_line[1:]
-			buffer.delete(*self.read_line[1:])
-			buffer.remove_tag(*self.read_line)
+			offsetA ,offsetB = self.read_line[1:]
+			iterA = buffer.get_iter_at_offset(offsetA)
+			iterB = buffer.get_iter_at_offset(offsetB)
+			buffer.delete(iterA, iterB)
+			buffer.remove_tag(self.read_line[0], iterA, iterB)
 
 		tag = buffer.create_tag(None, justification = gtk.JUSTIFY_CENTER,
 			strikethrough = True)
@@ -67,4 +69,4 @@ class OutputTextView(gtk.TextView):
 		buffer.insert_with_tags(end_iter,
 			"\n"+" "*int(config.get("tekka","divider_length")), tag)
 
-		self.read_line = (tag, buffer.get_iter_at_offset(offset), buffer.get_end_iter().copy())
+		self.read_line = (tag, offset, buffer.get_end_iter().get_offset())
