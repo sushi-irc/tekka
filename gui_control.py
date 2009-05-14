@@ -992,11 +992,9 @@ def errorMessage(string, force_dialog=False):
 	message = gettext.gettext("Error: %(message)s")
 
 	if output.get_buffer() and not force_dialog:
-		myPrint(
-			gettext.gettext(
-				"<font foreground='%(color)s'>" + message + "</font>" % {
-					"color": config.get("colors","error","#FF0000"),
-					"message": string}),
+		myPrint("<font foreground='%(color)s'>" + message + "</font>" % {
+				"color": config.get("colors","error","#FF0000"),
+				"message": string},
 			html=True)
 	else:
 		err = gtk.MessageDialog(
