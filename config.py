@@ -29,7 +29,7 @@ SUCH DAMAGE.
 import os
 import sys
 
-from xdg.BaseDirectory import xdg_config_home
+from xdg.BaseDirectory import xdg_config_home, xdg_data_home
 import ConfigParser
 
 from typecheck import types
@@ -68,7 +68,12 @@ def set_defaults():
 	defaults["tekka"] = {}
 	defaults["tekka"]["locale_dir"] = get_path("..", "..", "locale")
 	defaults["tekka"]["status_icon"] = get_path("graphics", "icon.svg")
-	defaults["tekka"]["plugin_dirs"] = escape_join(",", (get_path("plugins"), get_path("..", "plugins")))
+	defaults["tekka"]["plugin_dirs"] = escape_join(",", (
+			os.path.join(xdg_data_home, "sushi", "tekka", "plugins"),
+			os.path.join(xdg_data_home, "sushi", "plugins"),
+			get_path("plugins"),
+			get_path("..", "plugins")
+		))
 	defaults["tekka"]["use_default_font"] = "True"
 	defaults["tekka"]["font"] = "Monospace 10"
 	defaults["tekka"]["auto_expand"] = "True"
