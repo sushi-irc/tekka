@@ -33,13 +33,16 @@ from xdg.BaseDirectory import xdg_config_home
 import ConfigParser
 
 from typecheck import types
-from helper.escape import unescape_split
+from helper.escape import unescape_split, escape_join
 
 prefix = ""
 defaults = {}
 
 config_parser = None
 config_file = ""
+
+def get_path(*c):
+	return os.path.abspath(os.path.join(prefix, *c))
 
 def set_defaults():
 	"""
@@ -63,11 +66,9 @@ def set_defaults():
 	defaults = {}
 
 	defaults["tekka"] = {}
-	defaults["tekka"]["locale_dir"] = os.path.join(
-		prefix, "..", "..", "locale")
-	defaults["tekka"]["status_icon"] = os.path.join(
-		prefix, "graphics", "icon.svg")
-	defaults["tekka"]["plugin_dirs"] = os.path.join(prefix, "plugins")
+	defaults["tekka"]["locale_dir"] = get_path("..", "..", "locale")
+	defaults["tekka"]["status_icon"] = get_path("graphics", "icon.svg")
+	defaults["tekka"]["plugin_dirs"] = escape_join(",", (get_path("plugins"), get_path("..", "plugins")))
 	defaults["tekka"]["use_default_font"] = "True"
 	defaults["tekka"]["font"] = "Monospace 10"
 	defaults["tekka"]["auto_expand"] = "True"
@@ -126,10 +127,8 @@ def set_defaults():
 	# sections defined below are not added to the configParser and
 	# can't be set by the set method (will raise NoSectionError)
 	defaults["gladefiles"] = {}
-	defaults["gladefiles"]["mainwindow"] = os.path.join(
-		prefix, "glade", "mainwindow.glade")
-	defaults["gladefiles"]["dialogs"] = os.path.join(
-		prefix, "glade", "dialogs") + os.path.sep
+	defaults["gladefiles"]["mainwindow"] = get_path("glade", "mainwindow.glade")
+	defaults["gladefiles"]["dialogs"] = get_path("glade", "dialogs") + os.path.sep
 
 
 
@@ -203,7 +202,7 @@ def set_list(section, option, l):
 	by , and set it as value to option.
 	Return False on error, else True.
 	"""
-	s = ",".join([n.replace("\\", "\\\\").replace(",","\\,") for n in l if n])
+	s = escape_join(",", l)
 
 	if not s:
 		return False

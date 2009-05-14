@@ -74,3 +74,5 @@ def unescape_split(separator, tosplit, escape_char="\\"):
 	escaped = unescape_splitted(separator, splitted, escape_char)
 	return escaped
 
+def escape_join (separator, list):
+	return separator.join([item.replace("\\", "\\\\").replace(",","\\,") for item in list if item])
