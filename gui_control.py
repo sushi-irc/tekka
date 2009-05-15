@@ -992,7 +992,8 @@ def errorMessage(string, force_dialog=False):
 	message = gettext.gettext("Error: %(message)s")
 
 	if output.get_buffer() and not force_dialog:
-		myPrint("<font foreground='%(color)s'>" + message + "</font>" % {
+		message = "<font foreground='%(color)s'>" + message + "</font>"
+		myPrint(message % {
 				"color": config.get("colors","error","#FF0000"),
 				"message": string},
 			html=True)
