@@ -4,225 +4,261 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: tekka 1.0\n"
+"Project-Id-Version: tekka 1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-25 14:11+0100\n"
-"PO-Revision-Date: 2009-03-06 07:52+0000\n"
-"Last-Translator: nmihailov <Unknown>\n"
+"POT-Creation-Date: 2009-05-14 18:28+0200\n"
+"PO-Revision-Date: 2009-05-05 18:54+0000\n"
+"Last-Translator: Michael Kuhn <Unknown>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-03-07 00:20+0000\n"
+"X-Launchpad-Export-Date: 2009-05-15 16:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: ../commands.py:50
+#: ../glade/dialogs/about.glade.h:1
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Michael Kuhn https://launchpad.net/~suraia"
+
+#: ../commands.py:48
 #, python-format
 msgid "Warning: You are not connected to server %(server)s."
 msgstr "Внимание: Вие се свързахте към %(server)s"
 
-#: ../commands.py:106
+#: ../commands.py:66
+#, python-format
+msgid ""
+"Warning: The channel %(channel)s is not joined, everything you write will "
+"disappear."
+msgstr ""
+
+#: ../commands.py:554
 #, python-format
 msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
 msgstr ""
 "• Непозната команда “%(command)s”,  задай първичната команда “%(raw)s”."
 
-#: ../main.py:167
+#: ../gui_control.py:746
 #, python-format
 msgid "%d User"
 msgid_plural "%d Users"
 msgstr[0] "Потребител %d"
 msgstr[1] "Потребители %d"
 
-#: ../main.py:168
+#: ../gui_control.py:748
 #, python-format
 msgid "%d Operator"
 msgid_plural "%d Operators"
 msgstr[0] "Оператор %d"
 msgstr[1] "Оператори %d"
 
-#: ../main.py:1177
+#: ../gui_control.py:992
+#, python-format
+msgid "Error: %(message)s"
+msgstr ""
+
+#: ../main.py:430
 msgid "Reset markup"
 msgstr "Премахни маркираното"
 
-#: ../main.py:1425
+#: ../main.py:696
 #, python-format
 msgid "Do you really want to close channel “%(name)s”?"
 msgstr "Сигурен ли си, че искаш да затвориш този канал “%(name)s”?"
 
-#: ../main.py:1427
+#: ../main.py:698
 #, python-format
 msgid "Do you really want to close query “%(name)s”?"
 msgstr "Сигурен ли си, че искаш да затвориш ЛС “%(name)s”?"
 
-#: ../main.py:1429
+#: ../main.py:700
 #, python-format
 msgid "Do you really want to close server “%(name)s”?"
 msgstr "Сигурен ли си, че искаш да напуснеш сървъра “%(name)s”?"
 
-#: ../signals.py:366
+#: ../main.py:1180
+msgid "Error occured"
+msgstr ""
+
+#: ../signals.py:437
 #, python-format
 msgid "• You changed the topic to “%(topic)s”."
 msgstr "• Промени теамата на “%(topic)s”."
 
-#: ../signals.py:368
+#: ../signals.py:439
 #, python-format
 msgid "• %(nick)s changed the topic to “%(topic)s”."
 msgstr "• %(nick)s промени темата на чата на  “%(topic)s”."
 
-#: ../signals.py:425
+#: ../signals.py:493
 #, python-format
 msgid "• %(nick)s is away (%(message)s)."
 msgstr "• %(nick)s е away  (%(message)s)."
 
-#: ../signals.py:770
+#: ../signals.py:837
 #, python-format
 msgid "• You are now known as %(newnick)s."
 msgstr "• Твоят псевдоним сега е  %(newnick)s."
 
-#: ../signals.py:779
+#: ../signals.py:846
 #, python-format
 msgid "• %(nick)s is now known as %(newnick)s."
 msgstr "• %(nick)s сега е  %(newnick)s."
 
-#: ../signals.py:832
+#: ../signals.py:898
 #, python-format
 msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr ""
 "« Ти беше изритан в  %(channel)s от  %(nick)s с причина (%(reason)s)."
 
-#: ../signals.py:849
+#: ../signals.py:915
 #, python-format
 msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr ""
 "« %(who)s беше изритан в %(channel)s от %(nick)s  с причина (%(reason)s)."
 
-#: ../signals.py:887
+#: ../signals.py:953
 #, python-format
 msgid "« You have quit (%(reason)s)."
 msgstr "« Ти напусна (%(reason)s)."
 
-#: ../signals.py:889
+#: ../signals.py:955
 msgid "« You have quit."
 msgstr "« Ти напусна."
 
-#: ../signals.py:903
+#: ../signals.py:969
 #, python-format
 msgid "« %(nick)s has quit (%(reason)s)."
 msgstr "« %(nick)s излезе (%(reason)s)."
 
-#: ../signals.py:905
+#: ../signals.py:971
 #, python-format
 msgid "« %(nick)s has quit."
 msgstr "« %(nick)s излезе."
 
-#: ../signals.py:1001
+#: ../signals.py:1065
 #, python-format
 msgid "» You have joined %(channel)s."
 msgstr "» Ти влезе в  %(channel)s."
 
-#: ../signals.py:1011
+#: ../signals.py:1075
 #, python-format
 msgid "» %(nick)s has joined %(channel)s."
 msgstr "» %(nick)s влезе в %(channel)s."
 
-#: ../signals.py:1096
+#: ../signals.py:1163
 #, python-format
 msgid "« You have left %(channel)s (%(reason)s)."
 msgstr "« Ти напусна  %(channel)s (%(reason)s)."
 
-#: ../signals.py:1098
+#: ../signals.py:1165
 #, python-format
 msgid "« You have left %(channel)s."
 msgstr "« Ти напусна %(channel)s."
 
-#: ../signals.py:1119
+#: ../signals.py:1187
 #, python-format
 msgid "« %(nick)s has left %(channel)s (%(reason)s)."
 msgstr "« %(nick)s напусна %(channel)s (%(reason)s)."
 
-#: ../signals.py:1121
+#: ../signals.py:1189
 #, python-format
 msgid "« %(nick)s has left %(channel)s."
 msgstr "« %(nick)s напусна %(channel)s."
 
-#: ../signals.py:1144
+#: ../signals.py:1212
 #, python-format
 msgid "• %(target)s: No such nick/channel."
 msgstr "• %(target)s: Несъществува такъв прякор/канал."
 
-#: ../signals.py:1146
+#: ../signals.py:1214
 #, python-format
 msgid "• %(target)s: No such server."
 msgstr "• %(target)s: Няма такъв сървър."
 
-#: ../signals.py:1148
+#: ../signals.py:1216
 #, python-format
 msgid "• %(target)s: No such channel."
 msgstr "• %(target)s: Несъществува такъв канал."
 
-#: ../signals.py:1160
+#: ../signals.py:1228
 msgid "Unknown reason"
 msgstr "Непозната причина"
 
-#: ../signals.py:1163
+#: ../signals.py:1231
 msgid "The channel is full."
 msgstr "Канала е пълен."
 
-#: ../signals.py:1165
+#: ../signals.py:1233
 msgid "The channel is invite-only."
 msgstr "В канала се влиза само с покана."
 
-#: ../signals.py:1167
+#: ../signals.py:1235
 msgid "You are banned."
 msgstr "Ти си изгонен."
 
-#: ../signals.py:1180
+#: ../signals.py:1248
 msgid "You need the correct channel key."
 msgstr "Трябва ти ключ за този канал."
 
-#: ../signals.py:1183
+#: ../signals.py:1251
 #, python-format
 msgid "You can not join %(channel)s: %(reason)s"
 msgstr "Неможеш да се присъединиш към  %(channel)s: %(reason)s"
 
-#: ../signals.py:1195
+#: ../signals.py:1263
 #, python-format
 msgid "[%(nick)s] %(message)s"
 msgstr ""
 
-#: ../signals.py:1197
+#: ../signals.py:1265
 #, python-format
 msgid "[%(nick)s] End of whois."
 msgstr "[%(nick)s] Край на whois."
 
-#: ../dialogs/channelList.py:187
+#: ../dialogs/channelList.py:175
 msgid "Channel"
 msgstr "Канал"
 
-#: ../dialogs/channelList.py:187
+#: ../dialogs/channelList.py:175
 msgid "User"
 msgstr "Потребител"
 
-#: ../dialogs/channelList.py:187
+#: ../dialogs/channelList.py:175
 msgid "Topic"
 msgstr "Тема"
 
-#: ../dialogs/debugDialog.py:56
+#: ../dialogs/debugDialog.py:63
 msgid "C_ompile and run"
 msgstr ""
 
-#: ../helper/keyDialog.py:10
+#: ../dialogs/whois.py:74
+#, python-format
+msgid "Whois on %(server)s"
+msgstr ""
+
+#: ../dialogs/whois.py:79
+#, python-format
+msgid "Whois data of %(nick)s"
+msgstr ""
+
+#: ../dialogs/whois.py:122
+msgid "Loading..."
+msgstr ""
+
+#: ../helper/keyDialog.py:38
 msgid "Channel Key"
 msgstr "Промени ключа"
 
-#: ../helper/keyDialog.py:30
+#: ../helper/keyDialog.py:58
 #, python-format
 msgid "Enter the key for the channel %(channel)s."
 msgstr "Въведете ключа за стая  %(channel)s."
 
-#: ../helper/keyDialog.py:41
+#: ../helper/keyDialog.py:69
 msgid "Save key for channel"
 msgstr "Запази ключа за стая"
 
@@ -267,106 +303,92 @@ msgid "History"
 msgstr "Хронология"
 
 #: ../glade/mainwindow.glade.h:11
-msgid "Ignore"
-msgstr "Забрани"
-
-#: ../glade/mainwindow.glade.h:12
 msgid "Join"
 msgstr "Вход"
 
-#: ../glade/mainwindow.glade.h:13
+#: ../glade/mainwindow.glade.h:12
 msgid "Kick"
 msgstr "Изритай"
 
-#: ../glade/mainwindow.glade.h:14
+#: ../glade/mainwindow.glade.h:13
 msgid "Modes"
 msgstr "Модове"
 
-#: ../glade/mainwindow.glade.h:15
-msgid "Opens a dialog which asks you for the channel key to set."
-msgstr "Отвори диалога който те пита за залагането на ключ."
-
-#: ../glade/mainwindow.glade.h:16
+#: ../glade/mainwindow.glade.h:14
 msgid "Part"
 msgstr "Част"
 
-#: ../glade/mainwindow.glade.h:17 ../glade/dialogs/server.glade.h:1
+#: ../glade/mainwindow.glade.h:15 ../glade/dialogs/server.glade.h:1
 msgid "Server List"
 msgstr "Списък със сървъри"
 
-#: ../glade/mainwindow.glade.h:18
+#: ../glade/mainwindow.glade.h:16
 msgid "Set Key"
 msgstr "Сложи ключ"
 
-#: ../glade/mainwindow.glade.h:19
+#: ../glade/mainwindow.glade.h:17
 msgid "Shutdown"
 msgstr "Изключи"
 
-#: ../glade/mainwindow.glade.h:20
+#: ../glade/mainwindow.glade.h:18
 msgid "Status _Bar"
 msgstr "Статус _Bar"
 
-#: ../glade/mainwindow.glade.h:21
+#: ../glade/mainwindow.glade.h:19
 msgid "Status _Icon"
 msgstr "Статус _Icon"
 
-#: ../glade/mainwindow.glade.h:22
+#: ../glade/mainwindow.glade.h:20
 msgid "Take Half-Op"
 msgstr "Вземи половин-оператор"
 
-#: ../glade/mainwindow.glade.h:23
+#: ../glade/mainwindow.glade.h:21
 msgid "Take Op"
 msgstr "Вземи Op"
 
-#: ../glade/mainwindow.glade.h:24
+#: ../glade/mainwindow.glade.h:22
 msgid "Take Voice"
 msgstr "Вземи Voice"
 
-#: ../glade/mainwindow.glade.h:25
+#: ../glade/mainwindow.glade.h:23
 msgid "Whois"
 msgstr "Whois"
 
-#: ../glade/mainwindow.glade.h:26
+#: ../glade/mainwindow.glade.h:24
 msgid "_Channel List"
 msgstr "_Channel списък"
 
-#: ../glade/mainwindow.glade.h:27
+#: ../glade/mainwindow.glade.h:25
 msgid "_Debug"
 msgstr "_Debug"
 
-#: ../glade/mainwindow.glade.h:28
+#: ../glade/mainwindow.glade.h:26
 msgid "_Dialogs"
 msgstr "_Dialogs"
 
-#: ../glade/mainwindow.glade.h:29
+#: ../glade/mainwindow.glade.h:27 ../glade/dialogs/preferences.glade.h:33
 msgid "_General Output"
 msgstr "_General Output"
 
-#: ../glade/mainwindow.glade.h:30
+#: ../glade/mainwindow.glade.h:28
 msgid "_Help"
 msgstr "_Help"
 
-#: ../glade/mainwindow.glade.h:31
+#: ../glade/mainwindow.glade.h:29
 msgid "_Plugins"
 msgstr "_Plugins"
 
-#: ../glade/mainwindow.glade.h:32
+#: ../glade/mainwindow.glade.h:30
 msgid "_View"
 msgstr "_View"
 
-#: ../glade/mainwindow.glade.h:33
+#: ../glade/mainwindow.glade.h:31
 msgid "_maki"
 msgstr "_maki"
 
-#: ../glade/mainwindow.glade.h:34 ../glade/dialogs/preferences.glade.h:30
+#: ../glade/mainwindow.glade.h:32 ../glade/dialogs/preferences.glade.h:37
 msgid "_tekka"
 msgstr "_tekka"
-
-#: ../glade/dialogs/about.glade.h:1
-msgid "translator-credits"
-msgstr ""
-"Launchpad Contributions:\n"
-"  nmihailov https://launchpad.net/~nikolaycho"
 
 #: ../glade/dialogs/advancedPreferences.glade.h:1
 msgid "Advanced Preferences"
@@ -390,49 +412,61 @@ msgstr "_Unload"
 
 #: ../glade/dialogs/preferences.glade.h:1
 msgid ""
+"<b>Notice:</b>\n"
+"First field is type, second field is server, third is the channel.\n"
+"Everything matching passes the filter and will be shown except the row is "
+"negated."
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:4
+msgid ""
 "<b>Warning:</b>\n"
 "Changes will be applied after closing this dialog."
 msgstr ""
 "<b>Внимание:</b>\n"
 "Промените ще влязат в сила след като затворите този прозорец."
 
-#: ../glade/dialogs/preferences.glade.h:3
+#: ../glade/dialogs/preferences.glade.h:6
 msgid "A_uto expand server tree"
 msgstr "A_uto expand server tree"
 
-#: ../glade/dialogs/preferences.glade.h:4
+#: ../glade/dialogs/preferences.glade.h:7
 msgid "Actions:"
 msgstr "Действия:"
 
-#: ../glade/dialogs/preferences.glade.h:5
+#: ../glade/dialogs/preferences.glade.h:8
 msgid "Ad_vanced Settings"
 msgstr "Ad_vanced Настройки"
 
-#: ../glade/dialogs/preferences.glade.h:6
+#: ../glade/dialogs/preferences.glade.h:9
 msgid "C_hatting"
 msgstr "C_hatting"
 
-#: ../glade/dialogs/preferences.glade.h:7
+#: ../glade/dialogs/preferences.glade.h:10
 msgid "C_olors"
 msgstr "C_olors"
 
-#: ../glade/dialogs/preferences.glade.h:8
+#: ../glade/dialogs/preferences.glade.h:11
 msgid "Default nick:"
 msgstr "Прякор по подразбиране:"
 
-#: ../glade/dialogs/preferences.glade.h:9
-msgid "General Output font:"
-msgstr "Основен изходен шрифт:"
+#: ../glade/dialogs/preferences.glade.h:12
+msgid "Font:"
+msgstr ""
 
-#: ../glade/dialogs/preferences.glade.h:10
+#: ../glade/dialogs/preferences.glade.h:13
 msgid "Highlighted actions:"
 msgstr "Highlighted actions:"
 
-#: ../glade/dialogs/preferences.glade.h:11
+#: ../glade/dialogs/preferences.glade.h:14
 msgid "Highlighted messages:"
 msgstr ""
 
-#: ../glade/dialogs/preferences.glade.h:12
+#: ../glade/dialogs/preferences.glade.h:15
+msgid "Highlightwords:"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:16
 msgid ""
 "If you want to have control about <u>all</u> settings you can use the "
 "advanced settings dialog.\n"
@@ -447,59 +481,67 @@ msgstr ""
 "<b>Бележка:</b>\n"
 "За някой настройки трябва да се рестартира tekka за да има ефект."
 
-#: ../glade/dialogs/preferences.glade.h:16
+#: ../glade/dialogs/preferences.glade.h:20
 msgid "Last log lines:"
 msgstr "Последни логове:"
 
-#: ../glade/dialogs/preferences.glade.h:17
+#: ../glade/dialogs/preferences.glade.h:21
+msgid "Last log:"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:22
 msgid "Messages:"
 msgstr "Съобщения:"
 
-#: ../glade/dialogs/preferences.glade.h:18
+#: ../glade/dialogs/preferences.glade.h:23
 msgid "Notification:"
 msgstr "Notification:"
 
-#: ../glade/dialogs/preferences.glade.h:19
-msgid "Output font:"
-msgstr "Изходен шрифт:"
-
-#: ../glade/dialogs/preferences.glade.h:20
+#: ../glade/dialogs/preferences.glade.h:24
 msgid "Own nick:"
 msgstr "Собствен прякор:"
 
-#: ../glade/dialogs/preferences.glade.h:21
+#: ../glade/dialogs/preferences.glade.h:25
 msgid "Own text:"
 msgstr "Собствен текст:"
 
-#: ../glade/dialogs/preferences.glade.h:22
+#: ../glade/dialogs/preferences.glade.h:26
 msgid "Part message:"
 msgstr "Съобщение при напускане:"
 
-#: ../glade/dialogs/preferences.glade.h:23
+#: ../glade/dialogs/preferences.glade.h:27
+msgid "Preferences"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:28
 msgid "Quit message:"
 msgstr "Съобщение при изход:"
 
-#: ../glade/dialogs/preferences.glade.h:24
+#: ../glade/dialogs/preferences.glade.h:29
 msgid "Shutdown _maki on close"
 msgstr "Изход _maki при затваряне"
 
-#: ../glade/dialogs/preferences.glade.h:25
+#: ../glade/dialogs/preferences.glade.h:30
 msgid "Use _RGBA"
 msgstr "Използвай  _RGBA"
 
-#: ../glade/dialogs/preferences.glade.h:26
+#: ../glade/dialogs/preferences.glade.h:31
+msgid "Use _default font"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:32
 msgid "_Advanced"
 msgstr "_Advanced"
 
-#: ../glade/dialogs/preferences.glade.h:27
+#: ../glade/dialogs/preferences.glade.h:34
 msgid "_Hide on close"
 msgstr "_Hide при затваряне"
 
-#: ../glade/dialogs/preferences.glade.h:28
+#: ../glade/dialogs/preferences.glade.h:35
 msgid "_Nick Colors"
 msgstr "_Nick Цветове"
 
-#: ../glade/dialogs/preferences.glade.h:29
+#: ../glade/dialogs/preferences.glade.h:36
 msgid "_Show status icon"
 msgstr "_Show статус икони"
 
@@ -543,17 +585,15 @@ msgstr "Истинско име:"
 msgid "Server name:"
 msgstr "Име на сървър:"
 
-#: ../glade/dialogs/serverDelete.glade.h:1
+#: ../glade/dialogs/serverDelete.glade.h:2
+#, no-c-format
 msgid ""
 "<span weight=\"bold\" size=\"larger\">Delete Server</span>\n"
 "\n"
-"Are you sure you want to delete the server?"
+"Are you sure you want to delete the server '%(server)s'?"
 msgstr ""
-"<span weight=\"bold\" size=\"larger\">Изтрии сървър</span>\n"
-"\n"
-"Сигурен ли си че искаш да изтриеш този сървър?"
 
-#: ../glade/dialogs/serverDelete.glade.h:4
+#: ../glade/dialogs/serverDelete.glade.h:5
 msgid "Delete Server"
 msgstr "Изтрии сървър"
 

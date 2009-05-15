@@ -4,224 +4,262 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: tekka 1.0\n"
+"Project-Id-Version: tekka 1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-12-25 14:11+0100\n"
-"PO-Revision-Date: 2009-02-24 22:30+0000\n"
+"POT-Creation-Date: 2009-05-14 18:28+0200\n"
+"PO-Revision-Date: 2009-05-12 13:22+0000\n"
 "Last-Translator: Bjørn Olav Samdal <bjornsam@ulrik.uio.no>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-03-07 00:24+0000\n"
+"X-Launchpad-Export-Date: 2009-05-15 16:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: ../commands.py:50
+#: ../glade/dialogs/about.glade.h:1
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Bjørn Olav Samdal https://launchpad.net/~bjornsam"
+
+#: ../commands.py:48
 #, python-format
 msgid "Warning: You are not connected to server %(server)s."
 msgstr "Advarsel: Du er ikke tilkoblet en tjener %(server)s."
 
-#: ../commands.py:106
+#: ../commands.py:66
+#, python-format
+msgid ""
+"Warning: The channel %(channel)s is not joined, everything you write will "
+"disappear."
+msgstr ""
+"Advarsel: Kanalen %(channel)s er ikke tilkoblet, alt du skriver vil "
+"forsvinne."
+
+#: ../commands.py:554
 #, python-format
 msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
 msgstr "• Ukjent kommando “%(command)s”, sender kommando som rå “%(raw)s”."
 
-#: ../main.py:167
+#: ../gui_control.py:746
 #, python-format
 msgid "%d User"
 msgid_plural "%d Users"
 msgstr[0] "%d Bruker"
 msgstr[1] "%d Brukere"
 
-#: ../main.py:168
+#: ../gui_control.py:748
 #, python-format
 msgid "%d Operator"
 msgid_plural "%d Operators"
 msgstr[0] "%d Operator"
 msgstr[1] "%d Operatorer"
 
-#: ../main.py:1177
+#: ../gui_control.py:992
+#, python-format
+msgid "Error: %(message)s"
+msgstr "Feil: %(message)s"
+
+#: ../main.py:430
 msgid "Reset markup"
 msgstr "Gjennopprett oppsett"
 
-#: ../main.py:1425
+#: ../main.py:696
 #, python-format
 msgid "Do you really want to close channel “%(name)s”?"
 msgstr "Ønsker du å lukke kanalen “%(name)s”?"
 
-#: ../main.py:1427
+#: ../main.py:698
 #, python-format
 msgid "Do you really want to close query “%(name)s”?"
 msgstr "Ønsker du å lukke samtalen med “%(name)s”?"
 
-#: ../main.py:1429
+#: ../main.py:700
 #, python-format
 msgid "Do you really want to close server “%(name)s”?"
 msgstr "Øsnker du å avslutte koblingen til serveren “%(name)s”?"
 
-#: ../signals.py:366
+#: ../main.py:1180
+msgid "Error occured"
+msgstr "En feil oppstod"
+
+#: ../signals.py:437
 #, python-format
 msgid "• You changed the topic to “%(topic)s”."
 msgstr "• Du endret kanaloverskrift til \"%(topic)s\"."
 
-#: ../signals.py:368
+#: ../signals.py:439
 #, python-format
 msgid "• %(nick)s changed the topic to “%(topic)s”."
 msgstr "• %(nick)s endret kanaloverskriften til \"%(topic)s\"."
 
-#: ../signals.py:425
+#: ../signals.py:493
 #, python-format
 msgid "• %(nick)s is away (%(message)s)."
 msgstr "• %(nick)s er fraværende (%(message)s)."
 
-#: ../signals.py:770
+#: ../signals.py:837
 #, python-format
 msgid "• You are now known as %(newnick)s."
 msgstr "• Du kjennetegnes som %(newnick)s."
 
-#: ../signals.py:779
+#: ../signals.py:846
 #, python-format
 msgid "• %(nick)s is now known as %(newnick)s."
 msgstr "• %(nick)s er nå kjent som %(newnick)s."
 
-#: ../signals.py:832
+#: ../signals.py:898
 #, python-format
 msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr ""
 "« Du har blitt kastet ut fra kanalen %(channel)s av %(nick)s (%(reason)s)."
 
-#: ../signals.py:849
+#: ../signals.py:915
 #, python-format
 msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr ""
 "« %(who)s ble kastet ut fra kanalen %(channel)s av %(nick)s (%(reason)s)."
 
-#: ../signals.py:887
+#: ../signals.py:953
 #, python-format
 msgid "« You have quit (%(reason)s)."
 msgstr "« Du har avsluttet (%(reason)s)."
 
-#: ../signals.py:889
+#: ../signals.py:955
 msgid "« You have quit."
 msgstr "« Du har koblet deg av."
 
-#: ../signals.py:903
+#: ../signals.py:969
 #, python-format
 msgid "« %(nick)s has quit (%(reason)s)."
 msgstr "« %(nick)s har koblet seg av (%(reason)s)."
 
-#: ../signals.py:905
+#: ../signals.py:971
 #, python-format
 msgid "« %(nick)s has quit."
 msgstr "« %(nick)s har koblet seg av."
 
-#: ../signals.py:1001
+#: ../signals.py:1065
 #, python-format
 msgid "» You have joined %(channel)s."
 msgstr "» Du har blitt med i %(channel)s."
 
-#: ../signals.py:1011
+#: ../signals.py:1075
 #, python-format
 msgid "» %(nick)s has joined %(channel)s."
 msgstr "» %(nick)s har blitt med i %(channel)s."
 
-#: ../signals.py:1096
+#: ../signals.py:1163
 #, python-format
 msgid "« You have left %(channel)s (%(reason)s)."
 msgstr "« Du har koblet deg av %(channel)s (%(reason)s)."
 
-#: ../signals.py:1098
+#: ../signals.py:1165
 #, python-format
 msgid "« You have left %(channel)s."
 msgstr "« Du har igjen %(channel)s."
 
-#: ../signals.py:1119
+#: ../signals.py:1187
 #, python-format
 msgid "« %(nick)s has left %(channel)s (%(reason)s)."
 msgstr "« %(nick)s har koblet seg av %(channel)s (%(reason)s)."
 
-#: ../signals.py:1121
+#: ../signals.py:1189
 #, python-format
 msgid "« %(nick)s has left %(channel)s."
 msgstr "« %(nick)s har koblet seg av %(channel)s."
 
-#: ../signals.py:1144
+#: ../signals.py:1212
 #, python-format
 msgid "• %(target)s: No such nick/channel."
 msgstr "• %(target)s: Ingen navn/kanal funnet."
 
-#: ../signals.py:1146
+#: ../signals.py:1214
 #, python-format
 msgid "• %(target)s: No such server."
 msgstr "• %(target)s: Feil ved servertilkobling."
 
-#: ../signals.py:1148
+#: ../signals.py:1216
 #, python-format
 msgid "• %(target)s: No such channel."
 msgstr "• %(target)s: Ingen kanal valgt."
 
-#: ../signals.py:1160
+#: ../signals.py:1228
 msgid "Unknown reason"
 msgstr "Ukjent grunn"
 
-#: ../signals.py:1163
+#: ../signals.py:1231
 msgid "The channel is full."
 msgstr "Kanalen er full."
 
-#: ../signals.py:1165
+#: ../signals.py:1233
 msgid "The channel is invite-only."
 msgstr "Kanalen har invite-only"
 
-#: ../signals.py:1167
+#: ../signals.py:1235
 msgid "You are banned."
 msgstr "Du er bannlyst."
 
-#: ../signals.py:1180
+#: ../signals.py:1248
 msgid "You need the correct channel key."
 msgstr "Du trenger korrekt nøkkel til kanalen."
 
-#: ../signals.py:1183
+#: ../signals.py:1251
 #, python-format
 msgid "You can not join %(channel)s: %(reason)s"
 msgstr "Du kan ikke koble deg til %(channel)s: %(reason)s"
 
-#: ../signals.py:1195
+#: ../signals.py:1263
 #, python-format
 msgid "[%(nick)s] %(message)s"
 msgstr "[%(nick)s] %(message)s"
 
-#: ../signals.py:1197
+#: ../signals.py:1265
 #, python-format
 msgid "[%(nick)s] End of whois."
 msgstr "[%(nick)s] Avsluttning av whois."
 
-#: ../dialogs/channelList.py:187
+#: ../dialogs/channelList.py:175
 msgid "Channel"
 msgstr "Kanal"
 
-#: ../dialogs/channelList.py:187
+#: ../dialogs/channelList.py:175
 msgid "User"
 msgstr "Bruker"
 
-#: ../dialogs/channelList.py:187
+#: ../dialogs/channelList.py:175
 msgid "Topic"
 msgstr "Emne"
 
-#: ../dialogs/debugDialog.py:56
+#: ../dialogs/debugDialog.py:63
 msgid "C_ompile and run"
 msgstr "K_ompiler og kjør"
 
-#: ../helper/keyDialog.py:10
+#: ../dialogs/whois.py:74
+#, python-format
+msgid "Whois on %(server)s"
+msgstr "Hvem er på %(server)s"
+
+#: ../dialogs/whois.py:79
+#, python-format
+msgid "Whois data of %(nick)s"
+msgstr "Hvem er oppslag på %(nick)s"
+
+#: ../dialogs/whois.py:122
+msgid "Loading..."
+msgstr "Laster inn..."
+
+#: ../helper/keyDialog.py:38
 msgid "Channel Key"
 msgstr "Kanalnøkkel"
 
-#: ../helper/keyDialog.py:30
+#: ../helper/keyDialog.py:58
 #, python-format
 msgid "Enter the key for the channel %(channel)s."
 msgstr "Tast en nøkkel for kanalen %(channel)s."
 
-#: ../helper/keyDialog.py:41
+#: ../helper/keyDialog.py:69
 msgid "Save key for channel"
 msgstr "Lagre nøkkel for kanalen"
 
@@ -266,107 +304,92 @@ msgid "History"
 msgstr "Historie"
 
 #: ../glade/mainwindow.glade.h:11
-msgid "Ignore"
-msgstr "Ignorer"
-
-#: ../glade/mainwindow.glade.h:12
 msgid "Join"
 msgstr "Bli med"
 
-#: ../glade/mainwindow.glade.h:13
+#: ../glade/mainwindow.glade.h:12
 msgid "Kick"
 msgstr "Spark"
 
-#: ../glade/mainwindow.glade.h:14
+#: ../glade/mainwindow.glade.h:13
 msgid "Modes"
 msgstr "Rettigheter"
 
-#: ../glade/mainwindow.glade.h:15
-msgid "Opens a dialog which asks you for the channel key to set."
-msgstr ""
-"Åpne oppsett for kanalen som spør deg etter nøkkel som skal legges til."
-
-#: ../glade/mainwindow.glade.h:16
+#: ../glade/mainwindow.glade.h:14
 msgid "Part"
 msgstr "Del"
 
-#: ../glade/mainwindow.glade.h:17 ../glade/dialogs/server.glade.h:1
+#: ../glade/mainwindow.glade.h:15 ../glade/dialogs/server.glade.h:1
 msgid "Server List"
 msgstr "Tjenerliste"
 
-#: ../glade/mainwindow.glade.h:18
+#: ../glade/mainwindow.glade.h:16
 msgid "Set Key"
 msgstr "Skriv inn nøkkel"
 
-#: ../glade/mainwindow.glade.h:19
+#: ../glade/mainwindow.glade.h:17
 msgid "Shutdown"
 msgstr "Avslutt"
 
-#: ../glade/mainwindow.glade.h:20
+#: ../glade/mainwindow.glade.h:18
 msgid "Status _Bar"
 msgstr "Status _Linje"
 
-#: ../glade/mainwindow.glade.h:21
+#: ../glade/mainwindow.glade.h:19
 msgid "Status _Icon"
 msgstr "Status _Ikon"
 
-#: ../glade/mainwindow.glade.h:22
+#: ../glade/mainwindow.glade.h:20
 msgid "Take Half-Op"
 msgstr "Velg Halv-Operator"
 
-#: ../glade/mainwindow.glade.h:23
+#: ../glade/mainwindow.glade.h:21
 msgid "Take Op"
 msgstr "Fjern Op status"
 
-#: ../glade/mainwindow.glade.h:24
+#: ../glade/mainwindow.glade.h:22
 msgid "Take Voice"
 msgstr "Fjern voice"
 
-#: ../glade/mainwindow.glade.h:25
+#: ../glade/mainwindow.glade.h:23
 msgid "Whois"
 msgstr "Whois"
 
-#: ../glade/mainwindow.glade.h:26
+#: ../glade/mainwindow.glade.h:24
 msgid "_Channel List"
 msgstr "_Kanalliste"
 
-#: ../glade/mainwindow.glade.h:27
+#: ../glade/mainwindow.glade.h:25
 msgid "_Debug"
 msgstr "_Feilsøk"
 
-#: ../glade/mainwindow.glade.h:28
+#: ../glade/mainwindow.glade.h:26
 msgid "_Dialogs"
 msgstr "_Dialoger"
 
-#: ../glade/mainwindow.glade.h:29
+#: ../glade/mainwindow.glade.h:27 ../glade/dialogs/preferences.glade.h:33
 msgid "_General Output"
 msgstr "_Generell utdata"
 
-#: ../glade/mainwindow.glade.h:30
+#: ../glade/mainwindow.glade.h:28
 msgid "_Help"
 msgstr "_Hjelp"
 
-#: ../glade/mainwindow.glade.h:31
+#: ../glade/mainwindow.glade.h:29
 msgid "_Plugins"
 msgstr "_Tillegg"
 
-#: ../glade/mainwindow.glade.h:32
+#: ../glade/mainwindow.glade.h:30
 msgid "_View"
 msgstr "_Vis"
 
-#: ../glade/mainwindow.glade.h:33
+#: ../glade/mainwindow.glade.h:31
 msgid "_maki"
 msgstr "_maki"
 
-#: ../glade/mainwindow.glade.h:34 ../glade/dialogs/preferences.glade.h:30
+#: ../glade/mainwindow.glade.h:32 ../glade/dialogs/preferences.glade.h:37
 msgid "_tekka"
 msgstr "_tekka"
-
-#: ../glade/dialogs/about.glade.h:1
-msgid "translator-credits"
-msgstr ""
-"Launchpad Contributions:\n"
-"  Bjørn Olav Samdal https://launchpad.net/~bjornsam"
 
 #: ../glade/dialogs/advancedPreferences.glade.h:1
 msgid "Advanced Preferences"
@@ -390,47 +413,59 @@ msgstr "_Fjern innlastet"
 
 #: ../glade/dialogs/preferences.glade.h:1
 msgid ""
+"<b>Notice:</b>\n"
+"First field is type, second field is server, third is the channel.\n"
+"Everything matching passes the filter and will be shown except the row is "
+"negated."
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:4
+msgid ""
 "<b>Warning:</b>\n"
 "Changes will be applied after closing this dialog."
 msgstr "<b>Advarsel:</b>"
 
-#: ../glade/dialogs/preferences.glade.h:3
+#: ../glade/dialogs/preferences.glade.h:6
 msgid "A_uto expand server tree"
 msgstr "A_utomatisk forgren serveroppsett"
 
-#: ../glade/dialogs/preferences.glade.h:4
+#: ../glade/dialogs/preferences.glade.h:7
 msgid "Actions:"
 msgstr "Handlinger:"
 
-#: ../glade/dialogs/preferences.glade.h:5
+#: ../glade/dialogs/preferences.glade.h:8
 msgid "Ad_vanced Settings"
 msgstr "A_vansert Oppsett"
 
-#: ../glade/dialogs/preferences.glade.h:6
+#: ../glade/dialogs/preferences.glade.h:9
 msgid "C_hatting"
 msgstr "P_ersonlige meldinger"
 
-#: ../glade/dialogs/preferences.glade.h:7
+#: ../glade/dialogs/preferences.glade.h:10
 msgid "C_olors"
 msgstr "F_arger"
 
-#: ../glade/dialogs/preferences.glade.h:8
+#: ../glade/dialogs/preferences.glade.h:11
 msgid "Default nick:"
 msgstr "Standard kallenavn:"
 
-#: ../glade/dialogs/preferences.glade.h:9
-msgid "General Output font:"
-msgstr "Standard skrifttype:"
+#: ../glade/dialogs/preferences.glade.h:12
+msgid "Font:"
+msgstr "Skrifttype:"
 
-#: ../glade/dialogs/preferences.glade.h:10
+#: ../glade/dialogs/preferences.glade.h:13
 msgid "Highlighted actions:"
 msgstr "Markerte handling:"
 
-#: ../glade/dialogs/preferences.glade.h:11
+#: ../glade/dialogs/preferences.glade.h:14
 msgid "Highlighted messages:"
 msgstr "Markerte handlinger:"
 
-#: ../glade/dialogs/preferences.glade.h:12
+#: ../glade/dialogs/preferences.glade.h:15
+msgid "Highlightwords:"
+msgstr "Marker ord:"
+
+#: ../glade/dialogs/preferences.glade.h:16
 msgid ""
 "If you want to have control about <u>all</u> settings you can use the "
 "advanced settings dialog.\n"
@@ -446,59 +481,67 @@ msgstr ""
 "For noen av valgene er det nødvendig å starte tekka på nytt for å oppdatere "
 "oppsettet."
 
-#: ../glade/dialogs/preferences.glade.h:16
+#: ../glade/dialogs/preferences.glade.h:20
 msgid "Last log lines:"
 msgstr "Siste linjer i loggen:"
 
-#: ../glade/dialogs/preferences.glade.h:17
+#: ../glade/dialogs/preferences.glade.h:21
+msgid "Last log:"
+msgstr "Siste loggføring:"
+
+#: ../glade/dialogs/preferences.glade.h:22
 msgid "Messages:"
 msgstr "Meldinger:"
 
-#: ../glade/dialogs/preferences.glade.h:18
+#: ../glade/dialogs/preferences.glade.h:23
 msgid "Notification:"
 msgstr "Melding:"
 
-#: ../glade/dialogs/preferences.glade.h:19
-msgid "Output font:"
-msgstr ""
-
-#: ../glade/dialogs/preferences.glade.h:20
+#: ../glade/dialogs/preferences.glade.h:24
 msgid "Own nick:"
 msgstr "Eget kallenavn:"
 
-#: ../glade/dialogs/preferences.glade.h:21
+#: ../glade/dialogs/preferences.glade.h:25
 msgid "Own text:"
 msgstr "Egen tekst:"
 
-#: ../glade/dialogs/preferences.glade.h:22
+#: ../glade/dialogs/preferences.glade.h:26
 msgid "Part message:"
 msgstr "Del av beskjed:"
 
-#: ../glade/dialogs/preferences.glade.h:23
+#: ../glade/dialogs/preferences.glade.h:27
+msgid "Preferences"
+msgstr "Oppsett"
+
+#: ../glade/dialogs/preferences.glade.h:28
 msgid "Quit message:"
 msgstr "Avsluttningsmelding:"
 
-#: ../glade/dialogs/preferences.glade.h:24
+#: ../glade/dialogs/preferences.glade.h:29
 msgid "Shutdown _maki on close"
 msgstr "Slå av _maki ved avslutting"
 
-#: ../glade/dialogs/preferences.glade.h:25
+#: ../glade/dialogs/preferences.glade.h:30
 msgid "Use _RGBA"
 msgstr "Bruk _RGBA"
 
-#: ../glade/dialogs/preferences.glade.h:26
+#: ../glade/dialogs/preferences.glade.h:31
+msgid "Use _default font"
+msgstr "Bruk _starndard skriftoppsett"
+
+#: ../glade/dialogs/preferences.glade.h:32
 msgid "_Advanced"
 msgstr "_Avansert"
 
-#: ../glade/dialogs/preferences.glade.h:27
+#: ../glade/dialogs/preferences.glade.h:34
 msgid "_Hide on close"
 msgstr "_Skjul ved avslutting"
 
-#: ../glade/dialogs/preferences.glade.h:28
+#: ../glade/dialogs/preferences.glade.h:35
 msgid "_Nick Colors"
 msgstr "_Navnfarge"
 
-#: ../glade/dialogs/preferences.glade.h:29
+#: ../glade/dialogs/preferences.glade.h:36
 msgid "_Show status icon"
 msgstr "_Vis statusikon"
 
@@ -542,17 +585,18 @@ msgstr "Eget navn:"
 msgid "Server name:"
 msgstr "Tjenernavn:"
 
-#: ../glade/dialogs/serverDelete.glade.h:1
+#: ../glade/dialogs/serverDelete.glade.h:2
+#, no-c-format
 msgid ""
 "<span weight=\"bold\" size=\"larger\">Delete Server</span>\n"
 "\n"
-"Are you sure you want to delete the server?"
+"Are you sure you want to delete the server '%(server)s'?"
 msgstr ""
-"<span weight=\"bold\" size=\"larger\">Serverfjerning</span>\n"
+"<span weight=\"bold\" size=\"larger\">Slett Tilkoblingsmaskin</span>\n"
 "\n"
-"Er du sikker på at du ønsker å slette serveren?"
+"Er du sikker på at du ønsker å slette tilkoblingsmaskinen '%(server)s'?"
 
-#: ../glade/dialogs/serverDelete.glade.h:4
+#: ../glade/dialogs/serverDelete.glade.h:5
 msgid "Delete Server"
 msgstr "Fjern tjener"
 
