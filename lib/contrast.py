@@ -85,7 +85,7 @@ def srgb_to_xyz_g (K):
 	a = 0.055
 	gamma = 2.4
 	if K > 0.04045:
-		return (K+a)/(1+a)**gamma
+		return ((K+a)/(1+a))**gamma
 	else:
 		return K / 12.92
 
@@ -158,9 +158,9 @@ def lab_to_rgb (L, a, b):
 	gs = -0.9692 * x + 1.8760 * y + 0.0416 * z
 	bs =  0.0556 * x - 0.2040 * y + 1.0570 * z
 
-	R = CLAMP(int(round(xyz_to_srgb_C(rs)) * 65535), 0, 65535)
-	G = CLAMP(int(round(xyz_to_srgb_C(gs)) * 65535), 0, 65535)
-	B = CLAMP(int(round(xyz_to_srgb_C(bs)) * 65535), 0, 65535)
+	R = CLAMP(int(round(xyz_to_srgb_C(rs) * 65535)), 0, 65535)
+	G = CLAMP(int(round(xyz_to_srgb_C(gs) * 65535)), 0, 65535)
+	B = CLAMP(int(round(xyz_to_srgb_C(bs) * 65535)), 0, 65535)
 
 	return (R, G, B)
 
