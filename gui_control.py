@@ -50,7 +50,6 @@ import com
 from typecheck import types
 
 from helper.shortcuts import addShortcut, removeShortcut
-from helper.url import URLToTag
 from helper import URLHandler
 from helper.searchToolbar import SearchBar
 from helper.input_history import InputHistory
@@ -863,8 +862,6 @@ def channelPrint(timestamp, server, channel, message, msgtype="message"):
 	"""
 	timestring = time.strftime(config.get("tekka", "time_format", "%H:%M"),
 		time.localtime(timestamp))
-
-	message = URLToTag(message)
 
 	if not config.get_bool("tekka","color_text"):
 		colorHack = ""

@@ -35,6 +35,8 @@ from cStringIO import StringIO
 
 import xml.sax, xml.sax.handler
 
+from helper.url import URLToTag
+
 # TODO: add line limitation
 
 def rindex(l, i):
@@ -267,6 +269,7 @@ class HTMLBuffer(gtk.TextBuffer):
 		if gtk.TextBuffer.get_char_count(self) > 0:
 			text = "<br/>" + text
 
+		text = URLToTag(text)
 		text = "<msg>%s</msg>" % text
 
 		# check for last line text
