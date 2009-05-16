@@ -181,7 +181,6 @@ def contrast_render_foreground_color (background, color):
 	* maximum readability against the background.
    	"""
 
-	rcolor = gtk.gdk.Color()
 	points = [[0 for n in range(3)] for n in range(8)]
 
 	(L, a, b) = rgb_to_lab(background.red, background.green, background.blue)
@@ -197,7 +196,6 @@ def contrast_render_foreground_color (background, color):
 
 	max_dist = 0
 	max_color = 0
-	float_dist = 0
 
 	for i in range(8):
 		dist = lab_distance(L, a, b, points[i][0], points[i][1], points[i][2])
@@ -223,10 +221,9 @@ def contrast_render_foreground_color (background, color):
 		points[max_color][1] = a + (da * 1.5)
 		points[max_color][2] = b + (db * 1.5)
 
-	rcolor.pixel = 0
-	rcolor.red, rcolor.green, rcolor.blue = lab_to_rgb(
+	red, green, blue = lab_to_rgb(
 				points[max_color][0],
 				points[max_color][1],
 				points[max_color][2])
 
-	return rcolor
+	return gtk.gdk.Color (red, green, blue)
