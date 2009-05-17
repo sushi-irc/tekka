@@ -37,10 +37,38 @@ import com
 import config
 import gui_control as gui
 from helper import keyDialog
+from lib import contrast
 
 sushi = None
 
 signals = {}
+
+def get_contrast_colors ():
+	return (
+		contrast.CONTRAST_COLOR_AQUA,
+		contrast.CONTRAST_COLOR_BLACK,
+		contrast.CONTRAST_COLOR_BLUE,
+		contrast.CONTRAST_COLOR_BROWN,
+		contrast.CONTRAST_COLOR_CYAN,
+		contrast.CONTRAST_COLOR_DARK_BLUE,
+		contrast.CONTRAST_COLOR_DARK_GREEN,
+		contrast.CONTRAST_COLOR_DARK_GREY,
+		contrast.CONTRAST_COLOR_DARK_RED,
+		contrast.CONTRAST_COLOR_GREEN,
+		contrast.CONTRAST_COLOR_GREY,
+		contrast.CONTRAST_COLOR_LIGHT_BLUE,
+		contrast.CONTRAST_COLOR_LIGHT_BROWN,
+		contrast.CONTRAST_COLOR_LIGHT_GREEN,
+		contrast.CONTRAST_COLOR_LIGHT_GREY,
+		contrast.CONTRAST_COLOR_LIGHT_RED,
+		contrast.CONTRAST_COLOR_MAGENTA,
+		contrast.CONTRAST_COLOR_ORANGE,
+		contrast.CONTRAST_COLOR_PURPLE,
+		contrast.CONTRAST_COLOR_RED,
+		contrast.CONTRAST_COLOR_VIOLET,
+		contrast.CONTRAST_COLOR_WHITE,
+		contrast.CONTRAST_COLOR_YELLOW
+	)
 
 def parse_from (from_str):
 	h = from_str.split("!", 2)
@@ -258,12 +286,15 @@ def getNickColor(nick):
 	if not config.get_bool("tekka","color_text"):
 		return
 
-	colors = config.get_list("colors", "nick_colors")
+	colors = get_contrast_colors()
 
 	if not colors:
 		return config.get("colors","nick","#000000")
 
-	return colors[sum([ord(n) for n in nick])%len(colors)]
+	bg_color = gui.widgets.get_widget("output").get_style().bg[gtk.STATE_NORMAL]
+	color = colors[sum([ord(n) for n in nick]) % len(colors)]
+
+	return contrast.contrast_render_foreground_color(bg_color, color)
 
 def getTextColor(nick):
 	"""
@@ -273,11 +304,15 @@ def getTextColor(nick):
 	if not config.get_bool("tekka","color_text"):
 		return
 
-	colors = config.get_list("colors", "nick_colors")
+	colors = get_contrast_colors()
 
 	if not colors or not config.get_bool("tekka","color_nick_text"):
 		return config.get("colors","text_message","#000000")
-	return colors[sum([ord(n) for n in nick]) % len(colors)]
+
+	bg_color = gui.widgets.get_widget("output").get_style().bg[gtk.STATE_NORMAL]
+	color = colors[sum([ord(n) for n in nick]) % len(colors)]
+
+	return contrast.contrast_render_foreground_color(bg_color, color)
 
 def isHighlighted (server, text):
 	# TODO:  make this global so the method hasn't
