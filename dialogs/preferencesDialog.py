@@ -171,6 +171,10 @@ def fillGeneralOutputFilters():
 		if not filter_rule:
 			continue
 
+		if len(filter_rule) != 2:
+			gui.errorMessage("FAILRULE: %s" % (filter_rule))
+			continue
+
 		match = pattern.match(filter_rule)
 
 		if match:
