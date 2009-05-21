@@ -174,11 +174,21 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 			return
 
 		for name in attrs.getNames():
-			try:
-				tag.set_property(name, attrs[name])
-
-			except Exception, ex:
-				print ex
+			if name == "weight":
+				if attrs[name] == "bold":
+					tag.set_property("weight", pango.WEIGHT_BOLD)
+				elif attrs[name] == "normal":
+					tag.set_property("weight", pango.WEIGHT_NORMAL)
+			elif name == "style":
+				if attrs[name] == "italic":
+					tag.set_property("style", pango.STYLE_ITALIC)
+				elif attrs[name] == "normal":
+					tag.set_property("style", pango.STYLE_NORMAL)
+			else:
+				try:
+					tag.set_property(name, attrs[name])
+				except Exception, ex:
+					print ex
 
 
 class HTMLBuffer(gtk.TextBuffer):

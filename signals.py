@@ -254,7 +254,7 @@ def lastLog(server, channel, lines=0):
 					"chatting", "last_log_lines", default="0"))
 				):
 		buffer.insertHTML(buffer.get_end_iter(),
-			"<font foreground=\"%s\">%s</font>" % (
+			"<font foreground='%s'>%s</font>" % (
 				config.get("colors","last_log","#DDDDDD"),
 				gui.escape(line)))
 
@@ -560,7 +560,7 @@ def userMessage(timestamp, server, from_str, channel, message):
 			getTextColor(nick), message)
 
 	gui.channelPrint(timestamp, server, channel,
-		"&lt;%s<font foreground='%s'>%s</font>&gt; %s" % (
+		"&lt;%s<font foreground='%s' weight='bold'>%s</font>&gt; %s" % (
 			getPrefix(server, channel, nick),
 			getNickColor(nick),
 			gui.escape(nick),
@@ -575,7 +575,7 @@ def ownMessage(timestamp, server, channel, message):
 	nick = com.getOwnNick(server)
 
 	gui.channelPrint(timestamp, server, channel,
-		"&lt;%s<font foreground='%s'>%s</font>&gt; <font foreground='%s'>%s</font>" % (
+		"&lt;%s<font foreground='%s' weight='bold'>%s</font>&gt; <font foreground='%s'>%s</font>" % (
 		getPrefix(server, channel, nick),
 		config.get("colors","own_nick","#000000"),
 		nick,
@@ -591,7 +591,7 @@ def userQuery(timestamp, server, from_str, message):
 	createTab(server, nick)
 
 	gui.channelPrint(timestamp, server, nick,
-		"&lt;<font foreground='%s'>%s</font>&gt; %s" % (
+		"&lt;<font foreground='%s' weight='bold'>%s</font>&gt; %s" % (
 			getNickColor(nick),
 			gui.escape(nick),
 			gui.escape(message)
@@ -700,7 +700,7 @@ def ownCTCP(time, server, target, message):
 		textColor = config.get("colors","own_text","#000000")
 
 		gui.channelPrint(time, server, tab.name,
-			"&lt;CTCP:<font foreground='%s'>%s</font>&gt; "
+			"&lt;CTCP:<font foreground='%s' weight='bold'>%s</font>&gt; "
 			"<font foreground='%s'>%s</font>" % \
 				(nickColor, com.getOwnNick(server),
 				textColor, gui.escape(message)))
@@ -721,13 +721,13 @@ def queryCTCP(time, server, from_str, message):
 
 	if tab:
 		gui.channelPrint(time, server, tab.name, \
-				"&lt;CTCP:<font foreground='%s'>%s</font>&gt; "
+				"&lt;CTCP:<font foreground='%s' weight='bold'>%s</font>&gt; "
 				"<font foreground='%s'>%s</font>" % \
 				(getNickColor(nick), gui.escape(nick),
 				getTextColor(nick), gui.escape(message)))
 	else:
 		gui.currentServerPrint(time, server, \
-				"&lt;CTCP:<font foreground='%s'>%s</font>&gt; "
+				"&lt;CTCP:<font foreground='%s' weight='bold'>%s</font>&gt; "
 				"<font foreground='%s'>%s</font>" % \
 				(getNickColor(nick), gui.escape(nick),
 				getTextColor(nick), gui.escape(message)))
@@ -745,13 +745,13 @@ def ownNotice(time, server, target, message):
 
 	if tab:
 		gui.channelPrint(time, server, tab.name, \
-			"&gt;<font foreground='%s'>%s</font>&lt; "
+			"&gt;<font foreground='%s' weight='bold'>%s</font>&lt; "
 			"<font foreground='%s'>%s</font>" % \
 				(getNickColor(target), gui.escape(target),
 				getTextColor(target), gui.escape(message)))
 	else:
 		gui.currentServerPrint(time, server,
-			"&gt;<font foreground='%s'>%s</font>&lt; "
+			"&gt;<font foreground='%s' weight='bold'>%s</font>&lt; "
 			"<font foreground='%s'>%s</font>" % \
 				(getNickColor(target), gui.escape(target),
 				getTextColor(target), gui.escape(message)))
@@ -771,13 +771,13 @@ def queryNotice(time, server, from_str, message):
 
 	if tab:
 		gui.channelPrint(time, server, tab.name,
-				"-<font foreground='%s'>%s</font>- "
+				"-<font foreground='%s' weight='bold'>%s</font>- "
 				"<font foreground='%s'>%s</font>" % \
 				(getNickColor(nick), gui.escape(nick),
 				getTextColor(nick), gui.escape(message)))
 	else:
 		gui.currentServerPrint(time, server,
-				"-<font foreground='%s'>%s</font>- "
+				"-<font foreground='%s' weight='bold'>%s</font>- "
 				"<font foreground='%s'>%s</font>" % \
 				(getNickColor(nick), gui.escape(nick),
 				getTextColor(nick), gui.escape(message)))
@@ -796,7 +796,7 @@ def userNotice(time, server, from_str, target, message):
 		return
 
 	gui.channelPrint(time, server, target, \
-			"-<font foreground='%s'>%s</font>- "
+			"-<font foreground='%s' weight='bold'>%s</font>- "
 			"<font foreground='%s'>%s</font>" % \
 			(getNickColor(nick), gui.escape(nick),
 			getTextColor(nick), gui.escape(message)))
@@ -809,7 +809,7 @@ def ownAction(time, server, channel, action):
 	textColor = config.get("colors","own_text","#000000")
 
 	gui.channelPrint(time, server, channel,
-		"<font foreground='%s'>%s</font> "
+		"<font foreground='%s' weight='bold'>%s</font> "
 		"<font foreground='%s'>%s</font>" % \
 			(nickColor, com.getOwnNick(server), textColor, gui.escape(action)))
 
@@ -850,7 +850,7 @@ def userAction(time, server, from_str, channel, action):
 			getTextColor(nick), action)
 
 	gui.channelPrint(time, server, channel,
-		"<font foreground='%s'>%s</font> %s" % (
+		"<font foreground='%s' weight='bold'>%s</font> %s" % (
 			getNickColor(nick), nick, actionString), type)
 
 def userNick(time, server, from_str, newNick):
@@ -893,9 +893,9 @@ def userNick(time, server, from_str, newNick):
 		if tab.is_query() and tab.name != newNick:
 			continue
 
-		nickString = "<font foreground='%s'>%s</font>" % \
+		nickString = "<font foreground='%s' weight='bold'>%s</font>" % \
 			(getNickColor(nick), gui.escape(nick))
-		newNickString = "<font foreground='%s'>%s</font>" % \
+		newNickString = "<font foreground='%s' weight='bold'>%s</font>" % \
 			(getNickColor(newNick), gui.escape(newNick))
 
 		gui.channelPrint(time, server, tab.name,
@@ -921,7 +921,7 @@ def userKick(time, server, from_str, channel, who, reason):
 	channelString = "<font foreground='%s'>%s</font>" % (
 		getTextColor(channel), gui.escape(channel))
 
-	nickString = "<font foreground='%s'>%s</font>" % (
+	nickString = "<font foreground='%s' weight='bold'>%s</font>" % (
 		getNickColor(nick), gui.escape(nick))
 
 	reasonString = "<font foreground='%s'>%s</font>" % (
@@ -944,7 +944,7 @@ def userKick(time, server, from_str, channel, who, reason):
 		if gui.tabs.isActive(tab):
 			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
 
-		whoString = "<font foreground='%s'>%s</font>" % (
+		whoString = "<font foreground='%s' weight='bold'>%s</font>" % (
 			getNickColor(who), gui.escape(who))
 
 		message = _(u"« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s).") % {
@@ -1013,7 +1013,7 @@ def userQuit(time, server, from_str, reason):
 
 
 
-		nickString = "<font foreground='%s'>%s</font>" % (
+		nickString = "<font foreground='%s' weight='bold'>%s</font>" % (
 			getNickColor(nick),
 			gui.escape(nick))
 
@@ -1109,7 +1109,7 @@ def userJoin(timestamp, server, from_str, channel):
 
 		message = _(u"» %(nick)s has joined %(channel)s.")
 
-		nickString = "<font foreground='%s'>%s</font>" % (
+		nickString = "<font foreground='%s' weight='bold'>%s</font>" % (
 			getNickColor(nick),
 			gui.escape(nick))
 
@@ -1209,7 +1209,7 @@ def userPart(timestamp, server, from_str, channel, reason):
 
 	else: # another user parted
 
-		nickString = "<font foreground='%s'>%s</font>" % (
+		nickString = "<font foreground='%s' weight='bold'>%s</font>" % (
 			getNickColor(nick), gui.escape(nick))
 
 		channelString = "<font foreground='%s'>%s</font>" % (
