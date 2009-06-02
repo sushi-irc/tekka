@@ -1038,13 +1038,15 @@ def userQuit(time, server, from_str, reason):
 			"reason": reasonString
 		}
 
+		doPrint = not "quit" in config.get_list("channel_%s_%s" % (server.lower(), channelTab.name.lower()), "hide")
+
 		# print in all channels where nick joined a message
 		for channelTab in channels:
 
 			if channelTab.is_query():
 				# on query with `nick` only print quitmessage
 
-				if channelTab.name.lower() == nick.lower():
+				if doPrint and channelTab.name.lower() == nick.lower():
 					gui.channelPrint(time, server, channelTab.name,
 						message, "action")
 
@@ -1065,8 +1067,9 @@ def userQuit(time, server, from_str, reason):
 					gui.setUserCount(len(nickList),
 						nickList.get_operator_count())
 
-				gui.channelPrint(time, server, channelTab.name,
-					message, "action")
+				if doPrint:
+					gui.channelPrint(time, server, channelTab.name,
+						message, "action")
 
 
 def userJoin(timestamp, server, from_str, channel):
@@ -1111,6 +1114,8 @@ def userJoin(timestamp, server, from_str, channel):
 
 		message = _(u"» You have joined %(channel)s.")
 
+		doPrint = True
+
 	else: # another one joined the channel
 
 		tab = gui.tabs.searchTab(server, channel)
@@ -1135,12 +1140,15 @@ def userJoin(timestamp, server, from_str, channel):
 		if gui.tabs.isActive(tab):
 			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
 
+		doPrint = not "join" in config.get_list("channel_%s_%s" % (server.lower(), channel.lower()), "hide")
+
 	message = message % {
 		"nick": nickString,
 		"channel": channelString
 		}
 
-	gui.channelPrint(timestamp, server, channel, message, "action")
+	if doPrint:
+		gui.channelPrint(timestamp, server, channel, message, "action")
 
 def userNames(timestamp, server, channel, nicks, prefixes):
 	"""
@@ -1240,13 +1248,14 @@ def userPart(timestamp, server, from_str, channel, reason):
 		if gui.tabs.isActive(tab):
 			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
 
-		gui.channelPrint(timestamp, server, channel,
-			message % {
-				"nick": nickString,
-				"channel": channelString,
-				"reason": reasonString
-				},
-			"action")
+		if not "part" in config.get_list("channel_%s_%s" % (server.lower(), channel.lower()), "hide"):
+			gui.channelPrint(timestamp, server, channel,
+				message % {
+					"nick": nickString,
+					"channel": channelString,
+					"reason": reasonString
+					},
+				"action")
 
 def noSuch(time, server, target, type):
 	"""
