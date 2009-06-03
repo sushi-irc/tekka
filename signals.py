@@ -1038,10 +1038,9 @@ def userQuit(time, server, from_str, reason):
 			"reason": reasonString
 		}
 
-		doPrint = not "quit" in config.get_list("channel_%s_%s" % (server.lower(), channelTab.name.lower()), "hide")
-
 		# print in all channels where nick joined a message
 		for channelTab in channels:
+			doPrint = not "quit" in config.get_list("channel_%s_%s" % (server.lower(), channelTab.name.lower()), "hide")
 
 			if channelTab.is_query():
 				# on query with `nick` only print quitmessage
