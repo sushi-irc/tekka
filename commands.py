@@ -487,7 +487,7 @@ _commands = {
 
 _builtins = _commands.keys()
 
-@types(text=str)
+@types(text=basestring)
 def parseInput(text):
 	"""
 	split text for blank, strip the command
@@ -561,7 +561,7 @@ def parseInput(text):
 			_commands[cmd](serverTab, channelTab, argv[1:])
 
 
-@types(command=str,function=(MethodType,FunctionType))
+@types(command=basestring,function=(MethodType,FunctionType))
 def addCommand(command, function):
 	"""
 		Add a command.
@@ -576,7 +576,7 @@ def addCommand(command, function):
 
 	return True
 
-@types(command=str)
+@types(command=basestring)
 def removeCommand(command):
 	"""
 		Removes a command.

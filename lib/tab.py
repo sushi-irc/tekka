@@ -56,7 +56,7 @@ class tekkaTab(gobject.GObject):
 		self.emit ("new_path", path)
 	path = property(lambda x: x._path, _set_path)
 
-	@types(name=(str,String,unicode))
+	@types(name=basestring)
 	def _set_name(self, name):
 		self._name = name
 		self.emit ("new_name", name)
@@ -146,7 +146,7 @@ class tekkaServer(tekkaTab):
 		A typically server tab.
 	"""
 
-	@types(msg=str)
+	@types(msg=basestring)
 	def _set_away(self, msg):
 		self._away = msg
 		self.emit("away", msg)

@@ -119,7 +119,7 @@ def custom_handler(glade, function_name, widget_name, *x):
 
 	return None
 
-@types(gladeFile=str, section=str)
+@types(gladeFile=basestring, section=basestring)
 def load_widgets(gladeFile, section):
 	""" load the given section from gladeFile
 		into widgets and return them.
@@ -368,7 +368,7 @@ class TabClass(gobject.GObject):
 
 		return True
 
-	@types(server=str, object=str)
+	@types(server=basestring, object=basestring)
 	def removeTabByString(self, server, object):
 		"""
 			server: string
@@ -721,7 +721,7 @@ def setUrgent(switch):
 	if statusIcon:
 		statusIcon.set_blinking(switch)
 
-@types(title=(str,String,unicode))
+@types(title=basestring)
 def setWindowTitle(title):
 	"""
 		Sets the window title to the main
@@ -729,7 +729,7 @@ def setWindowTitle(title):
 	"""
 	widgets.get_widget("mainWindow").set_title(title)
 
-@types(nick=(str, String, unicode))
+@types(nick=basestring)
 def setNick(nick):
 	"""
 		Sets nick as label text of nickLabel.
@@ -763,7 +763,7 @@ def setFont(textView, font):
 
 	textView.modify_font(fd)
 
-@types(string=(str, String, unicode))
+@types(string=basestring)
 def setTopic(string):
 	"""
 		Sets the given string as text in
@@ -946,7 +946,7 @@ def currentServerPrint(timestamp, server, string, msgtype="message"):
 		# print to server tab
 		serverPrint(timestamp, server, string, msgtype)
 
-@types(string=(str,unicode), html=bool)
+@types(string=basestring, html=bool)
 def myPrint(string, html=False):
 	"""
 		prints the string `string` in the current output
@@ -976,7 +976,7 @@ def myPrint(string, html=False):
 
 	textview.scroll_to_bottom()
 
-@types(string=(str, unicode), force_dialog=bool)
+@types(string=basestring, force_dialog=bool)
 def errorMessage(string, force_dialog=False):
 	""" if GUI is initialized, and the output widget
 		has an buffer, print the error there,

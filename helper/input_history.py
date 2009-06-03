@@ -65,7 +65,7 @@ class InputHistory (object):
 	def set_text_callback(self, fun):
 		self._get_text_callback = fun
 
-	@types (entry=str)
+	@types (entry=basestring)
 	def add_entry (self, entry):
 		""" add a string to the history """
 		self._history.append (entry)

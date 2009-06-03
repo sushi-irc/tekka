@@ -55,6 +55,7 @@ def types (**type_dict):
 						foreign_name)
 
 				try:
+					foreign = check_dict[t_param]
 					foreign_type = type (check_dict[t_param])
 				except KeyError,e:
 					# skip, this happens if an argument is not
@@ -63,7 +64,7 @@ def types (**type_dict):
 
 				if type (t_type) == tuple:
 					# more than one type given
-					if foreign_type not in t_type:
+					if not isinstance(foreign, t_type):
 						typelist_name = " or ".join (
 							[n.__name__ for n in t_type])
 						raise_error (typelist_name, foreign_type.__name__)
@@ -71,7 +72,7 @@ def types (**type_dict):
 				elif type (t_type) == type:
 					# one type to check
 
-					if t_type != foreign_type:
+					if not isinstance(foreign, t_type):
 						raise_error (t_type.__name__, foreign_type.__name__)
 
 				else:

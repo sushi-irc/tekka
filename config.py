@@ -162,7 +162,7 @@ def write_config_file():
 	config_parser.write(f)
 	f.close()
 
-@types (section=str)
+@types (section=basestring)
 def create_section(section):
 	"""
 		creates config section `section`.
@@ -172,7 +172,7 @@ def create_section(section):
 	config_parser.add_section(section)
 	return True
 
-@types (section=str)
+@types (section=basestring)
 def remove_section(section):
 	"""
 		removes the section
@@ -183,7 +183,7 @@ def remove_section(section):
 	config_parser.remove_section(section)
 	return True
 
-@types (section=str, option=str)
+@types (section=basestring, option=basestring)
 #@on_fail (print_debug, "ConfigError while setting %s:%s to %s")
 def set(section, option, value):
 	"""
@@ -200,7 +200,7 @@ def set(section, option, value):
 	else:
 		return True
 
-@types (section=str, option=str, l=list)
+@types (section=basestring, option=basestring, l=list)
 def set_list(section, option, l):
 	"""
 	join the list l to a string seperated
@@ -214,7 +214,7 @@ def set_list(section, option, l):
 
 	set(section, option, s)
 
-@types (section=str, option=str, value=str)
+@types (section=basestring, option=basestring, value=basestring)
 def append_list(section, option, value):
 	"""
 	add value to the list identified by option
@@ -223,7 +223,7 @@ def append_list(section, option, value):
 	v.append(value)
 	set_list(section, option, v)
 
-@types (section=str, option=str)
+@types (section=basestring, option=basestring)
 def unset(section, option):
 	"""
 		Removes the option in the section.
@@ -241,7 +241,7 @@ def unset(section, option):
 		return False
 	return True
 
-@types (section=str, option=str)
+@types (section=basestring, option=basestring)
 def get(section, option="", default=None):
 	"""
 		Returns the value for option in section, on
@@ -306,7 +306,7 @@ def get(section, option="", default=None):
 	# usually this is not reached
 	return default
 
-@types (section=str, option=str)
+@types (section=basestring, option=basestring)
 def get_list(section, option, default=[]):
 	"""
 		Splits the option in the section for ","
@@ -325,7 +325,7 @@ def get_list(section, option, default=[]):
 		return default
 	return list
 
-@types (section=str, option=str)
+@types (section=basestring, option=basestring)
 def get_bool(section, option, default=False):
 	"""
 		Returns True or False if the value is
@@ -341,7 +341,7 @@ def get_bool(section, option, default=False):
 
 	return default
 
-@types (section=str, option=str)
+@types (section=basestring, option=basestring)
 def get_default(section, option=""):
 	"""
 	Returns the default value for the option
@@ -359,7 +359,7 @@ def get_default(section, option=""):
 				return defaults[section][option]
 	return None
 
-@types (path=str)
+@types (path=basestring)
 def check_config_file(path):
 	""" check if config file exists and create it if not """
 	if not os.path.exists (path):
