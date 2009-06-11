@@ -73,7 +73,7 @@ def showServerDialog(callback):
 	"""
 		Shows up the server dialog.
 	"""
-	d = loadDialog("serverDialog")
+	d = loadDialog("server")
 
 	return d.run(callback)
 
@@ -89,7 +89,7 @@ def showChannelListDialog(server):
 def showPluginsDialog():
 	"""
 	"""
-	d = loadDialog("pluginsDialog")
+	d = loadDialog("plugins")
 
 	return d.run()
 
@@ -97,17 +97,17 @@ def showHistoryDialog(tab):
 	"""
 		Shows up the history dialog for the current tab.
 	"""
-	d = loadDialog("historyDialog")
+	d = loadDialog("history")
 
 	return d.run(tab)
 
 def showDebugDialog():
-	d = loadDialog("debugDialog")
+	d = loadDialog("debug")
 
 	return d.run()
 
 def showPreferencesDialog():
-	d = loadDialog("preferencesDialog")
+	d = loadDialog("preferences")
 
 	return d.run()
 
