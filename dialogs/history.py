@@ -130,6 +130,7 @@ class HistorySearchBar(SearchBar):
 		textiter = None
 
 		if self.last:
+			# restore last search
 			file, offset, textiter = self.last
 			try:
 				file_index = self.calendar.files.index(file)
@@ -139,6 +140,13 @@ class HistorySearchBar(SearchBar):
 		for file in self.calendar.files[file_index:]:
 
 			if textiter:
+
+				if not textiter.get_buffer():
+					# day switched while searching, remove
+					# entry.
+					self.last = ()
+					break
+
 				search_result = textiter.forward_search(
 					self.search_term,
 					gtk.TEXT_SEARCH_TEXT_ONLY)
