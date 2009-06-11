@@ -46,8 +46,6 @@ class SearchBar(gtk.Table):
 			return self.textview_callback()
 		return self._textview
 
-	_textview = None
-	textview_callback = None
 	textview = property(get_textview, set_textview)
 
 	search_term = property(lambda s: s.search_entry.get_text(),
@@ -60,6 +58,10 @@ class SearchBar(gtk.Table):
 		textview_callback = None,
 		separator=False,
 		autohide=True):
+
+		self._textview = None
+		self.textview_callback = None
+
 		if separator:
 			rows = 3
 		else:

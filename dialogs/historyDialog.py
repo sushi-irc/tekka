@@ -67,6 +67,7 @@ class HistorySearchBar(SearchBar):
 		if self.search_entry.get_text() != val:
 			self.last = ()
 		self.search_entry.set_text(val)
+
 	search_term = property(lambda s: s.search_entry.get_text(),
 		set_search_term)
 
@@ -98,6 +99,9 @@ class HistorySearchBar(SearchBar):
 	def search_button_clicked_cb(self, button):
 		if not self.search_term or not self.textview or not self.calendar:
 			return
+
+		if widgets.get_widget("localSearchButton").get_active():
+			return SearchBar.search_button_clicked_cb(self, button)
 
 		"""
 		iterate over files:
@@ -202,10 +206,7 @@ class HistorySearchBar(SearchBar):
 
 				gobject.idle_add(scroll, self.textview, search_result[0])
 
-				self.last = (
-					file,
-					offset+d_end,
-					search_result[1])
+				self.last = (file, offset+d_end, search_result[1])
 				success = True
 				break
 
