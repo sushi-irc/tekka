@@ -405,10 +405,24 @@ def setup():
 
 	sigdic = {
 		"calendar_month_changed_cb" : calendar_month_changed_cb,
-		"calendar_day_selected_cb" : calendar_day_selected_cb
+		"calendar_day_selected_cb" : calendar_day_selected_cb,
+
+# TODO
+#		"targetNameBox_changed_cb": targetNameBox_changed_cb,
+#		"targetNameBox_popup_cb": targetNameBox_popup_cb
 	}
 
 	widgets.signal_autoconnect(sigdic)
+
+	# TODO: init targetNameBox with files
+	# NAME, PATH
+	#liststore = gtk.Liststore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+	#widgets.get_widget("targetNameBox").set_model(liststore)
+	"""
+	for i in files:
+		iter = liststore.insert()
+		liststore.set(iter, name, path)
+	"""
 
 	searchBar = widgets.get_widget("searchBar")
 	searchBar.textview = widgets.get_widget("historyView")

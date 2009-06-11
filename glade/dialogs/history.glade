@@ -18,6 +18,9 @@
           <widget class="GtkComboBoxEntry" id="targetNameBox">
             <property name="visible">True</property>
             <property name="sensitive">False</property>
+            <signal name="changed" handler="targetNameBox_changed_cb"/>
+            <signal name="popup" handler="targetNameBox_popup_cb"/>
+            <signal name="popdown" handler="targetNameBox_popdown_cb"/>
           </widget>
           <packing>
             <property name="expand">False</property>
