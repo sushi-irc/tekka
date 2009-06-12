@@ -409,6 +409,11 @@ def serverTree_button_press_event_cb(serverTree, event):
 
 		gui.tabs.switchToPath(path)
 
+	elif event.button == 2:
+		# if there's a tab, ask to close
+		if tab:
+			askToRemoveTab(tab)
+
 	elif event.button == 3:
 		# popup tab menu
 
@@ -658,10 +663,7 @@ def serverTree_shortcut_ctrl_Page_Down(serverTree, shortcut):
 	except IndexError:
 		return
 
-def serverTree_shortcut_ctrl_w(serverTree, shortcut):
-	"""
-		Ctrl+W was hit, close the current tab (if any)
-	"""
+def askToRemoveTab(tab):
 	def response_handler(dialog, response_id):
 
 		if response_id == gtk.RESPONSE_YES:
@@ -670,7 +672,7 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 			# FIXME:: because the tab which contains the output buffer is
 			# FIXME:: removed before the signal execution.
 			if tab.is_channel():
-				com.part(tab.server,tab.name,
+				com.part(tab.server, tab.name,
 					config.get("chatting", "part_message", ""))
 
 			elif tab.is_server():
@@ -682,15 +684,7 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 			gui.tabs.removeTab(tab)
 			gui.updateServerTreeShortcuts()
 
-			# TODO:  automagically switch to the next active tab
-			# TODO:: around the old tab.
-
 		dialog.destroy()
-
-	tab = gui.tabs.getCurrentTab()
-
-	if not tab:
-		return
 
 	if tab.is_channel():
 		message = _(u"Do you really want to close channel “%(name)s”?")
@@ -705,6 +699,18 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 		message_format= message % { "name": tab.name })
 	dialog.connect("response", response_handler)
 	dialog.show_all()
+
+def serverTree_shortcut_ctrl_w(serverTree, shortcut):
+	"""
+		Ctrl+W was hit, close the current tab (if any)
+	"""
+
+	tab = gui.tabs.getCurrentTab()
+
+	if not tab:
+		return
+
+	askToRemoveTab(tab)
 
 def output_shortcut_Page_Up(inputBar, shortcut):
 	"""
