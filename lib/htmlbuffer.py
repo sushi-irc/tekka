@@ -246,8 +246,6 @@ class HTMLBuffer(gtk.TextBuffer):
 		self.lines += text.count("\n")
 		diff = self.lines - self.max_lines
 
-		print diff
-
 		if diff > 0:
 			a = self.get_iter_at_line(0)
 			b = self.get_iter_at_line(diff)
