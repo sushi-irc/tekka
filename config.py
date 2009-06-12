@@ -86,7 +86,7 @@ def set_defaults():
 	defaults["tekka"]["time_format"] = "%H:%M"
 	defaults["tekka"]["whois_dialog"] = "true"
 	defaults["tekka"]["divider_length"] = "30"
-	defaults["tekka"]["max_output_lines"] = "20"
+	defaults["tekka"]["max_output_lines"] = "500"
 
 	defaults["general_output"] = {}
 	defaults["general_output"]["filters"] = ""

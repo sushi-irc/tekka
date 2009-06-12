@@ -880,7 +880,7 @@ def userNick(time, server, from_str, newNick):
 		tab.name = newNick
 
 	# we changed the nick
-	if newNick == com.getOwnNick(server):
+	if not nick or newNick == com.getOwnNick(server):
 		message = _(u"• You are now known as %(newnick)s.")
 
 		# update the nick in the GUI
@@ -895,6 +895,10 @@ def userNick(time, server, from_str, newNick):
 	# iterate over all channels and look if the nick is
 	# present there. If true so rename him in nicklist cache.
 	for tab in gui.tabs.getAllTabs(server)[1:]:
+		if not nick or newNick == com.getOwnNick(server):
+			doPrint = True
+		else:
+			doPrint = not "nick" in config.get_list("channel_%s_%s" % (server.lower(), tab.name.lower()), "hide")
 
 		if tab.is_channel():
 			if (nick in tab.nickList.getNicks()):
