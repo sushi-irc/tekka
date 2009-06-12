@@ -36,8 +36,7 @@ from cStringIO import StringIO
 import xml.sax, xml.sax.handler
 
 from helper.url import URLToTag
-
-# TODO: add line limitation
+import config
 
 def rindex(l, i):
 	tl = list(l)
@@ -49,7 +48,7 @@ def rindex(l, i):
 		print " (%s)" % i
 		return (-1)
 
-class htmlhandler(xml.sax.handler.ContentHandler):
+class HTMLHandler(xml.sax.handler.ContentHandler):
 	"""
 	Parses HTML like strings and applies
 	the tags as format rules for the given text buffer.
@@ -63,7 +62,7 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 		self.ignoreableEndTags = ["msg","br","su","sb"]
 		self.sucount = 0
 		self.sbcount = 0
-		self.urlHandler = handler
+		self.URLHandler = handler
 
 	def characters(self, text):
 		"""
@@ -102,9 +101,9 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 			tag.set_property("underline", pango.UNDERLINE_SINGLE)
 
 		elif name == "a":
-			if self.urlHandler:
+			if self.URLHandler:
 				tag.set_property("underline", pango.UNDERLINE_SINGLE)
-				tag.connect("event", self.urlHandler, attrs["href"])
+				tag.connect("event", self.URLHandler, attrs["href"])
 
 		elif name == "su":
 			self.sucount += 1
@@ -164,7 +163,7 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 			tag)
 
 		# reset to start
-		self.__init__(self.textbuffer, self.urlHandler)
+		self.__init__(self.textbuffer, self.URLHandler)
 
 
 	""" PARSING HELPER """
@@ -192,31 +191,36 @@ class htmlhandler(xml.sax.handler.ContentHandler):
 
 
 class HTMLBuffer(gtk.TextBuffer):
-	scrollPosition = None
-	urlHandler = None
-	lastLine = ""
 
 	def __init__(self, handler=None, tagtable=None):
+		self.lines = 0
+		try:
+			self.max_lines = int(config.get("tekka",
+				"max_output_lines"))
+		except ValueError:
+			self.max_lines = int(config.get_default("tekka",
+				"max_output_lines"))
+
 		if tagtable:
 			self.tagtable = tagtable
 		else:
 			self.tagtable = gtk.TextTagTable()
 
-		gtk.TextBuffer.__init__(self, self.tagtable)
+		self.URLHandler = handler
 
-		self.urlHandler = handler
+		gtk.TextBuffer.__init__(self, self.tagtable)
 
 		self.parser = xml.sax.make_parser()
 
-		contentHandler = htmlhandler(self, self.urlHandler)
+		contentHandler = HTMLHandler(self, self.URLHandler)
 		self.parser.setContentHandler(contentHandler)
 
-	def setUrlHandler(self, handler):
-		self.urlHandler = handler
-		self.parser.getContentHandler().urlHandler = handler
+	def setURLHandler(self, handler):
+		self.URLHandler = handler
+		self.parser.getContentHandler().URLHandler = handler
 
-	def getUrlHandler(self):
-		return self.urlHandler
+	def getURLHandler(self):
+		return self.URLHandler
 
 	def clear(self):
 		"""
@@ -230,35 +234,7 @@ class HTMLBuffer(gtk.TextBuffer):
 		if tt:
 			tt.foreach(lambda tag,data: data.remove(tag), tt)
 
-	def lastLineText(self, text):
-		"""
-		Adds text which is standing statically on the last line.
-
-		Problems triggered by this:
-		* this line is every(!) time at bottom, insert
-		  has to be overriden.
-		* there can be only one statically last line
-		"""
-		if self.lastLine:
-			self.removeLastLineText()
-
-		self.lastLine = text
-
-	def removeLastLineText(self):
-		"""
-		Removes the statically last line.
-		"""
-		if self.lastLine:
-			self.lastLine = ""
-
 	def insert(self, iter, text, *x):
-		if self.lastLine:
-			if iter.get_line() == self.get_end_iter().get_line():
-				# set the target iter to a line before the last
-				iter.set_line(iter.get_line()-1)
-
-				# XXX: this may cause problems if iter.get_line() is 0
-
 		siter = self.get_selection_bounds()
 
 		if siter:
@@ -266,6 +242,17 @@ class HTMLBuffer(gtk.TextBuffer):
 			ioff = siter[1].get_offset()
 
 		gtk.TextBuffer.insert(self, iter, text, *x)
+
+		self.lines += text.count("\n")
+		diff = self.lines - self.max_lines
+
+		print diff
+
+		if diff > 0:
+			a = self.get_iter_at_line(0)
+			b = self.get_iter_at_line(diff)
+			self.delete(a,b)
+			self.lines -= diff
 
 		if siter:
 			self.select_range(
