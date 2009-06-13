@@ -39,6 +39,8 @@ import gobject
 from gobject import idle_add
 from dbus import String
 
+import cProfile
+
 try:
 	from sexy import SpellEntry
 except ImportError:
@@ -63,6 +65,15 @@ widgets = None
 statusIcon = None
 accelGroup = None
 searchToolbar = None
+
+def profileMe(file):
+	def deco(fun):
+		def new(*args, **kwargs):
+			val = None
+			cProfile.runctx("val = fun(*args,**kwargs)", {"fun":fun}, locals(), file)
+			return val
+		return new
+	return deco
 
 def getNewBuffer():
 	"""
@@ -329,6 +340,7 @@ class TabClass(gobject.GObject):
 					nextIter = store.iter_next(temp)
 
 
+	@profileMe("removeTab.pro")
 	def removeTab(self, tab, update_shortcuts=True):
 		"""
 			tab: tekkaTab
@@ -534,6 +546,7 @@ class TabClass(gobject.GObject):
 			return None
 		return tablist[i-1]
 
+	@profileMe("switchToPath.pro")
 	def switchToPath(self, path):
 		"""
 			path: tuple

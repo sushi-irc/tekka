@@ -1203,6 +1203,8 @@ def tekka_excepthook(extype, exobj, extb):
 		extype.__name__,
 		str(exobj))
 
+	print >> sys.stderr, message
+
 	try:
 		dialog = tekka_excepthook.dialog
 	except AttributeError:
