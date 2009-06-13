@@ -38,7 +38,7 @@ from signals import parse_from
 import gui_control
 
 dbus_loop = DBusGMainLoop()
-required_version = (1, 0, 0)
+required_version = (1, 1, 0)
 bus_address = os.getenv("SUSHI_REMOTE_BUS_ADDRESS")
 if bus_address:
 	bus = dbus.bus.BusConnection(bus_address, mainloop=dbus_loop)
@@ -82,6 +82,7 @@ def connect():
 	version = tuple([int(v) for v in sushi.version()])
 
 	if not version or version < required_version:
+		# FIXME
 		sushi = None
 		return False
 
