@@ -54,6 +54,9 @@ class InlineDialog(gtk.HBox):
 
 			return False
 
+		def size_allocate_cb (widget, allocation):
+			widget.queue_draw()
+
 		gtk.HBox.__init__(self)
 
 		self.set_property("border-width", 6)
@@ -85,6 +88,7 @@ class InlineDialog(gtk.HBox):
 
 		self.connect("style-set", style_set_cb, self)
 		self.hbox.connect("expose-event", expose_event_cb)
+		self.hbox.connect("size-allocate", size_allocate_cb)
 
 		self.add(self.hbox)
 
