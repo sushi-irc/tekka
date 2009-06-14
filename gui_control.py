@@ -1044,6 +1044,7 @@ class InlineDialog(gtk.HBox):
 
 		# add icon
 		self.icon = gtk.image_new_from_stock(icon, gtk.ICON_SIZE_DIALOG)
+		self.icon.set_property("yalign", 0.0)
 		self.hbox.add_with_properties(self.icon, "expand", False, "padding", 6)
 
 		# add vbox
@@ -1052,6 +1053,7 @@ class InlineDialog(gtk.HBox):
 
 		# add buttonbox
 		self.buttonbox = gtk.VButtonBox()
+		self.buttonbox.set_layout(gtk.BUTTONBOX_START)
 		self.hbox.add_with_properties(self.buttonbox, "expand", False, "padding", 6)
 
 		if type(buttons) == gtk.ButtonsType:
@@ -1114,14 +1116,20 @@ gobject.signal_new("response", InlineDialog, gobject.SIGNAL_ACTION, None, (gobje
 
 class InlineMessageDialog(InlineDialog):
 
-	def __init__(self, message, *args, **kwargs):
+	def __init__(self, primary, secondary = None, *args, **kwargs):
 		InlineDialog.__init__(self, *args, **kwargs)
 
 		# add label
-		self.label = gtk.Label()
-		self.label.set_markup(message)
-		self.label.set_property("xalign", 0.0)
-		self.vbox.add(self.label)
+		self.primary_label = gtk.Label()
+		self.primary_label.set_markup("<b>%s</b>" % (primary))
+		self.primary_label.set_property("xalign", 0.0)
+		self.vbox.add(self.primary_label)
+
+		if secondary:
+			self.secondary_label = gtk.Label()
+			self.secondary_label.set_markup("<small>%s</small>" % (secondary))
+			self.secondary_label.set_property("xalign", 0.0)
+			self.vbox.add(self.secondary_label)
 
 def showInlineDialog(dialog):
 	area = widgets.get_widget("notificationWidget")
