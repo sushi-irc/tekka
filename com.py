@@ -85,7 +85,11 @@ def connect():
 	version = tuple([int(v) for v in sushi.version()])
 
 	if not version or version < required_version:
-		# FIXME
+		d = gui_control.InlineMessageDialog(_("Can't etablish connection to maki:"),
+			_("Protocol version does not match."))
+		gui_control.showInlineDialog(d)
+		d.connect("response", lambda d,i: d.destroy())
+
 		sushi = None
 		return False
 
