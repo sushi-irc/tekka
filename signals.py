@@ -1305,14 +1305,15 @@ def cannotJoin(time, server, channel, reason):
 		message = _("You are banned.")
 	elif reason == "k":
 		if config.get_bool("tekka", "ask_for_key_on_cannotjoin"):
+			def key_dialog_response_cb(dialog, id):
+				if id == gtk.RESPONSE_OK:
+					com.join(server, channel, d.entry.get_text())
+				d.destroy()
+
 			# open a input dialog which asks for the key
 			d = keyDialog.KeyDialog(server, channel)
-			result = d.run()
-
-			if result == gtk.RESPONSE_OK:
-				com.join(server, channel, d.entry.get_text())
-
-			d.destroy()
+			d.connect("response", key_dialog_response_cb)
+			gui.showInlineDialog(d)
 			return
 		else:
 			message = _("You need the correct channel key.")
@@ -1323,7 +1324,6 @@ def cannotJoin(time, server, channel, reason):
 			"reason":message
 			}
 		))
-
 
 def whois(time, server, nick, message):
 	"""
