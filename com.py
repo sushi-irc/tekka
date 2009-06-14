@@ -85,8 +85,12 @@ def connect():
 	version = tuple([int(v) for v in sushi.version()])
 
 	if not version or version < required_version:
-		d = gui_control.InlineMessageDialog(_("Can't etablish connection to maki:"),
-			_("Protocol version does not match."))
+		version_string = ".".join([str(x) for x in required_version])
+
+		d = gui_control.InlineMessageDialog(_("tekka requires a newer maki version."),
+			_("Please update maki to at least version %(version)s.") % {
+					"version": version_string
+				})
 		gui_control.showInlineDialog(d)
 		d.connect("response", lambda d,i: d.destroy())
 
