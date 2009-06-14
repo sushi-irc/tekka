@@ -207,7 +207,10 @@ def menu_Dialogs_channelList_activate_cb(menuItem):
 		return
 
 	sTab,cTab = gui.tabs.getCurrentTabs()
-	if not sTab: return
+
+	if not sTab:
+		return
+
 	dialog_control.showChannelListDialog(sTab.name)
 
 def menu_Dialogs_plugins_activate_cb(menuItem):
@@ -331,7 +334,8 @@ def inputBar_key_press_event_cb(inputBar, event):
 
 	if key == "Up":
 		# get next input history item
-		if not tab: return
+		if not tab:
+			return
 
 		hist = tab.input_history.get_previous()
 
@@ -343,7 +347,8 @@ def inputBar_key_press_event_cb(inputBar, event):
 
 	elif key == "Down":
 		# get previous input history item
-		if not tab: return
+		if not tab:
+			return
 
 		hist = tab.input_history.get_next()
 

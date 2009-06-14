@@ -174,7 +174,6 @@ def initServers():
 
 	for server in com.fetchServers():
 
-		print "emitting nick signal"
 		sushi.nick(server, "")
 
 		tab = gui.tabs.createServer(server)
@@ -286,6 +285,10 @@ def getNickColor(nick):
 	if not config.get_bool("tekka","color_text"):
 		return
 
+	bg_color = gui.widgets.get_widget("output").get_style().bg[gtk.STATE_NORMAL]
+	print bg_color
+
+
 	# FIXME
 	colors = config.get_list("colors", "nick_colors")
 	if not colors:
@@ -327,8 +330,6 @@ def getTextColor(nick):
 	return contrast.contrast_render_foreground_color(bg_color, color)
 
 def isHighlighted (server, text):
-	# TODO:  make this global so the method hasn't
-	# TODO:: to fetch the mapping every time
 	highlightwords = config.get_list("chatting", "highlight_words")
 	highlightwords.append(com.getOwnNick(server))
 
@@ -631,7 +632,11 @@ def userMode(time, server, from_str, target, mode, param):
 
 	if not nick:
 		# only a mode listing
-		gui.currentServerPrint(time, server, "• Modes for %s: %s" % (target, mode), "action")
+		gui.currentServerPrint(time, server,
+			_("• Modes for %(target)s: %(mode)s") % {
+				"target":target,
+				"mode":mode},
+			"action")
 
 	else:
 		actor = nick
@@ -694,9 +699,12 @@ def userCTCP(time, server,  from_str, target, message):
 		queryCTCP(time, server, from_str, message)
 		return
 
-	gui.channelPrint(time, server, target, \
-		"<font foreground='#00DD33'>CTCP from %s to Channel:</font> %s" % \
-			(gui.escape(nick), gui.escape(message)))
+	headline = _("CTCP from %(nick)s to Channel:") % {
+		"nick":gui.escape(nick)}
+
+	gui.channelPrint(time, server, target,
+		"<font foreground='#00DD33'>%s</font> %s" %	(
+			headline, gui.escape(message)))
 
 def ownCTCP(time, server, target, message):
 	"""
@@ -719,8 +727,9 @@ def ownCTCP(time, server, target, message):
 
 	else:
 		gui.serverPrint(time, server,
-			"CTCP request from you to %s: %s" % \
-			(gui.escape(target),gui.escape(message)))
+			_("CTCP request from you to %(target)s: %(message)s") % {
+			"target":gui.escape(target),
+			"message":gui.escape(message)})
 
 def queryCTCP(time, server, from_str, message):
 	"""
@@ -1012,7 +1021,9 @@ def userQuit(time, server, from_str, reason):
 
 			channelTab.connected=False
 
-			gui.channelPrint(time, server, channelTab.name, message % { "reason": reason }, "action")
+			gui.channelPrint(time, server, channelTab.name, message % {
+					"reason": reason},
+				"action")
 
 	else: # another user quit the network
 
@@ -1026,8 +1037,6 @@ def userQuit(time, server, from_str, reason):
 		if not channels:
 			print "No channels but quit reported.. Hum wtf? o.0"
 			return
-
-
 
 		nickString = "<font foreground='%s' weight='bold'>%s</font>" % (
 			getNickColor(nick),
@@ -1044,7 +1053,8 @@ def userQuit(time, server, from_str, reason):
 
 		# print in all channels where nick joined a message
 		for channelTab in channels:
-			doPrint = not "quit" in config.get_list("channel_%s_%s" % (server.lower(), channelTab.name.lower()), "hide")
+			doPrint = not "quit" in config.get_list("channel_%s_%s" % (
+				server.lower(), channelTab.name.lower()), "hide")
 
 			if channelTab.is_query():
 				# on query with `nick` only print quitmessage
@@ -1143,7 +1153,8 @@ def userJoin(timestamp, server, from_str, channel):
 		if gui.tabs.isActive(tab):
 			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
 
-		doPrint = not "join" in config.get_list("channel_%s_%s" % (server.lower(), channel.lower()), "hide")
+		doPrint = not "join" in config.get_list("channel_%s_%s" % (
+			server.lower(), channel.lower()), "hide")
 
 	message = message % {
 		"nick": nickString,
