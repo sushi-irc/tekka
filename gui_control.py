@@ -118,6 +118,12 @@ def custom_handler(glade, function_name, widget_name, *x):
 
 		return bar
 
+	elif widget_name == "notificationWidget":
+		align = gtk.Alignment()
+		align.set_property("visible",False)
+		align.set_padding(6,6,6,6)
+		return align
+
 	elif widget_name == "topicBar":
 		try:
 			bar = SpellEntry()
@@ -1015,3 +1021,102 @@ def errorMessage(string, force_dialog=False):
 		err.run()
 		err.destroy()
 
+######################################################
+# new style error reporting sticking to the guidelines
+
+class InlineDialog(gtk.Alignment):
+
+	def __init__(self, message, icon = gtk.STOCK_DIALOG_WARNING, buttons = gtk.BUTTONS_CLOSE):
+
+		"""
+		 /!\ I'm a warning!  [Close]
+
+		 /!\ I'm a long warning  [Close]
+		     which got no place
+			 for buttons.
+
+	     (?) Do you want?   [Yes] [No]
+
+		 ICON <-> TEXT => 12 px
+		 TEXT <-> BUTTONS => 24 px (XXX: better 12?)
+		"""
+		gtk.Alignment.__init__(self)
+
+		self.hbox = gtk.HBox(homogeneous=True)
+
+		self.icon = gtk.image_new_from_stock(icon, gtk.ICON_SIZE_DIALOG)
+		self.hbox.pack_start(self.icon)
+
+		self.label = gtk.Label()
+		self.label.set_markup(message)
+		self.hbox.add(self.label)
+
+		self.buttonbox = gtk.VButtonBox()
+		self.hbox.pack_end(self.buttonbox)
+
+		if type(buttons) == gtk.ButtonsType:
+			self.apply_buttons_type(buttons)
+		else:
+			self.add_buttons(*buttons)
+
+		self.add(self.hbox)
+
+	@types(btype = gtk.ButtonsType)
+	def apply_buttons_type(self, btype):
+		if btype == gtk.BUTTONS_NONE:
+			pass
+
+		elif btype == gtk.BUTTONS_OK:
+			self.add_buttons(gtk.STOCK_OK, gtk.RESPONSE_OK)
+
+		elif btype == gtk.BUTTONS_CLOSE:
+			self.add_buttons(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
+
+		elif btype == gtk.BUTTONS_YES_NO:
+			self.add_buttons(gtk.STOCK_YES, gtk.RESPONSE_YES, gtk.STOCK_NO, gtk.RESPONSE_NO)
+
+		elif btype == gtk.BUTTONS_OK_CANCEL:
+			self.add_buttons(gtk.STOCK_OK, gtk.RESPONSE_OK, gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
+
+	def add_buttons(self, *args):
+		""" add_buttons(Label0, ResponseID0, StockID1, ResponseID1, ...) """
+
+		if len(args) % 2 != 0:
+			raise ValueError, "Not enough arguments supplied, (Button, Response,...)"
+
+		i = 0
+		while i < len(args)-1:
+
+			try:
+				stock_info = gtk.stock_lookup(args[i])
+			except TypeError:
+				stock_info = None
+
+			if stock_info != None:
+				# Stock item
+				button = gtk.Button(stock = args[i])
+
+			else:
+				# Label
+				button = gtk.Button(label = args[i])
+
+			button.connect("clicked", lambda w,id: self.activate(w, id), args[i+1])
+			self.buttonbox.add(button)
+
+			i += 2
+
+	def activate(self, button, id):
+		""" button was activated, react on id """
+		print "ACTIVATE"
+		self.emit("response", id)
+
+gobject.signal_new("response", InlineDialog, gobject.SIGNAL_ACTION, None, (gobject.TYPE_INT,))
+
+def showInlineDialog(dialog):
+	area = widgets.get_widget("notificationWidget")
+	for child in area.get_children():
+		area.remove(child)
+
+	if dialog:
+		area.add(dialog)
+		area.show_all()

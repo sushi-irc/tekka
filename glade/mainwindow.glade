@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE glade-interface SYSTEM "glade-2.0.dtd">
-<!--Generated with glade3 3.4.5 on Mon Dec 15 01:06:23 2008 -->
+<?xml version="1.0"?>
 <glade-interface>
+  <!-- interface-requires gtk+ 2.16 -->
+  <!-- interface-naming-policy toplevel-contextual -->
   <widget class="GtkWindow" id="mainWindow">
     <property name="title">tekka</property>
     <property name="default_width">800</property>
@@ -26,12 +26,13 @@
                     <property name="visible">True</property>
                     <child>
                       <widget class="GtkImageMenuItem" id="menu_tekka_Connect">
-                        <property name="visible">True</property>
                         <property name="label" translatable="yes">Server List</property>
-                        <property name="use_underline">True</property>
+                        <property name="visible">True</property>
+                        <property name="use_stock">False</property>
                         <signal name="activate" handler="menu_tekka_Connect_activate_cb"/>
                         <child internal-child="image">
-                          <widget class="GtkImage" id="menu-item-image1">
+                          <widget class="GtkImage" id="image1">
+                            <property name="visible">True</property>
                             <property name="stock">gtk-network</property>
                           </widget>
                         </child>
@@ -39,8 +40,8 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="menu_tekka_Quit">
+                        <property name="label">gtk-quit</property>
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">gtk-quit</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <signal name="activate" handler="menu_tekka_Quit_activate_cb"/>
@@ -60,12 +61,13 @@
                     <property name="visible">True</property>
                     <child>
                       <widget class="GtkImageMenuItem" id="menu_maki_Connect">
-                        <property name="visible">True</property>
                         <property name="label" translatable="yes">Connect</property>
-                        <property name="use_underline">True</property>
+                        <property name="visible">True</property>
+                        <property name="use_stock">False</property>
                         <signal name="activate" handler="menu_maki_Connect_activate_cb"/>
                         <child internal-child="image">
-                          <widget class="GtkImage" id="menu-item-image2">
+                          <widget class="GtkImage" id="image2">
+                            <property name="visible">True</property>
                             <property name="stock">gtk-connect</property>
                           </widget>
                         </child>
@@ -73,12 +75,13 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="menu_maki_Shutdown">
+                        <property name="label" translatable="yes">Disconnect</property>
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Shutdown</property>
-                        <property name="use_underline">True</property>
+                        <property name="use_stock">False</property>
                         <signal name="activate" handler="menu_maki_Shutdown_activate_cb"/>
                         <child internal-child="image">
-                          <widget class="GtkImage" id="menu-item-image3">
+                          <widget class="GtkImage" id="image3">
+                            <property name="visible">True</property>
                             <property name="stock">gtk-disconnect</property>
                           </widget>
                         </child>
@@ -141,11 +144,19 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkMenuItem" id="menu_Dialogs_plugins">
-                        <property name="visible">True</property>
+                      <widget class="GtkImageMenuItem" id="menu_Dialogs_plugins">
                         <property name="label" translatable="yes">_Plugins</property>
+                        <property name="visible">True</property>
+                        <property name="tooltip" translatable="yes">Manage plugins</property>
                         <property name="use_underline">True</property>
+                        <property name="use_stock">False</property>
                         <signal name="activate" handler="menu_Dialogs_plugins_activate_cb"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="image4">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-properties</property>
+                          </widget>
+                        </child>
                       </widget>
                     </child>
                     <child>
@@ -158,8 +169,8 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="menu_Dialogs_preferences">
+                        <property name="label">gtk-preferences</property>
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">gtk-preferences</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <signal name="activate" handler="menu_Dialogs_preferences_activate_cb"/>
@@ -179,8 +190,8 @@
                     <property name="visible">True</property>
                     <child>
                       <widget class="GtkImageMenuItem" id="menu_Help_About">
+                        <property name="label">gtk-about</property>
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">gtk-about</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <signal name="activate" handler="menu_Help_about_activate_cb"/>
@@ -193,188 +204,206 @@
           </widget>
           <packing>
             <property name="expand">False</property>
+            <property name="position">0</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkHBox" id="mainHBox">
+          <widget class="GtkVBox" id="vbox1">
             <property name="visible">True</property>
+            <property name="orientation">vertical</property>
             <child>
-              <widget class="GtkHPaned" id="mainHPaned">
+              <widget class="Custom" id="notificationWidget"/>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkHBox" id="mainHBox">
                 <property name="visible">True</property>
-				<signal name="notify" handler="mainHPaned_notify_cb"/>
                 <child>
-                  <widget class="GtkVBox" id="outputVBox">
-                    <property name="width_request">300</property>
+                  <widget class="GtkHPaned" id="mainHPaned">
                     <property name="visible">True</property>
-                    <property name="border_width">6</property>
-                    <property name="spacing">6</property>
+                    <property name="can_focus">True</property>
+                    <signal name="notify" handler="mainHPaned_notify_cb"/>
                     <child>
-                      <widget class="Custom" id="topicBar">
+                      <widget class="GtkVBox" id="outputVBox">
+                        <property name="width_request">300</property>
                         <property name="visible">True</property>
-                        <property name="creation_function">create_topicbar</property>
-                      </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkVPaned" id="outputVPaned">
-                        <property name="visible">True</property>
-						<signal name="notify" handler="outputVPaned_notify_cb"/>
+                        <property name="border_width">6</property>
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">6</property>
                         <child>
-                          <widget class="GtkScrolledWindow" id="scrolledWindow_generalOutput">
-                            <property name="height_request">150</property>
+                          <widget class="Custom" id="topicBar">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
-                            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                            <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
-                            <child>
-                              <widget class="Custom" id="generalOutput">
-                                <property name="visible">True</property>
-                                <property name="creation_function">create_generalOutput</property>
-                              </widget>
-                            </child>
                           </widget>
                           <packing>
-                            <property name="resize">False</property>
-                            <property name="shrink">True</property>
+                            <property name="expand">False</property>
+                            <property name="position">0</property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="GtkScrolledWindow" id="scrolledWindow_output">
+                          <widget class="GtkVPaned" id="outputVPaned">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="hscrollbar_policy">GTK_POLICY_NEVER</property>
-                            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                            <property name="window_placement">GTK_CORNER_BOTTOM_LEFT</property>
-                            <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+                            <property name="orientation">vertical</property>
+                            <property name="position">1</property>
+                            <signal name="notify" handler="outputVPaned_notify_cb"/>
                             <child>
-                              <widget class="Custom" id="output">
+                              <widget class="GtkScrolledWindow" id="scrolledWindow_generalOutput">
+                                <property name="height_request">150</property>
                                 <property name="visible">True</property>
-								<property name="creation_function">create_output</property>
+                                <property name="can_focus">False</property>
+                                <property name="hscrollbar_policy">never</property>
+                                <property name="vscrollbar_policy">automatic</property>
+                                <property name="shadow_type">etched-in</property>
+                                <child>
+                                  <widget class="Custom" id="generalOutput">
+                                    <property name="visible">True</property>
+                                  </widget>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="resize">False</property>
+                                <property name="shrink">True</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkScrolledWindow" id="scrolledWindow_output">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="hscrollbar_policy">never</property>
+                                <property name="vscrollbar_policy">automatic</property>
+                                <property name="window_placement">bottom-left</property>
+                                <property name="shadow_type">etched-in</property>
+                                <child>
+                                  <widget class="Custom" id="output">
+                                    <property name="visible">True</property>
+                                  </widget>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="resize">True</property>
+                                <property name="shrink">True</property>
+                              </packing>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="Custom" id="searchToolbar"/>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <widget class="GtkHBox" id="inputHbox">
+                            <property name="visible">True</property>
+                            <property name="border_width">6</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <widget class="GtkLabel" id="nickLabel">
+                                <property name="visible">True</property>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="Custom" id="inputBar">
+                                <property name="visible">True</property>
+                              </widget>
+                              <packing>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                          </widget>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">3</property>
+                          </packing>
+                        </child>
+                      </widget>
+                      <packing>
+                        <property name="resize">True</property>
+                        <property name="shrink">False</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkVPaned" id="listVPaned">
+                        <property name="width_request">150</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="border_width">6</property>
+                        <property name="orientation">vertical</property>
+                        <property name="position_set">True</property>
+                        <signal name="notify" handler="listVPaned_notify_cb"/>
+                        <child>
+                          <widget class="GtkScrolledWindow" id="scrolledWindow_serverTree">
+                            <property name="height_request">180</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="hscrollbar_policy">automatic</property>
+                            <property name="vscrollbar_policy">automatic</property>
+                            <property name="shadow_type">etched-in</property>
+                            <child>
+                              <widget class="GtkTreeView" id="serverTree">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <signal name="button_press_event" handler="serverTree_button_press_event_cb"/>
+                                <signal name="row_activated" handler="serverTree_row_activated_cb"/>
                               </widget>
                             </child>
                           </widget>
                           <packing>
                             <property name="resize">True</property>
-                            <property name="shrink">True</property>
-                          </packing>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-					<child>
-					  <widget class="Custom" id="searchToolbar">
-					    <property name="visible">False</property>
-						<property name="creation_function">create_searchbar</property>
-					  </widget>
-					  <packing>
-					    <property name="position">2</property>
-						<property name="fill">False</property>
-						<property name="expand">False</property>
-					  </packing>
-					</child>
-                    <child>
-                      <widget class="GtkHBox" id="inputHbox">
-                        <property name="visible">True</property>
-                        <property name="border_width">6</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <widget class="GtkLabel" id="nickLabel">
-                            <property name="visible">True</property>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="position">1</property>
+                            <property name="shrink">False</property>
                           </packing>
                         </child>
                         <child>
-                          <widget class="Custom" id="inputBar">
+                          <widget class="GtkVBox" id="VBox_nickList">
                             <property name="visible">True</property>
-                            <property name="creation_function">create_inputbar</property>
-                          </widget>
-                          <packing>
-                            <property name="position">2</property>
-                          </packing>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="position">3</property>
-                      </packing>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="resize">True</property>
-                    <property name="shrink">False</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkVPaned" id="listVPaned">
-                    <property name="width_request">150</property>
-                    <property name="visible">True</property>
-                    <property name="border_width">6</property>
-                    <property name="position_set">True</property>
-					<signal name="notify" handler="listVPaned_notify_cb"/>
-                    <child>
-                      <widget class="GtkScrolledWindow" id="scrolledWindow_serverTree">
-                        <property name="height_request">180</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                        <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                        <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
-
-                        <child>
-                          <widget class="GtkTreeView" id="serverTree">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="headers_clickable">True</property>
-                            <signal name="button_press_event" handler="serverTree_button_press_event_cb"/>
-                            <signal name="row_activated" handler="serverTree_row_activated_cb"/>
-                          </widget>
-                        </child>
-                      </widget>
-                      <packing>
-                        <property name="resize">True</property>
-                        <property name="shrink">False</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkVBox" id="VBox_nickList">
-                        <property name="visible">True</property>
-                        <property name="spacing">5</property>
-                        <child>
-                          <widget class="GtkLabel" id="nickList_label">
-                            <property name="visible">True</property>
-                          </widget>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="padding">2</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkScrolledWindow" id="scrolledWindow_nickList">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="hscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                            <property name="vscrollbar_policy">GTK_POLICY_AUTOMATIC</property>
-                            <property name="shadow_type">GTK_SHADOW_ETCHED_IN</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">5</property>
                             <child>
-                              <widget class="GtkTreeView" id="nickList">
+                              <widget class="GtkLabel" id="nickList_label">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="headers_clickable">True</property>
-                                <signal name="button_press_event" handler="nickList_button_press_event_cb"/>
-                                <signal name="row_activated" handler="nickList_row_activated_cb"/>
                               </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="padding">2</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkScrolledWindow" id="scrolledWindow_nickList">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="hscrollbar_policy">automatic</property>
+                                <property name="vscrollbar_policy">automatic</property>
+                                <property name="shadow_type">etched-in</property>
+                                <child>
+                                  <widget class="GtkTreeView" id="nickList">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <signal name="button_press_event" handler="nickList_button_press_event_cb"/>
+                                    <signal name="row_activated" handler="nickList_row_activated_cb"/>
+                                  </widget>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
                             </child>
                           </widget>
                           <packing>
-                            <property name="position">1</property>
+                            <property name="resize">True</property>
+                            <property name="shrink">False</property>
                           </packing>
                         </child>
                       </widget>
@@ -385,8 +414,7 @@
                     </child>
                   </widget>
                   <packing>
-                    <property name="resize">True</property>
-                    <property name="shrink">False</property>
+                    <property name="position">0</property>
                   </packing>
                 </child>
               </widget>
