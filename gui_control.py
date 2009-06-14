@@ -120,7 +120,6 @@ def custom_handler(glade, function_name, widget_name, *x):
 
 	elif widget_name == "notificationWidget":
 		align = gtk.HBox()
-		align.set_property("visible",False)
 		return align
 
 	elif widget_name == "topicBar":
@@ -1042,6 +1041,7 @@ class InlineDialog(gtk.HBox):
 		gtk.HBox.__init__(self)
 
 		self.hbox = gtk.HBox()
+		self.set_property("border-width", 6)
 
 		# add icon
 		self.icon = gtk.image_new_from_stock(icon, gtk.ICON_SIZE_DIALOG)
@@ -1126,3 +1126,5 @@ def showInlineDialog(dialog):
 	if dialog:
 		area.add(dialog)
 		area.show_all()
+	else:
+		area.set_property("visible",False)
