@@ -1132,6 +1132,8 @@ class InlineMessageDialog(InlineDialog):
 			self.vbox.add(self.secondary_label)
 
 def showInlineDialog(dialog):
+	# TODO: implement stacking of error messages
+	#
 	area = widgets.get_widget("notificationWidget")
 	for child in area.get_children():
 		area.remove(child)

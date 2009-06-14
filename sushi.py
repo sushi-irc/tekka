@@ -38,8 +38,10 @@ class Plugin (object):
 		self._plugin_name = plugin_name
 
 	def display_error(self, message):
-		gui_control.errorMessage("Plugin %s: %s" % (
+		d = gui_control.InlineMessasgeDialog("<b>Error in plugin %s:</b>\n %s" % (
 			self._plugin_name, message))
+		gui_control.showInlineDialog(d)
+		d.connect("response", lambda d,id: d.destroy())
 
 	def get_bus(self):
 		return com.sushi

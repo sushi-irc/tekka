@@ -150,7 +150,9 @@ def menu_tekka_Connect_activate_cb(menuItem):
 		returned server (if any).
 	"""
 	if not com.getConnected():
-		gui.errorMessage("No connection to maki!", force_dialog=True)
+		d = gui.InlineMessageDialog("<b>Error:</b>\nNo connection to maki!")
+		gui.showInlineDialog(d)
+		d.connect("response", lambda d,id: d.destroy())
 		return
 
 	dialog_control.showServerDialog(server_dialog_callback)
@@ -199,8 +201,9 @@ def menu_Dialogs_channelList_activate_cb(menuItem):
 		show channel list dialog.
 	"""
 	if not com.getConnected():
-		gui.errorMessage("There is no connection to maki!",
-			force_dialog=True)
+		d = gui.InlineMessageDialog("<b>Error:</b>\nThere is no connection to maki!")
+		gui.showInlineDialog(d)
+		d.connect("response", lambda d,i: d.destroy())
 		return
 
 	sTab,cTab = gui.tabs.getCurrentTabs()
