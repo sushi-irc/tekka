@@ -1109,7 +1109,6 @@ class InlineDialog(gtk.HBox):
 
 	def activate(self, button, id):
 		""" button was activated, react on id """
-		print "ACTIVATE"
 		self.emit("response", id)
 
 gobject.signal_new("response", InlineDialog, gobject.SIGNAL_ACTION, None, (gobject.TYPE_INT,))

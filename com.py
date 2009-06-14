@@ -31,6 +31,7 @@ import re
 
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
+from gettext import gettext as _
 
 from typecheck import types
 from signals import parse_from
@@ -70,8 +71,8 @@ def connect():
 	try:
 		proxy = bus.get_object("de.ikkoku.sushi", "/de/ikkoku/sushi")
 	except dbus.exceptions.DBusException, e:
-		d = gui_control.InlineMessageDialog("<b>Can't etablish connection to maki:</b>\n"\
-			"%(error_message)s\n\nIs maki running?" % {
+		d = gui_control.InlineMessageDialog(_("Can't etablish connection to maki:"),
+			_("%(error_message)s\n\nIs maki running?") % {
 				"error_message": str(e)})
 		gui_control.showInlineDialog(d)
 		d.connect("response", lambda d,id: d.destroy())
