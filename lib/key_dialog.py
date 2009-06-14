@@ -64,18 +64,17 @@ class KeyDialog(InlineDialog):
 		self.sub_hbox.add(self.sub_vbox)
 		self.vbox.add(self.sub_hbox)
 
-	def run(self):
 		key = com.sushi.server_get(self.server, self.channel, "key")
 		self.entry.set_text(key)
 		self.entry.set_position(len(key))
 
-		res = gtk.Dialog.run(self)
-
-		if res == gtk.RESPONSE_OK and self.checkButton.get_active():
+	def response(self, id):
+		if id == gtk.RESPONSE_OK and self.checkButton.get_active():
 			# save key for the channel
 			com.sushi.server_set(self.server, self.channel,
 					"key", self.entry.get_text())
-		return res
+
+		InlineDialog.response(self, id)
 
 	def _entryActivated(self, entry):
 		self.response(gtk.RESPONSE_OK)

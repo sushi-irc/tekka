@@ -31,7 +31,7 @@ import gtk.glade
 from gobject import idle_add
 
 import dialog_control
-from helper import keyDialog
+from lib import key_dialog
 
 import config
 import com
@@ -138,14 +138,13 @@ def serverTreeMenu_setKeyItem_activate_cb(menuItem):
 	server = serverTree_tabMenu_currentTab.server
 	channel = serverTree_tabMenu_currentTab.name
 
-	d = keyDialog.KeyDialog(server, channel)
+	d = key_dialog.KeyDialog(server, channel)
 
-	d.checkButton.set_property("visible",False)
+	d.checkButton.set_property("visible", False)
 	d.checkButton.set_active(True)
+	d.connect("response", lambda d,i: d.destroy())
 
-	d.run()
-
-	d.destroy()
+	gui.showInlineDialog(d)
 
 def initServerTreeMenu():
 	"""

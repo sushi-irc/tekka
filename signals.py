@@ -285,10 +285,6 @@ def getNickColor(nick):
 	if not config.get_bool("tekka","color_text"):
 		return
 
-	bg_color = gui.widgets.get_widget("output").get_style().bg[gtk.STATE_NORMAL]
-	print bg_color
-
-
 	# FIXME
 	colors = config.get_list("colors", "nick_colors")
 	if not colors:
@@ -1307,8 +1303,8 @@ def cannotJoin(time, server, channel, reason):
 		if config.get_bool("tekka", "ask_for_key_on_cannotjoin"):
 			def key_dialog_response_cb(dialog, id):
 				if id == gtk.RESPONSE_OK:
-					com.join(server, channel, d.entry.get_text())
-				d.destroy()
+					com.join(server, channel, dialog.entry.get_text())
+				dialog.destroy()
 
 			# open a input dialog which asks for the key
 			d = key_dialog.KeyDialog(server, channel)
