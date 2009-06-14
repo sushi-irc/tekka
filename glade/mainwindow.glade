@@ -271,7 +271,7 @@
                             <child>
                               <widget class="GtkScrolledWindow" id="scrolledWindow_output">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
+                                <property name="can_focus">False</property>
                                 <property name="hscrollbar_policy">never</property>
                                 <property name="vscrollbar_policy">automatic</property>
                                 <property name="window_placement">bottom-left</property>
@@ -338,7 +338,7 @@
                       <widget class="GtkVPaned" id="listVPaned">
                         <property name="width_request">150</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
+                        <property name="can_focus">False</property>
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
                         <property name="position_set">True</property>
@@ -347,14 +347,14 @@
                           <widget class="GtkScrolledWindow" id="scrolledWindow_serverTree">
                             <property name="height_request">180</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can_focus">False</property>
                             <property name="hscrollbar_policy">automatic</property>
                             <property name="vscrollbar_policy">automatic</property>
                             <property name="shadow_type">etched-in</property>
                             <child>
                               <widget class="GtkTreeView" id="serverTree">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
+                                <property name="can_focus">False</property>
                                 <signal name="button_press_event" handler="serverTree_button_press_event_cb"/>
                                 <signal name="row_activated" handler="serverTree_row_activated_cb"/>
                               </widget>
@@ -383,14 +383,14 @@
                             <child>
                               <widget class="GtkScrolledWindow" id="scrolledWindow_nickList">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
+                                <property name="can_focus">False</property>
                                 <property name="hscrollbar_policy">automatic</property>
                                 <property name="vscrollbar_policy">automatic</property>
                                 <property name="shadow_type">etched-in</property>
                                 <child>
                                   <widget class="GtkTreeView" id="nickList">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
+                                    <property name="can_focus">False</property>
                                     <signal name="button_press_event" handler="nickList_button_press_event_cb"/>
                                     <signal name="row_activated" handler="nickList_row_activated_cb"/>
                                   </widget>

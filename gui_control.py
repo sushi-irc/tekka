@@ -119,9 +119,8 @@ def custom_handler(glade, function_name, widget_name, *x):
 		return bar
 
 	elif widget_name == "notificationWidget":
-		align = gtk.Alignment()
+		align = gtk.HBox()
 		align.set_property("visible",False)
-		align.set_padding(6,6,6,6)
 		return align
 
 	elif widget_name == "topicBar":
@@ -1024,7 +1023,7 @@ def errorMessage(string, force_dialog=False):
 ######################################################
 # new style error reporting sticking to the guidelines
 
-class InlineDialog(gtk.Alignment):
+class InlineDialog(gtk.HBox):
 
 	def __init__(self, message, icon = gtk.STOCK_DIALOG_WARNING, buttons = gtk.BUTTONS_CLOSE):
 
@@ -1040,19 +1039,26 @@ class InlineDialog(gtk.Alignment):
 		 ICON <-> TEXT => 12 px
 		 TEXT <-> BUTTONS => 24 px (XXX: better 12?)
 		"""
-		gtk.Alignment.__init__(self)
+		gtk.HBox.__init__(self)
 
-		self.hbox = gtk.HBox(homogeneous=True)
+		self.hbox = gtk.HBox()
 
+		# add icon
 		self.icon = gtk.image_new_from_stock(icon, gtk.ICON_SIZE_DIALOG)
-		self.hbox.pack_start(self.icon)
+		self.hbox.add(self.icon)
+		self.hbox.child_set(self.icon, "expand", False, "padding", 6)
 
+		# add label
 		self.label = gtk.Label()
 		self.label.set_markup(message)
+		self.label.set_property("xalign", 0.0)
 		self.hbox.add(self.label)
+		self.hbox.child_set(self.label, "padding", 6)
 
+		# add buttonbox
 		self.buttonbox = gtk.VButtonBox()
-		self.hbox.pack_end(self.buttonbox)
+		self.hbox.add(self.buttonbox)
+		self.hbox.child_set(self.buttonbox, "expand", False, "padding", 6)
 
 		if type(buttons) == gtk.ButtonsType:
 			self.apply_buttons_type(buttons)
