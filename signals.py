@@ -36,7 +36,7 @@ import time as mtime
 import com
 import config
 import gui_control as gui
-from helper import keyDialog
+from lib import key_dialog
 from lib import contrast
 
 sushi = None
@@ -1311,7 +1311,7 @@ def cannotJoin(time, server, channel, reason):
 				d.destroy()
 
 			# open a input dialog which asks for the key
-			d = keyDialog.KeyDialog(server, channel)
+			d = key_dialog.KeyDialog(server, channel)
 			d.connect("response", key_dialog_response_cb)
 			gui.showInlineDialog(d)
 			return
