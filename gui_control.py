@@ -120,6 +120,8 @@ def custom_handler(glade, function_name, widget_name, *x):
 
 	elif widget_name == "notificationWidget":
 		align = gtk.HBox()
+		align.set_no_show_all(True)
+		align.set_property("visible", False)
 		return align
 
 	elif widget_name == "topicBar":
@@ -1024,7 +1026,7 @@ def errorMessage(string, force_dialog=False):
 
 class InlineDialog(gtk.HBox):
 
-	def __init__(self, message, icon = gtk.STOCK_DIALOG_WARNING, buttons = gtk.BUTTONS_CLOSE):
+	def __init__(self, icon = gtk.STOCK_DIALOG_WARNING, buttons = gtk.BUTTONS_CLOSE):
 
 		"""
 		 /!\ I'm a warning!  [Close]
@@ -1034,9 +1036,6 @@ class InlineDialog(gtk.HBox):
 			 for buttons.
 
 	     (?) Do you want?   [Yes] [No]
-
-		 ICON <-> TEXT => 12 px
-		 TEXT <-> BUTTONS => 24 px (XXX: better 12?)
 		"""
 		gtk.HBox.__init__(self)
 
@@ -1045,20 +1044,15 @@ class InlineDialog(gtk.HBox):
 
 		# add icon
 		self.icon = gtk.image_new_from_stock(icon, gtk.ICON_SIZE_DIALOG)
-		self.hbox.add(self.icon)
-		self.hbox.child_set(self.icon, "expand", False, "padding", 6)
+		self.hbox.add_with_properties(self.icon, "expand", False, "padding", 6)
 
-		# add label
-		self.label = gtk.Label()
-		self.label.set_markup(message)
-		self.label.set_property("xalign", 0.0)
-		self.hbox.add(self.label)
-		self.hbox.child_set(self.label, "padding", 6)
+		# add vbox
+		self.vbox = gtk.VBox()
+		self.hbox.add_with_properties(self.vbox, "padding", 6)
 
 		# add buttonbox
 		self.buttonbox = gtk.VButtonBox()
-		self.hbox.add(self.buttonbox)
-		self.hbox.child_set(self.buttonbox, "expand", False, "padding", 6)
+		self.hbox.add_with_properties(self.buttonbox, "expand", False, "padding", 6)
 
 		if type(buttons) == gtk.ButtonsType:
 			self.apply_buttons_type(buttons)
@@ -1118,13 +1112,26 @@ class InlineDialog(gtk.HBox):
 
 gobject.signal_new("response", InlineDialog, gobject.SIGNAL_ACTION, None, (gobject.TYPE_INT,))
 
+class InlineMessageDialog(InlineDialog):
+
+	def __init__(self, message, *args, **kwargs):
+		InlineDialog.__init__(self, *args, **kwargs)
+
+		# add label
+		self.label = gtk.Label()
+		self.label.set_markup(message)
+		self.label.set_property("xalign", 0.0)
+		self.vbox.add(self.label)
+
 def showInlineDialog(dialog):
 	area = widgets.get_widget("notificationWidget")
 	for child in area.get_children():
 		area.remove(child)
 
 	if dialog:
+		area.set_no_show_all(False)
 		area.add(dialog)
 		area.show_all()
+		area.set_no_show_all(True)
 	else:
-		area.set_property("visible",False)
+		area.set_property("visible", False)
