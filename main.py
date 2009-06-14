@@ -702,12 +702,14 @@ def askToRemoveTab(tab):
 	elif tab.is_server():
 		message = _(u"Do you really want to close server “%(name)s”?")
 
-	dialog = gtk.MessageDialog(
-		type= gtk.MESSAGE_QUESTION,
-		buttons= gtk.BUTTONS_YES_NO,
-		message_format= message % { "name": tab.name })
+	dialog = InlineMessageDialog(
+		message % { "name": tab.name },
+		icon=gtk.STOCK_DIALOG_QUESTION,
+		buttons=gtk.BUTTONS_YES_NO
+	)
 	dialog.connect("response", response_handler)
-	dialog.show_all()
+
+	gui.showInlineDialog(dialog)
 
 def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 	"""
