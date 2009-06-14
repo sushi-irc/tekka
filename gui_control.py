@@ -119,7 +119,7 @@ def custom_handler(glade, function_name, widget_name, *x):
 		return bar
 
 	elif widget_name == "notificationWidget":
-		align = gtk.HBox()
+		align = gtk.VBox()
 		align.set_no_show_all(True)
 		align.set_property("visible", False)
 		return align
@@ -1181,8 +1181,10 @@ def showInlineDialog(dialog):
 	# TODO: implement stacking of error messages
 	#
 	area = widgets.get_widget("notificationWidget")
-	for child in area.get_children():
-		area.remove(child)
+
+	#for child in area.get_children():
+	#	area.remove(child)
+
 
 	if dialog:
 		area.set_no_show_all(False)
