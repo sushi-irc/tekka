@@ -38,8 +38,11 @@ class Plugin (object):
 		self._plugin_name = plugin_name
 
 	def display_error(self, message):
-		d = gui_control.InlineMessasgeDialog("<b>Error in plugin %s:</b>\n %s" % (
-			self._plugin_name, message))
+		d = gui_control.InlineMessageDialog("Plugin “%(plugin)s” caused an error." % {
+				"plugin": self._plugin_name
+			}, "%(message)s" % {
+				"message": message
+			})
 		gui_control.showInlineDialog(d)
 		d.connect("response", lambda d,id: d.destroy())
 

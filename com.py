@@ -71,9 +71,10 @@ def connect():
 	try:
 		proxy = bus.get_object("de.ikkoku.sushi", "/de/ikkoku/sushi")
 	except dbus.exceptions.DBusException, e:
-		d = gui_control.InlineMessageDialog(_("Can't etablish connection to maki:"),
-			_("%(error_message)s\n\nIs maki running?") % {
-				"error_message": str(e)})
+		d = gui_control.InlineMessageDialog(_("tekka could not connect to maki."),
+			_("Please check whether maki is running.\nThe following error occured: %(error)s") % {
+					"error": str(e)
+				})
 		gui_control.showInlineDialog(d)
 		d.connect("response", lambda d,id: d.destroy())
 
