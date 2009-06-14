@@ -1037,29 +1037,74 @@ class InlineDialog(gtk.HBox):
 
 	     (?) Do you want?   [Yes] [No]
 		"""
+		def style_set_cb (widget, style, dialog):
+			if dialog.setting_style:
+				return
+
+			tt = gtk.Window()
+			tt.set_name("gtk-tooltip")
+			tt.ensure_style()
+
+			# set_style() may cause style-set to be triggered again.
+			# It should not happen in our case, but better be safe
+			# than sorry.
+			dialog.setting_style = True
+			dialog.hbox.set_style(tt.get_style().copy())
+			dialog.setting_style = False
+
+			tt.destroy()
+
+			dialog.hbox.queue_draw()
+
+		def expose_event_cb (widget, event):
+			a = widget.get_allocation()
+
+			widget.style.paint_flat_box(
+				widget.window,
+				gtk.STATE_NORMAL,
+				gtk.SHADOW_ETCHED_IN,
+				None,
+				widget,
+				"tooltip",
+				a.x + 1,
+				a.y + 1,
+				a.width - 2,
+				a.height - 2
+			)
+
+			return False
+
 		gtk.HBox.__init__(self)
 
-		self.hbox = gtk.HBox()
 		self.set_property("border-width", 6)
+
+		self.setting_style = False
+
+		self.hbox = gtk.HBox(spacing=6)
+		self.hbox.set_app_paintable(True)
+		self.hbox.set_property("border-width", 6)
 
 		# add icon
 		self.icon = gtk.image_new_from_stock(icon, gtk.ICON_SIZE_DIALOG)
 		self.icon.set_property("yalign", 0.0)
-		self.hbox.add_with_properties(self.icon, "expand", False, "padding", 6)
+		self.hbox.add_with_properties(self.icon, "expand", False)
 
 		# add vbox
-		self.vbox = gtk.VBox()
+		self.vbox = gtk.VBox(spacing=6)
 		self.hbox.add_with_properties(self.vbox, "padding", 6)
 
 		# add buttonbox
 		self.buttonbox = gtk.VButtonBox()
 		self.buttonbox.set_layout(gtk.BUTTONBOX_START)
-		self.hbox.add_with_properties(self.buttonbox, "expand", False, "padding", 6)
+		self.hbox.add_with_properties(self.buttonbox, "expand", False)
 
 		if type(buttons) == gtk.ButtonsType:
 			self.apply_buttons_type(buttons)
 		else:
 			self.add_buttons(*buttons)
+
+		self.connect("style-set", style_set_cb, self)
+		self.hbox.connect("expose-event", expose_event_cb)
 
 		self.add(self.hbox)
 
