@@ -56,6 +56,7 @@ import webbrowser
 
 from helper.shortcuts import addShortcut, removeShortcut
 from helper import tabcompletion
+from lib.inline_dialog import InlineMessageDialog
 
 import gui_control as gui
 import config
@@ -150,7 +151,7 @@ def menu_tekka_Connect_activate_cb(menuItem):
 		returned server (if any).
 	"""
 	if not com.getConnected():
-		d = gui.InlineMessageDialog(_("tekka could not connect to maki."), _("Please check whether maki is running."))
+		d = InlineMessageDialog(_("tekka could not connect to maki."), _("Please check whether maki is running."))
 		gui.showInlineDialog(d)
 		d.connect("response", lambda d,id: d.destroy())
 		return
@@ -201,7 +202,7 @@ def menu_Dialogs_channelList_activate_cb(menuItem):
 		show channel list dialog.
 	"""
 	if not com.getConnected():
-		d = gui.InlineMessageDialog(_("tekka could not connect to maki."), _("Please check whether maki is running."))
+		d = InlineMessageDialog(_("tekka could not connect to maki."), _("Please check whether maki is running."))
 		gui.showInlineDialog(d)
 		d.connect("response", lambda d,i: d.destroy())
 		return

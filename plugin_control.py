@@ -47,6 +47,7 @@ import com
 import commands
 import signals
 import config
+from lib.inline_dialog import InlineMessageDialog
 
 _module_prefix = "tekkaplugin_"
 _plugins = {}
@@ -59,7 +60,7 @@ _plugins = {}
 ) = range(4)
 
 def generic_error(primary, secondary):
-	d = gui_control.InlineMessageDialog(primary, secondary)
+	d = InlineMessageDialog(primary, secondary)
 	gui_control.showInlineDialog(d)
 	d.connect("response", lambda d,i: d.destroy())
 

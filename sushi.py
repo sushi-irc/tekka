@@ -31,6 +31,7 @@ import commands
 import signals
 import config
 import gui_control
+from lib.inline_dialog import InlineMessageDialog
 
 class Plugin (object):
 
@@ -38,7 +39,7 @@ class Plugin (object):
 		self._plugin_name = plugin_name
 
 	def display_error(self, message):
-		d = gui_control.InlineMessageDialog("Plugin “%(plugin)s” caused an error." % {
+		d = InlineMessageDialog("Plugin “%(plugin)s” caused an error." % {
 				"plugin": self._plugin_name
 			}, "%(message)s" % {
 				"message": message

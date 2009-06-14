@@ -35,6 +35,7 @@ from gettext import gettext as _
 
 from typecheck import types
 from signals import parse_from
+from lib.inline_dialog import InlineMessageDialog
 
 import gui_control
 
@@ -71,7 +72,7 @@ def connect():
 	try:
 		proxy = bus.get_object("de.ikkoku.sushi", "/de/ikkoku/sushi")
 	except dbus.exceptions.DBusException, e:
-		d = gui_control.InlineMessageDialog(_("tekka could not connect to maki."),
+		d = InlineMessageDialog(_("tekka could not connect to maki."),
 			_("Please check whether maki is running.\nThe following error occured: %(error)s") % {
 					"error": str(e)
 				})
@@ -88,7 +89,7 @@ def connect():
 	if not version or version < required_version:
 		version_string = ".".join([str(x) for x in required_version])
 
-		d = gui_control.InlineMessageDialog(_("tekka requires a newer maki version."),
+		d = InlineMessageDialog(_("tekka requires a newer maki version."),
 			_("Please update maki to at least version %(version)s.") % {
 					"version": version_string
 				})
