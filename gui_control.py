@@ -1122,12 +1122,14 @@ class InlineMessageDialog(InlineDialog):
 		self.primary_label = gtk.Label()
 		self.primary_label.set_markup("<b>%s</b>" % (primary))
 		self.primary_label.set_property("xalign", 0.0)
+		self.primary_label.set_property("yalign", 0.0)
 		self.vbox.add(self.primary_label)
 
 		if secondary:
 			self.secondary_label = gtk.Label()
 			self.secondary_label.set_markup("<small>%s</small>" % (secondary))
 			self.secondary_label.set_property("xalign", 0.0)
+			self.secondary_label.set_property("yalign", 0.0)
 			self.vbox.add(self.secondary_label)
 
 def showInlineDialog(dialog):
