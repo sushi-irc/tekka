@@ -56,6 +56,7 @@ class InlineDialog(gtk.HBox):
 
 		def size_allocate_cb (widget, allocation):
 			widget.queue_draw()
+			widget.parent.queue_draw()
 
 		gtk.HBox.__init__(self)
 
