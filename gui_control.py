@@ -38,8 +38,10 @@ import gettext
 import gobject
 from gobject import idle_add
 from dbus import String
-from xdg.BaseDirectory import xdg_cache_home
 
+# profiling imports
+import os, sys
+from xdg.BaseDirectory import xdg_cache_home
 import cProfile
 
 try:
@@ -81,18 +83,17 @@ def profileMe(file):
 	def deco(fun):
 		def new(*args, **kwargs):
 			val = None
-			file = get_location(file)
+			file_path = get_location(file)
 
 			if None == file:
 				return fun(*args, **kwargs)
 
 			cProfile.runctx("val = fun(*args,**kwargs)", {"fun":fun},
-				locals(), file)
+				locals(), file_path)
 			return val
 
-		if config.get_bool("tekka", "profiling"):
+		if "-p" in sys.argv:
 			return new
-
 		return fun
 	return deco
 
