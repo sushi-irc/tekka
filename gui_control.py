@@ -38,6 +38,7 @@ import gettext
 import gobject
 from gobject import idle_add
 from dbus import String
+from xdg.BaseDirectory import xdg_cache_home
 
 import cProfile
 
