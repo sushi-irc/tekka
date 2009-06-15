@@ -67,12 +67,32 @@ accelGroup = None
 searchToolbar = None
 
 def profileMe(file):
+	def get_location(file):
+		path = os.path.join(xdg_cache_home, "sushi", "tekka")
+		if not os.path.exists(path):
+			try:
+				os.makedirs(path)
+			except BaseException, e:
+				print >> sys.stderr, "Profiling disabled: %s", e
+				return None
+		return os.path.join(path, file)
+
 	def deco(fun):
 		def new(*args, **kwargs):
 			val = None
-			cProfile.runctx("val = fun(*args,**kwargs)", {"fun":fun}, locals(), file)
+			file = get_location(file)
+
+			if None == file:
+				return fun(*args, **kwargs)
+
+			cProfile.runctx("val = fun(*args,**kwargs)", {"fun":fun},
+				locals(), file)
 			return val
-		return new
+
+		if config.get_bool("tekka", "profiling"):
+			return new
+
+		return fun
 	return deco
 
 def getNewBuffer():

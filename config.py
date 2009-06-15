@@ -87,6 +87,7 @@ def set_defaults():
 	defaults["tekka"]["whois_dialog"] = "true"
 	defaults["tekka"]["divider_length"] = "30"
 	defaults["tekka"]["max_output_lines"] = "500"
+	defaults["tekka"]["profiling"] = "False"
 
 	defaults["general_output"] = {}
 	defaults["general_output"]["filters"] = ""
