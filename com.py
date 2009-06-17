@@ -204,7 +204,10 @@ def fetchOwnNick(server):
 	if not sushi:
 		__noSushiMessage()
 		return
-	sushi.nick(server, "")
+
+	from_str = sushi.user_from(server, "")
+	nick = parse_from(from_str)[0]
+	myNick[server] = nick
 
 # caches the nick @nickname for server @server.
 def cacheOwnNick(server, nickname):
