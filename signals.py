@@ -919,12 +919,13 @@ def userNick(time, server, from_str, newNick):
 		newNickString = "<font foreground='%s' weight='bold'>%s</font>" % \
 			(getNickColor(newNick), gui.escape(newNick))
 
-		gui.channelPrint(time, server, tab.name,
-			message % {
-				"nick": nickString,
-				"newnick": newNickString
-			},
-			"action")
+		if doPrint:
+			gui.channelPrint(time, server, tab.name,
+				message % {
+					"nick": nickString,
+					"newnick": newNickString
+				},
+				"action")
 
 def userKick(time, server, from_str, channel, who, reason):
 	"""
