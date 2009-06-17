@@ -174,13 +174,11 @@ def initServers():
 
 	for server in com.fetchServers():
 
-		sushi.nick(server, "")
-
 		tab = gui.tabs.createServer(server)
 		tab.connected = True
 
-		# FIXME
 		if com.isAway(server, com.getOwnNick(server)):
+			# FIXME
 			tab.away = "OHAI"
 
 		gui.tabs.addTab(None, tab)
