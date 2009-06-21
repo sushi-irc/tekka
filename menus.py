@@ -34,7 +34,7 @@ import dialog_control
 from lib import key_dialog
 
 import config
-import com
+from com import sushi
 import gui_control as gui
 
 """
@@ -59,28 +59,29 @@ def serverTreeMenu_connectItem_activate_cb(menuItem):
 		Connect to the server.
 	"""
 	if serverTree_tabMenu_currentTab and serverTree_tabMenu_currentTab.is_server():
-		com.connectServer(serverTree_tabMenu_currentTab.name)
+		sushi.connect(serverTree_tabMenu_currentTab.name)
 
 def serverTreeMenu_disconnectItem_activate_cb(menuItem):
 	"""
 		quit server with default quit message.
 	"""
 	if serverTree_tabMenu_currentTab and serverTree_tabMenu_currentTab.is_server():
-		com.quitServer(serverTree_tabMenu_currentTab.name, config.get("chatting", "quit_message", ""))
+		sushi.quit(serverTree_tabMenu_currentTab.name,
+			config.get("chatting", "quit_message", ""))
 
 def serverTreeMenu_joinItem_activate_cb(menuItem):
 	"""
 		join channel without key
 	"""
 	if serverTree_tabMenu_currentTab and serverTree_tabMenu_currentTab.is_channel():
-		com.join(serverTree_tabMenu_currentTab.server, serverTree_tabMenu_currentTab.name)
+		sushi.join(serverTree_tabMenu_currentTab.server, serverTree_tabMenu_currentTab.name, "")
 
 def serverTreeMenu_partItem_activate_cb(menuItem):
 	"""
 		part channel with default part message
 	"""
 	if serverTree_tabMenu_currentTab and serverTree_tabMenu_currentTab.is_channel():
-		com.part(serverTree_tabMenu_currentTab.server, serverTree_tabMenu_currentTab.name, config.get("chatting", "part_message", ""))
+		sushi.part(serverTree_tabMenu_currentTab.server, serverTree_tabMenu_currentTab.name, config.get("chatting", "part_message", ""))
 
 def serverTreeMenu_closeItem_activate_cb(menuItem):
 	"""
@@ -91,9 +92,9 @@ def serverTreeMenu_closeItem_activate_cb(menuItem):
 		return
 
 	if serverTree_tabMenu_currentTab.is_channel() and serverTree_tabMenu_currentTab.joined:
-		com.part(serverTree_tabMenu_currentTab.server, serverTree_tabMenu_currentTab.name, config.get("chatting", "part_message", ""))
+		sushi.part(serverTree_tabMenu_currentTab.server, serverTree_tabMenu_currentTab.name, config.get("chatting", "part_message", ""))
 	elif serverTree_tabMenu_currentTab.is_server() and serverTree_tabMenu_currentTab.connected:
-		com.quitServer(serverTree_tabMenu_currentTab.name, config.get("chatting", "quit_message", ""))
+		sushi.quit(serverTree_tabMenu_currentTab.name, config.get("chatting", "quit_message", ""))
 
 	gui.tabs.removeTab(serverTree_tabMenu_currentTab)
 	gui.updateServerTreeShortcuts()
@@ -106,9 +107,9 @@ def serverTreeMenu_autoJoinItem_toggled_cb(menuItem):
 	if not serverTree_tabMenu_currentTab or not serverTree_tabMenu_currentTab.is_channel():
 		return
 
-	com.setChannelAutoJoin(serverTree_tabMenu_currentTab.server,
+	sushi.server_set(serverTree_tabMenu_currentTab.server,
 			serverTree_tabMenu_currentTab.name,
-			menuItem.get_active())
+			"autojoin", str(menuItem.get_active()).lower())
 
 def serverTreeMenu_autoConnectItem_toggled_cb(menuItem):
 	"""
@@ -118,8 +119,8 @@ def serverTreeMenu_autoConnectItem_toggled_cb(menuItem):
 	if not serverTree_tabMenu_currentTab or not serverTree_tabMenu_currentTab.is_server():
 		return
 
-	com.setServerAutoConnect(serverTree_tabMenu_currentTab.name,
-			menuItem.get_active())
+	sushi.server_set(serverTree_tabMenu_currentTab.name,
+		"server", "autoconnect", str(menuItem.get_active()).lower())
 
 def serverTreeMenu_historyItem_activate_cb(menuItem):
 	"""
@@ -218,7 +219,7 @@ def getServerTreeMenu(pointedTab):
 		autoJoinItem.hide()
 		historyItem.hide()
 
-		if com.getServerAutoConnect(pointedTab.name) == "true":
+		if sushi.server_get(pointedTab.name, "server", "autoconnect") == "true":
 			autoConnectItem.set_active(True)
 		else:
 			autoConnectItem.set_active(False)
@@ -233,7 +234,7 @@ def getServerTreeMenu(pointedTab):
 		disconnectItem.hide()
 		autoConnectItem.hide()
 
-		if com.getChannelAutoJoin(pointedTab.server, pointedTab.name) == "true":
+		if sushi.server_get(pointedTab.server, pointedTab.name, "autojoin") == "true":
 			autoJoinItem.set_active(True)
 		else:
 			autoJoinItem.set_active(False)
@@ -283,7 +284,7 @@ def kickItem_activate_cb(menuItem):
 	if not cTab or not cTab.is_channel():
 		return
 
-	com.kick(sTab.name, cTab.name, nickListMenu_currentNick)
+	sushi.kick(sTab.name, cTab.name, nickListMenu_currentNick)
 
 def banItem_activate_cb(menuItem):
 	sTab,cTab = gui.tabs.getCurrentTabs()
@@ -291,7 +292,7 @@ def banItem_activate_cb(menuItem):
 	if not cTab or not cTab.is_channel():
 		return
 
-	com.mode(sTab.name, cTab.name, "+b %s*!*@*" % (nickListMenu_currentNick) )
+	sushi.mode(sTab.name, cTab.name, "+b %s*!*@*" % (nickListMenu_currentNick) )
 
 def whoisItem_activate_cb(menuItem):
 	sTab,cTab = gui.tabs.getCurrentTabs()
@@ -303,7 +304,7 @@ def whoisItem_activate_cb(menuItem):
 		dialog_control.showWhoisDialog(sTab.name, nickListMenu_currentNick)
 
 	else:
-		com.sushi.whois(sTab.name, nickListMenu_currentNick)
+		sushi.sushi.whois(sTab.name, nickListMenu_currentNick)
 
 def deVoiceItem_activate_cb(menuItem):
 	sTab,cTab = gui.tabs.getCurrentTabs()
@@ -311,7 +312,7 @@ def deVoiceItem_activate_cb(menuItem):
 	if not cTab or not cTab.is_channel():
 		return
 
-	com.mode(sTab.name, cTab.name, "-v %s" % (nickListMenu_currentNick) )
+	sushi.mode(sTab.name, cTab.name, "-v %s" % (nickListMenu_currentNick) )
 
 def voiceItem_activate_cb(menuItem):
 	sTab,cTab = gui.tabs.getCurrentTabs()
@@ -319,7 +320,7 @@ def voiceItem_activate_cb(menuItem):
 	if not cTab or not cTab.is_channel():
 		return
 
-	com.mode(sTab.name, cTab.name, "+v %s" % (nickListMenu_currentNick) )
+	sushi.mode(sTab.name, cTab.name, "+v %s" % (nickListMenu_currentNick) )
 
 def deHalfOpItem_activate_cb(menuItem):
 	sTab,cTab = gui.tabs.getCurrentTabs()
@@ -327,7 +328,7 @@ def deHalfOpItem_activate_cb(menuItem):
 	if not cTab or not cTab.is_channel():
 		return
 
-	com.mode(sTab.name, cTab.name, "-h %s" % (nickListMenu_currentNick) )
+	sushi.mode(sTab.name, cTab.name, "-h %s" % (nickListMenu_currentNick) )
 
 def halfOpItem_activate_cb(menuItem):
 	sTab,cTab = gui.tabs.getCurrentTabs()
@@ -335,7 +336,7 @@ def halfOpItem_activate_cb(menuItem):
 	if not cTab or not cTab.is_channel():
 		return
 
-	com.mode(sTab.name, cTab.name, "+h %s" % (nickListMenu_currentNick) )
+	sushi.mode(sTab.name, cTab.name, "+h %s" % (nickListMenu_currentNick) )
 
 def deOpItem_activate_cb(menuItem):
 	sTab,cTab = gui.tabs.getCurrentTabs()
@@ -343,7 +344,7 @@ def deOpItem_activate_cb(menuItem):
 	if not cTab or not cTab.is_channel():
 		return
 
-	com.mode(sTab.name, cTab.name, "-o %s" % (nickListMenu_currentNick) )
+	sushi.mode(sTab.name, cTab.name, "-o %s" % (nickListMenu_currentNick) )
 
 def opItem_activate_cb(menuItem):
 	sTab,cTab = gui.tabs.getCurrentTabs()
@@ -351,7 +352,7 @@ def opItem_activate_cb(menuItem):
 	if not cTab or not cTab.is_channel():
 		return
 
-	com.mode(sTab.name, cTab.name, "+o %s" % (nickListMenu_currentNick) )
+	sushi.mode(sTab.name, cTab.name, "+o %s" % (nickListMenu_currentNick) )
 
 def initNickListMenu():
 	"""

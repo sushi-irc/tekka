@@ -39,7 +39,7 @@ import gui_control as gui
 from lib import key_dialog
 from lib import contrast
 
-sushi = None
+from com import sushi
 
 signals = {}
 
@@ -113,9 +113,7 @@ def disconnect_signal (signal, handler):
 		del signals[signal][handler]
 
 def handle_maki_disconnect():
-	global sushi, signals
-
-	sushi = None
+	global signals
 
 	for signal in signals:
 		for handler in signals[signal]:
@@ -124,10 +122,6 @@ def handle_maki_disconnect():
 	signals = {}
 
 def handle_maki_connect():
-	global sushi
-
-	sushi = com.sushi
-
 	# Message-Signals
 	connect_signal("message", userMessage)
 	connect_signal("notice", userNotice)
@@ -172,12 +166,12 @@ def initServers():
 	# in case we're reconnecting, clear all stuff
 	gui.widgets.get_widget("serverTree").get_model().clear()
 
-	for server in com.fetchServers():
+	for server in sushi.servers():
 
 		tab = gui.tabs.createServer(server)
 		tab.connected = True
 
-		if com.isAway(server, com.getOwnNick(server)):
+		if sushi.user_away(server, com.getOwnNick(server)):
 			# FIXME
 			tab.away = "OHAI"
 
@@ -196,12 +190,12 @@ def addChannels(server):
 	"""
 		Adds all channels to tekka wich are reported by maki.
 	"""
-	channels = com.fetchChannels(server)
+	channels = sushi.channels(server)
 
 	for channel in channels:
 
 		add = False
-		nicks, prefixes = com.fetchNicks(server, channel)
+		nicks, prefixes = sushi.channel_nicks(server, channel)
 
 		tab = gui.tabs.searchTab(server, channel)
 
@@ -244,7 +238,7 @@ def lastLog(server, channel, lines=0):
 		print "lastLog('%s','%s'): no buffer" % (server,channel)
 		return
 
-	for line in com.fetchLog(
+	for line in sushi.log(
 				server,
 				channel,
 				UInt64(lines or config.get(
@@ -267,7 +261,7 @@ def updatePrefix(tab, nick, mode):
 	# FIXME: cache support_prefix()!
 	if mode[1] in sushi.support_prefix(tab.server)[0]:
 		tab.nickList.setPrefix(nick,
-			com.fetchPrefix(tab.server, tab.name, nick))
+			sushi.user_channel_prefix(tab.server, tab.name, nick))
 
 		if gui.tabs.isActive(tab):
 			gui.setUserCount(len(tab.nickList),

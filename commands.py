@@ -29,52 +29,36 @@ SUCH DAMAGE.
 import time
 from dbus import UInt64
 
+from types import MethodType, FunctionType
+from typecheck import types
+
 from gettext import gettext as _
 
 import config
 import com
+from com import sushi
 import gui_control as gui
-from types import MethodType, FunctionType
-from typecheck import types
+from lib.inline_dialog import InlineMessageDialog
 
 def warnNoConnection(tab):
-	buffer = tab.textview.get_buffer()
-
 	if tab.is_server():
 		name = tab.name
 	elif tab.is_channel() or tab.is_query():
 		name = tab.server
 
-	notification = _("Warning: You are not connected "
-		"to server %(server)s.") % {
-			"server": name
-		}
+	dialog = InlineMessageDialog(_("Warning:"), _("You are not connected to "
+		"server %(server)s.")  % { "server": name } )
+	dialog.connect("response", lambda w,i: w.destroy() )
 
-	nColor = config.get("colors","notification","#000000")
-
-	buffer.insertHTML(buffer.get_end_iter(),
-		'<font foreground="%(nf_color)s">'
-		'%(notification)s</font>' % {
-		"nf_color" : nColor,
-		"notification" : notification
-	})
+	gui.showInlineDialog(dialog)
 
 def warnNotJoined(cTab):
-	buffer = cTab.textview.get_buffer()
+	dialog = InlineMessageDialog(_("Warning:"), _("The channel "
+		"%(channel)s is not joined. Everything you write will "
+		"not be send.") % { "channel": cTab.name })
+	dialog.connect("response", lambda w,i: w.destroy())
 
-	notification = _(
-		"Warning: The channel %(channel)s is not joined, "
-		"everything you write will disappear." % {
-			'channel': cTab.name}
-		)
-	nColor = config.get('colors','notification','#000000')
-
-	buffer.insertHTML(
-		buffer.get_end_iter(),
-		'<font foreground="%(nf_color)s">'
-		'%(notification)s</font>' % {
-			'nf_color': nColor,
-			'notification': notification})
+	gui.showInlineDialog(dialog)
 
 def makiConnect(currentServer, currentChannel, args):
 	"""
@@ -85,7 +69,7 @@ def makiConnect(currentServer, currentChannel, args):
 	if not args:
 		return gui.myPrint("Usage: /connect <servername>")
 
-	com.connectServer(args[0])
+	sushi.connect(args[0])
 
 def makiQuit(currentServer, currentChannel, args):
 	"""
@@ -101,7 +85,7 @@ def makiQuit(currentServer, currentChannel, args):
 			reason = " ".join(args[1:])
 			if not reason:
 				reason = config.get("chatting", "quit_message", "")
-			com.quitServer(args[0], reason)
+			sushi.quit(args[0], reason)
 		else:
 			# /quit [<reason>]
 			if not currentServer:
@@ -109,12 +93,12 @@ def makiQuit(currentServer, currentChannel, args):
 			reason = " ".join(args)
 			if not reason:
 				reason = config.get("chatting", "quit_message", "")
-			com.quitServer(currentServer.name, reason)
+			sushi.quit(currentServer.name, reason)
 	else:
 		# /quit
 		if not currentServer:
 			return gui.myPrint("Could not determine server.")
-		com.quitServer(currentServer.name, config.get("chatting", "quit_message", ""))
+		sushi.quit(currentServer.name, config.get("chatting", "quit_message", ""))
 
 def makiNick(currentServer, currentChannel, args):
 	"""
@@ -128,7 +112,7 @@ def makiNick(currentServer, currentChannel, args):
 	if not currentServer:
 		return gui.myPrint("Can't determine my server.")
 
-	com.nick(currentServer.name, args[0])
+	sushi.nick(currentServer.name, args[0])
 
 def makiPart(currentServer, currentChannel, args):
 	"""
@@ -144,7 +128,7 @@ def makiPart(currentServer, currentChannel, args):
 			reason = " ".join(args[1:])
 			if not reason:
 				reason = config.get("chatting", "part_message", "")
-			com.part(currentServer.name, args[0], reason)
+			sushi.part(currentServer.name, args[0], reason)
 		else:
 			# /part [<reason>]
 			if not currentChannel:
@@ -152,12 +136,12 @@ def makiPart(currentServer, currentChannel, args):
 			reason = " ".join(args)
 			if not reason:
 				reason = config.get("chatting", "part_message", "")
-			com.part(currentServer.name, currentChannel.name, reason)
+			sushi.part(currentServer.name, currentChannel.name, reason)
 	else:
 		# /part
 		if not currentChannel:
 			return gui.myPrint("Could not determine channel.")
-		com.part(currentServer.name, currentChannel.name, config.get("chatting", "part_message", ""))
+		sushi.part(currentServer.name, currentChannel.name, config.get("chatting", "part_message", ""))
 
 def makiJoin(currentServer, currentChannel, args):
 	"""
@@ -172,11 +156,11 @@ def makiJoin(currentServer, currentChannel, args):
 
 	if not args:
 		if currentChannel and not currentChannel.joined:
-			return com.join(currentServer.name, currentChannel.name, "")
+			return sushi.join(currentServer.name, currentChannel.name, "")
 		else:
 			return gui.myPrint("Usage: /join <channel> [<key>]")
 
-	com.join(currentServer.name, args[0], " ".join(args[1:]))
+	sushi.join(currentServer.name, args[0], " ".join(args[1:]))
 
 def makiAction(currentServer, currentChannel, args):
 	"""
@@ -193,7 +177,7 @@ def makiAction(currentServer, currentChannel, args):
 	if not currentChannel:
 		return gui.myPrint("Can't find active channel.")
 
-	com.action(currentServer.name, currentChannel.name, " ".join(args))
+	sushi.action(currentServer.name, currentChannel.name, " ".join(args))
 
 def makiKick(currentServer, currentTab, args):
 	"""
@@ -208,7 +192,7 @@ def makiKick(currentServer, currentTab, args):
 	if not currentTab or not currentTab.is_channel():
 		return gui.myPrint("You're not on a channel")
 
-	com.kick(currentServer.name, currentTab.name, args[0], " ".join(args[1:]))
+	sushi.kick(currentServer.name, currentTab.name, args[0], " ".join(args[1:]))
 
 def makiMode(currentServer, currentChannel, args):
 	"""
@@ -228,9 +212,9 @@ def makiMode(currentServer, currentChannel, args):
 
 	if len(args) > 2:
 		# a parameter is given
-		com.mode(currentServer.name, args[0], "%s %s" % (args[1], " ".join(args[2:])))
+		sushi.mode(currentServer.name, args[0], "%s %s" % (args[1], " ".join(args[2:])))
 	else:
-		com.mode(currentServer.name, args[0], args[1])
+		sushi.mode(currentServer.name, args[0], args[1])
 
 def makiTopic(serverTab, channelTab, args):
 	"""
@@ -253,7 +237,7 @@ def makiTopic(serverTab, channelTab, args):
 		topic = " ".join(args)
 
 
-	com.setTopic(serverTab.name, channelTab.name, topic)
+	sushi.topic(serverTab.name, channelTab.name, topic)
 
 def makiAway(serverTab, channelTab, args):
 	"""
@@ -264,7 +248,7 @@ def makiAway(serverTab, channelTab, args):
 	if not serverTab:
 		return gui.myPrint("Can't determine server.")
 
-	com.setAway(serverTab.name, " ".join(args))
+	sushi.away(serverTab.name, " ".join(args))
 
 def makiBack(serverTab, channelTab, args):
 	"""
@@ -274,7 +258,7 @@ def makiBack(serverTab, channelTab, args):
 	"""
 	if not serverTab:
 		return gui.myPrint("Can't determine server.")
-	com.setBack(serverTab.name)
+	sushi.back(serverTab.name)
 
 def makiNickserv(serverTab, channelTab, args):
 	"""
@@ -286,7 +270,7 @@ def makiNickserv(serverTab, channelTab, args):
 	if not serverTab:
 		return gui.myPrint("Can't determine server.")
 
-	com.nickserv(server)
+	sushi.nickserv(server)
 
 def makiCTCP(serverTab, channelTab, args):
 	"""
@@ -300,7 +284,7 @@ def makiCTCP(serverTab, channelTab, args):
 	if not serverTab:
 		return gui.myPrint("Could not determine server.")
 
-	com.ctcp(serverTab.name, args[0], " ".join(args[1:]))
+	sushi.ctcp(serverTab.name, args[0], " ".join(args[1:]))
 
 def makiNotice(serverTab, channelTab, args):
 	"""
@@ -318,7 +302,7 @@ def makiNotice(serverTab, channelTab, args):
 	if not serverTab:
 		return gui.myPrint("Could not determine server.")
 
-	com.notice(serverTab.name, args[0], " ".join(args[1:]))
+	sushi.notice(serverTab.name, args[0], " ".join(args[1:]))
 
 def makiMessage(serverTab, channelTab, args):
 	"""
@@ -347,7 +331,7 @@ def makiOper(serverTab, channelTab, args):
 	if not serverTab:
 		return gui.myPrint("Could not determine server.")
 
-	com.oper(serverTab.name, args[0], " ".join(args[1:]))
+	sushi.oper(serverTab.name, args[0], " ".join(args[1:]))
 
 def makiList(serverTab, channelTab, args):
 	"""
@@ -368,7 +352,7 @@ def makiList(serverTab, channelTab, args):
 		channel = ""
 
 	gui.serverPrint(time.time(), serverTab.name, "Start of list.")
-	com.list(serverTab.name, channel)
+	sushi.list(serverTab.name, channel)
 
 def makiRaw(serverTab, channelTab, args):
 	"""
@@ -387,7 +371,7 @@ def makiRaw(serverTab, channelTab, args):
 	# upper-case the command
 	args[0] = args[0].upper()
 
-	com.raw(serverTab.name, " ".join(args))
+	sushi.raw(serverTab.name, " ".join(args))
 
 def makiWhois(currentServer, currentChannel, args):
 	"""
@@ -398,7 +382,7 @@ def makiWhois(currentServer, currentChannel, args):
 	if not args:
 		return gui.myPrint("No server activated.")
 
-	com.sushi.whois(currentServer.name, args[0])
+	sushi.whois(currentServer.name, args[0])
 
 """ TEKKA USER COMMANDS """
 
@@ -427,7 +411,7 @@ def tekkaQuery(currentServer, currentTab, args):
 		output = tab.textview.get_buffer()
 
 		# fetch and write history to query (if any)
-		for line in com.fetchLog(currentServer.name, nick,
+		for line in sushi.log(currentServer.name, nick,
 			UInt64(config.get("chatting","last_log_lines","10"))):
 
 			output.insertHTML(output.get_end_iter(),
@@ -555,7 +539,7 @@ def parseInput(text):
 				u"sending raw command “%(raw)s”.") % {
 					"command": cmd,
 					"raw": raw })
-			com.raw(serverTab.name, raw)
+			sushi.raw(serverTab.name, raw)
 
 		else:
 			_commands[cmd](serverTab, channelTab, argv[1:])

@@ -30,6 +30,7 @@ import gtk
 import gtk.glade
 import config
 import com
+from com import sushi
 
 from lib.expanding_list import ExpandingList
 
@@ -65,14 +66,14 @@ def dialog_response_cb(dialog, response_id, server):
 		# apply the data
 		for key in ("address","port","name","nick","nickserv"):
 			exec ("value = widgets.get_widget('%sEntry').get_text()" % key)
-			com.sushi.server_set(server, "server", key, value)
+			sushi.server_set(server, "server", key, value)
 
-		com.sushi.server_set(server, "server", "autoconnect",
+		sushi.server_set(server, "server", "autoconnect",
 				str(widgets.get_widget("autoConnectCheckButton").get_active()).lower())
 
 		# apply commands
 		list = [i[0].get_text() for i in commandList.get_widget_matrix() if i[0].get_text()]
-		com.sushi.server_set_list(server, "server", "commands", list)
+		sushi.server_set_list(server, "server", "commands", list)
 
 	dialog.destroy()
 
@@ -93,7 +94,7 @@ def run(server):
 		autoconnectInput.set_active(False)
 
 	i = 0
-	for command in com.sushi.server_get_list(server, "server", "commands"):
+	for command in sushi.server_get_list(server, "server", "commands"):
 		commandList.get_widget_matrix()[i][0].set_text(command)
 		commandList.add_row()
 		i += 1

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2.6
+#!/usr/bin/env python
 # coding: UTF-8
 """
 Copyright (c) 2008 Marian Tietz
@@ -142,7 +142,7 @@ Glade signals
 def server_dialog_callback(server_list):
 	if server_list:
 		for server in server_list:
-			com.connectServer(server)
+			com.sushi.connect(server)
 
 def menu_tekka_Connect_activate_cb(menuItem):
 	"""
@@ -150,7 +150,7 @@ def menu_tekka_Connect_activate_cb(menuItem):
 		show up server dialog and connect to the
 		returned server (if any).
 	"""
-	if not com.getConnected():
+	if not com.sushi.connected:
 		d = InlineMessageDialog(_("tekka could not connect to maki."), _("Please check whether maki is running."))
 		gui.showInlineDialog(d)
 		d.connect("response", lambda d,id: d.destroy())
@@ -201,7 +201,7 @@ def menu_Dialogs_channelList_activate_cb(menuItem):
 	"""
 		show channel list dialog.
 	"""
-	if not com.getConnected():
+	if not com.sushi.connected:
 		d = InlineMessageDialog(_("tekka could not connect to maki."), _("Please check whether maki is running."))
 		gui.showInlineDialog(d)
 		d.connect("response", lambda d,i: d.destroy())
@@ -210,6 +210,11 @@ def menu_Dialogs_channelList_activate_cb(menuItem):
 	sTab,cTab = gui.tabs.getCurrentTabs()
 
 	if not sTab:
+		d = InlineMessageDialog(_("tekka could not determine server."),
+			_("There is no active server. Click on a server tab or a "
+			"child of a server tab to activate the server."))
+		d.connect("response", lambda w,i: w.destroy())
+		gui.showInlineDialog(d)
 		return
 
 	dialog_control.showChannelListDialog(sTab.name)
@@ -384,7 +389,7 @@ def topicBar_activate_cb(topicBar):
 
 	text = topicBar.get_text()
 
-	com.setTopic(sTab.name, cTab.name, text)
+	com.sushi.topic(sTab.name, cTab.name, text)
 
 	widgets.get_widget("inputBar").grab_focus()
 
@@ -481,9 +486,8 @@ def nickList_row_activated_cb(nickList, path, column):
 
 	output = query.textview.get_buffer()
 
-	for line in com.fetchLog(
-		serverTab.name,
-		name,
+	for line in com.sushi.log(
+		serverTab.name, name,
 		dbus.UInt64(config.get("chatting", "last_log_lines"))):
 
 		output.insertHTML(output.get_end_iter(),
@@ -681,11 +685,11 @@ def askToRemoveTab(tab):
 			# FIXME:: because the tab which contains the output buffer is
 			# FIXME:: removed before the signal execution.
 			if tab.is_channel():
-				com.part(tab.server, tab.name,
+				com.sushi.part(tab.server, tab.name,
 					config.get("chatting", "part_message", ""))
 
 			elif tab.is_server():
-				com.quitServer(tab.name,
+				com.sushi.quit(tab.name,
 					config.get("chatting", "quit_message", ""))
 
 			gui.tabs.switchToTab(gui.tabs.getNextTab(tab))
@@ -774,7 +778,7 @@ def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 def nickListRenderNicks(column, renderer, model, iter):
 	""" Renderer func for column "Nicks" in NickList """
 
-	if not com.getConnected():
+	if not com.sushi.connected:
 		# do not render if no connection exists
 		return
 
@@ -1062,7 +1066,7 @@ def setupGTK():
 		"menu_maki_Connect_activate_cb":
 			lambda w: connectMaki(),
 		"menu_maki_Shutdown_activate_cb":
-			lambda w: com.shutdown(
+			lambda w: com.sushi.shutdown(
 				config.get(
 					"chatting",
 					"quit_message",
@@ -1255,7 +1259,7 @@ def main():
 
 	# At last, close maki if requested
 	if config.get_bool("tekka", "close_maki_on_close"):
-		com.shutdown(config.get("chatting", "quit_message", ""))
+		com.sushi.shutdown(config.get("chatting", "quit_message", ""))
 
 if __name__ == "__main__":
 

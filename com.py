@@ -33,8 +33,9 @@ import dbus
 from dbus.mainloop.glib import DBusGMainLoop
 from gettext import gettext as _
 
+from types import NoneType
 from typecheck import types
-from signals import parse_from
+
 from lib.inline_dialog import InlineMessageDialog
 
 import gui_control
@@ -42,29 +43,91 @@ import gui_control
 dbus_loop = DBusGMainLoop()
 required_version = (1, 1, 0)
 bus_address = os.getenv("SUSHI_REMOTE_BUS_ADDRESS")
+
 if bus_address:
 	bus = dbus.connection.Connection(bus_address, mainloop=dbus_loop)
 else:
 	bus = dbus.SessionBus(mainloop=dbus_loop)
-sushi = None
+
+
+class SushiWrapper (object):
+
+	@types (sushi_interface = (dbus.Interface, NoneType))
+	def __init__(self, sushi_interface):
+		self._set_interface(sushi_interface)
+
+	@types (connected = bool)
+	def _set_connected(self, connected):
+		self._connected = connected
+
+	@types (interface = (dbus.Interface, NoneType))
+	def _set_interface(self, interface):
+		self._set_connected(interface != None)
+		self._sushi = interface
+
+	def __getattr__(self, attr):
+		def dummy(*args, **kwargs):
+			dialog = InlineMessageDialog(_("tekka could not contact maki."),
+				_("There's no connection to maki, so the recent "
+				"action was not performed. Try to reconnect to "
+				"maki to solve this problem."))
+			dialog.connect("response", lambda w,i: w.destroy())
+			gui_control.showInlineDialog(dialog)
+
+		if attr[0] == "_" or attr == "connected":
+			# return my attributes
+			return object.__getattr__(self, attr)
+		else:
+			if not self._sushi:
+				return dummy
+			else:
+				if attr in dir(self._sushi):
+					# return local from Interface
+					return eval("self._sushi.%s" % attr)
+				else:
+					# return dbus proxy method
+					return self._sushi.__getattr__(attr)
+		raise AttributeError(attr)
+
+	connected = property(lambda s: s._connected, _set_connected)
+
+sushi = SushiWrapper(None)
+
+from signals import parse_from
+
 myNick = {}
 
+_connect_callbacks = []
+_disconnect_callbacks = []
 _shutdown_callback = None
 _nick_callback = None
-_callbacks = []
-__connected = False
 
 @types (connect_callbacks = list, disconnect_callbacks = list)
 def setup(connect_callbacks, disconnect_callbacks):
+	""" register initial callbacks """
 	global _connect_callbacks, _disconnect_callbacks
 	_connect_callbacks = connect_callbacks
 	_disconnect_callbacks = disconnect_callbacks
 
+def disable_sushi_on_fail(cmethod):
+	""" decorator: disable sushi wrapper if connect fails """
+	def new(*args, **kwargs):
+		global sushi
+		ret = cmethod(*args, **kwargs)
+		if not ret:
+			sushi._set_interface(None)
+		return ret
+	return new
+
+@disable_sushi_on_fail
 def connect():
 	"""
-		Connect to maki over DBus.
-		Returns True if the connection attempt
-		was succesful.
+	Connect to maki over DBus.
+	Returns True if the connection attempt was succesful.
+	If the attempt was successful, the sushi object's
+	attribute "connected" is set to "True" and the object
+	has more attributes through the dbus proxy so you
+	can call dbus methods directly.
 	"""
 	global sushi, _shutdown_callback, _nick_callback
 
@@ -73,16 +136,17 @@ def connect():
 		proxy = bus.get_object("de.ikkoku.sushi", "/de/ikkoku/sushi")
 	except dbus.exceptions.DBusException, e:
 		d = InlineMessageDialog(_("tekka could not connect to maki."),
-			_("Please check whether maki is running.\nThe following error occured: %(error)s") % {
-					"error": str(e)
-				})
-		gui_control.showInlineDialog(d)
+			_("Please check whether maki is running.\n"
+			"The following error occured: %(error)s") % {
+				"error": str(e) })
 		d.connect("response", lambda d,id: d.destroy())
+
+		gui_control.showInlineDialog(d)
 
 	if not proxy:
 		return False
 
-	sushi = dbus.Interface(proxy, "de.ikkoku.sushi")
+	sushi._set_interface(dbus.Interface(proxy, "de.ikkoku.sushi"))
 
 	version = tuple([int(v) for v in sushi.version()])
 
@@ -91,22 +155,17 @@ def connect():
 
 		d = InlineMessageDialog(_("tekka requires a newer maki version."),
 			_("Please update maki to at least version %(version)s.") % {
-					"version": version_string
-				})
-		gui_control.showInlineDialog(d)
+					"version": version_string })
 		d.connect("response", lambda d,i: d.destroy())
 
-		sushi = None
+		gui_control.showInlineDialog(d)
 		return False
 
 	_shutdown_callback = sushi.connect_to_signal("shutdown", _shutdownSignal)
 	_nick_callback = sushi.connect_to_signal("nick", _nickSignal)
 
-	for server in fetchServers():
+	for server in sushi.servers():
 		fetchOwnNick(server)
-
-	global __connected
-	__connected = True
 
 	for callback in _connect_callbacks:
 		callback(sushi)
@@ -114,9 +173,8 @@ def connect():
 	return True
 
 def disconnect():
-	global __connected, sushi, _shutdown_callback, _nick_callback
-	__connected = False
-	sushi = None
+	global sushi, _shutdown_callback, _nick_callback
+	sushi._set_interface(None)
 
 	if _shutdown_callback:
 		_shutdown_callback.remove()
@@ -126,26 +184,6 @@ def disconnect():
 
 	for callback in _disconnect_callbacks:
 		callback()
-
-def getConnected():
-	"""
-		Returns True if we are connected to maki.
-	"""
-	return __connected
-
-def __noSushiMessage():
-	"""
-		Prints out a message that maki isn't
-		running.
-	"""
-	print "No sushi. Is maki running?"
-
-def shutdown(quitmsg=""):
-	if not sushi:
-		return __noSushiMessage()
-	sushi.shutdown(quitmsg)
-	global __connected
-	__connected = False
 
 """
 Signals: nickchange (nick => _nickSignal)
@@ -161,21 +199,6 @@ def _nickSignal(time, server, from_str, new_nick):
 		cacheOwnNick(server, new_nick)
 
 """
-Connection: connect to server
-			quit server
-"""
-
-def connectServer(server):
-	if not sushi:
-		return __noSushiMessage()
-	sushi.connect(server)
-
-def quitServer(server, reason=""):
-	if not sushi:
-		return __noSushiMessage()
-	sushi.quit(server,reason)
-
-"""
 Commands
 """
 
@@ -184,30 +207,16 @@ def sendMessage(server, channel, text):
 	"""
 		sends a PRIVMSG to channel @channel on server @server
 	"""
-	if not sushi:
-		return __noSushiMessage()
-
 	text = re.sub('(^|\s)(_\S+_)(\s|$)', '\\1' + chr(31) + '\\2' + chr(31) + '\\3', text)
 	text = re.sub('(^|\s)(\*\S+\*)(\s|$)', '\\1' + chr(2) + '\\2' + chr(2) + '\\3', text)
 
 	sushi.message(server, channel, text)
 
-def fetchNicks(server, channel):
-	"""
-		Returns a list of nicks joined
-		in channel on server.
-	"""
-	return sushi.channel_nicks(server,channel)
-
 # fetches the own nick for server @server from maki
 def fetchOwnNick(server):
-	if not sushi:
-		__noSushiMessage()
-		return
-
 	from_str = sushi.user_from(server, "")
 	nick = parse_from(from_str)[0]
-	myNick[server] = nick
+	cacheOwnNick(server, nick)
 
 # caches the nick @nickname for server @server.
 def cacheOwnNick(server, nickname):
@@ -218,92 +227,6 @@ def getOwnNick(server):
 	if myNick.has_key(server):
 		return myNick[server]
 	return ""
-
-# fetch all servers maki is connected to
-def fetchServers():
-	return sushi.servers() or []
-
-# fetch all channels joined on server @server
-def fetchChannels(server):
-	return sushi.channels(server) or []
-
-# returns all ignores set on the server
-def fetchIgnores(server):
-	return sushi.ignores(server)
-
-# returns @lines lines of log for target @target on server @server
-def fetchLog(server, target, lines):
-	return sushi.log(server, target, lines) or []
-
-# returns the modes set on @nick in channel @channel on
-# server @server
-def fetchUserChannelModes(server, channel, nick):
-	return sushi.user_channel_mode(server, channel, nick)
-
-# returns the prefix of user @nick in channel @channel
-# on server @server
-def fetchUserChannelPrefix(server, channel, nick):
-	return sushi.user_channel_prefix(server, channel, nick)
-
-# fetch the prefix of user @nick in channel @channel on
-# server @server
-def fetchPrefix(server, channel, nick):
-	return sushi.user_channel_prefix(server,channel,nick)
-
-# lookup if user @nick on server @server is away
-def isAway(server, nick):
-	return sushi.user_away(server, nick)
-
-def join(server, channel, key=""):
-	sushi.join(server,channel,key)
-
-def part(server, channel, message=""):
-	sushi.part(server,channel,message)
-
-def setTopic(server, channel, topic):
-	sushi.topic(server, channel, topic)
-
-def mode(server, target, mode):
-	sushi.mode(server, target, mode)
-
-def kick(server, channel, nick, reason=""):
-	sushi.kick(server, channel, nick, reason)
-
-def nickserv(server):
-	sushi.nickserv(server)
-
-def setAway(server, message):
-	sushi.away(server, message)
-
-def setBack(server):
-	sushi.back(server)
-
-def nick(server, new_nick):
-	sushi.nick(server, new_nick)
-
-def ctcp(server, target, message):
-	sushi.ctcp(server, target, message)
-
-def action(server, channel, message):
-	sushi.action(server, channel, message)
-
-def notice(server, target, message):
-	sushi.notice(server, target, message)
-
-def oper(server, name, password):
-	sushi.oper(server, name, password)
-
-def raw(server, command):
-	sushi.raw(server,command)
-
-def ignore(server, pattern):
-	sushi.ignore(server, pattern)
-
-def unignore(server, pattern):
-	sushi.unignore(server, pattern)
-
-def list(server, channel=""):
-	sushi.list(server,channel)
 
 """
 Config, server creation, server deletion
@@ -327,16 +250,8 @@ def applyServerInfo(smap):
 	for (k,v) in smap.items():
 		sushi.server_set(name, "server", k, v)
 
-def renameServer(name, newName):
-	sushi.server_rename(name, newName)
-
-def deleteServer(name):
-	sushi.server_remove(name, "", "")
-
-def fetchServerList():
-	return sushi.server_list("","")
-
 def fetchServerInfo(server):
+	# FIXME replace this
 	"""
 	fetch all available info of the given server from maki
 	and return it as a dict
@@ -353,15 +268,3 @@ def fetchServerInfo(server):
 				"commands"):
 		map[key] = sushi.server_get(server, "server", key)
 	return map
-
-def getChannelAutoJoin(server, channel):
-	return sushi.server_get(server, channel, "autojoin")
-
-def setChannelAutoJoin(server, channel, switch):
-	sushi.server_set(server, channel, "autojoin", str(switch).lower())
-
-def getServerAutoConnect(server):
-	return sushi.server_get(server, "server", "autoconnect")
-
-def setServerAutoConnect(server, switch):
-	sushi.server_set(server, "server", "autoconnect", str(switch).lower())

@@ -36,8 +36,8 @@ from gettext import gettext as _
 import gtk
 import gtk.glade
 
-import signals
 import com
+import signals
 import config
 from gui_control import errorMessage
 
@@ -101,7 +101,7 @@ def listButton_clicked_cb(button):
 		signals.connect_signal("list", sushiList)
 
 		try:
-			com.list(currentServer)
+			com.sushi.list(currentServer, "")
 
 		except BaseException, e:
 			print e
@@ -121,7 +121,7 @@ def listView_row_activated_cb(treeView, path, column):
 		print "no channel"
 		return
 
-	com.join(currentServer, channel)
+	com.sushi.join(currentServer, channel)
 
 def sushiList(time, server, channel, user, topic):
 	"""
@@ -140,8 +140,8 @@ def sushiList(time, server, channel, user, topic):
 
 	store = listView.get_model()
 	if (not filterExpression
-		or (filterExpression 
-			and (filterExpression.search(channel) 
+		or (filterExpression
+			and (filterExpression.search(channel)
 				or filterExpression.search(topic)))):
 		store.append(row=(channel, int(user), topic))
 

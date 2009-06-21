@@ -28,6 +28,7 @@ SUCH DAMAGE.
 
 import gtk.glade
 import com
+from com import sushi
 import config
 import gui_control
 
@@ -79,15 +80,15 @@ def dialog_response_cb(dialog, response_id, callback):
 		for key in ("address","port","nick","name","nickserv"):
 			exec ("value = widgets.get_widget('%sEntry').get_text()" % key)
 			if value:
-				com.sushi.server_set(server, "server", key, value)
+				sushi.server_set(server, "server", key, value)
 
 		# set autoconnect bool
-		com.sushi.server_set(server, "server", "autoconnect",
+		sushi.server_set(server, "server", "autoconnect",
 			str (widgets.get_widget("autoConnectCheckButton").get_active()).lower())
 
 		# set up commands
 		list = [i[0].get_text() for i in commandList.get_widget_matrix() if i[0].get_text()]
-		com.sushi.server_set_list(server, "server", "commands", list)
+		sushi.server_set_list(server, "server", "commands", list)
 		callback()
 
 	dialog.destroy()

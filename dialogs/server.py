@@ -71,7 +71,7 @@ def retrieveServerlist():
 	store = widgets.get_widget("serverList").get_model()
 	store.clear()
 
-	servers = com.fetchServerList()
+	servers = com.sushi.server_list("","")
 	for server in servers:
 		addServer(server)
 
@@ -134,7 +134,7 @@ def serverNameEdit(cellrenderertext, path, newText):
 	except IndexError:
 		return
 
-	com.renameServer(oldText, newText)
+	com.sushi.server_rename(oldText, newText)
 
 	# at least, update the list from maki (caching would be better..)
 	retrieveServerlist()
@@ -165,7 +165,7 @@ def deleteServer(servername):
 	for row in serverList:
 		if row[0] == servername:
 			serverList.remove(row.iter)
-			com.deleteServer(servername)
+			com.sushi.server_remove(servername, "", "")
 
 def add_dialog_cb():
 	""" indicates, server was added """
