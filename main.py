@@ -1041,6 +1041,9 @@ def setupGTK():
 		gladefiles["mainwindow"], "mainWindow")
 
 	def about_dialog_url_hook (dialog, link, data):
+		if gtk.gtk_version >= (2, 16, 0):
+			return
+
 		webbrowser.open(link)
 
 	gtk.about_dialog_set_url_hook(about_dialog_url_hook, None)
