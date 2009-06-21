@@ -56,9 +56,9 @@ from typecheck import types
 
 from helper.shortcuts import addShortcut, removeShortcut
 from helper import URLHandler
-from helper.searchToolbar import SearchBar
-from helper.input_history import InputHistory
 
+from lib.search_toolbar import SearchBar
+from lib.input_history import InputHistory
 from lib.output_textview import OutputTextView
 from lib.htmlbuffer import HTMLBuffer
 

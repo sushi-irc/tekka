@@ -37,7 +37,7 @@ import re
 import config
 import com
 import gui_control as gui
-from helper.searchToolbar import SearchBar
+from lib.search_toolbar import SearchBar
 
 widgets = None
 date_pattern = re.compile(r"(\d{4})-(\d{2})-(\d{2})")

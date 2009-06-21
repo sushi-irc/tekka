@@ -37,7 +37,7 @@ import re
 import gui_control as gui
 import dialog_control
 
-from helper.expandingList import expandingList
+from lib.expanding_list import ExpandingList
 
 widgets = None
 nickColorsList = None
@@ -51,7 +51,7 @@ def customHandler(glade, function_name, widget_name, *x):
 	if widget_name == "nickColorsList":
 		global nickColorsList
 
-		nickColorsList = expandingList(gtk.ColorButton)
+		nickColorsList = ExpandingList(gtk.ColorButton)
 		sw = gtk.ScrolledWindow()
 		sw.add_with_viewport(nickColorsList)
 		sw.show_all()
@@ -61,7 +61,7 @@ def customHandler(glade, function_name, widget_name, *x):
 	elif widget_name == "highlightList":
 		global highlightList
 
-		highlightList = expandingList(gtk.Entry)
+		highlightList = ExpandingList(gtk.Entry)
 		sw = gtk.ScrolledWindow()
 		sw.add_with_viewport(highlightList)
 		sw.show_all()
@@ -72,7 +72,7 @@ def customHandler(glade, function_name, widget_name, *x):
 		global generalOutputFilterList
 
 		# negate, type, server, channel
-		generalOutputFilterList = expandingList(
+		generalOutputFilterList = ExpandingList(
 			gtk.ToggleButton, gtk.Entry,
 			gtk.Entry, gtk.Entry,
 			no_firstrow=True)

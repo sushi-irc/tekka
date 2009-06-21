@@ -29,7 +29,7 @@ SUCH DAMAGE.
 import gtk
 import gobject
 
-class expandingList(gtk.Table):
+class ExpandingList(gtk.Table):
 
 	def __init__(self, *widgets, **kwargs):
 
@@ -69,7 +69,7 @@ class expandingList(gtk.Table):
 			try:
 				instance = widget()
 			except:
-				print "expandingList: error while instancing %s" % widget
+				print "ExpandingList: error while instancing %s" % widget
 				continue
 			self.emit("instanced_widget", row, column, instance)
 
@@ -215,7 +215,7 @@ class expandingList(gtk.Table):
 		self._matrix[row].append(a)
 		self.attach(a, column, column+1, row, row+1)
 
-gobject.signal_new("instanced_widget", expandingList, gobject.SIGNAL_ACTION,
+gobject.signal_new("instanced_widget", ExpandingList, gobject.SIGNAL_ACTION,
 	gobject.TYPE_NONE, (gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_PYOBJECT))
 
 if __name__ == "__main__":
@@ -224,7 +224,7 @@ if __name__ == "__main__":
 
 	sWin = gtk.ScrolledWindow()
 
-	expList = expandingList(gtk.Entry, gtk.Entry)
+	expList = ExpandingList(gtk.Entry, gtk.Entry)
 	expList.set_property("homogeneous", True)
 
 	sWin.add_with_viewport(expList)

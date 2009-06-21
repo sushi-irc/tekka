@@ -31,7 +31,7 @@ import gtk.glade
 import config
 import com
 
-from helper.expandingList import expandingList
+from lib.expanding_list import ExpandingList
 
 widgets = None
 commandList = None
@@ -44,7 +44,7 @@ def createCommandList(glade, function_name, widget_name, *x):
 		print "wrong widget"
 		return
 
-	commandList = expandingList(gtk.Entry)
+	commandList = ExpandingList(gtk.Entry)
 
 	sw = gtk.ScrolledWindow()
 	sw.add_with_viewport(commandList)

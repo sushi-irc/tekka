@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.6
 # coding: UTF-8
 """
 Copyright (c) 2008 Marian Tietz
