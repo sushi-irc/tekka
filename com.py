@@ -159,6 +159,7 @@ def connect():
 		d.connect("response", lambda d,i: d.destroy())
 
 		gui_control.showInlineDialog(d)
+		sushi._set_interface(None)
 		return False
 
 	_shutdown_callback = sushi.connect_to_signal("shutdown", _shutdownSignal)
