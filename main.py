@@ -858,8 +858,12 @@ def treemodel_rows_reordered_cb(treemodel, path, iter, new_order):
 		for child in row.iterchildren():
 			if not child[2]:
 				continue
+
+			# update current path, if necessary
+			if gui.tabs.currentPath == child[2].path:
+				gui.tabs.currentPath = child.path
+
 			child[2].path = child.path
-	#gui.updateServerTreeShortcuts()
 
 def setup_serverTree():
 	"""
