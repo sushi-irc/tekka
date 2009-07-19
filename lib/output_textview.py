@@ -55,22 +55,27 @@ class OutputTextView(gtk.TextView):
 		buffer = self.get_buffer()
 
 		if self.read_line:
-			offsetA ,offsetB = self.read_line[1:]
-			iterA = buffer.get_iter_at_offset(offsetA)
-			iterB = buffer.get_iter_at_offset(offsetB)
+			markA, markB = self.read_line[1:]
+			iterA = buffer.get_iter_at_mark(markA)
+			iterB = buffer.get_iter_at_mark(markB)
 
 			if None in (iterA, iterB):
+				raise ValueError, "set_read_line: %s,%s in None." % (iterA, iterB)
 				return
 
 			buffer.delete(iterA, iterB)
 			buffer.remove_tag(self.read_line[0], iterA, iterB)
 
-		tag = buffer.create_tag(None, justification = gtk.JUSTIFY_CENTER,
+		tag = buffer.create_tag(None,
+			justification = gtk.JUSTIFY_CENTER,
 			strikethrough = True)
+
 		end_iter = buffer.get_end_iter()
-		offset = end_iter.get_offset()
+		start_mark = buffer.create_mark(None, end_iter, True)
 
 		buffer.insert_with_tags(end_iter,
 			"\n"+" "*int(config.get("tekka","divider_length")), tag)
 
-		self.read_line = (tag, offset, buffer.get_end_iter().get_offset())
+		end_mark = buffer.create_mark(None, buffer.get_end_iter(), True)
+
+		self.read_line = (tag, start_mark, end_mark)
