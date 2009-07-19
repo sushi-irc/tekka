@@ -471,13 +471,21 @@ class TabClass(gobject.GObject):
 			to the server identified by server.
 			In the case of a given server, the
 			server tab is included in the returned list.
+			Note:  if there's a newly row inserted, the
+			Note:: tab-column can be None.
 		"""
 		store = widgets.get_widget("serverTree").get_model()
 
 		tabs = []
 
+		def iterate_store(model, path, iter):
+			tab = model[path][2]
+			if None == tab:
+				return
+			tabs.append(tab)
+
 		if not server:
-			store.foreach(lambda model,path,iter: tabs.append(model[path][2]))
+			store.foreach(iterate_store)
 		else:
 			for row in store:
 				if row[1].lower() == server.lower():
