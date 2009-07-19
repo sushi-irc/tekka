@@ -42,13 +42,7 @@ import gui_control
 
 dbus_loop = DBusGMainLoop()
 required_version = (1, 1, 0)
-bus_address = os.getenv("SUSHI_REMOTE_BUS_ADDRESS")
-
-if bus_address:
-	bus = dbus.connection.Connection(bus_address, mainloop=dbus_loop)
-else:
-	bus = dbus.SessionBus(mainloop=dbus_loop)
-
+bus = None
 
 class SushiWrapper (object):
 
@@ -74,6 +68,16 @@ class SushiWrapper (object):
 			dialog.connect("response", lambda w,i: w.destroy())
 			gui_control.showInlineDialog(dialog)
 
+		def errordummy(message):
+			def new(*args, **kwargs):
+				dialog = InlineMessageDialog(_("Connection error."),
+					_("The following error occured while contacting maki: \n"
+					"“%s“.\n"
+					"Try to reconnect to maki to solve this problem." % (message)))
+				dialog.connect("response", lambda w,i: w.destroy())
+				gui_control.showInlineDialog(dialog)
+			return new
+
 		if attr[0] == "_" or attr == "connected":
 			# return my attributes
 			return object.__getattr__(self, attr)
@@ -83,7 +87,10 @@ class SushiWrapper (object):
 			else:
 				if attr in dir(self._sushi):
 					# return local from Interface
-					return eval("self._sushi.%s" % attr)
+					try:
+						return eval("self._sushi.%s" % attr)
+					except dbus.DBusException, e:
+						return errordummy(str(e))
 				else:
 					# return dbus proxy method
 					return self._sushi.__getattr__(attr)
@@ -105,7 +112,8 @@ _nick_callback = None
 @types (connect_callbacks = list, disconnect_callbacks = list)
 def setup(connect_callbacks, disconnect_callbacks):
 	""" register initial callbacks """
-	global _connect_callbacks, _disconnect_callbacks
+	global _connect_callbacks, _disconnect_callbacks, bus
+
 	_connect_callbacks = connect_callbacks
 	_disconnect_callbacks = disconnect_callbacks
 
@@ -129,7 +137,45 @@ def connect():
 	has more attributes through the dbus proxy so you
 	can call dbus methods directly.
 	"""
-	global sushi, _shutdown_callback, _nick_callback
+	global sushi, _shutdown_callback, _nick_callback, bus
+
+	bus_address = os.getenv("SUSHI_REMOTE_BUS_ADDRESS")
+
+	def bus_remote_error(address, exception):
+		d = InlineMessageDialog(_("Failed to connect to maki."),
+			_("tekka can't connect to the specified bus address ”%s”.\n"
+			"Detailed error message: ”%s”.\n"
+			"Check if maki is running and reconnect to solve this problem." % (address, str(exception))))
+		gui_control.showInlineDialog(d)
+		d.connect("response",lambda w,id: w.destroy())
+
+	def connect_session_bus():
+		global bus, dbus_loop
+		try:
+			return dbus.SessionBus(mainloop=dbus_loop)
+		except DBusException, e:
+			d = InlineMessageDialog(_("Failed to connect to maki."),
+				_("tekka can't connect to maki. Make sure maki is "
+				"running and try to reconnect to solve this problem.\n"))
+			gui_control.showInlineDialog(d)
+			d.connect("response",lambda w,i: w.destroy())
+			return None
+
+	if bus_address:
+		try:
+			bus = dbus.connection.Connection(bus_address, mainloop=dbus_loop)
+		except dbus.DBusException, e:
+			bus_remote_error(bus_address, e)
+			bus = connect_session_bus()
+
+			if bus == None:
+				return False
+
+	else:
+		bus = connect_session_bus()
+
+		if bus == None:
+			return False
 
 	proxy = None
 	try:
