@@ -311,10 +311,8 @@ class TabClass(gobject.GObject):
 				if row[1].lower() == server.lower():
 					serverIter = row.iter
 
-		iter = store.append(serverIter, row=(object.markup,object.name,object))
-
+		iter = store.append(serverIter, row=(object.markup(),object.name,object))
 		object.path = store.get_path(iter)
-		store.set(iter, 0, object.markup(), 1, object.name, 2, object)
 
 		if server and config.get("tekka", "auto_expand"):
 			# expand the whole server tab
