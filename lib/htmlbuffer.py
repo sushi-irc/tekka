@@ -194,12 +194,7 @@ class HTMLBuffer(gtk.TextBuffer):
 
 	def __init__(self, handler=None, tagtable=None):
 		self.lines = 0
-		try:
-			self.max_lines = int(config.get("tekka",
-				"max_output_lines"))
-		except ValueError:
-			self.max_lines = int(config.get_default("tekka",
-				"max_output_lines"))
+
 
 		if tagtable:
 			self.tagtable = tagtable
@@ -244,7 +239,15 @@ class HTMLBuffer(gtk.TextBuffer):
 		gtk.TextBuffer.insert(self, iter, text, *x)
 
 		self.lines += text.count("\n")
-		diff = self.lines - self.max_lines
+
+		try:
+			max_lines = int(config.get("tekka",
+				"max_output_lines"))
+		except ValueError:
+			max_lines = int(config.get_default("tekka",
+				"max_output_lines"))
+
+		diff = self.lines - max_lines
 
 		if diff > 0:
 			a = self.get_iter_at_line(0)
