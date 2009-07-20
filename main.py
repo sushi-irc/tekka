@@ -65,9 +65,10 @@ import com
 import dialog_control
 import signals
 import commands
-import menus
 
 import plugin_control
+
+from menus import *
 
 # TODO:  if a tab is closed the widgets remain the same.
 # TODO:: it would be nice if the tab would be switched
@@ -432,8 +433,7 @@ def serverTree_button_press_event_cb(serverTree, event):
 		# popup tab menu
 
 		if tab:
-
-			menu = menus.getServerTreeMenu(tab)
+			menu = servertree_menu.ServerTreeMenu().get_menu(tab)
 
 			if not menu:
 				print "error in creating server tree tab menu."
@@ -525,7 +525,7 @@ def nickList_button_press_event_cb(nickList, event):
 
 			nick = nick[nickList.get_model().COLUMN_NICK]
 
-			menu = menus.getNickListMenu(nick)
+			menu = nicklist_menu.NickListMenu().get_menu(nick)
 
 			if not menu:
 				return False
