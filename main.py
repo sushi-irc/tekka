@@ -1225,7 +1225,10 @@ def tekka_excepthook(extype, exobj, extb):
 		extype.__name__,
 		str(exobj))
 
-	print >> sys.stderr, message
+	try:
+		print >> sys.stderr, message
+	except:
+		pass
 
 	try:
 		dialog = tekka_excepthook.dialog
