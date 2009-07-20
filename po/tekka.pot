@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-07-13 15:09+0200\n"
+"POT-Creation-Date: 2009-07-20 18:31+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,64 +37,55 @@ msgstr ""
 msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
 msgstr ""
 
-#: ../com.py:70
-msgid "tekka could not contact maki."
-msgstr ""
-
-#: ../com.py:71
-msgid ""
-"There's no connection to maki, so the recent action was not performed. Try "
-"to reconnect to maki to solve this problem."
-msgstr ""
-
-#: ../com.py:138 ../main.py:154 ../main.py:205
+#: ../com.py:64 ../com.py:73 ../com.py:145 ../com.py:157 ../com.py:185
+#: ../main.py:155 ../main.py:206
 msgid "tekka could not connect to maki."
 msgstr ""
 
-#: ../com.py:139
+#: ../com.py:65 ../com.py:74 ../com.py:146 ../com.py:158 ../com.py:186
 #, python-format
 msgid ""
 "Please check whether maki is running.\n"
 "The following error occured: %(error)s"
 msgstr ""
 
-#: ../com.py:156
+#: ../com.py:203
 msgid "tekka requires a newer maki version."
 msgstr ""
 
-#: ../com.py:157
+#: ../com.py:204
 #, python-format
 msgid "Please update maki to at least version %(version)s."
 msgstr ""
 
-#: ../gui_control.py:786
+#: ../gui_control.py:792
 #, python-format
 msgid "%d User"
 msgid_plural "%d Users"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../gui_control.py:788
+#: ../gui_control.py:794
 #, python-format
 msgid "%d Operator"
 msgid_plural "%d Operators"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../gui_control.py:1030
+#: ../gui_control.py:1036
 #, python-format
 msgid "Error: %(message)s"
 msgstr ""
 
-#: ../main.py:154 ../main.py:205
+#: ../main.py:155 ../main.py:206
 msgid "Please check whether maki is running."
 msgstr ""
 
-#: ../main.py:213
+#: ../main.py:214
 msgid "tekka could not determine server."
 msgstr ""
 
-#: ../main.py:214
+#: ../main.py:215
 msgid ""
 "There is no active server. Click on a server tab or a child of a server tab "
 "to activate the server."
@@ -119,7 +110,7 @@ msgstr ""
 msgid "Do you really want to close server “%(name)s”?"
 msgstr ""
 
-#: ../main.py:1204
+#: ../main.py:1208
 msgid "Error occured"
 msgstr ""
 
@@ -359,6 +350,24 @@ msgstr ""
 
 #: ../lib/key_dialog.py:60
 msgid "Save key for channel"
+msgstr ""
+
+#: ../menus/nicklist_menu.py:61 ../menus/servertree_menu.py:60
+msgid "Widget creation failed."
+msgstr ""
+
+#: ../menus/nicklist_menu.py:62
+msgid ""
+"tekka failed to create the nicklist menu.\n"
+"It's possible that there are files missing. Check if you have appropriate "
+"permissions to access all files needed by tekka and restart tekka."
+msgstr ""
+
+#: ../menus/servertree_menu.py:61
+msgid ""
+"tekka failed to create the server tree menu.\n"
+"It's possible that there are files missing. Check if you have appropriate "
+"permissions to access all files needed by tekka and restart tekka."
 msgstr ""
 
 #: ../glade/mainwindow.glade.h:1

@@ -61,19 +61,19 @@ class SushiWrapper (object):
 
 	def __getattr__(self, attr):
 		def dummy(*args, **kwargs):
-			dialog = InlineMessageDialog(_("tekka could not contact maki."),
-				_("There's no connection to maki, so the recent "
-				"action was not performed. Try to reconnect to "
-				"maki to solve this problem."))
+			dialog = InlineMessageDialog(_("tekka could not connect to maki."),
+				_("Please check whether maki is running.\n"
+				"The following error occured: %(error)s") % {
+					"error": message })
 			dialog.connect("response", lambda w,i: w.destroy())
 			gui_control.showInlineDialog(dialog)
 
 		def errordummy(message):
 			def new(*args, **kwargs):
-				dialog = InlineMessageDialog(_("Connection error."),
-					_("The following error occured while contacting maki: \n"
-					"“%s“.\n"
-					"Try to reconnect to maki to solve this problem." % (message)))
+				dialog = InlineMessageDialog(_("tekka could not connect to maki."),
+					_("Please check whether maki is running.\n"
+					"The following error occured: %(error)s") % {
+						"error": message })
 				dialog.connect("response", lambda w,i: w.destroy())
 				gui_control.showInlineDialog(dialog)
 			return new
@@ -141,11 +141,11 @@ def connect():
 
 	bus_address = os.getenv("SUSHI_REMOTE_BUS_ADDRESS")
 
-	def bus_remote_error(address, exception):
-		d = InlineMessageDialog(_("Failed to connect to maki."),
-			_("tekka can't connect to the specified bus address ”%s”.\n"
-			"Detailed error message: ”%s”.\n"
-			"Check if maki is running and reconnect to solve this problem." % (address, str(exception))))
+	def bus_remote_error(exception):
+		d = InlineMessageDialog(_("tekka could not connect to maki."),
+			_("Please check whether maki is running.\n"
+			"The following error occured: %(error)s") % {
+				"error": str(exception) })
 		gui_control.showInlineDialog(d)
 		d.connect("response",lambda w,id: w.destroy())
 
@@ -154,9 +154,10 @@ def connect():
 		try:
 			return dbus.SessionBus(mainloop=dbus_loop)
 		except DBusException, e:
-			d = InlineMessageDialog(_("Failed to connect to maki."),
-				_("tekka can't connect to maki. Make sure maki is "
-				"running and try to reconnect to solve this problem.\n"))
+			d = InlineMessageDialog(_("tekka could not connect to maki."),
+				_("Please check whether maki is running.\n"
+				"The following error occured: %(error)s") % {
+					"error": str(e) })
 			gui_control.showInlineDialog(d)
 			d.connect("response",lambda w,i: w.destroy())
 			return None
@@ -165,7 +166,7 @@ def connect():
 		try:
 			bus = dbus.connection.Connection(bus_address, mainloop=dbus_loop)
 		except dbus.DBusException, e:
-			bus_remote_error(bus_address, e)
+			bus_remote_error(e)
 			bus = connect_session_bus()
 
 			if bus == None:
