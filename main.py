@@ -850,18 +850,24 @@ def setup_mainWindow():
 
 def treemodel_rows_reordered_cb(treemodel, path, iter, new_order):
 	""" new_order is not accessible, so hack arround it... """
+	updated = False
 	for row in treemodel:
 		if not row[2]:
 			continue
 
+		if gui.tabs.currentPath == row[2].path and not updated:
+			gui.tabs.currentPath = row.path
+			updated = True
+
 		row[2].path = row.path
+
 		for child in row.iterchildren():
 			if not child[2]:
 				continue
 
-			# update current path, if necessary
-			if gui.tabs.currentPath == child[2].path:
+			if gui.tabs.currentPath == child[2].path and not updated:
 				gui.tabs.currentPath = child.path
+				updated = True
 
 			child[2].path = child.path
 
