@@ -89,6 +89,8 @@ def set_defaults():
 	defaults["tekka"]["max_output_lines"] = "500"
 	defaults["tekka"]["profiling"] = "False"
 
+	defaults["dcc"] = {}
+
 	defaults["general_output"] = {}
 	defaults["general_output"]["filters"] = ""
 	"""

@@ -36,8 +36,10 @@ import time as mtime
 import com
 import config
 import gui_control as gui
+
 from lib import key_dialog
 from lib import contrast
+from lib import dcc_dialog
 
 from com import sushi
 
@@ -149,6 +151,7 @@ def handle_maki_connect():
 	connect_signal("motd", serverMOTD)
 	connect_signal("list", list)
 	connect_signal("whois", whois)
+	connect_signal("dcc_send", dcc_send)
 
 	# Channel-Signals
 	connect_signal("topic", channelTopic)
@@ -1322,3 +1325,54 @@ def whois(time, server, nick, message):
 		gui.serverPrint(time, server, _(u"[%(nick)s] %(message)s") % { "nick": gui.escape(nick), "message": gui.escape(message) })
 	else:
 		gui.serverPrint(time, server, _(u"[%(nick)s] End of whois.") % { "nick": gui.escape(nick) })
+
+def dcc_send(time, id, server, sender, filename, size, progress, speed, status):
+	"""
+	status:
+	- 0 = incoming
+	- 1 = resumed
+	- 2 = running
+	- 3 = error
+
+	"" in (server, sender, filename) and 0 in (size, progress, speed, status):
+	send was removed
+	"""
+	def dcc_dialog_response_cb(dialog, id, tid):
+		if id == gtk.RESPONSE_OK:
+			sushi.dcc_send_accept(tid)
+		else:
+			sushi.dcc_send_remove(tid)
+		dialog.destroy()
+
+
+	if "" in (server, sender, filename) and 0 in (size, progress, speed, status):
+		# send was removed
+
+		if size == progress:
+			# completed successfully
+			pass
+
+		else:
+			pass
+
+	print "status is %d.\n" % (status)
+
+	if status == 1 << 0:
+		# incoming file transfer
+		d = dcc_dialog.DCCDialog(parse_from(sender)[0], filename, size)
+		d.connect("response", dcc_dialog_response_cb, id)
+		gui.showInlineDialog(d)
+
+	elif status == 1 << 0:
+		# resumed file transfer
+		print "resumed file transfer %d." % (id)
+
+	elif status == 1 << 1:
+		# file transfer is running
+		print "file transfer %d is running." % (id)
+
+	elif status == 1 << 2:
+		# error received
+		print "file transfer %d had an error." % (id)
+
+
