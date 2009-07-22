@@ -86,6 +86,10 @@ def showChannelListDialog(server):
 
 	return d.run(server)
 
+def showDCCDialog():
+	d = loadDialog("dcc")
+	return d.run()
+
 def showPluginsDialog():
 	"""
 	"""

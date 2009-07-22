@@ -136,11 +136,33 @@
                   <widget class="GtkMenu" id="menu_Dialogs">
                     <property name="visible">True</property>
                     <child>
-                      <widget class="GtkMenuItem" id="menu_Dialogs_channelList">
+                      <widget class="GtkImageMenuItem" id="menu_Dialogs_channelList">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">_Channel List</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="menu_Dialogs_channelList_activate_cb"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="image14">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-find</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menu_Dialogs_dcc">
+                        <property name="label" translatable="yes">_File Transfers</property>
+                        <property name="visible">True</property>
+                        <property name="tooltip" translatable="yes">Manage File Transfers</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="menu_Dialogs_dcc_activate_cb"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="image13">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-file</property>
+                          </widget>
+                        </child>
                       </widget>
                     </child>
                     <child>
@@ -160,11 +182,17 @@
                       </widget>
                     </child>
                     <child>
-                      <widget class="GtkMenuItem" id="menu_Dialogs_debug">
+                      <widget class="GtkImageMenuItem" id="menu_Dialogs_debug">
                         <property name="visible">True</property>
                         <property name="label" translatable="yes">_Debug</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="menu_Dialogs_debug_activate_cb"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="image15">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-zoom-in</property>
+                          </widget>
+                        </child>
                       </widget>
                     </child>
                     <child>

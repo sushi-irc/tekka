@@ -27,7 +27,7 @@ SUCH DAMAGE.
 """
 
 import gtk
-import com
+from com import sushi
 from gettext import gettext as _
 from lib.inline_dialog import InlineDialog
 
@@ -35,13 +35,15 @@ class DCCDialog(InlineDialog):
 
 	"""
 	[ICON] Incoming file transfer from %s: %s. [Accept]
-	       [ Download]                         [Cancel]
+	                                           [Deny]
+	       [ Dest. Dir]                        [Cancel]
 	"""
 
-	def __init__(self, nick, filename, size):
+	def __init__(self, id, nick, filename, size, resumable):
 		InlineDialog.__init__(self,
 			buttons = (gtk.STOCK_OK, gtk.RESPONSE_OK,
-						gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL),
+						gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+						gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE),
 			icon = gtk.STOCK_DIALOG_INFO)
 
 		self.table = gtk.Table(rows = 2, columns = 2)
@@ -51,10 +53,14 @@ class DCCDialog(InlineDialog):
 				"<b>"+_("Incoming file transfer")+"\n</b>"+
 				_("Sender: ”%(nick)s”\n"
 				  "Filename: “%(filename)s“\n"
-				  "File size: %(bytes)d bytes" %\
+				  "File size: %(bytes)d bytes"
+				  "%(resumable)s" % \
 				{ "nick": nick,
 				  "filename": filename,
-				  "bytes": size
+				  "bytes": size,
+				  "resumable": (resumable and
+				  		_("\nIf you don't choose another destination, "
+						  "this file will be resumed.") or "")
 				}))
 		self.table.attach(self.label, 0, 1, 0, 2)
 
@@ -63,6 +69,9 @@ class DCCDialog(InlineDialog):
 
 		self.filechooser = gtk.FileChooserButton("Select a Directory")
 		self.filechooser.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
-		self.table.attach(self.filechooser, 1, 2, 1, 2)
+		#self.filechooser.set_current_folder(sushi.dcc_get_path(id))
+		hbox = gtk.HBox()
+		hbox.pack_start(self.filechooser, expand = True, fill = False)
+		self.table.attach(hbox, 1, 2, 1, 2, yoptions = gtk.EXPAND)
 
 		self.vbox.add(self.table)

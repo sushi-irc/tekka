@@ -220,6 +220,10 @@ def menu_Dialogs_channelList_activate_cb(menuItem):
 
 	dialog_control.showChannelListDialog(sTab.name)
 
+def menu_Dialogs_dcc_activate_cb(menuItem):
+	""" show file transfers dialog """
+	dialog_control.showDCCDialog()
+
 def menu_Dialogs_plugins_activate_cb(menuItem):
 	"""
 	show plugin load/unload/list dialog.
@@ -1096,6 +1100,8 @@ def setupGTK():
 		# dialogs menu
 		"menu_Dialogs_channelList_activate_cb":
 			menu_Dialogs_channelList_activate_cb,
+		"menu_Dialogs_dcc_activate_cb" :
+			menu_Dialogs_dcc_activate_cb,
 		"menu_Dialogs_plugins_activate_cb" :
 			menu_Dialogs_plugins_activate_cb,
 		"menu_Dialogs_debug_activate_cb" :
@@ -1271,6 +1277,9 @@ def main():
 	connectMaki()
 
 	plugin_control.load_autoloads()
+
+	# initialize threading
+	gtk.gdk.threads_init()
 
 	# start main loop
 	gtk.main()

@@ -36,6 +36,10 @@ import time as mtime
 import com
 import config
 import gui_control as gui
+import dcc_control
+
+from dcc_control import dcc_s_incoming, dcc_s_resumable, \
+	dcc_s_resumed, dcc_s_running, dcc_s_error
 
 from lib import key_dialog
 from lib import contrast
@@ -1264,9 +1268,7 @@ def userPart(timestamp, server, from_str, channel, reason):
 				"action")
 
 def noSuch(time, server, target, type):
-	"""
-	Signal is emitted if maki can't find the target on the server.
-	"""
+	""" Signal is emitted if maki can't find the target on the server. """
 
 	tab = gui.tabs.searchTab(server, target)
 
@@ -1283,8 +1285,7 @@ def noSuch(time, server, target, type):
 		gui.serverPrint(time, server, error)
 
 def cannotJoin(time, server, channel, reason):
-	"""
-		The channel could not be joined.
+	""" The channel could not be joined.
 		reason : { l (full), i (invite only), b (banned), k (key) }
 	"""
 	message = _("Unknown reason")
@@ -1318,61 +1319,81 @@ def cannotJoin(time, server, channel, reason):
 		))
 
 def whois(time, server, nick, message):
-	"""
-		message = "" => end of whois
-	"""
+	""" message = "" => end of whois """
 	if message:
-		gui.serverPrint(time, server, _(u"[%(nick)s] %(message)s") % { "nick": gui.escape(nick), "message": gui.escape(message) })
+		gui.serverPrint(time, server,
+			_(u"[%(nick)s] %(message)s") % {
+				"nick": gui.escape(nick),
+				"message": gui.escape(message) })
 	else:
-		gui.serverPrint(time, server, _(u"[%(nick)s] End of whois.") % { "nick": gui.escape(nick) })
+		gui.serverPrint(time, server,
+			_(u"[%(nick)s] End of whois.") % {
+				"nick": gui.escape(nick) })
 
 def dcc_send(time, id, server, sender, filename, size, progress, speed, status):
 	"""
 	status:
-	- 0 = incoming
-	- 1 = resumed
-	- 2 = running
-	- 3 = error
+	- 1 << 0 = incoming
+	- 1 << 1 = resumed
+	- 1 << 2 = running
+	- 1 << 3 = error
 
 	"" in (server, sender, filename) and 0 in (size, progress, speed, status):
 	send was removed
 	"""
+
 	def dcc_dialog_response_cb(dialog, id, tid):
 		if id == gtk.RESPONSE_OK:
 			sushi.dcc_send_accept(tid)
-		else:
+		elif id == gtk.RESPONSE_CANCEL:
 			sushi.dcc_send_remove(tid)
 		dialog.destroy()
 
+	(dcc_s_incoming,
+	 dcc_s_resumable,
+	 dcc_s_resumed,
+	 dcc_s_running,
+	 dcc_s_error) = [1 << n for n in range(5)]
 
 	if "" in (server, sender, filename) and 0 in (size, progress, speed, status):
 		# send was removed
+		print "filetransfer %d removed." % (id)
+		return
 
-		if size == progress:
-			# completed successfully
-			pass
+	print "status is %d." % (status)
 
+	# handle incoming transfers
+	#
+	if status & dcc_s_incoming == dcc_s_incoming:
+
+		if status >> 2 == 0:
+			# attempt made
+
+			d = dcc_dialog.DCCDialog(id, parse_from(sender)[0], filename, size,
+				resumable = (status & dcc_s_resumable == dcc_s_resumable))
+
+			d.connect("response", dcc_dialog_response_cb, id)
+			gui.showInlineDialog(d)
+
+	"""
+	if status & dcc_s_running:
+		# transfer is running.
+		# add to the list of active transfers or update
+		print "started file transfer %d." % (id)
+
+		if not dcc_control.get_transfer(id):
+			dcc_control.add_transfer(
+				id, server,
+				sender, filename,
+				size, status)
 		else:
-			pass
+			dcc_control.update_transfer(
+				id,
+				progress = progress,
+				speed = speed)
 
-	print "status is %d.\n" % (status)
-
-	if status == 1 << 0:
-		# incoming file transfer
-		d = dcc_dialog.DCCDialog(parse_from(sender)[0], filename, size)
-		d.connect("response", dcc_dialog_response_cb, id)
-		gui.showInlineDialog(d)
-
-	elif status == 1 << 0:
-		# resumed file transfer
-		print "resumed file transfer %d." % (id)
-
-	elif status == 1 << 1:
-		# file transfer is running
-		print "file transfer %d is running." % (id)
-
-	elif status == 1 << 2:
-		# error received
-		print "file transfer %d had an error." % (id)
-
-
+	elif status & dcc_s_error:
+		# transfer had an error...
+		print "error in transfer %d." % (id)
+		dcc_control.update_transfer(id, status = status)
+	"""
