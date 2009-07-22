@@ -36,10 +36,6 @@ import time as mtime
 import com
 import config
 import gui_control as gui
-import dcc_control
-
-from dcc_control import dcc_s_incoming, dcc_s_resumable, \
-	dcc_s_resumed, dcc_s_running, dcc_s_error
 
 from lib import key_dialog
 from lib import contrast
