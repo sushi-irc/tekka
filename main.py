@@ -1149,6 +1149,11 @@ def setupGTK():
 			if not config.get_bool("tekka", "use_default_font"):
 				return
 
+			for row in widgets.get_widget("serverTree").get_model():
+				for child in row.iterchildren():
+					gui.setFont(child[2].textview, gui.get_font())
+				gui.setFont(row[2].textview, gui.get_font())
+
 			gui.setFont(widgets.get_widget("output"), gui.get_font())
 			gui.setFont(widgets.get_widget("inputBar"), gui.get_font())
 			gui.setFont(widgets.get_widget("generalOutput"), gui.get_font())

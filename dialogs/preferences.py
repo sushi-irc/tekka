@@ -270,6 +270,11 @@ def tekka_use_default_font_toggled(button):
 	config.set("tekka", "use_default_font",
 			str(button.get_active()))
 
+	for row in gui.widgets.get_widget("serverTree").get_model():
+		for child in row.iterchildren():
+			gui.setFont(child[2].textview, gui.get_font())
+		gui.setFont(row[2].textview, gui.get_font())
+
 	gui.setFont(gui.widgets.get_widget("output"), gui.get_font())
 	gui.setFont(gui.widgets.get_widget("inputBar"), gui.get_font())
 	gui.setFont(gui.widgets.get_widget("generalOutput"), gui.get_font())
