@@ -14,7 +14,6 @@ install: $(PO:%.po=%.mo)
 	done
 
 clean:
-	$(RM) -f tekka.pot
 	$(RM) -f $(GLADEH)
 	$(RM) -f *.mo
 
