@@ -37,6 +37,7 @@ from com import sushi
 
 from lib import inline_dialog
 from lib import key_dialog
+from lib import topic_dialog
 
 def singleton_loader(cls):
 	instances = {}
@@ -77,6 +78,7 @@ class ServerTreeMenu(object):
 			"autoJoinItem_toggled_cb" : self.autoJoinItem_toggled_cb,
 			"autoConnectItem_toggled_cb" : self.autoConnectItem_toggled_cb,
 			"historyItem_activate_cb" : self.historyItem_activate_cb,
+			"setTopicItem_activate_cb": self.setTopicItem_activate_cb,
 			"setKeyItem_activate_cb" : self.setKeyItem_activate_cb
 		}
 
@@ -103,12 +105,14 @@ class ServerTreeMenu(object):
 		autoJoinItem = self.widgets.get_widget("autoJoinItem")
 		historyItem = self.widgets.get_widget("historyItem")
 		closeItem = self.widgets.get_widget("closeItem")
+		setTopicItem = self.widgets.get_widget("topicItem")
 		setKeyItem = self.widgets.get_widget("setKeyItem")
 
 		# set up visibilty of menu items for each case
 		if pointedTab.is_server():
 			joinItem.hide()
 			partItem.hide()
+			setTopicItem.hide()
 			setKeyItem.hide()
 			autoJoinItem.hide()
 			historyItem.hide()
@@ -142,6 +146,7 @@ class ServerTreeMenu(object):
 		elif pointedTab.is_query():
 			autoConnectItem.hide()
 			autoJoinItem.hide()
+			setTopicItem.hide()
 			setKeyItem.hide()
 			connectItem.hide()
 			disconnectItem.hide()
@@ -227,6 +232,21 @@ class ServerTreeMenu(object):
 			return
 
 		dialog_control.showHistoryDialog(self.current_tab)
+
+	def setTopicItem_activate_cb(self, item):
+		""" show up inline dialog to change topic """
+		def dialog_response_cb(dialog, id):
+			if id != gtk.RESPONSE_OK:
+				dialog.destroy()
+
+		if not self.current_tab or not self.current_tab.is_channel():
+			return
+
+		d = topic_dialog.TopicDialog(
+			self.current_tab.server,
+			self.current_tab.name)
+		d.connect("response", dialog_response_cb)
+		gui_control.showInlineDialog(d)
 
 	def setKeyItem_activate_cb(self, item):
 		""" show up dialog for key setting """

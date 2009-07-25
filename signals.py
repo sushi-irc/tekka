@@ -464,9 +464,6 @@ def channelTopic(time, server, from_str, channel, topic):
 	channelTab.topic = topic
 	channelTab.topicsetter = nick
 
-	if channelTab == gui.tabs.getCurrentTab():
-		gui.setTopic(topic)
-
 	if not nick:
 		# this indicates if there was a topic setter or maki is
 		# just reporting the topic to us.
