@@ -146,6 +146,16 @@ def custom_handler(glade, function_name, widget_name, *x):
 		align.set_property("visible", False)
 		return align
 
+	elif widget_name == "topicBar":
+		try:
+			  bar = SpellEntry()
+		except NameError:
+			  bar = gtk.Entry()
+
+		bar.connect("activate", __main__.topicBar_activate_cb)
+
+		return bar
+
 	return None
 
 @types(gladeFile=basestring, section=basestring)
@@ -191,6 +201,7 @@ class TabClass(gobject.GObject):
 		if not tab is self.getCurrentTab():
 			return
 		widgetList = [
+			widgets.get_widget('topicBar'),
 			widgets.get_widget('nickList')]
 		for widget in widgetList:
 			widget.set_sensitive (switch)
@@ -614,6 +625,10 @@ class TabClass(gobject.GObject):
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
+			if config.get_bool("tekka", "show_topicbar"):
+				widgets.get_widget("topicBar").show()
+				widgets.get_widget("topicBar").set_text(tab.topic)
+
 			widgets.get_widget("VBox_nickList").show_all()
 			widgets.get_widget("nickList").set_model(tab.nickList)
 
@@ -621,6 +636,7 @@ class TabClass(gobject.GObject):
 			# queries and server tabs don't have topics or nicklists
 			self.setUseable(tab, tab.connected)
 
+			widgets.get_widget("topicBar").hide()
 			widgets.get_widget("VBox_nickList").hide()
 
 		tab.setNewMessage(None)
@@ -700,6 +716,7 @@ def setUseable(switch):
 	global gui_is_useable
 
 	widgetList = [
+		widgets.get_widget("topicBar"),
 		widgets.get_widget("inputBar"),
 		widgets.get_widget("serverTree"),
 		widgets.get_widget("nickList"),
@@ -793,6 +810,15 @@ def setFont(textView, font):
 		return
 
 	textView.modify_font(fd)
+
+@types(string=basestring)
+def setTopic(string):
+	""" Sets the given string as text in
+		the topic bar.
+	"""
+	tb = widgets.get_widget("topicBar")
+	tb.set_text(string)
+	tb.set_position(len(string))
 
 def updateServerTreeShortcuts():
 	"""

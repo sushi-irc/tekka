@@ -197,6 +197,14 @@ def menu_View_showStatusIcon_toggled_cb(menuItem):
 		config.set("tekka", "show_status_icon", "True")
 		gui.setStatusIcon(True)
 
+def menu_View_showTopicBar_toggled_cb(menuItem):
+	""" hide or show topic bar """
+	if not menuItem.get_active():
+		config.set("tekka", "show_topicbar", "False")
+		gui.widgets.get_widget("topicBar").hide()
+	else:
+		config.set("tekka", "show_topicbar", "True")
+		gui.widgets.get_widget("topicBar").show()
 
 def menu_Dialogs_channelList_activate_cb(menuItem):
 	"""
@@ -1096,6 +1104,8 @@ def setupGTK():
 			menu_View_showStatusBar_toggled_cb,
 		"menu_View_showStatusIcon_toggled_cb":
 			menu_View_showStatusIcon_toggled_cb,
+		"menu_View_showTopicBar_toggled_cb":
+			menu_View_showTopicBar_toggled_cb,
 
 		# dialogs menu
 		"menu_Dialogs_channelList_activate_cb":
@@ -1201,6 +1211,13 @@ def setupGTK():
 
 	if config.get_bool("tekka","show_status_icon"):
 		gui.setup_statusIcon()
+		btn.set_active(True)
+	btn.toggled()
+
+	btn = widgets.get_widget("menu_View_showTopicBar")
+
+	if config.get_bool("tekka", "show_statusbar"):
+		gui.widgets.get_widget("topicBar").show()
 		btn.set_active(True)
 	btn.toggled()
 
