@@ -153,7 +153,7 @@ def loadPluginList():
 					desc,
 					author))
 		except OSError:
-			return False
+			continue
 
 	return True
 
