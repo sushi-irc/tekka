@@ -349,7 +349,7 @@ def inputBar_key_press_event_cb(inputBar, event):
 	key =  gtk.gdk.keyval_name(event.keyval)
 	tab =  gui.tabs.getCurrentTab()
 
-	text = inputBar.get_text()
+	text = unicode(inputBar.get_text())
 
 	if key == "Up":
 		# get next input history item
