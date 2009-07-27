@@ -105,7 +105,7 @@ class ServerTreeMenu(object):
 		autoJoinItem = self.widgets.get_widget("autoJoinItem")
 		historyItem = self.widgets.get_widget("historyItem")
 		closeItem = self.widgets.get_widget("closeItem")
-		setTopicItem = self.widgets.get_widget("topicItem")
+		setTopicItem = self.widgets.get_widget("setTopicItem")
 		setKeyItem = self.widgets.get_widget("setKeyItem")
 
 		# set up visibilty of menu items for each case
