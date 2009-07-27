@@ -224,7 +224,7 @@ class ServerTreeMenu(object):
 			return
 
 		sushi.server_set(self.current_tab.name,
-			"server", "autoconnect", str(self, item.get_active()).lower())
+			"server", "autoconnect", str(item.get_active()).lower())
 
 	def historyItem_activate_cb(self, item):
 		""" show up history dialog for current tab. """
