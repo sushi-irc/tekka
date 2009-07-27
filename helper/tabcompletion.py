@@ -90,6 +90,9 @@ def _removeLastCompletion(entry, text):
 
 	print "Last completion was: '%s'" % (lc)
 
+	if lc == None:
+		return text
+
 	# strip of the match, keep the needle:
 	# 'n'<Tab> => 'nemo: ' => strip 'emo: '
 	print "text = %s, position = %d last_complete: %d (%s), needle: %d (%s)" % (
