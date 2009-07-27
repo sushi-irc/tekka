@@ -37,6 +37,19 @@
             <property name="visible">True</property>
             <property name="layout_style">GTK_BUTTONBOX_END</property>
             <child>
+              <widget class="GtkButton" id="configureButton">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+				<property name="use_underline">True</property>
+				<property name="sensitive">False</property>
+                <property name="label" translatable="yes">C_onfigure</property>
+                <property name="response_id">1</property>
+                <signal name="clicked" handler="configureButton_clicked_cb"/>
+              </widget>
+            </child>
+
+            <child>
               <widget class="GtkButton" id="loadButton">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
