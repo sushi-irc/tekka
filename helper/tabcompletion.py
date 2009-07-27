@@ -33,23 +33,23 @@ import gui_control
 
 # types identificating the current scroll position
 (
-NO_TYPE,
-NICK_TYPE,
-QUERY_TYPE,
-CHANNEL_TYPE,
-COMMAND_TYPE
+	NO_TYPE,
+	NICK_TYPE,
+	QUERY_TYPE,
+	CHANNEL_TYPE,
+	COMMAND_TYPE
 ) = range(5)
 
 # cache of position
 _current = {
-"position":None,
-"tab":None,
-"type":NO_TYPE,
-"needle":None,
-"lastCompletion":None
+	"position": None,
+	"tab": None,
+	"type": NO_TYPE,
+	"needle": None,
+	"lastCompletion": None
 }
 
-def _reset(full=False):
+def _reset_iteration():
 	global _current
 	_current["position"] = None
 	_current["tab"] = None
@@ -63,14 +63,18 @@ def _appendMatch(entry, mode, text, word, match):
 	apply it to the input bar widget.
 	Add separator too.
 	"""
+# FIXME: this mode stuff is so wrong..
 	if mode == "c":
 		separator = config.get("tekka","command_separator", " ")
 
 	elif mode == "n":
 		separator = config.get("tekka","nick_seperator", ": ")
 
-	new_text = text[0:entry.get_position()-len(word)] + match + separator + text[entry.get_position():]
-#	text = text[:-len(word)] + match + separator
+	# old text without needle + new_word + separator + rest
+	new_text = text[0:entry.get_position()-len(word)] + \
+		match + \
+		separator + \
+		text[entry.get_position():]
 
 	print "text: '%s' word: '%s' match: '%s'" % (text,word,match)
 
@@ -95,12 +99,16 @@ def _removeLastCompletion(entry, text):
 
 	# strip of the match, keep the needle:
 	# 'n'<Tab> => 'nemo: ' => strip 'emo: '
-	print "text = %s, position = %d last_complete: %d (%s), needle: %d (%s)" % (
-		text, entry.get_position(), len(lc), lc, len(_current["needle"]), _current["needle"])
+	print "text = %s, position = %d last_complete: " \
+		"%d (%s), needle: %d (%s)" % (
+		text, entry.get_position(),
+		len(lc), lc,
+		len(_current["needle"]),
+		_current["needle"])
+
 	needle = _current["needle"]
 	skip = (entry.get_position() - len(lc)) + len(needle)
 	new_text = text[:skip]+text[entry.get_position():]
-	#text = text[:-(len(lc)-len(_current["needle"]))]
 
 	print "Cleaned text is: '%s'" % (text)
 
@@ -109,30 +117,86 @@ def _removeLastCompletion(entry, text):
 
 	return new_text
 
+def _raise_position(matches, i_type):
+	if _current["type"] == i_type:
+		# continue iterating
+		if (_current["position"]+1 >= len(matches)
+			or _current["position"] == None):
+			_current["position"] = 0
+
+		else:
+			_current["position"] += 1
+
+	else:
+		# set type to the current and begin iterating
+		_current["type"] = i_type
+		_current["position"] = 0
+
+def _match_nick_in_channel(tab, word):
+	matches = tab.nickList.searchNick(word.lower())
+	# sort nicks alphabetically
+	matches.sort(lambda x, y: cmp(x.lower(), y.lower()))
+
+	if matches:
+		_raise_position(matches, NICK_TYPE)
+		print "current position: %d and cp = '%d'" % (
+			_current["position"], len(matches))
+
+		return matches[_current["position"]]
+	return None
+
+def _match_nick_in_query(tab, word):
+	matches = [nick for nick in (currentTab.name, com.getOwnNick(currentTab.server)) if nick[:len(word)].lower() == word.lower()]
+
+	if matches:
+		_raise_position(matches, QUERY_TYPE)
+		return matches[_current["position"]]
+	return None
+
+def _match_channel(word):
+	tabs = gui_control.tabs.getAllTabs()
+
+	# find all matching tabs
+	matches = [tab.name for tab in tabs
+		if tab and tab.name[:len(word)].lower() == word.lower()]
+
+	if matches:
+		_raise_position(matches, CHANNEL_TYPE)
+		return matches[_current["position"]]
+	return None
+
+def _match_command(word):
+	matches = [cmd for cmd in commands._commands.keys()
+	if cmd[:len(word)].lower()==word.lower()]
+
+	if matches:
+		_raise_position(matches, COMMAND_TYPE)
+		return matches[_current["position"]]
+	return None
+
 def stopIteration():
+	""" user does not want any more results, stop the iteration.
+		This is the case if, for example, the tab is switched or
+		the input bar is activated.
 	"""
-	Interrupt iteration.
-	Resets cached data (like needle)
-	"""
-	_reset()
-	#_current["needle"] = None
+	_reset_iteration()
 
 def complete(currentTab, entry, text):
-	"""
-	The user pressed tab after `text`.
-	* If currentTab is a channel, find a suitable nickname
-	* If currentTab is a query, find a suitable nickname matching
-	  my and the other nickname
-	* Find a matching channel name
-	* Find a matching command
-	If there are multiple matches:
-	* show the matches as statically last line (if enabled in config)
-	* iterate over the results by pressing tab
-	The end of the iteration is determined outside in the key press
-	event of the input bar. If another key except "Tab" is pressed,
-	the iteration ends (stopIteration).
+	""" search for the last typed word and try to
+		complete it in the following order:
+		- search for a suitable nick in the channel (if tab is a channel)
+		- search for a suitable nick in the query (if tab is a query)
+		- search for a suitable command (if the first letter is a '/')
+		- search for a suitable channel (if the first letter is
+		  a valid channel prefix)
 
-	TODO: generalize code, especially the section checks / match checks
+		If one of the searches matches, this function returns True.
+		If no search matches, False is returned.
+
+		The function checks, if the word searched for was the
+		same as last time. So if complete is called another
+		time, it will continue searching and using the next
+		result to the one before.
 	"""
 
 	global _current
@@ -141,8 +205,9 @@ def complete(currentTab, entry, text):
 		return False
 
 	if currentTab != _current["tab"]:
-		# reset iteration, data is not up to date
-		_reset()
+		# reset iteration, data is not up to date.
+		# start new iteration, then
+		_reset_iteration()
 		_current["tab"] = currentTab
 
 	if _current["needle"]:
@@ -168,29 +233,7 @@ def complete(currentTab, entry, text):
 	if currentTab and currentTab.is_channel():
 		# look for nicks
 
-		matches = currentTab.nickList.searchNick(word.lower())
-		matches.sort(lambda x, y: cmp(x.lower(), y.lower())) # sort alphabetically
-
-		if matches:
-			if _current["type"] == NICK_TYPE:
-				# continue iterating
-
-				if _current["position"]+1 >= len(matches) or _current["position"] == None:
-					# position too high or unset, set to 0
-					_current["position"] = 0
-
-				else:
-					_current["position"] += 1
-
-			else:
-				# we have matches, reset the current type and position
-				_current["type"] = NICK_TYPE
-				_current["position"] = 0
-
-			# TODO: print lastLine filled with contents of matches
-
-			print "current position: %d and cp = '%d'" % (_current["position"], len(matches))
-			match = matches[_current["position"]]
+		match = _match_nick_in_channel(currentTab, word)
 
 		if match:
 
@@ -208,24 +251,7 @@ def complete(currentTab, entry, text):
 	elif currentTab and currentTab.is_query():
 		# look for my nick or the other nick
 
-		matches = [nick for nick in (currentTab.name, com.getOwnNick(currentTab.server)) if nick[:len(word)].lower() == word.lower()]
-
-		if matches:
-			if _current["type"] == QUERY_TYPE:
-				# continue iterating
-
-				if _current["position"]+1 >= len(matches) or _current["position"] == None:
-					_current["position"] = 0
-
-				else:
-					_current["position"] += 1
-
-			else:
-				# set type to the current and begin iterating
-				_current["type"] = QUERY_TYPE
-				_current["position"] = 0
-
-			match = matches[_current["position"]]
+		match = _match_nick_in_query(currentTab, word)
 
 		if match:
 			if text.count(" ") >= 1:
@@ -241,28 +267,9 @@ def complete(currentTab, entry, text):
 
 	# channel completion
 	if (currentTab
-		and not currentTab.is_server()
 		and word[0] in com.sushi.support_chantypes(currentTab.server)):
-		tabs = gui_control.tabs.getAllTabs()
 
-		# find all matching tabs
-		matches = [tab.name for tab in tabs
-			if tab and tab.name[:len(word)].lower() == word.lower()]
-
-		if matches:
-			if _current["type"] == CHANNEL_TYPE:
-
-				if _current["position"]+1 >= len(matches) or _current["position"] == None:
-					_current["position"] = 0
-
-				else:
-					_current["position"] += 1
-
-			else:
-				_current["type"] = CHANNEL_TYPE
-				_current["position"] = 0
-
-			match = matches[_current["position"]]
+		match = _match_channel(word)
 
 		if match:
 			_appendMatch(entry, "c", text, word, match)
@@ -270,30 +277,12 @@ def complete(currentTab, entry, text):
 
 	# *** command completion ***
 
-	if word[0] != "/":
-		return False
+	if word[0] == "/":
 
-	needle = word[1:]
-	matches = [cmd for cmd in commands._commands.keys()
-		if cmd[:len(needle)].lower()==needle.lower()]
+		match = _match_command(word[1:])
 
-	if matches:
-		if _current["type"] == COMMAND_TYPE:
-			if _current["position"]+1 >= len(matches) or _current["position"] == None:
-				_current["position"] = 0
-
-			else:
-				_current["position"] += 1
-
-		else:
-			_current["type"] = COMMAND_TYPE
-			_current["position"] = 0
-
-		match = matches[_current["position"]]
-
-	if match:
-		_appendMatch(entry, "c",text, word, "/"+match)
-
-		return True
+		if match:
+			_appendMatch(entry, "c",text, word, "/"+match)
+			return True
 
 	return False
