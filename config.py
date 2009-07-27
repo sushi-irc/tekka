@@ -123,6 +123,7 @@ def set_defaults():
 	defaults["chatting"]["last_log_lines"] = "10"
 	defaults["chatting"]["quit_message"] = "Leading."
 	defaults["chatting"]["part_message"] = "Partitioning."
+	defaults["chatting"]["nick_separator"] = ": "
 
 	defaults["autoload_plugins"] = {}
 
@@ -208,7 +209,7 @@ def set(section, option, value):
 @types (section=basestring, option=basestring, l=list)
 def set_list(section, option, l):
 	"""
-	join the list l to a string seperated
+	join the list l to a string separated
 	by , and set it as value to option.
 	Return False on error, else True.
 	"""
