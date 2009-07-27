@@ -864,8 +864,8 @@ def updateServerTreeMarkup(path):
 		return
 
 def escape(msg):
-	"""
-		Converts special characters in msg in-place.
+	"""	Converts special characters in msg and returns
+		the new string.
 	"""
 	msg = msg.replace("&","&amp;")
 	msg = msg.replace("<","&lt;")
@@ -885,8 +885,8 @@ def write_to_general_output(msgtype, timestring, server, channel, message):
 			if not eval(rule):
 				return
 		except BaseException,e:
-			errorMessage("Error in general output filter rule '%s': '%s'." % (rule, e))
-			return
+			errorMessage("Error in general output filter "
+				"rule '%s': '%s'." % (rule, e))
 
 	if channel:
 		# channel print
@@ -1053,13 +1053,7 @@ def errorMessage(string, force_dialog=False):
 # new style error reporting sticking to the guidelines
 
 def showInlineDialog(dialog):
-	# TODO: implement stacking of error messages
-	#
 	area = widgets.get_widget("notificationWidget")
-
-	#for child in area.get_children():
-	#	area.remove(child)
-
 
 	if dialog:
 		area.set_no_show_all(False)
