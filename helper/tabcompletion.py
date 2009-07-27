@@ -57,26 +57,16 @@ def _reset_iteration():
 	_current["needle"] = None
 	_current["lastCompletion"] = None
 
-def _appendMatch(entry, mode, text, word, match):
+def _appendMatch(entry, text, word, match, separator = " "):
+	""" Complete `word` in `text` with `match` and
+		apply it to the input bar widget.
+		Add separator too.
 	"""
-	Complete `word` in `text` with `match` and
-	apply it to the input bar widget.
-	Add separator too.
-	"""
-# FIXME: this mode stuff is so wrong..
-	if mode == "c":
-		separator = config.get("tekka","command_separator", " ")
-
-	elif mode == "n":
-		separator = config.get("tekka","nick_seperator", ": ")
-
 	# old text without needle + new_word + separator + rest
 	new_text = text[0:entry.get_position()-len(word)] + \
 		match + \
 		separator + \
 		text[entry.get_position():]
-
-	print "text: '%s' word: '%s' match: '%s'" % (text,word,match)
 
 	old_position = entry.get_position()
 	entry.set_text(new_text)
@@ -92,25 +82,14 @@ def _removeLastCompletion(entry, text):
 	"""
 	lc = _current["lastCompletion"]
 
-	print "Last completion was: '%s'" % (lc)
-
 	if lc == None:
 		return text
 
 	# strip of the match, keep the needle:
 	# 'n'<Tab> => 'nemo: ' => strip 'emo: '
-	print "text = %s, position = %d last_complete: " \
-		"%d (%s), needle: %d (%s)" % (
-		text, entry.get_position(),
-		len(lc), lc,
-		len(_current["needle"]),
-		_current["needle"])
-
 	needle = _current["needle"]
 	skip = (entry.get_position() - len(lc)) + len(needle)
 	new_text = text[:skip]+text[entry.get_position():]
-
-	print "Cleaned text is: '%s'" % (text)
 
 	entry.set_text(new_text)
 	entry.set_position(skip)
@@ -139,9 +118,6 @@ def _match_nick_in_channel(tab, word):
 
 	if matches:
 		_raise_position(matches, NICK_TYPE)
-		print "current position: %d and cp = '%d'" % (
-			_current["position"], len(matches))
-
 		return matches[_current["position"]]
 	return None
 
@@ -214,7 +190,6 @@ def complete(currentTab, entry, text):
 		# continue searching for `needle`
 		word = _current["needle"]
 		text = _removeLastCompletion(entry, text)
-		print "Continue iterating! Needle is '%s'" % (word)
 
 	else:
 		# get the word to complete
@@ -222,8 +197,6 @@ def complete(currentTab, entry, text):
 		word = text[0:entry.get_position()].split(" ")[-1].strip()
 
 		_current["needle"] = word
-
-	print "word is: '%s'" % (word)
 
 	if not word:
 		return False
@@ -239,12 +212,13 @@ def complete(currentTab, entry, text):
 
 			# if the word is in a sentence, use command
 			# completion (only whitespace)
-			if text.count(" ") >= 1:
-				mode = "c"
+			if text.count(" ") < 1:
+				separator = config.get("chatting", "nick_separator")
 			else:
-				mode = "n"
+				separator = " "
 
-			_appendMatch(entry, mode, text, word, match)
+			_appendMatch(entry, text, word, match,
+				separator = separator)
 
 			return True
 
@@ -254,12 +228,13 @@ def complete(currentTab, entry, text):
 		match = _match_nick_in_query(currentTab, word)
 
 		if match:
-			if text.count(" ") >= 1:
-				mode = "c"
+			if text.count(" ") < 1:
+				separator = config.get("tekka", "nick_separator")
 			else:
-				mode = "n"
+				separator = " "
 
-			_appendMatch(entry, mode, text, word, match)
+			_appendMatch(entry, text, word, match,
+				separator = separator)
 
 			return True
 
@@ -272,7 +247,7 @@ def complete(currentTab, entry, text):
 		match = _match_channel(word)
 
 		if match:
-			_appendMatch(entry, "c", text, word, match)
+			_appendMatch(entry, text, word, match)
 			return True
 
 	# *** command completion ***
@@ -282,7 +257,7 @@ def complete(currentTab, entry, text):
 		match = _match_command(word[1:])
 
 		if match:
-			_appendMatch(entry, "c",text, word, "/"+match)
+			_appendMatch(entry, text, word, "/"+match)
 			return True
 
 	return False
