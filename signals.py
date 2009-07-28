@@ -468,16 +468,22 @@ def channelTopic(time, server, from_str, channel, topic):
 		gui.setTopic(topic)
 
 	if not nick:
-		# this indicates if there was a topic setter or maki is
-		# just reporting the topic to us.
-		return
+		# just reporting the topic.
+		message = _(u"• Topic for %(channel)s is: „%(topic)s”." % {
+			"channel": channel,
+			"topic": topic})
+		gui.channelPrint(time, server, channel, message, "action")
 
-	if nick == com.getOwnNick(server):
-		message = _(u"• You changed the topic to “%(topic)s”.")
 	else:
-		message = _(u"• %(nick)s changed the topic to “%(topic)s”.")
+		if nick == com.getOwnNick(server):
+			message = _(u"• You changed the topic to “%(topic)s”.")
+		else:
+			message = _(u"• %(nick)s changed the topic to “%(topic)s”.")
 
-	gui.channelPrint(time, server, channel, message % { "nick": nick, "topic": gui.escape(topic) }, "action")
+		gui.channelPrint(time, server, channel, message % {
+			"nick": nick,
+			"topic": gui.escape(topic) },
+			"action")
 
 def channelBanlist(time, server, channel, mask, who, when):
 	"""
