@@ -204,7 +204,13 @@ def menu_View_showTopicBar_toggled_cb(menuItem):
 		gui.widgets.get_widget("topicBar").hide()
 	else:
 		config.set("tekka", "show_topicbar", "True")
-		gui.widgets.get_widget("topicBar").show()
+		tb = gui.widgets.get_widget("topicBar")
+
+		cTab = gui.tabs.getCurrentTab()
+		if cTab and cTab.is_channel():
+			tb.set_text(com.sushi.channel_topic(cTab.server, cTab.name))
+		tb.show()
+
 
 def menu_Dialogs_channelList_activate_cb(menuItem):
 	"""
