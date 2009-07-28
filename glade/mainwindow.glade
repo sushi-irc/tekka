@@ -78,7 +78,7 @@
                         <property name="label" translatable="yes">Disconnect</property>
                         <property name="visible">True</property>
                         <property name="use_stock">False</property>
-                        <signal name="activate" handler="menu_maki_Shutdown_activate_cb"/>
+                        <signal name="activate" handler="menu_maki_Disconnect_activate_cb"/>
                         <child internal-child="image">
                           <widget class="GtkImage" id="image3">
                             <property name="visible">True</property>
@@ -87,6 +87,21 @@
                         </child>
                       </widget>
                     </child>
+                    <child>
+                      <widget class="GtkImageMenuItem" id="menu_maki_Shutdown">
+                        <property name="label" translatable="yes">Shutdown</property>
+                        <property name="visible">True</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="menu_maki_Shutdown_activate_cb"/>
+                        <child internal-child="image">
+                          <widget class="GtkImage" id="image3">
+                            <property name="visible">True</property>
+                            <property name="stock">gtk-cancel</property>
+                          </widget>
+                        </child>
+                      </widget>
+                    </child>
+
                   </widget>
                 </child>
               </widget>

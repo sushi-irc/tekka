@@ -1096,6 +1096,8 @@ def setupGTK():
 		# maki menu
 		"menu_maki_Connect_activate_cb":
 			lambda w: connectMaki(),
+		"menu_maki_Disconnect_activate_cb":
+			lambda w: com.disconnect(),
 		"menu_maki_Shutdown_activate_cb":
 			lambda w: com.sushi.shutdown(
 				config.get(
