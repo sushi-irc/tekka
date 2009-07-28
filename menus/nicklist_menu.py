@@ -38,16 +38,17 @@ from com import sushi
 from lib import inline_dialog
 from lib import key_dialog
 
-def singleton_loader(cls):
-	instances = {}
-	def gi():
-		if cls not in instances:
-			instances[cls] = cls()
-		return instances[cls]
-	return gi
+class SingletonMeta(type):
 
-@singleton_loader
+	def __new__(cls, name, bases, attrs):
+		instances = {}
+		if cls not in instances:
+			instances[cls] = super(SingletonMeta, cls).__new__(cls, name, bases, attrs)
+		return instances[cls]
+
 class NickListMenu(object):
+
+	__metaclass__ = SingletonMeta
 
 	def __init__(self):
 		self.menu = None
