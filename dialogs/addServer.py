@@ -27,7 +27,6 @@ SUCH DAMAGE.
 """
 
 import gtk.glade
-import com
 from com import sushi
 import config
 import gui_control
@@ -95,8 +94,6 @@ def dialog_response_cb(dialog, response_id, callback):
 
 
 def run(callback):
-	data = None
-
 	dialog = widgets.get_widget("serverAdd")
 
 	dialog.connect("response", dialog_response_cb, callback)

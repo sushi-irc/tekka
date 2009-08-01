@@ -26,17 +26,6 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
-import sys
-import com
-import config
-
-try:
-	import gtk
-	import gtk.glade
-except:
-	print "GTK load failed."
-	sys.exit(1)
-
 def loadDialog(name):
 	importName = "dialogs."+name
 	try:

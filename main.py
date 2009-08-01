@@ -41,7 +41,6 @@ except:
 	sys.exit(1)
 
 import dbus
-import time
 import traceback
 
 import gtk.glade
@@ -50,7 +49,7 @@ import pango
 
 import locale
 import gettext
-from gettext import gettext as _
+_ = gettext.gettext
 
 import webbrowser
 
@@ -69,6 +68,8 @@ import commands
 import plugin_control
 
 from menus import *
+
+widgets = None
 
 # TODO:  if a tab is closed the widgets remain the same.
 # TODO:: it would be nice if the tab would be switched

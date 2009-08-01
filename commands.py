@@ -36,9 +36,10 @@ from gettext import gettext as _
 
 import config
 import com
-from com import sushi
 import gui_control as gui
 from lib.inline_dialog import InlineMessageDialog
+
+sushi = com.sushi
 
 def warnNoConnection(tab):
 	if tab.is_server():
@@ -270,7 +271,7 @@ def makiNickserv(serverTab, channelTab, args):
 	if not serverTab:
 		return gui.myPrint("Can't determine server.")
 
-	sushi.nickserv(server)
+	sushi.nickserv(serverTab.name)
 
 def makiCTCP(serverTab, channelTab, args):
 	"""

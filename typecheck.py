@@ -57,7 +57,7 @@ def types (**type_dict):
 				try:
 					foreign = check_dict[t_param]
 					foreign_type = type (check_dict[t_param])
-				except KeyError,e:
+				except KeyError:
 					# skip, this happens if an argument is not
 					# given, let python handle this.
 					continue
