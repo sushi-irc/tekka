@@ -23,7 +23,7 @@ $(GLADEH): %.h: %
 
 tekka.pot: $(PY) $(GLADEH)
 	$(QUIET_GEN) xgettext --keyword=_ --keyword=N_ --output=$@.tmp $+; \
-		if $(MSGCMP) --use-untranslated $@ $@.tmp; \
+		if $(MSGCMP) --use-untranslated $@ $@.tmp > /dev/null 2>&1; \
 		then \
 			$(RM) -f $@.tmp; \
 			$(TOUCH) $@; \

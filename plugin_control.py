@@ -37,17 +37,15 @@ unload(filename)
 -> del plugins[filename]
 """
 
-import gobject
 import os
 import imp
 import sys
 from gettext import gettext as _
 
-import com
-import commands
-import signals
 import config
 from lib.inline_dialog import InlineMessageDialog
+
+import gui_control
 
 _module_prefix = "tekkaplugin_"
 _plugins = {}
@@ -103,11 +101,11 @@ def _find_module(filename):
 			name, config.get_list("tekka","plugin_dirs"))
 
 	except ImportError, e:
-		generic_error(_("Plugin not found:"), _("Error while finding module for '%s'" % (filename)))
+		generic_error(_("Plugin could not be loaded."), _("Plugin %(plugin)s could not be loaded.\nThe following error occurred: %(error)s") % {"plugin": filename, "error": e})
 		return None
 
 	if not mod_info:
-		generic_error(_("Plugin not found:"), _("No plugin found for filename '%s'" % (filename)))
+		generic_error(_("Plugin could not be loaded."), _("Plugin %(plugin)s could not be loaded.") % {"plugin": filename})
 		return None
 
 	return mod_info
@@ -127,7 +125,7 @@ def _load_module(filename, mod_info):
 		plugin = imp.load_module(modname, *mod_info)
 
 	except ImportError,e:
-		generic_error(_("Plugin load failed:"), _("Failure while loading plugin '%s': %s" % (name, e)))
+		generic_error(_("Plugin could not be loaded."), _("Plugin %(plugin)s could not be loaded.\nThe following error occurred: %(error)s") % {"plugin":name, "error":e})
 
 	try:
 		mod_info[0].close()
@@ -156,7 +154,7 @@ def load(filename):
 	global _plugins
 
 	if _plugins.has_key(filename):
-		generic_error(_("Plugin already loaded."), _("A plugin with that name is already loaded."))
+		generic_error(_("Plugin is already loaded."), _("Plugin %(plugin)s is already loaded.") % {"plugin": filename})
 		return False
 
 	mod_info = _find_module(filename)
@@ -175,7 +173,7 @@ def load(filename):
 		instance = eval ("plugin.%s()" % (classname))
 
 	except BaseException,e:
-		generic_error(_("Plugin load failed:"), _("Error while instancing plugin: %s" % (e)))
+		generic_error(_("Plugin could not be loaded."), _("Plugin %(plugin)s could not be loaded.\nThe following error occurred: %(error)s") % {"plugin": filename, "error": e})
 		_unload_module(modname)
 		return False
 
@@ -195,7 +193,7 @@ def unload(filename):
 	try:
 		entry = _plugins[filename]
 	except KeyError:
-		generic_error(_("Plugin unload failed:"), _("Failed to unload plugin '%s', does not exist." % (filename)))
+		generic_error(_("Plugin could not be unloaded."), _("Plugin %(plugin)s could not be unloaded, because it is not loaded.") % {"plugin": filename})
 		return False
 
 	# tell the instance, it's time to go
@@ -270,7 +268,6 @@ def load_autoloads():
 	for opt,filename in autoloads:
 		print "autoloading '%s'" % (filename)
 		if not load(filename):
-			generic_error(_("Plugin load failed:"),
-				_("Failed to load plugin '%s' automatically, removing from list." % (filename)))
-			config.unset("autoload_plugins",opt)
+			generic_error(_("Plugin could not be loaded."),
+				_("Plugin %(plugin)s could not be loaded automatically.") % {"plugin": filename})
 

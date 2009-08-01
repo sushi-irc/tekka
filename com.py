@@ -63,7 +63,7 @@ class SushiWrapper (object):
 		def dummy(*args, **kwargs):
 			dialog = InlineMessageDialog(_("tekka could not connect to maki."),
 				_("Please check whether maki is running.\n"
-				"The following error occured: %(error)s") % {
+				"The following error occurred: %(error)s") % {
 					"error": message })
 			dialog.connect("response", lambda w,i: w.destroy())
 			gui_control.showInlineDialog(dialog)
@@ -72,7 +72,7 @@ class SushiWrapper (object):
 			def new(*args, **kwargs):
 				dialog = InlineMessageDialog(_("tekka could not connect to maki."),
 					_("Please check whether maki is running.\n"
-					"The following error occured: %(error)s") % {
+					"The following error occurred: %(error)s") % {
 						"error": message })
 				dialog.connect("response", lambda w,i: w.destroy())
 				gui_control.showInlineDialog(dialog)
@@ -144,7 +144,7 @@ def connect():
 	def bus_remote_error(exception):
 		d = InlineMessageDialog(_("tekka could not connect to maki."),
 			_("Please check whether maki is running.\n"
-			"The following error occured: %(error)s") % {
+			"The following error occurred: %(error)s") % {
 				"error": str(exception) })
 		gui_control.showInlineDialog(d)
 		d.connect("response",lambda w,id: w.destroy())
@@ -156,7 +156,7 @@ def connect():
 		except DBusException, e:
 			d = InlineMessageDialog(_("tekka could not connect to maki."),
 				_("Please check whether maki is running.\n"
-				"The following error occured: %(error)s") % {
+				"The following error occurred: %(error)s") % {
 					"error": str(e) })
 			gui_control.showInlineDialog(d)
 			d.connect("response",lambda w,i: w.destroy())
@@ -184,7 +184,7 @@ def connect():
 	except dbus.exceptions.DBusException, e:
 		d = InlineMessageDialog(_("tekka could not connect to maki."),
 			_("Please check whether maki is running.\n"
-			"The following error occured: %(error)s") % {
+			"The following error occurred: %(error)s") % {
 				"error": str(e) })
 		d.connect("response", lambda d,id: d.destroy())
 

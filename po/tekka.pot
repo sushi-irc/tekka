@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-01 10:56+0200\n"
+"POT-Creation-Date: 2009-08-01 14:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,28 +17,28 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: ../commands.py:49 ../commands.py:56
+#: ../commands.py:50 ../commands.py:57
 msgid "Warning:"
 msgstr ""
 
-#: ../commands.py:49
+#: ../commands.py:50
 #, python-format
 msgid "You are not connected to server %(server)s."
 msgstr ""
 
-#: ../commands.py:56
+#: ../commands.py:57
 #, python-format
 msgid ""
 "The channel %(channel)s is not joined. Everything you write will not be send."
 msgstr ""
 
-#: ../commands.py:538
+#: ../commands.py:539
 #, python-format
 msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
 msgstr ""
 
 #: ../com.py:64 ../com.py:73 ../com.py:145 ../com.py:157 ../com.py:185
-#: ../main.py:155 ../main.py:220
+#: ../main.py:156 ../main.py:221
 msgid "tekka could not connect to maki."
 msgstr ""
 
@@ -46,7 +46,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Please check whether maki is running.\n"
-"The following error occured: %(error)s"
+"The following error occurred: %(error)s"
 msgstr ""
 
 #: ../com.py:203
@@ -77,91 +77,81 @@ msgstr[1] ""
 msgid "Error: %(message)s"
 msgstr ""
 
-#: ../main.py:155 ../main.py:220
+#: ../main.py:156 ../main.py:221
 msgid "Please check whether maki is running."
 msgstr ""
 
-#: ../main.py:228
+#: ../main.py:229
 msgid "tekka could not determine server."
 msgstr ""
 
-#: ../main.py:229
+#: ../main.py:230
 msgid ""
 "There is no active server. Click on a server tab or a child of a server tab "
 "to activate the server."
 msgstr ""
 
-#: ../main.py:467
+#: ../main.py:468
 msgid "Reset markup"
 msgstr ""
 
-#: ../main.py:721
+#: ../main.py:722
 #, python-format
 msgid "Do you really want to close channel “%(name)s”?"
 msgstr ""
 
-#: ../main.py:723
+#: ../main.py:724
 #, python-format
 msgid "Do you really want to close query “%(name)s”?"
 msgstr ""
 
-#: ../main.py:725
+#: ../main.py:726
 #, python-format
 msgid "Do you really want to close server “%(name)s”?"
 msgstr ""
 
-#: ../main.py:1250
+#: ../main.py:1251
 msgid "Error occured"
 msgstr ""
 
-#: ../plugin_control.py:106 ../plugin_control.py:110
-msgid "Plugin not found:"
+#: ../plugin_control.py:104 ../plugin_control.py:108 ../plugin_control.py:128
+#: ../plugin_control.py:176 ../plugin_control.py:271
+msgid "Plugin could not be loaded."
 msgstr ""
 
-#: ../plugin_control.py:106
+#: ../plugin_control.py:104 ../plugin_control.py:128 ../plugin_control.py:176
 #, python-format
-msgid "Error while finding module for '%s'"
+msgid ""
+"Plugin %(plugin)s could not be loaded.\n"
+"The following error occurred: %(error)s"
 msgstr ""
 
-#: ../plugin_control.py:110
+#: ../plugin_control.py:108
 #, python-format
-msgid "No plugin found for filename '%s'"
+msgid "Plugin %(plugin)s could not be loaded."
 msgstr ""
 
-#: ../plugin_control.py:130 ../plugin_control.py:178 ../plugin_control.py:273
-msgid "Plugin load failed:"
+#: ../plugin_control.py:157
+msgid "Plugin is already loaded."
 msgstr ""
 
-#: ../plugin_control.py:130
+#: ../plugin_control.py:157
 #, python-format
-msgid "Failure while loading plugin '%s': %s"
+msgid "Plugin %(plugin)s is already loaded."
 msgstr ""
 
-#: ../plugin_control.py:159
-msgid "Plugin already loaded."
+#: ../plugin_control.py:196
+msgid "Plugin could not be unloaded."
 msgstr ""
 
-#: ../plugin_control.py:159
-msgid "A plugin with that name is already loaded."
-msgstr ""
-
-#: ../plugin_control.py:178
+#: ../plugin_control.py:196
 #, python-format
-msgid "Error while instancing plugin: %s"
+msgid "Plugin %(plugin)s could not be unloaded, because it is not loaded."
 msgstr ""
 
-#: ../plugin_control.py:198
-msgid "Plugin unload failed:"
-msgstr ""
-
-#: ../plugin_control.py:198
+#: ../plugin_control.py:272
 #, python-format
-msgid "Failed to unload plugin '%s', does not exist."
-msgstr ""
-
-#: ../plugin_control.py:274
-#, python-format
-msgid "Failed to load plugin '%s' automatically, removing from list."
+msgid "Plugin %(plugin)s could not be loaded automatically."
 msgstr ""
 
 #: ../signals.py:472

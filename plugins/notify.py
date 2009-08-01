@@ -59,6 +59,7 @@ class notify (sushi.Plugin):
 		except:
 			self.pixbuf = None
 
+		# FIXME
 		self.connect_signal("message", self.message_cb)
 		self.connect_signal("action", self.action_cb)
 
