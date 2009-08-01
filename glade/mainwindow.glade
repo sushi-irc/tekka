@@ -293,6 +293,7 @@
                             <property name="wrap_mode">word-char</property>
                             <property name="selectable">True</property>
                             <property name="visible">False</property>
+                            <property name="can_focus">False</property>
                           </widget>
                           <packing>
                             <property name="expand">False</property>

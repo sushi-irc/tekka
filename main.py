@@ -767,15 +767,20 @@ def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 	"""
 	buffer = gui.get_current_output_textview().get_buffer()
 	goBuffer = widgets.get_widget("generalOutput").get_buffer()
+	topicBar = widgets.get_widget("topicBar")
 	cb = gtk.Clipboard()
 
-	# FIXME topicBar
 	if buffer.get_property("has-selection"):
 		buffer.copy_clipboard(cb)
 	elif inputBar.get_selection_bounds():
 		inputBar.copy_clipboard()
 	elif goBuffer.get_property("has-selection"):
 		goBuffer.copy_clipboard(cb)
+	elif topicBar.get_selection_bounds():
+		bounds = topicBar.get_selection_bounds()
+		text = unicode(topicBar.get_text(), "UTF-8")
+		text = text[bounds[0]:bounds[1]]
+		cb.set_text(text)
 
 def nickListRenderNicks(column, renderer, model, iter):
 	""" Renderer func for column "Nicks" in NickList """
