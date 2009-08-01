@@ -469,16 +469,16 @@ def channelTopic(time, server, from_str, channel, topic):
 
 	if not nick:
 		# just reporting the topic.
-		message = _(u"• Topic for %(channel)s is: „%(topic)s”." % {
+		message = _(u"• Topic for %(channel)s: %(topic)s") % {
 			"channel": channel,
-			"topic": topic})
+			"topic": gui.escape(topic) }
 		gui.channelPrint(time, server, channel, message, "action")
 
 	else:
 		if nick == com.getOwnNick(server):
-			message = _(u"• You changed the topic to “%(topic)s”.")
+			message = _(u"• You changed the topic to %(topic)s.")
 		else:
-			message = _(u"• %(nick)s changed the topic to “%(topic)s”.")
+			message = _(u"• %(nick)s changed the topic to %(topic)s.")
 
 		gui.channelPrint(time, server, channel, message % {
 			"nick": nick,
