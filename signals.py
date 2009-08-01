@@ -43,6 +43,8 @@ from lib import dcc_dialog
 
 from com import sushi
 
+from typecheck import types
+
 signals = {}
 
 def get_contrast_colors ():
@@ -85,11 +87,10 @@ def parse_from (from_str):
 
 	return (h[0], t[0], t[1])
 
+@types (signal=basestring)
 def connect_signal (signal, handler):
 	""" connect handler to signal """
 	global signals
-	if type(signal) != type(""):
-		raise TypeError
 
 	if not signals.has_key (signal):
 	  	signals[signal] = {}
@@ -100,11 +101,10 @@ def connect_signal (signal, handler):
 
 	signals[signal][handler] = sushi.connect_to_signal (signal, handler)
 
+@types (signal=basestring)
 def disconnect_signal (signal, handler):
 	""" disconnect handler from signal """
 	global signals
-	if type(signal) != type(""):
-		raise TypeError
 
 	try:
 		ob = signals[signal][handler]
@@ -209,7 +209,11 @@ def addChannels(server):
 		tab.nickList.clear()
 		tab.nickList.addNicks(nicks, prefixes)
 
+		tab.topic = sushi.channel_topic(server, channel)
+		tab.topicsetter = ""
+
 		if gui.tabs.isActive(tab):
+			gui.setTopic(tab.topic)
 			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
 
 		# TODO: handle topic setter
@@ -220,7 +224,8 @@ def addChannels(server):
 			gui.tabs.addTab(server, tab, update_shortcuts=False)
 			lastLog(server, channel)
 
-		sushi.topic(server, channel, "")
+		# FIXME print topic?
+
 
 	gui.updateServerTreeShortcuts()
 

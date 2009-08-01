@@ -626,8 +626,8 @@ class TabClass(gobject.GObject):
 				tab.nickList.get_operator_count())
 
 			if config.get_bool("tekka", "show_topicbar"):
-				widgets.get_widget("topicBar").show()
 				widgets.get_widget("topicBar").set_text(tab.topic)
+				widgets.get_widget("topicBar").show()
 
 			widgets.get_widget("VBox_nickList").show_all()
 			widgets.get_widget("nickList").set_model(tab.nickList)

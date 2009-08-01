@@ -209,7 +209,7 @@ def menu_View_showTopicBar_toggled_cb(menuItem):
 
 		cTab = gui.tabs.getCurrentTab()
 		if cTab and cTab.is_channel():
-			tb.set_text(com.sushi.channel_topic(cTab.server, cTab.name))
+			tb.set_text(cTab.topic)
 		tb.show()
 
 
