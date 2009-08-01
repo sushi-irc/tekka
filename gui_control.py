@@ -146,16 +146,6 @@ def custom_handler(glade, function_name, widget_name, *x):
 		align.set_property("visible", False)
 		return align
 
-	elif widget_name == "topicBar":
-		try:
-			  bar = SpellEntry()
-		except NameError:
-			  bar = gtk.Entry()
-
-		bar.connect("activate", __main__.topicBar_activate_cb)
-
-		return bar
-
 	return None
 
 @types(gladeFile=basestring, section=basestring)
@@ -201,7 +191,6 @@ class TabClass(gobject.GObject):
 		if not tab is self.getCurrentTab():
 			return
 		widgetList = [
-			widgets.get_widget('topicBar'),
 			widgets.get_widget('nickList')]
 		for widget in widgetList:
 			widget.set_sensitive (switch)
@@ -716,7 +705,6 @@ def setUseable(switch):
 	global gui_is_useable
 
 	widgetList = [
-		widgets.get_widget("topicBar"),
 		widgets.get_widget("inputBar"),
 		widgets.get_widget("serverTree"),
 		widgets.get_widget("nickList"),
@@ -818,7 +806,6 @@ def setTopic(string):
 	"""
 	tb = widgets.get_widget("topicBar")
 	tb.set_text(string)
-	tb.set_position(len(string))
 
 def updateServerTreeShortcuts():
 	"""

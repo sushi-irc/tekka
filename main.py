@@ -201,17 +201,18 @@ def menu_View_showStatusIcon_toggled_cb(menuItem):
 def menu_View_showTopicBar_toggled_cb(menuItem):
 	""" hide or show topic bar """
 	if not menuItem.get_active():
-		config.set("tekka", "show_topicbar", "False")
+		config.set("tekka", "show_topicbar", str(False))
 		gui.widgets.get_widget("topicBar").hide()
 	else:
-		config.set("tekka", "show_topicbar", "True")
+		config.set("tekka", "show_topicbar", str(True))
 		tb = gui.widgets.get_widget("topicBar")
 
 		cTab = gui.tabs.getCurrentTab()
+
 		if cTab and cTab.is_channel():
 			tb.set_text(cTab.topic)
-		tb.show()
 
+		tb.show()
 
 def menu_Dialogs_channelList_activate_cb(menuItem):
 	"""
@@ -394,25 +395,6 @@ def inputBar_key_press_event_cb(inputBar, event):
 		tabcompletion.stopIteration()
 
 
-def topicBar_activate_cb(topicBar):
-	"""
-		Receives if the topicBar gtk.Entry
-		widget was activated (Enter was hit).
-		Set the topic of the current channel
-		to the text in the topicBar
-	"""
-	sTab,cTab = gui.tabs.getCurrentTabs()
-
-	if not cTab:
-		# no channel, no topic
-		return
-
-	text = topicBar.get_text()
-
-	com.sushi.topic(sTab.name, cTab.name, text)
-
-	widgets.get_widget("inputBar").grab_focus()
-
 def serverTree_misc_menu_reset_activate_cb(menuItem):
 	"""
 	reset the markup of all tabs
@@ -553,6 +535,10 @@ def nickList_button_press_event_cb(nickList, event):
 			menu.popup(None, None, None, event.button, event.time)
 
 	return False
+
+def outputVBox_size_allocate_cb(outputVBox, alloc):
+	widget = gui.widgets.get_widget("topicBar")
+	widget.set_size_request(alloc.width, -1)
 
 def scrolledWindow_output_vscrollbar_valueChanged_cb(range):
 	"""
@@ -781,18 +767,15 @@ def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 	"""
 	buffer = gui.get_current_output_textview().get_buffer()
 	goBuffer = widgets.get_widget("generalOutput").get_buffer()
-	topicBar = widgets.get_widget("topicBar")
 	cb = gtk.Clipboard()
 
+	# FIXME topicBar
 	if buffer.get_property("has-selection"):
 		buffer.copy_clipboard(cb)
 	elif inputBar.get_selection_bounds():
 		inputBar.copy_clipboard()
 	elif goBuffer.get_property("has-selection"):
 		goBuffer.copy_clipboard(cb)
-	elif topicBar.get_selection_bounds():
-		topicBar.copy_clipboard()
-
 
 def nickListRenderNicks(column, renderer, model, iter):
 	""" Renderer func for column "Nicks" in NickList """
@@ -1154,6 +1137,9 @@ def setupGTK():
 		"nickList_button_press_event_cb":
 			nickList_button_press_event_cb,
 
+		# output vbox signals
+		"outputVBox_size_allocate_cb":
+			outputVBox_size_allocate_cb,
 	}
 
 	widgets.signal_autoconnect(sigdic)
@@ -1225,7 +1211,7 @@ def setupGTK():
 
 	btn = widgets.get_widget("menu_View_showTopicBar")
 
-	if config.get_bool("tekka", "show_statusbar"):
+	if config.get_bool("tekka", "show_topicbar"):
 		gui.widgets.get_widget("topicBar").show()
 		btn.set_active(True)
 	btn.toggled()
