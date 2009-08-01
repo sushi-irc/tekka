@@ -6,7 +6,7 @@ PY        = $(wildcard ../*.py) $(wildcard ../*/*.py)
 GLADE     = $(wildcard ../glade/*.glade) $(wildcard ../glade/*/*.glade)
 GLADEH    = $(GLADE:.glade=.glade.h)
 
-all:
+all: tekka.pot
 
 install: $(PO:%.po=%.mo)
 	for file in $+; do \
@@ -22,7 +22,14 @@ $(GLADEH): %.h: %
 	$(SED) -i '/^char \*s = N_("gtk-.*");$$/d' $@
 
 tekka.pot: $(PY) $(GLADEH)
-	$(QUIET_GEN) xgettext --keyword=_ --keyword=N_ --output=$@ $+
+	$(QUIET_GEN) xgettext --keyword=_ --keyword=N_ --output=$@.tmp $+; \
+		if $(MSGCMP) --use-untranslated $@ $@.tmp; \
+		then \
+			$(RM) -f $@.tmp; \
+			$(TOUCH) $@; \
+		else \
+			$(MV) $@.tmp $@; \
+		fi
 
 %.mo: %.po
 	$(QUIET_GEN) msgfmt --output-file=$@ $+
