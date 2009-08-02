@@ -76,7 +76,7 @@ class TabControl(gobject.GObject):
 			return self.prefix_cache[server][channel]
 
 	@types (tab = TekkaTab, switch = bool)
-	def setUseable(self, tab, switch):
+	def set_useable(self, tab, switch):
 		""" switch the destinated tab from/to
 			useable state
 			((de)activate sensitive widgets)
@@ -387,6 +387,7 @@ class TabControl(gobject.GObject):
 
 		return None, None
 
+	@types (tab = TekkaTab)
 	def is_active(self, tab):
 		"""
 			Checks if the given tab is currently
@@ -412,6 +413,7 @@ class TabControl(gobject.GObject):
 
 		return False
 
+	@types (tab = TekkaTab)
 	def get_next_tab(self, tab):
 		""" get the next left tab near to tab. 
 		
@@ -471,7 +473,7 @@ class TabControl(gobject.GObject):
 				they were hidden) and fill them with tab
 				specific data.
 			"""
-			self.setUseable(tab, tab.joined)
+			self.set_useable(tab, tab.joined)
 
 			lib.gui_control.set_user_count(
 				len(tab.nickList),
@@ -486,7 +488,7 @@ class TabControl(gobject.GObject):
 
 		elif tab.is_query() or tab.is_server():
 			# queries and server tabs don't have topics or nicklists
-			self.setUseable(tab, tab.connected)
+			self.set_useable(tab, tab.connected)
 
 			lib.gui_control.get_widget("topicBar").hide()
 			lib.gui_control.get_widget("VBox_nickList").hide()

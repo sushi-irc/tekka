@@ -219,17 +219,16 @@ def addChannels(server):
 				tab.nickList.get_operator_count())
 
 		# TODO: handle topic setter
-		tab.joined=True
-		tab.connected=True
+		tab.joined = True
+		tab.connected = True
 
 		if add:
-			gui.tabs.add_tab(server, tab, update_shortcuts=False)
+			gui.tabs.add_tab(server, tab, update_shortcuts = False)
 			lastLog(server, channel)
-
 
 	gui.updateServerTreeShortcuts()
 
-
+@types (server = basestring, channel = basestring, lines = int)
 def lastLog(server, channel, lines=0):
 	"""
 		Fetch lines amount of history text for channel

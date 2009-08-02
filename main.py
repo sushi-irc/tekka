@@ -105,6 +105,8 @@ def maki_connect_callback(sushi):
 
 def maki_disconnect_callback():
     """ connection to maki lost """
+    # FIXME:  after disconnecting and reconnecting, the current tab's textview
+    # FIXME:: is still insensitive
     signals.handle_maki_disconnect()
     gui.set_useable(False)
 
@@ -126,13 +128,13 @@ def tekka_tab_new_name(tab, name):
 
 def tekka_tab_connected(tab, connected):
     """ tab received a change on connected attribute """
-    gui.tabs.setUseable(tab, connected)
+    gui.tabs.set_useable(tab, connected)
     if tab.path:
         gui.updateServerTreeMarkup(tab.path)
 
 def tekka_channel_joined(tab, switch):
     """ channel received a change on joined attribute """
-    gui.tabs.setUseable(tab, switch)
+    gui.tabs.set_useable(tab, switch)
     if tab.path:
         gui.updateServerTreeMarkup(tab.path)
 
