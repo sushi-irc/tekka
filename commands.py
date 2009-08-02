@@ -83,7 +83,7 @@ def makiQuit(currentServer, currentChannel, args):
 	"""
 	if args:
 		# /quit <server> [<reason>]
-		if gui.tabs.searchTab(args[0]):
+		if gui.tabs.search_tab(args[0]):
 			reason = " ".join(args[1:])
 			if not reason:
 				reason = config.get("chatting", "quit_message", "")
@@ -126,7 +126,7 @@ def makiPart(currentServer, currentChannel, args):
 	"""
 	if args and currentServer:
 		# /part <channel> [<reason>]
-		if gui.tabs.searchTab(currentServer.name, args[0]):
+		if gui.tabs.search_tab(currentServer.name, args[0]):
 			reason = " ".join(args[1:])
 			if not reason:
 				reason = config.get("chatting", "part_message", "")
@@ -402,12 +402,12 @@ def tekkaQuery(currentServer, currentTab, args):
 
 	nick = args[0]
 
-	if not gui.tabs.searchTab(currentServer.name, nick):
+	if not gui.tabs.search_tab(currentServer.name, nick):
 		# no query started
 
-		tab = gui.tabs.createQuery(currentServer.name, nick)
+		tab = gui.tabs.create_query(currentServer.name, nick)
 		tab.connected = True
-		gui.tabs.addTab(currentServer.name, tab)
+		gui.tabs.add_tab(currentServer.name, tab)
 		gui.updateServerTreeShortcuts()
 
 		output = tab.textview.get_buffer()
@@ -483,7 +483,7 @@ def parseInput(text):
 	if not text:
 		return
 
-	serverTab,channelTab = gui.tabs.getCurrentTabs()
+	serverTab,channelTab = gui.tabs.get_current_tabs()
 
 	if ((channelTab and not channelTab.connected)
 		or (serverTab and not serverTab.connected)):

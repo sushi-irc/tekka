@@ -244,7 +244,7 @@ def applyGeneralOutputFilter():
 def tekka_show_status_icon_toggled(button):
 	config.set("tekka", "show_status_icon",
 			str(button.get_active()))
-	gui.setStatusIcon(button.get_active())
+	gui.switch_status_icon(button.get_active())
 
 def tekka_hide_on_close_toggled(button):
 	config.set("tekka", "hide_on_close",

@@ -52,7 +52,7 @@ class Plugin (object):
 		return com.sushi
 
 	def get_nick(self, server):
-		nick = com.getOwnNick(server)
+		nick = com.get_own_nick(server)
 
 		if not nick:
 			return None

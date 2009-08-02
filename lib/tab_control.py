@@ -52,17 +52,18 @@ class TabControl(gobject.GObject):
 		self.prefix_cache = {}
 		self._callbacks = {}
 
-	@types(d = dict)
+	@types (d = dict)
 	def set_callbacks(self, d):
 		self._callbacks = d
 
+	@types (key = basestring)
 	def get_callback(self, key):
 		try:
 			return self._callbacks[key]
 		except KeyError:
 			raise ValueError, "No such signal handler: %s." % (key)
 
-	@types(server = basestring, channel = basestring)
+	@types (server = basestring, channel = basestring)
 	def get_channel_prefix(self, server, channel):
 		if not self.prefix_cache.has_key(server):
 			self.prefix_cache[server] = {}
@@ -74,13 +75,13 @@ class TabControl(gobject.GObject):
 				com.sushi.support_prefix(server)[1])
 			return self.prefix_cache[server][channel]
 
-	@types(tab = TekkaTab, switch = bool)
+	@types (tab = TekkaTab, switch = bool)
 	def setUseable(self, tab, switch):
 		""" switch the destinated tab from/to
 			useable state
 			((de)activate sensitive widgets)
 		"""
-		if not tab is self.getCurrentTab():
+		if not tab is self.get_current_tab():
 			return
 
 		widgetList = [lib.gui_control.get_widget('nickList')]
@@ -89,6 +90,11 @@ class TabControl(gobject.GObject):
 			widget.set_sensitive (switch)
 
 	def _createTab(self, tabtype, name, *args, **kwargs):
+		""" instance class of type tabtype, connect signals,
+			create textview and setup input history.
+			
+			Returns a new child of TekkaTab.
+		"""
 		tab = tabtype(name, *args, **kwargs)
 
 		tab.textview = OutputTextView()
@@ -105,7 +111,13 @@ class TabControl(gobject.GObject):
 
 		return tab
 
-	def createChannel(self, server, name):
+	@types (server = basestring, name = basestring)
+	def create_channel(self, server, name):
+		""" create TekkaChannel object and associated a nickListStore
+			with it.
+			
+			Returns the newly created Tab object.
+		"""
 		ns = nickListStore()
 
 		ns.set_modes(self.get_channel_prefix(server, name))
@@ -116,19 +128,19 @@ class TabControl(gobject.GObject):
 
 		return tab
 
-	def createQuery(self, server, name):
+	def create_query(self, server, name):
 		tab = self._createTab(TekkaQuery, name, server)
 		return tab
 
-	def createServer(self, server):
+	def create_server(self, server):
 		tab = self._createTab(TekkaServer, server)
 
 		tab.connect("away", self.get_callback("away"))
 		return tab
 
-	def searchTab(self, server, name=""):
-		"""
-			Searches for server (and if name is given,
+	@types (server = basestring, name = basestring)
+	def search_tab(self, server, name=""):
+		"""	Searches for server (and if name is given,
 			for a tab identified by name).
 			The method returns the tab object or None.
 		"""
@@ -143,20 +155,16 @@ class TabControl(gobject.GObject):
 						if channel[1].lower() == name.lower():
 							return channel[2]
 		return None
-
-	def searchTabs(self, server, name=""):
-		"""
-			server: string
-			name: string
-
-			Searches for the given server and
-			if not "" the method searches for
-			a child identified by name.
-			They would be returned in a tuple:
-			(<serverTab>,<channelTab>)
+            
+	@types (server = basestring, name = basestring)
+	def search_tabs(self, server, name=""):
+		"""	Searches for a pair of tabs.
+            name can be empty, in that case
+            only the server string is used
+            for the search.
 
 			Possible return values:
-			(<serverTab>,<channelTab)
+			(<serverTab>,<channelTab>)
 			(<serverTab>,None)
 			(None,None)
 		"""
@@ -171,12 +179,9 @@ class TabControl(gobject.GObject):
 							return (row[2], channel[2])
 		return (None, None)
 
-	def addTab(self, server, object, update_shortcuts=True):
-		"""
-			server: string
-			object: tekkaTab
-
-			Adds a tab object into the server tree.
+	@types (server = (type(None), basestring), object = TekkaTab, update_shortcuts = bool)
+	def add_tab(self, server, object, update_shortcuts=True):
+		"""	Adds a tab object into the server tree.
 			server can be a string identifying a
 			server acting as parent for the tab or
 			None.
@@ -247,12 +252,9 @@ class TabControl(gobject.GObject):
 					temp = store.iter_parent(oIter)
 					nextIter = store.iter_next(temp)
 
-
-	def removeTab(self, tab, update_shortcuts=True):
-		"""
-			tab: tekkaTab
-
-			Removes the tab from the server tree.
+	@types (tab = TekkaTab, update_shortcuts = bool)
+	def remove_tab(self, tab, update_shortcuts=True):
+		"""	Removes the tab from the server tree.
 			There's no need for giving a parent due
 			to to the unique identifying path stored
 			inner the tekkaTab.
@@ -287,47 +289,9 @@ class TabControl(gobject.GObject):
 
 		return True
 
-	@types(server=basestring, object=basestring)
-	def removeTabByString(self, server, object):
-		"""
-			server: string
-			object: string
-
-			Removes a tab from the server tree.
-
-			server and object are strings identifying
-			the server and the child tab.
-
-			server can be None/"" so there only
-			a search on the top of the tree is performed.
-
-			On success this method returns True
-			otherwise False.
-		"""
-		store = lib.gui_control.get_widget("serverTree").get_model()
-
-		if server:
-			for row in store:
-				if row[1].lower() == server.lower():
-					for child in row.iterchildren():
-						if child[1].lower() == object.lower():
-							store.remove(child.iter)
-							return True
-		else:
-			for row in store:
-				if row[1].lower() == object.lower():
-					store.remove(row.iter)
-					return True
-
-		return False
-
-	def replaceTab(self, old, new):
-		"""
-			old: tekkaTab
-			new: tekkaTab
-
-			Replaces the tab `old` with the tab `new`.
-		"""
+	@types (old = TekkaTab, new = TekkaTab)
+	def replace_tab(self, old, new):
+		"""	Replaces the tab `old` with the tab `new`. """
 		store = lib.gui_control.get_widget("serverTree").get_model()
 
 		try:
@@ -344,14 +308,13 @@ class TabControl(gobject.GObject):
 			for row in store.iter_children(iter):
 				row[2].server = new.name
 
-	def getAllTabs(self, server=""):
+	@types (server = basestring)
+	def get_all_tabs(self, server=""):
 		"""
 			Returns all registered tabs.
-			If server is given this method
-			returns only the tabs registered
-			to the server identified by server.
-			In the case of a given server, the
-			server tab is included in the returned list.
+			If server is given, only the server
+			and it's childs are returned.
+			
 			Note:  if there's a newly row inserted, the
 			Note:: tab-column can be None.
 		"""
@@ -377,7 +340,7 @@ class TabControl(gobject.GObject):
 
 		return tabs
 
-	def getCurrentTab(self):
+	def get_current_tab(self):
 		"""
 			Returns the current tab.
 		"""
@@ -387,13 +350,14 @@ class TabControl(gobject.GObject):
 		except (IndexError,TypeError):
 			return None
 
-	def getCurrentTabs(self):
+	def get_current_tabs(self):
 		"""
 			Returns a tuple with the server
 			as parent tab and the active channel tab.
-			If only a server is active a tuple
-			with <server>,None is returned.
-
+			
+			If only a server is active, the
+			second field of the tuple is None.
+			
 			Possible return values:
 			(<serverTab>,<channelTab>)
 			(<serverTab>,None)
@@ -423,14 +387,14 @@ class TabControl(gobject.GObject):
 
 		return None, None
 
-	def isActive(self, tab):
+	def is_active(self, tab):
 		"""
 			Checks if the given tab is currently
 			activated in the serverTree.
 			Returns True if the tab is active,
 			otherwise False.
 		"""
-		serverTab, channelTab = self.getCurrentTabs()
+		serverTab, channelTab = self.get_current_tabs()
 
 		if not serverTab or (not channelTab and tab.is_channel()):
 			return False
@@ -448,25 +412,33 @@ class TabControl(gobject.GObject):
 
 		return False
 
-	def getNextTab(self, tab):
-		""" get the next left tab near to tab. """
+	def get_next_tab(self, tab):
+		""" get the next left tab near to tab. 
+		
+			This function doesn't make a difference
+			between the type of tab.
+		"""
 		if not tab or not tab.path:
 			return None
-		tablist = self.getAllTabs()
+		
+		tablist = self.get_all_tabs()
+		
 		if not tablist or len(tablist) == 1:
 			return None
+		
 		try:
 			i = tablist.index(tab)
 		except ValueError:
 			return None
+		
 		return tablist[i-1]
 
-	def switchToPath(self, path):
-		"""
-			path: tuple
-
-			Switches in TreeModel of serverTree to the
-			tab identified by path.
+	@types (path = tuple)
+	def switch_to_path(self, path):
+		""" Switch the server tree cursor
+			to the row pointed to by path.
+			
+			This function returns None.
 		"""
 		if not lib.gui_control.gui_is_useable:
 			return
@@ -484,7 +456,7 @@ class TabControl(gobject.GObject):
 			print "switchToPath(): tab not found in store, aborting."
 			return
 
-		old_tab = self.getCurrentTab()
+		old_tab = self.get_current_tab()
 
 		serverTree.set_cursor(path)
 		self.currentPath = path
@@ -501,7 +473,7 @@ class TabControl(gobject.GObject):
 			"""
 			self.setUseable(tab, tab.joined)
 
-			lib.gui_control.setUserCount(
+			lib.gui_control.set_user_count(
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
@@ -522,17 +494,17 @@ class TabControl(gobject.GObject):
 		tab.setNewMessage(None)
 
 		lib.gui_control.updateServerTreeMarkup(tab.path)
-		lib.gui_control.setWindowTitle(tab.name)
+		lib.gui_control.set_window_title(tab.name)
 
 		if not tab.is_server():
-			lib.gui_control.setNick(com.getOwnNick(tab.server))
+			lib.gui_control.set_nick(com.get_own_nick(tab.server))
 		else:
-			lib.gui_control.setNick(com.getOwnNick(tab.name))
+			lib.gui_control.set_nick(com.get_own_nick(tab.name))
 
-	def switchToTab(self, tab):
+	def switch_to_tab(self, tab):
 		if not tab or not tab.path:
 			return
-		self.switchToPath(tab.path)
+		self.switch_to_path(tab.path)
 
 gobject.signal_new("tab_switched", TabControl, gobject.SIGNAL_ACTION,
 	None, (gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT))

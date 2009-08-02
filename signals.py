@@ -171,23 +171,23 @@ def initServers():
 
 	for server in sushi.servers():
 
-		tab = gui.tabs.createServer(server)
+		tab = gui.tabs.create_server(server)
 		tab.connected = True
 
-		if sushi.user_away(server, com.getOwnNick(server)):
+		if sushi.user_away(server, com.get_own_nick(server)):
 			# FIXME
 			tab.away = "OHAI"
 
-		gui.tabs.addTab(None, tab)
+		gui.tabs.add_tab(None, tab)
 
 		addChannels(server)
 
 	try:
-		toSwitch = gui.tabs.getAllTabs()[1]
+		toSwitch = gui.tabs.get_all_tabs()[1]
 	except IndexError:
 		return
 	else:
-		gui.tabs.switchToPath(toSwitch.path)
+		gui.tabs.switch_to_path(toSwitch.path)
 
 def addChannels(server):
 	"""
@@ -200,10 +200,10 @@ def addChannels(server):
 		add = False
 		nicks, prefixes = sushi.channel_nicks(server, channel)
 
-		tab = gui.tabs.searchTab(server, channel)
+		tab = gui.tabs.search_tab(server, channel)
 
 		if not tab:
-			tab = gui.tabs.createChannel(server, channel)
+			tab = gui.tabs.create_channel(server, channel)
 			add = True
 
 		tab.nickList.clear()
@@ -212,9 +212,9 @@ def addChannels(server):
 		tab.topic = sushi.channel_topic(server, channel)
 		tab.topicsetter = ""
 
-		if gui.tabs.isActive(tab):
-			gui.setTopic(tab.topic)
-			gui.setUserCount(
+		if gui.tabs.is_active(tab):
+			gui.set_topic(tab.topic)
+			gui.set_user_count(
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
@@ -223,7 +223,7 @@ def addChannels(server):
 		tab.connected=True
 
 		if add:
-			gui.tabs.addTab(server, tab, update_shortcuts=False)
+			gui.tabs.add_tab(server, tab, update_shortcuts=False)
 			lastLog(server, channel)
 
 
@@ -235,7 +235,7 @@ def lastLog(server, channel, lines=0):
 		Fetch lines amount of history text for channel
 		on server.
 	"""
-	tab = gui.tabs.searchTab(server, channel)
+	tab = gui.tabs.search_tab(server, channel)
 
 	if not tab:
 		return
@@ -271,8 +271,8 @@ def updatePrefix(tab, nick, mode):
 		tab.nickList.setPrefix(nick,
 			sushi.user_channel_prefix(tab.server, tab.name, nick))
 
-		if gui.tabs.isActive(tab):
-			gui.setUserCount(len(tab.nickList),
+		if gui.tabs.is_active(tab):
+			gui.set_user_count(len(tab.nickList),
 				tab.nickList.get_operator_count())
 
 
@@ -327,7 +327,7 @@ def getTextColor(nick):
 
 def isHighlighted (server, text):
 	highlightwords = config.get_list("chatting", "highlight_words")
-	highlightwords.append(com.getOwnNick(server))
+	highlightwords.append(com.get_own_nick(server))
 
 	search_text = text.lower()
 	for word in highlightwords:
@@ -339,16 +339,16 @@ def isHighlighted (server, text):
 	return False
 
 def createTab (server, name):
-	tab = gui.tabs.searchTab(server, name)
+	tab = gui.tabs.search_tab(server, name)
 
 	if not tab:
 		if name[0] in sushi.support_chantypes(server):
-			tab = gui.tabs.createChannel(server, name)
+			tab = gui.tabs.create_channel(server, name)
 		else:
-			tab = gui.tabs.createQuery(server, name)
+			tab = gui.tabs.create_query(server, name)
 
 		tab.connected = True
-		gui.tabs.addTab(server, tab)
+		gui.tabs.add_tab(server, tab)
 		lastLog(server, name)
 
 	if tab.name != name:
@@ -359,7 +359,7 @@ def createTab (server, name):
 	return tab
 
 def getPrefix(server, channel, nick):
-	tab = gui.tabs.searchTab(server, channel)
+	tab = gui.tabs.search_tab(server, channel)
 
 	if tab and tab.is_channel():
 		return tab.nickList.getPrefix(nick)
@@ -373,14 +373,14 @@ def serverConnect(time, server):
 	"""
 		maki is connecting to a server.
 	"""
-	tab = gui.tabs.searchTab(server)
+	tab = gui.tabs.search_tab(server)
 
 	if not tab:
-		tab = gui.tabs.createServer(server)
+		tab = gui.tabs.create_server(server)
 
 		# add tab and update shortcuts only
 		# if it's necessary
-		gui.tabs.addTab(
+		gui.tabs.add_tab(
 			None, tab,
 			update_shortcuts = config.get_bool("tekka","server_shortcuts"))
 
@@ -388,7 +388,7 @@ def serverConnect(time, server):
 	if tab.connected:
 		tab.connected = False
 
-		channels = gui.tabs.getAllTabs(server)[1:]
+		channels = gui.tabs.get_all_tabs(server)[1:]
 
 		if channels:
 			for channelTab in channels:
@@ -405,18 +405,18 @@ def serverConnected(time, server):
 	"""
 		maki connected successfuly to a server.
 	"""
-	tab = gui.tabs.searchTab(server)
+	tab = gui.tabs.search_tab(server)
 
 	if not tab:
-		tab = gui.tabs.createServer(server)
-		gui.tabs.addTab(None, tab)
+		tab = gui.tabs.create_server(server)
+		gui.tabs.add_tab(None, tab)
 
 	tab.connected = True
 
 	addChannels(server)
 
 	# iterate over tabs, set the connected flag to queries
-	for query in [tab for tab in gui.tabs.getAllTabs(server)[1:] if tab.is_query()]:
+	for query in [tab for tab in gui.tabs.get_all_tabs(server)[1:] if tab.is_query()]:
 		query.connected = True
 
 	# TODO: implement status bar messages
@@ -431,8 +431,8 @@ def serverMOTD(time, server, message):
 	if not message:
 		return
 
-	if not gui.tabs.searchTab(server):
-		gui.tabs.addTab(None, gui.tabs.createServer(server))
+	if not gui.tabs.search_tab(server):
+		gui.tabs.add_tab(None, gui.tabs.create_server(server))
 
 	gui.serverPrint(time, server, gui.escape(message))
 
@@ -461,7 +461,7 @@ def channelTopic(time, server, from_str, channel, topic):
 		Apply this!
 	"""
 	nick = parse_from(from_str)[0]
-	channelTab = gui.tabs.searchTab(server, channel)
+	channelTab = gui.tabs.search_tab(server, channel)
 
 	if not channelTab:
 		raise Exception("Channel %s does not exist but "
@@ -470,8 +470,8 @@ def channelTopic(time, server, from_str, channel, topic):
 	channelTab.topic = topic
 	channelTab.topicsetter = nick
 
-	if channelTab == gui.tabs.getCurrentTab():
-		gui.setTopic(topic)
+	if channelTab == gui.tabs.get_current_tab():
+		gui.set_topic(topic)
 
 	if not nick:
 		# just reporting the topic.
@@ -481,7 +481,7 @@ def channelTopic(time, server, from_str, channel, topic):
 		gui.channelPrint(time, server, channel, message, "action")
 
 	else:
-		if nick == com.getOwnNick(server):
+		if nick == com.get_own_nick(server):
 			message = _(u"• You changed the topic to %(topic)s.")
 		else:
 			message = _(u"• %(nick)s changed the topic to %(topic)s.")
@@ -522,7 +522,7 @@ Signals for maki
 
 def makiShutdownSignal(time):
 	gui.myPrint("Maki is shut down!")
-	gui.setUseable(False)
+	gui.set_useable(False)
 
 """
 Signals for users
@@ -532,7 +532,7 @@ def userAway(time, server):
 	"""
 		maki says that we are away.
 	"""
-	tab = gui.tabs.searchTab(server)
+	tab = gui.tabs.search_tab(server)
 
 	if tab:
 		# TODO: implement getting away message
@@ -543,7 +543,7 @@ def userBack(time, server):
 	"""
 		maki says that we are back from away being.
 	"""
-	tab = gui.tabs.searchTab(server)
+	tab = gui.tabs.search_tab(server)
 
 	if tab:
 		tab.away = ""
@@ -568,11 +568,11 @@ def userMessage(timestamp, server, from_str, channel, message):
 	"""
 	nick = parse_from(from_str)[0]
 
-	if nick.lower() == com.getOwnNick(server).lower():
+	if nick.lower() == com.get_own_nick(server).lower():
 		ownMessage(timestamp, server, channel, message)
 		return
 
-	elif channel.lower() == com.getOwnNick(server).lower():
+	elif channel.lower() == com.get_own_nick(server).lower():
 		userQuery(timestamp, server, from_str, message)
 		return
 
@@ -585,7 +585,7 @@ def userMessage(timestamp, server, from_str, channel, message):
 
 		type = "highlightmessage"
 		messageString = message
-		gui.setUrgent(True)
+		gui.set_urgent(True)
 	else:
 		# no highlight, normal message type and
 		# text color is allowed.
@@ -607,7 +607,7 @@ def ownMessage(timestamp, server, channel, message):
 		The maki user wrote something on a channel or a query
 	"""
 	createTab(server, channel)
-	nick = com.getOwnNick(server)
+	nick = com.get_own_nick(server)
 
 	gui.channelPrint(timestamp, server, channel,
 		"&lt;%s<font foreground='%s' weight='bold'>%s</font>&gt;"
@@ -634,7 +634,7 @@ def userQuery(timestamp, server, from_str, message):
 		), "message")
 
 	# queries are important
-	gui.setUrgent(True)
+	gui.set_urgent(True)
 
 def userMode(time, server, from_str, target, mode, param):
 	"""
@@ -663,10 +663,10 @@ def userMode(time, server, from_str, target, mode, param):
 
 	else:
 		actor = nick
-		if nick == com.getOwnNick(server):
+		if nick == com.get_own_nick(server):
 			actor = "You"
 
-		tab = gui.tabs.searchTab(server, target)
+		tab = gui.tabs.search_tab(server, target)
 		if not tab:
 			# no channel/query found
 
@@ -685,7 +685,7 @@ def userMode(time, server, from_str, target, mode, param):
 			type = "action"
 			victim = target
 
-			if victim == com.getOwnNick(server):
+			if victim == com.get_own_nick(server):
 				victim = "you"
 				type = "hightlightaction"
 
@@ -715,10 +715,10 @@ def userCTCP(time, server,  from_str, target, message):
 	"""
 	nick = parse_from(from_str)[0]
 
-	if nick.lower() == com.getOwnNick(server).lower():
+	if nick.lower() == com.get_own_nick(server).lower():
 		ownCTCP(time, server, target, message)
 		return
-	elif target.lower() == com.getOwnNick(server).lower():
+	elif target.lower() == com.get_own_nick(server).lower():
 		queryCTCP(time, server, from_str, message)
 		return
 
@@ -734,7 +734,7 @@ def ownCTCP(time, server, target, message):
 		The maki user sends a CTCP request to
 		a channel or user (target).
 	"""
-	tab = gui.tabs.searchTab(server, target)
+	tab = gui.tabs.search_tab(server, target)
 
 	if tab:
 		# valid query/channel found, print it there
@@ -746,7 +746,7 @@ def ownCTCP(time, server, target, message):
 			"&lt;CTCP:<font foreground='%s' weight='bold'>%s</font>&gt; "
 			"<font foreground='%s'>%s</font>" % (
 				nickColor,
-				com.getOwnNick(server),
+				com.get_own_nick(server),
 				textColor,
 				gui.escape(message)))
 
@@ -763,7 +763,7 @@ def queryCTCP(time, server, from_str, message):
 		If no query window is open, send it to the server tab.
 	"""
 	nick = parse_from(from_str)[0]
-	tab = gui.tabs.searchTab(server, nick)
+	tab = gui.tabs.search_tab(server, nick)
 
 	if tab:
 		gui.channelPrint(time, server, tab.name, \
@@ -789,9 +789,9 @@ def ownNotice(time, server, target, message):
 		channel of the network which is identified by
 		`server`
 	"""
-	tab = gui.tabs.searchTab(server, target)
+	tab = gui.tabs.search_tab(server, target)
 	ownNickColor = config.get("colors","own_nick","#000000")
-	ownNick = com.getOwnNick(server)
+	ownNick = com.get_own_nick(server)
 
 	if tab:
 		gui.channelPrint(time, server, tab.name, \
@@ -813,7 +813,7 @@ def queryNotice(time, server, from_str, message):
 	"""
 	nick = parse_from(from_str)[0]
 
-	tab = gui.tabs.searchTab(server, nick)
+	tab = gui.tabs.search_tab(server, nick)
 	if tab:
 		if tab.name != nick:
 			# correct notation of tab name
@@ -838,10 +838,10 @@ def userNotice(time, server, from_str, target, message):
 	"""
 	nick = parse_from(from_str)[0]
 
-	if nick.lower() == com.getOwnNick(server).lower():
+	if nick.lower() == com.get_own_nick(server).lower():
 		ownNotice(time, server, target, message)
 		return
-	elif target.lower() == com.getOwnNick(server).lower():
+	elif target.lower() == com.get_own_nick(server).lower():
 		queryNotice(time, server, from_str, message)
 		return
 
@@ -864,7 +864,7 @@ def ownAction(time, server, channel, action):
 		"<font foreground='%s' weight='bold'>%s</font> "
 		"<font foreground='%s'>%s</font>" % (
 			nickColor,
-			com.getOwnNick(server),
+			com.get_own_nick(server),
 			textColor,
 			gui.escape(action)))
 
@@ -877,7 +877,7 @@ def actionQuery(time, server, from_str, action):
 	gui.channelPrint(time, server, nick,
 		"%s %s" % (nick, gui.escape(action)))
 
-	gui.setUrgent(True)
+	gui.set_urgent(True)
 
 def userAction(time, server, from_str, channel, action):
 	"""
@@ -885,11 +885,11 @@ def userAction(time, server, from_str, channel, action):
 	"""
 	nick = parse_from(from_str)[0]
 
-	if nick.lower() == com.getOwnNick(server).lower():
+	if nick.lower() == com.get_own_nick(server).lower():
 		ownAction(time, server, channel, action)
 		return
 
-	elif channel.lower() == com.getOwnNick(server).lower():
+	elif channel.lower() == com.get_own_nick(server).lower():
 		actionQuery(time, server, from_str, action)
 		return
 
@@ -898,7 +898,7 @@ def userAction(time, server, from_str, channel, action):
 	if isHighlighted(server, action):
 		type = "highlightaction"
 		actionString = action
-		gui.setUrgent(True)
+		gui.set_urgent(True)
 	else:
 		type = "action"
 		actionString = "<font foreground='%s'>%s</font>" % (
@@ -916,20 +916,20 @@ def userNick(time, server, from_str, newNick):
 	"""
 	nick = parse_from(from_str)[0]
 	# find a query
-	tab = gui.tabs.searchTab(server, nick)
+	tab = gui.tabs.search_tab(server, nick)
 
 	# rename query if found
 	if tab and tab.is_query():
 		tab.name = newNick
 
 	# we changed the nick
-	if not nick or newNick == com.getOwnNick(server):
+	if not nick or newNick == com.get_own_nick(server):
 		message = _(u"• You are now known as %(newnick)s.")
 
 		# update the nick in the GUI
-		currentServer, currentChannel = gui.tabs.getCurrentTabs()
+		currentServer, currentChannel = gui.tabs.get_current_tabs()
 		if currentServer and currentServer.name == server:
-			gui.setNick(newNick)
+			gui.set_nick(newNick)
 
 	# someone else did
 	else:
@@ -937,8 +937,8 @@ def userNick(time, server, from_str, newNick):
 
 	# iterate over all channels and look if the nick is
 	# present there. If true so rename him in nicklist cache.
-	for tab in gui.tabs.getAllTabs(server)[1:]:
-		if not nick or newNick == com.getOwnNick(server):
+	for tab in gui.tabs.get_all_tabs(server)[1:]:
+		if not nick or newNick == com.get_own_nick(server):
 			doPrint = True
 		else:
 			doPrint = not "nick" in config.get_list(
@@ -979,7 +979,7 @@ def userKick(time, server, from_str, channel, who, reason):
 		joined=False
 	"""
 	nick = parse_from(from_str)[0]
-	tab = gui.tabs.searchTab(server, channel)
+	tab = gui.tabs.search_tab(server, channel)
 
 	if not tab:
 		print "userKick: channel '%s' does not exist." % (channel)
@@ -994,7 +994,7 @@ def userKick(time, server, from_str, channel, who, reason):
 	reasonString = "<font foreground='%s'>%s</font>" % (
 		getTextColor(nick), gui.escape(reason))
 
-	if who == com.getOwnNick(server):
+	if who == com.get_own_nick(server):
 		tab.joined = False
 
 		message = _(u"« You have been kicked from %(channel)s "
@@ -1008,8 +1008,8 @@ def userKick(time, server, from_str, channel, who, reason):
 	else:
 		tab.nickList.removeNick(who)
 
-		if gui.tabs.isActive(tab):
-			gui.setUserCount(
+		if gui.tabs.is_active(tab):
+			gui.set_user_count(
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
@@ -1038,9 +1038,9 @@ def userQuit(time, server, from_str, reason):
 	a message is generated.
 	"""
 	nick = parse_from(from_str)[0]
-	if nick == com.getOwnNick(server):
+	if nick == com.get_own_nick(server):
 		# set the connected flag to False for the server
-		serverTab = gui.tabs.searchTab(server)
+		serverTab = gui.tabs.search_tab(server)
 
 		if not serverTab:
 			# this happens if the tab is closed
@@ -1049,7 +1049,7 @@ def userQuit(time, server, from_str, reason):
 		serverTab.connected = False
 
 		# walk through all channels and set joined = False on them
-		channels = gui.tabs.getAllTabs(server)[1:]
+		channels = gui.tabs.get_all_tabs(server)[1:]
 
 		if not channels:
 			return
@@ -1077,7 +1077,7 @@ def userQuit(time, server, from_str, reason):
 		else:
 			message = _(u"« %(nick)s has quit.")
 
-		channels = gui.tabs.getAllTabs(server)[1:]
+		channels = gui.tabs.get_all_tabs(server)[1:]
 
 		if not channels:
 			print "No channels but quit reported.. Hum wtf? o.0"
@@ -1120,9 +1120,9 @@ def userQuit(time, server, from_str, reason):
 			if nick in nicks:
 				nickList.removeNick(nick)
 
-				if gui.tabs.isActive(channelTab):
+				if gui.tabs.is_active(channelTab):
 					# update gui display for usercount
-					gui.setUserCount(len(nickList),
+					gui.set_user_count(len(nickList),
 						nickList.get_operator_count())
 
 				if doPrint:
@@ -1140,16 +1140,16 @@ def userJoin(timestamp, server, from_str, channel):
 	"""
 	nick = parse_from(from_str)[0]
 
-	if nick == com.getOwnNick(server):
+	if nick == com.get_own_nick(server):
 		# we joined a channel, fetch nicks and topic, create
 		# channel and print the log
 
-		tab = gui.tabs.searchTab(server, channel)
+		tab = gui.tabs.search_tab(server, channel)
 
 		if not tab:
-			tab = gui.tabs.createChannel(server, channel)
+			tab = gui.tabs.create_channel(server, channel)
 
-			if not gui.tabs.addTab(server, tab):
+			if not gui.tabs.add_tab(server, tab):
 				print "adding tab for channel '%s' failed." % (channel)
 				return
 
@@ -1157,14 +1157,14 @@ def userJoin(timestamp, server, from_str, channel):
 
 		tab.nickList.clear()
 
-		if gui.tabs.isActive(tab):
-			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
+		if gui.tabs.is_active(tab):
+			gui.set_user_count(len(tab.nickList), tab.nickList.get_operator_count())
 
 		tab.joined = True
 		tab.connected = True
 
 		if config.get_bool("tekka","switch_to_channel_after_join"):
-			gui.tabs.switchToPath(tab.path)
+			gui.tabs.switch_to_path(tab.path)
 
 		nickString = "You"
 		channelString = "<font foreground='%s'>%s</font>" % (
@@ -1176,7 +1176,7 @@ def userJoin(timestamp, server, from_str, channel):
 
 	else: # another one joined the channel
 
-		tab = gui.tabs.searchTab(server, channel)
+		tab = gui.tabs.search_tab(server, channel)
 
 		if not tab:
 			print "No tab for channel '%s' in userJoin (not me)."
@@ -1195,8 +1195,8 @@ def userJoin(timestamp, server, from_str, channel):
 
 		tab.nickList.appendNick(nick)
 
-		if gui.tabs.isActive(tab):
-			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
+		if gui.tabs.is_active(tab):
+			gui.set_user_count(len(tab.nickList), tab.nickList.get_operator_count())
 
 		doPrint = not "join" in config.get_list("channel_%s_%s" % (
 			server.lower(), channel.lower()), "hide")
@@ -1219,12 +1219,12 @@ def userNames(timestamp, server, channel, nicks, prefixes):
 	To avoid a non existent channel this method checks against
 	a missing channel tab and adds it if needed.
 	"""
-	tab = gui.tabs.searchTab(server, channel)
+	tab = gui.tabs.search_tab(server, channel)
 
 	if not tab:
-		tab = gui.tabs.createChannel(server, channel)
+		tab = gui.tabs.create_channel(server, channel)
 
-		if not gui.tabs.addTab(server, tab):
+		if not gui.tabs.add_tab(server, tab):
 			print "adding tab for channel '%s' failed." % (channel)
 			return
 
@@ -1245,8 +1245,8 @@ def userNames(timestamp, server, channel, nicks, prefixes):
 		if prefixes[i]:
 			tab.nickList.setPrefix(nicks[i], prefixes[i], sort=False)
 
-	if gui.tabs.isActive(tab):
-		gui.setUserCount(
+	if gui.tabs.is_active(tab):
+		gui.set_user_count(
 			len(tab.nickList),
 			tab.nickList.get_operator_count())
 
@@ -1260,13 +1260,13 @@ def userPart(timestamp, server, from_str, channel, reason):
 	"""
 	nick = parse_from(from_str)[0]
 
-	tab = gui.tabs.searchTab(server, channel)
+	tab = gui.tabs.search_tab(server, channel)
 
 	if not tab:
 		# tab was closed
 		return
 
-	if nick == com.getOwnNick(server):
+	if nick == com.get_own_nick(server):
 		# we parted
 
 		channelString = "<font foreground='%s'>%s</font>" % (
@@ -1306,8 +1306,8 @@ def userPart(timestamp, server, from_str, channel, reason):
 
 		tab.nickList.removeNick(nick)
 
-		if gui.tabs.isActive(tab):
-			gui.setUserCount(
+		if gui.tabs.is_active(tab):
+			gui.set_user_count(
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
@@ -1323,7 +1323,7 @@ def userPart(timestamp, server, from_str, channel, reason):
 def noSuch(time, server, target, type):
 	""" Signal is emitted if maki can't find the target on the server. """
 
-	tab = gui.tabs.searchTab(server, target)
+	tab = gui.tabs.search_tab(server, target)
 
 	if type == "n":
 		error = _(u"• %(target)s: No such nick/channel.") % {

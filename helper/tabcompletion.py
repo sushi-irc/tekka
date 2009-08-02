@@ -123,7 +123,7 @@ def _match_nick_in_channel(tab, word):
 	return None
 
 def _match_nick_in_query(tab, word):
-	matches = [nick for nick in (currentTab.name, com.getOwnNick(currentTab.server)) if nick[:len(word)].lower() == word.lower()]
+	matches = [nick for nick in (currentTab.name, com.get_own_nick(currentTab.server)) if nick[:len(word)].lower() == word.lower()]
 
 	if matches:
 		_raise_position(matches, QUERY_TYPE)
@@ -131,7 +131,7 @@ def _match_nick_in_query(tab, word):
 	return None
 
 def _match_channel(word):
-	tabs = gui_control.tabs.getAllTabs()
+	tabs = gui_control.tabs.get_all_tabs()
 
 	# find all matching tabs
 	matches = [tab.name for tab in tabs

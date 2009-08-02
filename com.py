@@ -212,7 +212,7 @@ def connect():
 	_nick_callback = sushi.connect_to_signal("nick", _nickSignal)
 
 	for server in sushi.servers():
-		fetchOwnNick(server)
+		fetch_own_nick(server)
 
 	for callback in _connect_callbacks:
 		callback(sushi)
@@ -242,8 +242,8 @@ def _shutdownSignal(time):
 def _nickSignal(time, server, from_str, new_nick):
 	nick = parse_from(from_str)[0]
 
-	if not nick or nick == getOwnNick(server):
-		cacheOwnNick(server, new_nick)
+	if not nick or nick == get_own_nick(server):
+		cache_own_nick(server, new_nick)
 
 """
 Commands
@@ -259,18 +259,20 @@ def sendMessage(server, channel, text):
 
 	sushi.message(server, channel, text)
 
+# TODO: implement this in the sushi wrapper.
+
 # fetches the own nick for server @server from maki
-def fetchOwnNick(server):
+def fetch_own_nick(server):
 	from_str = sushi.user_from(server, "")
 	nick = parse_from(from_str)[0]
-	cacheOwnNick(server, nick)
+	cache_own_nick(server, nick)
 
 # caches the nick @nickname for server @server.
-def cacheOwnNick(server, nickname):
+def cache_own_nick(server, nickname):
 	myNick[server] = nickname
 
 # returns the cached nick of server @server
-def getOwnNick(server):
+def get_own_nick(server):
 	if myNick.has_key(server):
 		return myNick[server]
 	return ""

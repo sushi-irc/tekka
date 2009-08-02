@@ -89,7 +89,7 @@ def profileMe(file):
 			if None == file:
 				return fun(*args, **kwargs)
 
-			cProfile.runctx("val = fun(*args,**kwargs)", {"fun":fun},
+			cProfile.runctx("val = fun(*args,**kwargs)", {"fun":fun}, 
 				locals(), file_path)
 			return val
 
@@ -174,7 +174,7 @@ def replace_output_textview(textview):
 
 
 def get_current_output_textview():
-	tab = tabs.getCurrentTab()
+	tab = tabs.get_current_tab()
 
 	if not tab:
 		return widgets.get_widget("output")
@@ -203,7 +203,7 @@ def setup_statusIcon():
 		gtk.widget_pop_colormap()
 
 @types(switch=bool)
-def setUseable(switch):
+def set_useable(switch):
 	"""
 		Dis- or enable the widgets
 		which emit or receive signals
@@ -212,10 +212,10 @@ def setUseable(switch):
 	global gui_is_useable
 
 	widgetList = [
-		widgets.get_widget("inputBar"),
-		widgets.get_widget("serverTree"),
-		widgets.get_widget("nickList"),
-		widgets.get_widget("output"),
+		widgets.get_widget("inputBar"), 
+		widgets.get_widget("serverTree"), 
+		widgets.get_widget("nickList"), 
+		widgets.get_widget("output"), 
 		widgets.get_widget("generalOutput")
 	]
 
@@ -231,7 +231,7 @@ def setUseable(switch):
 	gui_is_useable = switch
 
 @types(switch=bool)
-def setStatusIcon(switch):
+def switch_status_icon(switch):
 	""" enables / disables status icon """
 	if switch:
 		if not statusIcon:
@@ -244,7 +244,7 @@ def setStatusIcon(switch):
 		statusIcon.set_visible(False)
 
 @types(switch=bool)
-def setUrgent(switch):
+def set_urgent(switch):
 	"""
 		Sets or unsets the urgent
 		status to the main window.
@@ -265,7 +265,7 @@ def setUrgent(switch):
 		statusIcon.set_blinking(switch)
 
 @types(title=basestring)
-def setWindowTitle(title):
+def set_window_title(title):
 	"""
 		Sets the window title to the main
 		window.
@@ -273,14 +273,14 @@ def setWindowTitle(title):
 	widgets.get_widget("mainWindow").set_title(title)
 
 @types(nick=basestring)
-def setNick(nick):
+def set_nick(nick):
 	"""
 		Sets nick as label text of nickLabel.
 	"""
 	widgets.get_widget("nickLabel").set_text(nick)
 
 @types(normal=int, ops=int)
-def setUserCount(normal, ops):
+def set_user_count(normal, ops):
 	"""
 	sets the amount of users in the current channel.
 	"""
@@ -294,8 +294,7 @@ def setUserCount(normal, ops):
 			"users": m_users, "ops": m_ops })
 
 def set_font(textView, font):
-	"""
-		Sets the font of the textView to
+	"""	Sets the font of the textView to
 		the font identified by fontFamily
 	"""
 	fd = pango.FontDescription(font)
@@ -307,7 +306,7 @@ def set_font(textView, font):
 	textView.modify_font(fd)
 
 @types(string=basestring)
-def setTopic(string):
+def set_topic(string):
 	""" Sets the given string as text in
 		the topic bar.
 	"""
@@ -315,17 +314,16 @@ def setTopic(string):
 	tb.set_text(string)
 
 def updateServerTreeShortcuts():
-	"""
-		Iterates through the TreeModel
+	"""	Iterates through the TreeModel
 		of the server tree and sets 9
 		shortcuts to tabs for switching.
 	"""
 	global accelGroup
 
-	tabList = tabs.getAllTabs()
+	tabList = tabs.get_all_tabs()
 	st = widgets.get_widget("serverTree")
 
-	for i in range(1,10):
+	for i in range(1, 10):
 		removeShortcut(accelGroup, st, "<alt>%d" % (i))
 
 	c = 1
@@ -334,18 +332,17 @@ def updateServerTreeShortcuts():
 			break
 
 		if (tab.is_server()
-			and not config.get("tekka","server_shortcuts")):
+			and not config.get("tekka", "server_shortcuts")):
 			continue
 
-		addShortcut(accelGroup, st, "<alt>%d" % (c),
-			lambda w,s,p: tabs.switchToPath(p), tab.path)
+		addShortcut(accelGroup, st, "<alt>%d" % (c), 
+			lambda w, s, p: tabs.switch_to_path(p), tab.path)
 
 		c+=1
 
 @types(path=tuple)
 def updateServerTreeMarkup(path):
-	"""
-		Updates the first column of the row in
+	""" Updates the first column of the row in
 		gtk.TreeModel of serverTree identified by path.
 	"""
 	store = widgets.get_widget("serverTree").get_model()
@@ -361,9 +358,9 @@ def escape(msg):
 	"""	Converts special characters in msg and returns
 		the new string.
 	"""
-	msg = msg.replace("&","&amp;")
-	msg = msg.replace("<","&lt;")
-	msg = msg.replace(">","&gt;")
+	msg = msg.replace("&", "&amp;")
+	msg = msg.replace("<", "&lt;")
+	msg = msg.replace(">", "&gt;")
 	msg = msg.replace(chr(2), "<sb/>") # bold-char
 	msg = msg.replace(chr(31), "<su/>") # underline-char
 	msg = msg.replace(chr(1), "")
@@ -378,18 +375,18 @@ def write_to_general_output(msgtype, timestring, server, channel, message):
 		try:
 			if not eval(rule):
 				return
-		except BaseException,e:
+		except BaseException, e:
 			errorMessage("Error in general output filter "
 				"rule '%s': '%s'." % (rule, e))
 
 	if channel:
 		# channel print
-		goBuffer.insertHTML(goBuffer.get_end_iter(),
+		goBuffer.insertHTML(goBuffer.get_end_iter(), 
 			"[%s] &lt;%s:%s&gt; %s" % (
 				timestring, server, channel, message))
 	else:
 		# server print
-		goBuffer.insertHTML(goBuffer.get_end_iter(),
+		goBuffer.insertHTML(goBuffer.get_end_iter(), 
 			"[%s] &lt;%s&gt; %s" % (timestring, server, message))
 
 
@@ -401,36 +398,36 @@ def channelPrint(timestamp, server, channel, message, msgtype="message"):
 		into the htmlbuffer of the channel `channel` on server
 		`server`.
 	"""
-	timestring = time.strftime(config.get("tekka", "time_format", "%H:%M"),
+	timestring = time.strftime(config.get("tekka", "time_format", "%H:%M"), 
 		time.localtime(timestamp))
 
-	if not config.get_bool("tekka","color_text"):
+	if not config.get_bool("tekka", "color_text"):
 		colorHack = ""
 	else:
 		colorHack = "foreground='%s'" % (
 			config.get("colors", "text_%s" % msgtype, "#000000"))
 
 	outputString = "[%s] <font %s>%s</font>" % (
-		timestring,
-		colorHack,
+		timestring, 
+		colorHack, 
 		message)
 
-	channelTab = tabs.searchTab(server, channel)
+	channelTab = tabs.search_tab(server, channel)
 
 	if not channelTab:
-		print "No such channel %s:%s" % (server,channel)
+		print "No such channel %s:%s" % (server, channel)
 		return
 
 	buffer = channelTab.textview.get_buffer()
 	buffer.insertHTML(buffer.get_end_iter(), outputString)
 
 	# notification in server/channel list
-	if tabs.isActive(channelTab):
+	if tabs.is_active(channelTab):
 		if channelTab.autoScroll:
 			channelTab.textview.scroll_to_bottom()
 
 	else:
-		if config.get_bool("tekka","show_general_output"):
+		if config.get_bool("tekka", "show_general_output"):
 			# write it to the general output, also
 			write_to_general_output(msgtype, timestring, server, channel, message)
 
@@ -443,7 +440,7 @@ def serverPrint(timestamp, server, string, msgtype="message"):
 		prints 'string' with "%H:%M' formatted 'timestamp' to the server-output
 		identified by 'server'
 	"""
-	serverTab = tabs.searchTab(server)
+	serverTab = tabs.search_tab(server)
 
 	if not serverTab:
 		print "Server %s does not exist." % server
@@ -451,18 +448,18 @@ def serverPrint(timestamp, server, string, msgtype="message"):
 
 	buffer = serverTab.textview.get_buffer()
 
-	timestr = time.strftime(config.get("tekka", "time_format", "%H:%M"),
+	timestr = time.strftime(config.get("tekka", "time_format", "%H:%M"), 
 		time.localtime(timestamp))
 
-	buffer.insertHTML(buffer.get_end_iter(), "[%s] %s" % (timestr,string))
+	buffer.insertHTML(buffer.get_end_iter(), "[%s] %s" % (timestr, string))
 
 
-	if tabs.isActive(serverTab):
+	if tabs.is_active(serverTab):
 		if serverTab.autoScroll:
 			serverTab.textview.scroll_to_bottom()
 
 	else:
-		if config.get_bool("tekka","show_general_output"):
+		if config.get_bool("tekka", "show_general_output"):
 			write_to_general_output(msgtype, timestr, server, "", string)
 
 		if not msgtype in serverTab.newMessage:
@@ -474,14 +471,14 @@ def currentServerPrint(timestamp, server, string, msgtype="message"):
 		Prints the string on the current tab of server (if any).
 		Otherwise it prints directly in the server tab.
 	"""
-	serverTab,channelTab = tabs.getCurrentTabs()
+	serverTab, channelTab = tabs.get_current_tabs()
 
 	if (serverTab
 		and serverTab.name.lower() == server.lower()
 		and channelTab):
 		# print in current channel
 		channelPrint(
-			timestamp, server,
+			timestamp, server, 
 			channelTab.name, string, msgtype)
 	else:
 		# print to server tab
@@ -533,13 +530,13 @@ def errorMessage(string, force_dialog=False):
 	if output.get_buffer() and not force_dialog:
 		message = "<font foreground='%(color)s'>" + message + "</font>"
 		myPrint(message % {
-				"color": config.get("colors","error","#FF0000"),
-				"message": string},
+				"color": config.get("colors", "error", "#FF0000"), 
+				"message": string}, 
 			html=True)
 	else:
 		err = gtk.MessageDialog(
-			type=gtk.MESSAGE_ERROR,
-			buttons=gtk.BUTTONS_CLOSE,
+			type=gtk.MESSAGE_ERROR, 
+			buttons=gtk.BUTTONS_CLOSE, 
 			message_format=message % { "message": string })
 		err.run()
 		err.destroy()
