@@ -27,13 +27,12 @@ SUCH DAMAGE.
 """
 
 import gtk
+import gobject
 from gobject import TYPE_STRING
 from gettext import gettext as _
 
 import signals
 import com
-
-
 
 class WhoisDialog(gtk.Dialog):
 
@@ -105,6 +104,12 @@ def dialog_response_cb(dialog, id):
 		diag = None
 		dialog.destroy()
 
+def loading_timeout_cb(dialog):
+	if len(dialog.treeview.get_model()) <= 1:
+		dialog.end = True
+		dialog.whois_input(0, "", "", _("No data received so far. Are you still connected?"))
+	return False
+
 def run(server, nick):
 	global diag
 
@@ -121,6 +126,8 @@ def run(server, nick):
 	com.sushi.whois(server, nick)
 	diag.whois_input(0, "", "",_("Loading..."))
 	diag.end = True
+	
+	gobject.timeout_add(20000, loading_timeout_cb, diag)
 
 	diag.show_all()
 
