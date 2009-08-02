@@ -214,7 +214,9 @@ def addChannels(server):
 
 		if gui.tabs.isActive(tab):
 			gui.setTopic(tab.topic)
-			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
+			gui.setUserCount(
+				len(tab.nickList),
+				tab.nickList.get_operator_count())
 
 		# TODO: handle topic setter
 		tab.joined=True
@@ -223,8 +225,6 @@ def addChannels(server):
 		if add:
 			gui.tabs.addTab(server, tab, update_shortcuts=False)
 			lastLog(server, channel)
-
-		# FIXME print topic?
 
 
 	gui.updateServerTreeShortcuts()
@@ -464,7 +464,8 @@ def channelTopic(time, server, from_str, channel, topic):
 	channelTab = gui.tabs.searchTab(server, channel)
 
 	if not channelTab:
-		raise Exception("Channel %s does not exist but emits topic signal." % channel)
+		raise Exception("Channel %s does not exist but "
+						"emits topic signal." % channel)
 
 	channelTab.topic = topic
 	channelTab.topicsetter = nick
@@ -485,9 +486,11 @@ def channelTopic(time, server, from_str, channel, topic):
 		else:
 			message = _(u"• %(nick)s changed the topic to %(topic)s.")
 
-		gui.channelPrint(time, server, channel, message % {
-			"nick": nick,
-			"topic": gui.escape(topic) },
+		gui.channelPrint(
+			time, server, channel,
+			message % {
+				"nick": nick,
+				"topic": gui.escape(topic) },
 			"action")
 
 def channelBanlist(time, server, channel, mask, who, when):
@@ -495,14 +498,23 @@ def channelBanlist(time, server, channel, mask, who, when):
 		ban list signal.
 	"""
 	if not mask and not who and when == -1:
-		gui.channelPrint(time, server, channel, "End of banlist.", "action")
-		return
+		gui.channelPrint(
+			time, server, channel,
+			"End of banlist.", "action")
+	else:
+		timestring = mtime.strftime(
+			"%Y-%m-%d %H:%M:%S",
+			mtime.localtime(when))
 
-	timestring = mtime.strftime("%Y-%m-%d %H:%M:%S", mtime.localtime(when))
-
-	gui.channelPrint(time, server, channel, \
-		"%s by %s on %s" % \
-		(gui.escape(mask), gui.escape(who), gui.escape(timestring)), "action")
+		gui.channelPrint(
+			time,
+			server,
+			channel,
+			"%s by %s on %s" % (
+				gui.escape(mask),
+				gui.escape(who),
+				gui.escape(timestring)),
+			"action")
 
 """
 Signals for maki
@@ -523,6 +535,7 @@ def userAway(time, server):
 	tab = gui.tabs.searchTab(server)
 
 	if tab:
+		# TODO: implement getting away message
 		tab.away = "WE ARE AWAY. HERE SHOULD BE A MESSAGE BUT IT'S NOT IMPLEMENTED YET, SRY!"
 
 
@@ -540,7 +553,14 @@ def userAwayMessage(timestamp, server, nick, message):
 		The user is away and the server gives us the message he left
 		for us to see why he is away and probably when he's back again.
 	"""
-	gui.channelPrint(timestamp, server, nick, _(u"• %(nick)s is away (%(message)s).") % { "nick": nick, "message": gui.escape(message) }, "action")
+	gui.channelPrint(
+		timestamp,
+		server,
+		nick,
+		_(u"• %(nick)s is away (%(message)s).") % {
+			"nick": nick,
+			"message": gui.escape(message)},
+		"action")
 
 def userMessage(timestamp, server, from_str, channel, message):
 	"""
@@ -590,12 +610,13 @@ def ownMessage(timestamp, server, channel, message):
 	nick = com.getOwnNick(server)
 
 	gui.channelPrint(timestamp, server, channel,
-		"&lt;%s<font foreground='%s' weight='bold'>%s</font>&gt; <font foreground='%s'>%s</font>" % (
-		getPrefix(server, channel, nick),
-		config.get("colors","own_nick","#000000"),
-		nick,
-		config.get("colors","own_text","#000000"),
-		gui.escape(message)))
+		"&lt;%s<font foreground='%s' weight='bold'>%s</font>&gt;"
+		" <font foreground='%s'>%s</font>" % (
+			getPrefix(server, channel, nick),
+			config.get("colors","own_nick","#000000"),
+			nick,
+			config.get("colors","own_text","#000000"),
+			gui.escape(message)))
 
 def userQuery(timestamp, server, from_str, message):
 	"""
@@ -723,15 +744,17 @@ def ownCTCP(time, server, target, message):
 
 		gui.channelPrint(time, server, tab.name,
 			"&lt;CTCP:<font foreground='%s' weight='bold'>%s</font>&gt; "
-			"<font foreground='%s'>%s</font>" % \
-				(nickColor, com.getOwnNick(server),
-				textColor, gui.escape(message)))
+			"<font foreground='%s'>%s</font>" % (
+				nickColor,
+				com.getOwnNick(server),
+				textColor,
+				gui.escape(message)))
 
 	else:
 		gui.serverPrint(time, server,
 			_("CTCP request from you to %(target)s: %(message)s") % {
-			"target":gui.escape(target),
-			"message":gui.escape(message)})
+				"target": gui.escape(target),
+				"message": gui.escape(message)})
 
 def queryCTCP(time, server, from_str, message):
 	"""
@@ -744,16 +767,20 @@ def queryCTCP(time, server, from_str, message):
 
 	if tab:
 		gui.channelPrint(time, server, tab.name, \
-				"&lt;CTCP:<font foreground='%s' weight='bold'>%s</font>&gt; "
-				"<font foreground='%s'>%s</font>" % \
-				(getNickColor(nick), gui.escape(nick),
-				getTextColor(nick), gui.escape(message)))
+				"&lt;CTCP:<font foreground='%s' weight='bold'>%s"
+				"</font>&gt; <font foreground='%s'>%s</font>" % (
+					getNickColor(nick),
+					gui.escape(nick),
+					getTextColor(nick),
+					gui.escape(message)))
 	else:
-		gui.currentServerPrint(time, server, \
-				"&lt;CTCP:<font foreground='%s' weight='bold'>%s</font>&gt; "
-				"<font foreground='%s'>%s</font>" % \
-				(getNickColor(nick), gui.escape(nick),
-				getTextColor(nick), gui.escape(message)))
+		gui.currentServerPrint(time, server,
+				"&lt;CTCP:<font foreground='%s' weight='bold'>%s"
+				"</font>&gt; <font foreground='%s'>%s</font>" % (
+					getNickColor(nick),
+					gui.escape(nick),
+					getTextColor(nick),
+					gui.escape(message)))
 
 def ownNotice(time, server, target, message):
 	"""
@@ -818,11 +845,13 @@ def userNotice(time, server, from_str, target, message):
 		queryNotice(time, server, from_str, message)
 		return
 
-	gui.channelPrint(time, server, target, \
+	gui.channelPrint(time, server, target,
 			"-<font foreground='%s' weight='bold'>%s</font>- "
-			"<font foreground='%s'>%s</font>" % \
-			(getNickColor(nick), gui.escape(nick),
-			getTextColor(nick), gui.escape(message)))
+			"<font foreground='%s'>%s</font>" % (
+				getNickColor(nick),
+				gui.escape(nick),
+				getTextColor(nick),
+				gui.escape(message)))
 
 def ownAction(time, server, channel, action):
 
@@ -833,8 +862,11 @@ def ownAction(time, server, channel, action):
 
 	gui.channelPrint(time, server, channel,
 		"<font foreground='%s' weight='bold'>%s</font> "
-		"<font foreground='%s'>%s</font>" % \
-			(nickColor, com.getOwnNick(server), textColor, gui.escape(action)))
+		"<font foreground='%s'>%s</font>" % (
+			nickColor,
+			com.getOwnNick(server),
+			textColor,
+			gui.escape(action)))
 
 def actionQuery(time, server, from_str, action):
 
@@ -909,7 +941,11 @@ def userNick(time, server, from_str, newNick):
 		if not nick or newNick == com.getOwnNick(server):
 			doPrint = True
 		else:
-			doPrint = not "nick" in config.get_list("channel_%s_%s" % (server.lower(), tab.name.lower()), "hide")
+			doPrint = not "nick" in config.get_list(
+				"channel_%s_%s" % (
+					server.lower(),
+					tab.name.lower()),
+				"hide")
 
 		if tab.is_channel():
 			if (nick in tab.nickList.getNicks()):
@@ -920,10 +956,13 @@ def userNick(time, server, from_str, newNick):
 		if tab.is_query() and tab.name != newNick:
 			continue
 
-		nickString = "<font foreground='%s' weight='bold'>%s</font>" % \
-			(getNickColor(nick), gui.escape(nick))
-		newNickString = "<font foreground='%s' weight='bold'>%s</font>" % \
-			(getNickColor(newNick), gui.escape(newNick))
+		nickString = "<font foreground='%s' weight='bold'>%s</font>" % (
+			getNickColor(nick),
+			gui.escape(nick))
+
+		newNickString = "<font foreground='%s' weight='bold'>%s</font>" % (
+			getNickColor(newNick),
+			gui.escape(newNick))
 
 		if doPrint:
 			gui.channelPrint(time, server, tab.name,
@@ -970,12 +1009,15 @@ def userKick(time, server, from_str, channel, who, reason):
 		tab.nickList.removeNick(who)
 
 		if gui.tabs.isActive(tab):
-			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
+			gui.setUserCount(
+				len(tab.nickList),
+				tab.nickList.get_operator_count())
 
 		whoString = "<font foreground='%s' weight='bold'>%s</font>" % (
 			getNickColor(who), gui.escape(who))
 
-		message = _(u"« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s).") % {
+		message = _(u"« %(who)s was kicked from %(channel)s by "
+					u"%(nick)s (%(reason)s).") % {
 			"who": whoString,
 			"channel": channelString,
 			"nick": nickString,
@@ -1204,7 +1246,9 @@ def userNames(timestamp, server, channel, nicks, prefixes):
 			tab.nickList.setPrefix(nicks[i], prefixes[i], sort=False)
 
 	if gui.tabs.isActive(tab):
-		gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
+		gui.setUserCount(
+			len(tab.nickList),
+			tab.nickList.get_operator_count())
 
 
 def userPart(timestamp, server, from_str, channel, reason):
@@ -1263,7 +1307,9 @@ def userPart(timestamp, server, from_str, channel, reason):
 		tab.nickList.removeNick(nick)
 
 		if gui.tabs.isActive(tab):
-			gui.setUserCount(len(tab.nickList), tab.nickList.get_operator_count())
+			gui.setUserCount(
+				len(tab.nickList),
+				tab.nickList.get_operator_count())
 
 		if not "part" in config.get_list("channel_%s_%s" % (server.lower(), channel.lower()), "hide"):
 			gui.channelPrint(timestamp, server, channel,
@@ -1280,11 +1326,14 @@ def noSuch(time, server, target, type):
 	tab = gui.tabs.searchTab(server, target)
 
 	if type == "n":
-		error = _(u"• %(target)s: No such nick/channel.") % { "target": gui.escape(target) }
+		error = _(u"• %(target)s: No such nick/channel.") % {
+			"target": gui.escape(target) }
 	elif type == "s":
-		error = _(u"• %(target)s: No such server.") % { "target": gui.escape(target) }
+		error = _(u"• %(target)s: No such server.") % {
+			"target": gui.escape(target) }
 	elif type == "c":
-		error = _(u"• %(target)s: No such channel.") % { "target": gui.escape(target) }
+		error = _(u"• %(target)s: No such channel.") % {
+			"target": gui.escape(target) }
 
 	if tab:
 		gui.channelPrint(time, server, target, error)
@@ -1337,7 +1386,8 @@ def whois(time, server, nick, message):
 			_(u"[%(nick)s] End of whois.") % {
 				"nick": gui.escape(nick) })
 
-def dcc_send(time, id, server, sender, filename, size, progress, speed, status):
+def dcc_send(time, id, server, sender, filename,
+			 size, progress, speed, status):
 	"""
 	status:
 	- 1 << 0 = incoming
@@ -1345,7 +1395,8 @@ def dcc_send(time, id, server, sender, filename, size, progress, speed, status):
 	- 1 << 2 = running
 	- 1 << 3 = error
 
-	"" in (server, sender, filename) and 0 in (size, progress, speed, status):
+	"" in (server, sender, filename)
+		and 0 in (size, progress, speed, status):
 	send was removed
 	"""
 
@@ -1356,13 +1407,15 @@ def dcc_send(time, id, server, sender, filename, size, progress, speed, status):
 			sushi.dcc_send_remove(tid)
 		dialog.destroy()
 
-	(dcc_s_incoming,
-	 dcc_s_resumable,
-	 dcc_s_resumed,
-	 dcc_s_running,
-	 dcc_s_error) = [1 << n for n in range(5)]
+	(s_incoming,
+	 s_resumable,
+	 s_resumed,
+	 s_running,
+	 s_error) = [1 << n for n in range(5)]
 
-	if "" in (server, sender, filename) and 0 in (size, progress, speed, status):
+	if ("" in (server, sender, filename)
+	and 0 in (size, progress, speed, status)):
+
 		# send was removed
 		print "filetransfer %d removed." % (id)
 		return
@@ -1371,36 +1424,15 @@ def dcc_send(time, id, server, sender, filename, size, progress, speed, status):
 
 	# handle incoming transfers
 	#
-	if status & dcc_s_incoming == dcc_s_incoming:
+	if status & s_incoming == s_incoming:
 
 		if status >> 2 == 0:
 			# attempt made
 
-			d = dcc_dialog.DCCDialog(id, parse_from(sender)[0], filename, size,
-				resumable = (status & dcc_s_resumable == dcc_s_resumable))
+			d = dcc_dialog.DCCDialog(
+				id, parse_from(sender)[0],
+				filename, size,
+				resumable = (status & s_resumable == s_resumable))
 
 			d.connect("response", dcc_dialog_response_cb, id)
 			gui.showInlineDialog(d)
-
-	"""
-	if status & dcc_s_running:
-		# transfer is running.
-		# add to the list of active transfers or update
-		print "started file transfer %d." % (id)
-
-		if not dcc_control.get_transfer(id):
-			dcc_control.add_transfer(
-				id, server,
-				sender, filename,
-				size, status)
-		else:
-			dcc_control.update_transfer(
-				id,
-				progress = progress,
-				speed = speed)
-
-	elif status & dcc_s_error:
-		# transfer had an error...
-		print "error in transfer %d." % (id)
-		dcc_control.update_transfer(id, status = status)
-	"""

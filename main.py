@@ -568,48 +568,6 @@ def scrolledWindow_output_vscrollbar_valueChanged_cb(range):
 
 	idle_add(determine_auto_scroll, tab)
 
-def statusIcon_activate_cb(statusIcon):
-	"""
-		Click on status icon
-	"""
-	mw = widgets.get_widget("mainWindow")
-	if mw.get_property("visible"):
-		mw.hide()
-	else:
-		mw.show()
-
-def statusIcon_popup_menu_cb(statusIcon, button, time):
-	"""
-	User wants to see the menu
-	"""
-	m = gtk.Menu()
-
-	hide = gtk.MenuItem(label="Show/Hide main window")
-	m.append(hide)
-	hide.connect("activate", statusIcon_menu_hide_activate_cb)
-
-	sep = gtk.SeparatorMenuItem()
-	m.append(sep)
-
-	quit = gtk.ImageMenuItem(stock_id=gtk.STOCK_QUIT)
-	m.append(quit)
-	quit.connect("activate", lambda *x: gtk.main_quit())
-
-	m.show_all()
-
-	m.popup(None, None, gtk.status_icon_position_menu, button, time, statusIcon)
-
-def statusIcon_menu_hide_activate_cb(menuItem):
-	"""
-	Show main window if hidden, else hide.
-	"""
-	mw = widgets.get_widget("mainWindow")
-	if mw.get_property("visible"):
-		mw.hide()
-	else:
-		mw.show()
-
-
 """
 	Shortcut callbacks
 """
@@ -1072,6 +1030,13 @@ def setupGTK():
 	gui.searchToolbar.textview = gui.widgets.get_widget("output")
 
 	# connect tab control signals
+	gui.tabs.set_callbacks({
+		"new_message": tekka_tab_new_message,
+		"new_name": tekka_tab_new_name,
+		"new_path": tekka_tab_new_path,
+		"connected": tekka_tab_connected,
+		"joined": tekka_channel_joined,
+		"away": tekka_server_away })
 	gui.tabs.connect("tab_switched", tekka_tab_switched)
 
 	# connect main window signals:
@@ -1149,11 +1114,19 @@ def setupGTK():
 
 	widgets.signal_autoconnect(sigdic)
 
+	# setup manual signals
+
+	bar = widgets.get_widget("inputBar")
+	bar.connect("key-press-event", inputBar_key_press_event_cb)
+	bar.connect("activate", inputBar_activate_cb)
+
 	vbar = widgets.get_widget(
 		"scrolledWindow_output").get_vscrollbar()
 	vbar.connect(
 		"value-changed",
 		scrolledWindow_output_vscrollbar_valueChanged_cb)
+
+	# setup more complex widgets
 
 	setup_serverTree()
 	setup_nickList()
@@ -1167,31 +1140,32 @@ def setupGTK():
 
 			for row in widgets.get_widget("serverTree").get_model():
 				for child in row.iterchildren():
-					gui.setFont(child[2].textview, gui.get_font())
-				gui.setFont(row[2].textview, gui.get_font())
+					gui.set_font(child[2].textview, gui.get_font())
+				gui.set_font(row[2].textview, gui.get_font())
 
-			gui.setFont(widgets.get_widget("output"), gui.get_font())
-			gui.setFont(widgets.get_widget("inputBar"), gui.get_font())
-			gui.setFont(widgets.get_widget("generalOutput"), gui.get_font())
+			gui.set_font(widgets.get_widget("output"), gui.get_font())
+			gui.set_font(widgets.get_widget("inputBar"), gui.get_font())
+			gui.set_font(widgets.get_widget("generalOutput"), gui.get_font())
 
 		c = gconf.client_get_default()
 
 		c.add_dir("/desktop/gnome/interface", gconf.CLIENT_PRELOAD_NONE)
 		c.notify_add("/desktop/gnome/interface/monospace_font_name", default_font_cb)
 	except:
+		# FIXME: what kind of error is catched here? at least some doc...
 		pass
 
 	# set output font
-	gui.setFont(widgets.get_widget("output"), gui.get_font())
+	gui.set_font(widgets.get_widget("output"), gui.get_font())
 
 	# set input font
-	gui.setFont(widgets.get_widget("inputBar"), gui.get_font())
+	gui.set_font(widgets.get_widget("inputBar"), gui.get_font())
 
 	# set general output font
-	gui.setFont(widgets.get_widget("generalOutput"), gui.get_font())
+	gui.set_font(widgets.get_widget("generalOutput"), gui.get_font())
 
 	# setup general output
-	buffer = gui.getNewBuffer()
+	buffer = gui.get_new_buffer()
 	widgets.get_widget("generalOutput").set_buffer(buffer)
 
 	# setup menu bar stuff

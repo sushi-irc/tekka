@@ -32,7 +32,7 @@ def types (**type_dict):
 
 	def decorate (fun):
 
-		def new (*args, **kwargs):
+		def typecheck_decorator (*args, **kwargs):
 			argspec = inspect.getargspec (fun)
 			parameters = argspec[0]
 			check_dict = {}
@@ -69,7 +69,8 @@ def types (**type_dict):
 							[n.__name__ for n in t_type])
 						raise_error (typelist_name, foreign_type.__name__)
 
-				elif type (t_type) == type:
+				elif (type (t_type) == type
+				or type(t_type).__name__ == "GObjectMeta"):
 					# one type to check
 
 					if not isinstance(foreign, t_type):
@@ -84,5 +85,5 @@ def types (**type_dict):
 
 			return fun (*args, **kwargs)
 
-		return new
+		return typecheck_decorator
 	return decorate

@@ -430,5 +430,5 @@ def setup():
 
 	widgets.get_widget("calendar").connect("realize", calendar_realize_cb)
 
-	gui.setFont(widgets.get_widget("historyView"), gui.get_font())
+	gui.set_font(widgets.get_widget("historyView"), gui.get_font())
 

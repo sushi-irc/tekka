@@ -30,7 +30,7 @@ from dbus import String
 import gobject
 from typecheck import types
 
-class tekkaTab(gobject.GObject):
+class TekkaTab(gobject.GObject):
 	"""
 		Provides basic attributes like the output textview,
 		the name of the tab and a flag if a new message is received.
@@ -116,7 +116,7 @@ class tekkaTab(gobject.GObject):
 		return self.name
 
 gobject.signal_new(
-	"connected", tekkaTab,
+	"connected", TekkaTab,
 	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
 	(gobject.TYPE_BOOLEAN,))
 
@@ -127,21 +127,21 @@ gobject.signal_new(
 	are read.
 """
 gobject.signal_new(
-	"new_message", tekkaTab,
+	"new_message", TekkaTab,
 	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
 	(gobject.TYPE_PYOBJECT,))
 
 gobject.signal_new(
-	"new_path", tekkaTab,
+	"new_path", TekkaTab,
 	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
 	(gobject.TYPE_PYOBJECT,))
 
 gobject.signal_new(
-	"new_name", tekkaTab,
+	"new_name", TekkaTab,
 	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
 	(gobject.TYPE_STRING,))
 
-class tekkaServer(tekkaTab):
+class TekkaServer(TekkaTab):
 	"""
 		A typically server tab.
 	"""
@@ -154,7 +154,7 @@ class tekkaServer(tekkaTab):
 	away = property(lambda x: x._away, _set_away)
 
 	def __init__(self, name, textview=None):
-		tekkaTab.__init__(self, name, textview)
+		TekkaTab.__init__(self, name, textview)
 
 		self.away = ""
 
@@ -173,15 +173,15 @@ class tekkaServer(tekkaTab):
 
 gobject.signal_new(
 	"away",
-	tekkaServer, gobject.SIGNAL_ACTION,
+	TekkaServer, gobject.SIGNAL_ACTION,
 	gobject.TYPE_NONE, (gobject.TYPE_STRING,))
 
 
-class tekkaQuery(tekkaTab):
+class TekkaQuery(TekkaTab):
 	""" Class for typical query-tabs """
 
 	def __init__(self, name, server, textview=None):
-		tekkaTab.__init__(self, name, textview)
+		TekkaTab.__init__(self, name, textview)
 
 		self.server = server
 
@@ -220,7 +220,7 @@ class tekkaQuery(tekkaTab):
 
 		return markup
 
-class tekkaChannel(tekkaTab):
+class TekkaChannel(TekkaTab):
 	"""
 		A typically channel tab.
 	"""
@@ -234,7 +234,7 @@ class tekkaChannel(tekkaTab):
 
 	def __init__(self, name, server, textview=None,
 		nicklist=None, topic="", topicsetter=""):
-		tekkaTab.__init__(self, name, textview)
+		TekkaTab.__init__(self, name, textview)
 
 		self.nickList = nicklist
 		self.topic = topic
@@ -279,7 +279,7 @@ class tekkaChannel(tekkaTab):
 		return markup
 
 gobject.signal_new(
-	"joined", tekkaChannel,
+	"joined", TekkaChannel,
 	gobject.SIGNAL_ACTION,
 	gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,))
 
