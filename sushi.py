@@ -30,7 +30,8 @@ import com
 import commands
 import signals
 import config
-import gui_control
+
+import lib.gui_control as gui_control
 from lib.inline_dialog import InlineMessageDialog
 
 class Plugin (object):

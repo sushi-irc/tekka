@@ -37,8 +37,7 @@ from types import NoneType
 from typecheck import types
 
 from lib.inline_dialog import InlineMessageDialog
-
-import gui_control
+import lib.gui_control as gui_control
 
 dbus_loop = DBusGMainLoop()
 required_version = (1, 1, 0)

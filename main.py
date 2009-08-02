@@ -57,15 +57,15 @@ from helper.shortcuts import addShortcut, removeShortcut
 from helper import tabcompletion
 from lib.inline_dialog import InlineMessageDialog
 
-import gui_control as gui
 import config
 import com
 
-import dialog_control
 import signals
 import commands
 
-import plugin_control
+from lib import plugin_control
+import lib.gui_control as gui
+from lib import dialog_control
 
 from menus import *
 

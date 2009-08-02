@@ -28,7 +28,7 @@ SUCH DAMAGE.
 import gtk
 from gettext import gettext as _
 
-import gui_control
+import lib.gui_control
 import config
 
 class TekkaStatusIcon(gtk.StatusIcon):
@@ -51,7 +51,7 @@ class TekkaStatusIcon(gtk.StatusIcon):
 
 	def activate_cb(self, icon):
 		"""	Click on status icon """
-		mw = gui_control.get_widget("mainWindow")
+		mw = lib.gui_control.get_widget("mainWindow")
 
 		if mw.get_property("visible"):
 			mw.hide()
@@ -62,7 +62,7 @@ class TekkaStatusIcon(gtk.StatusIcon):
 		""" User wants to see the menu of the status icon """
 		m = gtk.Menu()
 
-		if gui_control.get_widget("mainWindow").get_property("visible"):
+		if lib.gui_control.get_widget("mainWindow").get_property("visible"):
 			msg = _("Hide main window")
 		else:
 			msg = _("Show main window")

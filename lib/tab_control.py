@@ -27,10 +27,10 @@ SUCH DAMAGE.
 
 import gobject
 
-import gui_control
 import com
 import config
 
+import lib.gui_control
 from lib.input_history import InputHistory
 from lib.tab import TekkaTab, TekkaChannel, TekkaQuery, TekkaServer
 from lib.output_textview import OutputTextView
@@ -83,7 +83,7 @@ class TabControl(gobject.GObject):
 		if not tab is self.getCurrentTab():
 			return
 
-		widgetList = [gui_control.get_widget('nickList')]
+		widgetList = [lib.gui_control.get_widget('nickList')]
 
 		for widget in widgetList:
 			widget.set_sensitive (switch)
@@ -93,7 +93,7 @@ class TabControl(gobject.GObject):
 
 		tab.textview = OutputTextView()
 		tab.textview.show()
-		gui_control.set_font(tab.textview, gui_control.get_font())
+		lib.gui_control.set_font(tab.textview, lib.gui_control.get_font())
 
 		tab.connect("new_message", self.get_callback("new_message"))
 		tab.connect("new_name", self.get_callback("new_name"))
@@ -101,7 +101,7 @@ class TabControl(gobject.GObject):
 		tab.connect("connected", self.get_callback("connected"))
 
 		tab.input_history = InputHistory(
-			text_callback = gui_control.get_widget("inputBar").get_text)
+			text_callback = lib.gui_control.get_widget("inputBar").get_text)
 
 		return tab
 
@@ -132,7 +132,7 @@ class TabControl(gobject.GObject):
 			for a tab identified by name).
 			The method returns the tab object or None.
 		"""
-		store = gui_control.get_widget("serverTree").get_model()
+		store = lib.gui_control.get_widget("serverTree").get_model()
 
 		for row in store:
 			if row[1].lower() == server.lower():
@@ -160,7 +160,7 @@ class TabControl(gobject.GObject):
 			(<serverTab>,None)
 			(None,None)
 		"""
-		store = gui_control.get_widget("serverTree").get_model()
+		store = lib.gui_control.get_widget("serverTree").get_model()
 		for row in store:
 			if row[1].lower() == server.lower():
 				if not name:
@@ -184,7 +184,7 @@ class TabControl(gobject.GObject):
 			On succes the method returns the path
 			to the new tab, otherwise None.
 		"""
-		store = gui_control.get_widget("serverTree").get_model()
+		store = lib.gui_control.get_widget("serverTree").get_model()
 
 		serverIter = None
 
@@ -199,12 +199,12 @@ class TabControl(gobject.GObject):
 
 		if server and config.get("tekka", "auto_expand"):
 			# expand the whole server tab
-			gui_control.get_widget("serverTree").expand_row(
+			lib.gui_control.get_widget("serverTree").expand_row(
 				store.get_path(store.iter_parent(iter)),
 				True)
 
 		if update_shortcuts:
-			gui_control.updateServerTreeShortcuts()
+			lib.gui_control.updateServerTreeShortcuts()
 
 		return object.path
 
@@ -257,7 +257,7 @@ class TabControl(gobject.GObject):
 			to to the unique identifying path stored
 			inner the tekkaTab.
 		"""
-		store = gui_control.get_widget("serverTree").get_model()
+		store = lib.gui_control.get_widget("serverTree").get_model()
 
 		try:
 			row = store[tab.path]
@@ -283,7 +283,7 @@ class TabControl(gobject.GObject):
 		self.__updateLowerRows(store,nextIter)
 
 		if update_shortcuts:
-			gui_control.updateServerTreeShortcuts()
+			lib.gui_control.updateServerTreeShortcuts()
 
 		return True
 
@@ -304,7 +304,7 @@ class TabControl(gobject.GObject):
 			On success this method returns True
 			otherwise False.
 		"""
-		store = gui_control.get_widget("serverTree").get_model()
+		store = lib.gui_control.get_widget("serverTree").get_model()
 
 		if server:
 			for row in store:
@@ -328,7 +328,7 @@ class TabControl(gobject.GObject):
 
 			Replaces the tab `old` with the tab `new`.
 		"""
-		store = gui_control.get_widget("serverTree").get_model()
+		store = lib.gui_control.get_widget("serverTree").get_model()
 
 		try:
 			row = store[old.path]
@@ -355,7 +355,7 @@ class TabControl(gobject.GObject):
 			Note:  if there's a newly row inserted, the
 			Note:: tab-column can be None.
 		"""
-		store = gui_control.get_widget("serverTree").get_model()
+		store = lib.gui_control.get_widget("serverTree").get_model()
 
 		tabs = []
 
@@ -381,7 +381,7 @@ class TabControl(gobject.GObject):
 		"""
 			Returns the current tab.
 		"""
-		store = gui_control.get_widget("serverTree").get_model()
+		store = lib.gui_control.get_widget("serverTree").get_model()
 		try:
 			return store[self.currentPath][2]
 		except (IndexError,TypeError):
@@ -399,7 +399,7 @@ class TabControl(gobject.GObject):
 			(<serverTab>,None)
 			(None,None)
 		"""
-		store = gui_control.get_widget("serverTree").get_model()
+		store = lib.gui_control.get_widget("serverTree").get_model()
 
 		if not self.currentPath:
 			return None,None
@@ -468,10 +468,10 @@ class TabControl(gobject.GObject):
 			Switches in TreeModel of serverTree to the
 			tab identified by path.
 		"""
-		if not gui_control.gui_is_useable:
+		if not lib.gui_control.gui_is_useable:
 			return
 
-		serverTree = gui_control.get_widget("serverTree")
+		serverTree = lib.gui_control.get_widget("serverTree")
 		store = serverTree.get_model()
 
 		if not path:
@@ -489,7 +489,7 @@ class TabControl(gobject.GObject):
 		serverTree.set_cursor(path)
 		self.currentPath = path
 
-		gui_control.replace_output_textview(tab.textview)
+		lib.gui_control.replace_output_textview(tab.textview)
 
 		self.emit("tab_switched", old_tab, tab)
 
@@ -501,33 +501,33 @@ class TabControl(gobject.GObject):
 			"""
 			self.setUseable(tab, tab.joined)
 
-			gui_control.setUserCount(
+			lib.gui_control.setUserCount(
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
 			if config.get_bool("tekka", "show_topicbar"):
-				gui_control.get_widget("topicBar").set_text(tab.topic)
-				gui_control.get_widget("topicBar").show()
+				lib.gui_control.get_widget("topicBar").set_text(tab.topic)
+				lib.gui_control.get_widget("topicBar").show()
 
-			gui_control.get_widget("VBox_nickList").show_all()
-			gui_control.get_widget("nickList").set_model(tab.nickList)
+			lib.gui_control.get_widget("VBox_nickList").show_all()
+			lib.gui_control.get_widget("nickList").set_model(tab.nickList)
 
 		elif tab.is_query() or tab.is_server():
 			# queries and server tabs don't have topics or nicklists
 			self.setUseable(tab, tab.connected)
 
-			gui_control.get_widget("topicBar").hide()
-			gui_control.get_widget("VBox_nickList").hide()
+			lib.gui_control.get_widget("topicBar").hide()
+			lib.gui_control.get_widget("VBox_nickList").hide()
 
 		tab.setNewMessage(None)
 
-		gui_control.updateServerTreeMarkup(tab.path)
-		gui_control.setWindowTitle(tab.name)
+		lib.gui_control.updateServerTreeMarkup(tab.path)
+		lib.gui_control.setWindowTitle(tab.name)
 
 		if not tab.is_server():
-			gui_control.setNick(com.getOwnNick(tab.server))
+			lib.gui_control.setNick(com.getOwnNick(tab.server))
 		else:
-			gui_control.setNick(com.getOwnNick(tab.name))
+			lib.gui_control.setNick(com.getOwnNick(tab.name))
 
 	def switchToTab(self, tab):
 		if not tab or not tab.path:

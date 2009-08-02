@@ -30,21 +30,15 @@ import gtk
 from gettext import gettext as _
 
 import config
-import gui_control
-import dialog_control
 
-from com import sushi
-
+import lib.gui_control as gui_control
+from lib import dialog_control
 from lib import inline_dialog
 from lib import key_dialog
 
-class SingletonMeta(type):
+from com import sushi
 
-	def __new__(cls, name, bases, attrs):
-		instances = {}
-		if cls not in instances:
-			instances[cls] = super(SingletonMeta, cls).__new__(cls, name, bases, attrs)
-		return instances[cls]
+from helper.singleton import SingletonMeta
 
 class NickListMenu(object):
 

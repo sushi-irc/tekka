@@ -29,7 +29,8 @@ SUCH DAMAGE.
 import commands
 import com
 import config
-import gui_control
+
+import lib.gui_control as gui_control
 
 # types identificating the current scroll position
 (

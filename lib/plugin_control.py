@@ -43,9 +43,9 @@ import sys
 from gettext import gettext as _
 
 import config
-from lib.inline_dialog import InlineMessageDialog
 
-import gui_control
+from lib.inline_dialog import InlineMessageDialog
+import lib.gui_control as gui_control
 
 _module_prefix = "tekkaplugin_"
 _plugins = {}

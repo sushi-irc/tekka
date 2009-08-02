@@ -39,7 +39,7 @@ import gtk.glade
 import com
 import signals
 import config
-from gui_control import errorMessage
+from lib.gui_control import errorMessage
 
 widgets = None
 currentServer = None

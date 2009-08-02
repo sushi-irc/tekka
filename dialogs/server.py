@@ -29,9 +29,10 @@ SUCH DAMAGE.
 import gtk
 import gtk.glade
 import com
-import dialog_control
 import config
-import gui_control
+
+from lib import dialog_control
+import lib.gui_control as gui_control
 
 widgets = None
 serverSelection = None

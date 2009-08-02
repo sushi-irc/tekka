@@ -35,8 +35,8 @@ import time as mtime
 
 import com
 import config
-import gui_control as gui
 
+import lib.gui_control as gui
 from lib import key_dialog
 from lib import contrast
 from lib import dcc_dialog

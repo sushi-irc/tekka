@@ -29,8 +29,8 @@ SUCH DAMAGE.
 import gtk.glade
 from com import sushi
 import config
-import gui_control
 
+import lib.gui_control as gui_control
 from lib.expanding_list import ExpandingList
 
 widgets = None

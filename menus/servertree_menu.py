@@ -30,22 +30,16 @@ import gtk
 from gettext import gettext as _
 
 import config
-import gui_control
-import dialog_control
 
 from com import sushi
 
+from helper.singleton import SingletonMeta
+
+import lib.gui_control as gui_control
 from lib import inline_dialog
 from lib import key_dialog
 from lib import topic_dialog
-
-class SingletonMeta(type):
-
-	def __new__(cls, name, bases, attrs):
-		instances = {}
-		if cls not in instances:
-			instances[cls] = super(SingletonMeta, cls).__new__(cls, name, bases, attrs)
-		return instances[cls]
+from lib import dialog_control
 
 class ServerTreeMenu(object):
 

@@ -36,7 +36,8 @@ import re
 
 import config
 import com
-import gui_control as gui
+
+import lib.gui_control as gui
 from lib.search_toolbar import SearchBar
 
 widgets = None

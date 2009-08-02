@@ -34,9 +34,8 @@ import gtk.glade
 from gobject import idle_add
 import re
 
-import gui_control as gui
-import dialog_control
-
+import lib.gui_control as gui
+from lib import dialog_control
 from lib.expanding_list import ExpandingList
 
 widgets = None

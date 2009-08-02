@@ -34,7 +34,7 @@ except ImportError:
 	pass
 
 import signals
-import gui_control
+import lib.gui_control as gui_control
 
 from com import sushi
 from gettext import gettext as _

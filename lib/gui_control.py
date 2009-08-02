@@ -57,7 +57,7 @@ from typecheck import types
 from helper.shortcuts import addShortcut, removeShortcut
 from helper import URLHandler
 
-from lib.tab_control import TabControl
+import lib.tab_control
 from lib.search_toolbar import SearchBar
 from lib.input_history import InputHistory
 from lib.output_textview import OutputTextView
@@ -68,7 +68,7 @@ widgets = None
 statusIcon = None
 accelGroup = None
 searchToolbar = None
-tabs = TabControl()
+tabs = lib.tab_control.TabControl()
 
 def profileMe(file):
 	def get_location(file):

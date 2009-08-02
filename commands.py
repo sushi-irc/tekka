@@ -36,7 +36,8 @@ from gettext import gettext as _
 
 import config
 import com
-import gui_control as gui
+
+import lib.gui_control as gui
 from lib.inline_dialog import InlineMessageDialog
 
 sushi = com.sushi
