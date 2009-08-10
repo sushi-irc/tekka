@@ -130,8 +130,7 @@ def handle_maki_connect():
 	connect_signal("action", userAction)
 	connect_signal("away_message", userAwayMessage)
 	connect_signal("ctcp", userCTCP)
-	connect_signal("no_such", noSuch)
-	connect_signal("cannot_join", cannotJoin)
+	connect_signal("error", userError)
 
 	# action signals
 	connect_signal("part", userPart)
@@ -1319,18 +1318,24 @@ def userPart(timestamp, server, from_str, channel, reason):
 					},
 				"action")
 
+def userError(time, server, domain, reason, arguments):
+	if domain == "no_such":
+		noSuch(time, server, arguments[0], reason)
+	elif domain == "cannot_join":
+		cannotJoin(time, server, arguments[0], reason)
+
 def noSuch(time, server, target, type):
 	""" Signal is emitted if maki can't find the target on the server. """
 
 	tab = gui.tabs.search_tab(server, target)
 
-	if type == "n":
+	if type == "nick":
 		error = _(u"• %(target)s: No such nick/channel.") % {
 			"target": gui.escape(target) }
-	elif type == "s":
+	elif type == "server":
 		error = _(u"• %(target)s: No such server.") % {
 			"target": gui.escape(target) }
-	elif type == "c":
+	elif type == "channel":
 		error = _(u"• %(target)s: No such channel.") % {
 			"target": gui.escape(target) }
 
@@ -1345,13 +1350,13 @@ def cannotJoin(time, server, channel, reason):
 	"""
 	message = _("Unknown reason")
 
-	if reason == "l":
+	if reason == "full":
 		message = _("The channel is full.")
-	elif reason == "i":
+	elif reason == "invite":
 		message = _("The channel is invite-only.")
-	elif reason == "b":
+	elif reason == "banned":
 		message = _("You are banned.")
-	elif reason == "k":
+	elif reason == "key":
 		if config.get_bool("tekka", "ask_for_key_on_cannotjoin"):
 			def key_dialog_response_cb(dialog, id):
 				if id == gtk.RESPONSE_OK:

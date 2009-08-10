@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-08-01 14:43+0200\n"
+"POT-Creation-Date: 2009-08-11 00:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,293 +17,234 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: ../commands.py:50 ../commands.py:57
+#: ../commands.py:51 ../commands.py:58
 msgid "Warning:"
 msgstr ""
 
-#: ../commands.py:50
+#: ../commands.py:51
 #, python-format
 msgid "You are not connected to server %(server)s."
 msgstr ""
 
-#: ../commands.py:57
+#: ../commands.py:58
 #, python-format
 msgid ""
 "The channel %(channel)s is not joined. Everything you write will not be send."
 msgstr ""
 
-#: ../commands.py:539
+#: ../commands.py:540
 #, python-format
 msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
 msgstr ""
 
-#: ../com.py:64 ../com.py:73 ../com.py:145 ../com.py:157 ../com.py:185
-#: ../main.py:156 ../main.py:221
+#: ../com.py:63 ../com.py:72 ../com.py:144 ../com.py:156 ../com.py:184
+#: ../main.py:177 ../main.py:241
 msgid "tekka could not connect to maki."
 msgstr ""
 
-#: ../com.py:65 ../com.py:74 ../com.py:146 ../com.py:158 ../com.py:186
+#: ../com.py:64 ../com.py:73 ../com.py:145 ../com.py:157 ../com.py:185
 #, python-format
 msgid ""
 "Please check whether maki is running.\n"
 "The following error occurred: %(error)s"
 msgstr ""
 
-#: ../com.py:203
+#: ../com.py:202
 msgid "tekka requires a newer maki version."
 msgstr ""
 
-#: ../com.py:204
+#: ../com.py:203
 #, python-format
 msgid "Please update maki to at least version %(version)s."
 msgstr ""
 
-#: ../gui_control.py:793
-#, python-format
-msgid "%d User"
-msgid_plural "%d Users"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../gui_control.py:795
-#, python-format
-msgid "%d Operator"
-msgid_plural "%d Operators"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../gui_control.py:1036
-#, python-format
-msgid "Error: %(message)s"
-msgstr ""
-
-#: ../main.py:156 ../main.py:221
+#: ../main.py:177 ../main.py:241
 msgid "Please check whether maki is running."
 msgstr ""
 
-#: ../main.py:229
+#: ../main.py:249
 msgid "tekka could not determine server."
 msgstr ""
 
-#: ../main.py:230
+#: ../main.py:250
 msgid ""
 "There is no active server. Click on a server tab or a child of a server tab "
 "to activate the server."
 msgstr ""
 
-#: ../main.py:468
+#: ../main.py:469
 msgid "Reset markup"
 msgstr ""
 
-#: ../main.py:722
+#: ../main.py:685
 #, python-format
 msgid "Do you really want to close channel “%(name)s”?"
 msgstr ""
 
-#: ../main.py:724
+#: ../main.py:687
 #, python-format
 msgid "Do you really want to close query “%(name)s”?"
 msgstr ""
 
-#: ../main.py:726
+#: ../main.py:689
 #, python-format
 msgid "Do you really want to close server “%(name)s”?"
 msgstr ""
 
-#: ../main.py:1251
+#: ../main.py:1237
 msgid "Error occured"
 msgstr ""
 
-#: ../plugin_control.py:104 ../plugin_control.py:108 ../plugin_control.py:128
-#: ../plugin_control.py:176 ../plugin_control.py:271
-msgid "Plugin could not be loaded."
-msgstr ""
-
-#: ../plugin_control.py:104 ../plugin_control.py:128 ../plugin_control.py:176
-#, python-format
-msgid ""
-"Plugin %(plugin)s could not be loaded.\n"
-"The following error occurred: %(error)s"
-msgstr ""
-
-#: ../plugin_control.py:108
-#, python-format
-msgid "Plugin %(plugin)s could not be loaded."
-msgstr ""
-
-#: ../plugin_control.py:157
-msgid "Plugin is already loaded."
-msgstr ""
-
-#: ../plugin_control.py:157
-#, python-format
-msgid "Plugin %(plugin)s is already loaded."
-msgstr ""
-
-#: ../plugin_control.py:196
-msgid "Plugin could not be unloaded."
-msgstr ""
-
-#: ../plugin_control.py:196
-#, python-format
-msgid "Plugin %(plugin)s could not be unloaded, because it is not loaded."
-msgstr ""
-
-#: ../plugin_control.py:272
-#, python-format
-msgid "Plugin %(plugin)s could not be loaded automatically."
-msgstr ""
-
-#: ../signals.py:472
+#: ../signals.py:476
 #, python-format
 msgid "• Topic for %(channel)s: %(topic)s"
 msgstr ""
 
-#: ../signals.py:479
+#: ../signals.py:483
 #, python-format
 msgid "• You changed the topic to %(topic)s."
 msgstr ""
 
-#: ../signals.py:481
+#: ../signals.py:485
 #, python-format
 msgid "• %(nick)s changed the topic to %(topic)s."
 msgstr ""
 
-#: ../signals.py:538
+#: ../signals.py:558
 #, python-format
 msgid "• %(nick)s is away (%(message)s)."
 msgstr ""
 
-#: ../signals.py:633
+#: ../signals.py:657
 #, python-format
 msgid "• Modes for %(target)s: %(mode)s"
 msgstr ""
 
-#: ../signals.py:699
+#: ../signals.py:723
 #, python-format
 msgid "CTCP from %(nick)s to Channel:"
 msgstr ""
 
-#: ../signals.py:727
+#: ../signals.py:753
 #, python-format
 msgid "CTCP request from you to %(target)s: %(message)s"
 msgstr ""
 
-#: ../signals.py:890
+#: ../signals.py:925
 #, python-format
 msgid "• You are now known as %(newnick)s."
 msgstr ""
 
-#: ../signals.py:899
+#: ../signals.py:934
 #, python-format
 msgid "• %(nick)s is now known as %(newnick)s."
 msgstr ""
 
-#: ../signals.py:956
+#: ../signals.py:998
 #, python-format
 msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr ""
 
-#: ../signals.py:973
+#: ../signals.py:1017
 #, python-format
 msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr ""
 
-#: ../signals.py:1011
+#: ../signals.py:1056
 #, python-format
 msgid "« You have quit (%(reason)s)."
 msgstr ""
 
-#: ../signals.py:1013
+#: ../signals.py:1058
 msgid "« You have quit."
 msgstr ""
 
-#: ../signals.py:1029
+#: ../signals.py:1074
 #, python-format
 msgid "« %(nick)s has quit (%(reason)s)."
 msgstr ""
 
-#: ../signals.py:1031
+#: ../signals.py:1076
 #, python-format
 msgid "« %(nick)s has quit."
 msgstr ""
 
-#: ../signals.py:1126
+#: ../signals.py:1171
 #, python-format
 msgid "» You have joined %(channel)s."
 msgstr ""
 
-#: ../signals.py:1138
+#: ../signals.py:1183
 #, python-format
 msgid "» %(nick)s has joined %(channel)s."
 msgstr ""
 
-#: ../signals.py:1230
+#: ../signals.py:1277
 #, python-format
 msgid "« You have left %(channel)s (%(reason)s)."
 msgstr ""
 
-#: ../signals.py:1232
+#: ../signals.py:1279
 #, python-format
 msgid "« You have left %(channel)s."
 msgstr ""
 
-#: ../signals.py:1254
+#: ../signals.py:1301
 #, python-format
 msgid "« %(nick)s has left %(channel)s (%(reason)s)."
 msgstr ""
 
-#: ../signals.py:1256
+#: ../signals.py:1303
 #, python-format
 msgid "« %(nick)s has left %(channel)s."
 msgstr ""
 
-#: ../signals.py:1278
+#: ../signals.py:1333
 #, python-format
 msgid "• %(target)s: No such nick/channel."
 msgstr ""
 
-#: ../signals.py:1280
+#: ../signals.py:1336
 #, python-format
 msgid "• %(target)s: No such server."
 msgstr ""
 
-#: ../signals.py:1282
+#: ../signals.py:1339
 #, python-format
 msgid "• %(target)s: No such channel."
 msgstr ""
 
-#: ../signals.py:1293
+#: ../signals.py:1351
 msgid "Unknown reason"
 msgstr ""
 
-#: ../signals.py:1296
+#: ../signals.py:1354
 msgid "The channel is full."
 msgstr ""
 
-#: ../signals.py:1298
+#: ../signals.py:1356
 msgid "The channel is invite-only."
 msgstr ""
 
-#: ../signals.py:1300
+#: ../signals.py:1358
 msgid "You are banned."
 msgstr ""
 
-#: ../signals.py:1314
+#: ../signals.py:1372
 msgid "You need the correct channel key."
 msgstr ""
 
-#: ../signals.py:1317
+#: ../signals.py:1375
 #, python-format
 msgid "You can not join %(channel)s: %(reason)s"
 msgstr ""
 
-#: ../signals.py:1327
+#: ../signals.py:1385
 #, python-format
 msgid "[%(nick)s] %(message)s"
 msgstr ""
 
-#: ../signals.py:1332
+#: ../signals.py:1390
 #, python-format
 msgid "[%(nick)s] End of whois."
 msgstr ""
@@ -352,17 +293,21 @@ msgstr ""
 msgid "C_ompile and run"
 msgstr ""
 
-#: ../dialogs/whois.py:74
+#: ../dialogs/whois.py:73
 #, python-format
 msgid "Whois on %(server)s"
 msgstr ""
 
-#: ../dialogs/whois.py:79
+#: ../dialogs/whois.py:78
 #, python-format
 msgid "Whois data of %(nick)s"
 msgstr ""
 
-#: ../dialogs/whois.py:122
+#: ../dialogs/whois.py:110
+msgid "No data received so far. Are you still connected?"
+msgstr ""
+
+#: ../dialogs/whois.py:127
 msgid "Loading..."
 msgstr ""
 
@@ -384,6 +329,25 @@ msgid ""
 "File size: %(bytes)d bytes%(resumable)s"
 msgstr ""
 
+#: ../lib/gui_control.py:288
+#, python-format
+msgid "%d User"
+msgid_plural "%d Users"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../lib/gui_control.py:290
+#, python-format
+msgid "%d Operator"
+msgid_plural "%d Operators"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../lib/gui_control.py:528
+#, python-format
+msgid "Error: %(message)s"
+msgstr ""
+
 #: ../lib/key_dialog.py:49
 #, python-format
 msgid "Enter the key for the channel %(channel)s."
@@ -391,6 +355,56 @@ msgstr ""
 
 #: ../lib/key_dialog.py:60
 msgid "Save key for channel"
+msgstr ""
+
+#: ../lib/plugin_control.py:104 ../lib/plugin_control.py:108
+#: ../lib/plugin_control.py:128 ../lib/plugin_control.py:176
+#: ../lib/plugin_control.py:271
+msgid "Plugin could not be loaded."
+msgstr ""
+
+#: ../lib/plugin_control.py:104 ../lib/plugin_control.py:128
+#: ../lib/plugin_control.py:176
+#, python-format
+msgid ""
+"Plugin %(plugin)s could not be loaded.\n"
+"The following error occurred: %(error)s"
+msgstr ""
+
+#: ../lib/plugin_control.py:108
+#, python-format
+msgid "Plugin %(plugin)s could not be loaded."
+msgstr ""
+
+#: ../lib/plugin_control.py:157
+msgid "Plugin is already loaded."
+msgstr ""
+
+#: ../lib/plugin_control.py:157
+#, python-format
+msgid "Plugin %(plugin)s is already loaded."
+msgstr ""
+
+#: ../lib/plugin_control.py:196
+msgid "Plugin could not be unloaded."
+msgstr ""
+
+#: ../lib/plugin_control.py:196
+#, python-format
+msgid "Plugin %(plugin)s could not be unloaded, because it is not loaded."
+msgstr ""
+
+#: ../lib/plugin_control.py:272
+#, python-format
+msgid "Plugin %(plugin)s could not be loaded automatically."
+msgstr ""
+
+#: ../lib/status_icon.py:66
+msgid "Hide main window"
+msgstr ""
+
+#: ../lib/status_icon.py:68
+msgid "Show main window"
 msgstr ""
 
 #: ../lib/topic_dialog.py:64
@@ -408,18 +422,18 @@ msgid ""
 "anyway?"
 msgstr ""
 
-#: ../menus/nicklist_menu.py:62 ../menus/servertree_menu.py:62
+#: ../menus/nicklist_menu.py:56 ../menus/servertree_menu.py:56
 msgid "Widget creation failed."
 msgstr ""
 
-#: ../menus/nicklist_menu.py:63
+#: ../menus/nicklist_menu.py:57
 msgid ""
 "tekka failed to create the nicklist menu.\n"
 "It's possible that there are files missing. Check if you have appropriate "
 "permissions to access all files needed by tekka and restart tekka."
 msgstr ""
 
-#: ../menus/servertree_menu.py:63
+#: ../menus/servertree_menu.py:57
 msgid ""
 "tekka failed to create the server tree menu.\n"
 "It's possible that there are files missing. Check if you have appropriate "
