@@ -105,7 +105,8 @@ def dialog_response_cb(dialog, id):
 		dialog.destroy()
 
 def loading_timeout_cb(dialog):
-	if len(dialog.treeview.get_model()) <= 1:
+	if (dialog.treeview.get_model()
+	and len(dialog.treeview.get_model()) <= 1):
 		dialog.end = True
 		dialog.whois_input(0, "", "", _("No data received so far. Are you still connected?"))
 	return False
@@ -126,7 +127,7 @@ def run(server, nick):
 	com.sushi.whois(server, nick)
 	diag.whois_input(0, "", "",_("Loading..."))
 	diag.end = True
-	
+
 	gobject.timeout_add(20000, loading_timeout_cb, diag)
 
 	diag.show_all()
