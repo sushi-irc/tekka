@@ -46,6 +46,7 @@ class DCCDialog(InlineDialog):
 						gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE),
 			icon = gtk.STOCK_DIALOG_INFO)
 
+		self.transfer_id = id
 		self.table = gtk.Table(rows = 2, columns = 2)
 
 		self.label = gtk.Label(None)
@@ -69,9 +70,14 @@ class DCCDialog(InlineDialog):
 
 		self.filechooser = gtk.FileChooserButton("Select a Directory")
 		self.filechooser.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
-		#self.filechooser.set_current_folder(sushi.dcc_get_path(id))
+		self.filechooser.set_current_folder(sushi.dcc_send_get(id, "directory"))
 		hbox = gtk.HBox()
 		hbox.pack_start(self.filechooser, expand = True, fill = False)
 		self.table.attach(hbox, 1, 2, 1, 2, yoptions = gtk.EXPAND)
 
 		self.vbox.add(self.table)
+
+	def response(self, id):
+		sushi.dcc_send_set(self.transfer_id, "directory",
+			self.filechooser.get_current_folder())
+		InlineDialog.response(self, id)
