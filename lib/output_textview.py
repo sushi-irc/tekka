@@ -44,6 +44,8 @@ class OutputTextView(gtk.TextView):
 
 		self.read_line = ()
 
+	# TODO: implement smooth scrolling with minimizing step size to 1px or so
+
 	def scroll_to_bottom(self):
 		tb = self.get_buffer()
 
