@@ -7,10 +7,10 @@ modification, are permitted provided that the following conditions
 are met:
 
 1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
+	notice, this list of conditions and the following disclaimer.
 2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
+	notice, this list of conditions and the following disclaimer in the
+	documentation and/or other materials provided with the distribution.
 
 THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -37,6 +37,13 @@ from lib.output_textview import OutputTextView
 from lib.nickListStore import nickListStore
 
 from typecheck import types
+
+"""
+TODO:  In the long run get rid of multiple
+TODO:: columns in the server tree. There
+TODO:: should be only one column with the
+TODO:: tab object inside.
+"""
 
 class TabControl(gobject.GObject):
 	"""
@@ -92,7 +99,7 @@ class TabControl(gobject.GObject):
 	def _createTab(self, tabtype, name, *args, **kwargs):
 		""" instance class of type tabtype, connect signals,
 			create textview and setup input history.
-			
+
 			Returns a new child of TekkaTab.
 		"""
 		tab = tabtype(name, *args, **kwargs)
@@ -115,7 +122,7 @@ class TabControl(gobject.GObject):
 	def create_channel(self, server, name):
 		""" create TekkaChannel object and associated a nickListStore
 			with it.
-			
+
 			Returns the newly created Tab object.
 		"""
 		ns = nickListStore()
@@ -155,13 +162,13 @@ class TabControl(gobject.GObject):
 						if channel[1].lower() == name.lower():
 							return channel[2]
 		return None
-            
+
 	@types (server = basestring, name = basestring)
 	def search_tabs(self, server, name=""):
 		"""	Searches for a pair of tabs.
-            name can be empty, in that case
-            only the server string is used
-            for the search.
+			name can be empty, in that case
+			only the server string is used
+			for the search.
 
 			Possible return values:
 			(<serverTab>,<channelTab>)
@@ -269,6 +276,7 @@ class TabControl(gobject.GObject):
 
 		# part of hack:
 		nextIter = store.iter_next(row.iter)
+
 		if not nextIter:
 			temp = store.iter_parent(row.iter)
 			if temp:
@@ -277,11 +285,18 @@ class TabControl(gobject.GObject):
 				nextIter = None
 		path = tab.path
 
+		cb = self.get_callback("remove")
+
+		if cb:
+			cb(tab)
+
 		store.remove(row.iter)
 
 		# hack because the signal rows-reordered
 		# does not work yet. Update all rows under
 		# the deleted to the new path.
+		#
+		# XXX: is this still necessary?
 		self.__updateLowerRows(store,nextIter)
 
 		if update_shortcuts:
@@ -309,12 +324,14 @@ class TabControl(gobject.GObject):
 				row[2].server = new.name
 
 	@types (server = basestring)
-	def get_all_tabs(self, server=""):
+	def get_all_tabs(self, servers=[], excludes=[]):
 		"""
 			Returns all registered tabs.
-			If server is given, only the server
-			and it's childs are returned.
-			
+			If server is given, only the servers
+			and it's children are returned.
+			If exclude is given, the given servers
+			will be ignored.
+
 			Note:  if there's a newly row inserted, the
 			Note:: tab-column can be None.
 		"""
@@ -322,17 +339,22 @@ class TabControl(gobject.GObject):
 
 		tabs = []
 
+		def lower(l):
+			return [n.lower() for n in l if n]
+
 		def iterate_store(model, path, iter):
 			tab = model[path][2]
-			if None == tab:
+			if (None == tab
+			or (tab.is_server() and tab.name.lower() in lower(excludes))
+			or (not tab.is_server() and tab.server.lower() in lower(excludes))):
 				return
 			tabs.append(tab)
 
-		if not server:
+		if not servers:
 			store.foreach(iterate_store)
 		else:
 			for row in store:
-				if row[1].lower() == server.lower():
+				if row[1].lower() in lower(servers):
 					tabs.append(row[2])
 					for child in row.iterchildren():
 						tabs.append(child[2])
@@ -354,10 +376,10 @@ class TabControl(gobject.GObject):
 		"""
 			Returns a tuple with the server
 			as parent tab and the active channel tab.
-			
+
 			If only a server is active, the
 			second field of the tuple is None.
-			
+
 			Possible return values:
 			(<serverTab>,<channelTab>)
 			(<serverTab>,None)
@@ -413,33 +435,50 @@ class TabControl(gobject.GObject):
 
 		return False
 
+	def get_next_server(self, current):
+		store = lib.gui_control.get_widget("serverTree").get_model()
+		useNext = False
+
+		for row in store:
+			if useNext:
+				return row[2]
+
+			if row[2] == current:
+				useNext = True
+
+		if len(store) >= 2:
+			# current was the last item, wrap to the first
+			return store[0][2]
+
+		return None
+
 	@types (tab = TekkaTab)
 	def get_next_tab(self, tab):
-		""" get the next left tab near to tab. 
-		
-			This function doesn't make a difference
-			between the type of tab.
+		""" get the next left tab near to tab.
+
+			This function doesn't consider the
+			type of the tab.
 		"""
 		if not tab or not tab.path:
 			return None
-		
+
 		tablist = self.get_all_tabs()
-		
+
 		if not tablist or len(tablist) == 1:
 			return None
-		
+
 		try:
 			i = tablist.index(tab)
 		except ValueError:
 			return None
-		
+
 		return tablist[i-1]
 
 	@types (path = tuple)
 	def switch_to_path(self, path):
 		""" Switch the server tree cursor
 			to the row pointed to by path.
-			
+
 			This function returns None.
 		"""
 		if not lib.gui_control.gui_is_useable:
@@ -493,6 +532,7 @@ class TabControl(gobject.GObject):
 			lib.gui_control.get_widget("topicBar").hide()
 			lib.gui_control.get_widget("VBox_nickList").hide()
 
+		# reset message notification
 		tab.setNewMessage(None)
 
 		lib.gui_control.updateServerTreeMarkup(tab.path)
