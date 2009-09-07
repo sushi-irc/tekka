@@ -323,7 +323,7 @@ class TabControl(gobject.GObject):
 			for row in store.iter_children(iter):
 				row[2].server = new.name
 
-	@types (server = basestring)
+	@types (servers = list, excludes = list)
 	def get_all_tabs(self, servers=[], excludes=[]):
 		"""
 			Returns all registered tabs.

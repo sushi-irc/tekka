@@ -181,6 +181,7 @@ def initServers():
 
 		addChannels(server)
 
+	# TODO: replace that with get_next_tab or similar
 	try:
 		toSwitch = gui.tabs.get_all_tabs()[1]
 	except IndexError:
@@ -386,7 +387,7 @@ def serverConnect(time, server):
 	if tab.connected:
 		tab.connected = False
 
-		channels = gui.tabs.get_all_tabs(server)[1:]
+		channels = gui.tabs.get_all_tabs(servers = [server])[1:]
 
 		if channels:
 			for channelTab in channels:
@@ -414,7 +415,8 @@ def serverConnected(time, server):
 	addChannels(server)
 
 	# iterate over tabs, set the connected flag to queries
-	for query in [tab for tab in gui.tabs.get_all_tabs(server)[1:] if tab.is_query()]:
+	for query in [tab for tab in gui.tabs.get_all_tabs(
+	servers = [server])[1:] if tab.is_query()]:
 		query.connected = True
 
 	# TODO: implement status bar messages
@@ -935,7 +937,7 @@ def userNick(time, server, from_str, newNick):
 
 	# iterate over all channels and look if the nick is
 	# present there. If true so rename him in nicklist cache.
-	for tab in gui.tabs.get_all_tabs(server)[1:]:
+	for tab in gui.tabs.get_all_tabs(servers = [server])[1:]:
 		if not nick or newNick == com.get_own_nick(server):
 			doPrint = True
 		else:
@@ -1047,7 +1049,7 @@ def userQuit(time, server, from_str, reason):
 		serverTab.connected = False
 
 		# walk through all channels and set joined = False on them
-		channels = gui.tabs.get_all_tabs(server)[1:]
+		channels = gui.tabs.get_all_tabs(servers = [server])[1:]
 
 		if not channels:
 			return
@@ -1075,7 +1077,7 @@ def userQuit(time, server, from_str, reason):
 		else:
 			message = _(u"« %(nick)s has quit.")
 
-		channels = gui.tabs.get_all_tabs(server)[1:]
+		channels = gui.tabs.get_all_tabs(servers = [server])[1:]
 
 		if not channels:
 			print "No channels but quit reported.. Hum wtf? o.0"
