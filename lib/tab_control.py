@@ -126,10 +126,12 @@ class TabControl(gobject.GObject):
 
 		return tab
 
+	@types(server = TekkaServer, name = basestring)
 	def create_query(self, server, name):
 		tab = self._createTab(TekkaQuery, name, server)
 		return tab
 
+	@types (server = basestring)
 	def create_server(self, server):
 		tab = self._createTab(TekkaServer, server)
 
