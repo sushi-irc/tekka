@@ -301,9 +301,9 @@ def getTextColor(nick):
 
 	return contrast.contrast_render_foreground_color(bg_color, color)
 
-def isHighlighted (server, text):
+def isHighlighted (server_tab, text):
 	highlightwords = config.get_list("chatting", "highlight_words")
-	highlightwords.append(server.nick)
+	highlightwords.append(server_tab.nick)
 
 	search_text = text.lower()
 	for word in highlightwords:
@@ -882,7 +882,7 @@ def userAction(time, server, from_str, channel, action):
 
 	action = gui.escape(action)
 
-	if isHighlighted(server, action):
+	if isHighlighted(server_tab, action):
 		type = "highlightaction"
 		actionString = action
 		gui.set_urgent(True)

@@ -536,10 +536,10 @@ def nickList_row_activated_cb(nickList, path, column):
 		# already a query open
 		return
 
-	query = gui.tabs.create_query(serverTab.name, name)
+	query = gui.tabs.create_query(serverTab, name)
 	query.connected = True
 
-	gui.tabs.add_tab(serverTab.name, query)
+	gui.tabs.add_tab(serverTab, query)
 
 	output = query.textview.get_buffer()
 
