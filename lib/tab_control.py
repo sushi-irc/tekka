@@ -25,6 +25,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+import gtk
 import gobject
 
 import com
@@ -70,18 +71,6 @@ class TabControl(gobject.GObject):
 		except KeyError:
 			raise ValueError, "No such signal handler: %s." % (key)
 
-	@types (server = basestring, channel = basestring)
-	def get_channel_prefix(self, server, channel):
-		if not self.prefix_cache.has_key(server):
-			self.prefix_cache[server] = {}
-
-		if self.prefix_cache[server].has_key(channel):
-			return self.prefix_cache[server][channel]
-		else:
-			self.prefix_cache[server][channel] = list(
-				com.sushi.support_prefix(server)[1])
-			return self.prefix_cache[server][channel]
-
 	@types (tab = TekkaTab, switch = bool)
 	def set_useable(self, tab, switch):
 		""" switch the destinated tab from/to
@@ -118,7 +107,7 @@ class TabControl(gobject.GObject):
 
 		return tab
 
-	@types (server = basestring, name = basestring)
+	@types (server = TekkaServer, name = basestring)
 	def create_channel(self, server, name):
 		""" create TekkaChannel object and associated a nickListStore
 			with it.
@@ -127,11 +116,13 @@ class TabControl(gobject.GObject):
 		"""
 		ns = nickListStore()
 
-		ns.set_modes(self.get_channel_prefix(server, name))
+		ns.set_modes(server.support_prefix[1])
 
 		tab = self._createTab(TekkaChannel, name, server,
 			nicklist = ns)
+
 		tab.connect("joined", self.get_callback("joined"))
+		tab.connect("topic", self.get_callback("topic"))
 
 		return tab
 
@@ -142,25 +133,32 @@ class TabControl(gobject.GObject):
 	def create_server(self, server):
 		tab = self._createTab(TekkaServer, server)
 
+		if com.sushi.user_away(server, com.get_own_nick(server)):
+			# FIXME
+			tab.away = "OHAI"
+
+		tab.nick = com.parse_from(com.sushi.user_from(server, ""))[0]
+		tab.support_prefix = com.sushi.support_prefix(server)
+		tab.support_chantypes = com.sushi.support_chantypes(server)
+
 		tab.connect("away", self.get_callback("away"))
+		tab.connect("new_nick", self.get_callback("new_nick"))
+
 		return tab
 
-	@types (server = basestring, name = basestring)
-	def search_tab(self, server, name=""):
-		"""	Searches for server (and if name is given,
-			for a tab identified by name).
-			The method returns the tab object or None.
-		"""
+	@types(server = basestring, child = basestring)
+	def search_tab(self, server, child = ""):
 		store = lib.gui_control.get_widget("serverTree").get_model()
 
 		for row in store:
-			if row[1].lower() == server.lower():
-				if not name:
-					return row[2]
+			if row[0].name.lower() == server.lower():
+				if child:
+					for crow in row.iterchildren():
+						if crow[0].name.lower() == child.lower():
+							return crow[0]
 				else:
-					for channel in row.iterchildren():
-						if channel[1].lower() == name.lower():
-							return channel[2]
+					return row[0]
+
 		return None
 
 	@types (server = basestring, name = basestring)
@@ -177,16 +175,17 @@ class TabControl(gobject.GObject):
 		"""
 		store = lib.gui_control.get_widget("serverTree").get_model()
 		for row in store:
-			if row[1].lower() == server.lower():
+			if row[0].name.lower() == server.lower():
 				if not name:
-					return (row[2], None)
+					return (row[0], None)
 				else:
 					for channel in row.iterchildren():
-						if channel[1].lower() == name.lower():
-							return (row[2], channel[2])
+						if channel[0].name.lower() == name.lower():
+							return (row[0], channel[0])
+					return (row[0], None)
 		return (None, None)
 
-	@types (server = (type(None), basestring), object = TekkaTab, update_shortcuts = bool)
+	@types (server = (type(None), TekkaServer), object = TekkaTab, update_shortcuts = bool)
 	def add_tab(self, server, object, update_shortcuts=True):
 		"""	Adds a tab object into the server tree.
 			server can be a string identifying a
@@ -202,18 +201,17 @@ class TabControl(gobject.GObject):
 
 		if server:
 			for row in store:
-				if row[1].lower() == server.lower():
+				if row[0] == server:
 					serverIter = row.iter
 
-		iter = store.append(serverIter,
-			row=(object.markup(),object.name,object))
+		iter = store.append(serverIter, row=(object,))
 		object.path = store.get_path(iter)
 
 		if server and config.get("tekka", "auto_expand"):
 			# expand the whole server tab
+			path = store.get_path(serverIter)
 			lib.gui_control.get_widget("serverTree").expand_row(
-				store.get_path(store.iter_parent(iter)),
-				True)
+				store.get_path(store.iter_parent(iter)), True)
 
 		if update_shortcuts:
 			lib.gui_control.updateServerTreeShortcuts()
@@ -239,7 +237,7 @@ class TabControl(gobject.GObject):
 			if not nextIter:
 				break
 
-			tab = store.get(nextIter, 2)
+			tab = store.get(nextIter, 0)
 			try:
 				tab=tab[0]
 			except:
@@ -315,13 +313,13 @@ class TabControl(gobject.GObject):
 			# no such tab at path
 			return False
 
-		store.set(row.iter, 0, new.markup(), 1, new.name, 2, new)
+		store.set(row.iter, 0, new)
 		new.path = store.get_path(row.iter)
 
-		# apply new server name to childs
+		# apply new server to childs
 		if old.is_server():
 			for row in store.iter_children(iter):
-				row[2].server = new.name
+				row[2].server = new
 
 	@types (servers = list, excludes = list)
 	def get_all_tabs(self, servers=[], excludes=[]):
@@ -343,10 +341,10 @@ class TabControl(gobject.GObject):
 			return [n.lower() for n in l if n]
 
 		def iterate_store(model, path, iter):
-			tab = model[path][2]
+			tab = model[path][0]
 			if (None == tab
 			or (tab.is_server() and tab.name.lower() in lower(excludes))
-			or (not tab.is_server() and tab.server.lower() in lower(excludes))):
+			or (not tab.is_server() and tab.server.name.lower() in lower(excludes))):
 				return
 			tabs.append(tab)
 
@@ -354,10 +352,10 @@ class TabControl(gobject.GObject):
 			store.foreach(iterate_store)
 		else:
 			for row in store:
-				if row[1].lower() in lower(servers):
-					tabs.append(row[2])
+				if row[0].name.lower() in lower(servers):
+					tabs.append(row[0])
 					for child in row.iterchildren():
-						tabs.append(child[2])
+						tabs.append(child[0])
 					break
 
 		return tabs
@@ -368,7 +366,7 @@ class TabControl(gobject.GObject):
 		"""
 		store = lib.gui_control.get_widget("serverTree").get_model()
 		try:
-			return store[self.currentPath][2]
+			return store[self.currentPath][0]
 		except (IndexError,TypeError):
 			return None
 
@@ -403,9 +401,9 @@ class TabControl(gobject.GObject):
 		pIter = store.iter_parent(iter)
 		if not pIter:
 			# no parent, iter is a server
-			return store.get_value(iter, 2), None
+			return store.get_value(iter, 0), None
 		else:
-			return store.get_value(pIter, 2), store.get_value(iter, 2)
+			return store.get_value(pIter, 0), store.get_value(iter, 0)
 
 		return None, None
 
@@ -430,7 +428,7 @@ class TabControl(gobject.GObject):
 		if (( tab.is_channel() or tab.is_query() )
 			and channelTab
 			and tab.name.lower() == channelTab.name.lower()
-			and tab.server.lower() == serverTab.name.lower()):
+			and tab.server.name.lower() == serverTab.name.lower()):
 			return True
 
 		return False
@@ -441,14 +439,14 @@ class TabControl(gobject.GObject):
 
 		for row in store:
 			if useNext:
-				return row[2]
+				return row[0]
 
-			if row[2] == current:
+			if row[0] == current:
 				useNext = True
 
 		if len(store) >= 2:
 			# current was the last item, wrap to the first
-			return store[0][2]
+			return store[0][0]
 
 		return None
 
@@ -492,7 +490,7 @@ class TabControl(gobject.GObject):
 			return
 
 		try:
-			tab = store[path][2]
+			tab = store[path][0]
 		except IndexError:
 			print "switchToPath(): tab not found in store, aborting."
 			return
@@ -535,11 +533,10 @@ class TabControl(gobject.GObject):
 		# reset message notification
 		tab.setNewMessage(None)
 
-		lib.gui_control.updateServerTreeMarkup(tab.path)
 		lib.gui_control.set_window_title(tab.name)
 
 		if not tab.is_server():
-			lib.gui_control.set_nick(com.get_own_nick(tab.server))
+			lib.gui_control.set_nick(com.get_own_nick(tab.server.name))
 		else:
 			lib.gui_control.set_nick(com.get_own_nick(tab.name))
 

@@ -89,7 +89,7 @@ def profileMe(file):
 			if None == file:
 				return fun(*args, **kwargs)
 
-			cProfile.runctx("val = fun(*args,**kwargs)", {"fun":fun}, 
+			cProfile.runctx("val = fun(*args,**kwargs)", {"fun":fun},
 				locals(), file_path)
 			return val
 
@@ -212,10 +212,10 @@ def set_useable(switch):
 	global gui_is_useable
 
 	widgetList = [
-		widgets.get_widget("inputBar"), 
-		widgets.get_widget("serverTree"), 
-		widgets.get_widget("nickList"), 
-		widgets.get_widget("output"), 
+		widgets.get_widget("inputBar"),
+		widgets.get_widget("serverTree"),
+		widgets.get_widget("nickList"),
+		widgets.get_widget("output"),
 		widgets.get_widget("generalOutput")
 	]
 
@@ -335,24 +335,10 @@ def updateServerTreeShortcuts():
 			and not config.get("tekka", "server_shortcuts")):
 			continue
 
-		addShortcut(accelGroup, st, "<alt>%d" % (c), 
+		addShortcut(accelGroup, st, "<alt>%d" % (c),
 			lambda w, s, p: tabs.switch_to_path(p), tab.path)
 
 		c+=1
-
-@types(path=tuple)
-def updateServerTreeMarkup(path):
-	""" Updates the first column of the row in
-		gtk.TreeModel of serverTree identified by path.
-	"""
-	store = widgets.get_widget("serverTree").get_model()
-	iter = store.get_iter(path)
-	try:
-		store.set_value(iter, 0, store[path][2].markup())
-	except IndexError:
-		print "updateServerTreeMarkup(%s): IndexError" % (
-			repr(path))
-		return
 
 def escape(msg):
 	"""	Converts special characters in msg and returns
@@ -381,12 +367,12 @@ def write_to_general_output(msgtype, timestring, server, channel, message):
 
 	if channel:
 		# channel print
-		goBuffer.insertHTML(goBuffer.get_end_iter(), 
+		goBuffer.insertHTML(goBuffer.get_end_iter(),
 			"[%s] &lt;%s:%s&gt; %s" % (
 				timestring, server, channel, message))
 	else:
 		# server print
-		goBuffer.insertHTML(goBuffer.get_end_iter(), 
+		goBuffer.insertHTML(goBuffer.get_end_iter(),
 			"[%s] &lt;%s&gt; %s" % (timestring, server, message))
 
 
@@ -398,7 +384,7 @@ def channelPrint(timestamp, server, channel, message, msgtype="message"):
 		into the htmlbuffer of the channel `channel` on server
 		`server`.
 	"""
-	timestring = time.strftime(config.get("tekka", "time_format", "%H:%M"), 
+	timestring = time.strftime(config.get("tekka", "time_format", "%H:%M"),
 		time.localtime(timestamp))
 
 	if not config.get_bool("tekka", "color_text"):
@@ -408,8 +394,8 @@ def channelPrint(timestamp, server, channel, message, msgtype="message"):
 			config.get("colors", "text_%s" % msgtype, "#000000"))
 
 	outputString = "[%s] <font %s>%s</font>" % (
-		timestring, 
-		colorHack, 
+		timestring,
+		colorHack,
 		message)
 
 	channelTab = tabs.search_tab(server, channel)
@@ -433,7 +419,6 @@ def channelPrint(timestamp, server, channel, message, msgtype="message"):
 
 		if not msgtype in channelTab.newMessage:
 			channelTab.setNewMessage(msgtype)
-			updateServerTreeMarkup(channelTab.path)
 
 def serverPrint(timestamp, server, string, msgtype="message"):
 	"""
@@ -448,7 +433,7 @@ def serverPrint(timestamp, server, string, msgtype="message"):
 
 	buffer = serverTab.textview.get_buffer()
 
-	timestr = time.strftime(config.get("tekka", "time_format", "%H:%M"), 
+	timestr = time.strftime(config.get("tekka", "time_format", "%H:%M"),
 		time.localtime(timestamp))
 
 	buffer.insertHTML(buffer.get_end_iter(), "[%s] %s" % (timestr, string))
@@ -464,7 +449,6 @@ def serverPrint(timestamp, server, string, msgtype="message"):
 
 		if not msgtype in serverTab.newMessage:
 			serverTab.setNewMessage(msgtype)
-			updateServerTreeMarkup(serverTab.path)
 
 def currentServerPrint(timestamp, server, string, msgtype="message"):
 	"""
@@ -478,7 +462,7 @@ def currentServerPrint(timestamp, server, string, msgtype="message"):
 		and channelTab):
 		# print in current channel
 		channelPrint(
-			timestamp, server, 
+			timestamp, server,
 			channelTab.name, string, msgtype)
 	else:
 		# print to server tab
@@ -530,13 +514,13 @@ def errorMessage(string, force_dialog=False):
 	if output.get_buffer() and not force_dialog:
 		message = "<font foreground='%(color)s'>" + message + "</font>"
 		myPrint(message % {
-				"color": config.get("colors", "error", "#FF0000"), 
-				"message": string}, 
+				"color": config.get("colors", "error", "#FF0000"),
+				"message": string},
 			html=True)
 	else:
 		err = gtk.MessageDialog(
-			type=gtk.MESSAGE_ERROR, 
-			buttons=gtk.BUTTONS_CLOSE, 
+			type=gtk.MESSAGE_ERROR,
+			buttons=gtk.BUTTONS_CLOSE,
 			message_format=message % { "message": string })
 		err.run()
 		err.destroy()

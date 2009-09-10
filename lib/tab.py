@@ -151,12 +151,33 @@ class TekkaServer(TekkaTab):
 		self._away = msg
 		self.emit("away", msg)
 
+	@types(prefix = (tuple, list))
+	def _set_sprefix(self, prefix):
+		self._sprefix = prefix
+		self.emit("prefix_set", prefix)
+
+	@types(ctypes = (tuple, list, basestring))
+	def _set_ctypes(self, ctypes):
+		self._ctypes = ctypes
+		self.emit("channeltypes_set", ctypes)
+
+	@types(nick = basestring)
+	def _set_nick(self, nick):
+		self._nick = nick
+		self.emit("new_nick", nick)
+
+	support_prefix = property(lambda x: x._sprefix, _set_sprefix)
+	support_chantypes = property(lambda x: x._ctypes, _set_ctypes)
 	away = property(lambda x: x._away, _set_away)
+	nick = property(lambda x: x._nick, _set_nick)
 
 	def __init__(self, name, textview=None):
 		TekkaTab.__init__(self, name, textview)
 
+		self.nick = ""
 		self.away = ""
+		self.support_prefix = ()
+		self.support_chantypes = ()
 
 	def is_server(self):
 		return True
@@ -176,6 +197,20 @@ gobject.signal_new(
 	TekkaServer, gobject.SIGNAL_ACTION,
 	gobject.TYPE_NONE, (gobject.TYPE_STRING,))
 
+gobject.signal_new(
+	"channeltypes_set",
+	TekkaServer, gobject.SIGNAL_ACTION,
+	gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
+
+gobject.signal_new(
+	"prefix_set",
+	TekkaServer, gobject.SIGNAL_ACTION,
+	gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
+
+gobject.signal_new(
+	"new_nick",
+	TekkaServer, gobject.SIGNAL_ACTION,
+	gobject.TYPE_NONE, (gobject.TYPE_STRING,))
 
 class TekkaQuery(TekkaTab):
 	""" Class for typical query-tabs """
@@ -202,7 +237,8 @@ class TekkaQuery(TekkaTab):
 			italic = True
 		if "message" in self.newMessage:
 			bold = True
-		if "highlightmessage" in self.newMessage and "highlightaction" in self.newMessage:
+		if ("highlightmessage" in self.newMessage
+			and "highlightaction" in self.newMessage):
 			foreground = "#DDDD00"
 		elif "highlightmessage" in self.newMessage:
 			foreground = "#DD0000"
@@ -230,7 +266,13 @@ class TekkaChannel(TekkaTab):
 		self._joined = switch
 		self.emit("joined", switch)
 
+	@types(topic=basestring)
+	def _set_topic(self, topic):
+		self._topic = topic
+		self.emit("topic", topic)
+
 	joined = property(lambda x: x._joined, _set_joined)
+	topic = property(lambda x: x._topic, _set_topic)
 
 	def __init__(self, name, server, textview=None,
 		nicklist=None, topic="", topicsetter=""):
@@ -282,4 +324,9 @@ gobject.signal_new(
 	"joined", TekkaChannel,
 	gobject.SIGNAL_ACTION,
 	gobject.TYPE_NONE, (gobject.TYPE_BOOLEAN,))
+
+gobject.signal_new(
+	"topic", TekkaChannel,
+	gobject.SIGNAL_ACTION,
+	gobject.TYPE_NONE, (gobject.TYPE_STRING,))
 

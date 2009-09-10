@@ -99,8 +99,6 @@ class SushiWrapper (object):
 
 sushi = SushiWrapper(None)
 
-from signals import parse_from
-
 myNick = {}
 
 _connect_callbacks = []
@@ -232,6 +230,19 @@ def disconnect():
 	for callback in _disconnect_callbacks:
 		callback()
 
+def parse_from (from_str):
+	h = from_str.split("!", 2)
+
+	if len(h) < 2:
+		return (h[0],)
+
+	t = h[1].split("@", 2)
+
+	if len(t) < 2:
+		return (h[0],)
+
+	return (h[0], t[0], t[1])
+
 """
 Signals: nickchange (nick => _nickSignal)
 """
@@ -258,8 +269,6 @@ def sendMessage(server, channel, text):
 	text = re.sub('(^|\s)(\*\S+\*)(\s|$)', '\\1' + chr(2) + '\\2' + chr(2) + '\\3', text)
 
 	sushi.message(server, channel, text)
-
-# TODO: implement this in the sushi wrapper.
 
 # fetches the own nick for server @server from maki
 def fetch_own_nick(server):

@@ -112,11 +112,16 @@ def maki_disconnect_callback():
 	gui.set_useable(False)
 
 def tekka_server_away(tab, msg):
-	if tab.path:
-		gui.updateServerTreeMarkup(tab.path)
+	pass
+
+def tekka_server_new_nick(tab, nick):
+	if tab == gui.get_current_tab():
+		gui.set_nick(nick)
 
 def tekka_tab_new_message(tab, type):
-	gui.updateServerTreeMarkup(tab.path)
+	renderer = gui.widgets.get_widget("serverTree")\
+		.get_column(0).get_cell_renderers()
+	renderer[0].notify("markup")
 
 def tekka_tab_new_name(tab, name):
 	store = widgets.get_widget("serverTree").get_model()
@@ -130,14 +135,14 @@ def tekka_tab_new_name(tab, name):
 def tekka_tab_connected(tab, connected):
 	""" tab received a change on connected attribute """
 	gui.tabs.set_useable(tab, connected)
-	if tab.path:
-		gui.updateServerTreeMarkup(tab.path)
 
 def tekka_channel_joined(tab, switch):
 	""" channel received a change on joined attribute """
 	gui.tabs.set_useable(tab, switch)
-	if tab.path:
-		gui.updateServerTreeMarkup(tab.path)
+
+def tekka_channel_topic(tab, topic):
+	""" topic set """
+	pass
 
 def tekka_tab_new_path(tab, new_path):
 	""" a new path is set to the path """
@@ -454,7 +459,6 @@ def serverTree_misc_menu_reset_activate_cb(menuItem):
 	"""
 	for tab in gui.tabs.get_all_tabs():
 		tab.setNewMessage(None)
-		gui.updateServerTreeMarkup(tab.path)
 
 def serverTree_button_press_event_cb(serverTree, event):
 	"""
@@ -465,7 +469,7 @@ def serverTree_button_press_event_cb(serverTree, event):
 
 	try:
 		path = serverTree.get_path_at_pos(int(event.x),int(event.y))[0]
-		tab = serverTree.get_model()[path][2]
+		tab = serverTree.get_model()[path][0]
 	except Exception,e:
 		print e
 		tab = None
@@ -536,7 +540,6 @@ def nickList_row_activated_cb(nickList, path, column):
 	query.connected = True
 
 	gui.tabs.add_tab(serverTab.name, query)
-	gui.updateServerTreeShortcuts()
 
 	output = query.textview.get_buffer()
 
@@ -709,7 +712,6 @@ def askToRemoveTab(tab):
 					config.get("chatting", "quit_message", ""))
 
 			gui.tabs.remove_tab(tab)
-			gui.updateServerTreeShortcuts()
 
 		dialog.destroy()
 
@@ -791,6 +793,42 @@ def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 		text = text[bounds[0]:bounds[1]]
 		cb.set_text(text)
 
+def servertree_query_tooltip(widget, x, y, kbdmode, tooltip):
+	""" show tooltips for treeview rows """
+
+	path = widget.get_path_at_pos(x,y)
+
+	if not path:
+		return
+
+	path = path[0]
+
+	try:
+		tab = widget.get_model()[path][0]
+	except IndexError:
+		return
+
+	if tab.is_server():
+		# TODO: away status
+		s = "<b>" + _("Nickname: ") + "</b>" +  tab.nick
+
+	elif tab.is_channel():
+		s = "<b>" +_("User: ") + "</b>" + str(len(tab.nickList)) +\
+			"\n<b>" + _("Topic: ") + "</b>" + tab.topic
+
+	elif tab.is_query():
+		# TODO
+		s = "TODO: $lastSentence"
+
+	tooltip.set_markup(s)
+
+	return True
+
+def servertree_render_server(column, renderer, model, iter):
+	""" Renderer func for column "Server" in servertree """
+	tab = model.get(iter, 0)
+	renderer.set_property("markup",tab[0].markup())
+
 def nickListRenderNicks(column, renderer, model, iter):
 	""" Renderer func for column "Nicks" in NickList """
 
@@ -868,24 +906,24 @@ def treemodel_rows_reordered_cb(treemodel, path, iter, new_order):
 	""" new_order is not accessible, so hack arround it... """
 	updated = False
 	for row in treemodel:
-		if not row[2]:
+		if not row[0]:
 			continue
 
-		if gui.tabs.currentPath == row[2].path and not updated:
+		if gui.tabs.currentPath == row[0].path and not updated:
 			gui.tabs.currentPath = row.path
 			updated = True
 
-		row[2].path = row.path
+		row[0].path = row.path
 
 		for child in row.iterchildren():
-			if not child[2]:
+			if not child[0]:
 				continue
 
-			if gui.tabs.currentPath == child[2].path and not updated:
+			if gui.tabs.currentPath == child[0].path and not updated:
 				gui.tabs.currentPath = child.path
 				updated = True
 
-			child[2].path = child.path
+			child[0].path = child.path
 
 def setup_serverTree():
 	"""
@@ -895,16 +933,16 @@ def setup_serverTree():
 		channel or server name and the third is a
 		tab object.
 	"""
-	tm = gtk.TreeStore(TYPE_STRING, TYPE_STRING, TYPE_PYOBJECT)
+	tm = gtk.TreeStore(TYPE_PYOBJECT)
 
 	# Sorting
 	def cmpl(m,i1,i2):
 		" compare columns lower case "
-		a = m.get_value(i1, 1)
-		b = m.get_value(i2, 1)
+		a = m.get_value(i1, 0)
+		b = m.get_value(i2, 0)
 		c,d=None,None
-		if a: c=a.lower()
-		if b: d=b.lower()
+		if a: c=a.name.lower()
+		if b: d=b.name.lower()
 		return cmp(c,d)
 
 	tm.set_sort_func(1,
@@ -917,9 +955,12 @@ def setup_serverTree():
 	widget = widgets.get_widget("serverTree")
 
 	widget.set_model(tm)
+	widget.set_property("has-tooltip", True)
+	widget.connect("query-tooltip", servertree_query_tooltip)
 
 	renderer = gtk.CellRendererText()
-	column = gtk.TreeViewColumn("Server", renderer, markup=0)
+	column = gtk.TreeViewColumn("Server", renderer)
+	column.set_cell_data_func(renderer, servertree_render_server)
 
 	widget.append_column(column)
 	widget.set_headers_visible(False)
@@ -1090,7 +1131,9 @@ def setupGTK():
 		"connected": tekka_tab_connected,
 		"joined": tekka_channel_joined,
 		"away": tekka_server_away,
-		"remove": tekka_tab_remove })
+		"remove": tekka_tab_remove,
+		"topic": tekka_channel_topic,
+		"new_nick": tekka_server_new_nick })
 
 	gui.tabs.connect("tab_switched", tekka_tab_switched)
 

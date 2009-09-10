@@ -66,8 +66,9 @@ class nickListStore(gtk.ListStore):
 		return self.__opcount
 
 	def set_modes(self, modes):
-		self.__modes = modes
+		self.__modes = list(modes)
 		self.__modes.append(" ") # append the empty mode
+		print "self.__modes = %s"  % self.__modes
 
 		# FIXME: i want this more reliable
 		if len(self.__modes) > 1:

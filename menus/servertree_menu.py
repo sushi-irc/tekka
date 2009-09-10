@@ -127,7 +127,7 @@ class ServerTreeMenu(object):
 			disconnectItem.hide()
 			autoConnectItem.hide()
 
-			if sushi.server_get(pointedTab.server, pointedTab.name, "autojoin") == "true":
+			if sushi.server_get(pointedTab.server.name, pointedTab.name, "autojoin") == "true":
 				autoJoinItem.set_active(True)
 			else:
 				autoJoinItem.set_active(False)
@@ -168,13 +168,14 @@ class ServerTreeMenu(object):
 	def joinItem_activate_cb(self, item):
 		""" join channel without key """
 		if self.current_tab and self.current_tab.is_channel():
-			sushi.join(self.current_tab.server, self.current_tab.name, "")
+			sushi.join(self.current_tab.server.name,
+				self.current_tab.name, "")
 
 	def partItem_activate_cb(self, item):
 		""" part channel with default part message """
 		if self.current_tab and self.current_tab.is_channel():
 			sushi.part(
-				self.current_tab.server,
+				self.current_tab.server.name,
 				self.current_tab.name,
 				config.get("chatting", "part_message", ""))
 
@@ -187,7 +188,7 @@ class ServerTreeMenu(object):
 
 		if self.current_tab.is_channel() and self.current_tab.joined:
 			sushi.part(
-				self.current_tab.server,
+				self.current_tab.server.name,
 				self.current_tab.name,
 				config.get("chatting", "part_message", ""))
 
@@ -207,7 +208,7 @@ class ServerTreeMenu(object):
 			return
 
 		sushi.server_set(
-			self.current_tab.server,
+			self.current_tab.server.name,
 			self.current_tab.name,
 			"autojoin", str(item.get_active()).lower())
 
@@ -238,7 +239,7 @@ class ServerTreeMenu(object):
 			return
 
 		d = topic_dialog.TopicDialog(
-			self.current_tab.server,
+			self.current_tab.server.name,
 			self.current_tab.name)
 		d.connect("response", dialog_response_cb)
 		gui_control.showInlineDialog(d)
@@ -248,7 +249,7 @@ class ServerTreeMenu(object):
 		if not self.current_tab or not self.current_tab.is_channel():
 			return
 
-		server = self.current_tab.server
+		server = self.current_tab.server.name
 		channel = self.current_tab.name
 
 		d = key_dialog.KeyDialog(server, channel)
