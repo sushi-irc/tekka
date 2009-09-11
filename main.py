@@ -115,7 +115,7 @@ def tekka_server_away(tab, msg):
 	pass
 
 def tekka_server_new_nick(tab, nick):
-	if tab == gui.get_current_tab():
+	if tab == gui.tabs.get_current_tab():
 		gui.set_nick(nick)
 
 def tekka_tab_new_markup(tab):
