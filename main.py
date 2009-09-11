@@ -201,24 +201,26 @@ def tekka_tab_remove(tab):
 Glade signals
 """
 
-def server_dialog_callback(server_list):
-	if server_list:
-		for server in server_list:
-			com.sushi.connect(server)
-
 def menu_tekka_Connect_activate_cb(menuItem):
 	"""
 		menuBar -> tekka -> connect was clicked,
 		show up server dialog and connect to the
 		returned server (if any).
 	"""
+
+	def server_dialog_callback(server_list):
+		if server_list:
+			for server in server_list:
+				com.sushi.connect(server)
+
 	if not com.sushi.connected:
-		d = InlineMessageDialog(_("tekka could not connect to maki."), _("Please check whether maki is running."))
+		d = InlineMessageDialog(_("tekka could not connect to maki."),
+			_("Please check whether maki is running."))
 		gui.showInlineDialog(d)
 		d.connect("response", lambda d,id: d.destroy())
-		return
 
-	dialog_control.showServerDialog(server_dialog_callback)
+	else:
+		dialog_control.showServerDialog(server_dialog_callback)
 
 def menu_View_showGeneralOutput_toggled_cb(menuItem):
 	"""
@@ -428,11 +430,9 @@ def inputBar_key_press_event_cb(inputBar, event):
 
 		hist = tab.input_history.get_previous()
 
-		if hist == None:
-			return
-
-		inputBar.set_text(hist)
-		inputBar.set_position(len(hist))
+		if hist != None:
+			inputBar.set_text(hist)
+			inputBar.set_position(len(hist))
 
 	elif key == "Down":
 		# get previous input history item
@@ -475,16 +475,14 @@ def serverTree_button_press_event_cb(serverTree, event):
 		path = serverTree.get_path_at_pos(int(event.x),int(event.y))[0]
 		tab = serverTree.get_model()[path][0]
 	except Exception,e:
-		print e
+		print "Exception in serverTree_button_press_event: ", e
 		tab = None
 
 	if event.button == 1:
 		# activate the tab
 
-		if not tab:
-			return False
-
-		gui.tabs.switch_to_path(path)
+		if tab:
+			gui.tabs.switch_to_path(path)
 
 	elif event.button == 2:
 		# if there's a tab, ask to close
@@ -501,9 +499,9 @@ def serverTree_button_press_event_cb(serverTree, event):
 				print "error in creating server tree tab menu."
 				return False
 
-			menu.popup(None, None, None, event.button, event.time)
-
-			return True
+			else:
+				menu.popup(None, None, None, event.button, event.time)
+				return True
 
 		else:
 			# display misc. menu
@@ -545,16 +543,8 @@ def nickList_row_activated_cb(nickList, path, column):
 
 	gui.tabs.add_tab(serverTab, query)
 
-	output = query.textview.get_buffer()
-
-	for line in com.sushi.log(
-		serverTab.name, name,
-		dbus.UInt64(config.get("chatting", "last_log_lines"))):
-
-		output.insertHTML(output.get_end_iter(),
-			"<font foreground='#DDDDDD'>%s</font>" % gui.escape(line))
-
-	gui.tabs.switch_to_path(query.path)
+	gui.print_last_log("", "", tab = query)
+	gui.tabs.switch_to_tab(query)
 
 def nickList_button_press_event_cb(nickList, event):
 	"""
@@ -675,7 +665,7 @@ def serverTree_shortcut_ctrl_Page_Up(serverTree, shortcut):
 		return
 
 	try:
-		gui.tabs.switch_to_path(tabs[i-1].path)
+		gui.tabs.switch_to_tab(tabs[i-1])
 	except IndexError:
 		return
 
@@ -695,7 +685,7 @@ def serverTree_shortcut_ctrl_Page_Down(serverTree, shortcut):
 		i = i+1
 		if (i) == len(tabs):
 			i = 0
-		gui.tabs.switch_to_path(tabs[i].path)
+		gui.tabs.switch_to_tab(tabs[i])
 	except IndexError:
 		return
 

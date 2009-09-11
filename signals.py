@@ -204,35 +204,9 @@ def add_channels(server_tab):
 
 		if add:
 			gui.tabs.add_tab(server_tab, tab, update_shortcuts = False)
-			print_last_log(server_tab.name, channel)
+			gui.print_last_log(server_tab.name, channel)
 
 	gui.updateServerTreeShortcuts()
-
-@types (server = basestring, channel = basestring, lines = int)
-def print_last_log(server, channel, lines=0):
-	"""	Fetch the given amount of lines of history for
-		the channel on the given server and print it to the
-		channel's textview.
-	"""
-	tab = gui.tabs.search_tab(server, channel)
-
-	if not tab:
-		return
-
-	buffer = tab.textview.get_buffer()
-
-	if not buffer:
-		print "last_log('%s','%s'): no buffer" % (server,channel)
-		return
-
-	for line in sushi.log(
-				server, channel,
-				UInt64(lines or config.get(
-					"chatting", "last_log_lines", default="0"))):
-		buffer.insertHTML(buffer.get_end_iter(),
-			"<font foreground='%s'>%s</font>" % (
-				config.get("colors","last_log","#DDDDDD"),
-				gui.escape(line)))
 
 def updatePrefix(tab, nick, mode):
 	"""
@@ -330,7 +304,7 @@ def createTab (server, name):
 
 		tab.connected = True
 		gui.tabs.add_tab(server_tab, tab)
-		print_last_log(server, name)
+		gui.print_last_log(server, name)
 
 	if tab.name != name:
 		# the name of the tab differs from the
@@ -1144,7 +1118,7 @@ def userJoin(timestamp, server, from_str, channel):
 				print "adding tab for channel '%s' failed." % (channel)
 				return
 
-			print_last_log(server, channel)
+			gui.print_last_log(server, channel)
 
 		tab.nickList.clear()
 
@@ -1219,7 +1193,7 @@ def userNames(timestamp, server, channel, nicks, prefixes):
 			print "adding tab for channel '%s' failed." % (channel)
 			return
 
-		print_last_log(server, channel)
+		gui.print_last_log(server, channel)
 
 		tab.joined = True
 		tab.connected = True

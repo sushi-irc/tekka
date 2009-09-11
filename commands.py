@@ -405,19 +405,16 @@ def tekkaQuery(currentServer, currentTab, args):
 	if not gui.tabs.search_tab(currentServer.name, nick):
 		# no query started
 
-		tab = gui.tabs.create_query(currentServer.name, nick)
+		tab = gui.tabs.create_query(currentServer, nick)
 		tab.connected = True
-		gui.tabs.add_tab(currentServer.name, tab)
+
+		gui.tabs.add_tab(currentServer, tab)
 		gui.updateServerTreeShortcuts()
 
 		output = tab.textview.get_buffer()
 
 		# fetch and write history to query (if any)
-		for line in sushi.log(currentServer.name, nick,
-			UInt64(config.get("chatting","last_log_lines","10"))):
-
-			output.insertHTML(output.get_end_iter(),
-				"<font foreground='#DDDDDD'>%s</font>" % gui.escape(line))
+		gui.print_last_log(currentServer.name, nick)
 
 def tekkaClear(currentServer, currentTab, args):
 	"""

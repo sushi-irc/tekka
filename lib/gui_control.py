@@ -37,7 +37,7 @@ import pango
 import gettext
 import gobject
 from gobject import idle_add
-from dbus import String
+from dbus import String, UInt64
 
 # profiling imports
 import os, sys
@@ -351,6 +351,35 @@ def escape(msg):
 	msg = msg.replace(chr(31), "<su/>") # underline-char
 	msg = msg.replace(chr(1), "")
 	return msg
+
+@types (server = basestring, channel = basestring, lines = int,
+	tab = (type(None), lib.tab.TekkaTab))
+def print_last_log(server, channel, lines=0, tab = None):
+	"""	Fetch the given amount of lines of history for
+		the channel on the given server and print it to the
+		channel's textview.
+	"""
+	if not tab:
+		tab = tabs.search_tab(server, channel)
+
+	if not tab:
+		return
+
+	buffer = tab.textview.get_buffer()
+
+	if not buffer:
+		print "last_log('%s','%s'): no buffer" % (server,channel)
+		return
+
+	for line in com.sushi.log(
+				server, channel,
+				UInt64(lines or config.get(
+					"chatting", "last_log_lines", default="0"))):
+
+		buffer.insertHTML(buffer.get_end_iter(),
+			"<font foreground='%s'>%s</font>" % (
+				config.get("colors","last_log","#DDDDDD"),
+				escape(line)))
 
 def write_to_general_output(msgtype, timestring, server, channel, message):
 	goBuffer = widgets.get_widget("generalOutput").get_buffer()
