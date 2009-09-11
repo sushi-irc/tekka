@@ -245,7 +245,7 @@ def updatePrefix(tab, nick, mode):
 
 	if mode[1] in tab.server.support_prefix[0]:
 		tab.nickList.setPrefix(nick,
-			sushi.user_channel_prefix(tab.server, tab.name, nick))
+			sushi.user_channel_prefix(tab.server.name, tab.name, nick))
 
 		if gui.tabs.is_active(tab):
 			gui.set_user_count(len(tab.nickList),
@@ -701,18 +701,21 @@ def userCTCP(time, server,  from_str, target, message):
 	server_tab = gui.tabs.search_tab(server)
 
 	if nick.lower() == server_tab.nick.lower():
+		# we wrote us
 		ownCTCP(time, server, target, message)
-		return
-	elif target.lower() == server_tab.lower():
+
+	elif target.lower() == server_tab.nick.lower():
+		# someone wrote us, put in into a query
 		queryCTCP(time, server, from_str, message)
-		return
 
-	headline = _("CTCP from %(nick)s to Channel:") % {
-		"nick":gui.escape(nick)}
+	else:
+		# normal ctcp
+		headline = _("CTCP from %(nick)s to Channel:") % {
+			"nick":gui.escape(nick)}
 
-	gui.channelPrint(time, server, target,
-		"<font foreground='#00DD33'>%s</font> %s" %	(
-			headline, gui.escape(message)))
+		gui.channelPrint(time, server, target,
+			"<font foreground='#00DD33'>%s</font> %s" %	(
+				headline, gui.escape(message)))
 
 def ownCTCP(time, server, target, message):
 	"""

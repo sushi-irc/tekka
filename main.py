@@ -119,9 +119,8 @@ def tekka_server_new_nick(tab, nick):
 		gui.set_nick(nick)
 
 def tekka_tab_new_message(tab, type):
-	renderer = gui.widgets.get_widget("serverTree")\
-		.get_column(0).get_cell_renderers()
-	renderer[0].notify("markup")
+	# FIXME: force renderer to update markup
+	pass
 
 def tekka_tab_new_name(tab, name):
 	store = widgets.get_widget("serverTree").get_model()
