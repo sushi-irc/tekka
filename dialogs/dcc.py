@@ -114,7 +114,11 @@ def cancel_focused_transfer():
 	if None == cursor:
 		pass
 	else:
-		sushi.dcc_send_remove(dbus.UInt64(store[cursor[0]][0]))
+		try:
+			sushi.dcc_send_remove(dbus.UInt64(store[cursor[0]][0]))
+		except TypeError:
+			# no transfer
+			pass
 
 def dialog_response_cb(dialog, id, poll_thread):
 	if id == 333:
