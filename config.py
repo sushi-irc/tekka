@@ -102,6 +102,7 @@ def set_defaults():
 	"""
 
 	defaults["sizes"] = {}
+	defaults["sizes"]["outputVPaned"] = "150"
 	"""
 	[window_height]
 	[window_width]
