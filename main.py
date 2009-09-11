@@ -1089,6 +1089,34 @@ def setup_paneds():
 
 	return False
 
+def setup_fonts():
+	""" add default font callback """
+	try:
+		import gconf
+
+		def default_font_cb (client, id, entry, data):
+			if not config.get_bool("tekka", "use_default_font"):
+				return
+
+			for row in widgets.get_widget("serverTree").get_model():
+				for child in row.iterchildren():
+					gui.set_font(child[0].textview, gui.get_font())
+				gui.set_font(row[0].textview, gui.get_font())
+
+			gui.set_font(widgets.get_widget("output"), gui.get_font())
+			gui.set_font(widgets.get_widget("inputBar"), gui.get_font())
+			gui.set_font(widgets.get_widget("generalOutput"), gui.get_font())
+
+		c = gconf.client_get_default()
+
+		c.add_dir("/desktop/gnome/interface", gconf.CLIENT_PRELOAD_NONE)
+		c.notify_add("/desktop/gnome/interface/monospace_font_name",
+			default_font_cb)
+
+	except:
+		# FIXME: what kind of error is catched here? at least some doc...
+		pass
+
 def setupGTK():
 	"""
 		Set locale, parse glade files.
@@ -1160,10 +1188,7 @@ def setupGTK():
 			lambda w: com.disconnect(),
 		"menu_maki_Shutdown_activate_cb":
 			lambda w: com.sushi.shutdown(
-				config.get(
-					"chatting",
-					"quit_message",
-					"")),
+				config.get("chatting", "quit_message", "")),
 
 		# view menu
 		"menu_View_showGeneralOutput_toggled_cb":
@@ -1228,38 +1253,16 @@ def setupGTK():
 
 	vbar = widgets.get_widget(
 		"scrolledWindow_output").get_vscrollbar()
-	vbar.connect(
-		"value-changed",
+	vbar.connect("value-changed",
 		scrolledWindow_output_vscrollbar_valueChanged_cb)
 
 	# setup more complex widgets
 
 	setup_serverTree()
+
 	setup_nickList()
 
-	try:
-		import gconf
-
-		def default_font_cb (client, id, entry, data):
-			if not config.get_bool("tekka", "use_default_font"):
-				return
-
-			for row in widgets.get_widget("serverTree").get_model():
-				for child in row.iterchildren():
-					gui.set_font(child[2].textview, gui.get_font())
-				gui.set_font(row[2].textview, gui.get_font())
-
-			gui.set_font(widgets.get_widget("output"), gui.get_font())
-			gui.set_font(widgets.get_widget("inputBar"), gui.get_font())
-			gui.set_font(widgets.get_widget("generalOutput"), gui.get_font())
-
-		c = gconf.client_get_default()
-
-		c.add_dir("/desktop/gnome/interface", gconf.CLIENT_PRELOAD_NONE)
-		c.notify_add("/desktop/gnome/interface/monospace_font_name", default_font_cb)
-	except:
-		# FIXME: what kind of error is catched here? at least some doc...
-		pass
+	setup_fonts()
 
 	# set output font
 	gui.set_font(widgets.get_widget("output"), gui.get_font())
@@ -1375,7 +1378,7 @@ def main():
 
 	plugin_control.load_autoloads()
 
-	# initialize threading
+	# initialize threading, needed by dcc dialog
 	gtk.gdk.threads_init()
 
 	# start main loop
