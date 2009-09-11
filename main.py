@@ -811,8 +811,9 @@ def servertree_query_tooltip(widget, x, y, kbdmode, tooltip):
 			"\n<b>" + _("Topic: ") + "</b>" + tab.topic
 
 	elif tab.is_query():
-		# TODO
-		s = "TODO: $lastSentence"
+		tb = tab.textview.get_buffer()
+		lineStart = tb.get_iter_at_line(tb.get_line_count())
+		s = gui.escape(tb.get_text(lineStart, tb.get_end_iter()))
 
 	tooltip.set_markup(s)
 
