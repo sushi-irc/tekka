@@ -698,7 +698,7 @@ def askToRemoveTab(tab):
 			# FIXME:: because the tab which contains the output buffer is
 			# FIXME:: removed before the signal execution.
 			if tab.is_channel():
-				com.sushi.part(tab.server, tab.name,
+				com.sushi.part(tab.server.name, tab.name,
 					config.get("chatting", "part_message", ""))
 
 			elif tab.is_server():

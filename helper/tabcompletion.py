@@ -123,7 +123,7 @@ def _match_nick_in_channel(tab, word):
 	return None
 
 def _match_nick_in_query(tab, word):
-	matches = [nick for nick in (currentTab.name, com.get_own_nick(currentTab.server)) if nick[:len(word)].lower() == word.lower()]
+	matches = [nick for nick in (currentTab.name, currentTab.server.nick) if nick[:len(word)].lower() == word.lower()]
 
 	if matches:
 		_raise_position(matches, QUERY_TYPE)
@@ -243,7 +243,7 @@ def complete(currentTab, entry, text):
 
 	# channel completion
 	if (currentTab
-		and word[0] in com.sushi.support_chantypes(currentTab.server)):
+		and word[0] in currentTab.server.support_chantypes:
 
 		match = _match_channel(word)
 

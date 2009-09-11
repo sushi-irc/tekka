@@ -46,7 +46,7 @@ def warnNoConnection(tab):
 	if tab.is_server():
 		name = tab.name
 	elif tab.is_channel() or tab.is_query():
-		name = tab.server
+		name = tab.server.name
 
 	dialog = InlineMessageDialog(_("Warning:"), _("You are not connected to "
 		"server %(server)s.")  % { "server": name } )
