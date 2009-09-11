@@ -48,6 +48,7 @@ class TekkaTab(gobject.GObject):
 	def _set_connected(self, switch):
 		self._connected=switch
 		self.emit ("connected", switch)
+		self.emit ("new_markup")
 	connected = property(lambda x: x._connected, _set_connected)
 
 	@types(path=tuple)
@@ -109,6 +110,7 @@ class TekkaTab(gobject.GObject):
 			except ValueError:
 				self.newMessage.append(status)
 				self.emit ("new_message", status)
+		self.emit("new_markup")
 
 	def markup(self):
 		if self.newMessage:
@@ -119,6 +121,10 @@ gobject.signal_new(
 	"connected", TekkaTab,
 	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
 	(gobject.TYPE_BOOLEAN,))
+
+gobject.signal_new(
+	"new_markup", TekkaTab,
+	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,())
 
 """ The second parameter (type) of this signal represents
 	the named type of the message (can be "action" or
@@ -150,6 +156,7 @@ class TekkaServer(TekkaTab):
 	def _set_away(self, msg):
 		self._away = msg
 		self.emit("away", msg)
+		self.emit("new_markup")
 
 	@types(prefix = (tuple, list))
 	def _set_sprefix(self, prefix):
@@ -265,6 +272,7 @@ class TekkaChannel(TekkaTab):
 	def _set_joined(self, switch):
 		self._joined = switch
 		self.emit("joined", switch)
+		self.emit("new_markup")
 
 	@types(topic=basestring)
 	def _set_topic(self, topic):

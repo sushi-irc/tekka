@@ -85,7 +85,7 @@ class TabControl(gobject.GObject):
 		for widget in widgetList:
 			widget.set_sensitive (switch)
 
-	def _createTab(self, tabtype, name, *args, **kwargs):
+	def _create_tab(self, tabtype, name, *args, **kwargs):
 		""" instance class of type tabtype, connect signals,
 			create textview and setup input history.
 
@@ -101,6 +101,7 @@ class TabControl(gobject.GObject):
 		tab.connect("new_name", self.get_callback("new_name"))
 		tab.connect("new_path", self.get_callback("new_path"))
 		tab.connect("connected", self.get_callback("connected"))
+		tab.connect("new_markup", self.get_callback("new_markup"))
 
 		tab.input_history = InputHistory(
 			text_callback = lib.gui_control.get_widget("inputBar").get_text)
@@ -118,7 +119,7 @@ class TabControl(gobject.GObject):
 
 		ns.set_modes(server.support_prefix[1])
 
-		tab = self._createTab(TekkaChannel, name, server,
+		tab = self._create_tab(TekkaChannel, name, server,
 			nicklist = ns)
 
 		tab.connect("joined", self.get_callback("joined"))
@@ -128,12 +129,12 @@ class TabControl(gobject.GObject):
 
 	@types(server = TekkaServer, name = basestring)
 	def create_query(self, server, name):
-		tab = self._createTab(TekkaQuery, name, server)
+		tab = self._create_tab(TekkaQuery, name, server)
 		return tab
 
 	@types (server = basestring)
 	def create_server(self, server):
-		tab = self._createTab(TekkaServer, server)
+		tab = self._create_tab(TekkaServer, server)
 
 		if com.sushi.user_away(server, com.get_own_nick(server)):
 			# FIXME

@@ -118,11 +118,14 @@ def tekka_server_new_nick(tab, nick):
 	if tab == gui.get_current_tab():
 		gui.set_nick(nick)
 
-def tekka_tab_new_message(tab, type):
+def tekka_tab_new_markup(tab):
 	# FIXME: is there a better solution than _this_?
 	if tab.path:
 		store = gui.widgets.get_widget("serverTree").get_model()
 		store.set_value(store.get_iter(tab.path), 0, tab)
+
+def tekka_tab_new_message(tab, type):
+	pass
 
 def tekka_tab_new_name(tab, name):
 	store = widgets.get_widget("serverTree").get_model()
@@ -1129,10 +1132,11 @@ def setupGTK():
 		"new_message": tekka_tab_new_message,
 		"new_name": tekka_tab_new_name,
 		"new_path": tekka_tab_new_path,
+		"remove": tekka_tab_remove,
+		"new_markup": tekka_tab_new_markup,
 		"connected": tekka_tab_connected,
 		"joined": tekka_channel_joined,
 		"away": tekka_server_away,
-		"remove": tekka_tab_remove,
 		"topic": tekka_channel_topic,
 		"new_nick": tekka_server_new_nick })
 
