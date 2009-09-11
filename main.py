@@ -793,8 +793,8 @@ def servertree_query_tooltip(widget, x, y, kbdmode, tooltip):
 	def limit(s):
 		limit = int(config.get("tekka","popup_line_limit"))
 		if len(s) > limit:
-			return s[:limit-3]+"..."
-		return s
+			return gui.escape(s[:limit-3]+"...")
+		return gui.escape(s)
 
 	path = widget.get_path_at_pos(x,y)
 
@@ -815,13 +815,13 @@ def servertree_query_tooltip(widget, x, y, kbdmode, tooltip):
 	elif tab.is_channel():
 		s = "<b>" +_("User: ") + "</b>" + str(len(tab.nickList)) +\
 			"\n<b>" + _("Topic: ") + "</b>" +\
-				limit(gui.escape(tab.topic)) +\
+				limit(tab.topic) +\
 			"\n<b>" + _("Last sentence: ") + "</b>" +\
-				limit(gui.escape(tab.textview.get_last_line()))
+				limit(tab.textview.get_last_line())
 
 	elif tab.is_query():
 		s = "<b>" + _("Last sentence: ") + "</b>" +\
-			limit(gui.escape(tab.textview.get_last_line()))
+			limit(tab.textview.get_last_line())
 
 	tooltip.set_markup(s)
 
