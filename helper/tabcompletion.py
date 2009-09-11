@@ -123,7 +123,7 @@ def _match_nick_in_channel(tab, word):
 	return None
 
 def _match_nick_in_query(tab, word):
-	matches = [nick for nick in (currentTab.name, currentTab.server.nick) if nick[:len(word)].lower() == word.lower()]
+	matches = [nick for nick in (tab.name, (tab.is_server() and tab.nick or tab.server.nick)) if nick[:len(word)].lower() == word.lower()]
 
 	if matches:
 		_raise_position(matches, QUERY_TYPE)
@@ -230,7 +230,7 @@ def complete(currentTab, entry, text):
 
 		if match:
 			if text.count(" ") < 1:
-				separator = config.get("tekka", "nick_separator")
+				separator = config.get("chatting", "nick_separator")
 			else:
 				separator = " "
 
@@ -243,7 +243,7 @@ def complete(currentTab, entry, text):
 
 	# channel completion
 	if (currentTab
-		and word[0] in currentTab.server.support_chantypes:
+		and word[0] in (currentTab.is_server() and currentTab.support_chantypes or currentTab.server.support_chantypes)):
 
 		match = _match_channel(word)
 
