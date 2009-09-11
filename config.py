@@ -216,10 +216,10 @@ def set_list(section, option, l):
 	"""
 	s = escape_join(",", l)
 
-	if not s:
+	if None == s:
 		return False
 
-	set(section, option, s)
+	return set(section, option, s)
 
 @types (section=basestring, option=basestring, value=basestring)
 def append_list(section, option, value):
@@ -228,7 +228,7 @@ def append_list(section, option, value):
 	"""
 	v = get_list(section, option)
 	v.append(value)
-	set_list(section, option, v)
+	return set_list(section, option, v)
 
 @types (section=basestring, option=basestring)
 def unset(section, option):
@@ -326,11 +326,11 @@ def get_list(section, option, default=[]):
 	if res == default:
 		return default
 
-	list = unescape_split(",", res)
+	l = unescape_split(",", res)
 
-	if not list:
+	if not l:
 		return default
-	return list
+	return list(l)
 
 @types (section=basestring, option=basestring)
 def get_bool(section, option, default=False):
