@@ -258,8 +258,8 @@ def tekka_font_clicked(button):
 
 		for row in gui.widgets.get_widget("serverTree").get_model():
 			for child in row.iterchildren():
-				gui.set_font(child[2].textview, gui.get_font())
-			gui.set_font(row[2].textview, gui.get_font())
+				gui.set_font(child[0].textview, gui.get_font())
+			gui.set_font(row[0].textview, gui.get_font())
 
 		gui.set_font(gui.widgets.get_widget("output"), gui.get_font())
 		gui.set_font(gui.widgets.get_widget("inputBar"), gui.get_font())
@@ -271,8 +271,8 @@ def tekka_use_default_font_toggled(button):
 
 	for row in gui.widgets.get_widget("serverTree").get_model():
 		for child in row.iterchildren():
-			gui.set_font(child[2].textview, gui.get_font())
-		gui.set_font(row[2].textview, gui.get_font())
+			gui.set_font(child[0].textview, gui.get_font())
+		gui.set_font(row[0].textview, gui.get_font())
 
 	gui.set_font(gui.widgets.get_widget("output"), gui.get_font())
 	gui.set_font(gui.widgets.get_widget("inputBar"), gui.get_font())
