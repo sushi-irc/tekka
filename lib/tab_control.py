@@ -322,7 +322,7 @@ class TabControl(gobject.GObject):
 		# apply new server to childs
 		if old.is_server():
 			for row in store.iter_children(iter):
-				row[2].server = new
+				row[0].server = new
 
 	@types (servers = list, excludes = list)
 	def get_all_tabs(self, servers=[], excludes=[]):
