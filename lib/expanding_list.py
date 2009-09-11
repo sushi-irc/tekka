@@ -29,6 +29,8 @@ SUCH DAMAGE.
 import gtk
 import gobject
 
+# FIXME: last filled item can't be removed
+
 class ExpandingList(gtk.Table):
 
 	def __init__(self, *widgets, **kwargs):
