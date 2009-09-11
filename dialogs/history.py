@@ -358,7 +358,7 @@ def run(tab):
 		return
 
 	log_dir = os.path.join(com.sushi.config_get("directories","logs"),
-		tab.server, tab.name)
+		tab.server.name, tab.name)
 	try:
 		file_list = os.listdir(log_dir)
 	except OSError,e:
