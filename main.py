@@ -790,11 +790,6 @@ def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 def servertree_query_tooltip(widget, x, y, kbdmode, tooltip):
 	""" show tooltips for treeview rows """
 
-	def get_last_sentence(tab):
-		tb = tab.textview.get_buffer()
-		lineStart = tb.get_iter_at_line(tb.get_line_count())
-		return gui.escape(tb.get_text(lineStart, tb.get_end_iter()))
-
 	def limit(s):
 		limit = int(config.get("tekka","popup_line_limit"))
 		if len(s) > limit:
@@ -815,17 +810,18 @@ def servertree_query_tooltip(widget, x, y, kbdmode, tooltip):
 
 	if tab.is_server():
 		# TODO: away status
-		s = "<b>" + _("Nickname: ") + "</b>" +  tab.nick
+		s = "<b>" + _("Nickname: ") + "</b>" +  gui.escape(tab.nick)
 
 	elif tab.is_channel():
 		s = "<b>" +_("User: ") + "</b>" + str(len(tab.nickList)) +\
-			"\n<b>" + _("Topic: ") + "</b>" + limit(tab.topic) +\
+			"\n<b>" + _("Topic: ") + "</b>" +\
+				limit(gui.escape(tab.topic)) +\
 			"\n<b>" + _("Last sentence: ") + "</b>" +\
-				limit(get_last_sentence(tab))
+				limit(gui.escape(tab.textview.get_last_line()))
 
 	elif tab.is_query():
 		s = "<b>" + _("Last sentence: ") + "</b>" +\
-			limit(get_last_sentence(tab))
+			limit(gui.escape(tab.textview.get_last_line()))
 
 	tooltip.set_markup(s)
 

@@ -53,6 +53,26 @@ class OutputTextView(gtk.TextView):
 		self.scroll_to_mark(mark, 0.05, True, 0.0, 1.0)
 		tb.delete_mark(mark)
 
+	def get_last_line(self):
+		""" returns the last readable line
+			(without read_line)
+		"""
+		buffer = self.get_buffer()
+		count = buffer.get_line_count()
+
+		if self.read_line:
+			count -= 2
+			lineEnd = buffer.get_iter_at_mark(self.read_line[1])
+		else:
+			lineEnd = buffer.get_end_iter()
+
+		if count <= 0:
+			return ""
+
+		lineStart = buffer.get_iter_at_line(count)
+
+		return buffer.get_text(lineStart, lineEnd)
+
 	def set_read_line(self):
 		buffer = self.get_buffer()
 
