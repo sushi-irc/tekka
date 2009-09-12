@@ -122,7 +122,7 @@ class NickListStore(gtk.ListStore):
 		row = self.find_nick_row(nick)
 
 		if row:
-			store.set(row.iter, self.COLUMN_NICK, newnick)
+			self.set(row.iter, self.COLUMN_NICK, newnick)
 			self.sort_nicks()
 
 	def remove_nick(self, nick):
