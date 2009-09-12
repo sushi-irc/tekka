@@ -793,7 +793,7 @@ def servertree_query_tooltip(widget, x, y, kbdmode, tooltip):
 	def limit(s):
 		limit = int(config.get("tekka","popup_line_limit"))
 		if len(s) > limit:
-			return gui.escape(s[:limit-3]+"...")
+			return gui.escape(s[:limit-3]+u"...")
 		return gui.escape(s)
 
 	path = widget.get_path_at_pos(x,y)
