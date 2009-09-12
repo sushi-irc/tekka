@@ -1061,7 +1061,6 @@ def load_paned_positions():
 		paned.set_property("position-set", True)
 		position = config.get("sizes", paned.name, None)
 		if position == None:
-			print "No position for paned %s" % (paned.name)
 			continue
 		try:
 			paned.set_position(int(position))

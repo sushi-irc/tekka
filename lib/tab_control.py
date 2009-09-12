@@ -35,7 +35,7 @@ import lib.gui_control
 from lib.input_history import InputHistory
 from lib.tab import TekkaTab, TekkaChannel, TekkaQuery, TekkaServer
 from lib.output_textview import OutputTextView
-from lib.nickListStore import nickListStore
+from lib.nick_list_store import NickListStore
 
 from typecheck import types
 
@@ -110,12 +110,12 @@ class TabControl(gobject.GObject):
 
 	@types (server = TekkaServer, name = basestring)
 	def create_channel(self, server, name):
-		""" create TekkaChannel object and associated a nickListStore
+		""" create TekkaChannel object and associated a NickListStore
 			with it.
 
 			Returns the newly created Tab object.
 		"""
-		ns = nickListStore()
+		ns = NickListStore()
 
 		ns.set_modes(server.support_prefix[1])
 

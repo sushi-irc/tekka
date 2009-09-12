@@ -113,7 +113,7 @@ def _raise_position(matches, i_type):
 		_current["position"] = 0
 
 def _match_nick_in_channel(tab, word):
-	matches = tab.nickList.searchNick(word.lower())
+	matches = tab.nickList.search_nick(word.lower())
 	# sort nicks alphabetically
 	matches.sort(lambda x, y: cmp(x.lower(), y.lower()))
 

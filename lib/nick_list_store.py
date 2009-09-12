@@ -26,10 +26,12 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
-import gtk,gobject
+import gtk
+import gobject
 
+from typecheck import types
 
-class nickListStore(gtk.ListStore):
+class NickListStore(gtk.ListStore):
 	"""
 	Store class for the nickList widget.
 	Stores the prefix and the nick name
@@ -38,7 +40,7 @@ class nickListStore(gtk.ListStore):
 	<prefix_1>,<nick_1>
 	...
 
-	prefix is a item of nickListStore.modes,
+	prefix is a item of NickListStore.modes,
 	nick is a string.
 	"""
 
@@ -48,16 +50,13 @@ class nickListStore(gtk.ListStore):
 	def __init__(self, nicks=None, prefixes=None):
 		gtk.ListStore.__init__(self, gobject.TYPE_STRING, gobject.TYPE_STRING)
 
-		# default modes:
-		self.modes = ["@","+"," "]
-
+		self.__modes = []
 		# user count, operator count, dowehaveoperators?
 		self.__count = 0
 		self.__opcount = 0
-		self.__has_ops = False
 
-		if nicks and prefixes:
-			self.addNicks(nicks, prefixes)
+		if nicks and prefixes and len(nicks) == len(prefixes):
+			self.add_nicks(nicks, prefixes)
 
 	def __len__(self):
 		return self.__count
@@ -70,60 +69,43 @@ class nickListStore(gtk.ListStore):
 		self.__modes.append(" ") # append the empty mode
 		print "self.__modes = %s"  % self.__modes
 
-		# FIXME: i want this more reliable
-		if len(self.__modes) > 1:
-			# no ops in mode set
-			self.__has_ops = True
-
-	def findRow(self, store, column, needle):
-		"""
-		Iterating through ListStore `store` and
-		comparing the content of the column (identified
-		by `column`) with needle.
-		If a match is found the row is returned.
-		"""
-		for row in store:
-			if row[column] == needle:
+	@types(needle = basestring)
+	def find_nick_row(self, needle):
+		for row in self:
+			if row[self.COLUMN_NICK].lower() == needle.lower():
 				return row
 		return None
 
-	def findLowerRow(self, store, column, needle):
+	def add_nicks(self, nicks, prefixes):
 		"""
-		Strings only.
-		Does the same as findRow but compares the
-		lower cased content of the column with the
-		lower cased needle so character case does not
-		matter.
-		"""
-		for row in store:
-			if row[column].lower() == needle.lower():
-				return row
-		return None
-
-	def addNicks(self, nicks, prefixes):
-		"""
-		Adds a list of nicks to the nickListStore.
+		Adds a list of nicks to the NickListStore.
 		After adding all nicks sortNicks is called.
 		"""
 		if not nicks or not prefixes:
 			return
 
 		for i in range(len(nicks)):
-			self.appendNick(nicks[i], sort=False)
-			self.setPrefix(nicks[i], prefixes[i], sort=False)
+			self.append_nick(nicks[i], sort=False)
+			self.set_prefix(nicks[i], prefixes[i], sort=False)
 
-		self.sortNicks()
+		self.sort_nicks()
 
-	def getNicks(self):
+	def get_nicks(self):
 		"""
-		returns all nick names(!) stored
+		returns all nick names stored
 		"""
 		return [l[self.COLUMN_NICK] for l in self if l is not None ]
 
-	def appendNick(self, nick, sort=True):
+	def get_nicks_mode(self):
+		""" return a tuple per nick with (prefix,nick) """
+		return [
+			(l[self.COLUMN_PREFIX],l[self.COLUMN_NICK]) for l in self
+			if l]
+
+	def append_nick(self, nick, sort=True):
 		"""
 		appends a nick to the store, if sort is false,
-		data in the nickListStore would'nt be sorted in-place
+		data in the NickListStore would'nt be sorted in-place
 		"""
 		iter = self.append(None)
 		self.set(iter, self.COLUMN_NICK, nick)
@@ -131,26 +113,24 @@ class nickListStore(gtk.ListStore):
 		self.__count += 1
 
 		if sort:
-			self.sortNicks()
+			self.sort_nicks()
 
-	def modifyNick(self, nick, newnick):
+	def modify_nick(self, nick, newnick):
 		"""
 		renames the nick `nick` to `newnick`
 		"""
-		store = self
-		row = self.findRow(store, self.COLUMN_NICK, nick)
-		if not row:
-			return
-		store.set(row.iter, self.COLUMN_NICK, newnick)
+		row = self.find_nick_row(nick)
 
-		self.sortNicks()
+		if row:
+			store.set(row.iter, self.COLUMN_NICK, newnick)
+			self.sort_nicks()
 
-	def removeNick(self, nick):
+	def remove_nick(self, nick):
 		"""
 		removes the whole column where nick name = `nick`
 		"""
 		store = self
-		row = self.findRow(store, self.COLUMN_NICK, nick)
+		row = self.find_nick_row(nick)
 
 		if not row:
 			return
@@ -162,25 +142,25 @@ class nickListStore(gtk.ListStore):
 
 		store.remove(row.iter)
 
-	def clear(self, countReset=True):
+	def clear(self, count_reset = True):
 		"""
 		remove all entries from the store
 		and set counts to 0.
 		"""
 		gtk.ListStore.clear(self)
-		if countReset:
+
+		if count_reset:
 			self.__count = 0
 			self.__opcount = 0
 
-	def setPrefix(self, nick, prefix, sort=True):
+	def set_prefix(self, nick, prefix, sort=True):
 		"""
 		sets the prefix `prefix` to the nick `nick`.
 		After setting the prefix and sort is true
-		the data in the nickListStore will be sorted
+		the data in the NickListStore will be sorted
 		in place.
 		"""
-		store = self
-		row = self.findRow(store, self.COLUMN_NICK, nick)
+		row = self.find_nick_row(nick)
 
 		if not row:
 			return
@@ -199,56 +179,63 @@ class nickListStore(gtk.ListStore):
 		row[self.COLUMN_PREFIX] = prefix
 
 		if sort:
-			self.sortNicks()
+			self.sort_nicks()
 
-	def getPrefix(self, nick):
+	def get_prefix(self, nick):
+		""" returns the prefix for the nick identified
+			by `nick`. If the nick is not found
+			None is returned.
 		"""
-		returns the prefix for the nick identified
-		by `nick`
-		"""
-		store = self
-		row = self.findRow(store, self.COLUMN_NICK, nick)
+		row = self.find_nick_row(nick)
+
 		if not row:
-			return " "
+			return None
+
 		return row[self.COLUMN_PREFIX]
 
-	def searchNick(self, needle):
+	def search_nick(self, needle):
+		""" returns a list of nicks wich are beginning with
+			the string `needle`
 		"""
-		returns a list of nicks wich are beginning with
-		the string `needle`
-		"""
-		return [l[self.COLUMN_NICK] for l in self if l and l[self.COLUMN_NICK][0:len(needle)].lower()==needle]
+		return [l[self.COLUMN_NICK] for l in self
+			if l and l[self.COLUMN_NICK][0:len(needle)].lower()==needle]
 
-	def searchNickByPrefix(self, prefixes):
+	def search_nick_by_prefix(self, prefixes):
+		""" Searches for nicks which prefix is in the tuple prefixes
+			and returns the found nicks as a list.
 		"""
-		Searches for nicks which prefix is in the tuple prefixes
-		and returns the found nicks as a list.
-		"""
-		return [l[self.COLUMN_NICK] for l in self if l and l[self.COLUMN_PREFIX] in prefixes]
+		return [l[self.COLUMN_NICK] for l in self
+			if l and l[self.COLUMN_PREFIX] in prefixes]
 
-	def sortNicks(self):
+	def sort_nicks(self):
+		""" sort the NickListStore in-place by prefix and
+			then by nick name
 		"""
-	sort the nickListStore in-place by prefix and
-	then by nick name
-		"""
-		store = self
 		modes = self.__modes
 		nl = []
 
-		for row in store:
-			prefix = row[0] or " "
-			nick = row[1]
+		for row in self:
+			prefix = row[self.COLUMN_PREFIX] or " "
+			nick = row[self.COLUMN_NICK]
+
 			try:
 				i = modes.index(prefix)
 			except ValueError:
-				print "sortNicks: i < 0"
-				continue
-			nl.append([i,nick])
-		nl.sort(cmp=lambda a,b: cmp(a[0],b[0]) or cmp(a[1].lower(),b[1].lower()))
-		store.clear(False)
-		for (prefix,nick) in nl:
-			iter = store.append(None)
-			prefix = modes[prefix]
-			store.set(iter, 0, prefix, 1, nick)
+				print "sort_nicks: prefix for %s (%s) not in modes (%s)" %(
+					nick, prefix, self.__modes)
 
+			nl.append([i,nick])
+
+		nl.sort( cmp = lambda a,b: (cmp(a[0], b[0])
+			or cmp(a[1].lower(), b[1].lower())) )
+
+		self.clear(count_reset = False)
+
+		for (prefix, nick) in nl:
+			try:
+				prefixSign = modes[prefix]
+			except IndexError:
+				prefixSign = "?"
+
+			self.append(row = (prefixSign, nick))
 

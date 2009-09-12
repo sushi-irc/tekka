@@ -26,7 +26,6 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
-
 from gettext import gettext as _
 
 import gtk
@@ -187,7 +186,7 @@ def add_channels(server_tab):
 			add = True
 
 		tab.nickList.clear()
-		tab.nickList.addNicks(nicks, prefixes)
+		tab.nickList.add_nicks(nicks, prefixes)
 
 		tab.topic = sushi.channel_topic(server_tab.name, channel)
 		tab.topicsetter = ""
@@ -218,7 +217,7 @@ def updatePrefix(tab, nick, mode):
 		return
 
 	if mode[1] in tab.server.support_prefix[0]:
-		tab.nickList.setPrefix(nick,
+		tab.nickList.set_prefix(nick,
 			sushi.user_channel_prefix(tab.server.name, tab.name, nick))
 
 		if gui.tabs.is_active(tab):
@@ -317,7 +316,7 @@ def getPrefix(server, channel, nick):
 	tab = gui.tabs.search_tab(server, channel)
 
 	if tab and tab.is_channel():
-		return tab.nickList.getPrefix(nick)
+		return tab.nickList.get_prefix(nick)
 	else:
 		return ""
 """
@@ -913,8 +912,8 @@ def userNick(time, server, from_str, newNick):
 				"hide")
 
 		if tab.is_channel():
-			if (nick in tab.nickList.getNicks()):
-				tab.nickList.modifyNick(nick, newNick)
+			if (nick in tab.nickList.get_nicks()):
+				tab.nickList.modify_nick(nick, newNick)
 			else:
 				continue
 
@@ -971,7 +970,7 @@ def userKick(time, server, from_str, channel, who, reason):
 		gui.channelPrint(time, server, channel, message, "highlightaction")
 
 	else:
-		tab.nickList.removeNick(who)
+		tab.nickList.remove_nick(who)
 
 		if gui.tabs.is_active(tab):
 			gui.set_user_count(
@@ -1081,10 +1080,10 @@ def userQuit(time, server, from_str, reason):
 			# and print the quit message if the
 			# nick was found.
 			nickList = channelTab.nickList
-			nicks = nickList.getNicks() or []
+			nicks = nickList.get_nicks() or []
 
 			if nick in nicks:
-				nickList.removeNick(nick)
+				nickList.remove_nick(nick)
 
 				if gui.tabs.is_active(channelTab):
 					# update gui display for usercount
@@ -1158,7 +1157,7 @@ def userJoin(timestamp, server, from_str, channel):
 			gui.escape(channel))
 
 
-		tab.nickList.appendNick(nick)
+		tab.nickList.append_nick(nick)
 
 		if gui.tabs.is_active(tab):
 			gui.set_user_count(len(tab.nickList), tab.nickList.get_operator_count())
@@ -1199,16 +1198,16 @@ def userNames(timestamp, server, channel, nicks, prefixes):
 		tab.connected = True
 
 	if not nicks:
-		tab.nickList.sortNicks()
+		tab.nickList.sort_nicks()
 		return
 
 	for i in xrange(len(nicks)):
 		# FIXME
-		tab.nickList.removeNick(nicks[i])
-		tab.nickList.appendNick(nicks[i], sort=False)
+		tab.nickList.remove_nick(nicks[i])
+		tab.nickList.append_nick(nicks[i], sort=False)
 
 		if prefixes[i]:
-			tab.nickList.setPrefix(nicks[i], prefixes[i], sort=False)
+			tab.nickList.set_prefix(nicks[i], prefixes[i], sort=False)
 
 	if gui.tabs.is_active(tab):
 		gui.set_user_count(
@@ -1269,7 +1268,7 @@ def userPart(timestamp, server, from_str, channel, reason):
 		else:
 			message = _(u"« %(nick)s has left %(channel)s.")
 
-		tab.nickList.removeNick(nick)
+		tab.nickList.remove_nick(nick)
 
 		if gui.tabs.is_active(tab):
 			gui.set_user_count(
