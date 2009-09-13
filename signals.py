@@ -146,17 +146,22 @@ def handle_maki_connect():
 
 	add_servers()
 
+def setup_server(server):
+	tab = gui.tabs.create_server(server)
+
+	gui.tabs.add_tab(None, tab,
+		update_shortcuts = config.get_bool("tekka","server_shortcuts"))
+
+	return tab
+
 def add_servers():
 	""" Adds all servers to tekka which are reported by maki. """
 	# in case we're reconnecting, clear all stuff
 	gui.widgets.get_widget("serverTree").get_model().clear()
 
 	for server in sushi.servers():
-		tab = gui.tabs.create_server(server)
+		tab = setup_server(server)
 		tab.connected = True
-
-		gui.tabs.add_tab(None, tab)
-
 		add_channels(tab)
 
 	# TODO: replace that with get_next_tab or similar
@@ -326,17 +331,12 @@ def serverConnect(time, server):
 	"""
 		maki is connecting to a server.
 	"""
+	gui.set_useable(True)
+
 	tab = gui.tabs.search_tab(server)
 
 	if not tab:
-		tab = gui.tabs.create_server(server)
-
-		# add tab and update shortcuts only
-		# if it's necessary
-		gui.tabs.add_tab(
-			None, tab,
-			update_shortcuts = config.get_bool("tekka","server_shortcuts"))
-
+		tab = setup_server(server)
 
 	if tab.connected:
 		tab.connected = False
@@ -361,12 +361,9 @@ def serverConnected(time, server):
 	tab = gui.tabs.search_tab(server)
 
 	if not tab:
-		tab = gui.tabs.create_server(server)
-		gui.tabs.add_tab(None, tab)
+		tab = setup_server(server)
 
 	tab.connected = True
-
-	add_channels(tab)
 
 	# iterate over tabs, set the connected flag to queries
 	for query in [tab for tab in gui.tabs.get_all_tabs(
@@ -378,17 +375,27 @@ def serverConnected(time, server):
 
 	gui.serverPrint(time, server, "Connected.")
 
-def serverMOTD(time, server, message):
+def serverMOTD(time, server, message, first_time = {}):
 	"""
 		Server is sending a MOTD
 	"""
+	if not first_time.has_key(server):
+		tab = gui.tabs.search_tab(server)
+		if not tab:
+			tab = setup_server(server)
+			tab.connected = True
+		first_time[server] = tab
+
 	if not message:
-		return
+		# get the prefixes for the server to make
+		# sure they are correct
+		tab = first_time[server]
+		tab.support_prefix = sushi.support_prefix(server)
+		tab.support_chantypes = sushi.support_chantypes(server)
+		del first_time[server]
 
-	if not gui.tabs.search_tab(server):
-		gui.tabs.add_tab(None, gui.tabs.create_server(server))
-
-	gui.serverPrint(time, server, gui.escape(message))
+	else:
+		gui.serverPrint(time, server, gui.escape(message))
 
 """
 Signals for channel interaction
