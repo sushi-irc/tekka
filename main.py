@@ -197,6 +197,10 @@ def tekka_tab_remove(tab):
 		else:
 			gui.tabs.switch_to_tab(nextTab)
 
+	elif (tab.is_server()
+	and len(gui.get_widget("serverTree").get_model()) == 1):
+		gui.set_useable(False)
+
 """
 Glade signals
 """
