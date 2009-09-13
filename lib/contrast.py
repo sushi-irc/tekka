@@ -227,3 +227,21 @@ def contrast_render_foreground_color (background, color):
 				points[max_color][2])
 
 	return gtk.gdk.Color (red, green, blue)
+
+if __name__ == "__main__":
+	import sys
+
+	if len(sys.argv) < 2:
+		sys.exit(1)
+
+	cnames = [
+		"aqua","black","blue","brown","cyan","darkblue",
+		"darkgreen","darkgray","darkred","green","gray",
+		"lightblue","lightbrown","lightgreen","lightgrey",
+		"lightred","magenta","orange","purple","red",
+		"violet","white","yellow","last"]
+
+	c = gtk.gdk.Color(sys.argv[1])
+	for i in range(23):
+		r = contrast_render_foreground_color(c, i)
+		print "output(%d:%s): \t%s" % (i, cnames[i], r)

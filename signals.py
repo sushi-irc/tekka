@@ -238,21 +238,28 @@ def getNickColor(nick):
 	if not config.get_bool("tekka","color_text"):
 		return
 
-	# FIXME
+	"""
 	colors = config.get_list("colors", "nick_colors")
 	if not colors:
 		return config.get("colors","nick","#000000")
 	return colors[sum([ord(n) for n in nick]) % len(colors)]
-
+	"""
+	print "getNickColor(%s)" % nick
 	colors = get_contrast_colors()
 
+	"""
 	if not colors:
 		return config.get("colors","nick","#000000")
+	"""
 
-	bg_color = gui.widgets.get_widget("output").get_style().bg[gtk.STATE_NORMAL]
+	bg_color = gui.widgets.get_widget("output").get_style().bg[gtk.STATE_ACTIVE]
+	bg_color = gtk.gdk.Color("#fff")
 	color = colors[sum([ord(n) for n in nick]) % len(colors)]
+	print "c_color = %d" % color
 
-	return contrast.contrast_render_foreground_color(bg_color, color)
+	r = contrast.contrast_render_foreground_color(bg_color, color)
+	print "r = %s" % r
+	return r
 
 def getTextColor(nick):
 	"""
@@ -262,11 +269,12 @@ def getTextColor(nick):
 	if not config.get_bool("tekka","color_text"):
 		return
 
-	# FIXME
+	"""
 	colors = config.get_list("colors", "nick_colors")
 	if not colors or not config.get_bool("tekka","color_nick_text"):
 		return config.get("colors","text_message","#000000")
 	return colors[sum([ord(n) for n in nick]) % len(colors)]
+	"""
 
 	colors = get_contrast_colors()
 
@@ -274,9 +282,13 @@ def getTextColor(nick):
 		return config.get("colors","text_message","#000000")
 
 	bg_color = gui.widgets.get_widget("output").get_style().bg[gtk.STATE_NORMAL]
+	print "bg_color = %s" % bg_color
 	color = colors[sum([ord(n) for n in nick]) % len(colors)]
+	print "c_color = %d" % color
 
-	return contrast.contrast_render_foreground_color(bg_color, color)
+	r = contrast.contrast_render_foreground_color(bg_color, color)
+	print "r = %s" % r
+	return r
 
 def isHighlighted (server_tab, text):
 	highlightwords = config.get_list("chatting", "highlight_words")
@@ -376,8 +388,11 @@ def serverConnected(time, server):
 	gui.serverPrint(time, server, "Connected.")
 
 def serverMOTD(time, server, message, first_time = {}):
-	"""
-		Server is sending a MOTD
+	""" Server is sending a MOTD.
+		Channes are joined 3s after the end of the
+		MOTD so at the end of the MOTD, make sure
+		that the prefixes and chantypes are read
+		correctly.
 	"""
 	if not first_time.has_key(server):
 		tab = gui.tabs.search_tab(server)
