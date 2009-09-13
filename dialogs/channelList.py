@@ -47,6 +47,9 @@ filterExpression = None
 listView = None
 cache = []  # /list cache
 
+def clearProgressBar():
+	widgets.get_widget("progressBar").set_fraction(0)
+
 def run(server):
 	"""
 	Show the dialog until close was hit.
@@ -61,6 +64,7 @@ def run(server):
 
 	currentServer = server
 
+	clearProgressBar()
 	dialog = widgets.get_widget("channelList")
 
 	dialog.show_all()
@@ -70,7 +74,11 @@ def run(server):
 def resetSignal(*x):
 	""" reset the list signal to the original state """
 	signals.disconnect_signal ("list", sushiList)
-	signals.connect_signal ("list", signals.list)
+
+def stopListButton_clicked_cb(button):
+	signals.disconnect_signal ("list", sushiList)
+	cache = [] # we don't want an incomplete cache?
+	clearProgressBar()
 
 def listButton_clicked_cb(button):
 	"""
@@ -95,9 +103,9 @@ def listButton_clicked_cb(button):
 		# use cached values
 		for (server, channel, user, topic) in cache:
 			sushiList(0, server, channel, user, topic)
+		clearProgressBar()
 
 	else:
-		signals.disconnect_signal ("list", signals.list)
 		signals.connect_signal("list", sushiList)
 
 		try:
@@ -136,7 +144,10 @@ def sushiList(time, server, channel, user, topic):
 		# EOL, this is not reached if we use
 		# manual call.
 		resetSignal ()
+		clearProgressBar()
 		return
+
+	widgets.get_widget("progressBar").pulse()
 
 	store = listView.get_model()
 	if (not filterExpression
@@ -146,7 +157,8 @@ def sushiList(time, server, channel, user, topic):
 		store.append(row=(channel, int(user), topic))
 
 def dialog_response_cb(dialog, id):
-	if id in (gtk.RESPONSE_NONE, gtk.RESPONSE_DELETE_EVENT, gtk.RESPONSE_CLOSE):
+	if id in (gtk.RESPONSE_NONE, gtk.RESPONSE_DELETE_EVENT,
+	gtk.RESPONSE_CLOSE):
 		resetSignal()
 		dialog.destroy()
 
@@ -158,6 +170,7 @@ def setup():
 
 	sigdic = {
 		"listButton_clicked_cb" : listButton_clicked_cb,
+		"stopListButton_clicked_cb": stopListButton_clicked_cb,
 		"regexpEntry_activate_cb" : listButton_clicked_cb,
 		"listView_row_activated_cb" : listView_row_activated_cb
 	}

@@ -134,7 +134,6 @@ def handle_maki_connect():
 	connect_signal("connect", serverConnect)
 	connect_signal("connected", serverConnected)
 	connect_signal("motd", serverMOTD)
-	connect_signal("list", list)
 	connect_signal("whois", whois)
 	connect_signal("dcc_send", dcc_send)
 
@@ -391,19 +390,6 @@ def serverMOTD(time, server, message):
 
 	gui.serverPrint(time, server, gui.escape(message))
 
-def list(time, server, channel, users, topic):
-	"""
-		Signal for /list command.
-		Prints content of the listing.
-	"""
-	if not channel and not topic and users == -1:
-		gui.serverPrint(time, server, "End of list.")
-		return
-
-	gui.serverPrint(time, server, \
-		"%s: %d user; topic: \"%s\"" % \
-		(gui.escape(channel), users, gui.escape(topic)))
-
 """
 Signals for channel interaction
 """
@@ -508,6 +494,7 @@ def userAwayMessage(timestamp, server, nick, message):
 		The user is away and the server gives us the message he left
 		for us to see why he is away and probably when he's back again.
 	"""
+	# TODO: print this one time only..
 	gui.channelPrint(
 		timestamp,
 		server,
@@ -1309,6 +1296,33 @@ def noSuch(time, server, target, type):
 		gui.channelPrint(time, server, target, error)
 	else:
 		gui.serverPrint(time, server, error)
+
+def channelList(time, server, channel, users, topic):
+	""" Signal for /list command.
+		Prints content of the listing.
+	"""
+	if not channel and not topic and users == -1:
+		gui.serverPrint(time, server, "End of list.")
+
+		try:
+			channelList._buffer = None
+		except:
+			pass
+
+		return
+
+	try:
+		buf = channelList._buffer
+	except AttributeError:
+		buf = None
+
+	if None == buf:
+		serverTab = gui.tabs.search_tab(server)
+		buf = channelList._buffer = serverTab.textview.get_buffer()
+
+	buf.insert(buf.get_end_iter(),
+		"%s: %d user; topic: \"%s\"" % \
+		(gui.escape(channel), users, gui.escape(topic)))
 
 def cannotJoin(time, server, channel, reason):
 	""" The channel could not be joined.

@@ -34,6 +34,7 @@ from typecheck import types
 
 from gettext import gettext as _
 
+import signals
 import config
 import com
 
@@ -48,16 +49,17 @@ def warnNoConnection(tab):
 	elif tab.is_channel() or tab.is_query():
 		name = tab.server.name
 
-	dialog = InlineMessageDialog(_("Warning:"), _("You are not connected to "
-		"server %(server)s.")  % { "server": name } )
+	dialog = InlineMessageDialog(_("Warning:"),
+		_("You are not connected to server %(server)s.") % {
+			"server": name } )
 	dialog.connect("response", lambda w,i: w.destroy() )
 
 	gui.showInlineDialog(dialog)
 
 def warnNotJoined(cTab):
-	dialog = InlineMessageDialog(_("Warning:"), _("The channel "
-		"%(channel)s is not joined. Everything you write will "
-		"not be send.") % { "channel": cTab.name })
+	dialog = InlineMessageDialog(_("Warning:"),
+		_("The channel %(channel)s is not joined. Everything you "
+		"write will not be send.") % { "channel": cTab.name })
 	dialog.connect("response", lambda w,i: w.destroy())
 
 	gui.showInlineDialog(dialog)
@@ -100,7 +102,8 @@ def makiQuit(currentServer, currentChannel, args):
 		# /quit
 		if not currentServer:
 			return gui.myPrint("Could not determine server.")
-		sushi.quit(currentServer.name, config.get("chatting", "quit_message", ""))
+		sushi.quit(currentServer.name,
+			config.get("chatting", "quit_message", ""))
 
 def makiNick(currentServer, currentChannel, args):
 	"""
@@ -354,6 +357,8 @@ def makiList(serverTab, channelTab, args):
 		channel = ""
 
 	gui.serverPrint(time.time(), serverTab.name, "Start of list.")
+
+	signals.connect_signal("list", signals.channelList)
 	sushi.list(serverTab.name, channel)
 
 def makiRaw(serverTab, channelTab, args):
@@ -374,6 +379,13 @@ def makiRaw(serverTab, channelTab, args):
 	args[0] = args[0].upper()
 
 	sushi.raw(serverTab.name, " ".join(args))
+
+def makiStopList(serverTab, channelTab, args):
+	""" Aborts printing the channel list.
+
+		Usage: /stoplist
+	"""
+	signals.disconnect_signal("list", signals.channelList)
 
 def makiWhois(currentServer, currentChannel, args):
 	"""
@@ -462,6 +474,7 @@ _commands = {
 	"oper" : makiOper,
 	"list" : makiList,
 	"raw" : makiRaw,
+	"stoplist" : makiStopList,
 	"whois" : makiWhois,
 	"query": tekkaQuery,
 	"clear": tekkaClear,
