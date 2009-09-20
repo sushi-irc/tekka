@@ -397,7 +397,9 @@ def serverMOTD(time, server, message, first_time = {}):
 		tab = gui.tabs.search_tab(server)
 		if not tab:
 			tab = setup_server(server)
-			tab.connected = True
+		else:
+			gui.tabs.update_server(tab)
+		tab.connected = True
 		first_time[server] = tab
 
 	if not message:

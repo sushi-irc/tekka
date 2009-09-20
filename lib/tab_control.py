@@ -132,9 +132,12 @@ class TabControl(gobject.GObject):
 		tab = self._create_tab(TekkaQuery, name, server)
 		return tab
 
-	@types (server = basestring)
-	def create_server(self, server):
-		tab = self._create_tab(TekkaServer, server)
+	@types (tab = TekkaServer)
+	def update_server(self, tab):
+		""" fetch server info from sushi and apply them
+			to the given serverTab
+		"""
+		server = tab.name
 
 		if com.sushi.user_away(server, com.get_own_nick(server)):
 			# FIXME
@@ -143,6 +146,12 @@ class TabControl(gobject.GObject):
 		tab.nick = com.parse_from(com.sushi.user_from(server, ""))[0]
 		tab.support_prefix = com.sushi.support_prefix(server)
 		tab.support_chantypes = com.sushi.support_chantypes(server)
+
+	@types (server = basestring)
+	def create_server(self, server):
+		tab = self._create_tab(TekkaServer, server)
+
+		self.update_server(tab)
 
 		tab.connect("away", self.get_callback("away"))
 		tab.connect("new_nick", self.get_callback("new_nick"))
