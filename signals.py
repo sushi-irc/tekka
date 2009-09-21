@@ -253,6 +253,7 @@ def getNickColor(nick):
 	"""
 
 	bg_color = gui.widgets.get_widget("output").get_style().bg[gtk.STATE_ACTIVE]
+	print "bg_color = %s" % bg_color
 	color = colors[sum([ord(n) for n in nick]) % len(colors)]
 	print "c_color = %d" % color
 
@@ -897,13 +898,9 @@ def userNick(time, server, from_str, newNick):
 		tab.name = newNick
 
 	# we changed the nick
-	if not nick or newNick == server_tab.nick:
+	if not nick or nick == server_tab.nick:
 		message = _(u"• You are now known as %(newnick)s.")
-
-		# update the nick
-		currentServer, currentChannel = gui.tabs.get_current_tabs()
-		if currentServer and currentServer.name == server:
-			currentServer.nick = newNick
+		server_tab.nick = newNick
 
 	# someone else did
 	else:
@@ -912,6 +909,7 @@ def userNick(time, server, from_str, newNick):
 	# iterate over all channels and look if the nick is
 	# present there. If true so rename him in nicklist cache.
 	for tab in gui.tabs.get_all_tabs(servers = [server])[1:]:
+
 		if not nick or newNick == server_tab.nick:
 			doPrint = True
 		else:
@@ -920,6 +918,7 @@ def userNick(time, server, from_str, newNick):
 					server.lower(),
 					tab.name.lower()),
 				"hide")
+		print "%s@%s: %s" % (server, tab, doPrint)
 
 		if tab.is_channel():
 			if (nick in tab.nickList.get_nicks()):
@@ -939,6 +938,7 @@ def userNick(time, server, from_str, newNick):
 			gui.escape(newNick))
 
 		if doPrint:
+			print "would print to %s@%s: %s" % (tab.name, server, message)
 			gui.channelPrint(time, server, tab.name,
 				message % {
 					"nick": nickString,
