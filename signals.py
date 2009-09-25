@@ -206,6 +206,8 @@ def add_channels(server_tab):
 		tab.joined = True
 		tab.connected = True
 
+		# TODO: print topic, if no topic is awaited through "join" signal
+
 		if add:
 			gui.tabs.add_tab(server_tab, tab, update_shortcuts = False)
 			gui.print_last_log(server_tab.name, channel)
