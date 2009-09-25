@@ -350,6 +350,7 @@ def escape(msg):
 	msg = msg.replace(">", "&gt;")
 	msg = msg.replace(chr(2), "<sb/>") # bold-char
 	msg = msg.replace(chr(31), "<su/>") # underline-char
+	msg = msg.replace(chr(27), "") # TODO: begin of color
 	msg = msg.replace(chr(1), "")
 	return msg
 
