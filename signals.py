@@ -29,6 +29,7 @@ SUCH DAMAGE.
 from gettext import gettext as _
 
 import gtk
+import gobject
 from dbus import UInt64
 import time as mtime
 
@@ -1324,28 +1325,54 @@ def channelList(time, server, channel, users, topic):
 	""" Signal for /list command.
 		Prints content of the listing.
 	"""
-	if not channel and not topic and users == -1:
-		gui.serverPrint(time, server, "End of list.")
 
-		try:
-			channelList._buffer = None
-		except:
-			pass
+	def init_channelList():
+		channelList._text = []
+		channelList._line = 0
 
-		return
+		serverTab = gui.tabs.search_tab(server)
+		channelList._buf = serverTab.textview.get_buffer()
+
+	def print_listing(buf, text):
+		buf.insertHTML(buf.get_end_iter(), "<br/>".join(text))
+		return False
 
 	try:
-		buf = channelList._buffer
+		channelList._init
 	except AttributeError:
-		buf = None
+		channelList._init = 0
 
-	if None == buf:
-		serverTab = gui.tabs.search_tab(server)
-		buf = channelList._buffer = serverTab.textview.get_buffer()
+	if not channelList._init:
+		init_channelList()
+		channelList._init = 1
 
-	buf.insert(buf.get_end_iter(),
-		"%s: %d user; topic: \"%s\"" % \
-		(gui.escape(channel), users, gui.escape(topic)))
+	if not channel and not topic and users == -1:
+		# listing ended, reset variables
+
+		if channelList._line > 0:
+			# print rest
+			gobject.idle_add(print_listing, channelList._buf,
+				channelList._text)
+
+		gobject.idle_add(gui.serverPrint, time, server, "End of list.")
+
+		init_channelList()
+		channelList._init = 0
+
+	else:
+		channelList._text.append(("• <b>%s</b><br/>"+
+			"\t%d "+_("User")+"<br/>"+
+			"\t"+_("Topic")+": \"%s\"") % \
+			(gui.escape(channel), users, gui.escape(topic)))
+
+		channelList._line += 1
+
+		if channelList._line == 10:
+			gobject.idle_add(print_listing, channelList._buf,
+				channelList._text)
+
+			channelList._text = []
+			channelList._line = 0
 
 def cannotJoin(time, server, channel, reason):
 	""" The channel could not be joined.
