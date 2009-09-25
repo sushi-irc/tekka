@@ -29,7 +29,7 @@ SUCH DAMAGE.
 import gtk
 import gtk.glade
 import pango
-from cStringIO import StringIO
+from StringIO import StringIO
 
 import xml.sax, xml.sax.handler
 
@@ -52,8 +52,9 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 	the tags as format rules for the given text buffer.
 	"""
 
-	def __init__(self,textbuffer,handler):
+	def __init__(self, textbuffer, handler):
 		xml.sax.handler.ContentHandler.__init__(self)
+
 		self.textbuffer = textbuffer
 		self.elms = []
 		self.tags = []
@@ -187,6 +188,10 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 				except Exception, ex:
 					print ex
 
+class ScanHandler(xml.sax.ContentHandler):
+
+	def __init__(self):
+		xml.sax.ContentHandler.__init__(self)
 
 class HTMLBuffer(gtk.TextBuffer):
 
@@ -203,7 +208,10 @@ class HTMLBuffer(gtk.TextBuffer):
 
 		gtk.TextBuffer.__init__(self, self.tagtable)
 
+		self.scanner = xml.sax.make_parser()
 		self.parser = xml.sax.make_parser()
+
+		self.scanner.setContentHandler(ScanHandler())
 
 		contentHandler = HTMLHandler(self, self.URLHandler)
 		self.parser.setContentHandler(contentHandler)
@@ -268,11 +276,16 @@ class HTMLBuffer(gtk.TextBuffer):
 		text = URLToTag(text)
 		text = "<msg>%s</msg>" % text
 
-		# check for last line text
+		def applyToParser(text):
+			try:
+				self.parser.parse(StringIO(text))
+			except xml.sax.SAXParseException,e:
+				raise Exception,\
+					"%s.applyToParser: '%s' raised with '%s'." % (e, text)
 
 		while True:
 			try:
-				self.parser.parse(StringIO(str(text)))
+				self.scanner.parse(StringIO(text))
 
 			except xml.sax.SAXParseException, e:
 				# Exception while parsing, get (if caused by char)
@@ -297,12 +310,7 @@ class HTMLBuffer(gtk.TextBuffer):
 				print "faulty char on line %d char %d ('%s')" % (
 					line, pos, text[pos])
 
-				# delete the written stuff
-				self.delete(
-					self.get_iter_at_offset(startoffset),
-					self.get_end_iter())
-
-				# replace the faulty char
+				# skip the faulty char
 				text = text[:pos] + text[pos+1:]
 
 				continue
@@ -310,4 +318,6 @@ class HTMLBuffer(gtk.TextBuffer):
 			else:
 				# everything went fine, no need
 				# for looping further.
+				applyToParser(text)
+
 				break
