@@ -92,6 +92,8 @@ def configureButton_clicked_cb(button):
 		selected plugin
 	"""
 	def dialog_response_cb(dialog, rID):
+		for (key, value) in dialog.map.items():
+			print "Result: %s -> %s" % (key, str(value))
 		dialog.destroy()
 
 	pluginView = widgets.get_widget("pluginView")
@@ -111,20 +113,31 @@ def configureButton_clicked_cb(button):
 
 	table = gtk.Table(rows = len(options), columns = 2)
 	rowCount = 0
+	dataMap = {}
 
 	for (opt, label, type, value) in options:
 
 		wLabel = gtk.Label(label)
 		widget = None
 
+		dataMap[opt] = value
+
 		if type == psushi.TYPE_STRING:
 			widget = gtk.Entry()
 			widget.set_text(value)
+
+			widget.connect("changed",
+				lambda w,f,o: f(o,w.get_text()),
+				dataMap.__setitem__, opt)
 
 		elif type == psushi.TYPE_PASSWORD:
 			widget = gtk.Entry()
 			widget.set_text(value)
 			widget.set_property("visibility", False)
+
+			widget.connect("changed",
+				lambda w,f,o: f(o, w.get_text()),
+				dataMap.__setitem__, opt)
 
 		elif type == psushi.TYPE_NUMBER:
 			widget = gtk.SpinButton()
@@ -132,13 +145,26 @@ def configureButton_clicked_cb(button):
 			widget.set_increments(1, 5)
 			widget.set_value(value)
 
+			widget.connect("value-changed",
+				lambda w,f,o: f(o, w.get_value()),
+				dataMap.__setitem__, opt)
+
 		elif type == psushi.TYPE_BOOL:
 			widget = gtk.CheckButton()
 			widget.set_active(value)
 
+			widget.connect("toggle",
+				lambda w,f,o: f(o, w.get_active()),
+				dataMap.__setitem__, opt)
+
 		elif type == psushi.TYPE_CHOICE:
 			wModel = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 			widget = gtk.ComboBox(wModel)
+
+			widget.connect("changed",
+				lambda w,f,o: f(o, w.get_active() >= 0 \
+				and w.get_model()[w.get_active()][1] or ""),
+				dataMap.__setitem__, opt)
 
 			wRenderer = gtk.CellRendererText()
 			widget.pack_start(wRenderer, True)
@@ -146,14 +172,19 @@ def configureButton_clicked_cb(button):
 
 			for (key, value) in value:
 				wModel.append(row = (key, value))
+
+			widget.set_active(0)
+
 		else:
 			raise TypeError, "Wrong type given: %d" % (type)
+
 
 		table.attach(wLabel, 0, 1, rowCount, rowCount+1)
 		table.attach(widget, 1, 2, rowCount, rowCount+1)
 
 		rowCount += 1
 
+	dialog.map = dataMap
 	dialog.vbox.pack_start(table)
 	dialog.show_all()
 
