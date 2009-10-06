@@ -255,7 +255,7 @@ def getNickColor(nick):
 		return config.get("colors","nick","#000000")
 	"""
 
-	bg_color = gui.widgets.get_widget("output").get_style().bg[gtk.STATE_ACTIVE]
+	bg_color = gui.widgets.get_widget("output").get_style().base[gtk.STATE_NORMAL]
 	print "bg_color = %s" % bg_color
 	color = colors[sum([ord(n) for n in nick]) % len(colors)]
 	print "c_color = %d" % color
