@@ -34,6 +34,20 @@ import config
 import lib.gui_control as gui_control
 from lib.inline_dialog import InlineMessageDialog
 
+"""
+TYPE_STRING: Takes one argument (default string)
+TYPE_PASSWORD: Hidden string. Takes one argument (default string)
+TYPE_NUMBER: Takes one argument (default number)
+TYPE_BOOL: Takes one argument (default bool value)
+TYPE_CHOICE: Takes n key/value tuple.
+"""
+(TYPE_STRING,
+ TYPE_PASSWORD,
+ TYPE_NUMBER,
+ TYPE_BOOL,
+ TYPE_CHOICE
+) = range(5)
+
 class Plugin (object):
 
 	def __init__(self, plugin_name):
