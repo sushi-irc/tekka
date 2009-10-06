@@ -89,7 +89,8 @@ def set_defaults():
 	defaults["tekka"]["divider_length"] = "30"
 	defaults["tekka"]["max_output_lines"] = "500"
 	defaults["tekka"]["profiling"] = "False"
-	defaults["tekka"]["popup_line_limit"] = 40
+	defaults["tekka"]["popup_line_limit"] = "40"
+	defaults["tekka"]["browser"] = None
 
 	defaults["dcc"] = {}
 
