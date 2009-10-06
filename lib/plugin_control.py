@@ -154,7 +154,9 @@ def load(filename):
 	global _plugins
 
 	if _plugins.has_key(filename):
-		generic_error(_("Plugin is already loaded."), _("Plugin %(plugin)s is already loaded.") % {"plugin": filename})
+		generic_error(_("Plugin is already loaded."),
+			_("Plugin %(plugin)s is already loaded.") % {
+				"plugin": filename})
 		return False
 
 	mod_info = _find_module(filename)
@@ -173,7 +175,11 @@ def load(filename):
 		instance = eval ("plugin.%s()" % (classname))
 
 	except BaseException,e:
-		generic_error(_("Plugin could not be loaded."), _("Plugin %(plugin)s could not be loaded.\nThe following error occurred: %(error)s") % {"plugin": filename, "error": e})
+		generic_error(_("Plugin could not be loaded."),
+			_("Plugin %(plugin)s could not be loaded.\n"
+			"The following error occurred: %(error)s") % {
+				"plugin": filename,
+				"error": e})
 		_unload_module(modname)
 		return False
 
@@ -260,6 +266,60 @@ def get_info(filename):
 		_unload_module(modname)
 
 		return info
+
+	return None
+
+def _check_options_tuple(options):
+	if type(options) != tuple:
+		return False
+
+	for x in options:
+		# name, label and type are required
+		if type(x) != tuple or len(x) < 3:
+			return False
+
+	return True
+
+def get_options(filename):
+	""" Return the configurable options and the input
+		types associated with every option.
+		If no options are found, None is returned.
+
+		e.g. ( 	("pass", "some label", sushi.TYPE_PASSWORD, ""),
+				("name", "another label", sushi.TYPE_ENTRY, "default"))
+	"""
+	global _plugins
+
+	def retrieve_options(plugin):
+		try:
+			options = plugin.plugin_options
+		except AttributeError:
+			return None
+
+		if not _check_options_tuple(options):
+			return None
+
+		return options
+
+	if _plugins.has_key(filename):
+		return retrieve_options(_plugins[filename][PLUGIN_MODULE])
+
+	else:
+		mod_info = _find_module(filename)
+
+		if not mod_info:
+			return None
+
+		modname, plugin = _load_module(filename, mod_info)
+
+		if not plugin:
+			return None
+
+		options = retrieve_options(plugin)
+
+		_unload_module(modname)
+
+		return options
 
 	return None
 
