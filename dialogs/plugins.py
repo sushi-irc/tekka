@@ -29,20 +29,25 @@ SUCH DAMAGE.
 import gtk
 import gtk.glade
 import os
+import gobject
 from gobject import TYPE_BOOLEAN
+
+from gettext import gettext as _
 
 from lib import plugin_control as pinterface
 import config
 
+import sushi as psushi
+
 widgets = None
 
 (COL_LOADED,
-COL_AUTOLOAD,
-COL_NAME,
-COL_PATH,
-COL_VERSION,
-COL_DESC,
-COL_AUTHOR) = range(7)
+ COL_AUTOLOAD,
+ COL_NAME,
+ COL_PATH,
+ COL_VERSION,
+ COL_DESC,
+ COL_AUTHOR) = range(7)
 
 def dialog_response_cb(dialog, response_id):
 	if response_id != 0:
@@ -82,6 +87,76 @@ def unloadPlugin_clicked_cb(button):
 	if pinterface.unload(store[path][COL_NAME]):
 		store.set(store.get_iter(path), COL_LOADED, False)
 
+def configureButton_clicked_cb(button):
+	""" build and show configuration dialog for the currently
+		selected plugin
+	"""
+	def dialog_response_cb(dialog, rID):
+		dialog.destroy()
+
+	pluginView = widgets.get_widget("pluginView")
+	path = pluginView.get_cursor()[0]
+
+	try:
+		options = pinterface.get_options(
+			pluginView.get_model()[path][COL_NAME])
+	except IndexError:
+		return
+
+	dialog = gtk.Dialog(
+		title = _("Configure %(name)s" % {
+			"name": pluginView.get_model()[path][COL_NAME]}),
+		buttons = (gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE))
+	dialog.connect("response", dialog_response_cb)
+
+	table = gtk.Table(rows = len(options), columns = 2)
+	rowCount = 0
+
+	for (opt, label, type, value) in options:
+
+		wLabel = gtk.Label(label)
+		widget = None
+
+		if type == psushi.TYPE_STRING:
+			widget = gtk.Entry()
+			widget.set_text(value)
+
+		elif type == psushi.TYPE_PASSWORD:
+			widget = gtk.Entry()
+			widget.set_text(value)
+			widget.set_property("visibility", False)
+
+		elif type == psushi.TYPE_NUMBER:
+			widget = gtk.SpinButton()
+			widget.set_range(-99999,99999)
+			widget.set_increments(1, 5)
+			widget.set_value(value)
+
+		elif type == psushi.TYPE_BOOL:
+			widget = gtk.CheckButton()
+			widget.set_active(value)
+
+		elif type == psushi.TYPE_CHOICE:
+			wModel = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+			widget = gtk.ComboBox(wModel)
+
+			wRenderer = gtk.CellRendererText()
+			widget.pack_start(wRenderer, True)
+			widget.add_attribute(wRenderer, "text", 0)
+
+			for (key, value) in value:
+				wModel.append(row = (key, value))
+		else:
+			raise TypeError, "Wrong type given: %d" % (type)
+
+		table.attach(wLabel, 0, 1, rowCount, rowCount+1)
+		table.attach(widget, 1, 2, rowCount, rowCount+1)
+
+		rowCount += 1
+
+	dialog.vbox.pack_start(table)
+	dialog.show_all()
+
 def cellRendererToggle_toggled_cb(renderer, path, pluginView):
 	store = pluginView.get_model()
 
@@ -102,6 +177,30 @@ def cellRendererToggle_toggled_cb(renderer, path, pluginView):
 	else:
 		# activated
 		config.set("autoload_plugins", str(len(list)+1), name)
+
+def pluginView_button_press_event_cb(pluginView, event):
+	""" activate the configure button if the selected plugin
+		supports configuration
+	"""
+
+	if event.button == 1:
+		# left click
+
+		try:
+			path = pluginView.get_path_at_pos(int(event.x),int(event.y))[0]
+			pluginName = pluginView.get_model()[path][COL_NAME]
+
+		except IndexError:
+			return # no plugin selected
+		except TypeError:
+			return # s.a.a.
+
+		options = pinterface.get_options(pluginName)
+
+		if options:
+			widgets.get_widget("configureButton").set_sensitive(True)
+		else:
+			widgets.get_widget("configureButton").set_sensitive(False)
 
 def loadPluginList():
 	view = widgets.get_widget("pluginView")
@@ -165,14 +264,22 @@ def setup():
 
 	sigdic = {
 		"loadButton_clicked_cb" : loadPlugin_clicked_cb,
-		"unloadButton_clicked_cb" : unloadPlugin_clicked_cb
+		"unloadButton_clicked_cb" : unloadPlugin_clicked_cb,
+		"configureButton_clicked_cb": configureButton_clicked_cb,
+		"pluginView_button_press_event_cb": pluginView_button_press_event_cb
 	}
 
 	widgets.signal_autoconnect(sigdic)
 
 	pluginView = widgets.get_widget("pluginView")
-	model = gtk.ListStore(TYPE_BOOLEAN, TYPE_BOOLEAN, str, str, str, str, str)
-		# chkbutton | chkbutton | name | path | version | description | author
+	model = gtk.ListStore(
+		TYPE_BOOLEAN, # chkbutton
+		TYPE_BOOLEAN, # chkbutton
+		str, # name
+		str, # path
+		str, # version
+		str, # description
+		str) # author
 	pluginView.set_model(model)
 
 	# isLoaded column
