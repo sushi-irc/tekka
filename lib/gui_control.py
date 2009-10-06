@@ -386,7 +386,7 @@ def print_last_log(server, channel, lines=0, tab = None):
 def write_to_general_output(msgtype, timestring, server, channel, message):
 	goBuffer = widgets.get_widget("generalOutput").get_buffer()
 
-	filter = config.get_list("general_output", "filter", default=[])
+	filter = config.get_list("general_output", "filter", [])
 	print "filter: %s" % (filter)
 	for rule in filter:
 		try:

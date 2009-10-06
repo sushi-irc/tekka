@@ -98,7 +98,7 @@ def _find_module(filename):
 	mod_info = None
 	try:
 		mod_info = imp.find_module(
-			name, config.get_list("tekka","plugin_dirs"))
+			name, config.get_list("tekka","plugin_dirs",[]))
 
 	except ImportError, e:
 		generic_error(_("Plugin could not be loaded."), _("Plugin %(plugin)s could not be loaded.\nThe following error occurred: %(error)s") % {"plugin": filename, "error": e})

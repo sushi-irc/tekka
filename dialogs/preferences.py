@@ -127,7 +127,7 @@ def fillChatting():
 		widgets.get_widget(key).set_text(val)
 
 	i = 0
-	for highlight in config.get_list("chatting", "highlight_words"):
+	for highlight in config.get_list("chatting", "highlight_words", []):
 		highlightList.get_widget_matrix()[i][0].set_text(highlight)
 		highlightList.add_row()
 		i+=1
@@ -138,7 +138,7 @@ def fillChatting():
 	widgets.get_widget("last_log_lines").set_value(float(val))
 
 def fillNickColors():
-	colors = config.get_list("colors", "nick_colors")
+	colors = config.get_list("colors", "nick_colors", [])
 
 	if not colors:
 		return
@@ -158,7 +158,7 @@ def fillNickColors():
 	nickColorsList.remove_row(i)
 
 def fillGeneralOutputFilters():
-	filter = config.get_list("general_output", "filter")
+	filter = config.get_list("general_output", "filter", [])
 	pattern = re.compile("^not \((.+)\)")
 
 	if not filter:

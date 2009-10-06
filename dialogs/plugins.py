@@ -108,7 +108,7 @@ def loadPluginList():
 
 	view.get_model().clear()
 
-	paths = config.get_list("tekka", "plugin_dirs")
+	paths = config.get_list("tekka", "plugin_dirs", [])
 
 	if not paths:
 		print "no plugin paths!"

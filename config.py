@@ -227,7 +227,7 @@ def append_list(section, option, value):
 	"""
 	add value to the list identified by option
 	"""
-	v = get_list(section, option)
+	v = get_list(section, option, [])
 	v.append(value)
 	return set_list(section, option, v)
 
@@ -315,7 +315,7 @@ def get(section, option="", default=None):
 	return default
 
 @types (section=basestring, option=basestring)
-def get_list(section, option, default=[]):
+def get_list(section, option, default):
 	"""
 		Splits the option in the section for ","
 		and returns a list if the splitting was

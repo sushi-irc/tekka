@@ -242,7 +242,7 @@ def getNickColor(nick):
 		return
 
 	"""
-	colors = config.get_list("colors", "nick_colors")
+	colors = config.get_list("colors", "nick_colors", [])
 	if not colors:
 		return config.get("colors","nick","#000000")
 	return colors[sum([ord(n) for n in nick]) % len(colors)]
@@ -273,7 +273,7 @@ def getTextColor(nick):
 		return
 
 	"""
-	colors = config.get_list("colors", "nick_colors")
+	colors = config.get_list("colors", "nick_colors", [])
 	if not colors or not config.get_bool("tekka","color_nick_text"):
 		return config.get("colors","text_message","#000000")
 	return colors[sum([ord(n) for n in nick]) % len(colors)]
@@ -294,7 +294,7 @@ def getTextColor(nick):
 	return r
 
 def isHighlighted (server_tab, text):
-	highlightwords = config.get_list("chatting", "highlight_words")
+	highlightwords = config.get_list("chatting", "highlight_words", [])
 	highlightwords.append(server_tab.nick)
 
 	search_text = text.lower()
@@ -920,7 +920,7 @@ def userNick(time, server, from_str, newNick):
 				"channel_%s_%s" % (
 					server.lower(),
 					tab.name.lower()),
-				"hide")
+				"hide", [])
 		print "%s@%s: %s" % (server, tab, doPrint)
 
 		if tab.is_channel():
@@ -1077,7 +1077,7 @@ def userQuit(time, server, from_str, reason):
 		# print in all channels where nick joined a message
 		for channelTab in channels:
 			doPrint = not "quit" in config.get_list("channel_%s_%s" % (
-				server.lower(), channelTab.name.lower()), "hide")
+				server.lower(), channelTab.name.lower()), "hide", [])
 
 			if channelTab.is_query():
 				# on query with `nick` only print quitmessage
@@ -1176,7 +1176,7 @@ def userJoin(timestamp, server, from_str, channel):
 			gui.set_user_count(len(tab.nickList), tab.nickList.get_operator_count())
 
 		doPrint = not "join" in config.get_list("channel_%s_%s" % (
-			server.lower(), channel.lower()), "hide")
+			server.lower(), channel.lower()), "hide", [])
 
 	message = message % {
 		"nick": nickString,
@@ -1288,7 +1288,7 @@ def userPart(timestamp, server, from_str, channel, reason):
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
-		if not "part" in config.get_list("channel_%s_%s" % (server.lower(), channel.lower()), "hide"):
+		if not "part" in config.get_list("channel_%s_%s" % (server.lower(), channel.lower()), "hide", []):
 			gui.channelPrint(timestamp, server, channel,
 				message % {
 					"nick": nickString,
