@@ -165,7 +165,6 @@ def add_servers():
 		tab.connected = True
 		add_channels(tab)
 
-	# TODO: replace that with get_next_tab or similar
 	try:
 		toSwitch = gui.tabs.get_all_tabs()[1]
 	except IndexError:
@@ -206,11 +205,12 @@ def add_channels(server_tab):
 		tab.joined = True
 		tab.connected = True
 
-		# TODO: print topic, if no topic is awaited through "join" signal
-
 		if add:
 			gui.tabs.add_tab(server_tab, tab, update_shortcuts = False)
 			gui.print_last_log(server_tab.name, channel)
+
+		topic = sushi.channel_topic(server_tab.name, channel)
+		channelTopic(mtime.time(), server_tab.name, "", channel, topic)
 
 	gui.updateServerTreeShortcuts()
 
