@@ -518,6 +518,12 @@ def serverTree_button_press_event_cb(serverTree, event):
 
 	return False
 
+def serverTree_row_activated_cb(serverTree, path, column):
+	""" open the history dialog for the pointed tab """
+	model = serverTree.get_model()
+	tab = model[path][0]
+
+	dialog_control.showHistoryDialog(tab)
 
 def nickList_row_activated_cb(nickList, path, column):
 	"""
@@ -1226,6 +1232,8 @@ def setupGTK():
 			lambda w: w.expand_all(),
 		"serverTree_button_press_event_cb" :
 			serverTree_button_press_event_cb,
+		"serverTree_row_activated_cb":
+			serverTree_row_activated_cb,
 
 		# nick list signals
 		"nickList_row_activated_cb":
