@@ -241,27 +241,13 @@ def getNickColor(nick):
 	if not config.get_bool("tekka","color_text"):
 		return
 
-	"""
-	colors = config.get_list("colors", "nick_colors", [])
-	if not colors:
-		return config.get("colors","nick","#000000")
-	return colors[sum([ord(n) for n in nick]) % len(colors)]
-	"""
-	print "getNickColor(%s)" % nick
 	colors = get_contrast_colors()
 
-	"""
-	if not colors:
-		return config.get("colors","nick","#000000")
-	"""
-
-	bg_color = gui.widgets.get_widget("output").get_style().base[gtk.STATE_NORMAL]
-	print "bg_color = %s" % bg_color
+	bg_color = gui.widgets.get_widget("output").get_style().\
+		base[gtk.STATE_NORMAL]
 	color = colors[sum([ord(n) for n in nick]) % len(colors)]
-	print "c_color = %d" % color
 
 	r = contrast.contrast_render_foreground_color(bg_color, color)
-	print "r = %s" % r
 	return r
 
 def getTextColor(nick):
@@ -272,25 +258,17 @@ def getTextColor(nick):
 	if not config.get_bool("tekka","color_text"):
 		return
 
-	"""
-	colors = config.get_list("colors", "nick_colors", [])
-	if not colors or not config.get_bool("tekka","color_nick_text"):
-		return config.get("colors","text_message","#000000")
-	return colors[sum([ord(n) for n in nick]) % len(colors)]
-	"""
-
 	colors = get_contrast_colors()
 
 	if not colors or not config.get_bool("tekka","color_nick_text"):
 		return config.get("colors","text_message","#000000")
 
-	bg_color = gui.widgets.get_widget("output").get_style().bg[gtk.STATE_NORMAL]
-	print "bg_color = %s" % bg_color
+	bg_color = gui.widgets.get_widget("output").get_style().\
+		base[gtk.STATE_NORMAL]
+
 	color = colors[sum([ord(n) for n in nick]) % len(colors)]
-	print "c_color = %d" % color
 
 	r = contrast.contrast_render_foreground_color(bg_color, color)
-	print "r = %s" % r
 	return r
 
 def isHighlighted (server_tab, text):
