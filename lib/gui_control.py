@@ -133,8 +133,6 @@ def custom_handler(glade, function_name, widget_name, *x):
 
 	elif widget_name in ("generalOutput", "output"):
 		go = OutputTextView()
-		# FIXME: size of GO is to low, initially
-
 		return go
 
 	elif widget_name == "inputBar":

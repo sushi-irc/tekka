@@ -90,10 +90,6 @@ from menus import *
 
 widgets = None
 
-# TODO:  if a tab is closed the widgets remain the same.
-# TODO:: it would be nice if the tab would be switched
-# TODO:: to an active on (for error prevention too).
-
 """
 Tekka intern signals
 """
@@ -701,9 +697,6 @@ def askToRemoveTab(tab):
 
 		if response_id == gtk.RESPONSE_YES:
 
-			# FIXME:  if you close a tab no part message will be shown up
-			# FIXME:: because the tab which contains the output buffer is
-			# FIXME:: removed before the signal execution.
 			if tab.is_channel():
 				com.sushi.part(tab.server.name, tab.name,
 					config.get("chatting", "part_message", ""))

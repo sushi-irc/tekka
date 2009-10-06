@@ -241,11 +241,8 @@ def unset(section, option):
 		return False
 	try:
 		config_parser.remove_option(section, option)
-	except BaseException,e:
-		# TODO: use more specified exception here
-		# TODO:: instead of catching everything
-		print "Exception occured while unsetting ('%s','%s'): %s"\
-			% (section,option,e)
+	except ConfigParser.NoSectionError,e:
+		print "Unsetting ('%s','%s') failed: %s" % (section,option,e)
 		return False
 	return True
 
