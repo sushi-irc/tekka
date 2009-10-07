@@ -121,12 +121,16 @@ def configureButton_clicked_cb(button):
 	dialog.connect("response", dialog_response_cb)
 
 	table = gtk.Table(rows = len(options), columns = 2)
+	table.set_property("column-spacing", 12)
+
 	dataMap = {} # config_key : value
 	rowCount = 0
 
 	for (opt, label, type, value) in options:
 
-		wLabel = gtk.Label(label)
+		wLabel = gtk.Label(label+": ")
+		wLabel.set_property("xalign", 0)
+
 		widget = None
 
 		cValue = config.get(cSection, opt) or value
@@ -215,7 +219,14 @@ def configureButton_clicked_cb(button):
 
 	dialog.plugin_name = plugin_name
 	dialog.map = dataMap
-	dialog.vbox.pack_start(table)
+
+	# put another vbox arround it because
+	# d.vbox.set_property("border-width",..) does not work...
+	vbox = gtk.VBox()
+	vbox.set_property("border-width", 12)
+	vbox.pack_start(table)
+	dialog.vbox.pack_start(vbox)
+
 	dialog.show_all()
 
 def cellRendererToggle_toggled_cb(renderer, path, pluginView):
