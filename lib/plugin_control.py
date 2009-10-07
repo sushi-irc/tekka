@@ -66,6 +66,9 @@ def strip_suffix(filename):
 	""" foo.py -> foo """
 	return os.path.split(filename)[-1].split(".")[0]
 
+def get_plugin_config_section(filename):
+	return "plugin_"+strip_suffix(filename)
+
 def is_loaded(filename):
 	""" returns True if the plugin is loaded, otherwise False """
 	return _plugins.has_key(filename)
