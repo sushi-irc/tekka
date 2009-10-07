@@ -91,9 +91,16 @@ def configureButton_clicked_cb(button):
 	""" build and show configuration dialog for the currently
 		selected plugin
 	"""
+
 	def dialog_response_cb(dialog, rID):
+		""" apply the values and close the configuration dialog """
+		cSection = pinterface.get_plugin_config_section(plugin_name)
+		config.create_section(cSection)
+
 		for (key, value) in dialog.map.items():
 			print "Result: %s -> %s" % (key, str(value))
+			config.set(cSection, key, str(value))
+
 		dialog.destroy()
 
 	pluginView = widgets.get_widget("pluginView")
@@ -105,34 +112,39 @@ def configureButton_clicked_cb(button):
 	except IndexError:
 		return
 
+	plugin_name = pluginView.get_model()[path][COL_NAME]
+	cSection = pinterface.get_plugin_config_section(plugin_name)
+
 	dialog = gtk.Dialog(
-		title = _("Configure %(name)s" % {
-			"name": pluginView.get_model()[path][COL_NAME]}),
+		title = _("Configure %(name)s" % {"name": plugin_name}),
 		buttons = (gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE))
 	dialog.connect("response", dialog_response_cb)
 
 	table = gtk.Table(rows = len(options), columns = 2)
+	dataMap = {} # config_key : value
 	rowCount = 0
-	dataMap = {}
 
 	for (opt, label, type, value) in options:
 
 		wLabel = gtk.Label(label)
 		widget = None
 
-		dataMap[opt] = value
+		cValue = config.get(cSection, opt) or value
+		dataMap[opt] = cValue or value
 
 		if type == psushi.TYPE_STRING:
+			# Simple text entry
 			widget = gtk.Entry()
-			widget.set_text(value)
+			widget.set_text(cValue)
 
 			widget.connect("changed",
 				lambda w,f,o: f(o,w.get_text()),
 				dataMap.__setitem__, opt)
 
 		elif type == psushi.TYPE_PASSWORD:
+			# Hidden char. entry
 			widget = gtk.Entry()
-			widget.set_text(value)
+			widget.set_text(cValue)
 			widget.set_property("visibility", False)
 
 			widget.connect("changed",
@@ -140,24 +152,30 @@ def configureButton_clicked_cb(button):
 				dataMap.__setitem__, opt)
 
 		elif type == psushi.TYPE_NUMBER:
+			# Number entry field
 			widget = gtk.SpinButton()
 			widget.set_range(-99999,99999)
 			widget.set_increments(1, 5)
-			widget.set_value(value)
+			widget.set_value(int(cValue))
 
 			widget.connect("value-changed",
 				lambda w,f,o: f(o, w.get_value()),
 				dataMap.__setitem__, opt)
 
 		elif type == psushi.TYPE_BOOL:
+			# Check button for boolean values
 			widget = gtk.CheckButton()
-			widget.set_active(value)
+			if type(value) == bool:
+				widget.set_active(cValue)
+			else:
+				widgets.set_active(cValue.lower() != "false")
 
 			widget.connect("toggle",
 				lambda w,f,o: f(o, w.get_active()),
 				dataMap.__setitem__, opt)
 
 		elif type == psushi.TYPE_CHOICE:
+			# Multiple values. Stored as [0] = key and [1] = value
 			wModel = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 			widget = gtk.ComboBox(wModel)
 
@@ -170,10 +188,21 @@ def configureButton_clicked_cb(button):
 			widget.pack_start(wRenderer, True)
 			widget.add_attribute(wRenderer, "text", 0)
 
-			for (key, value) in value:
-				wModel.append(row = (key, value))
+			for (key, val) in value:
+				wModel.append(row = (key, val))
 
-			widget.set_active(0)
+			# this is tricky, if there's a saved value,
+			# find the matching value (second field!)
+			# and set the index to that position.
+			if cValue and cValue != value:
+				i = 0
+				for row in wModel:
+					if row[1] == cValue:
+						break
+					i+=1
+				widget.set_active(i)
+			else:
+				widget.set_active(0)
 
 		else:
 			raise TypeError, "Wrong type given: %d" % (type)
@@ -184,6 +213,7 @@ def configureButton_clicked_cb(button):
 
 		rowCount += 1
 
+	dialog.plugin_name = plugin_name
 	dialog.map = dataMap
 	dialog.vbox.pack_start(table)
 	dialog.show_all()
