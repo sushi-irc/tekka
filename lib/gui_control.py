@@ -41,6 +41,7 @@ from gobject import idle_add
 from dbus import String, UInt64
 
 import lib.contrast
+import helper.color
 
 # profiling imports
 import os, sys
@@ -361,26 +362,8 @@ def escape_color(msg):
 		escape_color.pattern
 		escape_color.color_table
 	except AttributeError:
-		escape_color.pattern = re.compile(
-			chr(3)+"([0-9]{1,2})(,[0-9]{1,2}){0,1}.*")
-		escape_color.color_table = {
-			 0: lib.contrast.CONTRAST_COLOR_WHITE,
-			 1: lib.contrast.CONTRAST_COLOR_BLACK,
-			 2: lib.contrast.CONTRAST_COLOR_BLUE,
-			 3: lib.contrast.CONTRAST_COLOR_DARK_GREEN,
-			 4: lib.contrast.CONTRAST_COLOR_DARK_RED,
-			 5: lib.contrast.CONTRAST_COLOR_LIGHT_BROWN,
-			 6: lib.contrast.CONTRAST_COLOR_PURPLE,
-			 7: lib.contrast.CONTRAST_COLOR_ORANGE,
-			 8: lib.contrast.CONTRAST_COLOR_YELLOW,
-			 9: lib.contrast.CONTRAST_COLOR_LIGHT_GREEN,
-			10: lib.contrast.CONTRAST_COLOR_CYAN,
-			11: lib.contrast.CONTRAST_COLOR_AQUA,
-			12: lib.contrast.CONTRAST_COLOR_LIGHT_BLUE,
-			13: lib.contrast.CONTRAST_COLOR_MAGENTA,
-			14: lib.contrast.CONTRAST_COLOR_GREY,
-			15: lib.contrast.CONTRAST_COLOR_LIGHT_GREY
-		}
+		escape_color.pattern = re.compile(chr(3)+helper.color.COLOR_PATTERN)
+		escape_color.color_table = helper.color.COLOR_TABLE
 
 	while True:
 		try:

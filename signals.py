@@ -47,6 +47,9 @@ from typecheck import types
 
 signals = {}
 
+# TODO:  would be nice to have all signal callbacks
+# TODO:: pre- or suffixed with "cb"
+
 def get_contrast_colors ():
 	return (
 		contrast.CONTRAST_COLOR_AQUA,
