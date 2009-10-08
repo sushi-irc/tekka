@@ -351,7 +351,7 @@ def escape_color(msg):
 			bg_color, ccolor)
 
 	last_i = -1
-	count = 0
+	count = 0 # openend <font>
 
 	try:
 		escape_color.pattern
@@ -394,6 +394,7 @@ def escape_color(msg):
 			if count != 0:
 				# close the previous color
 				tag = "</font>" + tag
+				count -= 1
 
 			try:
 				fg = escape_color.color_table[int(groups[0])]
@@ -417,6 +418,12 @@ def escape_color(msg):
 			msg = msg[:i] + tag + msg[i+skip_len:]
 
 			count += 1
+
+		else:
+			if count > 0:
+				# single ^C, if there's an open tag, close it
+				msg = msg[:i] + "</font>" + msg[i+1:]
+				count -= 1
 
 		last_i = i
 
