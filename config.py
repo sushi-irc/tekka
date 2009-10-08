@@ -319,6 +319,9 @@ def get_list(section, option, default):
 		and returns a list if the splitting was
 		successful. Else the method will return
 		"default".
+
+		Notice: If there's an empty string set,
+		this function will return default.
 	"""
 	res = get(section, option, default)
 
@@ -327,7 +330,7 @@ def get_list(section, option, default):
 
 	l = unescape_split(",", res)
 
-	if not l:
+	if not l or (len(l) == 1 and l[0] == ""):
 		return default
 	return list(l)
 
