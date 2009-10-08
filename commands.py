@@ -26,6 +26,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+import re
 import time
 from dbus import UInt64
 
@@ -37,6 +38,9 @@ from gettext import gettext as _
 import signals
 import config
 import com
+
+import helper.color
+import helper.escape
 
 import lib.gui_control as gui
 from lib.inline_dialog import InlineMessageDialog
@@ -488,20 +492,10 @@ def parse_color(s):
 	try:
 		parse_color.color_pattern
 	except AttributeError:
-		parse.color.color_pattern = re.compile(helper.color.COLOR_PATTERN)
+		parse_color.color_pattern = re.compile(helper.color.COLOR_PATTERN)
 
-	s_split = s.split("%C")
-	s_new = s_split[0]
-
-	for cmd in s_split[1:]:
-		match = parse_color.color_pattern.match(cmd)
-
-		if match:
-			s_new += chr(3)
-		else:
-			s_new += "%C"
-		s_new += cmd
-	return s_new
+	s_split = helper.escape.unescape_split("%C", s, escape_char="%")
+	return chr(3).join(s_split)
 
 @types(text=basestring)
 def parseInput(text):
@@ -514,7 +508,8 @@ def parseInput(text):
 	if not text:
 		return
 
-	#text = parse_color(text)
+	text = parse_color(text)
+	print "COLOR_PARSED:'%s'" % (text)
 
 	serverTab,channelTab = gui.tabs.get_current_tabs()
 
