@@ -29,7 +29,7 @@ SUCH DAMAGE.
 test_string = "abc,de\\,,f\\,g,\\\\,h,i"
 # result: ["abc","de,","f,g","\\\\","h","i"]
 
-def get_escape_char_count(part, char):
+def _get_escape_char_count(part, char):
 	c = 0
 	rev = range(len(part))
 	rev.reverse()
@@ -40,16 +40,17 @@ def get_escape_char_count(part, char):
 			break
 	return c
 
-def unescape_splitted(separator, splitted, escape_char):
+def _unescape_splitted(separator, splitted, escape_char):
 	escaped = []
 	i = 0
 
 	for split in splitted:
 		if not split:
+			escaped.append(split)
 			continue
 
 		if split[-1] == escape_char:
-			count = get_escape_char_count(split, escape_char)
+			count = _get_escape_char_count(split, escape_char)
 
 			if count % 2 != 0:
 				# the , was escaped
@@ -57,7 +58,7 @@ def unescape_splitted(separator, splitted, escape_char):
 				# merge this and the next split together.
 				# add the escaped separator and remove the escape
 				new_split = [split[:-1] + separator + splitted[i+1]]
-				return escaped + unescape_splitted(
+				return escaped + _unescape_splitted(
 					separator,
 					new_split + splitted[i+2:],
 					escape_char)
@@ -71,7 +72,7 @@ def unescape_splitted(separator, splitted, escape_char):
 
 def unescape_split(separator, tosplit, escape_char="\\"):
 	splitted = tosplit.split(separator)
-	escaped = unescape_splitted(separator, splitted, escape_char)
+	escaped = _unescape_splitted(separator, splitted, escape_char)
 	return escaped
 
 def escape_join (separator, list):
