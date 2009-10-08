@@ -343,7 +343,11 @@ def updateServerTreeShortcuts():
 		c+=1
 
 def escape_color(msg):
-	""" ... """
+	""" Parse the mIRC color format ^Cn[,m] and convert it
+		to the intern handled <font></font> tag.
+		Convert the numbers n and m into contrast color codes
+		and use them as foreground/background.
+	"""
 	def get_gdk_color(ccolor):
 		bg_color = widgets.get_widget("output").get_style().\
 			base[gtk.STATE_NORMAL]
