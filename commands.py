@@ -483,15 +483,38 @@ _commands = {
 
 _builtins = _commands.keys()
 
+def parse_color(s):
+	""" split for %C and parse the numbers following """
+	try:
+		parse_color.color_pattern
+	except AttributeError:
+		parse.color.color_pattern = re.compile(helper.color.COLOR_PATTERN)
+
+	s_split = s.split("%C")
+	s_new = s_split[0]
+
+	for cmd in s_split[1:]:
+		match = parse_color.color_pattern.match(cmd)
+
+		if match:
+			s_new += chr(3)
+		else:
+			s_new += "%C"
+		s_new += cmd
+	return s_new
+
 @types(text=basestring)
 def parseInput(text):
 	"""
+	parse color codes (%Cn[,m]),
 	split text for blank, strip the command
 	and search for it in _commands-dict.
 	Call the underlying function if found.
 	"""
 	if not text:
 		return
+
+	#text = parse_color(text)
 
 	serverTab,channelTab = gui.tabs.get_current_tabs()
 
