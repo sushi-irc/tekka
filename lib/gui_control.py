@@ -30,6 +30,7 @@ The "core": the gui wrapper class.
 """
 
 # global modules
+import re
 import gtk
 import gtk.glade
 import time
@@ -38,6 +39,8 @@ import gettext
 import gobject
 from gobject import idle_add
 from dbus import String, UInt64
+
+import lib.contrast
 
 # profiling imports
 import os, sys
@@ -339,15 +342,103 @@ def updateServerTreeShortcuts():
 
 		c+=1
 
+def escape_color(msg):
+	""" ... """
+	def get_gdk_color(ccolor):
+		bg_color = widgets.get_widget("output").get_style().\
+			base[gtk.STATE_NORMAL]
+		return lib.contrast.contrast_render_foreground_color(
+			bg_color, ccolor)
+
+	last_i = -1
+	count = 0
+
+	try:
+		escape_color.pattern
+		escape_color.color_table
+	except AttributeError:
+		escape_color.pattern = re.compile(
+			chr(3)+"([0-9]{1,2})(,[0-9]{1,2}){0,1}.*")
+		escape_color.color_table = {
+			 0: lib.contrast.CONTRAST_COLOR_WHITE,
+			 1: lib.contrast.CONTRAST_COLOR_BLACK,
+			 2: lib.contrast.CONTRAST_COLOR_BLUE,
+			 3: lib.contrast.CONTRAST_COLOR_DARK_GREEN,
+			 4: lib.contrast.CONTRAST_COLOR_DARK_RED,
+			 5: lib.contrast.CONTRAST_COLOR_LIGHT_BROWN,
+			 6: lib.contrast.CONTRAST_COLOR_PURPLE,
+			 7: lib.contrast.CONTRAST_COLOR_ORANGE,
+			 8: lib.contrast.CONTRAST_COLOR_YELLOW,
+			 9: lib.contrast.CONTRAST_COLOR_LIGHT_GREEN,
+			10: lib.contrast.CONTRAST_COLOR_CYAN,
+			11: lib.contrast.CONTRAST_COLOR_AQUA,
+			12: lib.contrast.CONTRAST_COLOR_LIGHT_BLUE,
+			13: lib.contrast.CONTRAST_COLOR_MAGENTA,
+			14: lib.contrast.CONTRAST_COLOR_GREY,
+			15: lib.contrast.CONTRAST_COLOR_LIGHT_GREY
+		}
+
+	while True:
+		try:
+			i = msg.index(chr(3), last_i+1)
+		except ValueError:
+			break
+
+		match = escape_color.pattern.match(msg[i:i+6])
+		print "%s = COLORSEQUENCE(%s)" % (match, msg[i:i+6])
+
+		if match:
+			groups = match.groups()
+			tag = "<font"
+
+			if count != 0:
+				# close the previous color
+				tag = "</font>" + tag
+
+			try:
+				fg = escape_color.color_table[int(groups[0])]
+				fg = get_gdk_color(fg)
+			except (KeyError, TypeError):
+				fg = None
+			else:
+				tag += " foreground='%s'" % fg
+
+			try:
+				bg = escape_color.color_table[int(groups[1][1:])]
+				bg = get_gdk_color(bg)
+			except (KeyError, TypeError):
+				bg = None
+			else:
+				tag += " background='%s'" % bg
+
+			tag += ">"
+			skip_len = 1 + (groups[0] and len(groups[0]) or 0) \
+				+ (groups[1] and len(groups[1]) or 0)
+			msg = msg[:i] + tag + msg[i+skip_len:]
+
+			count += 1
+
+		last_i = i
+
+	if count != 0:
+		# make sure the <font> is closed.
+		msg = msg + "</font>"
+
+	return msg
+
 def escape(msg):
 	"""	Converts special characters in msg and returns
 		the new string.
 	"""
+
 	msg = msg.replace("&", "&amp;")
 	msg = msg.replace("<", "&lt;")
 	msg = msg.replace(">", "&gt;")
 	msg = msg.replace(chr(2), "<sb/>") # bold-char
 	msg = msg.replace(chr(31), "<su/>") # underline-char
+
+	msg = escape_color(msg)
+
 	msg = msg.replace(chr(27), "") # TODO: begin of color
 	msg = msg.replace(chr(1), "")
 	return msg
