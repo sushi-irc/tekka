@@ -40,7 +40,7 @@ def run():
 
 
 def setup():
-	path = config.get("gladefiles","dialogs") + "colorTable.glade"
+	path = config.get("gladefiles","dialogs") + "colorTable.ui"
 
 	builder.add_from_file(path)
 

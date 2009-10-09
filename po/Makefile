@@ -5,6 +5,8 @@ PO        = $(LANGUAGES:%=%.po)
 PY        = $(wildcard ../*.py) $(wildcard ../*/*.py)
 GLADE     = $(wildcard ../glade/*.glade) $(wildcard ../glade/*/*.glade)
 GLADEH    = $(GLADE:.glade=.glade.h)
+UI        = $(wildcard ../glade/*.ui) $(wildcard ../glade/*/*.ui)
+UIH       = $(UI:.ui=.ui.h)
 
 all: tekka.pot
 
@@ -14,14 +16,14 @@ install: $(PO:%.po=%.mo)
 	done
 
 clean:
-	$(RM) -f $(GLADEH)
+	$(RM) -f $(GLADEH) $(UIH)
 	$(RM) -f *.mo
 
-$(GLADEH): %.h: %
+$(GLADEH) $(UIH): %.h: %
 	$(QUIET_GEN) intltool-extract --type=gettext/glade $+; \
 	$(SED) -i '/^char \*s = N_("gtk-.*");$$/d' $@
 
-tekka.pot: $(PY) $(GLADEH)
+tekka.pot: $(PY) $(GLADEH) $(UIH)
 	$(QUIET_GEN) xgettext --keyword=_ --keyword=N_ --output=$@.tmp $+; \
 		if $(MSGCMP) --use-untranslated $@ $@.tmp > /dev/null 2>&1; \
 		then \

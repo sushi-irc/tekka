@@ -20,6 +20,8 @@ install: all
 	$(INSTALL) -m 644 dialogs/*.py '$(DESTDIR)$(sharedir)/sushi/tekka/dialogs'
 	$(INSTALL) -m 644 glade/*.glade '$(DESTDIR)$(sharedir)/sushi/tekka/glade'
 	$(INSTALL) -m 644 glade/dialogs/*.glade '$(DESTDIR)$(sharedir)/sushi/tekka/glade/dialogs'
+	#$(INSTALL) -m 644 glade/*.ui '$(DESTDIR)$(sharedir)/sushi/tekka/glade'
+	$(INSTALL) -m 644 glade/dialogs/*.ui '$(DESTDIR)$(sharedir)/sushi/tekka/glade/dialogs'
 	# FIXME
 	$(SED) 's#@SUSHI_VERSION@#$(SUSHI_VERSION)#' 'glade/dialogs/about.glade' > '$(DESTDIR)$(sharedir)/sushi/tekka/glade/dialogs/about.glade'
 	$(INSTALL) -m 644 graphics/*.svg '$(DESTDIR)$(sharedir)/sushi/tekka/graphics'
