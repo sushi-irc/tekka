@@ -6,251 +6,460 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tekka 1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-05-14 18:28+0200\n"
-"PO-Revision-Date: 2009-05-05 18:54+0000\n"
+"POT-Creation-Date: 2009-10-09 03:52+0200\n"
+"PO-Revision-Date: 2009-07-13 13:50+0000\n"
 "Last-Translator: Alexandre Sapata Carbonell <alexandrenescau@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2009-05-15 16:12+0000\n"
+"X-Launchpad-Export-Date: 2009-10-09 11:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: ../commands.py:48
-#, python-format
-msgid "Warning: You are not connected to server %(server)s."
+#: ../commands.py:56 ../commands.py:64
+msgid "Warning:"
 msgstr ""
 
-#: ../commands.py:66
+#: ../commands.py:57
+#, python-format
+msgid "You are not connected to server %(server)s."
+msgstr ""
+
+#: ../commands.py:65
 #, python-format
 msgid ""
-"Warning: The channel %(channel)s is not joined, everything you write will "
-"disappear."
+"The channel %(channel)s is not joined. Everything you write will not be send."
 msgstr ""
 
-#: ../commands.py:554
+#: ../commands.py:568
 #, python-format
 msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
 msgstr ""
 
-#: ../gui_control.py:746
+#: ../com.py:63 ../com.py:72 ../com.py:142 ../com.py:154 ../com.py:182
+#: ../main.py:220 ../main.py:286
+msgid "tekka could not connect to maki."
+msgstr ""
+
+#: ../com.py:64 ../com.py:73 ../com.py:143 ../com.py:155 ../com.py:183
+#, python-format
+msgid ""
+"Please check whether maki is running.\n"
+"The following error occurred: %(error)s"
+msgstr ""
+
+#: ../com.py:200
+msgid "tekka requires a newer maki version."
+msgstr ""
+
+#: ../com.py:201
+#, python-format
+msgid "Please update maki to at least version %(version)s."
+msgstr ""
+
+#: ../main.py:221 ../main.py:287
+msgid "Please check whether maki is running."
+msgstr ""
+
+#: ../main.py:297
+msgid "tekka could not determine server."
+msgstr ""
+
+#: ../main.py:298
+msgid ""
+"There is no active server. Click on a server tab or a child of a server tab "
+"to activate the server."
+msgstr ""
+
+#: ../main.py:515
+msgid "Reset markup"
+msgstr ""
+
+#: ../main.py:722
+#, python-format
+msgid "Do you really want to close channel “%(name)s”?"
+msgstr ""
+
+#: ../main.py:724
+#, python-format
+msgid "Do you really want to close query “%(name)s”?"
+msgstr ""
+
+#: ../main.py:726
+#, python-format
+msgid "Do you really want to close server “%(name)s”?"
+msgstr ""
+
+#: ../main.py:822
+msgid "Nickname: "
+msgstr ""
+
+#: ../main.py:825
+msgid "User: "
+msgstr ""
+
+#: ../main.py:826
+msgid "Topic: "
+msgstr ""
+
+#: ../main.py:828 ../main.py:832
+msgid "Last sentence: "
+msgstr ""
+
+#: ../main.py:1333
+msgid "Error occured"
+msgstr ""
+
+#: ../signals.py:427
+#, python-format
+msgid "• Topic for %(channel)s: %(topic)s"
+msgstr ""
+
+#: ../signals.py:434
+#, python-format
+msgid "• You changed the topic to %(topic)s."
+msgstr ""
+
+#: ../signals.py:436
+#, python-format
+msgid "• %(nick)s changed the topic to %(topic)s."
+msgstr ""
+
+#: ../signals.py:510
+#, python-format
+msgid "• %(nick)s is away (%(message)s)."
+msgstr ""
+
+#: ../signals.py:611
+#, python-format
+msgid "• Modes for %(target)s: %(mode)s"
+msgstr ""
+
+#: ../signals.py:681
+#, python-format
+msgid "CTCP from %(nick)s to Channel:"
+msgstr ""
+
+#: ../signals.py:711
+#, python-format
+msgid "CTCP request from you to %(target)s: %(message)s"
+msgstr ""
+
+#: ../signals.py:886
+#, python-format
+msgid "• You are now known as %(newnick)s."
+msgstr "• Você é agora conhecido como %(newnick)s."
+
+#: ../signals.py:891
+#, python-format
+msgid "• %(nick)s is now known as %(newnick)s."
+msgstr "• %(nick)s é agora conhecido como %(newnick)s."
+
+#: ../signals.py:958
+#, python-format
+msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
+msgstr ""
+
+#: ../signals.py:977
+#, python-format
+msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
+msgstr ""
+
+#: ../signals.py:1017
+#, python-format
+msgid "« You have quit (%(reason)s)."
+msgstr "« Você saiu (%(reason)s)."
+
+#: ../signals.py:1019
+msgid "« You have quit."
+msgstr "« Você saiu."
+
+#: ../signals.py:1035
+#, python-format
+msgid "« %(nick)s has quit (%(reason)s)."
+msgstr "« %(nick)s saiu (%(reason)s)."
+
+#: ../signals.py:1037
+#, python-format
+msgid "« %(nick)s has quit."
+msgstr "« %(nick)s saiu."
+
+#: ../signals.py:1133
+#, python-format
+msgid "» You have joined %(channel)s."
+msgstr ""
+
+#: ../signals.py:1143
+#, python-format
+msgid "» %(nick)s has joined %(channel)s."
+msgstr ""
+
+#: ../signals.py:1237
+#, python-format
+msgid "« You have left %(channel)s (%(reason)s)."
+msgstr "« Você abandonou %(channel)s (%(reason)s)."
+
+#: ../signals.py:1239
+#, python-format
+msgid "« You have left %(channel)s."
+msgstr "« Você abandonou %(channel)s."
+
+#: ../signals.py:1261
+#, python-format
+msgid "« %(nick)s has left %(channel)s (%(reason)s)."
+msgstr ""
+
+#: ../signals.py:1263
+#, python-format
+msgid "« %(nick)s has left %(channel)s."
+msgstr ""
+
+#: ../signals.py:1293
+#, python-format
+msgid "• %(target)s: No such nick/channel."
+msgstr "• %(target)s: Não existe tal nick/canal."
+
+#: ../signals.py:1296
+#, python-format
+msgid "• %(target)s: No such server."
+msgstr ""
+
+#: ../signals.py:1299
+#, python-format
+msgid "• %(target)s: No such channel."
+msgstr ""
+
+#: ../signals.py:1347 ../dialogs/channelList.py:188
+msgid "User"
+msgstr ""
+
+#: ../signals.py:1348 ../dialogs/channelList.py:188
+#: ../glade/mainwindow.glade.h:27
+msgid "Topic"
+msgstr ""
+
+#: ../signals.py:1364
+msgid "Unknown reason"
+msgstr ""
+
+#: ../signals.py:1367
+msgid "The channel is full."
+msgstr ""
+
+#: ../signals.py:1369
+msgid "The channel is invite-only."
+msgstr ""
+
+#: ../signals.py:1371
+msgid "You are banned."
+msgstr ""
+
+#: ../signals.py:1385
+msgid "You need the correct channel key."
+msgstr ""
+
+#: ../signals.py:1388
+#, python-format
+msgid "You can not join %(channel)s: %(reason)s"
+msgstr ""
+
+#: ../signals.py:1398
+#, python-format
+msgid "[%(nick)s] %(message)s"
+msgstr "[%(nick)s] %(message)s"
+
+#: ../signals.py:1403
+#, python-format
+msgid "[%(nick)s] End of whois."
+msgstr "[%(nick)s] Fim de whois."
+
+#: ../dialogs/channelList.py:188
+msgid "Channel"
+msgstr ""
+
+#: ../dialogs/dcc.py:153
+msgid "ID"
+msgstr ""
+
+#: ../dialogs/dcc.py:153
+msgid "Server"
+msgstr ""
+
+#: ../dialogs/dcc.py:153
+msgid "Partner"
+msgstr ""
+
+#: ../dialogs/dcc.py:153
+msgid "Filename"
+msgstr ""
+
+#: ../dialogs/dcc.py:153
+msgid "Size"
+msgstr ""
+
+#: ../dialogs/dcc.py:161
+msgid "Progress"
+msgstr ""
+
+#: ../dialogs/dcc.py:167
+msgid "Speed"
+msgstr ""
+
+#: ../dialogs/debug.py:63
+msgid "C_ompile and run"
+msgstr ""
+
+#: ../dialogs/plugins.py:119
+#, python-format
+msgid "Configure %(name)s"
+msgstr ""
+
+#: ../dialogs/whois.py:73
+#, python-format
+msgid "Whois on %(server)s"
+msgstr ""
+
+#: ../dialogs/whois.py:78
+#, python-format
+msgid "Whois data of %(nick)s"
+msgstr ""
+
+#: ../dialogs/whois.py:111
+msgid "No data received so far. Are you still connected?"
+msgstr ""
+
+#: ../dialogs/whois.py:128
+msgid "Loading..."
+msgstr ""
+
+#: ../lib/dcc_dialog.py:54
+msgid "Incoming file transfer"
+msgstr ""
+
+#: ../lib/dcc_dialog.py:63
+msgid ""
+"\n"
+"If you don't choose another destination, this file will be resumed."
+msgstr ""
+
+#: ../lib/dcc_dialog.py:55
+#, python-format
+msgid ""
+"Sender: ”%(nick)s”\n"
+"Filename: “%(filename)s“\n"
+"File size: %(bytes)d bytes%(resumable)s"
+msgstr ""
+
+#: ../lib/gui_control.py:291
 #, python-format
 msgid "%d User"
 msgid_plural "%d Users"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../gui_control.py:748
+#: ../lib/gui_control.py:293
 #, python-format
 msgid "%d Operator"
 msgid_plural "%d Operators"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../gui_control.py:992
+#: ../lib/gui_control.py:626
 #, python-format
 msgid "Error: %(message)s"
 msgstr ""
 
-#: ../main.py:430
-msgid "Reset markup"
-msgstr ""
-
-#: ../main.py:696
-#, python-format
-msgid "Do you really want to close channel “%(name)s”?"
-msgstr ""
-
-#: ../main.py:698
-#, python-format
-msgid "Do you really want to close query “%(name)s”?"
-msgstr ""
-
-#: ../main.py:700
-#, python-format
-msgid "Do you really want to close server “%(name)s”?"
-msgstr ""
-
-#: ../main.py:1180
-msgid "Error occured"
-msgstr ""
-
-#: ../signals.py:437
-#, python-format
-msgid "• You changed the topic to “%(topic)s”."
-msgstr ""
-
-#: ../signals.py:439
-#, python-format
-msgid "• %(nick)s changed the topic to “%(topic)s”."
-msgstr ""
-
-#: ../signals.py:493
-#, python-format
-msgid "• %(nick)s is away (%(message)s)."
-msgstr ""
-
-#: ../signals.py:837
-#, python-format
-msgid "• You are now known as %(newnick)s."
-msgstr "• Você é agora conhecido como %(newnick)s."
-
-#: ../signals.py:846
-#, python-format
-msgid "• %(nick)s is now known as %(newnick)s."
-msgstr "• %(nick)s é agora conhecido como %(newnick)s."
-
-#: ../signals.py:898
-#, python-format
-msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
-msgstr ""
-
-#: ../signals.py:915
-#, python-format
-msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
-msgstr ""
-
-#: ../signals.py:953
-#, python-format
-msgid "« You have quit (%(reason)s)."
-msgstr "« Você saiu (%(reason)s)."
-
-#: ../signals.py:955
-msgid "« You have quit."
-msgstr "« Você saiu."
-
-#: ../signals.py:969
-#, python-format
-msgid "« %(nick)s has quit (%(reason)s)."
-msgstr "« %(nick)s saiu (%(reason)s)."
-
-#: ../signals.py:971
-#, python-format
-msgid "« %(nick)s has quit."
-msgstr "« %(nick)s saiu."
-
-#: ../signals.py:1065
-#, python-format
-msgid "» You have joined %(channel)s."
-msgstr ""
-
-#: ../signals.py:1075
-#, python-format
-msgid "» %(nick)s has joined %(channel)s."
-msgstr ""
-
-#: ../signals.py:1163
-#, python-format
-msgid "« You have left %(channel)s (%(reason)s)."
-msgstr "« Você abandonou %(channel)s (%(reason)s)."
-
-#: ../signals.py:1165
-#, python-format
-msgid "« You have left %(channel)s."
-msgstr "« Você abandonou %(channel)s."
-
-#: ../signals.py:1187
-#, python-format
-msgid "« %(nick)s has left %(channel)s (%(reason)s)."
-msgstr ""
-
-#: ../signals.py:1189
-#, python-format
-msgid "« %(nick)s has left %(channel)s."
-msgstr ""
-
-#: ../signals.py:1212
-#, python-format
-msgid "• %(target)s: No such nick/channel."
-msgstr "• %(target)s: Não existe tal nick/canal."
-
-#: ../signals.py:1214
-#, python-format
-msgid "• %(target)s: No such server."
-msgstr ""
-
-#: ../signals.py:1216
-#, python-format
-msgid "• %(target)s: No such channel."
-msgstr ""
-
-#: ../signals.py:1228
-msgid "Unknown reason"
-msgstr ""
-
-#: ../signals.py:1231
-msgid "The channel is full."
-msgstr ""
-
-#: ../signals.py:1233
-msgid "The channel is invite-only."
-msgstr ""
-
-#: ../signals.py:1235
-msgid "You are banned."
-msgstr ""
-
-#: ../signals.py:1248
-msgid "You need the correct channel key."
-msgstr ""
-
-#: ../signals.py:1251
-#, python-format
-msgid "You can not join %(channel)s: %(reason)s"
-msgstr ""
-
-#: ../signals.py:1263
-#, python-format
-msgid "[%(nick)s] %(message)s"
-msgstr "[%(nick)s] %(message)s"
-
-#: ../signals.py:1265
-#, python-format
-msgid "[%(nick)s] End of whois."
-msgstr "[%(nick)s] Fim de whois."
-
-#: ../dialogs/channelList.py:175
-msgid "Channel"
-msgstr ""
-
-#: ../dialogs/channelList.py:175
-msgid "User"
-msgstr ""
-
-#: ../dialogs/channelList.py:175
-msgid "Topic"
-msgstr ""
-
-#: ../dialogs/debugDialog.py:63
-msgid "C_ompile and run"
-msgstr ""
-
-#: ../dialogs/whois.py:74
-#, python-format
-msgid "Whois on %(server)s"
-msgstr ""
-
-#: ../dialogs/whois.py:79
-#, python-format
-msgid "Whois data of %(nick)s"
-msgstr ""
-
-#: ../dialogs/whois.py:122
-msgid "Loading..."
-msgstr ""
-
-#: ../helper/keyDialog.py:38
-msgid "Channel Key"
-msgstr ""
-
-#: ../helper/keyDialog.py:58
+#: ../lib/key_dialog.py:49
 #, python-format
 msgid "Enter the key for the channel %(channel)s."
 msgstr ""
 
-#: ../helper/keyDialog.py:69
+#: ../lib/key_dialog.py:60
 msgid "Save key for channel"
+msgstr ""
+
+#: ../lib/plugin_control.py:107 ../lib/plugin_control.py:111
+#: ../lib/plugin_control.py:131 ../lib/plugin_control.py:181
+#: ../lib/plugin_control.py:334
+msgid "Plugin could not be loaded."
+msgstr ""
+
+#: ../lib/plugin_control.py:107 ../lib/plugin_control.py:131
+#: ../lib/plugin_control.py:182
+#, python-format
+msgid ""
+"Plugin %(plugin)s could not be loaded.\n"
+"The following error occurred: %(error)s"
+msgstr ""
+
+#: ../lib/plugin_control.py:111
+#, python-format
+msgid "Plugin %(plugin)s could not be loaded."
+msgstr ""
+
+#: ../lib/plugin_control.py:160
+msgid "Plugin is already loaded."
+msgstr ""
+
+#: ../lib/plugin_control.py:161
+#, python-format
+msgid "Plugin %(plugin)s is already loaded."
+msgstr ""
+
+#: ../lib/plugin_control.py:205
+msgid "Plugin could not be unloaded."
+msgstr ""
+
+#: ../lib/plugin_control.py:205
+#, python-format
+msgid "Plugin %(plugin)s could not be unloaded, because it is not loaded."
+msgstr ""
+
+#: ../lib/plugin_control.py:335
+#, python-format
+msgid "Plugin %(plugin)s could not be loaded automatically."
+msgstr ""
+
+#: ../lib/status_icon.py:66
+msgid "Hide main window"
+msgstr ""
+
+#: ../lib/status_icon.py:68
+msgid "Show main window"
+msgstr ""
+
+#: ../lib/topic_dialog.py:64
+#, python-format
+msgid "Topic for channel %(channel)s on %(server)s"
+msgstr ""
+
+#: ../lib/topic_dialog.py:117
+msgid "Topic changed before."
+msgstr ""
+
+#: ../lib/topic_dialog.py:118
+msgid ""
+"The topic was changed before your update. Do you want to commit the changes "
+"anyway?"
+msgstr ""
+
+#: ../menus/nicklist_menu.py:56 ../menus/servertree_menu.py:56
+msgid "Widget creation failed."
+msgstr ""
+
+#: ../menus/nicklist_menu.py:57
+msgid ""
+"tekka failed to create the nicklist menu.\n"
+"It's possible that there are files missing. Check if you have appropriate "
+"permissions to access all files needed by tekka and restart tekka."
+msgstr ""
+
+#: ../menus/servertree_menu.py:57
+msgid ""
+"tekka failed to create the server tree menu.\n"
+"It's possible that there are files missing. Check if you have appropriate "
+"permissions to access all files needed by tekka and restart tekka."
 msgstr ""
 
 #: ../glade/mainwindow.glade.h:1
@@ -294,90 +503,106 @@ msgid "History"
 msgstr ""
 
 #: ../glade/mainwindow.glade.h:11
+msgid "IRC Colors"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:12
 msgid "Join"
 msgstr "Entrar"
 
-#: ../glade/mainwindow.glade.h:12
+#: ../glade/mainwindow.glade.h:13
 msgid "Kick"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:13
+#: ../glade/mainwindow.glade.h:14
+msgid "Manage File Transfers"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:15
+msgid "Manage plugins"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:16
 msgid "Modes"
 msgstr "Modos"
 
-#: ../glade/mainwindow.glade.h:14
+#: ../glade/mainwindow.glade.h:17
 msgid "Part"
 msgstr "Parte"
 
-#: ../glade/mainwindow.glade.h:15 ../glade/dialogs/server.glade.h:1
+#: ../glade/mainwindow.glade.h:18 ../glade/dialogs/server.glade.h:1
 msgid "Server List"
 msgstr "Lista de Servidores"
 
-#: ../glade/mainwindow.glade.h:16
+#: ../glade/mainwindow.glade.h:19
 msgid "Set Key"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:17
-msgid "Shutdown"
-msgstr "Desligar"
-
-#: ../glade/mainwindow.glade.h:18
-msgid "Status _Bar"
-msgstr ""
-
-#: ../glade/mainwindow.glade.h:19
-msgid "Status _Icon"
-msgstr ""
-
 #: ../glade/mainwindow.glade.h:20
-msgid "Take Half-Op"
+msgid "Show a translation between IRC color codes and real colors"
 msgstr ""
 
 #: ../glade/mainwindow.glade.h:21
-msgid "Take Op"
-msgstr "Tirar OP"
+msgid "Shutdown"
+msgstr "Desligar"
 
 #: ../glade/mainwindow.glade.h:22
-msgid "Take Voice"
-msgstr "Tirar Voice"
+msgid "Status _Bar"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:23
-msgid "Whois"
+msgid "Status _Icon"
 msgstr ""
 
 #: ../glade/mainwindow.glade.h:24
-msgid "_Channel List"
+msgid "Take Half-Op"
 msgstr ""
 
 #: ../glade/mainwindow.glade.h:25
-msgid "_Debug"
-msgstr ""
+msgid "Take Op"
+msgstr "Tirar OP"
 
 #: ../glade/mainwindow.glade.h:26
+msgid "Take Voice"
+msgstr "Tirar Voice"
+
+#: ../glade/mainwindow.glade.h:28
+msgid "Whois"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:29
 msgid "_Dialogs"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:27 ../glade/dialogs/preferences.glade.h:33
+#: ../glade/mainwindow.glade.h:30
+msgid "_File Transfers"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:31 ../glade/dialogs/preferences.glade.h:33
 msgid "_General Output"
 msgstr "_Saída geral"
 
-#: ../glade/mainwindow.glade.h:28
+#: ../glade/mainwindow.glade.h:32
 msgid "_Help"
 msgstr "_Ajuda"
 
-#: ../glade/mainwindow.glade.h:29
+#: ../glade/mainwindow.glade.h:33
 msgid "_Plugins"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:30
+#: ../glade/mainwindow.glade.h:34
+msgid "_Topic Bar"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:35
 msgid "_View"
 msgstr "_Visualizar"
 
-#: ../glade/mainwindow.glade.h:31
+#: ../glade/mainwindow.glade.h:36
 msgid "_maki"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:32 ../glade/dialogs/preferences.glade.h:37
+#: ../glade/mainwindow.glade.h:37 ../glade/dialogs/preferences.glade.h:37
 msgid "_tekka"
 msgstr "_tekka"
 
@@ -396,15 +621,27 @@ msgstr ""
 msgid "Channel List"
 msgstr ""
 
+#: ../glade/dialogs/dcc.glade.h:1
+msgid "File Transfers"
+msgstr ""
+
+#: ../glade/dialogs/history.glade.h:2
+msgid "Local search only"
+msgstr ""
+
 #: ../glade/dialogs/plugins.glade.h:1
-msgid "Plugins"
+msgid "C_onfigure"
 msgstr ""
 
 #: ../glade/dialogs/plugins.glade.h:2
-msgid "_Load"
+msgid "Plugins"
 msgstr ""
 
 #: ../glade/dialogs/plugins.glade.h:3
+msgid "_Load"
+msgstr ""
+
+#: ../glade/dialogs/plugins.glade.h:4
 msgid "_Unload"
 msgstr ""
 
@@ -595,3 +832,16 @@ msgstr "<b>Editar Servidor</b>"
 #: ../glade/dialogs/serverEdit.glade.h:5
 msgid "Edit Server"
 msgstr "Editar Servidor"
+
+#: ../glade/dialogs/colorTable.ui.h:2
+#, no-c-format
+msgid ""
+"<b>IRC to real colors</b>\n"
+"\n"
+"Example use:\n"
+"Type %C02,01 for blue foreground and black background."
+msgstr ""
+
+#: ../glade/dialogs/colorTable.ui.h:6
+msgid "IRC color codes"
+msgstr ""
