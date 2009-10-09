@@ -308,6 +308,8 @@
                             <property name="wrap">True</property>
                             <property name="wrap_mode">word-char</property>
                             <property name="selectable">True</property>
+                            <property name="visible">False</property>
+                            <property name="can_focus">False</property>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -317,6 +319,7 @@
                         <child>
                           <widget class="GtkVPaned" id="outputVPaned">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="orientation">vertical</property>
                             <property name="position">1</property>
                             <signal name="notify" handler="outputVPaned_notify_cb"/>
@@ -409,6 +412,7 @@
                       <widget class="GtkVPaned" id="listVPaned">
                         <property name="width_request">150</property>
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
                         <property name="position_set">True</property>
@@ -424,6 +428,7 @@
                             <child>
                               <widget class="GtkTreeView" id="serverTree">
                                 <property name="visible">True</property>
+                                <property name="can_focus">False</property>
                                 <signal name="button_press_event" handler="serverTree_button_press_event_cb"/>
                                 <signal name="row_activated" handler="serverTree_row_activated_cb"/>
                               </widget>
@@ -437,6 +442,7 @@
                         <child>
                           <widget class="GtkVBox" id="VBox_nickList">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="orientation">vertical</property>
                             <property name="spacing">5</property>
                             <child>
@@ -461,6 +467,7 @@
                                 <child>
                                   <widget class="GtkTreeView" id="nickList">
                                     <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
                                     <signal name="button_press_event" handler="nickList_button_press_event_cb"/>
                                     <signal name="row_activated" handler="nickList_row_activated_cb"/>
                                   </widget>
