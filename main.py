@@ -319,6 +319,9 @@ def menu_Dialogs_debug_activate_cb(menuItem):
 def menu_Dialogs_preferences_activate_cb(menuItem):
 	dialog_control.showPreferencesDialog()
 
+def menu_Help_Colors_activate_cb(menuItem):
+	dialog_control.showColorTableDialog()
+
 def menu_Help_about_activate_cb(menuItem):
 	"""
 		Show the about dialog!
@@ -1214,6 +1217,8 @@ def setupGTK():
 			menu_Dialogs_preferences_activate_cb,
 
 		# help menu
+		"menu_Help_Colors_activate_cb":
+			menu_Help_Colors_activate_cb,
 		"menu_Help_about_activate_cb":
 			menu_Help_about_activate_cb,
 

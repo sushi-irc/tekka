@@ -107,3 +107,7 @@ def showPreferencesDialog():
 def showWhoisDialog(server, nick):
 	d = loadDialog("whois")
 	return d.run(server, nick)
+
+def showColorTableDialog():
+	d = loadDialog("colorTable")
+	return d.run()

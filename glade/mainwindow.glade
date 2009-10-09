@@ -239,6 +239,15 @@
                   <widget class="GtkMenu" id="menu_Help">
                     <property name="visible">True</property>
                     <child>
+                      <widget class="GtkMenuItem" id="menu_Help_Colors">
+                        <property name="visible">True</property>
+                        <property name="tooltip" translatable="yes">Show a translation between IRC color codes and real colors</property>
+                        <property name="label" translatable="yes">IRC color table</property>
+                        <property name="use_underline">True</property>
+                        <signal name="activate" handler="menu_Help_Colors_activate_cb"/>
+                      </widget>
+                    </child>
+                    <child>
                       <widget class="GtkImageMenuItem" id="menu_Help_About">
                         <property name="label">gtk-about</property>
                         <property name="visible">True</property>
