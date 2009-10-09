@@ -55,6 +55,10 @@ def _unescape_splitted(separator, splitted, escape_char):
 			if count % 2 != 0:
 				# the , was escaped
 
+				if (i+1) == len(splitted):
+					escaped.append(split)
+					break
+
 				# merge this and the next split together.
 				# add the escaped separator and remove the escape
 				new_split = [split[:-1] + separator + splitted[i+1]]
