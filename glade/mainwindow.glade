@@ -159,12 +159,13 @@
                     <property name="visible">True</property>
                     <child>
                       <widget class="GtkImageMenuItem" id="menu_Dialogs_channelList">
-                        <property name="visible">True</property>
                         <property name="label" translatable="yes">_Channel List</property>
+                        <property name="visible">True</property>
                         <property name="use_underline">True</property>
+                        <property name="use_stock">False</property>
                         <signal name="activate" handler="menu_Dialogs_channelList_activate_cb"/>
                         <child internal-child="image">
-                          <widget class="GtkImage" id="image14">
+                          <widget class="GtkImage" id="image6">
                             <property name="visible">True</property>
                             <property name="stock">gtk-find</property>
                           </widget>
@@ -205,14 +206,15 @@
                     </child>
                     <child>
                       <widget class="GtkImageMenuItem" id="menu_Dialogs_debug">
-                        <property name="visible">True</property>
                         <property name="label" translatable="yes">_Debug</property>
+                        <property name="visible">True</property>
                         <property name="use_underline">True</property>
+                        <property name="use_stock">False</property>
                         <signal name="activate" handler="menu_Dialogs_debug_activate_cb"/>
                         <child internal-child="image">
-                          <widget class="GtkImage" id="image15">
+                          <widget class="GtkImage" id="image7">
                             <property name="visible">True</property>
-                            <property name="stock">gtk-zoom-in</property>
+                            <property name="stock">gtk-info</property>
                           </widget>
                         </child>
                       </widget>
@@ -306,8 +308,6 @@
                             <property name="wrap">True</property>
                             <property name="wrap_mode">word-char</property>
                             <property name="selectable">True</property>
-                            <property name="visible">False</property>
-                            <property name="can_focus">False</property>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -317,7 +317,6 @@
                         <child>
                           <widget class="GtkVPaned" id="outputVPaned">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
                             <property name="orientation">vertical</property>
                             <property name="position">1</property>
                             <signal name="notify" handler="outputVPaned_notify_cb"/>
@@ -410,7 +409,6 @@
                       <widget class="GtkVPaned" id="listVPaned">
                         <property name="width_request">150</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
                         <property name="position_set">True</property>
@@ -426,7 +424,6 @@
                             <child>
                               <widget class="GtkTreeView" id="serverTree">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
                                 <signal name="button_press_event" handler="serverTree_button_press_event_cb"/>
                                 <signal name="row_activated" handler="serverTree_row_activated_cb"/>
                               </widget>
@@ -445,6 +442,8 @@
                             <child>
                               <widget class="GtkLabel" id="nickList_label">
                                 <property name="visible">True</property>
+                                <property name="use_markup">True</property>
+                                <property name="selectable">True</property>
                               </widget>
                               <packing>
                                 <property name="expand">False</property>
@@ -462,7 +461,6 @@
                                 <child>
                                   <widget class="GtkTreeView" id="nickList">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
                                     <signal name="button_press_event" handler="nickList_button_press_event_cb"/>
                                     <signal name="row_activated" handler="nickList_row_activated_cb"/>
                                   </widget>
