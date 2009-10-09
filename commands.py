@@ -509,7 +509,6 @@ def parseInput(text):
 		return
 
 	text = parse_color(text)
-	print "COLOR_PARSED:'%s'" % (text)
 
 	serverTab,channelTab = gui.tabs.get_current_tabs()
 

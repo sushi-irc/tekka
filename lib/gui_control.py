@@ -372,7 +372,7 @@ def escape_color(msg):
 			break
 
 		match = escape_color.pattern.match(msg[i:i+6])
-		print "%s = COLORSEQUENCE(%s)" % (match, msg[i:i+6])
+		#print "%s = COLORSEQUENCE(%s)" % (match, msg[i:i+6])
 
 		if match:
 			groups = match.groups()
