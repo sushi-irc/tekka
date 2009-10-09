@@ -2,3 +2,4 @@
 *.pyc
 
 *.glade.h
+*.ui.h
