@@ -127,13 +127,7 @@ def tekka_tab_new_message(tab, type):
 	pass
 
 def tekka_tab_new_name(tab, name):
-	store = widgets.get_widget("serverTree").get_model()
-	try:
-		cell = store[tab.path]
-	except IndexError:
-		print "Error in renaming tab %s." % (tab)
-		return
-	store.set (cell.iter, 0, tab.markup(), 1, name)
+	tekka_tab_new_markup(tab)
 
 def tekka_tab_connected(tab, connected):
 	""" tab received a change on connected attribute """
