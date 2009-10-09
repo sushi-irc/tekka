@@ -76,7 +76,8 @@ class TopicDialog(InlineDialog):
 		self.table.attach(self.topicBar, 0, 1, 1, 2)
 
 		signals.connect_signal("topic", self._topic_changed_cb)
-		self.topicBar.set_text(sushi.channel_topic(server, channel))
+		self.topicBar.set_markup(gui_control.escape(
+			sushi.channel_topic(server, channel)))
 		self.topicBar.set_position(len(self.topicBar.get_text()))
 
 		self.topicBar.connect("activate", self._topicBar_activate_cb)

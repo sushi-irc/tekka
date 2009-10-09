@@ -119,7 +119,7 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 			else:
 				tag.set_property("weight", pango.WEIGHT_NORMAL)
 
-		elif name == "font":
+		elif name in ("font","span"):
 			self._parseFont(tag, attrs)
 
 		elif name == "msg":

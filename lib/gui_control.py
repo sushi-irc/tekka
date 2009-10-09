@@ -314,7 +314,7 @@ def set_topic(string):
 		the topic bar.
 	"""
 	tb = widgets.get_widget("topicBar")
-	tb.set_text(string)
+	tb.set_markup(string)
 
 def updateServerTreeShortcuts():
 	"""	Iterates through the TreeModel
@@ -376,11 +376,11 @@ def escape_color(msg):
 
 		if match:
 			groups = match.groups()
-			tag = "<font"
+			tag = "<span"
 
 			if count != 0:
 				# close the previous color
-				tag = "</font>" + tag
+				tag = "</span>" + tag
 				count -= 1
 
 			try:
@@ -409,14 +409,14 @@ def escape_color(msg):
 		else:
 			if count > 0:
 				# single ^C, if there's an open tag, close it
-				msg = msg[:i] + "</font>" + msg[i+1:]
+				msg = msg[:i] + "</span>" + msg[i+1:]
 				count -= 1
 
 		last_i = i
 
 	if count != 0:
 		# make sure the <font> is closed.
-		msg = msg + "</font>"
+		msg = msg + "</span>"
 
 	return msg
 
