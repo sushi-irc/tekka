@@ -213,17 +213,17 @@ def makiMode(currentServer, currentChannel, args):
 		OR:	  /mode nemo +x
 		OR:	  /mode #xesio +m
 	"""
-	if not args or len(args) < 2:
+	if not args or len(args) < 1:
 		return gui.myPrint("Usage: /mode <target> (+|-)<mode> [<param>]")
 
 	if not currentServer:
 		return gui.myPrint("Could not determine server.")
 
-	if len(args) > 2:
+	if len(args) >= 2:
 		# a parameter is given
 		sushi.mode(currentServer.name, args[0], "%s %s" % (args[1], " ".join(args[2:])))
 	else:
-		sushi.mode(currentServer.name, args[0], args[1])
+		sushi.mode(currentServer.name, args[0], "")
 
 def makiTopic(serverTab, channelTab, args):
 	"""
