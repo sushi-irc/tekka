@@ -26,9 +26,6 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
-# TODO:  add a status bar or something which
-# TODO:: reports that the listing is done
-
 from re import compile
 
 from gettext import gettext as _
@@ -39,7 +36,7 @@ import gtk.glade
 import com
 import signals
 import config
-from lib.gui_control import errorMessage
+from lib.gui_control import errorMessage, markup_escape
 
 widgets = None
 currentServer = None
@@ -136,6 +133,9 @@ def sushiList(time, server, channel, user, topic):
 	receives the data from maki.
 	add server/user/topic to listStore
 	"""
+	channel = markup_escape(channel)
+	topic = markup_escape(topic)
+
 	if time > 0:
 		# no manual call
 		cache.append((server,channel,user,topic))
@@ -187,6 +187,6 @@ def setup():
 	c = 0
 	for name in (_("Channel"), _("User"), _("Topic")):
 		renderer = gtk.CellRendererText()
-		column = gtk.TreeViewColumn(name, renderer, text=c)
+		column = gtk.TreeViewColumn(name, renderer, markup=c)
 		listView.append_column(column)
 		c+=1

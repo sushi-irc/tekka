@@ -42,6 +42,7 @@ from dbus import String, UInt64
 
 import lib.contrast
 import helper.color
+import helper.escape
 
 # profiling imports
 import os, sys
@@ -420,21 +421,56 @@ def escape_color(msg):
 
 	return msg
 
-def escape(msg):
-	"""	Converts special characters in msg and returns
-		the new string.
+def _escape_ml(msg):
+	""" escape every invalid character via gobject.markup_escape_text
+		from the given string but leave the irc color/bold characters:
+		- chr(2)
+		- chr(3)
+		- chr(31)
 	"""
 
-	msg = msg.replace("&", "&amp;")
-	msg = msg.replace("<", "&lt;")
-	msg = msg.replace(">", "&gt;")
+	msg = msg.replace("%","%%") # escape %
+	msg = msg.replace(chr(2), "%2")
+	msg = msg.replace(chr(31), "%31")
+	msg = msg.replace(chr(3), "%3")
+
+	msg = gobject.markup_escape_text(msg)
+
+	l = helper.escape.unescape_split("%2", msg, escape_char="%")
+	msg = chr(2).join(l)
+
+	l = helper.escape.unescape_split("%3", msg, escape_char="%")
+	msg = chr(3).join(l)
+
+	l = helper.escape.unescape_split("%31", msg, escape_char="%")
+	msg = chr(31).join(l)
+
+	return msg
+
+def markup_escape(msg):
+	""" escape for pango markup language """
+	msg = _escape_ml(msg)
+
+	# don't want bold/underline, can't use it
+	msg = msg.replace(chr(2), "")
+	msg = msg.replace(chr(31), "")
+
+	msg = escape_color(msg)
+
+	return msg
+
+def escape(msg):
+	"""	Converts special characters in msg and returns
+		the new string. This function should only
+		be used in combination with HTMLBuffer.
+	"""
+	msg = _escape_ml(msg)
+
 	msg = msg.replace(chr(2), "<sb/>") # bold-char
 	msg = msg.replace(chr(31), "<su/>") # underline-char
 
 	msg = escape_color(msg)
 
-	msg = msg.replace(chr(27), "") # TODO: begin of color
-	msg = msg.replace(chr(1), "")
 	return msg
 
 @types (server = basestring, channel = basestring, lines = int,

@@ -529,7 +529,8 @@ class TabControl(gobject.GObject):
 				tab.nickList.get_operator_count())
 
 			if config.get_bool("tekka", "show_topicbar"):
-				lib.gui_control.set_topic(lib.gui_control.escape(tab.topic))
+				lib.gui_control.set_topic(
+					lib.gui_control.markup_escape(tab.topic))
 				lib.gui_control.get_widget("topicBar").show()
 
 			lib.gui_control.get_widget("VBox_nickList").show_all()

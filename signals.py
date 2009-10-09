@@ -199,7 +199,7 @@ def add_channels(server_tab):
 		tab.topicsetter = ""
 
 		if gui.tabs.is_active(tab):
-			gui.set_topic(gui.escape(tab.topic))
+			gui.set_topic(gui.markup_escape(tab.topic))
 			gui.set_user_count(
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
@@ -420,7 +420,7 @@ def channelTopic(time, server, from_str, channel, topic):
 	channelTab.topicsetter = nick
 
 	if channelTab == gui.tabs.get_current_tab():
-		gui.set_topic(gui.escape(topic))
+		gui.set_topic(gui.markup_escape(topic))
 
 	if not nick:
 		# just reporting the topic.
