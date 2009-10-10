@@ -336,7 +336,6 @@ def mainWindow_scroll_event_cb(mainWindow, event):
 	elif (event.state & gtk.gdk.MOD1_MASK
 	and event.direction == gtk.gdk.SCROLL_UP):
 		gui.tabs.switch_to_previous()
-		return True
 
 def mainWindow_delete_event_cb(mainWindow, event):
 	"""
