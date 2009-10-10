@@ -558,6 +558,38 @@ class TabControl(gobject.GObject):
 			return
 		self.switch_to_path(tab.path)
 
+	def switch_to_previous(self):
+		tabs = self.get_all_tabs()
+		tab = self.get_current_tab()
+
+		try:
+			i = tabs.index(tab)
+		except ValueError:
+			return
+
+		try:
+			self.switch_to_tab(tabs[i-1])
+		except IndexError:
+			return
+
+	def switch_to_next(self):
+		tabs = self.get_all_tabs()
+		tab = self.get_current_tab()
+
+		try:
+			i = tabs.index(tab)
+		except ValueError:
+			return
+
+		try:
+			i = i+1
+			if (i) == len(tabs):
+				i = 0
+			self.switch_to_tab(tabs[i])
+		except IndexError:
+			return
+
+
 gobject.signal_new("tab_switched", TabControl, gobject.SIGNAL_ACTION,
 	None, (gobject.TYPE_PYOBJECT, gobject.TYPE_PYOBJECT))
 

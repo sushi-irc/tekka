@@ -328,6 +328,14 @@ def menu_Help_about_activate_cb(menuItem):
 	d.connect("response", about_response_cb)
 	d.show_all()
 
+def mainWindow_scroll_event_cb(mainWindow, event):
+	if (event.state & gtk.gdk.MOD1_MASK
+	and event.direction == gtk.gdk.SCROLL_DOWN):
+		gui.tabs.switch_to_next()
+
+	elif event.direction == gtk.gdk.SCROLL_UP:
+		gui.tabs.switch_to_previous()
+
 def mainWindow_delete_event_cb(mainWindow, event):
 	"""
 		The user want's to close the main window.
@@ -662,38 +670,13 @@ def serverTree_shortcut_ctrl_Page_Up(serverTree, shortcut):
 	"""
 		Ctrl+Page_Up was hit, go up in server tree
 	"""
-	tabs = gui.tabs.get_all_tabs()
-	tab = gui.tabs.get_current_tab()
-
-	try:
-		i = tabs.index(tab)
-	except ValueError:
-		return
-
-	try:
-		gui.tabs.switch_to_tab(tabs[i-1])
-	except IndexError:
-		return
+	gui.tabs.switch_to_previous()
 
 def serverTree_shortcut_ctrl_Page_Down(serverTree, shortcut):
 	"""
 		Ctrl+Page_Down was hit, go down in server tree
 	"""
-	tabs = gui.tabs.get_all_tabs()
-	tab = gui.tabs.get_current_tab()
-
-	try:
-		i = tabs.index(tab)
-	except ValueError:
-		return
-
-	try:
-		i = i+1
-		if (i) == len(tabs):
-			i = 0
-		gui.tabs.switch_to_tab(tabs[i])
-	except IndexError:
-		return
+	gui.tabs.switch_to_next()
 
 def askToRemoveTab(tab):
 	def response_handler(dialog, response_id):
@@ -905,6 +888,8 @@ def setup_mainWindow():
 
 	if config.get_bool("tekka","window_maximized"):
 		win.maximize()
+
+	win.connect("scroll-event", mainWindow_scroll_event_cb)
 
 	win.show_all()
 
