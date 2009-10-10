@@ -333,8 +333,10 @@ def mainWindow_scroll_event_cb(mainWindow, event):
 	and event.direction == gtk.gdk.SCROLL_DOWN):
 		gui.tabs.switch_to_next()
 
-	elif event.direction == gtk.gdk.SCROLL_UP:
+	elif (event.state & gtk.gdk.MOD1_MASK
+	and event.direction == gtk.gdk.SCROLL_UP):
 		gui.tabs.switch_to_previous()
+		return True
 
 def mainWindow_delete_event_cb(mainWindow, event):
 	"""
@@ -888,6 +890,16 @@ def setup_mainWindow():
 
 	if config.get_bool("tekka","window_maximized"):
 		win.maximize()
+
+	# enable scrolling through server tree by scroll wheel
+	def kill_mod1_scroll(w,e):
+		if e.state & gtk.gdk.MOD1_MASK:
+			w.emit_stop_by_name("scroll-event")
+
+	for widget in ("scrolledWindow_output","scrolledWindow_generalOutput",
+				"scrolledWindow_serverTree","scrolledWindow_nickList"):
+		widgets.get_widget(widget).connect("scroll-event",
+			kill_mod1_scroll)
 
 	win.connect("scroll-event", mainWindow_scroll_event_cb)
 
