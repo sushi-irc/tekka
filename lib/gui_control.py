@@ -445,7 +445,7 @@ def _escape_ml(msg):
 	l = helper.escape.unescape_split("%31", msg, escape_char="%")
 	msg = chr(31).join(l)
 
-	return msg
+	return msg.replace("%%","%")
 
 def markup_escape(msg):
 	""" escape for pango markup language """
