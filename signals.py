@@ -115,38 +115,38 @@ def handle_maki_disconnect():
 
 def handle_maki_connect():
 	# Message-Signals
-	connect_signal("message", userMessage)
-	connect_signal("notice", userNotice)
-	connect_signal("action", userAction)
-	connect_signal("away_message", userAwayMessage)
-	connect_signal("ctcp", userCTCP)
-	connect_signal("error", userError)
+	connect_signal("message", userMessage_cb)
+	connect_signal("notice", userNotice_cb)
+	connect_signal("action", userAction_cb)
+	connect_signal("away_message", userAwayMessage_cb)
+	connect_signal("ctcp", userCTCP_cb)
+	connect_signal("error", userError_cb)
 
 	# action signals
-	connect_signal("part", userPart)
-	connect_signal("join", userJoin)
-	connect_signal("names", userNames)
-	connect_signal("quit", userQuit)
-	connect_signal("kick", userKick)
-	connect_signal("nick", userNick)
-	connect_signal("away", userAway)
-	connect_signal("back", userBack)
-	connect_signal("mode", userMode)
-	connect_signal("oper", userOper)
+	connect_signal("part", userPart_cb)
+	connect_signal("join", userJoin_cb)
+	connect_signal("names", userNames_cb)
+	connect_signal("quit", userQuit_cb)
+	connect_signal("kick", userKick_cb)
+	connect_signal("nick", userNick_cb)
+	connect_signal("away", userAway_cb)
+	connect_signal("back", userBack_cb)
+	connect_signal("mode", userMode_cb)
+	connect_signal("oper", userOper_cb)
 
 	# Server-Signals
-	connect_signal("connect", serverConnect)
-	connect_signal("connected", serverConnected)
-	connect_signal("motd", serverMOTD)
-	connect_signal("whois", whois)
-	connect_signal("dcc_send", dcc_send)
+	connect_signal("connect", serverConnect_cb)
+	connect_signal("connected", serverConnected_cb)
+	connect_signal("motd", serverMOTD_cb)
+	connect_signal("whois", whois_cb)
+	connect_signal("dcc_send", dcc_send_cb)
 
 	# Channel-Signals
-	connect_signal("topic", channelTopic)
-	connect_signal("banlist", channelBanlist)
+	connect_signal("topic", channelTopic_cb)
+	connect_signal("banlist", channelBanlist_cb)
 
 	# Maki signals
-	connect_signal("shutdown", makiShutdownSignal)
+	connect_signal("shutdown", makiShutdown_cb)
 
 	add_servers()
 
@@ -213,7 +213,7 @@ def add_channels(server_tab):
 			gui.print_last_log(server_tab.name, channel)
 
 		topic = sushi.channel_topic(server_tab.name, channel)
-		channelTopic(mtime.time(), server_tab.name, "", channel, topic)
+		channelTopic_cb(mtime.time(), server_tab.name, "", channel, topic)
 
 	gui.updateServerTreeShortcuts()
 
@@ -323,7 +323,7 @@ def getPrefix(server, channel, nick):
 Server signals
 """
 
-def serverConnect(time, server):
+def serverConnect_cb(time, server):
 	"""
 		maki is connecting to a server.
 	"""
@@ -350,7 +350,7 @@ def serverConnect(time, server):
 	# TODO: implement status bar messages
 	#gui.statusBar.push(gui.STATUSBAR_CONNECTING, "Connecting to %s" % server)
 
-def serverConnected(time, server):
+def serverConnected_cb(time, server):
 	"""
 		maki connected successfuly to a server.
 	"""
@@ -371,7 +371,7 @@ def serverConnected(time, server):
 
 	gui.serverPrint(time, server, "Connected.")
 
-def serverMOTD(time, server, message, first_time = {}):
+def serverMOTD_cb(time, server, message, first_time = {}):
 	""" Server is sending a MOTD.
 		Channes are joined 3s after the end of the
 		MOTD so at the end of the MOTD, make sure
@@ -403,7 +403,7 @@ Signals for channel interaction
 """
 
 
-def channelTopic(time, server, from_str, channel, topic):
+def channelTopic_cb(time, server, from_str, channel, topic):
 	"""
 		The topic was set on server "server" in channel "channel" by
 		user "nick" to "topic".
@@ -442,7 +442,7 @@ def channelTopic(time, server, from_str, channel, topic):
 				"topic": gui.escape(topic) },
 			"action")
 
-def channelBanlist(time, server, channel, mask, who, when):
+def channelBanlist_cb(time, server, channel, mask, who, when):
 	"""
 		ban list signal.
 	"""
@@ -469,7 +469,7 @@ def channelBanlist(time, server, channel, mask, who, when):
 Signals for maki
 """
 
-def makiShutdownSignal(time):
+def makiShutdown_cb(time):
 	gui.myPrint("Maki is shut down!")
 	gui.set_useable(False)
 
@@ -477,7 +477,7 @@ def makiShutdownSignal(time):
 Signals for users
 """
 
-def userAway(time, server):
+def userAway_cb(time, server):
 	"""
 		maki says that we are away.
 	"""
@@ -488,7 +488,7 @@ def userAway(time, server):
 		tab.away = "WE ARE AWAY. HERE SHOULD BE A MESSAGE BUT IT'S NOT IMPLEMENTED YET, SRY!"
 
 
-def userBack(time, server):
+def userBack_cb(time, server):
 	"""
 		maki says that we are back from away being.
 	"""
@@ -497,7 +497,7 @@ def userBack(time, server):
 	if tab:
 		tab.away = ""
 
-def userAwayMessage(timestamp, server, nick, message):
+def userAwayMessage_cb(timestamp, server, nick, message):
 	"""
 		The user is away and the server gives us the message he left
 		for us to see why he is away and probably when he's back again.
@@ -512,7 +512,7 @@ def userAwayMessage(timestamp, server, nick, message):
 			"message": gui.escape(message)},
 		"action")
 
-def userMessage(timestamp, server, from_str, channel, message):
+def userMessage_cb(timestamp, server, from_str, channel, message):
 	"""
 		PRIVMSGs are coming in here.
 	"""
@@ -520,7 +520,7 @@ def userMessage(timestamp, server, from_str, channel, message):
 	server_tab = gui.tabs.search_tab(server)
 
 	if nick.lower() == server_tab.nick.lower():
-		ownMessage(timestamp, server, channel, message)
+		ownMessage_cb(timestamp, server, channel, message)
 		return
 
 	elif channel.lower() == server_tab.nick.lower():
@@ -553,7 +553,7 @@ def userMessage(timestamp, server, from_str, channel, message):
 			messageString,
 		), type)
 
-def ownMessage(timestamp, server, channel, message):
+def ownMessage_cb(timestamp, server, channel, message):
 	"""
 		The maki user wrote something on a channel or a query
 	"""
@@ -569,7 +569,7 @@ def ownMessage(timestamp, server, channel, message):
 			config.get("colors","own_text","#000000"),
 			gui.escape(message)))
 
-def userQuery(timestamp, server, from_str, message):
+def userQuery_cb(timestamp, server, from_str, message):
 	"""
 		A user writes to us in a query.
 	"""
@@ -587,7 +587,7 @@ def userQuery(timestamp, server, from_str, message):
 	# queries are important
 	gui.set_urgent(True)
 
-def userMode(time, server, from_str, target, mode, param):
+def userMode_cb(time, server, from_str, target, mode, param):
 	"""
 		Mode change on target from nick detected.
 		nick and param are optional arguments and
@@ -653,13 +653,13 @@ def userMode(time, server, from_str, target, mode, param):
 				type)
 
 
-def userOper(time, server):
+def userOper_cb(time, server):
 	"""
 		yay, somebody gives the user oper rights.
 	"""
 	gui.currentServerPrint(time, server, "• You got oper access.")
 
-def userCTCP(time, server,  from_str, target, message):
+def userCTCP_cb(time, server,  from_str, target, message):
 	"""
 		A user sends a CTCP request to target.
 		I don't know a case in which target is not a channel
@@ -670,7 +670,7 @@ def userCTCP(time, server,  from_str, target, message):
 
 	if nick.lower() == server_tab.nick.lower():
 		# we wrote us
-		ownCTCP(time, server, target, message)
+		ownCTCP_cb(time, server, target, message)
 
 	elif target.lower() == server_tab.nick.lower():
 		# someone wrote us, put in into a query
@@ -685,7 +685,7 @@ def userCTCP(time, server,  from_str, target, message):
 			"<font foreground='#00DD33'>%s</font> %s" %	(
 				headline, gui.escape(message)))
 
-def ownCTCP(time, server, target, message):
+def ownCTCP_cb(time, server, target, message):
 	"""
 		The maki user sends a CTCP request to
 		a channel or user (target).
@@ -712,7 +712,7 @@ def ownCTCP(time, server, target, message):
 				"target": gui.escape(target),
 				"message": gui.escape(message)})
 
-def queryCTCP(time, server, from_str, message):
+def queryCTCP_cb(time, server, from_str, message):
 	"""
 		A user sends us a CTCP request over a query.
 
@@ -738,7 +738,7 @@ def queryCTCP(time, server, from_str, message):
 					getTextColor(nick),
 					gui.escape(message)))
 
-def ownNotice(time, server, target, message):
+def ownNotice_cb(time, server, target, message):
 	"""
 		if query channel with ``target`` exists, print
 		the notice there, else print it on the current
@@ -763,7 +763,7 @@ def ownNotice(time, server, target, message):
 				getTextColor(target), gui.escape(message)))
 
 
-def queryNotice(time, server, from_str, message):
+def queryNotice_cb(time, server, from_str, message):
 	"""
 		A user sends a notice directly to the maki user.
 	"""
@@ -788,7 +788,7 @@ def queryNotice(time, server, from_str, message):
 				(getNickColor(nick), gui.escape(nick),
 				getTextColor(nick), gui.escape(message)))
 
-def userNotice(time, server, from_str, target, message):
+def userNotice_cb(time, server, from_str, target, message):
 	"""
 		A user noticed to a channel (target).
 	"""
@@ -796,10 +796,10 @@ def userNotice(time, server, from_str, target, message):
 	server_tab = gui.tabs.search_tab(server)
 
 	if nick.lower() == server_tab.nick.lower():
-		ownNotice(time, server, target, message)
+		ownNotice_cb(time, server, target, message)
 		return
 	elif target.lower() == server_tab.nick.lower():
-		queryNotice(time, server, from_str, message)
+		queryNotice_cb(time, server, from_str, message)
 		return
 
 	gui.channelPrint(time, server, target,
@@ -810,7 +810,7 @@ def userNotice(time, server, from_str, target, message):
 				getTextColor(nick),
 				gui.escape(message)))
 
-def ownAction(time, server, channel, action):
+def ownAction_cb(time, server, channel, action):
 
 	createTab(server, channel)
 
@@ -825,7 +825,7 @@ def ownAction(time, server, channel, action):
 			textColor,
 			gui.escape(action)))
 
-def actionQuery(time, server, from_str, action):
+def actionQuery_cb(time, server, from_str, action):
 
 	nick = parse_from(from_str)[0]
 
@@ -836,7 +836,7 @@ def actionQuery(time, server, from_str, action):
 
 	gui.set_urgent(True)
 
-def userAction(time, server, from_str, channel, action):
+def userAction_cb(time, server, from_str, channel, action):
 	"""
 		A user sent a action (text in third person)
 	"""
@@ -844,11 +844,11 @@ def userAction(time, server, from_str, channel, action):
 	server_tab = gui.tabs.search_tab(server)
 
 	if nick.lower() == server_tab.nick.lower():
-		ownAction(time, server, channel, action)
+		ownAction_cb(time, server, channel, action)
 		return
 
 	elif channel.lower() == server_tab.nick.lower():
-		actionQuery(time, server, from_str, action)
+		actionQuery_cb(time, server, from_str, action)
 		return
 
 	action = gui.escape(action)
@@ -866,7 +866,7 @@ def userAction(time, server, from_str, channel, action):
 		"<font foreground='%s' weight='bold'>%s</font> %s" % (
 			getNickColor(nick), nick, actionString), type)
 
-def userNick(time, server, from_str, newNick):
+def userNick_cb(time, server, from_str, newNick):
 	"""
 	A user (or the maki user) changed it's nick.
 	If a query window for this nick on this server
@@ -930,7 +930,7 @@ def userNick(time, server, from_str, newNick):
 				},
 				"action")
 
-def userKick(time, server, from_str, channel, who, reason):
+def userKick_cb(time, server, from_str, channel, who, reason):
 	"""
 		signal emitted if a user got kicked.
 		If the kicked user is ourself mark the channel as
@@ -984,7 +984,7 @@ def userKick(time, server, from_str, channel, who, reason):
 		gui.channelPrint(time, server, channel, message, "action")
 
 
-def userQuit(time, server, from_str, reason):
+def userQuit_cb(time, server, from_str, reason):
 	"""
 	The user identified by nick quit on the server "server" with
 	the reason "reason". "reason" can be empty ("").
@@ -1089,7 +1089,7 @@ def userQuit(time, server, from_str, reason):
 						message, "action")
 
 
-def userJoin(timestamp, server, from_str, channel):
+def userJoin_cb(timestamp, server, from_str, channel):
 	"""
 	A user identified by "nick" joins the channel "channel" on
 	server "server.
@@ -1166,7 +1166,7 @@ def userJoin(timestamp, server, from_str, channel):
 	if doPrint:
 		gui.channelPrint(timestamp, server, channel, message, "action")
 
-def userNames(timestamp, server, channel, nicks, prefixes):
+def userNames_cb(timestamp, server, channel, nicks, prefixes):
 	"""
 	this signal is called for each nick in the channel.
 	remove the nick to make sure it isn't there (hac--workaround),
@@ -1209,7 +1209,7 @@ def userNames(timestamp, server, channel, nicks, prefixes):
 			tab.nickList.get_operator_count())
 
 
-def userPart(timestamp, server, from_str, channel, reason):
+def userPart_cb(timestamp, server, from_str, channel, reason):
 	"""
 	A user parted the channel.
 
@@ -1278,13 +1278,13 @@ def userPart(timestamp, server, from_str, channel, reason):
 					},
 				"action")
 
-def userError(time, server, domain, reason, arguments):
+def userError_cb(time, server, domain, reason, arguments):
 	if domain == "no_such":
 		noSuch(time, server, arguments[0], reason)
 	elif domain == "cannot_join":
 		cannotJoin(time, server, arguments[0], reason)
 
-def noSuch(time, server, target, type):
+def noSuch_cb(time, server, target, type):
 	""" Signal is emitted if maki can't find the target on the server. """
 
 	tab = gui.tabs.search_tab(server, target)
@@ -1304,7 +1304,7 @@ def noSuch(time, server, target, type):
 	else:
 		gui.serverPrint(time, server, error)
 
-def channelList(time, server, channel, users, topic):
+def channelList_cb(time, server, channel, users, topic):
 	""" Signal for /list command.
 		Prints content of the listing.
 	"""
@@ -1357,7 +1357,7 @@ def channelList(time, server, channel, users, topic):
 			channelList._text = []
 			channelList._line = 0
 
-def cannotJoin(time, server, channel, reason):
+def cannotJoin_cb(time, server, channel, reason):
 	""" The channel could not be joined.
 		reason : { l (full), i (invite only), b (banned), k (key) }
 	"""
@@ -1391,7 +1391,7 @@ def cannotJoin(time, server, channel, reason):
 			}
 		))
 
-def whois(time, server, nick, message):
+def whois_cb(time, server, nick, message):
 	""" message = "" => end of whois """
 	if message:
 		gui.serverPrint(time, server,
@@ -1403,7 +1403,7 @@ def whois(time, server, nick, message):
 			_(u"[%(nick)s] End of whois.") % {
 				"nick": gui.escape(nick) })
 
-def dcc_send(time, id, server, sender, filename,
+def dcc_send_cb(time, id, server, sender, filename,
 			 size, progress, speed, status):
 	"""
 	status:
