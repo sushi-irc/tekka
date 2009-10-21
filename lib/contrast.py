@@ -28,7 +28,7 @@ from math import sqrt, fabs
 
 # actually, this should be an enum but
 # there is no need for an enum, i think...
-(
+colors = (
 	CONTRAST_COLOR_AQUA,
 	CONTRAST_COLOR_BLACK,
 	CONTRAST_COLOR_BLUE,

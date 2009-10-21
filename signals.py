@@ -47,36 +47,6 @@ from typecheck import types
 
 signals = {}
 
-# TODO:  would be nice to have all signal callbacks
-# TODO:: pre- or suffixed with "cb"
-
-def get_contrast_colors ():
-	return (
-		contrast.CONTRAST_COLOR_AQUA,
-		contrast.CONTRAST_COLOR_BLACK,
-		contrast.CONTRAST_COLOR_BLUE,
-		contrast.CONTRAST_COLOR_BROWN,
-		contrast.CONTRAST_COLOR_CYAN,
-		contrast.CONTRAST_COLOR_DARK_BLUE,
-		contrast.CONTRAST_COLOR_DARK_GREEN,
-		contrast.CONTRAST_COLOR_DARK_GREY,
-		contrast.CONTRAST_COLOR_DARK_RED,
-		contrast.CONTRAST_COLOR_GREEN,
-		contrast.CONTRAST_COLOR_GREY,
-		contrast.CONTRAST_COLOR_LIGHT_BLUE,
-		contrast.CONTRAST_COLOR_LIGHT_BROWN,
-		contrast.CONTRAST_COLOR_LIGHT_GREEN,
-		contrast.CONTRAST_COLOR_LIGHT_GREY,
-		contrast.CONTRAST_COLOR_LIGHT_RED,
-		contrast.CONTRAST_COLOR_MAGENTA,
-		contrast.CONTRAST_COLOR_ORANGE,
-		contrast.CONTRAST_COLOR_PURPLE,
-		contrast.CONTRAST_COLOR_RED,
-		contrast.CONTRAST_COLOR_VIOLET,
-		contrast.CONTRAST_COLOR_WHITE,
-		contrast.CONTRAST_COLOR_YELLOW
-	)
-
 @types (signal=basestring)
 def connect_signal (signal, handler):
 	""" connect handler to signal """
@@ -244,8 +214,7 @@ def getNickColor(nick):
 	if not config.get_bool("tekka","color_text"):
 		return
 
-	colors = get_contrast_colors()
-
+	colors = contrast.colors
 	bg_color = gui.widgets.get_widget("output").get_style().\
 		base[gtk.STATE_NORMAL]
 	color = colors[sum([ord(n) for n in nick]) % len(colors)]
@@ -261,8 +230,7 @@ def getTextColor(nick):
 	if not config.get_bool("tekka","color_text"):
 		return
 
-	colors = get_contrast_colors()
-
+	colors = contrast.colors
 	if not colors or not config.get_bool("tekka","color_nick_text"):
 		return config.get("colors","text_message","#000000")
 
@@ -484,8 +452,7 @@ def userAway_cb(time, server):
 	tab = gui.tabs.search_tab(server)
 
 	if tab:
-		# TODO: implement getting away message
-		tab.away = "WE ARE AWAY. HERE SHOULD BE A MESSAGE BUT IT'S NOT IMPLEMENTED YET, SRY!"
+		tab.away = "-- Not implemented yet --"
 
 
 def userBack_cb(time, server):
@@ -897,6 +864,7 @@ def userNick_cb(time, server, from_str, newNick):
 		if not nick or newNick == server_tab.nick:
 			doPrint = True
 		else:
+# TODO:::: hide hiding
 			doPrint = not "nick" in config.get_list(
 				"channel_%s_%s" % (
 					server.lower(),
