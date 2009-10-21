@@ -31,6 +31,9 @@ import gobject
 
 from typecheck import types
 
+COLUMN_PREFIX=0
+COLUMN_NICK=1
+
 class NickListStore(gtk.ListStore):
 	"""
 	Store class for the nickList widget.
@@ -44,11 +47,9 @@ class NickListStore(gtk.ListStore):
 	nick is a string.
 	"""
 
-	COLUMN_PREFIX=0
-	COLUMN_NICK=1
-
 	def __init__(self, nicks=None, prefixes=None):
-		gtk.ListStore.__init__(self, gobject.TYPE_STRING, gobject.TYPE_STRING)
+		gtk.ListStore.__init__(self, gobject.TYPE_STRING,
+			gobject.TYPE_STRING)
 
 		self.__modes = []
 		# user count, operator count, dowehaveoperators?
@@ -66,13 +67,13 @@ class NickListStore(gtk.ListStore):
 
 	def set_modes(self, modes):
 		self.__modes = list(modes)
-		self.__modes.append(" ") # append the empty mode
+		self.__modes.append("")
 		print "self.__modes = %s"  % self.__modes
 
 	@types(needle = basestring)
 	def find_nick_row(self, needle):
 		for row in self:
-			if row[self.COLUMN_NICK].lower() == needle.lower():
+			if row[COLUMN_NICK].lower() == needle.lower():
 				return row
 		return None
 
@@ -94,12 +95,12 @@ class NickListStore(gtk.ListStore):
 		"""
 		returns all nick names stored
 		"""
-		return [l[self.COLUMN_NICK] for l in self if l is not None ]
+		return [l[COLUMN_NICK] for l in self if l is not None ]
 
 	def get_nicks_mode(self):
 		""" return a tuple per nick with (prefix,nick) """
 		return [
-			(l[self.COLUMN_PREFIX],l[self.COLUMN_NICK]) for l in self
+			(l[COLUMN_PREFIX],l[COLUMN_NICK]) for l in self
 			if l]
 
 	def append_nick(self, nick, sort=True):
@@ -108,7 +109,9 @@ class NickListStore(gtk.ListStore):
 		data in the NickListStore would'nt be sorted in-place
 		"""
 		iter = self.append(None)
-		self.set(iter, self.COLUMN_NICK, nick)
+
+		self.set(iter, COLUMN_NICK, nick)
+		self.set(iter, COLUMN_PREFIX, "")
 
 		self.__count += 1
 
@@ -122,7 +125,7 @@ class NickListStore(gtk.ListStore):
 		row = self.find_nick_row(nick)
 
 		if row:
-			self.set(row.iter, self.COLUMN_NICK, newnick)
+			self.set(row.iter, COLUMN_NICK, newnick)
 			self.sort_nicks()
 
 	def remove_nick(self, nick):
@@ -135,7 +138,7 @@ class NickListStore(gtk.ListStore):
 		if not row:
 			return
 
-		if row[self.COLUMN_PREFIX] in self.__modes[:-2]:
+		if row[COLUMN_PREFIX] in self.__modes[:-2]:
 			self.__opcount -= 1
 
 		self.__count -= 1
@@ -168,15 +171,15 @@ class NickListStore(gtk.ListStore):
 		# list without voice and no-mode
 		op_pre = self.__modes[:-2]
 
-		if row[self.COLUMN_PREFIX] in op_pre and prefix not in op_pre:
+		if row[COLUMN_PREFIX] in op_pre and prefix not in op_pre:
 			# op goes to non-op
 			self.__opcount -= 1
 
-		elif row[self.COLUMN_PREFIX] not in op_pre and prefix in op_pre:
+		elif row[COLUMN_PREFIX] not in op_pre and prefix in op_pre:
 			# wasn't an op and becomes one
 			self.__opcount += 1
 
-		row[self.COLUMN_PREFIX] = prefix
+		row[COLUMN_PREFIX] = prefix
 
 		if sort:
 			self.sort_nicks()
@@ -191,51 +194,55 @@ class NickListStore(gtk.ListStore):
 		if not row:
 			return None
 
-		return row[self.COLUMN_PREFIX]
+		return row[COLUMN_PREFIX]
 
 	def search_nick(self, needle):
 		""" returns a list of nicks wich are beginning with
 			the string `needle`
 		"""
-		return [l[self.COLUMN_NICK] for l in self
-			if l and l[self.COLUMN_NICK][0:len(needle)].lower()==needle]
+		return [l[COLUMN_NICK] for l in self
+			if l and l[COLUMN_NICK][0:len(needle)].lower()==needle]
 
 	def search_nick_by_prefix(self, prefixes):
 		""" Searches for nicks which prefix is in the tuple prefixes
 			and returns the found nicks as a list.
 		"""
-		return [l[self.COLUMN_NICK] for l in self
-			if l and l[self.COLUMN_PREFIX] in prefixes]
+		return [l[COLUMN_NICK] for l in self
+			if l and l[COLUMN_PREFIX] in prefixes]
 
 	def sort_nicks(self):
 		""" sort the NickListStore in-place by prefix and
-			then by nick name
+			then by nick name.
+			Use insertion sort.
 		"""
-		modes = self.__modes
-		nl = []
-
-		for row in self:
-			prefix = row[self.COLUMN_PREFIX] or " "
-			nick = row[self.COLUMN_NICK]
-
+		def retreive_prefix(row):
 			try:
-				i = modes.index(prefix)
+				return self.__modes.index(row[COLUMN_PREFIX])
 			except ValueError:
-				print "sort_nicks: prefix for %s (%s) not in modes (%s)" %(
-					nick, prefix, self.__modes)
+				print "sort_nicks: prefix '%s' (%s) not in modes (%s)" % (
+					row[COLUMN_PREFIX], row[COLUMN_NICK], self.__modes)
+				return None
 
-			nl.append([i,nick])
+		def compare(left, current):
+			pLeft = retreive_prefix(left)
+			pRight = retreive_prefix(current)
 
-		nl.sort( cmp = lambda a,b: (cmp(a[0], b[0])
-			or cmp(a[1].lower(), b[1].lower())) )
+			# smallest prefix index p is highest mode
 
-		self.clear(count_reset = False)
+			return (pLeft < pRight or cmp(left[COLUMN_NICK].lower(),current[COLUMN_NICK].lower())	== 1)
 
-		for (prefix, nick) in nl:
-			try:
-				prefixSign = modes[prefix]
-			except IndexError:
-				prefixSign = "?"
+		for j in range(len(self)):
 
-			self.append(row = (prefixSign, nick))
+			i = j - 1
+			current = [self[j][0],self[j][1]]
+
+			while i > -1 and compare(self[i], current):
+				self.set(self[i+1].iter, 0, self[i][0], 1, self[i][1])
+				i -= 1
+
+			self.set(self[i+1].iter, 0, current[0], 1, current[1])
+
+
+#		nl.sort( cmp = lambda a,b: (cmp(a[0], b[0])
+#			or cmp(a[1].lower(), b[1].lower())) )
 
