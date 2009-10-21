@@ -224,12 +224,18 @@ class NickListStore(gtk.ListStore):
 				return None
 
 		def compare(left, current):
+			# left >? current
+
 			pLeft = retreive_prefix(left)
 			pRight = retreive_prefix(current)
 
+			# pLeft < pRight => Left > Right
 			# smallest prefix index p is highest mode
 
-			return (pLeft < pRight or cmp(left[COLUMN_NICK].lower(),current[COLUMN_NICK].lower())	== 1)
+			d = lambda: cmp(left[COLUMN_NICK].lower(),
+				current[COLUMN_NICK].lower())==1
+
+			return (pLeft > pRight) or (pLeft == pRight and d())
 
 		for j in range(len(self)):
 
@@ -241,8 +247,3 @@ class NickListStore(gtk.ListStore):
 				i -= 1
 
 			self.set(self[i+1].iter, 0, current[0], 1, current[1])
-
-
-#		nl.sort( cmp = lambda a,b: (cmp(a[0], b[0])
-#			or cmp(a[1].lower(), b[1].lower())) )
-
