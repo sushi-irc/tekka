@@ -235,7 +235,6 @@ def applyGeneralOutputFilter():
 
 		filter_list.append(rule)
 
-		print filter_list
 		config.set_list("general_output", "filter", filter_list)
 
 
@@ -347,7 +346,7 @@ def chatting_log_lines_changed(button):
 def advanced_advancedSettingsClicked(button):
 	d = dialog_control.loadDialog("advancedPreferences")
 	if not d:
-		print "dialog setup failed"
+		logging.error("advanced settings dialog setup failed")
 		return
 	d.run()
 

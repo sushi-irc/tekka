@@ -28,6 +28,7 @@ SUCH DAMAGE.
 
 import gtk
 import gobject
+import logging
 
 from typecheck import types
 
@@ -68,7 +69,6 @@ class NickListStore(gtk.ListStore):
 	def set_modes(self, modes):
 		self.__modes = list(modes)
 		self.__modes.append("")
-		print "self.__modes = %s"  % self.__modes
 
 	@types(needle = basestring)
 	def find_nick_row(self, needle):
@@ -219,8 +219,9 @@ class NickListStore(gtk.ListStore):
 			try:
 				return self.__modes.index(row[COLUMN_PREFIX])
 			except ValueError:
-				print "sort_nicks: prefix '%s' (%s) not in modes (%s)" % (
-					row[COLUMN_PREFIX], row[COLUMN_NICK], self.__modes)
+				logging.error(
+					"sort_nicks: prefix '%s' (%s) not in modes (%s)" % (
+					row[COLUMN_PREFIX], row[COLUMN_NICK], self.__modes))
 				return None
 
 		def compare(left, current):

@@ -27,6 +27,7 @@ SUCH DAMAGE.
 
 import gtk
 from gettext import gettext as _
+import logging
 
 import lib.gui_control
 import config
@@ -43,7 +44,7 @@ class TekkaStatusIcon(gtk.StatusIcon):
 				config.get("tekka","status_icon"))
 		except BaseException,e:
 			# unknown, print it
-			print e
+			logging.error("StatusIconInit: %s" % (e))
 			return
 
 		self.connect("activate", self.activate_cb)

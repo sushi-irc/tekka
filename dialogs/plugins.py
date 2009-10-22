@@ -31,6 +31,7 @@ import gtk.glade
 import os
 import gobject
 from gobject import TYPE_BOOLEAN
+import logging
 
 from gettext import gettext as _
 
@@ -65,10 +66,10 @@ def loadPlugin_clicked_cb(button):
 
 	path = view.get_cursor()[0]
 	if not path:
-		print "No row activated!"
+		# TODO: what about informing the user that there is no row active
 		return
 
-	print "loading plugin '%s'..." % (store[path][COL_NAME])
+	logging.info("loading plugin '%s'..." % (store[path][COL_NAME]))
 
 	if pinterface.load(store[path][COL_NAME]):
 		store.set(store.get_iter(path), COL_LOADED, True)
@@ -79,10 +80,10 @@ def unloadPlugin_clicked_cb(button):
 
 	path = view.get_cursor()[0]
 	if not path:
-		print "No row activated!"
+		# TODO: see todo in loadPlugin_clicked_cb
 		return
 
-	print "unloading plugin '%s'..." % (store[path][COL_NAME])
+	logging.info("unloading plugin '%s'..." % (store[path][COL_NAME]))
 
 	if pinterface.unload(store[path][COL_NAME]):
 		store.set(store.get_iter(path), COL_LOADED, False)
@@ -98,7 +99,7 @@ def configureButton_clicked_cb(button):
 		config.create_section(cSection)
 
 		for (key, value) in dialog.map.items():
-			print "Result: %s -> %s" % (key, str(value))
+			logging.debug("DRCB: Result: %s -> %s" % (key, str(value)))
 			config.set(cSection, key, str(value))
 
 		dialog.destroy()
@@ -282,7 +283,7 @@ def loadPluginList():
 	paths = config.get_list("tekka", "plugin_dirs", [])
 
 	if not paths:
-		print "no plugin paths!"
+		logging.error("loadPluginList: no plugin paths!")
 		return False
 
 	list = config.get("autoload_plugins", default={}).values()
@@ -308,7 +309,8 @@ def loadPluginList():
 				info = pinterface.get_info(item)
 
 				if not info:
-					print "no info for plugin '%s'" % (info)
+					logging.debug(
+						"loadPluginList: no info for plugin '%s'" % (info))
 					version = "N/A"
 					desc = "N/A"
 					author = "N/A"

@@ -30,6 +30,7 @@ from gettext import gettext as _
 
 import gtk
 import gobject
+import logging
 from dbus import UInt64
 import time as mtime
 
@@ -870,7 +871,6 @@ def userNick_cb(time, server, from_str, newNick):
 					server.lower(),
 					tab.name.lower()),
 				"hide", [])
-		print "%s@%s: %s" % (server, tab, doPrint)
 
 		if tab.is_channel():
 			if (nick in tab.nickList.get_nicks()):
@@ -890,7 +890,6 @@ def userNick_cb(time, server, from_str, newNick):
 			gui.escape(newNick))
 
 		if doPrint:
-			print "would print to %s@%s: %s" % (tab.name, server, message)
 			gui.channelPrint(time, server, tab.name,
 				message % {
 					"nick": nickString,
@@ -908,7 +907,7 @@ def userKick_cb(time, server, from_str, channel, who, reason):
 	server_tab, tab = gui.tabs.search_tabs(server, channel)
 
 	if not tab:
-		print "userKick: channel '%s' does not exist." % (channel)
+		logging.debug("userKick: channel '%s' does not exist." % (channel))
 		return
 
 	channelString = "<font foreground='%s'>%s</font>" % (
@@ -1007,7 +1006,7 @@ def userQuit_cb(time, server, from_str, reason):
 		channels = gui.tabs.get_all_tabs(servers = [server])[1:]
 
 		if not channels:
-			print "No channels but quit reported.. Hum wtf? o.0"
+			logging.debug("No channels but quit reported.. Hum wtf? o.0")
 			return
 
 		nickString = "<font foreground='%s' weight='bold'>%s</font>" % (
@@ -1076,7 +1075,8 @@ def userJoin_cb(timestamp, server, from_str, channel):
 			tab = gui.tabs.create_channel(stab, channel)
 
 			if not gui.tabs.add_tab(stab, tab):
-				print "adding tab for channel '%s' failed." % (channel)
+				logging.debug("adding tab for channel '%s' failed." % (
+					channel))
 				return
 
 			gui.print_last_log(server, channel)
@@ -1105,7 +1105,7 @@ def userJoin_cb(timestamp, server, from_str, channel):
 	else: # another one joined the channel
 
 		if not tab:
-			print "No tab for channel '%s' in userJoin (not me)."
+			logging.debug("No tab for channel '%s' in userJoin (not me).")
 			return
 
 		message = _(u"» %(nick)s has joined %(channel)s.")
@@ -1151,7 +1151,8 @@ def userNames_cb(timestamp, server, channel, nicks, prefixes):
 		tab = gui.tabs.create_channel(serverTab, channel)
 
 		if not gui.tabs.add_tab(serverTab, tab):
-			print "adding tab for channel '%s' failed." % (channel)
+			logging.debug("adding tab for channel '%s' failed." % (
+				channel))
 			return
 
 		gui.print_last_log(server, channel)
@@ -1402,10 +1403,10 @@ def dcc_send_cb(time, id, server, sender, filename,
 	and 0 in (size, progress, speed, status)):
 
 		# send was removed
-		print "filetransfer %d removed." % (id)
+		logging.debug("filetransfer %d removed." % (id))
 		return
 
-	print "status is %d." % (status)
+	logging.debug("status is %d." % (status))
 
 	# handle incoming transfers
 	#

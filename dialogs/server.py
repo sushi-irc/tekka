@@ -30,6 +30,7 @@ import gtk
 import gtk.glade
 import com
 import config
+import logging
 
 from lib import dialog_control
 import lib.gui_control as gui_control
@@ -151,7 +152,7 @@ def createServer(newServer):
 		or not newServer.has_key("nick") \
 		or not newServer.has_key("name"):
 
-		print "wrong data to createserver"
+		logging.error("wrong data to createServer: %s" % (newServer))
 		return
 
 	com.createServer(newServer)
@@ -184,7 +185,8 @@ def openEditDialog(widget):
 	servername = None
 
 	if not path:
-		print "No server selected."
+		# TODO:  dialog to inform the user that there's no
+		# TODO:: server selected?
 		return
 
 	else:
@@ -193,16 +195,14 @@ def openEditDialog(widget):
 	data = dialog_control.showEditServerDialog(servername)
 
 	if not servername:
-		print "Error in retrieving the servername"
+		logging.error("openEditDialog: Error in retrieving the servername")
 		return
 
 	if data:
-		print "User edited server"
 		retrieveServerlist()
 
 def delete_dialog_cb(servername):
 	""" indicates that the server can be deleted """
-	print "Deleting server %s" % servername
 	deleteServer(servername)
 
 def openDeleteDialog(widget):
@@ -212,7 +212,7 @@ def openDeleteDialog(widget):
 	servername = None
 
 	if not path:
-		print "No server selected."
+		# TODO: see openEditDialog-todo
 		return
 
 	else:

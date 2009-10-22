@@ -26,6 +26,8 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+import logging
+
 from gobject import signal_new, signal_lookup, SIGNAL_ACTION
 from gtk.gdk import CONTROL_MASK, SHIFT_MASK, MOD1_MASK, keyval_from_name
 from gtk import ACCEL_VISIBLE
@@ -41,11 +43,13 @@ def removeShortcuts(accelGroup, widget):
 		Removes all shortcuts registered to widget
 	"""
 	if not regmap.has_key(accelGroup):
-		print "No shortcuts registered to accel group."
+		logging.error("removeShortcuts: No shortcuts registered to "
+			"accel group.")
 		return False
 
 	if not regmap[accelGroup].has_key(widget):
-		print "No shortcuts registered to widget."
+		logging.info("removeShortcuts: No shortcuts registered to "
+			"widget %s." % (widget))
 		return False
 
 	for (handler,keys,keyval,mask) in regmap[accelGroup][widget]:
@@ -61,11 +65,11 @@ def removeShortcut(accelGroup, widget, shortcut):
 		Removes the shortcut identified by shortcut string.
 	"""
 	if not regmap.has_key(accelGroup):
-		print "No shortcuts registered to accel group."
+		logging.info("No shortcuts registered to accel group.")
 		return False
 
 	if not regmap[accelGroup].has_key(widget):
-		print "No shortcuts registered for widget."
+		logging.info("No shortcuts registered for widget.")
 		return False
 
 	i = 0
@@ -74,7 +78,7 @@ def removeShortcut(accelGroup, widget, shortcut):
 			widget.remove_accelerator(accelGroup, keyval, mask)
 			widget.disconnect(handler)
 			del regmap[accelGroup][widget][i]
-			#print "deleted shortcut %s." % ("".join(keys))
+			#logging.debug("deleted shortcut %s." % ("".join(keys)))
 			break
 		i+=1
 
@@ -93,13 +97,13 @@ def addShortcut(accelGroup, widget, shortcut, callback, *args):
 	match = shortExp.match(shortcut)
 
 	if not match:
-		print "No pattern match."
+		logging.error("addShortcut: No pattern match for %s" % (shortcut))
 		return None
 
 	vGroups = [g for g in match.groups() if g]
 
 	if not vGroups:
-		print "No filled groups."
+		logging.error("addShortcut: No filled groups for %s" % (shortcut))
 		return None
 
 	mask = 0
@@ -118,7 +122,7 @@ def addShortcut(accelGroup, widget, shortcut, callback, *args):
 		keyval = keyval_from_name(key)
 
 		if not keyval:
-			print "Too much chars for shortcut (%s)." % (key)
+			logging.error("addShortcut: Too much chars for (%s)." % (key))
 			return None
 	else:
 		keyval = ord(key)

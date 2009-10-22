@@ -36,6 +36,7 @@ import gtk.glade
 import com
 import signals
 import config
+import logging
 from lib.gui_control import errorMessage, markup_escape
 
 widgets = None
@@ -84,7 +85,7 @@ def listButton_clicked_cb(button):
 	the server listing.
 	"""
 	if not currentServer:
-		print "no current server"
+		logging.error("channelList: no current server")
 		return
 
 	global filterExpression, cache
@@ -109,7 +110,7 @@ def listButton_clicked_cb(button):
 			com.sushi.list(currentServer, "")
 
 		except BaseException, e:
-			print e
+			logging.error("Error in getting list: %s" % (e))
 			resetSignal()
 
 def listView_row_activated_cb(treeView, path, column):
@@ -117,13 +118,11 @@ def listView_row_activated_cb(treeView, path, column):
 	clicked on a channel.
 	"""
 	if not currentServer:
-		print "no current server!"
 		return
 
 	try:
 		channel = treeView.get_model()[path][0]
 	except:
-		print "no channel"
 		return
 
 	com.sushi.join(currentServer, channel)

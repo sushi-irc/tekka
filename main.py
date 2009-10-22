@@ -69,6 +69,7 @@ import dbus
 import webbrowser
 import locale
 import types as ptypes
+import logging
 import gettext
 _ = gettext.gettext
 
@@ -165,8 +166,6 @@ def tekka_tab_switched_cb(tabclass, old, new):
 
 def tekka_tab_remove_cb(tab):
 	""" a tab is about to be removed """
-
-	print "tekka_tab_remove (%s)" % tab
 
 	if gui.tabs.get_current_tab() == tab:
 		# switch to another tab
@@ -498,7 +497,6 @@ def serverTree_button_press_event_cb(serverTree, event):
 		path = serverTree.get_path_at_pos(int(event.x),int(event.y))[0]
 		tab = serverTree.get_model()[path][0]
 	except Exception,e:
-		print "Exception in serverTree_button_press_event: ", e
 		tab = None
 
 	if event.button == 1:
@@ -519,7 +517,7 @@ def serverTree_button_press_event_cb(serverTree, event):
 			menu = servertree_menu.ServerTreeMenu().get_menu(tab)
 
 			if not menu:
-				print "error in creating server tree tab menu."
+				logging.error("error in creating server tree tab menu.")
 				return False
 
 			else:
@@ -638,10 +636,8 @@ def scrolledWindow_output_vscrollbar_valueChanged_cb(range):
 		if (adjust.upper - adjust.page_size) == range.get_value():
 			# bottom reached
 			tab.autoScroll = True
-			print "autoscroll for tab %s ENABLED." % (tab.name)
 		else:
 			tab.autoScroll = False
-			print "autoscroll for tab %s DISABLED." % (tab.name)
 
 		return False
 
@@ -788,9 +784,7 @@ def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 		text = text[bounds[0]:bounds[1]]
 		cb.set_text(text)
 
-# TODO: the following 2 functions are callbacks, rename them
-
-def servertree_query_tooltip(widget, x, y, kbdmode, tooltip):
+def serverTree_query_tooltip_cb(widget, x, y, kbdmode, tooltip):
 	""" show tooltips for treeview rows """
 
 	def limit(s):
@@ -830,12 +824,12 @@ def servertree_query_tooltip(widget, x, y, kbdmode, tooltip):
 
 	return True
 
-def servertree_render_server(column, renderer, model, iter):
+def serverTree_render_server_cb(column, renderer, model, iter):
 	""" Renderer func for column "Server" in servertree """
 	tab = model.get(iter, 0)
 	renderer.set_property("markup",tab[0].markup())
 
-def nickListRenderNicks(column, renderer, model, iter):
+def nickList_render_nicks_cb(column, renderer, model, iter):
 	""" Renderer func for column "Nicks" in NickList """
 
 	if not com.sushi.connected:
@@ -974,11 +968,11 @@ def setup_serverTree():
 
 	widget.set_model(tm)
 	widget.set_property("has-tooltip", True)
-	widget.connect("query-tooltip", servertree_query_tooltip)
+	widget.connect("query-tooltip", serverTree_query_tooltip_cb)
 
 	renderer = gtk.CellRendererText()
 	column = gtk.TreeViewColumn("Server", renderer)
-	column.set_cell_data_func(renderer, servertree_render_server)
+	column.set_cell_data_func(renderer, serverTree_render_server_cb)
 
 	widget.append_column(column)
 	widget.set_headers_visible(False)
@@ -999,7 +993,7 @@ def setup_nickList():
 
 	renderer = gtk.CellRendererText()
 	column = gtk.TreeViewColumn("Nicks", renderer, text=1)
-	column.set_cell_data_func(renderer, nickListRenderNicks)
+	column.set_cell_data_func(renderer, nickList_render_nicks_cb)
 	widget.append_column(column)
 
 	widget.set_headers_visible(False)
@@ -1085,7 +1079,8 @@ def load_paned_positions():
 		try:
 			paned.set_position(int(position))
 		except ValueError:
-			print "Failed to set position for paned %s" % (paned.name)
+			logging.error("Failed to set position for paned %s" % (
+				paned.name))
 			continue
 
 def setup_paneds():
@@ -1373,6 +1368,13 @@ def main():
 
 	# load config file, apply defaults
 	config.setup()
+
+	# setup logging
+	try:
+		logging.basicConfig(filename = config.get("tekka","logfile"),
+			level = logging.DEBUG)
+	except:
+		pass
 
 	# setup callbacks
 	com.setup( [maki_connect_callback], [maki_disconnect_callback])

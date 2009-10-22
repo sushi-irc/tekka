@@ -27,6 +27,7 @@ SUCH DAMAGE.
 
 import gtk
 import gobject
+import logging
 
 import com
 import config
@@ -539,13 +540,14 @@ class TabControl(gobject.GObject):
 		store = serverTree.get_model()
 
 		if not path:
-			print "switchToPath(): empty path given, aborting."
+			logging.error("switchToPath(): empty path given, aborting.")
 			return
 
 		try:
 			tab = store[path][0]
 		except IndexError:
-			print "switchToPath(): tab not found in store, aborting."
+			logging.error(
+				"switchToPath(): tab not found in store, aborting.")
 			return
 
 		old_tab = self.get_current_tab()

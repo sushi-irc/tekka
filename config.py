@@ -66,6 +66,8 @@ def set_defaults():
 	defaults = {}
 
 	defaults["tekka"] = {}
+	defaults["tekka"]["logfile"] = get_path(xdg_data_home, "sushi",
+		"tekka_log")
 	defaults["tekka"]["locale_dir"] = get_path("..", "..", "locale")
 	defaults["tekka"]["status_icon"] = get_path("graphics", "icon.svg")
 	defaults["tekka"]["plugin_dirs"] = escape_join(",", (

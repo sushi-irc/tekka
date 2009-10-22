@@ -33,6 +33,7 @@ from time import localtime
 import os
 import codecs
 import re
+import logging
 
 import config
 import com
@@ -182,8 +183,9 @@ class HistorySearchBar(SearchBar):
 				date = self._get_date(text, index)
 
 				if not date:
-					print "Could not find date for index %d on file %s" %(
-						index, file)
+					logging.error(
+						"Could not find date for index %d on "
+						"file %s" % (index, file))
 					break
 
 				year, month, day = date
@@ -203,8 +205,9 @@ class HistorySearchBar(SearchBar):
 
 				if not search_result:
 					# This should definitively not happen..
-					print "No search result with textiter for '%s'" % (
-						self.search_term)
+					logging.info(
+						"No search result with textiter for '%s'" % (
+						self.search_term))
 					break
 
 				self.textview.get_buffer().select_range(*search_result)
@@ -224,7 +227,6 @@ class HistorySearchBar(SearchBar):
 			textiter = None
 
 		if not success:
-			print "NO RESULTS"
 			self.last = ()
 
 
@@ -233,7 +235,7 @@ def calendar_open_file(calendar, file):
 #		fd = codecs.open(os.path.join(calendar.log_dir, file), "r", "utf-8")
 		fd = open(os.path.join(calendar.log_dir, file), "r")
 	except IOError,e:
-		print "Failed to open file %s: %s" % (file, e)
+		logging.error("Calendar: Failed to open file %s: %s" % (file, e))
 		return None
 	return fd
 
@@ -345,7 +347,7 @@ def calendar_day_selected_cb(calendar):
 		*calendar.get_properties("year","month","day"))
 
 	if None in (start, end):
-		print "Missing start / end."
+		logging.error("CalendarDaySelected: Missing start / end.")
 		buffer.set_text("")
 		return
 
@@ -362,7 +364,7 @@ def run(tab):
 	try:
 		file_list = os.listdir(log_dir)
 	except OSError,e:
-		print e
+		logging.error("calendar run failed: %s" % (e))
 		return
 	file_list.sort()
 

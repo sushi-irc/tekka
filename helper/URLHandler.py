@@ -28,6 +28,7 @@ SUCH DAMAGE.
 
 import gtk
 import config
+import logging
 import webbrowser
 
 eventIDs = {}
@@ -63,11 +64,11 @@ def URLHandler(texttag, widget, event, iter, url):
 			else:
 				browser = webbrowser
 		except webbrowser.Error:
-			print "Could not open a browser"
+			logging.error("Could not open a browser")
 			browser = None
 
 		except TypeError:
-			print "Fetching bug in python2.4"
+			logging.debug("Fetching bug in python2.4")
 			browser = None
 
 		if event.button == 1 and browser:

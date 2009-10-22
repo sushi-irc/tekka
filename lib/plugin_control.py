@@ -41,6 +41,7 @@ import os
 import imp
 import sys
 from gettext import gettext as _
+import logging
 
 import config
 
@@ -329,7 +330,7 @@ def get_options(filename):
 def load_autoloads():
 	autoloads = config.get("autoload_plugins").items()
 	for opt,filename in autoloads:
-		print "autoloading '%s'" % (filename)
+		logging.info("autoloading '%s'" % (filename))
 		if not load(filename):
 			generic_error(_("Plugin could not be loaded."),
 				_("Plugin %(plugin)s could not be loaded automatically.") % {"plugin": filename})

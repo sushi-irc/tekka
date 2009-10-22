@@ -28,6 +28,7 @@ SUCH DAMAGE.
 
 import gtk
 import dbus
+import logging
 from gobject import TYPE_UINT64
 from threading import Thread
 from time import sleep
@@ -55,11 +56,10 @@ class PollThread(Thread):
 		while not self._stop:
 
 			gtk.gdk.threads_enter()
-			print "refreshing!"
 			try:
 				apply_dbus_sends()
 			except BaseException,e:
-				print "-"*34, e, "-"*34
+				logging.error("Error in PollThread: %s" % (e))
 			gtk.gdk.threads_leave()
 
 			sleep(1)

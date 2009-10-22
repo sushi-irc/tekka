@@ -37,6 +37,7 @@ import time
 import pango
 import gettext
 import gobject
+import logging
 from gobject import idle_add
 from dbus import String, UInt64
 
@@ -52,7 +53,7 @@ import cProfile
 try:
 	from sexy import SpellEntry
 except ImportError:
-	print "Spell checking disabled."
+	logging.info("Spell checking disabled.")
 
 # local modules
 import config
@@ -82,7 +83,7 @@ def profileMe(file):
 			try:
 				os.makedirs(path)
 			except BaseException, e:
-				print >> sys.stderr, "Profiling disabled: %s", e
+				logging.info("Profiling disabled: %s" % e)
 				return None
 		return os.path.join(path, file)
 
@@ -304,7 +305,7 @@ def set_font(textView, font):
 	fd = pango.FontDescription(font)
 
 	if not fd:
-		print "Font _not_ modified (previous error)"
+		logging.error("set_font: Font _not_ modified (previous error)")
 		return
 
 	textView.modify_font(fd)
@@ -373,7 +374,6 @@ def escape_color(msg):
 			break
 
 		match = escape_color.pattern.match(msg[i:i+6])
-		#print "%s = COLORSEQUENCE(%s)" % (match, msg[i:i+6])
 
 		if match:
 			groups = match.groups()
@@ -489,7 +489,7 @@ def print_last_log(server, channel, lines=0, tab = None):
 	buffer = tab.textview.get_buffer()
 
 	if not buffer:
-		print "last_log('%s','%s'): no buffer" % (server,channel)
+		logging.error("last_log('%s','%s'): no buffer" % (server,channel))
 		return
 
 	for line in com.sushi.log(
@@ -506,7 +506,7 @@ def write_to_general_output(msgtype, timestring, server, channel, message):
 	goBuffer = widgets.get_widget("generalOutput").get_buffer()
 
 	filter = config.get_list("general_output", "filter", [])
-	print "filter: %s" % (filter)
+	logging.debug("filter: %s" % (filter))
 	for rule in filter:
 		try:
 			if not eval(rule):
@@ -551,7 +551,7 @@ def channelPrint(timestamp, server, channel, message, msgtype="message"):
 	channelTab = tabs.search_tab(server, channel)
 
 	if not channelTab:
-		print "No such channel %s:%s" % (server, channel)
+		logging.error("No such channel %s:%s" % (server, channel))
 		return
 
 	buffer = channelTab.textview.get_buffer()
@@ -578,7 +578,7 @@ def serverPrint(timestamp, server, string, msgtype="message"):
 	serverTab = tabs.search_tab(server)
 
 	if not serverTab:
-		print "Server %s does not exist." % server
+		logging.error("Server %s does not exist." % (server))
 		return
 
 	buffer = serverTab.textview.get_buffer()
@@ -630,7 +630,7 @@ def myPrint(string, html=False):
 	output = textview.get_buffer()
 
 	if not output:
-		print "No output buffer here!"
+		logging.error("myPrint: No output buffer.")
 		return
 
 	if not html:
@@ -643,7 +643,7 @@ def myPrint(string, html=False):
 		try:
 			output.insertHTML(output.get_end_iter(), string)
 		except AttributeError:
-			print "No HTML buffer, printing normal."
+			logging.info("myPrint: No HTML buffer, printing normal.")
 			output.insert(output.get_end_iter(), "\n"+string)
 
 	textview.scroll_to_bottom()

@@ -30,6 +30,7 @@ import gtk
 from gettext import gettext as _
 import lib.gui_control as gui
 import __main__
+import logging
 
 error_textview = gtk.TextView()
 
@@ -37,7 +38,7 @@ def button_clicked_cb(button, textView):
 	"""
 		compile statement and run it.
 	"""
-	print "compile and run!"
+	logging.info("debugDialog: Compile and run!")
 	exec(textView.get_buffer().get_property("text"))
 
 def destroy_dialog(dialog, rid):
@@ -55,7 +56,7 @@ def run():
 	dialog.resize(300,400)
 
 	if not dialog:
-		print "Dialog creation failed!"
+		logging.error("DebugDialog creation failed!")
 		return
 
 	code_vbox = gtk.VBox()

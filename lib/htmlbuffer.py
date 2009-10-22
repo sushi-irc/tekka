@@ -29,6 +29,7 @@ SUCH DAMAGE.
 import gtk
 import gtk.glade
 import pango
+import logging
 from StringIO import StringIO
 
 import xml.sax, xml.sax.handler
@@ -42,8 +43,6 @@ def rindex(l, i):
 	try:
 		return (len(tl)-1)-tl.index(i)
 	except ValueError, e:
-		print e,
-		print " (%s)" % i
 		return (-1)
 
 class HTMLHandler(xml.sax.handler.ContentHandler):
@@ -128,7 +127,7 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 			pass
 
 		else:
-			print "Unknown tag %s" % name
+			logging.error("HTMLBuffer: Unknown tag %s" % (name))
 			return
 
 		self.elms.append(name)
@@ -186,7 +185,7 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 				try:
 					tag.set_property(name, attrs[name])
 				except Exception, ex:
-					print ex
+					logging.error("_parseFont: %s" % (ex))
 
 class ScanHandler(xml.sax.ContentHandler):
 
@@ -299,16 +298,16 @@ class HTMLBuffer(gtk.TextBuffer):
 				line = e.getLineNumber()
 
 				if (pos-2 >= 0 and text[pos-2:pos] == "</"):
-					print "Syntax error on line %d, "\
+					logging.error("Syntax error on line %d, "\
 						"column %d: %s\n\t%s" % (
 							line,
 							pos,
 							text[pos:],
-							text)
+							text))
 					return
 
-				print "faulty char on line %d char %d ('%s')" % (
-					line, pos, text[pos])
+				logging.error("HTMLBuffer: faulty char on line %d "
+					"char %d ('%s')" % (line, pos, text[pos]))
 
 				# skip the faulty char
 				text = text[:pos] + text[pos+1:]

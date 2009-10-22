@@ -40,9 +40,7 @@ commandList = None
 def createCommandList(glade, function_name, widget_name, *x):
 	global commandList
 
-	print widget_name
 	if widget_name != "commandList":
-		print "wrong widget"
 		return
 
 	commandList = ExpandingList(gtk.Entry)

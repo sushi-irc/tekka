@@ -26,12 +26,14 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+import logging
+
 def loadDialog(name):
 	importName = "dialogs."+name
 	try:
 		dialog = __import__(importName)
 	except ImportError,e:
-		print "ImportError: ",e
+		logging.error("loadDialog: ImportError: %s" % (e))
 		return None
 	# get the sub-module (name)
 	components = importName.split('.')

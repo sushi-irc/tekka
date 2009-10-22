@@ -28,6 +28,7 @@ SUCH DAMAGE.
 
 import gtk
 import gobject
+import logging
 
 # FIXME: last filled item can't be removed
 
@@ -71,11 +72,12 @@ class ExpandingList(gtk.Table):
 			try:
 				instance = widget()
 			except:
-				print "ExpandingList: error while instancing %s" % widget
+				logging.error(
+					"ExpandingList: error while instancing %s" % (widget))
 				continue
 			self.emit("instanced_widget", row, column, instance)
 
-			print "attaching instance of %s" % widget
+			logging.debug("attaching instance of %s" % (widget))
 			self.attach(instance, column, column+1, row, row+1)
 			self._matrix[row].append(instance)
 			column += 1
@@ -96,7 +98,9 @@ class ExpandingList(gtk.Table):
 		# determine the row to add the new row under
 		if under >= 0:
 			if under > self._rows:
-				print "under > self._rows"
+				logging.error(
+					"expanding_list: add_row: under (%d) > "
+					"self._rows (%d)" % (under, self._rows))
 				return
 
 			row = under + 1
