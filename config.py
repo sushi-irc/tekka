@@ -29,7 +29,8 @@ SUCH DAMAGE.
 import os
 import sys
 
-from xdg.BaseDirectory import xdg_config_home, xdg_data_home
+from xdg.BaseDirectory import xdg_config_home, xdg_data_home, \
+	xdg_cache_home
 import ConfigParser
 
 from typecheck import types
@@ -66,8 +67,8 @@ def set_defaults():
 	defaults = {}
 
 	defaults["tekka"] = {}
-	defaults["tekka"]["logfile"] = get_path(xdg_data_home, "sushi",
-		"tekka_log")
+	defaults["tekka"]["logfile"] = get_path(xdg_cache_home, "sushi",
+		"tekka.txt")
 	defaults["tekka"]["locale_dir"] = get_path("..", "..", "locale")
 	defaults["tekka"]["status_icon"] = get_path("graphics", "icon.svg")
 	defaults["tekka"]["plugin_dirs"] = escape_join(",", (

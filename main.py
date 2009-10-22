@@ -63,6 +63,7 @@ except:
 	print "Are you sure X is running?"
 	sys.exit(1)
 
+import os
 from gobject import TYPE_STRING, TYPE_PYOBJECT, idle_add,GError
 import pango
 import dbus
@@ -1361,6 +1362,18 @@ def tekka_excepthook(extype, exobj, extb):
 	else:
 		tekka_excepthook.dialog.set_message(message)
 
+def setup_logging():
+	try:
+		logfile = config.get("tekka","logfile")
+
+		if not os.path.exists(logfile):
+			os.makedirs(os.path.split(logfile)[0])
+
+		logging.basicConfig(filename = logfile, level = logging.DEBUG,
+			filemode="w")
+	except BaseException, e:
+		print >> sys.stderr, "Logging init error: %s" % (e)
+
 def main():
 	"""
 	Entry point. The program starts here.
@@ -1369,12 +1382,8 @@ def main():
 	# load config file, apply defaults
 	config.setup()
 
-	# setup logging
-	try:
-		logging.basicConfig(filename = config.get("tekka","logfile"),
-			level = logging.DEBUG)
-	except:
-		pass
+	# create logfile, setup logging module
+	setup_logging()
 
 	# setup callbacks
 	com.setup( [maki_connect_callback], [maki_disconnect_callback])
