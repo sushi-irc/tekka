@@ -641,7 +641,7 @@ def userCTCP_cb(time, server,  from_str, target, message):
 
 	elif target.lower() == server_tab.nick.lower():
 		# someone wrote us, put in into a query
-		queryCTCP(time, server, from_str, message)
+		queryCTCP_cb(time, server, from_str, message)
 
 	else:
 		# normal ctcp
