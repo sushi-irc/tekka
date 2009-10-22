@@ -77,8 +77,11 @@ def set_defaults():
 	defaults["tekka"]["use_default_font"] = "True"
 	defaults["tekka"]["font"] = "Monospace 10"
 	defaults["tekka"]["auto_expand"] = "True"
+
 	defaults["tekka"]["show_general_output"] = "True"
 	defaults["tekka"]["show_topicbar"] = "False"
+	defaults["tekka"]["show_side_pane"] = "True"
+
 	defaults["tekka"]["rgba"] = "False"
 	defaults["tekka"]["close_maki_on_close"] = "False"
 	defaults["tekka"]["color_text"] = "True" 		# colors enabled?

@@ -546,50 +546,6 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkTable" id="nickColorsTable">
-                <property name="visible">True</property>
-                <property name="border_width">8</property>
-                <property name="n_rows">2</property>
-                <child>
-                  <widget class="Custom" id="nickColorsList">
-                    <property name="visible">True</property>
-                    <property name="creation_function">createNickColorsList</property>
-                  </widget>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="label7">
-                    <property name="visible">True</property>
-                    <property name="xalign">0.11999999731779099</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Warning:&lt;/b&gt;
-Changes will be applied after closing this dialog.</property>
-                    <property name="use_markup">True</property>
-                    <property name="wrap">True</property>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
-                    <property name="y_options">GTK_SHRINK</property>
-                    <property name="y_padding">6</property>
-                  </packing>
-                </child>
-              </widget>
-              <packing>
-                <property name="position">3</property>
-              </packing>
-            </child>
-            <child>
-              <widget class="GtkLabel" id="label6">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">_Nick Colors</property>
-                <property name="use_underline">True</property>
-              </widget>
-              <packing>
-                <property name="position">3</property>
-                <property name="tab_fill">False</property>
-                <property name="type">tab</property>
-              </packing>
-            </child>
-            <child>
               <widget class="GtkTable" id="generalOutputFilterTable">
                 <property name="visible">True</property>
                 <property name="border_width">8</property>
@@ -619,7 +575,51 @@ Everything matching passes the filter and will be shown except the row is negate
                 </child>
               </widget>
               <packing>
-                <property name="position">3</property>
+                <property name="position">4</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="label6">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_Nick Colors</property>
+                <property name="use_underline">True</property>
+              </widget>
+              <packing>
+                <property name="position">4</property>
+                <property name="tab_fill">False</property>
+                <property name="type">tab</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkTable" id="nickColorsTable">
+                <property name="visible">True</property>
+                <property name="border_width">8</property>
+                <property name="n_rows">2</property>
+                <child>
+                  <widget class="Custom" id="nickColorsList">
+                    <property name="visible">True</property>
+                    <property name="creation_function">createNickColorsList</property>
+                  </widget>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label7">
+                    <property name="visible">True</property>
+                    <property name="xalign">0.11999999731779099</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Warning:&lt;/b&gt;
+Changes will be applied after closing this dialog.</property>
+                    <property name="use_markup">True</property>
+                    <property name="wrap">True</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                    <property name="y_options">GTK_SHRINK</property>
+                    <property name="y_padding">6</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="position">4</property>
               </packing>
             </child>
             <child>
@@ -629,7 +629,7 @@ Everything matching passes the filter and will be shown except the row is negate
                 <property name="use_underline">True</property>
               </widget>
               <packing>
-                <property name="position">3</property>
+                <property name="position">4</property>
                 <property name="tab_fill">False</property>
                 <property name="type">tab</property>
               </packing>
@@ -668,7 +668,7 @@ For some options it is neccessary to restart tekka for the changes to take effec
                 </child>
               </widget>
               <packing>
-                <property name="position">4</property>
+                <property name="position">5</property>
               </packing>
             </child>
             <child>
@@ -678,7 +678,21 @@ For some options it is neccessary to restart tekka for the changes to take effec
                 <property name="use_underline">True</property>
               </widget>
               <packing>
-                <property name="position">4</property>
+                <property name="position">5</property>
+                <property name="tab_fill">False</property>
+                <property name="type">tab</property>
+              </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="label14">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">page 7</property>
+              </widget>
+              <packing>
+                <property name="position">5</property>
                 <property name="tab_fill">False</property>
                 <property name="type">tab</property>
               </packing>

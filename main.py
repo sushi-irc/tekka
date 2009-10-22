@@ -68,6 +68,7 @@ import pango
 import dbus
 import webbrowser
 import locale
+import types as ptypes
 import gettext
 _ = gettext.gettext
 
@@ -76,6 +77,7 @@ import config
 import com
 import signals
 import commands
+from typecheck import types
 
 import lib.gui_control as gui
 
@@ -234,6 +236,18 @@ def menu_View_showGeneralOutput_toggled_cb(menuItem):
 	else:
 		sw.hide()
 		config.set("tekka","show_general_output","False")
+
+def menu_View_showSidePane_toggled_cb(menuItem):
+	""" Toggle side pane (listVPaned) """
+	p = gui.widgets.get_widget("listVPaned")
+
+	if menuItem.get_active():
+		p.show()
+		config.set("tekka","show_side_pane", "True")
+	else:
+		p.hide()
+		config.set("tekka","show_side_pane", "False")
+
 
 def menu_View_showStatusBar_toggled_cb(menuItem):
 	"""
@@ -1032,6 +1046,7 @@ def setup_shortcuts():
 		- ctrl + w -> close the current tab
 		- ctrl + l -> clear the output buffer
 		- ctrl + u -> clear the input entry
+		- ctrl + s -> hide/show the side pane
 	"""
 	gui.accelGroup = gtk.AccelGroup()
 	widgets.get_widget("mainWindow").add_accel_group(gui.accelGroup)
@@ -1059,6 +1074,10 @@ def setup_shortcuts():
 
 	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"),
 		"<ctrl>c", inputBar_shortcut_ctrl_c)
+
+	addShortcut(gui.accelGroup,
+		widgets.get_widget("menu_View_showSidePane"), "<ctrl>s",
+		lambda w,s: w.set_active(not w.get_active()))
 
 
 def connect_maki():
@@ -1222,6 +1241,8 @@ def setupGTK():
 		# view menu
 		"menu_View_showGeneralOutput_toggled_cb":
 			menu_View_showGeneralOutput_toggled_cb,
+		"menu_View_showSidePane_toggled_cb":
+			menu_View_showSidePane_toggled_cb,
 		"menu_View_showStatusBar_toggled_cb":
 			menu_View_showStatusBar_toggled_cb,
 		"menu_View_showStatusIcon_toggled_cb":
@@ -1264,9 +1285,6 @@ def setupGTK():
 			serverTree_button_press_event_cb,
 		"serverTree_row_activated_cb":
 			serverTree_row_activated_cb,
-
-		"hideListsButton_clicked_cb":
-			hideListsButton_clicked_cb,
 
 		# nick list signals
 		"nickList_row_activated_cb":
@@ -1314,31 +1332,20 @@ def setupGTK():
 	widgets.get_widget("generalOutput").set_buffer(buffer)
 
 	# setup menu bar stuff
-	btn = widgets.get_widget("menu_View_showGeneralOutput")
+	@types( user = ptypes.FunctionType )
+	def apply_visibility(wname, cvalue, user=None):
+		button = widgets.get_widget(wname)
+		if config.get_bool("tekka", cvalue):
+			if user: user()
+			button.set_active(True)
+		button.toggled()
 
-	if config.get_bool("tekka","show_general_output"):
-		btn.set_active(True)
-	btn.toggled()
-
-	btn = widgets.get_widget("menu_View_showStatusBar")
-
-	if config.get_bool("tekka","show_status_bar"):
-		btn.set_active(True)
-	btn.toggled()
-
-	btn = widgets.get_widget("menu_View_showStatusIcon")
-
-	if config.get_bool("tekka","show_status_icon"):
-		gui.setup_statusIcon()
-		btn.set_active(True)
-	btn.toggled()
-
-	btn = widgets.get_widget("menu_View_showTopicBar")
-
-	if config.get_bool("tekka", "show_topicbar"):
-		gui.widgets.get_widget("topicBar").show()
-		btn.set_active(True)
-	btn.toggled()
+	apply_visibility("menu_View_showGeneralOutput", "show_general_output")
+	apply_visibility("menu_View_showSidePane", "show_side_pane")
+	apply_visibility("menu_View_showStatusBar", "show_status_bar")
+	apply_visibility("menu_View_showStatusIcon", "show_status_icon",
+		lambda: gui.setup_statusIcon())
+	apply_visibility("menu_View_showTopicBar", "show_topicbar")
 
 	setup_shortcuts()
 
