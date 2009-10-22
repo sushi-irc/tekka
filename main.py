@@ -96,7 +96,7 @@ Tekka intern signals
 
 def maki_connect_callback(sushi):
 	""" connection to maki etablished """
-	signals.handle_maki_connect()
+	signals.handle_maki_connect_cb()
 	gui.set_useable(True)
 
 def maki_disconnect_callback():
@@ -104,7 +104,7 @@ def maki_disconnect_callback():
 	# FIXME:  after disconnecting and reconnecting,
 	# FIXME:: the current tab's textview
 	# FIXME:: is still insensitive
-	signals.handle_maki_disconnect()
+	signals.handle_maki_disconnect_cb()
 	gui.set_useable(False)
 
 def tekka_server_away(tab, msg):

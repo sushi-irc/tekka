@@ -74,7 +74,7 @@ def disconnect_signal (signal, handler):
 		ob.remove()
 		del signals[signal][handler]
 
-def handle_maki_disconnect():
+def handle_maki_disconnect_cb():
 	global signals
 
 	for signal in signals:
@@ -83,7 +83,7 @@ def handle_maki_disconnect():
 
 	signals = {}
 
-def handle_maki_connect():
+def handle_maki_connect_cb():
 	# Message-Signals
 	connect_signal("message", userMessage_cb)
 	connect_signal("notice", userNotice_cb)
