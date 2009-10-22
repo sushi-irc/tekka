@@ -214,7 +214,7 @@ def getNickColor(nick):
 	if not config.get_bool("tekka","color_text"):
 		return
 
-	colors = contrast.colors
+	colors = contrast.colors[:-1]
 	bg_color = gui.widgets.get_widget("output").get_style().\
 		base[gtk.STATE_NORMAL]
 	color = colors[sum([ord(n) for n in nick]) % len(colors)]
@@ -230,7 +230,7 @@ def getTextColor(nick):
 	if not config.get_bool("tekka","color_text"):
 		return
 
-	colors = contrast.colors
+	colors = contrast.colors[:-1]
 	if not colors or not config.get_bool("tekka","color_nick_text"):
 		return config.get("colors","text_message","#000000")
 

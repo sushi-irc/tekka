@@ -107,6 +107,8 @@ def maki_disconnect_callback():
 	signals.handle_maki_disconnect_cb()
 	gui.set_useable(False)
 
+# TODO: mark the tekka_ callbcaks as callbacks with _cb suffix
+
 def tekka_server_away(tab, msg):
 	pass
 
@@ -531,6 +533,37 @@ def serverTree_row_activated_cb(serverTree, path, column):
 
 	dialog_control.showHistoryDialog(tab)
 
+def hideListsButton_clicked_cb(button):
+	""" the hide lists button is clicked """
+	frame = gui.widgets.get_widget("listFrame")
+	window = gui.widgets.get_widget("mainWindow").get_window()
+	hpaned = gui.widgets.get_widget("mainHPaned")
+	child = frame.get_child()
+
+	if child.get_property("visible"):
+		# hide
+		child.hide_all()
+
+		# save old paned position / set new
+		# TODO: replace fixed value 50 with dynamic one
+		hpaned.old_position = hpaned.get_position()
+		new_position = window.get_size()[0] - 50
+
+		hpaned.handler_block_by_func(paned_notify)
+		hpaned.set_position(new_position)
+		hpaned.handler_unblock_by_func(paned_notify)
+
+		frame.get_label_widget().set_label(u"«")
+	else:
+		# show
+		child.show_all()
+
+		# restore the paned position
+		hpaned.set_position(hpaned.old_position)
+		config.unset("tekka", "lists_hidden")
+
+		frame.get_label_widget().set_label(u"»")
+
 def nickList_row_activated_cb(nickList, path, column):
 	"""
 		The user activated a nick in the list.
@@ -773,6 +806,8 @@ def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 		text = unicode(topicBar.get_text(), "UTF-8")
 		text = text[bounds[0]:bounds[1]]
 		cb.set_text(text)
+
+# TODO: the following 2 functions are callbacks, rename them
 
 def servertree_query_tooltip(widget, x, y, kbdmode, tooltip):
 	""" show tooltips for treeview rows """
@@ -1229,6 +1264,9 @@ def setupGTK():
 			serverTree_button_press_event_cb,
 		"serverTree_row_activated_cb":
 			serverTree_row_activated_cb,
+
+		"hideListsButton_clicked_cb":
+			hideListsButton_clicked_cb,
 
 		# nick list signals
 		"nickList_row_activated_cb":

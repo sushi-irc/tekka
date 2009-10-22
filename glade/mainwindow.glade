@@ -305,11 +305,10 @@
                             <property name="xalign">0</property>
                             <property name="yalign">0</property>
                             <property name="ypad">3</property>
+							<property name="can_focus">False</property>
                             <property name="wrap">True</property>
                             <property name="wrap_mode">word-char</property>
                             <property name="selectable">True</property>
-                            <property name="visible">False</property>
-                            <property name="can_focus">False</property>
                           </widget>
                           <packing>
                             <property name="expand">False</property>
@@ -319,7 +318,7 @@
                         <child>
                           <widget class="GtkVPaned" id="outputVPaned">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+							<property name="can_focus">False</property>
                             <property name="orientation">vertical</property>
                             <property name="position">1</property>
                             <signal name="notify" handler="outputVPaned_notify_cb"/>
@@ -409,78 +408,102 @@
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkVPaned" id="listVPaned">
-                        <property name="width_request">150</property>
+                      <widget class="GtkFrame" id="listFrame">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="border_width">6</property>
-                        <property name="orientation">vertical</property>
-                        <property name="position_set">True</property>
-                        <signal name="notify" handler="listVPaned_notify_cb"/>
+                        <property name="label_xalign">0</property>
                         <child>
-                          <widget class="GtkScrolledWindow" id="scrolledWindow_serverTree">
-                            <property name="height_request">180</property>
+                          <widget class="GtkVPaned" id="listVPaned">
+                            <property name="width_request">150</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="hscrollbar_policy">automatic</property>
-                            <property name="vscrollbar_policy">automatic</property>
-                            <property name="shadow_type">etched-in</property>
-                            <child>
-                              <widget class="GtkTreeView" id="serverTree">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <signal name="button_press_event" handler="serverTree_button_press_event_cb"/>
-                                <signal name="row_activated" handler="serverTree_row_activated_cb"/>
-                              </widget>
-                            </child>
-                          </widget>
-                          <packing>
-                            <property name="resize">True</property>
-                            <property name="shrink">False</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <widget class="GtkVBox" id="VBox_nickList">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="border_width">6</property>
                             <property name="orientation">vertical</property>
-                            <property name="spacing">5</property>
+                            <property name="position_set">True</property>
+                            <signal name="notify" handler="listVPaned_notify_cb"/>
                             <child>
-                              <widget class="GtkLabel" id="nickList_label">
-                                <property name="visible">True</property>
-                                <property name="use_markup">True</property>
-                                <property name="selectable">True</property>
-                              </widget>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="padding">2</property>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <widget class="GtkScrolledWindow" id="scrolledWindow_nickList">
+                              <widget class="GtkScrolledWindow" id="scrolledWindow_serverTree">
+                                <property name="height_request">180</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="hscrollbar_policy">automatic</property>
                                 <property name="vscrollbar_policy">automatic</property>
                                 <property name="shadow_type">etched-in</property>
                                 <child>
-                                  <widget class="GtkTreeView" id="nickList">
+                                  <widget class="GtkTreeView" id="serverTree">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <signal name="button_press_event" handler="nickList_button_press_event_cb"/>
-                                    <signal name="row_activated" handler="nickList_row_activated_cb"/>
+                                    <signal name="button_press_event" handler="serverTree_button_press_event_cb"/>
+                                    <signal name="row_activated" handler="serverTree_row_activated_cb"/>
                                   </widget>
                                 </child>
                               </widget>
                               <packing>
-                                <property name="position">1</property>
+                                <property name="resize">True</property>
+                                <property name="shrink">False</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkVBox" id="VBox_nickList">
+                                <property name="visible">True</property>
+                                <property name="orientation">vertical</property>
+								<property name="can_focus">False</property>
+                                <property name="spacing">5</property>
+                                <child>
+                                  <widget class="GtkLabel" id="nickList_label">
+                                    <property name="visible">True</property>
+                                    <property name="use_markup">True</property>
+									<property name="can_focus">False</property>
+                                    <property name="selectable">True</property>
+                                  </widget>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="padding">2</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <widget class="GtkScrolledWindow" id="scrolledWindow_nickList">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="hscrollbar_policy">automatic</property>
+                                    <property name="vscrollbar_policy">automatic</property>
+                                    <property name="shadow_type">etched-in</property>
+                                    <child>
+                                      <widget class="GtkTreeView" id="nickList">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <signal name="button_press_event" handler="nickList_button_press_event_cb"/>
+                                        <signal name="row_activated" handler="nickList_row_activated_cb"/>
+                                      </widget>
+                                    </child>
+                                  </widget>
+                                  <packing>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="resize">True</property>
+                                <property name="shrink">False</property>
                               </packing>
                             </child>
                           </widget>
+                        </child>
+                        <child>
+                          <widget class="GtkButton" id="hideListsButton">
+                            <property name="label" translatable="yes">&#xBB;</property>
+                            <property name="width_request">25</property>
+                            <property name="height_request">30</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="use_underline">True</property>
+                            <property name="focus_on_click">False</property>
+                            <signal name="clicked" handler="hideListsButton_clicked_cb"/>
+                          </widget>
                           <packing>
-                            <property name="resize">True</property>
-                            <property name="shrink">False</property>
+                            <property name="type">label_item</property>
                           </packing>
                         </child>
                       </widget>
