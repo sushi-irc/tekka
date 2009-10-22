@@ -109,47 +109,45 @@ def maki_disconnect_callback():
 	signals.handle_maki_disconnect_cb()
 	gui.set_useable(False)
 
-# TODO: mark the tekka_ callbcaks as callbacks with _cb suffix
-
-def tekka_server_away(tab, msg):
+def tekka_server_away_cb(tab, msg):
 	pass
 
-def tekka_server_new_nick(tab, nick):
+def tekka_server_new_nick_cb(tab, nick):
 	activeTabs = gui.tabs.get_current_tabs()
 
 	if (tab in activeTabs
 	or (not tab.is_server() and tab.server in activeTabs)):
 		gui.set_nick(nick)
 
-def tekka_tab_new_markup(tab):
+def tekka_tab_new_markup_cb(tab):
 	# FIXME: is there a better solution than _this_?
 	if tab.path:
 		store = gui.widgets.get_widget("serverTree").get_model()
 		store.set_value(store.get_iter(tab.path), 0, tab)
 
-def tekka_tab_new_message(tab, type):
+def tekka_tab_new_message_cb(tab, type):
 	pass
 
-def tekka_tab_new_name(tab, name):
+def tekka_tab_new_name_cb(tab, name):
 	tekka_tab_new_markup(tab)
 
-def tekka_tab_connected(tab, connected):
+def tekka_tab_connected_cb(tab, connected):
 	""" tab received a change on connected attribute """
 	gui.tabs.set_useable(tab, connected)
 
-def tekka_channel_joined(tab, switch):
+def tekka_channel_joined_cb(tab, switch):
 	""" channel received a change on joined attribute """
 	gui.tabs.set_useable(tab, switch)
 
-def tekka_channel_topic(tab, topic):
+def tekka_channel_topic_cb(tab, topic):
 	""" topic set """
 	pass
 
-def tekka_tab_new_path(tab, new_path):
+def tekka_tab_new_path_cb(tab, new_path):
 	""" a new path is set to the path """
 	pass
 
-def tekka_tab_switched(tabclass, old, new):
+def tekka_tab_switched_cb(tabclass, old, new):
 	""" switched from tab old to tab new """
 	inputBar = widgets.get_widget("inputBar")
 
@@ -165,7 +163,7 @@ def tekka_tab_switched(tabclass, old, new):
 		inputBar.set_text(new.get_input_text())
 		inputBar.set_position(len(inputBar.get_text()))
 
-def tekka_tab_remove(tab):
+def tekka_tab_remove_cb(tab):
 	""" a tab is about to be removed """
 
 	print "tekka_tab_remove (%s)" % tab
@@ -546,37 +544,6 @@ def serverTree_row_activated_cb(serverTree, path, column):
 	tab = model[path][0]
 
 	dialog_control.showHistoryDialog(tab)
-
-def hideListsButton_clicked_cb(button):
-	""" the hide lists button is clicked """
-	frame = gui.widgets.get_widget("listFrame")
-	window = gui.widgets.get_widget("mainWindow").get_window()
-	hpaned = gui.widgets.get_widget("mainHPaned")
-	child = frame.get_child()
-
-	if child.get_property("visible"):
-		# hide
-		child.hide_all()
-
-		# save old paned position / set new
-		# TODO: replace fixed value 50 with dynamic one
-		hpaned.old_position = hpaned.get_position()
-		new_position = window.get_size()[0] - 50
-
-		hpaned.handler_block_by_func(paned_notify)
-		hpaned.set_position(new_position)
-		hpaned.handler_unblock_by_func(paned_notify)
-
-		frame.get_label_widget().set_label(u"«")
-	else:
-		# show
-		child.show_all()
-
-		# restore the paned position
-		hpaned.set_position(hpaned.old_position)
-		config.unset("tekka", "lists_hidden")
-
-		frame.get_label_widget().set_label(u"»")
 
 def nickList_row_activated_cb(nickList, path, column):
 	"""
@@ -1207,19 +1174,19 @@ def setupGTK():
 	gui.searchToolbar.textview = gui.widgets.get_widget("output")
 
 	# connect tab control signals
-	gui.tabs.set_callbacks({
-		"new_message": tekka_tab_new_message,
-		"new_name": tekka_tab_new_name,
-		"new_path": tekka_tab_new_path,
-		"remove": tekka_tab_remove,
-		"new_markup": tekka_tab_new_markup,
-		"connected": tekka_tab_connected,
-		"joined": tekka_channel_joined,
-		"away": tekka_server_away,
-		"topic": tekka_channel_topic,
-		"new_nick": tekka_server_new_nick })
+	gui.tabs.add_callbacks({
+		"new_message": tekka_tab_new_message_cb,
+		"new_name": tekka_tab_new_name_cb,
+		"new_path": tekka_tab_new_path_cb,
+		"remove": tekka_tab_remove_cb,
+		"new_markup": tekka_tab_new_markup_cb,
+		"connected": tekka_tab_connected_cb,
+		"joined": tekka_channel_joined_cb,
+		"away": tekka_server_away_cb,
+		"topic": tekka_channel_topic_cb,
+		"new_nick": tekka_server_new_nick_cb })
 
-	gui.tabs.connect("tab_switched", tekka_tab_switched)
+	gui.tabs.connect("tab_switched", tekka_tab_switched_cb)
 
 	# connect main window signals:
 	sigdic = {

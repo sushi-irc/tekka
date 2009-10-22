@@ -60,16 +60,62 @@ class TabControl(gobject.GObject):
 		self.prefix_cache = {}
 		self._callbacks = {}
 
+		""" valid callbacks are, at the moment:
+
+			TekkaTab:
+			- new_message
+			- new_name
+			- new_path
+			- connected
+			- new_markup
+
+			TekkaChannel:
+			- joined
+			- topic
+
+			TekkaServer:
+			- away
+			- new_nick
+		"""
+
 	@types (d = dict)
-	def set_callbacks(self, d):
-		self._callbacks = d
+	def add_callbacks(self, d):
+		""" get dict with {<str>:<function>,...}
+			and apply the values to the internal
+			callback dict as a list, resulting in:
+			{<str>:[<function0>,<function1>...],...}
+		"""
+		for (key, value) in d.items():
+			if self._callbacks.has_key(key):
+				self._callbacks[key].append(value)
+			else:
+				self._callbacks[key] = [value]
 
 	@types (key = basestring)
-	def get_callback(self, key):
+	def get_callbacks(self, key):
+		""" return all callback functions stored
+			under the given key as a list.
+		"""
 		try:
 			return self._callbacks[key]
 		except KeyError:
 			raise ValueError, "No such signal handler: %s." % (key)
+
+	@types (callbacks = tuple)
+	def connect_callbacks(self, obj, callbacks):
+		""" connect the object with all the callbacks
+			identified by a string in the callbacks
+			tuple.
+		"""
+		for cb in callbacks:
+			cbFunctions = self.get_callbacks(cb)
+
+			for fun in cbFunctions:
+				try:
+					obj.connect(cb, fun)
+				except TypeError, e:
+					# invalid signal
+					continue
 
 	@types (tab = TekkaTab, switch = bool)
 	def set_useable(self, tab, switch):
@@ -97,11 +143,8 @@ class TabControl(gobject.GObject):
 		tab.textview.show()
 		lib.gui_control.set_font(tab.textview, lib.gui_control.get_font())
 
-		tab.connect("new_message", self.get_callback("new_message"))
-		tab.connect("new_name", self.get_callback("new_name"))
-		tab.connect("new_path", self.get_callback("new_path"))
-		tab.connect("connected", self.get_callback("connected"))
-		tab.connect("new_markup", self.get_callback("new_markup"))
+		self.connect_callbacks(tab, ("new_message","new_name",
+			"new_path","connected","new_markup"))
 
 		tab.input_history = InputHistory(
 			text_callback = lib.gui_control.get_widget("inputBar").get_text)
@@ -122,14 +165,23 @@ class TabControl(gobject.GObject):
 		tab = self._create_tab(TekkaChannel, name, server,
 			nicklist = ns)
 
-		tab.connect("joined", self.get_callback("joined"))
-		tab.connect("topic", self.get_callback("topic"))
+		self.connect_callbacks(tab, ("joined","topic"))
 
 		return tab
 
 	@types(server = TekkaServer, name = basestring)
 	def create_query(self, server, name):
 		tab = self._create_tab(TekkaQuery, name, server)
+		return tab
+
+	@types (server = basestring)
+	def create_server(self, server):
+		tab = self._create_tab(TekkaServer, server)
+
+		self.update_server(tab)
+
+		self.connect_callbacks(tab, ("away","new_nick"))
+
 		return tab
 
 	@types (tab = TekkaServer)
@@ -146,17 +198,6 @@ class TabControl(gobject.GObject):
 		tab.nick = com.parse_from(com.sushi.user_from(server, ""))[0]
 		tab.support_prefix = com.sushi.support_prefix(server)
 		tab.support_chantypes = com.sushi.support_chantypes(server)
-
-	@types (server = basestring)
-	def create_server(self, server):
-		tab = self._create_tab(TekkaServer, server)
-
-		self.update_server(tab)
-
-		tab.connect("away", self.get_callback("away"))
-		tab.connect("new_nick", self.get_callback("new_nick"))
-
-		return tab
 
 	@types(server = basestring, child = basestring)
 	def search_tab(self, server, child = ""):
