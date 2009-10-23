@@ -39,6 +39,7 @@ import lib.gui_control as gui_control
 from com import sushi
 from gettext import gettext as _
 from lib.inline_dialog import InlineDialog, InlineMessageDialog
+import helper.color
 
 class TopicDialog(InlineDialog):
 
@@ -76,7 +77,7 @@ class TopicDialog(InlineDialog):
 		self.table.attach(self.topicBar, 0, 1, 1, 2)
 
 		signals.connect_signal("topic", self._topic_changed_cb)
-		self.topicBar.set_markup(gui_control.markup_escape(
+		self.topicBar.set_text(helper.color.parse_color_codes_to_markups(
 			sushi.channel_topic(server, channel)))
 		self.topicBar.set_position(len(self.topicBar.get_text()))
 
@@ -101,9 +102,11 @@ class TopicDialog(InlineDialog):
 			else:
 				# update the topic bar
 				topic_dialog.topicBar.set_text(
-					sushi.channel_topic(
-						topic_dialog.server,
-						topic_dialog.channel))
+					helper.color.parse_color_codes_to_markups(
+						sushi.channel_topic(
+							topic_dialog.server,
+							topic_dialog.channel)))
+
 				topic_dialog.topicBar.set_position(
 					len(topic_dialog.topicBar.get_text()))
 				topic_dialog._topic_changed = False
@@ -130,7 +133,8 @@ class TopicDialog(InlineDialog):
 				sushi.topic(
 					self.server,
 					self.channel,
-					self.topicBar.get_text())
+					helper.color.parse_color_markups_to_codes(
+						self.topicBar.get_text()))
 
 		InlineDialog.response(self, id)
 

@@ -345,82 +345,6 @@ def updateServerTreeShortcuts():
 
 		c+=1
 
-def escape_color(msg):
-	""" Parse the mIRC color format ^Cn[,m] and convert it
-		to the intern handled <font></font> tag.
-		Convert the numbers n and m into contrast color codes
-		and use them as foreground/background.
-	"""
-	def get_gdk_color(ccolor):
-		bg_color = widgets.get_widget("output").get_style().\
-			base[gtk.STATE_NORMAL]
-		return lib.contrast.contrast_render_foreground_color(
-			bg_color, ccolor)
-
-	last_i = -1
-	count = 0 # openend <font>
-
-	try:
-		escape_color.pattern
-		escape_color.color_table
-	except AttributeError:
-		escape_color.pattern = re.compile(chr(3)+helper.color.COLOR_PATTERN)
-		escape_color.color_table = helper.color.COLOR_TABLE
-
-	while True:
-		try:
-			i = msg.index(chr(3), last_i+1)
-		except ValueError:
-			break
-
-		match = escape_color.pattern.match(msg[i:i+6])
-
-		if match:
-			groups = match.groups()
-			tag = "<span"
-
-			if count != 0:
-				# close the previous color
-				tag = "</span>" + tag
-				count -= 1
-
-			try:
-				fg = escape_color.color_table[int(groups[0])]
-				fg = get_gdk_color(fg)
-			except (KeyError, TypeError):
-				fg = None
-			else:
-				tag += " foreground='%s'" % fg
-
-			try:
-				bg = escape_color.color_table[int(groups[1][1:])]
-				bg = get_gdk_color(bg)
-			except (KeyError, TypeError):
-				bg = None
-			else:
-				tag += " background='%s'" % bg
-
-			tag += ">"
-			skip_len = 1 + (groups[0] and len(groups[0]) or 0) \
-				+ (groups[1] and len(groups[1]) or 0)
-			msg = msg[:i] + tag + msg[i+skip_len:]
-
-			count += 1
-
-		else:
-			if count > 0:
-				# single ^C, if there's an open tag, close it
-				msg = msg[:i] + "</span>" + msg[i+1:]
-				count -= 1
-
-		last_i = i
-
-	if count != 0:
-		# make sure the <font> is closed.
-		msg = msg + "</span>"
-
-	return msg
-
 def _escape_ml(msg):
 	""" escape every invalid character via gobject.markup_escape_text
 		from the given string but leave the irc color/bold characters:
@@ -455,7 +379,7 @@ def markup_escape(msg):
 	msg = msg.replace(chr(2), "")
 	msg = msg.replace(chr(31), "")
 
-	msg = escape_color(msg)
+	msg = helper.color.parse_color_codes_to_tags(msg)
 
 	return msg
 
@@ -469,7 +393,7 @@ def escape(msg):
 	msg = msg.replace(chr(2), "<sb/>") # bold-char
 	msg = msg.replace(chr(31), "<su/>") # underline-char
 
-	msg = escape_color(msg)
+	msg = helper.color.parse_color_codes_to_tags(msg)
 
 	return msg
 

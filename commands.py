@@ -239,8 +239,8 @@ def makiTopic(serverTab, channelTab, args):
 		return gui.myPrint(
 		"Topic for channel %(channel)s: '%(topic)s'" % {
 			"channel":channelTab.name,
-			"topic":channelTab.topic
-		})
+			"topic":helper.color.parse_color_codes_to_tags(channelTab.topic)
+		}, html=True)
 
 	else:
 		topic = " ".join(args)
@@ -487,16 +487,6 @@ _commands = {
 
 _builtins = _commands.keys()
 
-def parse_color(s):
-	""" split for %C and parse the numbers following """
-	try:
-		parse_color.color_pattern
-	except AttributeError:
-		parse_color.color_pattern = re.compile(helper.color.COLOR_PATTERN)
-
-	s_split = helper.escape.unescape_split("%C", s, escape_char="%")
-	return chr(3).join(s_split)
-
 @types(text=basestring)
 def parseInput(text):
 	"""
@@ -508,7 +498,8 @@ def parseInput(text):
 	if not text:
 		return
 
-	text = parse_color(text)
+	# parse %C tags
+	text = helper.color.parse_color_markups_to_codes(text)
 
 	serverTab,channelTab = gui.tabs.get_current_tabs()
 
