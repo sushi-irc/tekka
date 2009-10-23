@@ -90,6 +90,7 @@ def set_defaults():
 	defaults["tekka"]["color_text"] = "True" 		# colors enabled?
 	defaults["tekka"]["color_nick_text"] = "False" 	# color the text as well as the nick
 	defaults["tekka"]["ask_for_key_on_cannotjoin"] = "True"
+	defaults["tekka"]["switch_to_channel_after_join"] = "True"
 	defaults["tekka"]["time_format"] = "%H:%M"
 	defaults["tekka"]["whois_dialog"] = "true"
 	defaults["tekka"]["divider_length"] = "30"

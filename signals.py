@@ -41,6 +41,7 @@ import lib.gui_control as gui
 from lib import key_dialog
 from lib import contrast
 from lib import dcc_dialog
+from lib import tab
 
 from com import sushi, parse_from
 
@@ -121,6 +122,7 @@ def handle_maki_connect_cb():
 
 	add_servers()
 
+@types (server = basestring)
 def setup_server(server):
 	tab = gui.tabs.create_server(server)
 
@@ -146,6 +148,7 @@ def add_servers():
 	else:
 		gui.tabs.switch_to_path(toSwitch.path)
 
+@types (server_tab = tab.TekkaServer)
 def add_channels(server_tab):
 	"""
 		Adds all channels to tekka wich are reported by maki.
@@ -188,6 +191,7 @@ def add_channels(server_tab):
 
 	gui.updateServerTreeShortcuts()
 
+@types (tab = tab.TekkaTab, nick = basestring, mode = basestring)
 def updatePrefix(tab, nick, mode):
 	"""
 	checks if the mode is a prefix-mode (e.g. +o)
@@ -205,7 +209,7 @@ def updatePrefix(tab, nick, mode):
 			gui.set_user_count(len(tab.nickList),
 				tab.nickList.get_operator_count())
 
-
+@types (nick = basestring)
 def getNickColor(nick):
 	"""
 		Returns a static color for the nick given.
@@ -223,6 +227,7 @@ def getNickColor(nick):
 	r = contrast.contrast_render_foreground_color(bg_color, color)
 	return r
 
+@types (nick = basestring)
 def getTextColor(nick):
 	"""
 		Same as getNickColor but for text and defaults
@@ -243,6 +248,7 @@ def getTextColor(nick):
 	r = contrast.contrast_render_foreground_color(bg_color, color)
 	return r
 
+@types (server_tab = tab.TekkaServer, text = basestring)
 def isHighlighted (server_tab, text):
 	highlightwords = config.get_list("chatting", "highlight_words", [])
 	highlightwords.append(server_tab.nick)
@@ -256,6 +262,7 @@ def isHighlighted (server_tab, text):
 
 	return False
 
+@types (server = basestring, name = basestring)
 def createTab (server, name):
 	server_tab = gui.tabs.search_tab(server)
 	tab = gui.tabs.search_tab(server, name)
@@ -288,6 +295,37 @@ def getPrefix(server, channel, nick):
 		return tab.nickList.get_prefix(nick)
 	else:
 		return ""
+
+@types (tab = tab.TekkaTab, what = basestring, own = bool)
+def hide_output(tab, what, own = False):
+	""" Returns bool.
+		Check if the message type determined by "what"
+		shall be shown or not.
+		tab should be a TekkaServer, -Channel or -Query
+	"""
+	hide = False
+	printOwn = not config.get_bool("tekka", "hide_own_messages")
+
+	if type(tab) == tab.TekkaChannel:
+		hide = not what in config.get_list(
+				"channel_%s_%s" % (
+					tab.server.name.lower(),
+					tab.name.lower()),
+				"hide", [])
+	elif type(tab) == tab.TekkaQuery:
+		hide = not what in config.get_list(
+				"query_%s_%s" % (
+					tab.server.name.lower(),
+					tab.name.lower()),
+				"hide", [])
+	elif type(tab) == tab.TekkaServer:
+		hide = not what in config.get_list(
+				"server_%s" % (
+					tab.name.lower()),
+				"hide", [])
+
+	return (hide and not own) or (hide and own and not printOwn)
+
 """
 Server signals
 """
@@ -583,7 +621,9 @@ def userMode_cb(time, server, from_str, target, mode, param):
 
 	else:
 		actor = nick
-		if nick == server_tab.nick:
+		own = (nick == server_tab.nick)
+
+		if own:
 			actor = "You"
 
 		tab = gui.tabs.search_tab(server, target)
@@ -592,33 +632,37 @@ def userMode_cb(time, server, from_str, target, mode, param):
 
 			if param: param = " "+param
 
-			gui.currentServerPrint(time, server,
-				"• %(actor)s set %(mode)s%(param)s on %(target)s" % {
-					"actor":actor,
-					"mode":mode,
-					"param":param,
-					"target":target},
-				"action")
-		else:
-			# suitable channel/query found, print it there
-
-			type = "action"
-			victim = target
-
-			if victim == server_tab.nick:
-				victim = "you"
-				type = "hightlightaction"
-
-			updatePrefix(tab, param, mode)
-			if param: param = " "+param
-
-			gui.channelPrint(time, server, tab.name,
-				"• %(actor)s set %(mode)s%(param)s on %(victim)s." % {
+			if not hide_output(tab, "mode", own = own):
+				gui.currentServerPrint(time, server,
+					"• %(actor)s set %(mode)s%(param)s on %(target)s" % {
 						"actor":actor,
 						"mode":mode,
 						"param":param,
-						"victim":victim},
-				type)
+						"target":target},
+					"action")
+		else:
+			# suitable channel/query found, print it there
+
+			updatePrefix(tab, param, mode)
+
+			own = (victim == server_tab.nick)
+			type = "action"
+			victim = target
+
+			if own:
+				victim = "you"
+				type = "hightlightaction"
+
+			if param: param = " "+param
+
+			if not hide_output(tab, "mode", own = own):
+				gui.channelPrint(time, server, tab.name,
+					"• %(actor)s set %(mode)s%(param)s on %(victim)s." % {
+							"actor":actor,
+							"mode":mode,
+							"param":param,
+							"victim":victim},
+					type)
 
 
 def userOper_cb(time, server):
@@ -863,14 +907,10 @@ def userNick_cb(time, server, from_str, newNick):
 	for tab in gui.tabs.get_all_tabs(servers = [server])[1:]:
 
 		if not nick or newNick == server_tab.nick:
+			# notification, print everytime
 			doPrint = True
 		else:
-# TODO:::: hide hiding
-			doPrint = not "nick" in config.get_list(
-				"channel_%s_%s" % (
-					server.lower(),
-					tab.name.lower()),
-				"hide", [])
+			doPrint = not hide_output(tab, "nick")
 
 		if tab.is_channel():
 			if (nick in tab.nickList.get_nicks()):
@@ -922,13 +962,16 @@ def userKick_cb(time, server, from_str, channel, who, reason):
 	if who == server_tab.nick:
 		tab.joined = False
 
-		message = _(u"« You have been kicked from %(channel)s "
-			u"by %(nick)s (%(reason)s)." % {
-				"channel": channelString,
-				"nick": nickString,
-				"reason": reasonString })
+		if not hide_output(tab, "kick", own = True):
 
-		gui.channelPrint(time, server, channel, message, "highlightaction")
+			message = _(u"« You have been kicked from %(channel)s "
+				u"by %(nick)s (%(reason)s)." % {
+					"channel": channelString,
+					"nick": nickString,
+					"reason": reasonString })
+
+			gui.channelPrint(time, server, channel, message,
+				"highlightaction")
 
 	else:
 		tab.nickList.remove_nick(who)
@@ -938,18 +981,19 @@ def userKick_cb(time, server, from_str, channel, who, reason):
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
-		whoString = "<font foreground='%s' weight='bold'>%s</font>" % (
-			getNickColor(who), gui.escape(who))
+		if not hide_output(tab, "kick"):
 
-		message = _(u"« %(who)s was kicked from %(channel)s by "
-					u"%(nick)s (%(reason)s).") % {
-			"who": whoString,
-			"channel": channelString,
-			"nick": nickString,
-			"reason": reasonString }
+			whoString = "<font foreground='%s' weight='bold'>%s</font>" % (
+				getNickColor(who), gui.escape(who))
 
-		gui.channelPrint(time, server, channel, message, "action")
+			message = _(u"« %(who)s was kicked from %(channel)s by "
+						u"%(nick)s (%(reason)s).") % {
+				"who": whoString,
+				"channel": channelString,
+				"nick": nickString,
+				"reason": reasonString }
 
+			gui.channelPrint(time, server, channel, message, "action")
 
 def userQuit_cb(time, server, from_str, reason):
 	"""
@@ -974,34 +1018,48 @@ def userQuit_cb(time, server, from_str, reason):
 
 		server_tab.connected = False
 
-		# walk through all channels and set joined = False on them
-		channels = gui.tabs.get_all_tabs(servers = [server])[1:]
+		if not hide_output(tab, "quit", own = True):
 
-		if not channels:
-			return
+			# walk through all channels and set joined = False on them
+			channels = gui.tabs.get_all_tabs(servers = [server])[1:]
 
-		if reason:
-			message = _(u"« You have quit (%(reason)s).")
-		else:
-			message = _(u"« You have quit.")
+			if reason:
+				message = _(u"« You have quit (%(reason)s).")
+			else:
+				message = _(u"« You have quit.")
 
-		# deactivate channels/queries
-		for channelTab in channels:
-			if channelTab.is_channel():
-				channelTab.joined=False
+			# deactivate channels/queries
+			for channelTab in channels:
+				if channelTab.is_channel():
+					channelTab.joined=False
 
-			channelTab.connected=False
+				channelTab.connected=False
 
-			gui.channelPrint(time, server, channelTab.name, message % {
-					"reason": reason},
-				"action")
+				gui.channelPrint(time, server, channelTab.name,
+					message % {"reason": reason}, "action")
 
 	else: # another user quit the network
 
-		if reason:
-			message = _(u"« %(nick)s has quit (%(reason)s).")
-		else:
-			message = _(u"« %(nick)s has quit.")
+		doPrint = hide_output(tab, "quit")
+
+		if doPrint:
+			if reason:
+				message = _(u"« %(nick)s has quit (%(reason)s).")
+			else:
+				message = _(u"« %(nick)s has quit.")
+
+			nickString = "<font foreground='%s' weight='bold'>"\
+				"%s</font>" % (
+					getNickColor(nick),
+					gui.escape(nick))
+
+			reasonString = "<font foreground='%s'>%s</font>" % (
+				getTextColor(nick),
+				gui.escape(reason))
+
+			message = message % {
+				"nick": nickString,
+				"reason": reasonString}
 
 		channels = gui.tabs.get_all_tabs(servers = [server])[1:]
 
@@ -1009,23 +1067,8 @@ def userQuit_cb(time, server, from_str, reason):
 			logging.debug("No channels but quit reported.. Hum wtf? o.0")
 			return
 
-		nickString = "<font foreground='%s' weight='bold'>%s</font>" % (
-			getNickColor(nick),
-			gui.escape(nick))
-
-		reasonString = "<font foreground='%s'>%s</font>" % (
-			getTextColor(nick),
-			gui.escape(reason))
-
-		message = message % {
-			"nick": nickString,
-			"reason": reasonString
-		}
-
 		# print in all channels where nick joined a message
 		for channelTab in channels:
-			doPrint = not "quit" in config.get_list("channel_%s_%s" % (
-				server.lower(), channelTab.name.lower()), "hide", [])
 
 			if channelTab.is_query():
 				# on query with `nick` only print quitmessage
@@ -1075,9 +1118,9 @@ def userJoin_cb(timestamp, server, from_str, channel):
 			tab = gui.tabs.create_channel(stab, channel)
 
 			if not gui.tabs.add_tab(stab, tab):
-				logging.debug("adding tab for channel '%s' failed." % (
-					channel))
-				return
+				raise Exception, \
+					"userJoin_cb: adding tab for channel '%s' failed." % (
+					channel)
 
 			gui.print_last_log(server, channel)
 
@@ -1094,44 +1137,48 @@ def userJoin_cb(timestamp, server, from_str, channel):
 		if config.get_bool("tekka","switch_to_channel_after_join"):
 			gui.tabs.switch_to_path(tab.path)
 
-		nickString = "You"
-		channelString = "<font foreground='%s'>%s</font>" % (
-			getTextColor(channel), gui.escape(channel))
+		doPrint = not hide_output(tab, "join", own = True)
 
-		message = _(u"» You have joined %(channel)s.")
+		if doPrint:
 
-		doPrint = True
+			nickString = "You"
+			channelString = "<font foreground='%s'>%s</font>" % (
+				getTextColor(channel), gui.escape(channel))
+
+			message = _(u"» You have joined %(channel)s.")
 
 	else: # another one joined the channel
 
 		if not tab:
-			logging.debug("No tab for channel '%s' in userJoin (not me).")
-			return
+			raise Exception, \
+				"No tab for channel '%s' in userJoin (not me)."
 
-		message = _(u"» %(nick)s has joined %(channel)s.")
+		doPrint = not hide_output(tab, "join")
 
-		nickString = "<font foreground='%s' weight='bold'>%s</font>" % (
-			getNickColor(nick),
-			gui.escape(nick))
+		if doPrint:
+			message = _(u"» %(nick)s has joined %(channel)s.")
 
-		channelString = "<font foreground='%s'>%s</font>" % (
-			getTextColor(channel),
-			gui.escape(channel))
+			nickString = "<font foreground='%s' weight='bold'>"\
+				"%s</font>" % (
+					getNickColor(nick),
+					gui.escape(nick))
+
+			channelString = "<font foreground='%s'>%s</font>" % (
+				getTextColor(channel),
+				gui.escape(channel))
 
 
 		tab.nickList.append_nick(nick)
 
 		if gui.tabs.is_active(tab):
-			gui.set_user_count(len(tab.nickList), tab.nickList.get_operator_count())
-
-		doPrint = not "join" in config.get_list("channel_%s_%s" % (
-			server.lower(), channel.lower()), "hide", [])
-
-	message = message % {
-		"nick": nickString,
-		"channel": channelString }
+			gui.set_user_count(len(tab.nickList),
+				tab.nickList.get_operator_count())
 
 	if doPrint:
+		message = message % {
+			"nick": nickString,
+			"channel": channelString }
+
 		gui.channelPrint(timestamp, server, channel, message, "action")
 
 def userNames_cb(timestamp, server, channel, nicks, prefixes):
@@ -1151,9 +1198,8 @@ def userNames_cb(timestamp, server, channel, nicks, prefixes):
 		tab = gui.tabs.create_channel(serverTab, channel)
 
 		if not gui.tabs.add_tab(serverTab, tab):
-			logging.debug("adding tab for channel '%s' failed." % (
-				channel))
-			return
+			raise Exception, "adding tab for channel '%s' failed." % (
+				channel)
 
 		gui.print_last_log(server, channel)
 
@@ -1161,21 +1207,22 @@ def userNames_cb(timestamp, server, channel, nicks, prefixes):
 		tab.connected = True
 
 	if not nicks:
+		# end of list
 		tab.nickList.sort_nicks()
-		return
 
-	for i in xrange(len(nicks)):
-		# FIXME
-		tab.nickList.remove_nick(nicks[i])
-		tab.nickList.append_nick(nicks[i], sort=False)
+	else:
+		for i in xrange(len(nicks)):
+			# FIXME
+			tab.nickList.remove_nick(nicks[i])
+			tab.nickList.append_nick(nicks[i], sort=False)
 
-		if prefixes[i]:
-			tab.nickList.set_prefix(nicks[i], prefixes[i], sort=False)
+			if prefixes[i]:
+				tab.nickList.set_prefix(nicks[i], prefixes[i], sort=False)
 
-	if gui.tabs.is_active(tab):
-		gui.set_user_count(
-			len(tab.nickList),
-			tab.nickList.get_operator_count())
+		if gui.tabs.is_active(tab):
+			gui.set_user_count(
+				len(tab.nickList),
+				tab.nickList.get_operator_count())
 
 
 def userPart_cb(timestamp, server, from_str, channel, reason):
@@ -1196,40 +1243,28 @@ def userPart_cb(timestamp, server, from_str, channel, reason):
 	if nick == stab.nick:
 		# we parted
 
-		channelString = "<font foreground='%s'>%s</font>" % (
-			getTextColor(channel), gui.escape(channel))
-
-		reasonString = "<font foreground='%s'>%s</font>" % (
-			getTextColor(nick), gui.escape(reason))
-
-		if reason:
-			message = _(u"« You have left %(channel)s (%(reason)s).")
-		else:
-			message = _(u"« You have left %(channel)s.")
-
 		tab.joined = False
 
-		gui.channelPrint(timestamp, server, channel,
-			message % {
-				"channel": channelString,
-				"reason": reasonString },
-			"action")
+		if not hide_output(tab, "part", own = True):
+
+			channelString = "<font foreground='%s'>%s</font>" % (
+				getTextColor(channel), gui.escape(channel))
+
+			reasonString = "<font foreground='%s'>%s</font>" % (
+				getTextColor(nick), gui.escape(reason))
+
+			if reason:
+				message = _(u"« You have left %(channel)s (%(reason)s).")
+			else:
+				message = _(u"« You have left %(channel)s.")
+
+			gui.channelPrint(timestamp, server, channel,
+				message % {
+					"channel": channelString,
+					"reason": reasonString },
+				"action")
 
 	else: # another user parted
-
-		nickString = "<font foreground='%s' weight='bold'>%s</font>" % (
-			getNickColor(nick), gui.escape(nick))
-
-		channelString = "<font foreground='%s'>%s</font>" % (
-			getTextColor(channel), gui.escape(channel))
-
-		reasonString = "<font foreground='%s'>%s</font>" % (
-			getTextColor(nick), gui.escape(reason))
-
-		if reason:
-			message = _(u"« %(nick)s has left %(channel)s (%(reason)s).")
-		else:
-			message = _(u"« %(nick)s has left %(channel)s.")
 
 		tab.nickList.remove_nick(nick)
 
@@ -1238,7 +1273,22 @@ def userPart_cb(timestamp, server, from_str, channel, reason):
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
-		if not "part" in config.get_list("channel_%s_%s" % (server.lower(), channel.lower()), "hide", []):
+		if not hide_output(tab, "part"):
+			nickString = "<font foreground='%s' weight='bold'>"\
+				"%s</font>" % (getNickColor(nick), gui.escape(nick))
+
+			channelString = "<font foreground='%s'>%s</font>" % (
+				getTextColor(channel), gui.escape(channel))
+
+			reasonString = "<font foreground='%s'>%s</font>" % (
+				getTextColor(nick), gui.escape(reason))
+
+			if reason:
+				message = _(u"« %(nick)s has left %(channel)s "\
+					"(%(reason)s).")
+			else:
+				message = _(u"« %(nick)s has left %(channel)s.")
+
 			gui.channelPrint(timestamp, server, channel,
 				message % {
 					"nick": nickString,
@@ -1250,10 +1300,11 @@ def userPart_cb(timestamp, server, from_str, channel, reason):
 def userError_cb(time, server, domain, reason, arguments):
 	if domain == "no_such":
 		noSuch(time, server, arguments[0], reason)
+
 	elif domain == "cannot_join":
 		cannotJoin(time, server, arguments[0], reason)
 
-def noSuch_cb(time, server, target, type):
+def noSuch(time, server, target, type):
 	""" Signal is emitted if maki can't find the target on the server. """
 
 	tab = gui.tabs.search_tab(server, target)
@@ -1272,6 +1323,42 @@ def noSuch_cb(time, server, target, type):
 		gui.channelPrint(time, server, target, error)
 	else:
 		gui.serverPrint(time, server, error)
+
+def cannotJoin(time, server, channel, reason):
+	""" The channel could not be joined.
+		reason : { l (full), i (invite only), b (banned), k (key) }
+	"""
+	message = _("Unknown reason")
+
+	if reason == "full":
+		message = _("The channel is full.")
+	elif reason == "invite":
+		message = _("The channel is invite-only.")
+	elif reason == "banned":
+		message = _("You are banned.")
+	elif reason == "key":
+		if config.get_bool("tekka", "ask_for_key_on_cannotjoin"):
+
+			def key_dialog_response_cb(dialog, id):
+				if id == gtk.RESPONSE_OK:
+					com.join(server, channel, dialog.entry.get_text())
+				dialog.destroy()
+
+			# open a input dialog which asks for the key
+			d = key_dialog.KeyDialog(server, channel)
+			d.connect("response", key_dialog_response_cb)
+			gui.showInlineDialog(d)
+			return
+
+		else:
+			message = _("You need the correct channel key.")
+
+	gui.currentServerPrint (time, server,
+		_("You can not join %(channel)s: %(reason)s" % {
+			"channel":channel,
+			"reason":message
+			}
+		))
 
 def channelList_cb(time, server, channel, users, topic):
 	""" Signal for /list command.
@@ -1326,39 +1413,6 @@ def channelList_cb(time, server, channel, users, topic):
 			channelList._text = []
 			channelList._line = 0
 
-def cannotJoin_cb(time, server, channel, reason):
-	""" The channel could not be joined.
-		reason : { l (full), i (invite only), b (banned), k (key) }
-	"""
-	message = _("Unknown reason")
-
-	if reason == "full":
-		message = _("The channel is full.")
-	elif reason == "invite":
-		message = _("The channel is invite-only.")
-	elif reason == "banned":
-		message = _("You are banned.")
-	elif reason == "key":
-		if config.get_bool("tekka", "ask_for_key_on_cannotjoin"):
-			def key_dialog_response_cb(dialog, id):
-				if id == gtk.RESPONSE_OK:
-					com.join(server, channel, dialog.entry.get_text())
-				dialog.destroy()
-
-			# open a input dialog which asks for the key
-			d = key_dialog.KeyDialog(server, channel)
-			d.connect("response", key_dialog_response_cb)
-			gui.showInlineDialog(d)
-			return
-		else:
-			message = _("You need the correct channel key.")
-
-	gui.currentServerPrint (time, server,
-		_("You can not join %(channel)s: %(reason)s" % {
-			"channel":channel,
-			"reason":message
-			}
-		))
 
 def whois_cb(time, server, nick, message):
 	""" message = "" => end of whois """
