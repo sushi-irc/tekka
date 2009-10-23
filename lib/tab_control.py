@@ -297,11 +297,52 @@ class TabControl(gobject.GObject):
 			cb(tab)
 
 		store.remove(row.iter)
+		self.__updateLowerRows(store,nextIter)
 
 		if update_shortcuts:
 			lib.gui_control.updateServerTreeShortcuts()
 
 		return True
+
+	def __updateLowerRows(self, store, iter):
+		"""
+			iter points to the row after the deleted row.
+			path is the path of the deleted row.
+			This hack is UGLY! Would someone please fix
+			the crappy rows-reordered signal? KTHXBYE
+		"""
+
+		if not iter:
+			# no work, phew.
+			return
+
+		newLastPath = None
+		nextIter = iter
+
+		while True:
+			if not nextIter:
+				break
+
+			tab = store.get(nextIter, 0)
+			try:
+				tab=tab[0]
+			except:
+				break
+
+			tab.path = store.get_path(nextIter)
+
+			oIter = nextIter
+			nextIter = store.iter_next(oIter)
+			if not nextIter:
+				if store.iter_has_child(oIter):
+					# oIter is a server
+					nextIter = store.iter_children(oIter)
+				else:
+					# oIter is a channel and the next is (maybe)
+					# a further server
+					temp = store.iter_parent(oIter)
+					nextIter = store.iter_next(temp)
+
 
 	@types (old = TekkaTab, new = TekkaTab)
 	def replace_tab(self, old, new):
