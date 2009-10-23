@@ -41,7 +41,7 @@ import lib.gui_control as gui
 from lib import key_dialog
 from lib import contrast
 from lib import dcc_dialog
-from lib import tab
+from lib import tab as tabs
 
 from com import sushi, parse_from
 
@@ -148,7 +148,8 @@ def add_servers():
 	else:
 		gui.tabs.switch_to_path(toSwitch.path)
 
-@types (server_tab = tab.TekkaServer)
+
+@types (server_tab = tabs.TekkaServer)
 def add_channels(server_tab):
 	"""
 		Adds all channels to tekka wich are reported by maki.
@@ -191,7 +192,7 @@ def add_channels(server_tab):
 
 	gui.updateServerTreeShortcuts()
 
-@types (tab = tab.TekkaTab, nick = basestring, mode = basestring)
+@types (tab = tabs.TekkaTab, nick = basestring, mode = basestring)
 def updatePrefix(tab, nick, mode):
 	"""
 	checks if the mode is a prefix-mode (e.g. +o)
@@ -248,7 +249,7 @@ def getTextColor(nick):
 	r = contrast.contrast_render_foreground_color(bg_color, color)
 	return r
 
-@types (server_tab = tab.TekkaServer, text = basestring)
+@types (server_tab = tabs.TekkaServer, text = basestring)
 def isHighlighted (server_tab, text):
 	highlightwords = config.get_list("chatting", "highlight_words", [])
 	highlightwords.append(server_tab.nick)
@@ -296,30 +297,30 @@ def getPrefix(server, channel, nick):
 	else:
 		return ""
 
-@types (tab = tab.TekkaTab, what = basestring, own = bool)
+@types (tab = tabs.TekkaTab, what = basestring, own = bool)
 def hide_output(tab, what, own = False):
 	""" Returns bool.
 		Check if the message type determined by "what"
-		shall be shown or not.
+		shall be hidden or not.
 		tab should be a TekkaServer, -Channel or -Query
 	"""
 	hide = False
 	printOwn = not config.get_bool("tekka", "hide_own_messages")
 
-	if type(tab) == tab.TekkaChannel:
-		hide = not what in config.get_list(
+	if type(tab) == tabs.TekkaChannel:
+		hide = what in config.get_list(
 				"channel_%s_%s" % (
 					tab.server.name.lower(),
 					tab.name.lower()),
 				"hide", [])
-	elif type(tab) == tab.TekkaQuery:
-		hide = not what in config.get_list(
+	elif type(tab) == tabs.TekkaQuery:
+		hide = what in config.get_list(
 				"query_%s_%s" % (
 					tab.server.name.lower(),
 					tab.name.lower()),
 				"hide", [])
-	elif type(tab) == tab.TekkaServer:
-		hide = not what in config.get_list(
+	elif type(tab) == tabs.TekkaServer:
+		hide = what in config.get_list(
 				"server_%s" % (
 					tab.name.lower()),
 				"hide", [])
@@ -1109,6 +1110,7 @@ def userJoin_cb(timestamp, server, from_str, channel):
 	"""
 	nick = parse_from(from_str)[0]
 	stab, tab = gui.tabs.search_tabs(server, channel)
+	doPrint = True
 
 	if nick == stab.nick:
 		# we joined a channel, fetch nicks and topic, create
