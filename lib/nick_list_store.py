@@ -192,7 +192,7 @@ class NickListStore(gtk.ListStore):
 		row = self.find_nick_row(nick)
 
 		if not row:
-			return None
+			raise Exception, "get_prefix: Nick '%s' not found."
 
 		return row[COLUMN_PREFIX]
 
