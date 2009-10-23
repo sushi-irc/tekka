@@ -1019,48 +1019,52 @@ def userQuit_cb(time, server, from_str, reason):
 
 		server_tab.connected = False
 
-		if not hide_output(tab, "quit", own = True):
+		hideServerPrint = hide_output(server_tab, "quit", own = True)
 
-			# walk through all channels and set joined = False on them
-			channels = gui.tabs.get_all_tabs(servers = [server])[1:]
+		# walk through all channels and set joined = False on them
+		channels = gui.tabs.get_all_tabs(servers = [server])[1:]
 
-			if reason:
-				message = _(u"« You have quit (%(reason)s).")
-			else:
-				message = _(u"« You have quit.")
+		if reason:
+			message = _(u"« You have quit (%(reason)s).")
+		else:
+			message = _(u"« You have quit.")
 
-			# deactivate channels/queries
-			for channelTab in channels:
-				if channelTab.is_channel():
-					channelTab.joined=False
+		# deactivate channels/queries
+		for channelTab in channels:
 
-				channelTab.connected=False
+			hideChannelPrint = hide_output(channelTab, "quit",
+				own = True)
 
+			if channelTab.is_channel():
+				channelTab.joined = False
+
+			channelTab.connected = False
+
+			if not (hideServerPrint or hideChannelPrint):
 				gui.channelPrint(time, server, channelTab.name,
 					message % {"reason": reason}, "action")
 
 	else: # another user quit the network
 
-		doPrint = hide_output(tab, "quit")
+		hideServerPrint = hide_output(server_tab, "quit")
 
-		if doPrint:
-			if reason:
-				message = _(u"« %(nick)s has quit (%(reason)s).")
-			else:
-				message = _(u"« %(nick)s has quit.")
+		if reason:
+			message = _(u"« %(nick)s has quit (%(reason)s).")
+		else:
+			message = _(u"« %(nick)s has quit.")
 
-			nickString = "<font foreground='%s' weight='bold'>"\
-				"%s</font>" % (
-					getNickColor(nick),
-					gui.escape(nick))
+		nickString = "<font foreground='%s' weight='bold'>"\
+			"%s</font>" % (
+				getNickColor(nick),
+				gui.escape(nick))
 
-			reasonString = "<font foreground='%s'>%s</font>" % (
-				getTextColor(nick),
-				gui.escape(reason))
+		reasonString = "<font foreground='%s'>%s</font>" % (
+			getTextColor(nick),
+			gui.escape(reason))
 
-			message = message % {
-				"nick": nickString,
-				"reason": reasonString}
+		message = message % {
+			"nick": nickString,
+			"reason": reasonString}
 
 		channels = gui.tabs.get_all_tabs(servers = [server])[1:]
 
@@ -1071,10 +1075,13 @@ def userQuit_cb(time, server, from_str, reason):
 		# print in all channels where nick joined a message
 		for channelTab in channels:
 
+			hideChannelPrint = hide_output(channelTab, "quit")
+
 			if channelTab.is_query():
 				# on query with `nick` only print quitmessage
 
-				if doPrint and channelTab.name.lower() == nick.lower():
+				if (not (hideChannelPrint or hideServerPrint)
+				and channelTab.name.lower() == nick.lower()):
 					gui.channelPrint(time, server, channelTab.name,
 						message, "action")
 
@@ -1095,7 +1102,7 @@ def userQuit_cb(time, server, from_str, reason):
 					gui.set_user_count(len(nickList),
 						nickList.get_operator_count())
 
-				if doPrint:
+				if not (hideServerPrint or hideChannelPrint):
 					gui.channelPrint(time, server, channelTab.name,
 						message, "action")
 
