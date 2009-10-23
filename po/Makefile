@@ -24,14 +24,7 @@ $(GLADEH) $(UIH): %.h: %
 	$(SED) -i '/^char \*s = N_("gtk-.*");$$/d' $@
 
 tekka.pot: $(PY) $(GLADEH) $(UIH)
-	$(QUIET_GEN) xgettext --keyword=_ --keyword=N_ --output=$@.tmp $+; \
-		if $(MSGCMP) --use-untranslated $@ $@.tmp > /dev/null 2>&1; \
-		then \
-			$(RM) -f $@.tmp; \
-			$(TOUCH) $@; \
-		else \
-			$(MV) $@.tmp $@; \
-		fi
+	$(QUIET_GEN) xgettext --keyword=_ --keyword=N_ --output=$@ $+;
 
 %.mo: %.po
 	$(QUIET_GEN) msgfmt --output-file=$@ $+

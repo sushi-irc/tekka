@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-10-09 03:52+0200\n"
+"POT-Creation-Date: 2009-10-23 21:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,13 +32,13 @@ msgid ""
 "The channel %(channel)s is not joined. Everything you write will not be send."
 msgstr ""
 
-#: ../commands.py:568
+#: ../commands.py:567
 #, python-format
 msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
 msgstr ""
 
 #: ../com.py:63 ../com.py:72 ../com.py:142 ../com.py:154 ../com.py:182
-#: ../main.py:220 ../main.py:286
+#: ../main.py:219 ../main.py:297
 msgid "tekka could not connect to maki."
 msgstr ""
 
@@ -58,223 +58,223 @@ msgstr ""
 msgid "Please update maki to at least version %(version)s."
 msgstr ""
 
-#: ../main.py:221 ../main.py:287
+#: ../main.py:220 ../main.py:298
 msgid "Please check whether maki is running."
 msgstr ""
 
-#: ../main.py:297
+#: ../main.py:308
 msgid "tekka could not determine server."
 msgstr ""
 
-#: ../main.py:298
+#: ../main.py:309
 msgid ""
 "There is no active server. Click on a server tab or a child of a server tab "
 "to activate the server."
 msgstr ""
 
-#: ../main.py:515
+#: ../main.py:534
 msgid "Reset markup"
 msgstr ""
 
-#: ../main.py:722
+#: ../main.py:714
 #, python-format
 msgid "Do you really want to close channel “%(name)s”?"
 msgstr ""
 
-#: ../main.py:724
+#: ../main.py:716
 #, python-format
 msgid "Do you really want to close query “%(name)s”?"
 msgstr ""
 
-#: ../main.py:726
+#: ../main.py:718
 #, python-format
 msgid "Do you really want to close server “%(name)s”?"
 msgstr ""
 
-#: ../main.py:822
+#: ../main.py:814
 msgid "Nickname: "
 msgstr ""
 
-#: ../main.py:825
+#: ../main.py:817
 msgid "User: "
 msgstr ""
 
-#: ../main.py:826
+#: ../main.py:818
 msgid "Topic: "
 msgstr ""
 
-#: ../main.py:828 ../main.py:832
+#: ../main.py:820 ../main.py:824
 msgid "Last sentence: "
 msgstr ""
 
-#: ../main.py:1333
+#: ../main.py:1334
 msgid "Error occured"
 msgstr ""
 
-#: ../signals.py:427
+#: ../signals.py:396
 #, python-format
 msgid "• Topic for %(channel)s: %(topic)s"
 msgstr ""
 
-#: ../signals.py:434
+#: ../signals.py:403
 #, python-format
 msgid "• You changed the topic to %(topic)s."
 msgstr ""
 
-#: ../signals.py:436
+#: ../signals.py:405
 #, python-format
 msgid "• %(nick)s changed the topic to %(topic)s."
 msgstr ""
 
-#: ../signals.py:510
+#: ../signals.py:478
 #, python-format
 msgid "• %(nick)s is away (%(message)s)."
 msgstr ""
 
-#: ../signals.py:611
+#: ../signals.py:579
 #, python-format
 msgid "• Modes for %(target)s: %(mode)s"
 msgstr ""
 
-#: ../signals.py:681
+#: ../signals.py:649
 #, python-format
 msgid "CTCP from %(nick)s to Channel:"
 msgstr ""
 
-#: ../signals.py:711
+#: ../signals.py:679
 #, python-format
 msgid "CTCP request from you to %(target)s: %(message)s"
 msgstr ""
 
-#: ../signals.py:886
+#: ../signals.py:854
 #, python-format
 msgid "• You are now known as %(newnick)s."
 msgstr ""
 
-#: ../signals.py:891
+#: ../signals.py:859
 #, python-format
 msgid "• %(nick)s is now known as %(newnick)s."
 msgstr ""
 
-#: ../signals.py:958
+#: ../signals.py:925
 #, python-format
 msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr ""
 
-#: ../signals.py:977
+#: ../signals.py:944
 #, python-format
 msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr ""
 
-#: ../signals.py:1017
+#: ../signals.py:984
 #, python-format
 msgid "« You have quit (%(reason)s)."
 msgstr ""
 
-#: ../signals.py:1019
+#: ../signals.py:986
 msgid "« You have quit."
 msgstr ""
 
-#: ../signals.py:1035
+#: ../signals.py:1002
 #, python-format
 msgid "« %(nick)s has quit (%(reason)s)."
 msgstr ""
 
-#: ../signals.py:1037
+#: ../signals.py:1004
 #, python-format
 msgid "« %(nick)s has quit."
 msgstr ""
 
-#: ../signals.py:1133
+#: ../signals.py:1101
 #, python-format
 msgid "» You have joined %(channel)s."
 msgstr ""
 
-#: ../signals.py:1143
+#: ../signals.py:1111
 #, python-format
 msgid "» %(nick)s has joined %(channel)s."
 msgstr ""
 
-#: ../signals.py:1237
+#: ../signals.py:1206
 #, python-format
 msgid "« You have left %(channel)s (%(reason)s)."
 msgstr ""
 
-#: ../signals.py:1239
+#: ../signals.py:1208
 #, python-format
 msgid "« You have left %(channel)s."
 msgstr ""
 
-#: ../signals.py:1261
+#: ../signals.py:1230
 #, python-format
 msgid "« %(nick)s has left %(channel)s (%(reason)s)."
 msgstr ""
 
-#: ../signals.py:1263
+#: ../signals.py:1232
 #, python-format
 msgid "« %(nick)s has left %(channel)s."
 msgstr ""
 
-#: ../signals.py:1293
+#: ../signals.py:1262
 #, python-format
 msgid "• %(target)s: No such nick/channel."
 msgstr ""
 
-#: ../signals.py:1296
+#: ../signals.py:1265
 #, python-format
 msgid "• %(target)s: No such server."
 msgstr ""
 
-#: ../signals.py:1299
+#: ../signals.py:1268
 #, python-format
 msgid "• %(target)s: No such channel."
 msgstr ""
 
-#: ../signals.py:1347 ../dialogs/channelList.py:188
+#: ../signals.py:1316 ../dialogs/channelList.py:187
 msgid "User"
 msgstr ""
 
-#: ../signals.py:1348 ../dialogs/channelList.py:188
-#: ../glade/mainwindow.glade.h:27
+#: ../signals.py:1317 ../dialogs/channelList.py:187
+#: ../glade/mainwindow.glade.h:28
 msgid "Topic"
 msgstr ""
 
-#: ../signals.py:1364
+#: ../signals.py:1333
 msgid "Unknown reason"
 msgstr ""
 
-#: ../signals.py:1367
+#: ../signals.py:1336
 msgid "The channel is full."
 msgstr ""
 
-#: ../signals.py:1369
+#: ../signals.py:1338
 msgid "The channel is invite-only."
 msgstr ""
 
-#: ../signals.py:1371
+#: ../signals.py:1340
 msgid "You are banned."
 msgstr ""
 
-#: ../signals.py:1385
+#: ../signals.py:1354
 msgid "You need the correct channel key."
 msgstr ""
 
-#: ../signals.py:1388
+#: ../signals.py:1357
 #, python-format
 msgid "You can not join %(channel)s: %(reason)s"
 msgstr ""
 
-#: ../signals.py:1398
+#: ../signals.py:1367
 #, python-format
 msgid "[%(nick)s] %(message)s"
 msgstr ""
 
-#: ../signals.py:1403
+#: ../signals.py:1372
 #, python-format
 msgid "[%(nick)s] End of whois."
 msgstr ""
 
-#: ../dialogs/channelList.py:188
+#: ../dialogs/channelList.py:187
 msgid "Channel"
 msgstr ""
 
@@ -306,11 +306,11 @@ msgstr ""
 msgid "Speed"
 msgstr ""
 
-#: ../dialogs/debug.py:63
+#: ../dialogs/debug.py:64
 msgid "C_ompile and run"
 msgstr ""
 
-#: ../dialogs/plugins.py:119
+#: ../dialogs/plugins.py:120
 #, python-format
 msgid "Configure %(name)s"
 msgstr ""
@@ -351,21 +351,21 @@ msgid ""
 "File size: %(bytes)d bytes%(resumable)s"
 msgstr ""
 
-#: ../lib/gui_control.py:291
+#: ../lib/gui_control.py:293
 #, python-format
 msgid "%d User"
 msgid_plural "%d Users"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../lib/gui_control.py:293
+#: ../lib/gui_control.py:295
 #, python-format
 msgid "%d Operator"
 msgid_plural "%d Operators"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../lib/gui_control.py:626
+#: ../lib/gui_control.py:662
 #, python-format
 msgid "Error: %(message)s"
 msgstr ""
@@ -379,53 +379,53 @@ msgstr ""
 msgid "Save key for channel"
 msgstr ""
 
-#: ../lib/plugin_control.py:107 ../lib/plugin_control.py:111
-#: ../lib/plugin_control.py:131 ../lib/plugin_control.py:181
-#: ../lib/plugin_control.py:334
+#: ../lib/plugin_control.py:108 ../lib/plugin_control.py:112
+#: ../lib/plugin_control.py:132 ../lib/plugin_control.py:182
+#: ../lib/plugin_control.py:335
 msgid "Plugin could not be loaded."
 msgstr ""
 
-#: ../lib/plugin_control.py:107 ../lib/plugin_control.py:131
-#: ../lib/plugin_control.py:182
+#: ../lib/plugin_control.py:108 ../lib/plugin_control.py:132
+#: ../lib/plugin_control.py:183
 #, python-format
 msgid ""
 "Plugin %(plugin)s could not be loaded.\n"
 "The following error occurred: %(error)s"
 msgstr ""
 
-#: ../lib/plugin_control.py:111
+#: ../lib/plugin_control.py:112
 #, python-format
 msgid "Plugin %(plugin)s could not be loaded."
 msgstr ""
 
-#: ../lib/plugin_control.py:160
+#: ../lib/plugin_control.py:161
 msgid "Plugin is already loaded."
 msgstr ""
 
-#: ../lib/plugin_control.py:161
+#: ../lib/plugin_control.py:162
 #, python-format
 msgid "Plugin %(plugin)s is already loaded."
 msgstr ""
 
-#: ../lib/plugin_control.py:205
+#: ../lib/plugin_control.py:206
 msgid "Plugin could not be unloaded."
 msgstr ""
 
-#: ../lib/plugin_control.py:205
+#: ../lib/plugin_control.py:206
 #, python-format
 msgid "Plugin %(plugin)s could not be unloaded, because it is not loaded."
 msgstr ""
 
-#: ../lib/plugin_control.py:335
+#: ../lib/plugin_control.py:336
 #, python-format
 msgid "Plugin %(plugin)s could not be loaded automatically."
 msgstr ""
 
-#: ../lib/status_icon.py:66
+#: ../lib/status_icon.py:67
 msgid "Hide main window"
 msgstr ""
 
-#: ../lib/status_icon.py:68
+#: ../lib/status_icon.py:69
 msgid "Show main window"
 msgstr ""
 
@@ -434,11 +434,11 @@ msgstr ""
 msgid "Topic for channel %(channel)s on %(server)s"
 msgstr ""
 
-#: ../lib/topic_dialog.py:117
+#: ../lib/topic_dialog.py:118
 msgid "Topic changed before."
 msgstr ""
 
-#: ../lib/topic_dialog.py:118
+#: ../lib/topic_dialog.py:119
 msgid ""
 "The topic was changed before your update. Do you want to commit the changes "
 "anyway?"
@@ -502,7 +502,7 @@ msgstr ""
 msgid "History"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:11
+#: ../glade/mainwindow.glade.h:11 ../glade/dialogs/colorTable.ui.h:6
 msgid "IRC Colors"
 msgstr ""
 
@@ -530,79 +530,91 @@ msgstr ""
 msgid "Part"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:18 ../glade/dialogs/server.glade.h:1
+#: ../glade/mainwindow.glade.h:18
+msgid "S_ide Pane"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:19 ../glade/dialogs/server.glade.h:1
 msgid "Server List"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:19
+#: ../glade/mainwindow.glade.h:20
 msgid "Set Key"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:20
+#: ../glade/mainwindow.glade.h:21
 msgid "Show a translation between IRC color codes and real colors"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:21
+#: ../glade/mainwindow.glade.h:22
 msgid "Shutdown"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:22
+#: ../glade/mainwindow.glade.h:23
 msgid "Status _Bar"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:23
+#: ../glade/mainwindow.glade.h:24
 msgid "Status _Icon"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:24
+#: ../glade/mainwindow.glade.h:25
 msgid "Take Half-Op"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:25
+#: ../glade/mainwindow.glade.h:26
 msgid "Take Op"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:26
+#: ../glade/mainwindow.glade.h:27
 msgid "Take Voice"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:28
+#: ../glade/mainwindow.glade.h:29
 msgid "Whois"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:29
-msgid "_Dialogs"
-msgstr ""
-
 #: ../glade/mainwindow.glade.h:30
-msgid "_File Transfers"
+msgid "_Channel List"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:31 ../glade/dialogs/preferences.glade.h:33
-msgid "_General Output"
+#: ../glade/mainwindow.glade.h:31
+msgid "_Debug"
 msgstr ""
 
 #: ../glade/mainwindow.glade.h:32
-msgid "_Help"
+msgid "_Dialogs"
 msgstr ""
 
 #: ../glade/mainwindow.glade.h:33
-msgid "_Plugins"
+msgid "_File Transfers"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:34
-msgid "_Topic Bar"
+#: ../glade/mainwindow.glade.h:34 ../glade/dialogs/preferences.glade.h:32
+msgid "_General Output"
 msgstr ""
 
 #: ../glade/mainwindow.glade.h:35
-msgid "_View"
+msgid "_Help"
 msgstr ""
 
 #: ../glade/mainwindow.glade.h:36
+msgid "_Plugins"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:37
+msgid "_Topic Bar"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:38
+msgid "_View"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:39
 msgid "_maki"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:37 ../glade/dialogs/preferences.glade.h:37
+#: ../glade/mainwindow.glade.h:40 ../glade/dialogs/preferences.glade.h:36
 msgid "_tekka"
 msgstr ""
 
@@ -754,19 +766,15 @@ msgstr ""
 msgid "Use _default font"
 msgstr ""
 
-#: ../glade/dialogs/preferences.glade.h:32
-msgid "_Advanced"
-msgstr ""
-
-#: ../glade/dialogs/preferences.glade.h:34
+#: ../glade/dialogs/preferences.glade.h:33
 msgid "_Hide on close"
 msgstr ""
 
-#: ../glade/dialogs/preferences.glade.h:35
+#: ../glade/dialogs/preferences.glade.h:34
 msgid "_Nick Colors"
 msgstr ""
 
-#: ../glade/dialogs/preferences.glade.h:36
+#: ../glade/dialogs/preferences.glade.h:35
 msgid "_Show status icon"
 msgstr ""
 
@@ -837,8 +845,4 @@ msgid ""
 "\n"
 "Example use:\n"
 "Type %C02,01 for blue foreground and black background."
-msgstr ""
-
-#: ../glade/dialogs/colorTable.ui.h:6
-msgid "IRC color codes"
 msgstr ""
