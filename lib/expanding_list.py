@@ -201,25 +201,29 @@ class ExpandingList(gtk.Table):
 		a = gtk.Button(stock=gtk.STOCK_ADD)
 		# remove the label of the button
 		a.get_children()[0].get_children()[0].get_children()[1].set_text("")
+		# show icon
+		a.get_image().show()
 
 		a.row = row
 		a.column = column
 
 		a.connect("clicked", self._button_add_clicked)
 		self._matrix[row].append(a)
-		self.attach(a, column, column+1, row, row+1)
+		self.attach(a, column, column+1, row, row+1, gtk.FILL|gtk.SHRINK, gtk.FILL|gtk.SHRINK)
 
 	def _add_minus_button(self, row, column):
 		a = gtk.Button(stock=gtk.STOCK_REMOVE)
 		# remove the label of the button
 		a.get_children()[0].get_children()[0].get_children()[1].set_text("")
+		# show icon
+		a.get_image().show()
 
 		a.row = row
 		a.column = column
 
 		a.connect("clicked", self._button_remove_clicked)
 		self._matrix[row].append(a)
-		self.attach(a, column, column+1, row, row+1)
+		self.attach(a, column, column+1, row, row+1, gtk.FILL|gtk.SHRINK, gtk.FILL|gtk.SHRINK)
 
 gobject.signal_new("instanced_widget", ExpandingList, gobject.SIGNAL_ACTION,
 	gobject.TYPE_NONE, (gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_PYOBJECT))
