@@ -1353,17 +1353,28 @@ def tekka_excepthook(extype, exobj, extb):
 	except:
 		pass
 
+	self = tekka_excepthook
 	try:
-		dialog = tekka_excepthook.dialog
+		dialog = self.dialog
 	except AttributeError:
-		dialog = tekka_excepthook.dialog = ErrorDialog(message)
+		dialog = self.dialog = ErrorDialog(message)
 		dialog.connect("response", dialog_response_cb)
 		dialog.show_all()
 	else:
-		tekka_excepthook.dialog.set_message(message)
+		self.dialog.set_message(message)
+
+	sys.__excepthook__(extype, exobj, extb)
 
 def setup_logging():
 	try:
+		class ExceptionHandler(logging.Handler):
+			""" handler for exceptions caught with logging.error.
+				dump those exceptions to the exception handler.
+			"""
+			def emit(self, record):
+				if record.exc_info:
+					tekka_excepthook(*record.exc_info)
+
 		logfile = config.get("tekka","logfile")
 		logdir = os.path.dirname(logfile)
 
@@ -1372,6 +1383,9 @@ def setup_logging():
 
 		logging.basicConfig(filename = logfile, level = logging.DEBUG,
 			filemode="w")
+
+		logging.getLogger("").addHandler(ExceptionHandler())
+
 	except BaseException, e:
 		print >> sys.stderr, "Logging init error: %s" % (e)
 
