@@ -24,7 +24,7 @@ $(GLADEH) $(UIH): %.h: %
 	$(SED) -i '/^char \*s = N_("gtk-.*");$$/d' $@
 
 tekka.pot: $(PY) $(GLADEH) $(UIH)
-	$(QUIET_GEN) xgettext --keyword=_ --keyword=N_ --output=$@ $+;
+	$(QUIET_GEN) xgettext --keyword=_ --keyword=N_ --output=$@ $+
 
 %.mo: %.po
 	$(QUIET_GEN) msgfmt --output-file=$@ $+
