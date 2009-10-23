@@ -337,9 +337,9 @@ class TabControl(gobject.GObject):
 				nextIter = None
 		path = tab.path
 
-		cb = self.get_callback("remove")
+		callbacks = self.get_callbacks("remove")
 
-		if cb:
+		for cb in callbacks:
 			cb(tab)
 
 		store.remove(row.iter)
