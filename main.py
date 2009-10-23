@@ -882,11 +882,11 @@ def setup_mainWindow():
 			# Explicitly add a 64x64 icon to work around
 			# a Compiz bug (LP: #312317)
 			gtk.window_set_default_icon_list(
+				gtk.gdk.pixbuf_new_from_file(iconPath),
 				gtk.gdk.pixbuf_new_from_file_at_size(
 					iconPath,
 					64,
-					64),
-				gtk.gdk.pixbuf_new_from_file(iconPath))
+					64))
 
 		except GError:
 			# file not found
@@ -1365,9 +1365,10 @@ def tekka_excepthook(extype, exobj, extb):
 def setup_logging():
 	try:
 		logfile = config.get("tekka","logfile")
+		logdir = os.path.dirname(logfile)
 
-		if not os.path.exists(logfile):
-			os.makedirs(os.path.split(logfile)[0])
+		if not os.path.exists(logdir):
+			os.makedirs(logdir)
 
 		logging.basicConfig(filename = logfile, level = logging.DEBUG,
 			filemode="w")
