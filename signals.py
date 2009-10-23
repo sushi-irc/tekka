@@ -327,6 +327,15 @@ def hide_output(tab, what, own = False):
 
 	return (hide and not own) or (hide and own and not printOwn)
 
+@types (servertab = tabs.TekkaServer, tab = tabs.TekkaTab,
+	what = basestring, own = bool)
+def show_output_exclusive(servertab, tab, what, own = False):
+	""" if the tab demands output but servertab disallows it,
+		allow.
+	"""
+	return not (hide_output(servertab, what, own = own)
+		or hide_output(tab, what, own = own))
+
 """
 Server signals
 """
@@ -628,12 +637,14 @@ def userMode_cb(time, server, from_str, target, mode, param):
 			actor = "You"
 
 		tab = gui.tabs.search_tab(server, target)
+
 		if not tab:
 			# no channel/query found
 
 			if param: param = " "+param
 
-			if not hide_output(tab, "mode", own = own):
+			if not hide_output(server_tab, "quit"):
+
 				gui.currentServerPrint(time, server,
 					"• %(actor)s set %(mode)s%(param)s on %(target)s" % {
 						"actor":actor,
@@ -646,17 +657,19 @@ def userMode_cb(time, server, from_str, target, mode, param):
 
 			updatePrefix(tab, param, mode)
 
-			own = (victim == server_tab.nick)
 			type = "action"
 			victim = target
+			own = (target == server_tab.nick)
 
-			if own:
-				victim = "you"
+			if (param == server_tab.nick) or own:
 				type = "hightlightaction"
+			elif own:
+				victim = "you"
 
 			if param: param = " "+param
 
-			if not hide_output(tab, "mode", own = own):
+			if show_output_exclusive(server_tab, tab, "mode", own = own):
+
 				gui.channelPrint(time, server, tab.name,
 					"• %(actor)s set %(mode)s%(param)s on %(victim)s." % {
 							"actor":actor,
@@ -894,10 +907,13 @@ def userNick_cb(time, server, from_str, newNick):
 	if tab and tab.is_query():
 		tab.name = newNick
 
+	own = False
+
 	# we changed the nick
 	if not nick or nick == server_tab.nick:
 		message = _(u"• You are now known as %(newnick)s.")
 		server_tab.nick = newNick
+		own = True
 
 	# someone else did
 	else:
@@ -911,7 +927,7 @@ def userNick_cb(time, server, from_str, newNick):
 			# notification, print everytime
 			doPrint = True
 		else:
-			doPrint = not hide_output(tab, "nick")
+			doPrint = show_output_exclusive(server_tab, tab, "nick", own)
 
 		if tab.is_channel():
 			if (nick in tab.nickList.get_nicks()):
@@ -963,7 +979,7 @@ def userKick_cb(time, server, from_str, channel, who, reason):
 	if who == server_tab.nick:
 		tab.joined = False
 
-		if not hide_output(tab, "kick", own = True):
+		if show_output_exclusive(server_tab, tab, "kick", own = True):
 
 			message = _(u"« You have been kicked from %(channel)s "
 				u"by %(nick)s (%(reason)s)." % {
@@ -982,7 +998,7 @@ def userKick_cb(time, server, from_str, channel, who, reason):
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
-		if not hide_output(tab, "kick"):
+		if show_output_exclusive(server_tab, tab, "kick"):
 
 			whoString = "<font foreground='%s' weight='bold'>%s</font>" % (
 				getNickColor(who), gui.escape(who))
@@ -1146,9 +1162,7 @@ def userJoin_cb(timestamp, server, from_str, channel):
 		if config.get_bool("tekka","switch_to_channel_after_join"):
 			gui.tabs.switch_to_path(tab.path)
 
-		doPrint = not hide_output(tab, "join", own = True)
-
-		if doPrint:
+		if show_output_exclusive(stab, tab, "join", own = True):
 
 			nickString = "You"
 			channelString = "<font foreground='%s'>%s</font>" % (
@@ -1162,7 +1176,7 @@ def userJoin_cb(timestamp, server, from_str, channel):
 			raise Exception, \
 				"No tab for channel '%s' in userJoin (not me)."
 
-		doPrint = not hide_output(tab, "join")
+		doPrint = show_output_exclusive(stab, tab, "join", own = False)
 
 		if doPrint:
 			message = _(u"» %(nick)s has joined %(channel)s.")
@@ -1254,7 +1268,7 @@ def userPart_cb(timestamp, server, from_str, channel, reason):
 
 		tab.joined = False
 
-		if not hide_output(tab, "part", own = True):
+		if show_output_exclusive(stab, tab, "part", own = True):
 
 			channelString = "<font foreground='%s'>%s</font>" % (
 				getTextColor(channel), gui.escape(channel))
@@ -1282,7 +1296,8 @@ def userPart_cb(timestamp, server, from_str, channel, reason):
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
-		if not hide_output(tab, "part"):
+		if show_output_exclusive(stab, tab, "part", False):
+
 			nickString = "<font foreground='%s' weight='bold'>"\
 				"%s</font>" % (getNickColor(nick), gui.escape(nick))
 
