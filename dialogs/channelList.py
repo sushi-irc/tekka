@@ -132,8 +132,6 @@ def sushiList(time, server, channel, user, topic):
 	receives the data from maki.
 	add server/user/topic to listStore
 	"""
-	channel = markup_escape(channel)
-	topic = markup_escape(topic)
 
 	if time > 0:
 		# no manual call
@@ -153,7 +151,8 @@ def sushiList(time, server, channel, user, topic):
 		or (filterExpression
 			and (filterExpression.search(channel)
 				or filterExpression.search(topic)))):
-		store.append(row=(channel, int(user), topic))
+		store.append(row=(markup_escape(channel), int(user),
+			markup_escape(topic)))
 
 def dialog_response_cb(dialog, id):
 	if id in (gtk.RESPONSE_NONE, gtk.RESPONSE_DELETE_EVENT,
