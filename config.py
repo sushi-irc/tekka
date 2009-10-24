@@ -178,6 +178,10 @@ def write_config_file():
 	config_parser.write(f)
 	f.close()
 
+@types (section = basestring)
+def has_section(section):
+	return config_parser.has_section(section)
+
 @types (section=basestring)
 def create_section(section):
 	"""
