@@ -32,6 +32,7 @@ IRC color specifications
 import re
 import gtk
 
+import config
 from typecheck import types
 
 import helper.escape
@@ -159,5 +160,20 @@ def parse_color_markups_to_codes(s):
 	s_split = helper.escape.unescape_split("%C", s, escape_char="%")
 	return chr(3).join(s_split)
 
+@types (nick = basestring)
+def get_nick_color(nick):
+	"""
+		Returns a static color for the nick given.
+		The returned color depends on the color mapping
+		set in config module.
+	"""
+	if not config.get_bool("tekka","color_text"):
+		return
 
+	colors = lib.contrast.colors[:-1]
+	bg_color = lib.gui_control.widgets.get_widget("output").get_style().\
+		base[gtk.STATE_NORMAL]
+	color = colors[sum([ord(n) for n in nick]) % len(colors)]
 
+	r = lib.contrast.contrast_render_foreground_color(bg_color, color)
+	return r

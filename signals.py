@@ -43,6 +43,8 @@ from lib import contrast
 from lib import dcc_dialog
 from lib import tab as tabs
 
+from helper import color
+
 from com import sushi, parse_from
 
 from typecheck import types
@@ -210,28 +212,11 @@ def updatePrefix(tab, nick, mode):
 			gui.set_user_count(len(tab.nickList),
 				tab.nickList.get_operator_count())
 
-@types (nick = basestring)
-def getNickColor(nick):
-	"""
-		Returns a static color for the nick given.
-		The returned color depends on the color mapping
-		set in config module.
-	"""
-	if not config.get_bool("tekka","color_text"):
-		return
-
-	colors = contrast.colors[:-1]
-	bg_color = gui.widgets.get_widget("output").get_style().\
-		base[gtk.STATE_NORMAL]
-	color = colors[sum([ord(n) for n in nick]) % len(colors)]
-
-	r = contrast.contrast_render_foreground_color(bg_color, color)
-	return r
-
+#TODO: move to helper.color
 @types (nick = basestring)
 def getTextColor(nick):
 	"""
-		Same as getNickColor but for text and defaults
+		Same as color.get_nick_color but for text and defaults
 		to another value (text_message)
 	"""
 	if not config.get_bool("tekka","color_text"):
@@ -560,7 +545,7 @@ def userMessage_cb(timestamp, server, from_str, channel, message):
 	gui.channelPrint(timestamp, server, channel,
 		"&lt;%s<font foreground='%s' weight='bold'>%s</font>&gt; %s" % (
 			getPrefix(server, channel, nick),
-			getNickColor(nick),
+			color.get_nick_color(nick),
 			gui.escape(nick),
 			messageString,
 		), type)
@@ -591,7 +576,7 @@ def userQuery_cb(timestamp, server, from_str, message):
 
 	gui.channelPrint(timestamp, server, nick,
 		"&lt;<font foreground='%s' weight='bold'>%s</font>&gt; %s" % (
-			getNickColor(nick),
+			color.get_nick_color(nick),
 			gui.escape(nick),
 			gui.escape(message)
 		), "message")
@@ -747,7 +732,7 @@ def queryCTCP_cb(time, server, from_str, message):
 		gui.channelPrint(time, server, tab.name, \
 				"&lt;CTCP:<font foreground='%s' weight='bold'>%s"
 				"</font>&gt; <font foreground='%s'>%s</font>" % (
-					getNickColor(nick),
+					color.get_nick_color(nick),
 					gui.escape(nick),
 					getTextColor(nick),
 					gui.escape(message)))
@@ -755,7 +740,7 @@ def queryCTCP_cb(time, server, from_str, message):
 		gui.currentServerPrint(time, server,
 				"&lt;CTCP:<font foreground='%s' weight='bold'>%s"
 				"</font>&gt; <font foreground='%s'>%s</font>" % (
-					getNickColor(nick),
+					color.get_nick_color(nick),
 					gui.escape(nick),
 					getTextColor(nick),
 					gui.escape(message)))
@@ -775,13 +760,13 @@ def ownNotice_cb(time, server, target, message):
 		gui.channelPrint(time, server, tab.name, \
 			"&gt;<font foreground='%s' weight='bold'>%s</font>&lt; "
 			"<font foreground='%s'>%s</font>" % \
-				(getNickColor(target), gui.escape(target),
+				(color.get_nick_color(target), gui.escape(target),
 				getTextColor(target), gui.escape(message)))
 	else:
 		gui.currentServerPrint(time, server,
 			"&gt;<font foreground='%s' weight='bold'>%s</font>&lt; "
 			"<font foreground='%s'>%s</font>" % \
-				(getNickColor(target), gui.escape(target),
+				(color.get_nick_color(target), gui.escape(target),
 				getTextColor(target), gui.escape(message)))
 
 
@@ -801,13 +786,13 @@ def queryNotice_cb(time, server, from_str, message):
 		gui.channelPrint(time, server, tab.name,
 				"-<font foreground='%s' weight='bold'>%s</font>- "
 				"<font foreground='%s'>%s</font>" % \
-				(getNickColor(nick), gui.escape(nick),
+				(color.get_nick_color(nick), gui.escape(nick),
 				getTextColor(nick), gui.escape(message)))
 	else:
 		gui.currentServerPrint(time, server,
 				"-<font foreground='%s' weight='bold'>%s</font>- "
 				"<font foreground='%s'>%s</font>" % \
-				(getNickColor(nick), gui.escape(nick),
+				(color.get_nick_color(nick), gui.escape(nick),
 				getTextColor(nick), gui.escape(message)))
 
 def userNotice_cb(time, server, from_str, target, message):
@@ -827,7 +812,7 @@ def userNotice_cb(time, server, from_str, target, message):
 	gui.channelPrint(time, server, target,
 			"-<font foreground='%s' weight='bold'>%s</font>- "
 			"<font foreground='%s'>%s</font>" % (
-				getNickColor(nick),
+				color.get_nick_color(nick),
 				gui.escape(nick),
 				getTextColor(nick),
 				gui.escape(message)))
@@ -886,7 +871,7 @@ def userAction_cb(time, server, from_str, channel, action):
 
 	gui.channelPrint(time, server, channel,
 		"<font foreground='%s' weight='bold'>%s</font> %s" % (
-			getNickColor(nick), nick, actionString), type)
+			color.get_nick_color(nick), nick, actionString), type)
 
 def userNick_cb(time, server, from_str, newNick):
 	"""
@@ -935,11 +920,11 @@ def userNick_cb(time, server, from_str, newNick):
 			continue
 
 		nickString = "<font foreground='%s' weight='bold'>%s</font>" % (
-			getNickColor(nick),
+			color.get_nick_color(nick),
 			gui.escape(nick))
 
 		newNickString = "<font foreground='%s' weight='bold'>%s</font>" % (
-			getNickColor(newNick),
+			color.get_nick_color(newNick),
 			gui.escape(newNick))
 
 		if doPrint:
@@ -967,7 +952,7 @@ def userKick_cb(time, server, from_str, channel, who, reason):
 		getTextColor(channel), gui.escape(channel))
 
 	nickString = "<font foreground='%s' weight='bold'>%s</font>" % (
-		getNickColor(nick), gui.escape(nick))
+		color.get_nick_color(nick), gui.escape(nick))
 
 	reasonString = "<font foreground='%s'>%s</font>" % (
 		getTextColor(nick), gui.escape(reason))
@@ -997,7 +982,7 @@ def userKick_cb(time, server, from_str, channel, who, reason):
 		if show_output_exclusive(server_tab, tab, "kick"):
 
 			whoString = "<font foreground='%s' weight='bold'>%s</font>" % (
-				getNickColor(who), gui.escape(who))
+				color.get_nick_color(who), gui.escape(who))
 
 			message = _(u"« %(who)s was kicked from %(channel)s by "
 						u"%(nick)s (%(reason)s).") % {
@@ -1067,7 +1052,7 @@ def userQuit_cb(time, server, from_str, reason):
 
 		nickString = "<font foreground='%s' weight='bold'>"\
 			"%s</font>" % (
-				getNickColor(nick),
+				color.get_nick_color(nick),
 				gui.escape(nick))
 
 		reasonString = "<font foreground='%s'>%s</font>" % (
@@ -1181,7 +1166,7 @@ def userJoin_cb(timestamp, server, from_str, channel):
 
 			nickString = "<font foreground='%s' weight='bold'>"\
 				"%s</font>" % (
-					getNickColor(nick),
+					color.get_nick_color(nick),
 					gui.escape(nick))
 
 			channelString = "<font foreground='%s'>%s</font>" % (
@@ -1297,7 +1282,8 @@ def userPart_cb(timestamp, server, from_str, channel, reason):
 		if show_output_exclusive(stab, tab, "part", False):
 
 			nickString = "<font foreground='%s' weight='bold'>"\
-				"%s</font>" % (getNickColor(nick), gui.escape(nick))
+				"%s</font>" % (
+				color.get_nick_color(nick), gui.escape(nick))
 
 			channelString = "<font foreground='%s'>%s</font>" % (
 				getTextColor(channel), gui.escape(channel))
