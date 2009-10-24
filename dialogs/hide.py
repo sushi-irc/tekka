@@ -23,11 +23,13 @@ for (key, val) in buttons.items():
 def get_tab_category(tab):
 	cat = ""
 	if type(active_tab) == tabs.TekkaServer:
-		cat = "server_%s" % (active_tab.name)
+		cat = "server_%s" % (active_tab.name.lower())
 	elif type(active_tab) == tabs.TekkaChannel:
-		cat = "channel_%s_%s" % (active_tab.server.name, active_tab.name)
+		cat = "channel_%s_%s" % (active_tab.server.name.lower(),
+			active_tab.name.lower())
 	elif type(active_tab) == tabs.TekkaQuery:
-		cat = "query_%s_%s" % (active_tab.server.name, active_tab.name)
+		cat = "query_%s_%s" % (active_tab.server.name.lower(),
+			active_tab.name.lower())
 	return cat
 
 def get_hidden_types(tab):
@@ -36,6 +38,13 @@ def get_hidden_types(tab):
 	return {
 		"hide_own": config.get_list(cat, "hide_own", []),
 		"hide": config.get_list(cat, "hide", []) }
+
+def check_empty_section(cat, data):
+	if len(data["hide"]) == 0:
+		config.unset(cat, "hide")
+
+	if len(data["hide_own"]) == 0:
+		config.unset(cat, "hide_own")
 
 def apply_button_setting(button):
 	cat = get_tab_category(active_tab)
@@ -60,6 +69,8 @@ def apply_button_setting(button):
 
 	config.set_list(cat, "hide", d["hide"])
 
+	check_empty_section(cat, d)
+
 def apply_own_button_setting(button):
 	cat = get_tab_category(active_tab)
 	d = get_hidden_types(active_tab)
@@ -83,6 +94,8 @@ def apply_own_button_setting(button):
 	print "set_list(%s, hide_own, %s)" % (cat, d["hide_own"])
 
 	config.set_list(cat, "hide_own", d["hide_own"])
+
+	check_empty_section(cat, d)
 
 def apply_current_settings():
 	d = get_hidden_types(active_tab)
