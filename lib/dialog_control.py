@@ -45,6 +45,14 @@ def loadDialog(name):
 	dialog.setup()
 	return dialog
 
+def show_dialog(name, *param):
+	d = loadDialog(name)
+
+	if not d:
+		raise Exception, "Dialog with name '%s' not found." % (name)
+
+	return d.run(*param)
+
 def showEditServerDialog(server):
 	d = loadDialog("editServer")
 
