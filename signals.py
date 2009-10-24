@@ -304,28 +304,26 @@ def hide_output(tab, what, own = False):
 		shall be hidden or not.
 		tab should be a TekkaServer, -Channel or -Query
 	"""
-	hide = False
-	printOwn = not config.get_bool("tekka", "hide_own_messages")
-
 	if type(tab) == tabs.TekkaChannel:
-		hide = what in config.get_list(
-				"channel_%s_%s" % (
+		cat = "channel_%s_%s" % (
 					tab.server.name.lower(),
-					tab.name.lower()),
-				"hide", [])
+					tab.name.lower())
 	elif type(tab) == tabs.TekkaQuery:
-		hide = what in config.get_list(
-				"query_%s_%s" % (
+		cat = "query_%s_%s" % (
 					tab.server.name.lower(),
-					tab.name.lower()),
-				"hide", [])
+					tab.name.lower())
 	elif type(tab) == tabs.TekkaServer:
-		hide = what in config.get_list(
-				"server_%s" % (
-					tab.name.lower()),
-				"hide", [])
+		cat = "server_%s" % (tab.name.lower())
 
-	return (hide and not own) or (hide and own and not printOwn)
+	else:
+		return False
+
+	hide = what in config.get_list(cat, "hide", [])
+	hideOwn = what in config.get_list(cat, "hide_own", [])
+
+	print "%s-%s: %s,%s" % (cat, what, hide, hideOwn)
+
+	return (hide and not own) or (own and hideOwn) or (hide and own and not hideOwn)
 
 @types (servertab = tabs.TekkaServer, tab = tabs.TekkaTab,
 	what = basestring, own = bool)
