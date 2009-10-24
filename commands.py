@@ -295,6 +295,65 @@ def makiCTCP(serverTab, channelTab, args):
 
 	sushi.ctcp(serverTab.name, args[0], " ".join(args[1:]))
 
+def tekkaNames(serverTab, channelTab, args):
+	"""
+		Sends a NAMES request and prints the result
+		as text to the channel.
+
+		Usage: /names [<channel>]
+	"""
+	def request(server,channel):
+		def names_cb(time, server, channel, nicks, prefixes):
+			self = names_cb
+
+			def print_message(message):
+				if self.no_channel:
+					gui.currentServerPrint(time, server, message,
+						"action")
+				else:
+					gui.channelPrint(time, server, channel, message,
+						"action")
+
+			if self.first:
+				print_message(_("• Begin of names"))
+				self.first = False
+
+			if not nicks: # eol
+				signals.disconnect_signal("names", self)
+				print_message(_("• End of names"))
+
+			else:
+				message = ""
+				for i in xrange(len(nicks)):
+					message += "[%s<font foreground='%s'>%s</font>]" % (
+						prefixes[i],
+						helper.color.get_nick_color(nicks[i]),
+						nicks[i])
+
+					if (i+1) % 5 == 0:
+						print_message(message)
+						message = ""
+					else:
+						message += " "
+
+				print_message(message)
+
+
+		names_cb.no_channel = not channel
+		names_cb.first = True
+		signals.connect_signal("names", names_cb)
+		sushi.names(server, channel)
+
+	if not args:
+		if channelTab:
+			request(serverTab.name, channelTab.name)
+		else:
+			pass # which channel was meant?
+	elif len(args) == 1:
+		request(serverTab.name, args[0])
+	else:
+		gui.myPrint("Usage: /names [<channel>]")
+
 def makiNotice(serverTab, channelTab, args):
 	"""
 		Sends a notice to the given target.
@@ -473,6 +532,7 @@ _commands = {
 	"back" : makiBack,
 "nickserv" : makiNickserv,
 	"ctcp" : makiCTCP,
+	"names" : tekkaNames,
 	"notice" : makiNotice,
 	"msg" : makiMessage,
 	"oper" : makiOper,
