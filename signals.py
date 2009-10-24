@@ -1131,7 +1131,7 @@ def userJoin_cb(timestamp, server, from_str, channel):
 	"""
 	nick = parse_from(from_str)[0]
 	stab, tab = gui.tabs.search_tabs(server, channel)
-	doPrint = True
+	doPrint = False
 
 	if nick == stab.nick:
 		# we joined a channel, fetch nicks and topic, create
@@ -1160,7 +1160,9 @@ def userJoin_cb(timestamp, server, from_str, channel):
 		if config.get_bool("tekka","switch_to_channel_after_join"):
 			gui.tabs.switch_to_path(tab.path)
 
-		if show_output_exclusive(stab, tab, "join", own = True):
+		doPrint = show_output_exclusive(stab, tab, "join", own = True)
+
+		if doPrint:
 
 			nickString = "You"
 			channelString = "<font foreground='%s'>%s</font>" % (
