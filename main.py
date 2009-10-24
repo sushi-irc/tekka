@@ -86,6 +86,7 @@ import lib.gui_control as gui
 from lib import dialog_control
 from lib.inline_dialog import InlineMessageDialog
 from lib import plugin_control
+import lib.nick_list_store
 
 from helper.shortcuts import addShortcut, removeShortcut
 from helper import tabcompletion
@@ -554,7 +555,7 @@ def nickList_row_activated_cb(nickList, path, column):
 	serverTab,channelTab = gui.tabs.get_current_tabs()
 
 	try:
-		name = nickList.get_model()[path][nickList.get_model().COLUMN_NICK]
+		name = nickList.get_model()[path][lib.nick_list_store.COLUMN_NICK]
 	except TypeError:
 		# nickList has no model
 		return
@@ -602,7 +603,7 @@ def nickList_button_press_event_cb(nickList, event):
 		if nick:
 			# display nick specific menu
 
-			nick = nick[nickList.get_model().COLUMN_NICK]
+			nick = nick[lib.nick_list_store.COLUMN_NICK]
 
 			menu = nicklist_menu.NickListMenu().get_menu(nick)
 
