@@ -72,6 +72,7 @@ class ServerTreeMenu(object):
 			"closeItem_activate_cb" : self.closeItem_activate_cb,
 			"autoJoinItem_toggled_cb" : self.autoJoinItem_toggled_cb,
 			"autoConnectItem_toggled_cb" : self.autoConnectItem_toggled_cb,
+			"hideItem_activate_cb": self.hideItem_activate_cb,
 			"historyItem_activate_cb" : self.historyItem_activate_cb,
 			"setTopicItem_activate_cb": self.setTopicItem_activate_cb,
 			"setKeyItem_activate_cb" : self.setKeyItem_activate_cb
@@ -221,6 +222,13 @@ class ServerTreeMenu(object):
 
 		sushi.server_set(self.current_tab.name,
 			"server", "autoconnect", str(item.get_active()).lower())
+
+	def hideItem_activate_cb(self, item):
+		""" show up hide messages dialog """
+		if not self.current_tab or self.current_tab.is_server():
+			return
+
+		dialog_control.show_dialog("hide", self.current_tab)
 
 	def historyItem_activate_cb(self, item):
 		""" show up history dialog for current tab. """

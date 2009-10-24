@@ -687,9 +687,17 @@
       </widget>
     </child>
     <child>
+      <widget class="GtkMenuItem" id="hideItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">H_ide Messages</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="hideItem_activate_cb"/>
+      </widget>
+    </child>
+    <child>
       <widget class="GtkMenuItem" id="historyItem">
         <property name="visible">True</property>
-        <property name="label" translatable="yes">History</property>
+        <property name="label" translatable="yes">_History</property>
         <property name="use_underline">True</property>
         <signal name="activate" handler="historyItem_activate_cb"/>
       </widget>
