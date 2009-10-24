@@ -13,6 +13,7 @@
     <child>
       <widget class="GtkVBox" id="mainVBox">
         <property name="visible">True</property>
+        <property name="orientation">vertical</property>
         <child>
           <widget class="GtkMenuBar" id="menubar1">
             <property name="visible">True</property>
@@ -626,7 +627,6 @@
       <widget class="GtkImageMenuItem" id="connectItem">
         <property name="label" translatable="yes">_Connect</property>
         <property name="visible">True</property>
-        <property name="tooltip" translatable="yes">Connect to the pointed server.</property>
         <property name="use_underline">True</property>
         <property name="use_stock">False</property>
         <signal name="activate" handler="connectItem_activate_cb"/>
@@ -642,7 +642,6 @@
       <widget class="GtkImageMenuItem" id="disconnectItem">
         <property name="label" translatable="yes">_Disconnect</property>
         <property name="visible">True</property>
-        <property name="tooltip" translatable="yes">Disconnect the pointed server.</property>
         <property name="use_underline">True</property>
         <property name="use_stock">False</property>
         <signal name="activate" handler="disconnectItem_activate_cb"/>
@@ -681,7 +680,6 @@
       <widget class="GtkImageMenuItem" id="partItem">
         <property name="label" translatable="yes">_Part</property>
         <property name="visible">True</property>
-        <property name="tooltip" translatable="yes">Leave the pointed channel.</property>
         <property name="use_underline">True</property>
         <property name="use_stock">False</property>
         <signal name="activate" handler="partItem_activate_cb"/>
@@ -696,7 +694,6 @@
     <child>
       <widget class="GtkCheckMenuItem" id="autoJoinItem">
         <property name="visible">True</property>
-        <property name="tooltip" translatable="yes">Mark this channel for auto joining.</property>
         <property name="label" translatable="yes">Auto-join</property>
         <property name="use_underline">True</property>
         <signal name="toggled" handler="autoJoinItem_toggled_cb"/>
@@ -706,7 +703,6 @@
       <widget class="GtkImageMenuItem" id="setTopicItem">
         <property name="label" translatable="yes">Set _Topic</property>
         <property name="visible">True</property>
-        <property name="tooltip" translatable="yes">Edit the topic of the channel in a seperatee dialog.</property>
         <property name="use_underline">True</property>
         <property name="use_stock">False</property>
         <signal name="activate" handler="setTopicItem_activate_cb"/>
@@ -722,7 +718,6 @@
       <widget class="GtkImageMenuItem" id="setKeyItem">
         <property name="label" translatable="yes">Set _Key</property>
         <property name="visible">True</property>
-        <property name="tooltip" translatable="yes">Set the secret key of the pointed channel.</property>
         <property name="use_underline">True</property>
         <property name="use_stock">False</property>
         <signal name="activate" handler="setKeyItem_activate_cb"/>
@@ -753,7 +748,6 @@
       <widget class="GtkImageMenuItem" id="historyItem">
         <property name="label" translatable="yes">_History</property>
         <property name="visible">True</property>
-        <property name="tooltip" translatable="yes">Open the history dialog for the pointed tab.</property>
         <property name="use_underline">True</property>
         <property name="use_stock">False</property>
         <signal name="activate" handler="historyItem_activate_cb"/>
@@ -769,7 +763,6 @@
       <widget class="GtkImageMenuItem" id="closeItem">
         <property name="label" translatable="yes">Close</property>
         <property name="visible">True</property>
-        <property name="tooltip" translatable="yes">Closethe pointed tab.</property>
         <property name="use_stock">False</property>
         <signal name="activate" handler="closeItem_activate_cb"/>
         <child internal-child="image">
