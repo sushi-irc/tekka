@@ -99,6 +99,7 @@ class ServerTreeMenu(object):
 		partItem = self.widgets.get_widget("partItem")
 		autoConnectItem = self.widgets.get_widget("autoConnectItem")
 		autoJoinItem = self.widgets.get_widget("autoJoinItem")
+		hideItem = self.widgets.get_widget("hideItem")
 		historyItem = self.widgets.get_widget("historyItem")
 		closeItem = self.widgets.get_widget("closeItem")
 		setTopicItem = self.widgets.get_widget("setTopicItem")
@@ -111,9 +112,11 @@ class ServerTreeMenu(object):
 			setTopicItem.hide()
 			setKeyItem.hide()
 			autoJoinItem.hide()
+			hideItem.hide()
 			historyItem.hide()
 
-			if sushi.server_get(pointedTab.name, "server", "autoconnect") == "true":
+			if sushi.server_get(
+			pointedTab.name, "server", "autoconnect") == "true":
 				autoConnectItem.set_active(True)
 			else:
 				autoConnectItem.set_active(False)
@@ -128,11 +131,11 @@ class ServerTreeMenu(object):
 			disconnectItem.hide()
 			autoConnectItem.hide()
 
-			if sushi.server_get(pointedTab.server.name, pointedTab.name, "autojoin") == "true":
+			if sushi.server_get(
+			pointedTab.server.name, pointedTab.name, "autojoin") == "true":
 				autoJoinItem.set_active(True)
 			else:
 				autoJoinItem.set_active(False)
-
 
 			if pointedTab.joined:
 				joinItem.hide()

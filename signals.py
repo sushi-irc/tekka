@@ -312,27 +312,25 @@ def hide_output(tab, what, own = False):
 		cat = "query_%s_%s" % (
 					tab.server.name.lower(),
 					tab.name.lower())
-	elif type(tab) == tabs.TekkaServer:
-		cat = "server_%s" % (tab.name.lower())
-
 	else:
 		return False
 
 	hide = what in config.get_list(cat, "hide", [])
 	hideOwn = what in config.get_list(cat, "hide_own", [])
 
-	print "%s-%s: %s,%s" % (cat, what, hide, hideOwn)
-
-	return (hide and not own) or (own and hideOwn) or (hide and own and not hideOwn)
+	return ((hide and not own)
+		or (own and hideOwn)
+		or (hide and own and not hideOwn))
 
 @types (servertab = tabs.TekkaServer, tab = tabs.TekkaTab,
 	what = basestring, own = bool)
 def show_output_exclusive(servertab, tab, what, own = False):
-	""" if the tab demands output but servertab disallows it,
-		allow.
+	""" Returns bool.
+		Determine if the message identified by -what- shall
+		be shown in tab -tab- or not.
+		-servertab- is not used at the moment.
 	"""
-	return not (hide_output(servertab, what, own = own)
-		or hide_output(tab, what, own = own))
+	return not hide_output(tab, what, own = own)
 
 """
 Server signals

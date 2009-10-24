@@ -174,6 +174,8 @@ def write_config_file():
 		print "Config module not loaded. I don't save anything."
 		return
 
+	# TODO: check for empty sections and don't write them.
+
 	f = file(config_file, "w")
 	config_parser.write(f)
 	f.close()
