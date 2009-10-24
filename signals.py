@@ -110,7 +110,7 @@ def handle_maki_connect_cb():
 	connect_signal("connect", serverConnect_cb)
 	connect_signal("connected", serverConnected_cb)
 	connect_signal("motd", serverMOTD_cb)
-	connect_signal("whois", whois_cb)
+	connect_signal("whois", whois_cb) # FIXME: only on demand! like list
 	connect_signal("dcc_send", dcc_send_cb)
 
 	# Channel-Signals
@@ -1436,7 +1436,6 @@ def channelList_cb(time, server, channel, users, topic):
 
 			channelList._text = []
 			channelList._line = 0
-
 
 def whois_cb(time, server, nick, message):
 	""" message = "" => end of whois """

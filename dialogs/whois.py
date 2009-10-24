@@ -99,7 +99,6 @@ def dialog_response_cb(dialog, id):
 	if id in (gtk.RESPONSE_NONE, gtk.RESPONSE_CLOSE):
 		global diag
 		signals.disconnect_signal("whois", dialog.whois_input)
-		signals.connect_signal("whois", signals.whois)
 
 		diag = None
 		dialog.destroy()
@@ -118,7 +117,6 @@ def run(server, nick):
 		diag = WhoisDialog(server, nick)
 		diag.connect("response", dialog_response_cb)
 
-		signals.disconnect_signal("whois", signals.whois)
 		signals.connect_signal("whois", diag.whois_input)
 
 	else:
