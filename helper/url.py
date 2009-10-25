@@ -28,7 +28,7 @@ SUCH DAMAGE.
 
 import re
 
-urlExp = re.compile("(\w+)://[^ \t\"'<>]+[^ \t\"'<>,.)\]]")
+urlExp = re.compile("(\w+)://[^ \t\"'<>]+[^ \t\"'<>,.]")
 
 def URLToTag(message):
 	"""
@@ -48,6 +48,10 @@ def URLToTag(message):
 
 		url = message[mStart:mEnd]
 
+		if url[-1] == ")" and (url.count("(") - url.count(")") != 0):
+			mEnd -= 1
+			url = message[mStart:mEnd]
+
 		tagStart="<a href='%s'>" % url
 		tagEnd = "</a>"
 
@@ -60,3 +64,12 @@ def URLToTag(message):
 		lastEnd += len(tagStart)+len(tagEnd)+len(url)
 	return message
 
+if __name__ == "__main__":
+	urls = ("http://www.example.com/",
+	        "See http://www.example.com, and http://www.example.com/.",
+	        "http://www.example.com/ex_(ample)",
+	        "See URL (http://www.example.com/ex_(ample)).")
+
+	for url in urls:
+		print url
+		print u"→", URLToTag(url)
