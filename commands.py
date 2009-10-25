@@ -421,7 +421,7 @@ def makiList(serverTab, channelTab, args):
 
 	gui.serverPrint(time.time(), serverTab.name, "Start of list.")
 
-	signals.connect_signal("list", signals.channelList)
+	signals.connect_signal("list", signals.channelList_cb)
 	sushi.list(serverTab.name, channel)
 
 def makiRaw(serverTab, channelTab, args):
@@ -448,7 +448,7 @@ def makiStopList(serverTab, channelTab, args):
 
 		Usage: /stoplist
 	"""
-	signals.disconnect_signal("list", signals.channelList)
+	signals.disconnect_signal("list", signals.channelList_cb)
 
 def makiWhois(currentServer, currentChannel, args):
 	"""

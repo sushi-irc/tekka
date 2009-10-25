@@ -499,7 +499,7 @@ def userMessage_cb(timestamp, server, from_str, channel, message):
 		return
 
 	elif channel.lower() == server_tab.nick.lower():
-		userQuery(timestamp, server, from_str, message)
+		userQuery_cb(timestamp, server, from_str, message)
 		return
 
 	message = gui.escape(message)
@@ -1327,7 +1327,7 @@ def cannotJoin(time, server, channel, reason):
 
 			def key_dialog_response_cb(dialog, id):
 				if id == gtk.RESPONSE_OK:
-					com.join(server, channel, dialog.entry.get_text())
+					sushi.join(server, channel, dialog.entry.get_text())
 				dialog.destroy()
 
 			# open a input dialog which asks for the key
@@ -1352,52 +1352,52 @@ def channelList_cb(time, server, channel, users, topic):
 	"""
 
 	def init_channelList():
-		channelList._text = []
-		channelList._line = 0
+		channelList_cb._text = []
+		channelList_cb._line = 0
 
 		serverTab = gui.tabs.search_tab(server)
-		channelList._buf = serverTab.textview.get_buffer()
+		channelList_cb._buf = serverTab.textview.get_buffer()
 
 	def print_listing(buf, text):
 		buf.insertHTML(buf.get_end_iter(), "<br/>".join(text))
 		return False
 
 	try:
-		channelList._init
+		channelList_cb._init
 	except AttributeError:
-		channelList._init = 0
+		channelList_cb._init = 0
 
-	if not channelList._init:
+	if not channelList_cb._init:
 		init_channelList()
-		channelList._init = 1
+		channelList_cb._init = 1
 
 	if not channel and not topic and users == -1:
 		# listing ended, reset variables
 
-		if channelList._line > 0:
+		if channelList_cb._line > 0:
 			# print rest
-			gobject.idle_add(print_listing, channelList._buf,
-				channelList._text)
+			gobject.idle_add(print_listing, channelList_cb._buf,
+				channelList_cb._text)
 
 		gobject.idle_add(gui.serverPrint, time, server, "End of list.")
 
 		init_channelList()
-		channelList._init = 0
+		channelList_cb._init = 0
 
 	else:
-		channelList._text.append(("• <b>%s</b><br/>"+
+		channelList_cb._text.append(("• <b>%s</b><br/>"+
 			"\t%d "+_("User")+"<br/>"+
 			"\t"+_("Topic")+": \"%s\"") % \
 			(gui.escape(channel), users, gui.escape(topic)))
 
-		channelList._line += 1
+		channelList_cb._line += 1
 
-		if channelList._line == 10:
-			gobject.idle_add(print_listing, channelList._buf,
-				channelList._text)
+		if channelList_cb._line == 10:
+			gobject.idle_add(print_listing, channelList_cb._buf,
+				channelList_cb._text)
 
-			channelList._text = []
-			channelList._line = 0
+			channelList_cb._text = []
+			channelList_cb._line = 0
 
 def whois_cb(time, server, nick, message):
 	""" message = "" => end of whois """
