@@ -1432,14 +1432,15 @@ def dcc_send_cb(time, id, server, sender, filename,
 			sushi.dcc_send_remove(tid)
 		dialog.destroy()
 
-	(s_incoming,
+	(s_new,
+	 s_incoming,
 	 s_resumable,
 	 s_resumed,
 	 s_running,
-	 s_error) = [1 << n for n in range(5)]
+	 s_error) = [1 << n for n in range(6)]
 
-	if ("" in (server, sender, filename)
-	and 0 in (size, progress, speed, status)):
+	if (server == "" and sender == "" and filename == ""
+	and size == 0 and progress == 0 and speed == 0 and status == 0):
 
 		# send was removed
 		logging.debug("filetransfer %d removed." % (id))
@@ -1451,7 +1452,7 @@ def dcc_send_cb(time, id, server, sender, filename,
 	#
 	if status & s_incoming == s_incoming:
 
-		if status >> 2 == 0:
+		if status & s_new == s_new:
 			# attempt made
 
 			d = dcc_dialog.DCCDialog(
