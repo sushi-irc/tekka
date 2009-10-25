@@ -177,3 +177,24 @@ def get_nick_color(nick):
 
 	r = lib.contrast.contrast_render_foreground_color(bg_color, color)
 	return r
+
+@types (nick = basestring)
+def get_text_color(nick):
+	"""
+		Same as color.get_nick_color but for text and defaults
+		to another value (text_message)
+	"""
+	if not config.get_bool("tekka","color_text"):
+		return
+
+	colors = lib.contrast.colors[:-1]
+	if not colors or not config.get_bool("tekka","color_nick_text"):
+		return config.get("colors","text_message","#000000")
+
+	bg_color = lib.gui_control.widgets.get_widget("output").get_style().\
+		base[gtk.STATE_NORMAL]
+
+	color = colors[sum([ord(n) for n in nick]) % len(colors)]
+
+	r = lib.contrast.contrast_render_foreground_color(bg_color, color)
+	return r
