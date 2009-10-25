@@ -51,6 +51,13 @@ Indentation: Lines split up but with same context should
 				 anotherParam)
 """
 
+# TODO:  would be nice to be notified (in a visual way?) if there's
+# TODO:: a new markup in the server tree for a hidden tab (not in the
+# TODO:: current view scope due to scrolling). It would be cool if the
+# TODO:: top or bottom (in order which direction the tab with the new
+# TODO:: markup is) of the server tree smoothly flashes or something
+# TODO:: like that.
+
 import pygtk
 pygtk.require("2.0")
 
