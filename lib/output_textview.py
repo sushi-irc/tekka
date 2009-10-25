@@ -64,6 +64,13 @@ class OutputTextView(gtk.TextView):
 	MAX_SCROLL_TIME = 0.4 # seconds
 	SCROLL_DELAY = 33 # milliseconds
 
+	"""
+	TODO:  optimize the whole code for manual smooth
+	TODO:: scrolling even if the slider is set directly
+	TODO:: to a position. This needs a replacement for
+	TODO:: the current end-mark (the bottom of the buffer)
+	"""
+
 	@classmethod
 	def set_smooth_scrolling(cls, switch):
 		cls.SMOOTH_SCROLLING = switch
