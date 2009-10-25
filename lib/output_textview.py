@@ -124,7 +124,7 @@ class OutputTextView(gtk.TextView):
 
 		if parent:
 			vadj = parent.get_vadjustment()
-			vadj.set_value(vadj.upper - vadj.page_size + 1)
+			vadj.set_value(vadj.upper - vadj.page_size)
 
 		return False
 
