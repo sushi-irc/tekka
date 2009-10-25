@@ -93,6 +93,7 @@ import lib.gui_control as gui
 from lib import dialog_control
 from lib.inline_dialog import InlineMessageDialog
 from lib import plugin_control
+import lib.output_textview
 import lib.nick_list_store
 
 from helper.shortcuts import addShortcut, removeShortcut
@@ -1301,6 +1302,9 @@ def setupGTK():
 	# setup general output
 	buffer = gui.get_new_buffer()
 	widgets.get_widget("generalOutput").set_buffer(buffer)
+
+	lib.output_textview.OutputTextView.set_smooth_scrolling(
+		config.get_bool("tekka","smooth_scrolling"))
 
 	# setup menu bar stuff
 	@types( user = ptypes.FunctionType )

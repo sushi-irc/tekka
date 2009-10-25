@@ -27,11 +27,18 @@ SUCH DAMAGE.
 """
 
 import gtk
+
 from lib.htmlbuffer import HTMLBuffer
 from helper import URLHandler
 import config
 
+##
+import gobject
+from threading import Timer # for smooth scrolling
+##
+
 class OutputTextView(gtk.TextView):
+
 
 	def __init__(self):
 		gtk.TextView.__init__(self,
@@ -44,14 +51,124 @@ class OutputTextView(gtk.TextView):
 
 		self.read_line = ()
 
-	# TODO: implement smooth scrolling with minimizing step size to 1px or so
+		##
+		self.smooth_id = None
+		#self.smooth_scroll_timer is set in smooth_scroll_to_end
+		##
+
+	""" < """
+	# Smooth scrolling inspired by Gajim Code
+
+	# smooth scroll constants
+	SMOOTH_SCROLLING = False
+	MAX_SCROLL_TIME = 0.4 # seconds
+	SCROLL_DELAY = 33 # milliseconds
+
+	@classmethod
+	def set_smooth_scrolling(cls, switch):
+		cls.SMOOTH_SCROLLING = switch
+
+	def smooth_scroll(self):
+		""" idle add handler for smooth scrolling.
+			Returns True if it's going to be recalled.
+			Scrolls 1/3rd of the distance to the bottom.
+
+			TODO:  add direction parameter for use with
+			TODO:: manual scrolling.
+		"""
+
+		parent = self.get_parent()
+
+		if not parent:
+			return False
+
+		vadj = parent.get_vadjustment()
+		max_val = vadj.upper - vadj.page_size + 1
+		cur_val = vadj.get_value()
+
+		# scroll by 1/3rd of remaining distance
+		onethird = cur_val + ((max_val - cur_val) / 3.0)
+
+		vadj.set_value(onethird)
+
+		if max_val - onethird < 0.01:
+			self.smooth_id = None
+			self.smooth_scroll_timer.cancel()
+			return False
+
+		return True
+
+	def _smooth_scroll_timeout(self):
+		gobject.idle_add(self._do_smooth_scroll_timeout)
+
+	def _do_smooth_scroll_timeout(self):
+		""" Timout handler.
+			Time's up, if we were done, ok, if not
+			and it's remaing space given,
+			remove the timer and jump fast forward.
+		"""
+		if not self.smooth_id:
+			# we finished scrolling
+			return False
+
+		gobject.source_remove(self.smooth_id)
+		self.smooth_id = None
+		parent = self.get_parent()
+
+		if parent:
+			vadj = parent.get_vadjustment()
+			vadj.set_value(vadj.upper - vadj.page_size + 1)
+
+		return False
+
+	def _smooth_scroll_to_end(self):
+		""" Call n times smooth_scroll() until
+			the end is reached.
+		"""
+		if None != self.smooth_id:
+			# already scrolling
+			return False
+
+		self.smooth_id = gobject.timeout_add(self.SCROLL_DELAY,
+				self.smooth_scroll)
+		self.smooth_scroll_timer = Timer(self.MAX_SCROLL_TIME,
+				self._smooth_scroll_timeout)
+
+		self.smooth_scroll_timer.start()
+
+		return False
+
+	def _scroll_to_end(self):
+		""" Scroll normally to the end of the buffer """
+		parent = self.get_parent()
+		buffer = self.get_buffer()
+		end_mark = buffer.create_mark("end", buffer.get_end_iter(), False)
+
+		self.scroll_to_mark(end_mark, 0, True, 0, 1)
+
+		# reset horizontal scrollbar (do avoid side effects)
+		if parent:
+			adjustment = parent.get_hadjustment()
+			adjustment.set_value(0)
+
+		# avoid recalling through idle_add
+		return False
+
+	""" > """
+
+   	def stop_scrolling(self):
+		""" interrupts smooth scrolling procedure """
+		if self.smooth_id:
+			gobject.source_remove(self.smooth_id)
+			self.smooth_id = None
+			self.smooth_scroll_timer.cancel()
 
 	def scroll_to_bottom(self):
-		tb = self.get_buffer()
-
-		mark = tb.create_mark("end", tb.get_end_iter(), False)
-		self.scroll_to_mark(mark, 0.05, True, 0.0, 1.0)
-		tb.delete_mark(mark)
+		""" scroll to the end of the textbuffer """
+		if self.SMOOTH_SCROLLING:
+			self._smooth_scroll_to_end()
+		else:
+			self._scroll_to_end()
 
 	def get_last_line(self):
 		""" returns the last readable line

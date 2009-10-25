@@ -80,6 +80,7 @@ def set_defaults():
 	defaults["tekka"]["use_default_font"] = "True"
 	defaults["tekka"]["font"] = "Monospace 10"
 	defaults["tekka"]["auto_expand"] = "True"
+	defaults["tekka"]["smooth_scrolling"] = "True"
 
 	defaults["tekka"]["show_general_output"] = "True"
 	defaults["tekka"]["show_topicbar"] = "False"
