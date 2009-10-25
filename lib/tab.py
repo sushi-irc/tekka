@@ -79,11 +79,11 @@ class TekkaTab(gobject.GObject):
 	def __repr__(self):
 		return "<tab '%s', path: '%s'>" % (self.name, self.path)
 
-	def is_server(s):
+	def is_server(self):
 		return False
-	def is_query(s):
+	def is_query(self):
 		return False
-	def is_channel(s):
+	def is_channel(self):
 		return False
 
 	@types(text = str)

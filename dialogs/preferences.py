@@ -34,6 +34,8 @@ import gtk.glade
 from gobject import idle_add
 import re
 
+import logging
+
 import lib.gui_control as gui
 from lib import dialog_control
 from lib.expanding_list import ExpandingList
@@ -41,6 +43,7 @@ from lib.expanding_list import ExpandingList
 widgets = None
 nickColorsList = None
 highlightList = None
+generalOutputFilterList = None
 
 def generalOutputFilterList_instanced_widget_cb(elist, row, column, obj):
 	if column == 0:

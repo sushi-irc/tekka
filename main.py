@@ -140,7 +140,7 @@ def tekka_tab_new_message_cb(tab, type):
 	pass
 
 def tekka_tab_new_name_cb(tab, name):
-	tekka_tab_new_markup(tab)
+	tekka_tab_new_markup_cb(tab)
 
 def tekka_tab_connected_cb(tab, connected):
 	""" tab received a change on connected attribute """
