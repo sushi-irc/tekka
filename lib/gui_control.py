@@ -248,6 +248,11 @@ def switch_status_icon(switch):
 			return
 		statusIcon.set_visible(False)
 
+def has_focus():
+	win = widgets.get_widget("mainWindow")
+
+	return win.has_toplevel_focus()
+
 @types(switch=bool)
 def set_urgent(switch):
 	"""
@@ -260,7 +265,7 @@ def set_urgent(switch):
 	"""
 	win = widgets.get_widget("mainWindow")
 
-	if win.has_toplevel_focus():
+	if has_focus():
 		# urgent toplevel windows suck ass
 		return
 

@@ -30,6 +30,7 @@ import sushi
 
 # tekka-specific
 import config
+import lib.gui_control as gui
 
 import gobject
 import gtk
@@ -50,8 +51,6 @@ class notify (sushi.Plugin):
 
 		pynotify.init("tekka")
 
-		self.notification = None
-		self.subject = None
 		self.caps = pynotify.get_server_caps()
 
 		try:
@@ -68,22 +67,21 @@ class notify (sushi.Plugin):
 		self.disconnect_signal("action", self.action_cb)
 
 	def notify (self, subject, body):
-		if not self.notification or self.subject != subject:
-			self.notification = pynotify.Notification(subject, body)
+		if gui.has_focus():
+			return
 
-			if self.pixbuf:
-				self.notification.set_icon_from_pixbuf(self.pixbuf)
+		notification = pynotify.Notification(subject, body)
 
-			if "append" in self.caps:
-				self.notification.set_hint_string("append", "allowed")
+		if self.pixbuf:
+			notification.set_icon_from_pixbuf(self.pixbuf)
 
-			if "x-canonical-append" in self.caps:
-				self.notification.set_hint_string("x-canonical-append", "allowed")
+		if "append" in self.caps:
+			notification.set_hint_string("append", "allowed")
 
-		self.subject = subject
+		if "x-canonical-append" in self.caps:
+			notification.set_hint_string("x-canonical-append", "allowed")
 
-		self.notification.update(subject, body)
-		self.notification.show()
+		notification.show()
 
 	def escape (self, message):
 		# Bold
