@@ -413,20 +413,57 @@
                         <property name="position_set">True</property>
                         <signal name="notify" handler="listVPaned_notify_cb"/>
                         <child>
-                          <widget class="GtkScrolledWindow" id="scrolledWindow_serverTree">
-                            <property name="height_request">180</property>
+                          <widget class="GtkVBox" id="serverTree_eventVBox">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="hscrollbar_policy">automatic</property>
-                            <property name="vscrollbar_policy">automatic</property>
-                            <property name="shadow_type">etched-in</property>
+                            <property name="orientation">vertical</property>
                             <child>
-                              <widget class="GtkTreeView" id="serverTree">
+                              <widget class="GtkEventBox" id="serverTree_eventbox_top">
                                 <property name="visible">True</property>
-								<property name="can_focus">False</property>
-                                <signal name="button_press_event" handler="serverTree_button_press_event_cb"/>
-                                <signal name="row_activated" handler="serverTree_row_activated_cb"/>
+                                <child>
+                                  <placeholder/>
+                                </child>
                               </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="padding">1</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkScrolledWindow" id="scrolledWindow_serverTree">
+                                <property name="height_request">180</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="hscrollbar_policy">automatic</property>
+                                <property name="vscrollbar_policy">automatic</property>
+                                <property name="shadow_type">etched-in</property>
+                                <child>
+                                  <widget class="GtkTreeView" id="serverTree">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <signal name="button_press_event" handler="serverTree_button_press_event_cb"/>
+                                    <signal name="row_activated" handler="serverTree_row_activated_cb"/>
+                                  </widget>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <widget class="GtkEventBox" id="serverTree_eventbox_bottom">
+                                <property name="visible">True</property>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </widget>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">False</property>
+                                <property name="padding">1</property>
+                                <property name="position">2</property>
+                              </packing>
                             </child>
                           </widget>
                           <packing>
