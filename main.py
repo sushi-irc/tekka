@@ -136,13 +136,14 @@ def tekka_tab_new_markup_cb(tab):
 		store = gui.widgets.get_widget("serverTree").get_model()
 		store.set_value(store.get_iter(tab.path), 0, tab)
 
-def tekka_tab_new_message_cb(tab, type):
+def tekka_tab_new_message_cb(tab, mtype):
 	""" a new message of the given type was received """
 	if gui.tabs.is_active(tab):
 		tab.newMessage = [] # already read
 
-		# TODO: move this directly to OutputTextView
-		if tab.window.auto_scroll:
+		print "%s: auto_scroll = %s, mtype = %s" % (tab, tab.window.auto_scroll, mtype)
+
+		if tab.window.auto_scroll and mtype:
 			tab.window.textview.scroll_to_bottom()
 
 	else:
@@ -182,6 +183,9 @@ def tekka_tab_switched_cb(tabclass, old, new):
 	if new:
 		inputBar.set_text(new.get_input_text())
 		inputBar.set_position(len(inputBar.get_text()))
+
+		if new.window.auto_scroll:
+			new.window.textview.scroll_to_bottom( no_smooth = True )
 
 def tekka_tab_remove_cb(tab):
 	""" a tab is about to be removed """
