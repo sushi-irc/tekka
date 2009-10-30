@@ -1121,7 +1121,7 @@ def setup_fonts():
 			default_font_cb)
 
 	except:
-		# FIXME: what kind of error is catched here? at least some doc...
+		# ImportError or gconf reported a missing dir.
 		pass
 
 def setupGTK():
@@ -1266,6 +1266,7 @@ def setupGTK():
 
 	shell = widgets.get_widget("outputShell")
 	shell.connect("widget-changed", outputShell_widget_changed_cb)
+	shell.reset()
 
 	# setup more complex widgets
 

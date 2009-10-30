@@ -122,6 +122,8 @@ class OutputWindow(gtk.ScrolledWindow):
 
 		self.add(self.textview)
 
+		self.old_allocation = self.get_allocation()
+
 		# XXX: redundant code, see main.py::setup_mainWindow
 		def kill_mod1_scroll_cb(w,e):
 			if e.state & gtk.gdk.MOD1_MASK:
@@ -130,22 +132,29 @@ class OutputWindow(gtk.ScrolledWindow):
 		self.connect("scroll-event", kill_mod1_scroll_cb)
 
 		def size_allocate_cb(win, alloc):
-			adj = win.get_vadjustment()
-			print "width,height: %d,%d" % (alloc.width, alloc.height)
-			print "value = %d, upper = %d, lower = %d, page_size = %d" % (adj.value, adj.upper, adj.lower, adj.page_size)
-			oldPageSize = alloc.height - 2
-			adj.upper -= oldPageSize - adj.page_size
+			adj = win.get_vscrollbar().get_adjustment()
 
-			print "new value = %d (%d - %d)" % (adj.value, oldPageSize, adj.page_size)
+			if alloc.height != self.old_allocation.height:
+				if self.auto_scroll:
+					adj.value = adj.upper - adj.page_size
+
+			self.old_allocation = alloc
 
 		self.connect("size-allocate", size_allocate_cb)
 
-		def value_changed_cb(range):
-			adj = range.get_adjustment()
-			print "SCROLLING: value = %d, upper = %d, lower = %d, page_size = %d, page_inc = %d, step_inc = %d" % (adj.value, adj.upper, adj.lower, adj.page_size, adj.page_increment, adj.step_increment)
+		def value_changed_cb(sbar):
+			def idle_handler_cb():
+				adjust = sbar.get_property("adjustment")
 
-		vbar = self.get_vscrollbar()
-		vbar.connect("value-changed", value_changed_cb)
+				if (adjust.upper - adjust.page_size) == sbar.get_value():
+					self.auto_scroll = True
+				else:
+					self.auto_scroll = False
+				return False
+
+			gobject.idle_add(idle_handler_cb)
+
+		self.get_vscrollbar().connect("value-changed", value_changed_cb)
 
 class OutputShell(gtk.VBox):
 
@@ -161,7 +170,7 @@ class OutputShell(gtk.VBox):
 		self.init_window = window
 		self.output_window = None
 
-		self.set(self.init_window)
+		self.reset()
 
 	@types (new_window = OutputWindow)
 	def set(self, new_window):
@@ -179,7 +188,7 @@ class OutputShell(gtk.VBox):
 		self.set(self.init_window)
 
 	def get(self):
-		return self.get_children()[0]
+		return self.output_window
 
 gobject.signal_new(
 	"widget-changed", OutputShell,
@@ -207,19 +216,7 @@ def get_new_buffer():
 	return buffer
 
 def get_new_output_window():
-
-	def value_changed_cb(sbar, window):
-		adjust = sbar.get_property("adjustment")
-
-		# XXX: probably there's need to idle_add this
-		if (adjust.upper - adjust.page_size) == sbar.get_value():
-			window.auto_scroll = True
-		else:
-			window.auto_scroll = False
-
 	w = OutputWindow()
-	w.get_vscrollbar().connect("value-changed", value_changed_cb, w)
-
 	return w
 
 def get_font ():
