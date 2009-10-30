@@ -740,7 +740,7 @@ def output_shortcut_Page_Up(inputBar, shortcut):
 	"""
 		Page_Up was hit, scroll up in output
 	"""
-	vadj = widgets.get_widget("scrolledWindow_output").get_vadjustment()
+	vadj = widgets.get_widget("outputWindow").get_vadjustment()
 
 	if vadj.get_value() == 0.0:
 		return # at top already
@@ -753,7 +753,7 @@ def output_shortcut_Page_Down(inputBar, shortcut):
 	"""
 		Page_Down was hit, scroll down in output
 	"""
-	vadj = widgets.get_widget("scrolledWindow_output").get_vadjustment()
+	vadj = widgets.get_widget("outputWindow").get_vadjustment()
 
 	if (vadj.upper - vadj.page_size) == vadj.get_value():
 		return # we are already at bottom

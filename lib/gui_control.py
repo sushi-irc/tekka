@@ -285,33 +285,6 @@ def apply_new_font():
 	set_font(widgets.get_widget("inputBar"), font)
 	set_font(widgets.get_widget("generalOutput"), font)
 
-def custom_handler(glade, function_name, widget_name, *x):
-	if widget_name == "searchToolbar":
-		return setup_searchToolbar()
-
-	elif widget_name == "outputShell":
-		return OutputShell(OutputWindow())
-
-	elif widget_name == "generalOutput":
-		go = OutputTextView()
-		return go
-
-	elif widget_name == "inputBar":
-		try:
-			bar = SpellEntry()
-		except NameError:
-			bar = gtk.Entry()
-		bar.grab_focus()
-
-		return bar
-
-	elif widget_name == "notificationWidget":
-		align = gtk.VBox()
-		align.set_no_show_all(True)
-		align.set_property("visible", False)
-		return align
-
-	return None
 
 @types(gladeFile=basestring, section=basestring)
 def load_widgets(gladeFile, section):
@@ -321,6 +294,34 @@ def load_widgets(gladeFile, section):
 		to initialize the GUI
 	"""
 	global widgets
+
+	def custom_handler(glade, function_name, widget_name, *x):
+		if widget_name == "searchToolbar":
+			return setup_searchToolbar()
+
+		elif widget_name == "outputShell":
+			return OutputShell(OutputWindow())
+
+		elif widget_name == "generalOutput":
+			return OutputTextView()
+
+		elif widget_name == "inputBar":
+			try:
+				bar = SpellEntry()
+			except NameError:
+				bar = gtk.Entry()
+			bar.grab_focus()
+
+			return bar
+
+		elif widget_name == "notificationWidget":
+			align = gtk.VBox()
+			align.set_no_show_all(True)
+			align.set_property("visible", False)
+			return align
+
+		return None
+
 	gtk.glade.set_custom_handler(custom_handler)
 
 	widgets = WidgetsWrapper(gtk.glade.XML(gladeFile, section))
