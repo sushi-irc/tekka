@@ -68,12 +68,26 @@ from lib.status_icon import TekkaStatusIcon
 
 class WidgetsWrapper(object):
 
+	""" Wrap a glade XML widget object
+		so one can manually add own widgets
+		and access them as if they lie in
+		the XML object.
+
+		Every unknown method call will be
+		forwarded to the glade object.
+	"""
+
 	def __init__(self, glade_widgets):
 		self.glade_widgets = glade_widgets
 		self.own_widgets = {}
 
 	@types (widget = gtk.Widget)
 	def add_widget(self, widget):
+		""" Add a widget to the dictionary.
+
+			Throws ValueError if the widget's name
+			exists in the glade object.
+		"""
 		name = widget.get_property("name")
 
 		if not self.glade_widgets.get_widget(name):
@@ -84,6 +98,7 @@ class WidgetsWrapper(object):
 
 	@types (widget = (basestring, gtk.Widget))
 	def remove_widget(self, widget):
+		""" Remove our widget by name or by object """
 		def remove_by_name(name):
 			if self.own_widgets.has_key(name):
 				del self.own_widgets[name]
@@ -93,7 +108,11 @@ class WidgetsWrapper(object):
 		else:
 			remove_by_name(widget.get_property("name"))
 
+	@types (name = basestring)
 	def get_widget(self, name):
+		""" Return our own widget if found, else look in glade.
+			Returns None if no widget is found.
+		"""
 		try:
 			return self.own_widgets[name]
 		except KeyError:
@@ -111,6 +130,14 @@ class WidgetsWrapper(object):
 			return getattr(self.glade_widgets, attr)
 
 class OutputWindow(gtk.ScrolledWindow):
+
+	""" A gtk.ScrolledWindow with a TextView inside of it.
+
+		This widget watches for autoscrolling and
+		adjusts the scrollbar on size-allocations.
+
+		This widget is supposed to be hold by a OutputShell.
+	"""
 
 	def __init__(self):
 		gtk.ScrolledWindow.__init__(self)
@@ -159,12 +186,14 @@ class OutputWindow(gtk.ScrolledWindow):
 class OutputShell(gtk.VBox):
 
 	""" A shell for one OutputWindow with
-		methods to display another OutputWindow
+		methods to display another OutputWindow.
 	"""
 
 	@types (widget = OutputWindow)
 	def __init__(self, window):
-		""" takes a window to show if the switcher is reset """
+		""" Takes a default window which is shown if reset() is
+			called (which is the default).
+		"""
 		gtk.VBox.__init__(self)
 
 		self.init_window = window
@@ -174,6 +203,12 @@ class OutputShell(gtk.VBox):
 
 	@types (new_window = OutputWindow)
 	def set(self, new_window):
+		""" Set a new OutputWindow which replaces
+			the current.
+
+			Emits widget-changed with the old and the
+			new widget.
+		"""
 		old_window = self.output_window
 
 		if old_window:
@@ -185,9 +220,11 @@ class OutputShell(gtk.VBox):
 		self.emit("widget-changed", old_window, new_window)
 
 	def reset(self):
+		""" Reset to the default window. """
 		self.set(self.init_window)
 
 	def get(self):
+		""" Return the current OutputWindow """
 		return self.output_window
 
 gobject.signal_new(
