@@ -25,9 +25,8 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
-"""
-The "core": the gui wrapper class.
-"""
+
+""" The "core": the gui wrapper class. """
 
 # global modules
 import re
@@ -38,6 +37,7 @@ import pango
 import gettext
 import gobject
 import logging
+
 from gobject import idle_add
 from dbus import String, UInt64
 
@@ -45,10 +45,6 @@ import lib.contrast
 import helper.color
 import helper.escape
 
-# profiling imports
-import os, sys
-from xdg.BaseDirectory import xdg_cache_home
-import cProfile
 
 try:
 	from sexy import SpellEntry
@@ -70,39 +66,131 @@ from lib.output_textview import OutputTextView
 from lib.htmlbuffer import HTMLBuffer
 from lib.status_icon import TekkaStatusIcon
 
+class WidgetsWrapper(object):
+
+	def __init__(self, glade_widgets):
+		self.glade_widgets = glade_widgets
+		self.own_widgets = {}
+
+	@types (widget = gtk.Widget)
+	def add_widget(self, widget):
+		name = widget.get_property("name")
+
+		if not self.glade_widgets.get_widget(name):
+			widget.connect("destroy", lambda x: self.remove_widget(x))
+			self.own_widgets[name] = widget
+		else:
+			raise ValueError, "Widgets '%s' already in widgets dict." % (name)
+
+	@types (widget = (basestring, gtk.Widget))
+	def remove_widget(self, widget):
+		def remove_by_name(name):
+			if self.own_widgets.has_key(name):
+				del self.own_widgets[name]
+
+		if isinstance(widget, basestring):
+			remove_by_name(widget)
+		else:
+			remove_by_name(widget.get_property("name"))
+
+	def get_widget(self, name):
+		try:
+			return self.own_widgets[name]
+		except KeyError:
+			pass
+
+		w = self.glade_widgets.get_widget(name)
+		if w:
+			return w
+		return None
+
+	def __getattr__(self, attr):
+		try:
+			return object.__getattr__(self, attr)
+		except AttributeError:
+			return getattr(self.glade_widgets, attr)
+
+class OutputWindow(gtk.ScrolledWindow):
+
+	def __init__(self):
+		gtk.ScrolledWindow.__init__(self)
+
+		self.set_properties( hscrollbar_policy=gtk.POLICY_NEVER, shadow_type=gtk.SHADOW_ETCHED_IN )
+
+		self.textview = OutputTextView()
+		self.auto_scroll = True
+
+		self.add(self.textview)
+
+		# XXX: redundant code, see main.py::setup_mainWindow
+		def kill_mod1_scroll_cb(w,e):
+			if e.state & gtk.gdk.MOD1_MASK:
+				w.emit_stop_by_name("scroll-event")
+
+		self.connect("scroll-event", kill_mod1_scroll_cb)
+
+		def size_allocate_cb(win, alloc):
+			adj = win.get_vadjustment()
+			print "width,height: %d,%d" % (alloc.width, alloc.height)
+			print "value = %d, upper = %d, lower = %d, page_size = %d" % (adj.value, adj.upper, adj.lower, adj.page_size)
+			oldPageSize = alloc.height - 2
+			adj.upper -= oldPageSize - adj.page_size
+
+			print "new value = %d (%d - %d)" % (adj.value, oldPageSize, adj.page_size)
+
+		self.connect("size-allocate", size_allocate_cb)
+
+		def value_changed_cb(range):
+			adj = range.get_adjustment()
+			print "SCROLLING: value = %d, upper = %d, lower = %d, page_size = %d, page_inc = %d, step_inc = %d" % (adj.value, adj.upper, adj.lower, adj.page_size, adj.page_increment, adj.step_increment)
+
+		vbar = self.get_vscrollbar()
+		vbar.connect("value-changed", value_changed_cb)
+
+class OutputShell(gtk.VBox):
+
+	""" A shell for one OutputWindow with
+		methods to display another OutputWindow
+	"""
+
+	@types (widget = OutputWindow)
+	def __init__(self, window):
+		""" takes a window to show if the switcher is reset """
+		gtk.VBox.__init__(self)
+
+		self.init_window = window
+		self.output_window = None
+
+		self.set(self.init_window)
+
+	@types (new_window = OutputWindow)
+	def set(self, new_window):
+		old_window = self.output_window
+
+		if old_window:
+			self.remove(old_window)
+
+		self.pack_start(new_window)
+		self.output_window = new_window
+
+		self.emit("widget-changed", old_window, new_window)
+
+	def reset(self):
+		self.set(self.init_window)
+
+	def get(self):
+		return self.get_children()[0]
+
+gobject.signal_new(
+	"widget-changed", OutputShell,
+	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
+	(gobject.TYPE_PYOBJECT,gobject.TYPE_PYOBJECT))
+
 widgets = None
 statusIcon = None
 accelGroup = None
 searchToolbar = None
 tabs = lib.tab_control.TabControl()
-
-def profileMe(file):
-	def get_location(file):
-		path = os.path.join(xdg_cache_home, "sushi", "tekka")
-		if not os.path.exists(path):
-			try:
-				os.makedirs(path)
-			except BaseException, e:
-				logging.info("Profiling disabled: %s" % e)
-				return None
-		return os.path.join(path, file)
-
-	def deco(fun):
-		def new(*args, **kwargs):
-			val = None
-			file_path = get_location(file)
-
-			if None == file:
-				return fun(*args, **kwargs)
-
-			cProfile.runctx("val = fun(*args,**kwargs)", {"fun":fun},
-				locals(), file_path)
-			return val
-
-		if "-p" in sys.argv:
-			return new
-		return fun
-	return deco
 
 def get_widget(name):
 	try:
@@ -117,6 +205,22 @@ def get_new_buffer():
 	"""
 	buffer = HTMLBuffer(handler = URLHandler.URLHandler)
 	return buffer
+
+def get_new_output_window():
+
+	def value_changed_cb(sbar, window):
+		adjust = sbar.get_property("adjustment")
+
+		# XXX: probably there's need to idle_add this
+		if (adjust.upper - adjust.page_size) == sbar.get_value():
+			window.auto_scroll = True
+		else:
+			window.auto_scroll = False
+
+	w = OutputWindow()
+	w.get_vscrollbar().connect("value-changed", value_changed_cb, w)
+
+	return w
 
 def get_font ():
 	if not config.get_bool("tekka", "use_default_font"):
@@ -133,11 +237,28 @@ def get_font ():
 	except:
 		return config.get("tekka", "font")
 
+def apply_new_font():
+	""" iterate over all widgets which use fonts and change them """
+
+	font = get_font()
+
+	for row in widgets.get_widget("serverTree").get_model():
+		for child in row.iterchildren():
+			set_font(child[0].window.textview, font)
+		set_font(row[0].window.textview, font)
+
+	set_font(widgets.get_widget("output"), font)
+	set_font(widgets.get_widget("inputBar"), font)
+	set_font(widgets.get_widget("generalOutput"), font)
+
 def custom_handler(glade, function_name, widget_name, *x):
 	if widget_name == "searchToolbar":
 		return setup_searchToolbar()
 
-	elif widget_name in ("generalOutput", "output"):
+	elif widget_name == "outputShell":
+		return OutputShell(OutputWindow())
+
+	elif widget_name == "generalOutput":
 		go = OutputTextView()
 		return go
 
@@ -167,24 +288,10 @@ def load_widgets(gladeFile, section):
 	"""
 	global widgets
 	gtk.glade.set_custom_handler(custom_handler)
-	widgets = gtk.glade.XML(gladeFile, section)
+
+	widgets = WidgetsWrapper(gtk.glade.XML(gladeFile, section))
 
 	return widgets
-
-def replace_output_textview(textview):
-	sw = widgets.get_widget("scrolledWindow_output")
-	sw.remove(sw.get_children()[0])
-	sw.add(textview)
-	searchToolbar.textview = textview
-
-
-def get_current_output_textview():
-	tab = tabs.get_current_tab()
-
-	if not tab:
-		return widgets.get_widget("output")
-	else:
-		return tab.textview
 
 def setup_searchToolbar():
 	global searchToolbar
@@ -220,13 +327,9 @@ def set_useable(switch):
 		widgets.get_widget("inputBar"),
 		widgets.get_widget("serverTree"),
 		widgets.get_widget("nickList"),
-		widgets.get_widget("output"),
+		widgets.get_widget("outputShell"),
 		widgets.get_widget("generalOutput")
 	]
-
-	current_textview = get_current_output_textview()
-	if current_textview:
-		widgetList.append(current_textview)
 
 	for widget in widgetList:
 		widget.set_sensitive(switch)
@@ -311,9 +414,8 @@ def set_font(textView, font):
 
 	if not fd:
 		logging.error("set_font: Font _not_ modified (previous error)")
-		return
-
-	textView.modify_font(fd)
+	else:
+		textView.modify_font(fd)
 
 @types(string=basestring)
 def set_topic(string):
@@ -415,7 +517,7 @@ def print_last_log(server, channel, lines=0, tab = None):
 	if not tab:
 		return
 
-	buffer = tab.textview.get_buffer()
+	buffer = tab.window.textview.get_buffer()
 
 	if not buffer:
 		logging.error("last_log('%s','%s'): no buffer" % (server,channel))
@@ -436,6 +538,7 @@ def write_to_general_output(msgtype, timestring, server, channel, message):
 
 	filter = config.get_list("general_output", "filter", [])
 	logging.debug("filter: %s" % (filter))
+
 	for rule in filter:
 		try:
 			if not eval(rule):
@@ -453,7 +556,6 @@ def write_to_general_output(msgtype, timestring, server, channel, message):
 		# server print
 		goBuffer.insertHTML(goBuffer.get_end_iter(),
 			"[%s] &lt;%s&gt; %s" % (timestring, server, message))
-
 
 	widgets.get_widget("generalOutput").scroll_to_bottom()
 
@@ -483,21 +585,15 @@ def channelPrint(timestamp, server, channel, message, msgtype="message"):
 		logging.error("No such channel %s:%s" % (server, channel))
 		return
 
-	buffer = channelTab.textview.get_buffer()
+	buffer = channelTab.window.textview.get_buffer()
 	buffer.insertHTML(buffer.get_end_iter(), outputString)
 
-	# notification in server/channel list
-	if tabs.is_active(channelTab):
-		if channelTab.autoScroll:
-			channelTab.textview.scroll_to_bottom()
-
-	else:
+	if not tabs.is_active(channelTab):
 		if config.get_bool("tekka", "show_general_output"):
 			# write it to the general output, also
 			write_to_general_output(msgtype, timestring, server, channel, message)
 
-		if not msgtype in channelTab.newMessage:
-			channelTab.setNewMessage(msgtype)
+	channelTab.setNewMessage(msgtype)
 
 def serverPrint(timestamp, server, string, msgtype="message"):
 	"""
@@ -510,24 +606,18 @@ def serverPrint(timestamp, server, string, msgtype="message"):
 		logging.error("Server %s does not exist." % (server))
 		return
 
-	buffer = serverTab.textview.get_buffer()
+	buffer = serverTab.window.textview.get_buffer()
 
 	timestr = time.strftime(config.get("tekka", "time_format", "%H:%M"),
 		time.localtime(timestamp))
 
 	buffer.insertHTML(buffer.get_end_iter(), "[%s] %s" % (timestr, string))
 
-
-	if tabs.is_active(serverTab):
-		if serverTab.autoScroll:
-			serverTab.textview.scroll_to_bottom()
-
-	else:
+	if not tabs.is_active(serverTab):
 		if config.get_bool("tekka", "show_general_output"):
 			write_to_general_output(msgtype, timestr, server, "", string)
 
-		if not msgtype in serverTab.newMessage:
-			serverTab.setNewMessage(msgtype)
+	serverTab.setNewMessage(msgtype)
 
 def currentServerPrint(timestamp, server, string, msgtype="message"):
 	"""
@@ -555,7 +645,7 @@ def myPrint(string, html=False):
 		the insertHTML-method falling back to normal insert
 		if it's not possible to insert via insertHTML.
 	"""
-	textview = get_current_output_textview()
+	textview = widgets.get_widget("output")
 	output = textview.get_buffer()
 
 	if not output:

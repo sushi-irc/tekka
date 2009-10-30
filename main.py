@@ -137,7 +137,16 @@ def tekka_tab_new_markup_cb(tab):
 		store.set_value(store.get_iter(tab.path), 0, tab)
 
 def tekka_tab_new_message_cb(tab, type):
-	pass
+	""" a new message of the given type was received """
+	if gui.tabs.is_active(tab):
+		tab.newMessage = [] # already read
+
+		# TODO: move this directly to OutputTextView
+		if tab.window.auto_scroll:
+			tab.window.textview.scroll_to_bottom()
+
+	else:
+		pass
 
 def tekka_tab_new_name_cb(tab, name):
 	tekka_tab_new_markup_cb(tab)
@@ -165,7 +174,7 @@ def tekka_tab_switched_cb(tabclass, old, new):
 	if old:
 		itext = inputBar.get_text()
 		old.set_input_text(itext)
-		old.textview.set_read_line()
+		old.window.textview.set_read_line()
 
 	inputBar.set_text("")
 	inputBar.set_position(1)
@@ -376,7 +385,7 @@ def mainWindow_delete_event_cb(mainWindow, event):
 		and gui.statusIcon.get_visible()):
 
 		for tab in gui.tabs.get_all_tabs():
-			tab.textview.set_read_line()
+			tab.window.textview.set_read_line()
 
 		mainWindow.hide()
 
@@ -398,21 +407,10 @@ def mainWindow_size_allocate_cb(mainWindow, alloc):
 	"""
 		Main window was resized.
 		Store the new size in the config.
-
-		Due to resizing the scrollbar dimensions
-		of the scrolled window arround the output
-		changed. In conclusion the autoscroll is
-		disabled because the scrollbar is not
-		at bottom anymore. So if the current tab
-		has auto scroll = True, scroll to bottom.
 	"""
 	if not mainWindow.window.get_state() & gtk.gdk.WINDOW_STATE_MAXIMIZED:
 		config.set("sizes","window_width",alloc.width)
 		config.set("sizes","window_height",alloc.height)
-
-	tab = gui.tabs.get_current_tab()
-	if tab and tab.autoScroll:
-		tab.textview.scroll_to_bottom()
 
 def mainWindow_window_state_event_cb(mainWindow, event):
 	"""
@@ -488,6 +486,20 @@ def inputBar_key_press_event_cb(inputBar, event):
 	if key != "Tab":
 		tabcompletion.stopIteration()
 
+def outputShell_widget_changed_cb(shell, old_widget, new_widget):
+	""" old_widget: OutputWindow
+		new_widget: OutputWindow
+	"""
+	print "widgets changed: %s to %s" % (old_widget, new_widget)
+
+	new_widget.set_property("name", "outputWindow")
+	new_widget.textview.set_property("name", "output")
+
+	gui.widgets.remove_widget(old_widget)
+	gui.widgets.add_widget(new_widget)
+
+	gui.widgets.remove_widget(old_widget.textview)
+	gui.widgets.add_widget(new_widget.textview)
 
 def serverTree_misc_menu_reset_activate_cb(menuItem):
 	"""
@@ -627,32 +639,6 @@ def outputVBox_size_allocate_cb(outputVBox, alloc):
 	widget = gui.widgets.get_widget("topicBar")
 	widget.set_size_request(alloc.width, -1)
 
-def scrolledWindow_output_vscrollbar_valueChanged_cb(range):
-	"""
-		The vertical scrollbar of the surrounding scrolled window
-		of the output text view was moved.
-		Disable the autoscroll if the scroll bar is not at the
-		bottom.
-	"""
-	tab = gui.tabs.get_current_tab()
-
-	if not tab:
-		# no tab to (dis|en)able auto scrolling
-		return
-
-	adjust = range.get_property("adjustment")
-
-	def determine_auto_scroll(tab):
-		if (adjust.upper - adjust.page_size) == range.get_value():
-			# bottom reached
-			tab.autoScroll = True
-		else:
-			tab.autoScroll = False
-
-		return False
-
-	idle_add(determine_auto_scroll, tab)
-
 """
 	Shortcut callbacks
 """
@@ -667,12 +653,18 @@ def output_shortcut_ctrl_l(inputBar, shortcut):
 	"""
 		Ctrl+L was hit, clear the outputs.
 	"""
-	output = gui.get_current_output_textview()
+	current_tab = gui.tabs.get_current_tab()
 
-	buf = output.get_buffer()
-	if buf: buf.set_text("")
+	if current_tab:
+		output = current_tab.window.textview
+
+		buf = output.get_buffer()
+		if buf:
+			buf.set_text("")
+
 	buf = widgets.get_widget("generalOutput").get_buffer()
-	if buf: buf.set_text("")
+	if buf:
+		buf.set_text("")
 
 def output_shortcut_ctrl_f(inputBar, shortcut):
 	""" show/hide the search toolbar """
@@ -824,11 +816,11 @@ def serverTree_query_tooltip_cb(widget, x, y, kbdmode, tooltip):
 			"\n<b>" + _("Topic: ") + "</b>" +\
 				limit(tab.topic) +\
 			"\n<b>" + _("Last sentence: ") + "</b>" +\
-				limit(tab.textview.get_last_line())
+				limit(tab.window.textview.get_last_line())
 
 	elif tab.is_query():
 		s = "<b>" + _("Last sentence: ") + "</b>" +\
-			limit(tab.textview.get_last_line())
+			limit(tab.window.textview.get_last_line())
 
 	tooltip.set_markup(s)
 
@@ -915,7 +907,7 @@ def setup_mainWindow():
 		if e.state & gtk.gdk.MOD1_MASK:
 			w.emit_stop_by_name("scroll-event")
 
-	for widget in ("scrolledWindow_output","scrolledWindow_generalOutput",
+	for widget in ("scrolledWindow_generalOutput",
 				"scrolledWindow_serverTree","scrolledWindow_nickList"):
 		widgets.get_widget(widget).connect("scroll-event",
 			kill_mod1_scroll)
@@ -1062,7 +1054,7 @@ def connect_maki():
 	"""
 	com.connect()
 
-def paned_notify(paned, gparam):
+def paned_notify_cb(paned, gparam):
 	""" watch every property set for
 		paned. If the property equals
 		position, save the new value
@@ -1084,8 +1076,10 @@ def load_paned_positions():
 	for paned in paneds:
 		paned.set_property("position-set", True)
 		position = config.get("sizes", paned.name, None)
+
 		if position == None:
 			continue
+
 		try:
 			paned.set_position(int(position))
 		except ValueError:
@@ -1099,11 +1093,11 @@ def setup_paneds():
 	sigdic = {
 		# watch for position change of paneds
 		"listVPaned_notify_cb":
-			paned_notify,
+			paned_notify_cb,
 		"mainHPaned_notify_cb":
-			paned_notify,
+			paned_notify_cb,
 		"outputVPaned_notify_cb":
-			paned_notify,
+			paned_notify_cb,
 		}
 	widgets.signal_autoconnect(sigdic)
 
@@ -1118,14 +1112,7 @@ def setup_fonts():
 			if not config.get_bool("tekka", "use_default_font"):
 				return
 
-			for row in widgets.get_widget("serverTree").get_model():
-				for child in row.iterchildren():
-					gui.set_font(child[0].textview, gui.get_font())
-				gui.set_font(row[0].textview, gui.get_font())
-
-			gui.set_font(widgets.get_widget("output"), gui.get_font())
-			gui.set_font(widgets.get_widget("inputBar"), gui.get_font())
-			gui.set_font(widgets.get_widget("generalOutput"), gui.get_font())
+			gui.apply_new_font()
 
 		c = gconf.client_get_default()
 
@@ -1277,10 +1264,8 @@ def setupGTK():
 	bar.connect("key-press-event", inputBar_key_press_event_cb)
 	bar.connect("activate", inputBar_activate_cb)
 
-	vbar = widgets.get_widget(
-		"scrolledWindow_output").get_vscrollbar()
-	vbar.connect("value-changed",
-		scrolledWindow_output_vscrollbar_valueChanged_cb)
+	shell = widgets.get_widget("outputShell")
+	shell.connect("widget-changed", outputShell_widget_changed_cb)
 
 	# setup more complex widgets
 
@@ -1289,9 +1274,6 @@ def setupGTK():
 	setup_nickList()
 
 	setup_fonts()
-
-	# set output font
-	gui.set_font(widgets.get_widget("output"), gui.get_font())
 
 	# set input font
 	gui.set_font(widgets.get_widget("inputBar"), gui.get_font())

@@ -35,7 +35,6 @@ import config
 import lib.gui_control
 from lib.input_history import InputHistory
 from lib.tab import TekkaTab, TekkaChannel, TekkaQuery, TekkaServer
-from lib.output_textview import OutputTextView
 from lib.nick_list_store import NickListStore
 
 from typecheck import types
@@ -127,15 +126,16 @@ class TabControl(gobject.GObject):
 
 	def _create_tab(self, tabtype, name, *args, **kwargs):
 		""" instance class of type tabtype, connect signals,
-			create textview and setup input history.
+			create output window and setup input history.
 
 			Returns a new child of TekkaTab.
 		"""
 		tab = tabtype(name, *args, **kwargs)
 
-		tab.textview = OutputTextView()
-		tab.textview.show()
-		lib.gui_control.set_font(tab.textview, lib.gui_control.get_font())
+		tab.window = lib.gui_control.get_new_output_window()
+		tab.window.show_all()
+
+		lib.gui_control.set_font(tab.window.textview, lib.gui_control.get_font())
 
 		self.connect_callbacks(tab, ("new_message","new_name",
 			"new_path","connected","new_markup"))
@@ -543,7 +543,7 @@ class TabControl(gobject.GObject):
 		serverTree.set_cursor(path)
 		self.currentPath = path
 
-		lib.gui_control.replace_output_textview(tab.textview)
+		lib.gui_control.get_widget("outputShell").set(tab.window)
 
 		self.emit("tab_switched", old_tab, tab)
 

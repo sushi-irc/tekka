@@ -41,7 +41,6 @@ class TekkaTab(gobject.GObject):
 		name: the identifying name
 		newMessage: a list containing message "flags"
 		connected: is the tab active or not
-		autoScroll: automatically scroll the textview to the end
 	"""
 
 	@types(switch=bool)
@@ -63,15 +62,14 @@ class TekkaTab(gobject.GObject):
 		self.emit ("new_name", name)
 	name = property(lambda x: x._name, _set_name)
 
-	def __init__(self, name, textview=None):
+	def __init__(self, name, window = None):
 		gobject.GObject.__init__(self)
 
-		self.textview = textview
+		self.window = window
 		self.path = ()
 		self.name = name
 		self.newMessage = []
 		self.connected = False
-		self.autoScroll = True
 		self.input_text = ""
 
 		self.input_history = None

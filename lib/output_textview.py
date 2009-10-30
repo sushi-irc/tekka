@@ -124,7 +124,7 @@ class OutputTextView(gtk.TextView):
 
 		if parent:
 			vadj = parent.get_vadjustment()
-			vadj.set_value(vadj.upper - vadj.page_size)
+			vadj.set_value(vadj.upper - vadj.page_size + 1)
 
 		return False
 
@@ -154,6 +154,7 @@ class OutputTextView(gtk.TextView):
 		self.scroll_to_mark(end_mark, 0, True, 0, 1)
 
 		# reset horizontal scrollbar (do avoid side effects)
+		# FIXME: maybe straight left is not that good for non-western encodings
 		if parent:
 			adjustment = parent.get_hadjustment()
 			adjustment.set_value(0)
@@ -170,9 +171,9 @@ class OutputTextView(gtk.TextView):
 			self.smooth_id = None
 			self.smooth_scroll_timer.cancel()
 
-	def scroll_to_bottom(self):
+	def scroll_to_bottom(self, no_smooth = False):
 		""" scroll to the end of the textbuffer """
-		if self.SMOOTH_SCROLLING:
+		if self.SMOOTH_SCROLLING and not no_smooth:
 			self._smooth_scroll_to_end()
 		else:
 			self._scroll_to_end()

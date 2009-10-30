@@ -283,7 +283,7 @@
           </packing>
         </child>
         <child>
-          <widget class="GtkVBox" id="vbox1">
+          <widget class="GtkVBox" id="notificationVBox">
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
             <child>
@@ -299,7 +299,6 @@
                 <child>
                   <widget class="GtkHPaned" id="mainHPaned">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
                     <signal name="notify" handler="mainHPaned_notify_cb"/>
                     <child>
                       <widget class="GtkVBox" id="outputVBox">
@@ -349,18 +348,8 @@
                               </packing>
                             </child>
                             <child>
-                              <widget class="GtkScrolledWindow" id="scrolledWindow_output">
+                              <widget class="Custom" id="outputShell">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="hscrollbar_policy">never</property>
-                                <property name="vscrollbar_policy">automatic</property>
-                                <property name="window_placement">bottom-left</property>
-                                <property name="shadow_type">etched-in</property>
-                                <child>
-                                  <widget class="Custom" id="output">
-                                    <property name="visible">True</property>
-                                  </widget>
-                                </child>
                               </widget>
                               <packing>
                                 <property name="resize">True</property>
@@ -418,7 +407,6 @@
                       <widget class="GtkVPaned" id="listVPaned">
                         <property name="width_request">150</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="border_width">6</property>
                         <property name="orientation">vertical</property>
                         <property name="position_set">True</property>
@@ -434,7 +422,6 @@
                             <child>
                               <widget class="GtkTreeView" id="serverTree">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
                                 <signal name="button_press_event" handler="serverTree_button_press_event_cb"/>
                                 <signal name="row_activated" handler="serverTree_row_activated_cb"/>
                               </widget>
@@ -472,7 +459,6 @@
                                 <child>
                                   <widget class="GtkTreeView" id="nickList">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
                                     <signal name="button_press_event" handler="nickList_button_press_event_cb"/>
                                     <signal name="row_activated" handler="nickList_row_activated_cb"/>
                                   </widget>
