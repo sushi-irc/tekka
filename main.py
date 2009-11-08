@@ -139,6 +139,7 @@ def tekka_tab_new_markup_cb(tab):
 def tekka_tab_new_message_cb(tab, mtype):
 	""" a new message of the given type was received """
 	if gui.tabs.is_active(tab):
+		# FIXME: this won't reset urgent window hint and so on...
 		tab.newMessage = [] # already read
 
 		print "%s: auto_scroll = %s, mtype = %s" % (tab, tab.window.auto_scroll, mtype)
@@ -1289,9 +1290,6 @@ def setupGTK():
 	# setup general output
 	buffer = gui.get_new_buffer()
 	widgets.get_widget("generalOutput").set_buffer(buffer)
-
-	lib.output_textview.OutputTextView.set_smooth_scrolling(
-		config.get_bool("tekka","smooth_scrolling"))
 
 	# setup menu bar stuff
 	@types( user = ptypes.FunctionType )

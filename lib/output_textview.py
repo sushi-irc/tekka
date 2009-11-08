@@ -60,7 +60,6 @@ class OutputTextView(gtk.TextView):
 	# Smooth scrolling inspired by Gajim Code
 
 	# smooth scroll constants
-	SMOOTH_SCROLLING = False
 	MAX_SCROLL_TIME = 0.4 # seconds
 	SCROLL_DELAY = 33 # milliseconds
 
@@ -70,10 +69,6 @@ class OutputTextView(gtk.TextView):
 	TODO:: to a position. This needs a replacement for
 	TODO:: the current end-mark (the bottom of the buffer)
 	"""
-
-	@classmethod
-	def set_smooth_scrolling(cls, switch):
-		cls.SMOOTH_SCROLLING = switch
 
 	def smooth_scroll(self):
 		""" idle add handler for smooth scrolling.
@@ -173,7 +168,7 @@ class OutputTextView(gtk.TextView):
 
 	def scroll_to_bottom(self, no_smooth = False):
 		""" scroll to the end of the textbuffer """
-		if self.SMOOTH_SCROLLING and not no_smooth:
+		if config.get_bool("tekka","smooth_scrolling") and not no_smooth:
 			self._smooth_scroll_to_end()
 		else:
 			self._scroll_to_end()
