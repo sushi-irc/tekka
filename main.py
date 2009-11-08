@@ -95,6 +95,7 @@ from lib.inline_dialog import InlineMessageDialog
 from lib import plugin_control
 import lib.output_textview
 import lib.nick_list_store
+from lib.welcome_window import WelcomeWindow
 
 from helper.shortcuts import addShortcut, removeShortcut
 from helper import tabcompletion
@@ -156,6 +157,7 @@ def tekka_tab_new_name_cb(tab, name):
 def tekka_tab_connected_cb(tab, connected):
 	""" tab received a change on connected attribute """
 	gui.tabs.set_useable(tab, connected)
+	hide_welcome_screen()
 
 def tekka_channel_joined_cb(tab, switch):
 	""" channel received a change on joined attribute """
@@ -496,6 +498,10 @@ def outputShell_widget_changed_cb(shell, old_widget, new_widget):
 		new_widget: OutputWindow
 	"""
 	print "widgets changed: %s to %s" % (old_widget, new_widget)
+
+	if (type(old_widget) == WelcomeWindow
+	and type(new_widget) != WelcomeWindow):
+		hide_welcome_screen()
 
 	new_widget.set_property("name", "outputWindow")
 	new_widget.textview.set_property("name", "output")
@@ -1129,6 +1135,30 @@ def setup_fonts():
 		# ImportError or gconf reported a missing dir.
 		pass
 
+def show_welcome_screen():
+
+	self = show_welcome_screen
+	self.hides = ("scrolledWindow_generalOutput", "listVPaned")
+
+	for w in self.hides:
+		gui.widgets.get_widget(w).hide()
+
+	s = gui.widgets.get_widget("outputShell")
+
+	w = WelcomeWindow()
+
+	s.set(w)
+	s.show_all()
+	s.set_sensitive(True)
+
+def hide_welcome_screen():
+	hides = show_welcome_screen.hides
+
+	print "HIDING WELCOME"
+
+	for w in hides:
+		gui.widgets.get_widget(w).show()
+
 def setupGTK():
 	"""
 		Set locale, parse glade files.
@@ -1311,6 +1341,8 @@ def setupGTK():
 
 	# disable the GUI and wait for commands :-)
 	gui.set_useable(False)
+
+	show_welcome_screen()
 
 	idle_add(setup_paneds)
 

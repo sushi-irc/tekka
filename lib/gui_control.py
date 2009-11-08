@@ -142,7 +142,9 @@ class OutputWindow(gtk.ScrolledWindow):
 	def __init__(self):
 		gtk.ScrolledWindow.__init__(self)
 
-		self.set_properties( hscrollbar_policy=gtk.POLICY_NEVER, shadow_type=gtk.SHADOW_ETCHED_IN )
+		self.set_properties( hscrollbar_policy=gtk.POLICY_NEVER,
+			vscrollbar_policy = gtk.POLICY_AUTOMATIC,
+			shadow_type=gtk.SHADOW_ETCHED_IN )
 
 		self.textview = OutputTextView()
 		self.auto_scroll = True
@@ -284,7 +286,6 @@ def apply_new_font():
 	set_font(widgets.get_widget("output"), font)
 	set_font(widgets.get_widget("inputBar"), font)
 	set_font(widgets.get_widget("generalOutput"), font)
-
 
 @types(gladeFile=basestring, section=basestring)
 def load_widgets(gladeFile, section):
