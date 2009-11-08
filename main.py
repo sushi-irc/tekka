@@ -113,7 +113,7 @@ def maki_connect_callback(sushi):
 	signals.handle_maki_connect_cb()
 	gui.set_useable(True)
 
-def maki_disconnect_callback():
+def maki_disconnect_callback(sushi):
 	""" connection to maki lost """
 	# FIXME:  after disconnecting and reconnecting,
 	# FIXME:: the current tab's textview
@@ -1149,7 +1149,9 @@ def show_welcome_screen():
 
 	s.set(w)
 	s.show_all()
-	s.set_sensitive(True)
+
+	com.sushi.connect("maki-disconnected",
+		lambda sushi: s.set_sensitive(True))
 
 def hide_welcome_screen():
 	hides = show_welcome_screen.hides
@@ -1430,7 +1432,8 @@ def main():
 	setup_logging()
 
 	# setup callbacks
-	com.setup( [maki_connect_callback], [maki_disconnect_callback])
+	com.sushi.connect("maki-connected", maki_connect_callback)
+	com.sushi.connect("maki-disconnected", maki_disconnect_callback)
 
 	# build graphical interface
 	setupGTK()

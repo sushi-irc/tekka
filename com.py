@@ -28,6 +28,7 @@ SUCH DAMAGE.
 
 import os
 import re
+import gobject
 
 import dbus
 from dbus.mainloop.glib import DBusGMainLoop
@@ -43,14 +44,20 @@ dbus_loop = DBusGMainLoop()
 required_version = (1, 1, 0)
 bus = None
 
-class SushiWrapper (object):
+class SushiWrapper (gobject.GObject):
 
 	@types (sushi_interface = (dbus.Interface, NoneType))
 	def __init__(self, sushi_interface):
+		gobject.GObject.__init__(self)
 		self._set_interface(sushi_interface)
 
 	@types (connected = bool)
 	def _set_connected(self, connected):
+		if connected:
+			self.emit("maki-connected")
+		else:
+			self.emit("maki-disconnected")
+
 		self._connected = connected
 
 	@types (interface = (dbus.Interface, NoneType))
@@ -97,22 +104,17 @@ class SushiWrapper (object):
 
 	connected = property(lambda s: s._connected, _set_connected)
 
+gobject.signal_new ("maki-connected", SushiWrapper, gobject.SIGNAL_ACTION,
+	None, ())
+gobject.signal_new ("maki-disconnected", SushiWrapper,
+	gobject.SIGNAL_ACTION, None, ())
+
 sushi = SushiWrapper(None)
 
 myNick = {}
 
-_connect_callbacks = []
-_disconnect_callbacks = []
 _shutdown_callback = None
 _nick_callback = None
-
-@types (connect_callbacks = list, disconnect_callbacks = list)
-def setup(connect_callbacks, disconnect_callbacks):
-	""" register initial callbacks """
-	global _connect_callbacks, _disconnect_callbacks, bus
-
-	_connect_callbacks = connect_callbacks
-	_disconnect_callbacks = disconnect_callbacks
 
 def disable_sushi_on_fail(cmethod):
 	""" decorator: disable sushi wrapper if connect fails """
@@ -212,9 +214,6 @@ def connect():
 	for server in sushi.servers():
 		fetch_own_nick(server)
 
-	for callback in _connect_callbacks:
-		callback(sushi)
-
 	return True
 
 def disconnect():
@@ -226,9 +225,6 @@ def disconnect():
 
 	if _nick_callback:
 		_nick_callback.remove()
-
-	for callback in _disconnect_callbacks:
-		callback()
 
 def parse_from (from_str):
 	h = from_str.split("!", 2)
