@@ -33,6 +33,26 @@ class WelcomeWindow(OutputWindow):
 		self.table.attach(self.label, 1, 2, 0, 1, xoptions=0)
 
 		self.descr = gtk.Label()
+
+		self.table.attach(self.descr, 0, 2, 1, 2, xoptions=0)
+
+		self.add_with_viewport(self.table)
+
+		if com.sushi.connected:
+			self.sushi_connected_cb(com.sushi)
+		else:
+			self.sushi_disconnected_cb(com.sushi)
+
+		com.sushi.connect("maki-connected", self.sushi_connected_cb)
+		com.sushi.connect("maki-disconnected", self.sushi_disconnected_cb)
+
+	def sushi_connected_cb(self, sushi):
+		s = _("You're connected to <b>maki</b> so the next step"
+  				"is, that you connect to a server over the server"
+				" dialog in the tekka menu.")
+		self.descr.set_markup(s)
+
+	def sushi_disconnected_cb(self, sushi):
 		s = _("You're not connected to <b>maki</b>, the central "
 		  		"IRC daemon which interacts with the IRC server. "
 	  			"Without <b>maki</b> you can't connect to a "
@@ -41,16 +61,5 @@ class WelcomeWindow(OutputWindow):
 				"visit http://sushi.ikkoku.de/ and see if there's "
 				"a solution for your problem. Otherwise, feel free "
 				"to ask for support.")
-		self.descr.set_markup(s)
-
-
-		self.table.attach(self.descr, 0, 2, 1, 2, xoptions=0)
-
-		self.add_with_viewport(self.table)
-
-	def sushi_connect_cb(self):
-		s = _("You're connected to <b>maki</b> so the next step"
-  				"is, that you connect to a server over the server"
-				" dialog in the tekka menu.")
 		self.descr.set_markup(s)
 
