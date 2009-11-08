@@ -50,6 +50,7 @@ from com import sushi, parse_from
 from typecheck import types
 
 signals = {}
+restore_list = []
 
 @types (signal=basestring)
 def connect_signal (signal, handler):
@@ -78,16 +79,8 @@ def disconnect_signal (signal, handler):
 		ob.remove()
 		del signals[signal][handler]
 
-def handle_maki_disconnect_cb():
-	global signals
+def connect_signals():
 
-	for signal in signals:
-		for handler in signals[signal]:
-			signals[signal][handler].remove()
-
-	signals = {}
-
-def handle_maki_connect_cb():
 	# Message-Signals
 	connect_signal("message", userMessage_cb)
 	connect_signal("notice", userNotice_cb)
@@ -121,6 +114,38 @@ def handle_maki_connect_cb():
 
 	# Maki signals
 	connect_signal("shutdown", makiShutdown_cb)
+
+def restore_signals():
+	global restore_list
+
+	for (signal, handler) in restore_list:
+		connect_signal(signal, handler)
+
+def handle_maki_disconnect_cb():
+	global signals
+	global restore_list
+
+	for signal in signals:
+		for handler in signals[signal]:
+			signals[signal][handler].remove()
+			restore_list.append((signal, handler))
+
+	signals = {}
+
+def handle_maki_connect_cb():
+
+	self = handle_maki_connect_cb
+	try:
+		self.init
+	except AttributeError:
+		self.init = True
+	else:
+		self.init = False
+
+	if self.init:
+		connect_signals()
+	else:
+		restore_signals()
 
 	add_servers()
 
