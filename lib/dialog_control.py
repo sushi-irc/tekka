@@ -28,6 +28,9 @@ SUCH DAMAGE.
 
 import logging
 
+from com import sushi, NoSushiError
+from gettext import gettext as _
+
 def loadDialog(name):
 	importName = "dialogs."+name
 	try:
@@ -45,79 +48,15 @@ def loadDialog(name):
 	dialog.setup()
 	return dialog
 
-def show_dialog(name, *param):
+def show_dialog(name, *param, **dparams):
 	d = loadDialog(name)
 
 	if not d:
 		raise Exception, "Dialog with name '%s' not found." % (name)
 
+	if dparams.has_key("need_sushi") and dparams["need_sushi"]:
+		if not sushi.connected:
+			raise NoSushiError, _("Can't open dialog '%s'. "
+				"There's no connection to maki." % (name))
+
 	return d.run(*param)
-
-def showEditServerDialog(server):
-	d = loadDialog("editServer")
-
-	return d.run(server)
-
-def showAddServerDialog(callback):
-	d = loadDialog("addServer")
-
-	return d.run(callback)
-
-def showDeleteServerDialog(servername, callback):
-	d = loadDialog("deleteServer")
-
-	return d.run(servername, callback)
-
-def showServerDialog(callback):
-	"""
-		Shows up the server dialog.
-	"""
-	d = loadDialog("server")
-
-	return d.run(callback)
-
-def showChannelListDialog(server):
-	"""
-		Shows up the channel list dialog
-		(GUI representation of /list)
-	"""
-	d = loadDialog("channelList")
-
-	return d.run(server)
-
-def showDCCDialog():
-	d = loadDialog("dcc")
-	return d.run()
-
-def showPluginsDialog():
-	"""
-	"""
-	d = loadDialog("plugins")
-
-	return d.run()
-
-def showHistoryDialog(tab):
-	"""
-		Shows up the history dialog for the current tab.
-	"""
-	d = loadDialog("history")
-
-	return d.run(tab)
-
-def showDebugDialog():
-	d = loadDialog("debug")
-
-	return d.run()
-
-def showPreferencesDialog():
-	d = loadDialog("preferences")
-
-	return d.run()
-
-def showWhoisDialog(server, nick):
-	d = loadDialog("whois")
-	return d.run(server, nick)
-
-def showColorTableDialog():
-	d = loadDialog("colorTable")
-	return d.run()

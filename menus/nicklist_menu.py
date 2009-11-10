@@ -36,7 +36,7 @@ from lib import dialog_control
 from lib import inline_dialog
 from lib import key_dialog
 
-from com import sushi
+from com import sushi, NoSushiError
 
 from helper.singleton import SingletonMeta
 
@@ -47,8 +47,7 @@ class NickListMenu(object):
 	def __init__(self):
 		self.menu = None
 		self.widgets = gtk.glade.XML(
-			config.get("gladefiles", "mainwindow"),
-			"nickListMenu")
+			config.get("gladefiles", "mainwindow"), "nickListMenu")
 		self.deactivate_handler = []
 
 		if not self.widgets:
@@ -129,7 +128,14 @@ class NickListMenu(object):
 			return
 
 		if config.get_bool("tekka", "whois_dialog"):
-			dialog_control.showWhoisDialog(sTab.name, self.current_nick)
+			try:
+				dialog_control.show_dialog("whois", sTab.name,
+					self.current_nick, need_sushi = True)
+			except NoSushiError, e:
+				d = InlineMessageDialog(_("No connection to maki."),
+					e.args[0])
+				d.connect("response", lambda w,i: w.destroy())
+				gui_control.showInlineDialog(d)
 
 		else:
 			sushi.sushi.whois(sTab.name, self.current_nick)

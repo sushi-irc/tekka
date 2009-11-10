@@ -238,7 +238,7 @@ class ServerTreeMenu(object):
 		if not self.current_tab or self.current_tab.is_server():
 			return
 
-		dialog_control.showHistoryDialog(self.current_tab)
+		dialog_control.show_dialog("history", self.current_tab)
 
 	def setTopicItem_activate_cb(self, item):
 		""" show up inline dialog to change topic """

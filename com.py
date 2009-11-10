@@ -44,6 +44,9 @@ dbus_loop = DBusGMainLoop()
 required_version = (1, 1, 0)
 bus = None
 
+class NoSushiError (BaseException):
+	pass
+
 class SushiWrapper (gobject.GObject):
 
 	@types (sushi_interface = (dbus.Interface, NoneType))

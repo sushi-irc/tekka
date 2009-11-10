@@ -244,7 +244,7 @@ def menu_tekka_Connect_activate_cb(menuItem):
 		d.connect("response", lambda d,id: d.destroy())
 
 	else:
-		dialog_control.showServerDialog(server_dialog_callback)
+		dialog_control.show_dialog("server", server_dialog_callback)
 
 def menu_View_showGeneralOutput_toggled_cb(menuItem):
 	"""
@@ -314,46 +314,49 @@ def menu_View_showTopicBar_toggled_cb(menuItem):
 
 def menu_Dialogs_channelList_activate_cb(menuItem):
 	""" show channel list dialog. """
-	if not com.sushi.connected:
-		d = InlineMessageDialog(
-			_("tekka could not connect to maki."),
-			_("Please check whether maki is running."))
+	sTab,cTab = gui.tabs.get_current_tabs()
 
+	if not sTab:
+		d = InlineMessageDialog(_("tekka could not determine server."),
+			_("There is no active server. Click on a server tab or a "
+			"child of a server tab to activate the server."))
+		d.connect("response", lambda w,i: w.destroy())
 		gui.showInlineDialog(d)
-		d.connect("response", lambda d,i: d.destroy())
 
 	else:
-
-		sTab,cTab = gui.tabs.get_current_tabs()
-
-		if not sTab:
-			d = InlineMessageDialog(_("tekka could not determine server."),
-				_("There is no active server. Click on a server tab or a "
-				"child of a server tab to activate the server."))
+		try:
+			dialog_control.show_dialog("channelList", sTab.name,
+				need_sushi = True)
+		except NoSushiError, e:
+			d = InlineMessageDialog(
+				_("No connection to maki."), e.args[0])
 			d.connect("response", lambda w,i: w.destroy())
 			gui.showInlineDialog(d)
 
-		else:
-			dialog_control.showChannelListDialog(sTab.name)
-
 def menu_Dialogs_dcc_activate_cb(menuItem):
 	""" show file transfers dialog """
-	dialog_control.showDCCDialog()
+	try:
+		dialog_control.show_dialog("dcc", need_sushi = True)
+	except com.NoSushiError, e:
+		d = InlineMessageDialog(_("No connection to maki."), e.args[0])
+		d.connect("response", lambda w,i: w.destroy())
+		gui.showInlineDialog(d)
+
 
 def menu_Dialogs_plugins_activate_cb(menuItem):
 	"""
 	show plugin load/unload/list dialog.
 	"""
-	dialog_control.showPluginsDialog()
+	dialog_control.show_dialog("plugins")
 
 def menu_Dialogs_debug_activate_cb(menuItem):
-	dialog_control.showDebugDialog()
+	dialog_control.show_dialog("debug")
 
 def menu_Dialogs_preferences_activate_cb(menuItem):
-	dialog_control.showPreferencesDialog()
+	dialog_control.show_dialog("preferences")
 
 def menu_Help_Colors_activate_cb(menuItem):
-	dialog_control.showColorTableDialog()
+	dialog_control.show_dialog("colorTable")
 
 def menu_Help_about_activate_cb(menuItem):
 	"""
@@ -574,7 +577,7 @@ def serverTree_row_activated_cb(serverTree, path, column):
 	model = serverTree.get_model()
 	tab = model[path][0]
 
-	dialog_control.showHistoryDialog(tab)
+	dialog_control.show_dialog("history", tab)
 
 def nickList_row_activated_cb(nickList, path, column):
 	"""

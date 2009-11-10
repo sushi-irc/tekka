@@ -174,7 +174,7 @@ def add_dialog_cb():
 	retrieveServerlist()
 
 def openAddDialog(widget):
-	dialog_control.showAddServerDialog(add_dialog_cb)
+	dialog_control.show_dialog("addServer", add_dialog_cb)
 
 def openEditDialog(widget):
 	view = widgets.get_widget("serverList")
@@ -192,7 +192,7 @@ def openEditDialog(widget):
 	else:
 		servername = serverList[path][0]
 
-	data = dialog_control.showEditServerDialog(servername)
+	data = dialog_control.show_dialog("editServer", servername)
 
 	if not servername:
 		logging.error("openEditDialog: Error in retrieving the servername")
@@ -223,4 +223,4 @@ def openDeleteDialog(widget):
 			force_dialog = True)
 		return
 
-	dialog_control.showDeleteServerDialog(servername, delete_dialog_cb)
+	dialog_control.show_dialog("deleteServer", servername, delete_dialog_cb)
