@@ -62,21 +62,21 @@ class SushiWrapper (gobject.GObject):
 
 	@types (interface = (dbus.Interface, NoneType))
 	def _set_interface(self, interface):
-		self._set_connected(interface != None)
 		self._sushi = interface
+		self._set_connected(interface != None)
 
 	def __getattr__(self, attr):
 		def dummy(*args, **kwargs):
-			dialog = InlineMessageDialog(_("tekka could not connect to maki."),
-				_("Please check whether maki is running.\n"
-				"The following error occurred: %(error)s") % {
-					"error": message })
+			dialog = InlineMessageDialog(
+				_("tekka failed to make a call to maki."),
+				_("Please check if maki is running.\n"))
 			dialog.connect("response", lambda w,i: w.destroy())
 			gui_control.showInlineDialog(dialog)
 
 		def errordummy(message):
 			def new(*args, **kwargs):
-				dialog = InlineMessageDialog(_("tekka could not connect to maki."),
+				dialog = InlineMessageDialog(
+					_("tekka could not connect to maki."),
 					_("Please check whether maki is running.\n"
 					"The following error occurred: %(error)s") % {
 						"error": message })
