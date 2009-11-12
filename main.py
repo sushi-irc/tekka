@@ -144,7 +144,8 @@ def tekka_tab_new_message_cb(tab, mtype):
 		# FIXME: this won't reset urgent window hint and so on...
 		tab.newMessage = [] # already read
 
-		print "%s: auto_scroll = %s, mtype = %s" % (tab, tab.window.auto_scroll, mtype)
+		print "%s: auto_scroll = %s, mtype = %s" % (
+			tab, tab.window.auto_scroll, mtype)
 
 		if tab.window.auto_scroll and mtype:
 			tab.window.textview.scroll_to_bottom()
@@ -189,6 +190,11 @@ def tekka_tab_switched_cb(tabclass, old, new):
 
 		if new.window.auto_scroll:
 			new.window.textview.scroll_to_bottom( no_smooth = True )
+
+def tekka_tab_add_cb(tab):
+	""" a tab is added """
+	if type(gui.widgets.get_widget("outputWindow")) == WelcomeWindow:
+		hide_welcome_screen()
 
 def tekka_tab_remove_cb(tab):
 	""" a tab is about to be removed """
@@ -1159,9 +1165,6 @@ def show_welcome_screen():
 	com.sushi.g_connect("maki-disconnected",
 		lambda sushi: s.set_sensitive(True))
 
-	signals.connect_signal("connect",
-		lambda *x: hide_welcome_screen())
-
 def hide_welcome_screen():
 	hides = show_welcome_screen.hides
 
@@ -1214,6 +1217,7 @@ def setupGTK():
 		"new_message": tekka_tab_new_message_cb,
 		"new_name": tekka_tab_new_name_cb,
 		"new_path": tekka_tab_new_path_cb,
+		"add": tekka_tab_add_cb,
 		"remove": tekka_tab_remove_cb,
 		"new_markup": tekka_tab_new_markup_cb,
 		"connected": tekka_tab_connected_cb,

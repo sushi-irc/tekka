@@ -254,6 +254,11 @@ class TabControl(gobject.GObject):
 		iter = store.append(serverIter, row=(object,))
 		object.path = store.get_path(iter)
 
+		callbacks = self.get_callbacks("add")
+
+		for cb in callbacks:
+			cb(object)
+
 		if server and config.get("tekka", "auto_expand"):
 			# expand the whole server tab
 			path = store.get_path(serverIter)
