@@ -37,9 +37,6 @@ from gettext import gettext as _
 from types import NoneType
 from typecheck import types
 
-from lib.inline_dialog import InlineMessageDialog
-import lib.gui_control as gui_control
-
 dbus_loop = DBusGMainLoop()
 required_version = (1, 1, 0)
 bus = None
@@ -49,6 +46,21 @@ class NoSushiError (BaseException):
 
 class SushiWrapper (gobject.GObject):
 
+	""" Wraps a DBus Interface to maki so if there's
+		no connection, an error signal is emitted and
+		can be catched by the GUI.
+
+		Access to the underlying gobject methods is
+		possible by prefixing an "g_":
+		g_emit(), g_connect, ...
+
+		The only methods available directly from
+		this class are all methods beginning with an "_"
+		and the "connected" property.
+		All other getattr calls will be forwarded
+		to the intern sushi interface.
+	"""
+
 	@types (sushi_interface = (dbus.Interface, NoneType))
 	def __init__(self, sushi_interface):
 		gobject.GObject.__init__(self)
@@ -57,9 +69,9 @@ class SushiWrapper (gobject.GObject):
 	@types (connected = bool)
 	def _set_connected(self, connected):
 		if connected:
-			self.emit("maki-connected")
+			self.g_emit("maki-connected")
 		else:
-			self.emit("maki-disconnected")
+			self.g_emit("maki-disconnected")
 
 		self._connected = connected
 
@@ -68,41 +80,53 @@ class SushiWrapper (gobject.GObject):
 		self._sushi = interface
 		self._set_connected(interface != None)
 
-	def __getattr__(self, attr):
+	@types (title = basestring, msg = basestring)
+	def _emit_error(self, title, msg):
+		self.g_emit("sushi-error", title, msg)
+
+	def __getattribute__(self, attr):
+
 		def dummy(*args, **kwargs):
-			dialog = InlineMessageDialog(
+			sushi._emit_error(
 				_("tekka failed to make a call to maki."),
 				_("Please check if maki is running.\n"))
-			dialog.connect("response", lambda w,i: w.destroy())
-			gui_control.showInlineDialog(dialog)
 
 		def errordummy(message):
 			def new(*args, **kwargs):
-				dialog = InlineMessageDialog(
+				sushi._emit_error(
 					_("tekka could not connect to maki."),
 					_("Please check whether maki is running.\n"
 					"The following error occurred: %(error)s") % {
 						"error": message })
-				dialog.connect("response", lambda w,i: w.destroy())
-				gui_control.showInlineDialog(dialog)
 			return new
 
-		if attr[0] == "_" or attr == "connected":
-			# return my attributes
-			return object.__getattr__(self, attr)
+		gobject_attr = False
+
+		if attr[:2] == "g_":
+			attr = attr[2:]
+			gobject_attr = True
+
+		if attr[0] == "_" or gobject_attr or attr == "connected":
+			# resolve it by gobject.__getattribute__. This function
+			# will call getattr as well if there is no matching
+			# method in the gobject hierarchy.
+			return gobject.GObject.__getattribute__(self, attr)
 		else:
 			if not self._sushi:
+				# return a dummy which reports an error
 				return dummy
 			else:
-				if attr in dir(self._sushi):
-					# return local from Interface
+				try:
+					# try local methods
+					return self._sushi.__getattribute__(attr)
+				except AttributeError:
+					# try proxy methods
 					try:
-						return eval("self._sushi.%s" % attr)
+						return self._sushi.__getattr__(attr)
 					except dbus.DBusException, e:
+						# method not found, return dummy
 						return errordummy(str(e))
-				else:
-					# return dbus proxy method
-					return self._sushi.__getattr__(attr)
+
 		raise AttributeError(attr)
 
 	connected = property(lambda s: s._connected, _set_connected)
@@ -111,6 +135,8 @@ gobject.signal_new ("maki-connected", SushiWrapper, gobject.SIGNAL_ACTION,
 	None, ())
 gobject.signal_new ("maki-disconnected", SushiWrapper,
 	gobject.SIGNAL_ACTION, None, ())
+gobject.signal_new ("sushi-error", SushiWrapper,
+	gobject.SIGNAL_ACTION, None, (str, str))
 
 sushi = SushiWrapper(None)
 
@@ -144,24 +170,22 @@ def connect():
 	bus_address = os.getenv("SUSHI_REMOTE_BUS_ADDRESS")
 
 	def bus_remote_error(exception):
-		d = InlineMessageDialog(_("tekka could not connect to maki."),
+		sushi._emit_error(
+			_("tekka could not connect to maki."),
 			_("Please check whether maki is running.\n"
 			"The following error occurred: %(error)s") % {
 				"error": str(exception) })
-		gui_control.showInlineDialog(d)
-		d.connect("response",lambda w,id: w.destroy())
 
 	def connect_session_bus():
 		global bus, dbus_loop
 		try:
 			return dbus.SessionBus(mainloop=dbus_loop)
 		except DBusException, e:
-			d = InlineMessageDialog(_("tekka could not connect to maki."),
+			sushi._emit_error(
+				_("tekka could not connect to maki."),
 				_("Please check whether maki is running.\n"
 				"The following error occurred: %(error)s") % {
 					"error": str(e) })
-			gui_control.showInlineDialog(d)
-			d.connect("response",lambda w,i: w.destroy())
 			return None
 
 	if bus_address:
@@ -184,13 +208,11 @@ def connect():
 	try:
 		proxy = bus.get_object("de.ikkoku.sushi", "/de/ikkoku/sushi")
 	except dbus.exceptions.DBusException, e:
-		d = InlineMessageDialog(_("tekka could not connect to maki."),
+		sushi._emit_error(
+			_("tekka could not connect to maki."),
 			_("Please check whether maki is running.\n"
 			"The following error occurred: %(error)s") % {
 				"error": str(e) })
-		d.connect("response", lambda d,id: d.destroy())
-
-		gui_control.showInlineDialog(d)
 
 	if not proxy:
 		return False
@@ -202,12 +224,11 @@ def connect():
 	if not version or version < required_version:
 		version_string = ".".join([str(x) for x in required_version])
 
-		d = InlineMessageDialog(_("tekka requires a newer maki version."),
+		sushi._emit_error(
+			_("tekka requires a newer maki version."),
 			_("Please update maki to at least version %(version)s.") % {
 					"version": version_string })
-		d.connect("response", lambda d,i: d.destroy())
 
-		gui_control.showInlineDialog(d)
 		sushi._set_interface(None)
 		return False
 

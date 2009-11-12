@@ -52,6 +52,10 @@ from typecheck import types
 signals = {}
 restore_list = []
 
+def setup():
+	sushi.g_connect("maki-connected", handle_maki_connect_cb)
+	sushi.g_connect("maki-disconnected", handle_maki_disconnect_cb)
+
 @types (signal=basestring)
 def connect_signal (signal, handler):
 	""" connect handler to signal """
@@ -121,7 +125,7 @@ def restore_signals():
 	for (signal, handler) in restore_list:
 		connect_signal(signal, handler)
 
-def handle_maki_disconnect_cb():
+def handle_maki_disconnect_cb(sushi):
 	global signals
 	global restore_list
 
@@ -132,7 +136,7 @@ def handle_maki_disconnect_cb():
 
 	signals = {}
 
-def handle_maki_connect_cb():
+def handle_maki_connect_cb(sushi):
 
 	self = handle_maki_connect_cb
 	try:

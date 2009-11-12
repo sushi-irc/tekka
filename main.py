@@ -102,15 +102,17 @@ from helper import tabcompletion
 
 from menus import *
 
-widgets = None
-
 """
 Tekka intern signals
 """
 
+def sushi_error_cb(sushi, title, message):
+	d = InlineMessageDialog(title, message)
+	d.connect("response", lambda w,i: w.destroy())
+	d.show_all()
+
 def maki_connect_callback(sushi):
 	""" connection to maki etablished """
-	signals.handle_maki_connect_cb()
 	gui.set_useable(True)
 
 def maki_disconnect_callback(sushi):
@@ -118,7 +120,6 @@ def maki_disconnect_callback(sushi):
 	# FIXME:  after disconnecting and reconnecting,
 	# FIXME:: the current tab's textview
 	# FIXME:: is still insensitive
-	signals.handle_maki_disconnect_cb()
 	gui.set_useable(False)
 
 def tekka_server_away_cb(tab, msg):
@@ -157,7 +158,6 @@ def tekka_tab_new_name_cb(tab, name):
 def tekka_tab_connected_cb(tab, connected):
 	""" tab received a change on connected attribute """
 	gui.tabs.set_useable(tab, connected)
-	hide_welcome_screen()
 
 def tekka_channel_joined_cb(tab, switch):
 	""" channel received a change on joined attribute """
@@ -173,7 +173,7 @@ def tekka_tab_new_path_cb(tab, new_path):
 
 def tekka_tab_switched_cb(tabclass, old, new):
 	""" switched from tab old to tab new """
-	inputBar = widgets.get_widget("inputBar")
+	inputBar = gui.widgets.get_widget("inputBar")
 
 	if old:
 		itext = inputBar.get_text()
@@ -327,7 +327,7 @@ def menu_Dialogs_channelList_activate_cb(menuItem):
 		try:
 			dialog_control.show_dialog("channelList", sTab.name,
 				need_sushi = True)
-		except NoSushiError, e:
+		except com.NoSushiError, e:
 			d = InlineMessageDialog(
 				_("No connection to maki."), e.args[0])
 			d.connect("response", lambda w,i: w.destroy())
@@ -365,9 +365,12 @@ def menu_Help_about_activate_cb(menuItem):
 	def about_response_cb(dialog, response_id):
 		dialog.destroy()
 
-	widgets = gtk.glade.XML(config.get("gladefiles","dialogs") + "about.glade")
+	widgets = gtk.glade.XML(
+		config.get("gladefiles","dialogs") + "about.glade")
+
 	d = widgets.get_widget("aboutDialog")
 	d.connect("response", about_response_cb)
+
 	d.show_all()
 
 def mainWindow_scroll_event_cb(mainWindow, event):
@@ -661,7 +664,7 @@ def inputBar_shortcut_ctrl_u(inputBar, shortcut):
 	"""
 		Ctrl + U was hit, clear the inputBar
 	"""
-	widgets.get_widget("inputBar").set_text("")
+	gui.widgets.get_widget("inputBar").set_text("")
 
 def output_shortcut_ctrl_l(inputBar, shortcut):
 	"""
@@ -676,7 +679,7 @@ def output_shortcut_ctrl_l(inputBar, shortcut):
 		if buf:
 			buf.set_text("")
 
-	buf = widgets.get_widget("generalOutput").get_buffer()
+	buf = gui.widgets.get_widget("generalOutput").get_buffer()
 	if buf:
 		buf.set_text("")
 
@@ -754,7 +757,7 @@ def output_shortcut_Page_Up(inputBar, shortcut):
 	"""
 		Page_Up was hit, scroll up in output
 	"""
-	vadj = widgets.get_widget("outputWindow").get_vadjustment()
+	vadj = gui.widgets.get_widget("outputWindow").get_vadjustment()
 
 	if vadj.get_value() == 0.0:
 		return # at top already
@@ -767,7 +770,7 @@ def output_shortcut_Page_Down(inputBar, shortcut):
 	"""
 		Page_Down was hit, scroll down in output
 	"""
-	vadj = widgets.get_widget("outputWindow").get_vadjustment()
+	vadj = gui.widgets.get_widget("outputWindow").get_vadjustment()
 
 	if (vadj.upper - vadj.page_size) == vadj.get_value():
 		return # we are already at bottom
@@ -784,8 +787,8 @@ def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 		FIXME: this solution sucks ass.
 	"""
 	buffer = gui.get_current_output_textview().get_buffer()
-	goBuffer = widgets.get_widget("generalOutput").get_buffer()
-	topicBar = widgets.get_widget("topicBar")
+	goBuffer = gui.widgets.get_widget("generalOutput").get_buffer()
+	topicBar = gui.widgets.get_widget("topicBar")
 	cb = gtk.Clipboard()
 
 	if buffer.get_property("has-selection"):
@@ -884,7 +887,7 @@ def setup_mainWindow():
 		- set window size
 		- set window state
 	"""
-	win = widgets.get_widget("mainWindow")
+	win = gui.widgets.get_widget("mainWindow")
 
 	if config.get_bool("tekka", "rgba"):
 		colormap = win.get_screen().get_rgba_colormap()
@@ -923,7 +926,7 @@ def setup_mainWindow():
 
 	for widget in ("scrolledWindow_generalOutput",
 				"scrolledWindow_serverTree","scrolledWindow_nickList"):
-		widgets.get_widget(widget).connect("scroll-event",
+		gui.widgets.get_widget(widget).connect("scroll-event",
 			kill_mod1_scroll)
 
 	win.connect("scroll-event", mainWindow_scroll_event_cb)
@@ -980,7 +983,7 @@ def setup_serverTree():
 
 	# further stuff (set model to treeview, add columns)
 
-	widget = widgets.get_widget("serverTree")
+	widget = gui.widgets.get_widget("serverTree")
 
 	widget.set_model(tm)
 	widget.set_property("has-tooltip", True)
@@ -1000,7 +1003,7 @@ def setup_nickList():
 		The first is the prefix and the second
 		the nick name.
 	"""
-	widget = widgets.get_widget("nickList")
+	widget = gui.widgets.get_widget("nickList")
 	widget.set_model(None)
 
 	renderer = gtk.CellRendererText()
@@ -1026,34 +1029,34 @@ def setup_shortcuts():
 		- ctrl + s -> hide/show the side pane
 	"""
 	gui.accelGroup = gtk.AccelGroup()
-	widgets.get_widget("mainWindow").add_accel_group(gui.accelGroup)
+	gui.widgets.get_widget("mainWindow").add_accel_group(gui.accelGroup)
 
-	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"), "<ctrl>u",
-		inputBar_shortcut_ctrl_u)
-	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"), "<ctrl>l",
-		output_shortcut_ctrl_l)
-	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"), "<ctrl>f",
-		output_shortcut_ctrl_f)
-	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"), "<ctrl>g",
-		output_shortcut_ctrl_g)
+	addShortcut(gui.accelGroup, gui.widgets.get_widget("inputBar"),
+		"<ctrl>u", inputBar_shortcut_ctrl_u)
+	addShortcut(gui.accelGroup, gui.widgets.get_widget("inputBar"),
+		"<ctrl>l", output_shortcut_ctrl_l)
+	addShortcut(gui.accelGroup, gui.widgets.get_widget("inputBar"),
+		"<ctrl>f", output_shortcut_ctrl_f)
+	addShortcut(gui.accelGroup, gui.widgets.get_widget("inputBar"),
+		"<ctrl>g", output_shortcut_ctrl_g)
 
-	addShortcut(gui.accelGroup, widgets.get_widget("serverTree"),
+	addShortcut(gui.accelGroup, gui.widgets.get_widget("serverTree"),
 		"<ctrl>Page_Up", serverTree_shortcut_ctrl_Page_Up)
-	addShortcut(gui.accelGroup, widgets.get_widget("serverTree"),
+	addShortcut(gui.accelGroup, gui.widgets.get_widget("serverTree"),
 		"<ctrl>Page_Down", serverTree_shortcut_ctrl_Page_Down)
-	addShortcut(gui.accelGroup, widgets.get_widget("serverTree"),
+	addShortcut(gui.accelGroup, gui.widgets.get_widget("serverTree"),
 		"<ctrl>w", serverTree_shortcut_ctrl_w)
 
-	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"),
+	addShortcut(gui.accelGroup, gui.widgets.get_widget("inputBar"),
 		"Page_Up", output_shortcut_Page_Up)
-	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"),
+	addShortcut(gui.accelGroup, gui.widgets.get_widget("inputBar"),
 		"Page_Down", output_shortcut_Page_Down)
 
-	addShortcut(gui.accelGroup, widgets.get_widget("inputBar"),
+	addShortcut(gui.accelGroup, gui.widgets.get_widget("inputBar"),
 		"<ctrl>c", inputBar_shortcut_ctrl_c)
 
 	addShortcut(gui.accelGroup,
-		widgets.get_widget("menu_View_showSidePane"), "<ctrl>s",
+		gui.widgets.get_widget("menu_View_showSidePane"), "<ctrl>s",
 		lambda w,s: w.set_active(not w.get_active()))
 
 
@@ -1083,9 +1086,9 @@ def load_paned_positions():
 		main and output paneds.
 	"""
 	paneds = [
-		widgets.get_widget("listVPaned"),
-		widgets.get_widget("mainHPaned"),
-		widgets.get_widget("outputVPaned")]
+		gui.widgets.get_widget("listVPaned"),
+		gui.widgets.get_widget("mainHPaned"),
+		gui.widgets.get_widget("outputVPaned")]
 
 	for paned in paneds:
 		paned.set_property("position-set", True)
@@ -1113,7 +1116,7 @@ def setup_paneds():
 		"outputVPaned_notify_cb":
 			paned_notify_cb,
 		}
-	widgets.signal_autoconnect(sigdic)
+	gui.widgets.signal_autoconnect(sigdic)
 
 	return False
 
@@ -1153,8 +1156,11 @@ def show_welcome_screen():
 	s.set(w)
 	s.show_all()
 
-	com.sushi.connect("maki-disconnected",
+	com.sushi.g_connect("maki-disconnected",
 		lambda sushi: s.set_sensitive(True))
+
+	signals.connect_signal("connect",
+		lambda *x: hide_welcome_screen())
 
 def hide_welcome_screen():
 	hides = show_welcome_screen.hides
@@ -1171,7 +1177,6 @@ def setupGTK():
 		Setup widgets.
 	"""
 	global commands, signals
-	global widgets
 
 	gladefiles = config.get("gladefiles", default={})
 
@@ -1188,8 +1193,7 @@ def setupGTK():
 	gtk.glade.textdomain("tekka")
 
 	# parse glade file for main window
-	widgets = gui.load_widgets(
-		gladefiles["mainwindow"], "mainWindow")
+	gui.load_widgets(gladefiles["mainwindow"], "mainWindow")
 
 	def about_dialog_url_hook (dialog, link, data):
 		if gtk.gtk_version >= (2, 16, 0):
@@ -1296,15 +1300,15 @@ def setupGTK():
 			outputVBox_size_allocate_cb,
 	}
 
-	widgets.signal_autoconnect(sigdic)
+	gui.widgets.signal_autoconnect(sigdic)
 
 	# setup manual signals
 
-	bar = widgets.get_widget("inputBar")
+	bar = gui.widgets.get_widget("inputBar")
 	bar.connect("key-press-event", inputBar_key_press_event_cb)
 	bar.connect("activate", inputBar_activate_cb)
 
-	shell = widgets.get_widget("outputShell")
+	shell = gui.widgets.get_widget("outputShell")
 	shell.connect("widget-changed", outputShell_widget_changed_cb)
 	shell.reset()
 
@@ -1317,19 +1321,19 @@ def setupGTK():
 	setup_fonts()
 
 	# set input font
-	gui.set_font(widgets.get_widget("inputBar"), gui.get_font())
+	gui.set_font(gui.widgets.get_widget("inputBar"), gui.get_font())
 
 	# set general output font
-	gui.set_font(widgets.get_widget("generalOutput"), gui.get_font())
+	gui.set_font(gui.widgets.get_widget("generalOutput"), gui.get_font())
 
 	# setup general output
 	buffer = gui.get_new_buffer()
-	widgets.get_widget("generalOutput").set_buffer(buffer)
+	gui.widgets.get_widget("generalOutput").set_buffer(buffer)
 
 	# setup menu bar stuff
 	@types( user = ptypes.FunctionType )
 	def apply_visibility(wname, cvalue, user=None):
-		button = widgets.get_widget(wname)
+		button = gui.widgets.get_widget(wname)
 		if config.get_bool("tekka", cvalue):
 			if user: user()
 			button.set_active(True)
@@ -1352,7 +1356,9 @@ def setupGTK():
 	idle_add(setup_paneds)
 
 def tekka_excepthook(extype, exobj, extb):
-	""" we got an exception, print it in a dialog box """
+	""" we got an exception, print it in a dialog box and,
+		if possible, to the standard output.
+	"""
 
 	def dialog_response_cb(dialog, rid):
 		del tekka_excepthook.dialog
@@ -1361,7 +1367,7 @@ def tekka_excepthook(extype, exobj, extb):
 	class ErrorDialog(gtk.Dialog):
 		def __init__(self, message):
 			gtk.Dialog.__init__(self,
-				parent = widgets.get_widget("mainWindow"),
+				parent = gui.widgets.get_widget("mainWindow"),
 				title = _("Error occured"),
 				buttons = (gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE))
 
@@ -1400,6 +1406,12 @@ def tekka_excepthook(extype, exobj, extb):
 	sys.__excepthook__(extype, exobj, extb)
 
 def setup_logging():
+	""" set the path of the logfile to tekka.logfile config
+		value and create it (including path) if needed.
+		After that, add a logging handler for exceptions
+		which reports exceptions catched by the logger
+		to the tekka_excepthook. (DBus uses this)
+	"""
 	try:
 		class ExceptionHandler(logging.Handler):
 			""" handler for exceptions caught with logging.error.
@@ -1435,8 +1447,10 @@ def main():
 	setup_logging()
 
 	# setup callbacks
-	com.sushi.connect("maki-connected", maki_connect_callback)
-	com.sushi.connect("maki-disconnected", maki_disconnect_callback)
+	com.sushi.g_connect("sushi-error", sushi_error_cb)
+	com.sushi.g_connect("maki-connected", maki_connect_callback)
+	com.sushi.g_connect("maki-disconnected", maki_disconnect_callback)
+	signals.setup()
 
 	# build graphical interface
 	setupGTK()

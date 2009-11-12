@@ -43,8 +43,8 @@ class WelcomeWindow(OutputWindow):
 		else:
 			self.sushi_disconnected_cb(com.sushi)
 
-		com.sushi.connect("maki-connected", self.sushi_connected_cb)
-		com.sushi.connect("maki-disconnected", self.sushi_disconnected_cb)
+		com.sushi.g_connect("maki-connected", self.sushi_connected_cb)
+		com.sushi.g_connect("maki-disconnected", self.sushi_disconnected_cb)
 
 	def sushi_connected_cb(self, sushi):
 		s = _("You're connected to <b>maki</b> so the next step"

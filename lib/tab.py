@@ -115,6 +115,8 @@ class TekkaTab(gobject.GObject):
 			return "<b>"+self.name+"</b>"
 		return self.name
 
+# FIXME:  rename connected to tab-connected or something similar
+# FIXME:: due to double assignment of gobject signal connected
 gobject.signal_new(
 	"connected", TekkaTab,
 	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
