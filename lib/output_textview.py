@@ -85,7 +85,7 @@ class OutputTextView(gtk.TextView):
 			return False
 
 		vadj = parent.get_vadjustment()
-		max_val = vadj.upper - vadj.page_size + 1
+		max_val = vadj.upper - vadj.page_size
 		cur_val = vadj.get_value()
 
 		# scroll by 1/3rd of remaining distance
@@ -119,7 +119,9 @@ class OutputTextView(gtk.TextView):
 
 		if parent:
 			vadj = parent.get_vadjustment()
-			vadj.set_value(vadj.upper - vadj.page_size + 1)
+			vadj.set_value(vadj.upper - vadj.page_size)
+
+		self.emit("at-end")
 
 		return False
 
@@ -149,10 +151,13 @@ class OutputTextView(gtk.TextView):
 		self.scroll_to_mark(end_mark, 0, True, 0, 1)
 
 		# reset horizontal scrollbar (do avoid side effects)
-		# FIXME: maybe straight left is not that good for non-western encodings
+		# FIXME:  maybe straight left is not that good for
+		# FIXME:: non-western encodings
 		if parent:
 			adjustment = parent.get_hadjustment()
 			adjustment.set_value(0)
+
+		self.emit("at-end")
 
 		# avoid recalling through idle_add
 		return False
@@ -221,3 +226,6 @@ class OutputTextView(gtk.TextView):
 		end_mark = buffer.create_mark(None, buffer.get_end_iter(), True)
 
 		self.read_line = (tag, start_mark, end_mark)
+
+gobject.signal_new("at-end", OutputTextView, gobject.SIGNAL_ACTION,
+	None, ())

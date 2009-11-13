@@ -166,6 +166,7 @@ class OutputWindow(gtk.ScrolledWindow):
 			if alloc.height != self.old_allocation.height:
 				if self.auto_scroll:
 					adj.value = adj.upper - adj.page_size
+					self.auto_scroll = True
 
 			self.old_allocation = alloc
 
@@ -174,6 +175,10 @@ class OutputWindow(gtk.ScrolledWindow):
 		def value_changed_cb(sbar):
 			def idle_handler_cb():
 				adjust = sbar.get_property("adjustment")
+
+				print "%d - %d (%d) == %d" % (adjust.upper,
+					adjust.page_size, (adjust.upper-adjust.page_size),
+					sbar.get_value())
 
 				if (adjust.upper - adjust.page_size) == sbar.get_value():
 					self.auto_scroll = True
@@ -184,6 +189,13 @@ class OutputWindow(gtk.ScrolledWindow):
 			gobject.idle_add(idle_handler_cb)
 
 		self.get_vscrollbar().connect("value-changed", value_changed_cb)
+
+		def at_end_cb(widget):
+			""" scrolled to end """
+			print "set autoscroll to True"
+			self.auto_scroll = True
+
+		self.textview.connect("at-end", at_end_cb)
 
 class OutputShell(gtk.VBox):
 
