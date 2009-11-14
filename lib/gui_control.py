@@ -180,10 +180,16 @@ class OutputWindow(gtk.ScrolledWindow):
 					adjust.page_size, (adjust.upper-adjust.page_size),
 					sbar.get_value())
 
-				if (adjust.upper - adjust.page_size) == sbar.get_value():
+				if (self.auto_scroll
+				and self.textview.is_smooth_scrolling()):
 					self.auto_scroll = True
+					print "smooth scrolling => auto_scroll = True"
+				elif (adjust.upper - adjust.page_size) == sbar.get_value():
+					self.auto_scroll = True
+					print "At end => auto_scroll = True"
 				else:
 					self.auto_scroll = False
+					print "Neither end nor smooth_scrolling => auto_scroll = False"
 				return False
 
 			gobject.idle_add(idle_handler_cb)

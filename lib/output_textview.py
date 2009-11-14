@@ -164,6 +164,10 @@ class OutputTextView(gtk.TextView):
 
 	""" > """
 
+	def is_smooth_scrolling(self):
+		""" return if we're in the middle of smooth scrolling process """
+		return self.smooth_id != None
+
    	def stop_scrolling(self):
 		""" interrupts smooth scrolling procedure """
 		if self.smooth_id:
