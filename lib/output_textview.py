@@ -211,8 +211,8 @@ class OutputTextView(gtk.TextView):
 			iterB = buffer.get_iter_at_mark(markB)
 
 			if None in (iterA, iterB):
-				raise ValueError, "set_read_line: %s,%s in None." % (iterA, iterB)
-				return
+				raise ValueError, "set_read_line: %s,%s in None." % (
+					iterA, iterB)
 
 			buffer.delete(iterA, iterB)
 			buffer.remove_tag(self.read_line[0], iterA, iterB)
