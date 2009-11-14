@@ -58,7 +58,7 @@ class PollThread(Thread):
 			gtk.gdk.threads_enter()
 			try:
 				apply_dbus_sends()
-			except BaseException,e:
+			except BaseException as e:
 				logging.error("Error in PollThread: %s" % (e))
 			gtk.gdk.threads_leave()
 

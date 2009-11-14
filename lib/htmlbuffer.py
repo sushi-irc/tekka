@@ -42,7 +42,7 @@ def rindex(l, i):
 	tl.reverse()
 	try:
 		return (len(tl)-1)-tl.index(i)
-	except ValueError, e:
+	except ValueError as e:
 		return (-1)
 
 class HTMLHandler(xml.sax.handler.ContentHandler):
@@ -184,7 +184,7 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 			else:
 				try:
 					tag.set_property(name, attrs[name])
-				except Exception, ex:
+				except Exception as ex:
 					logging.error("_parseFont: %s" % (ex))
 
 class ScanHandler(xml.sax.ContentHandler):

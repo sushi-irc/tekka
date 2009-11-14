@@ -104,12 +104,19 @@ def _find_module(filename):
 		mod_info = imp.find_module(
 			name, config.get_list("tekka","plugin_dirs",[]))
 
-	except ImportError, e:
-		generic_error(_("Plugin could not be loaded."), _("Plugin %(plugin)s could not be loaded.\nThe following error occurred: %(error)s") % {"plugin": filename, "error": e})
+	except ImportError as e:
+		generic_error(
+			_("Plugin could not be loaded."),
+			_("Plugin %(plugin)s could not be loaded.\n"
+			"The following error occurred: %(error)s") % {
+				"plugin": filename, "error": e})
 		return None
 
 	if not mod_info:
-		generic_error(_("Plugin could not be loaded."), _("Plugin %(plugin)s could not be loaded.") % {"plugin": filename})
+		generic_error(
+			_("Plugin could not be loaded."),
+			_("Plugin %(plugin)s could not be loaded.") % {
+				"plugin": filename})
 		return None
 
 	return mod_info
@@ -128,8 +135,12 @@ def _load_module(filename, mod_info):
 	try:
 		plugin = imp.load_module(modname, *mod_info)
 
-	except ImportError,e:
-		generic_error(_("Plugin could not be loaded."), _("Plugin %(plugin)s could not be loaded.\nThe following error occurred: %(error)s") % {"plugin":name, "error":e})
+	except ImportError as e:
+		generic_error(
+			_("Plugin could not be loaded."),
+			_("Plugin %(plugin)s could not be loaded.\n"
+			"The following error occurred: %(error)s") % {
+				"plugin":name, "error":e})
 
 	try:
 		mod_info[0].close()
@@ -158,7 +169,8 @@ def load(filename):
 	global _plugins
 
 	if _plugins.has_key(filename):
-		generic_error(_("Plugin is already loaded."),
+		generic_error(
+			_("Plugin is already loaded."),
 			_("Plugin %(plugin)s is already loaded.") % {
 				"plugin": filename})
 		return False
@@ -178,7 +190,7 @@ def load(filename):
 	try:
 		instance = eval ("plugin.%s()" % (classname))
 
-	except BaseException,e:
+	except BaseException as e:
 		generic_error(_("Plugin could not be loaded."),
 			_("Plugin %(plugin)s could not be loaded.\n"
 			"The following error occurred: %(error)s") % {

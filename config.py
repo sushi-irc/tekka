@@ -396,7 +396,7 @@ def check_config_file(path):
 
 		try:
 			f = file (path, "w")
-		except BaseException,e:
+		except BaseException as e:
 			print "Error while creating config file: %s" % (e)
 			return False
 		else:

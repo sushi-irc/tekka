@@ -11,7 +11,7 @@ def profileMe(file):
 		if not os.path.exists(path):
 			try:
 				os.makedirs(path)
-			except BaseException, e:
+			except BaseException as e:
 				logging.info("Profiling disabled: %s" % e)
 				return None
 		return os.path.join(path, file)

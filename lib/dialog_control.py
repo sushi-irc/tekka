@@ -35,7 +35,7 @@ def loadDialog(name):
 	importName = "dialogs."+name
 	try:
 		dialog = __import__(importName)
-	except ImportError,e:
+	except ImportError as e:
 		logging.error("loadDialog: ImportError: %s" % (e))
 		return None
 	# get the sub-module (name)

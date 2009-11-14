@@ -131,7 +131,7 @@ class NickListMenu(object):
 			try:
 				dialog_control.show_dialog("whois", sTab.name,
 					self.current_nick, need_sushi = True)
-			except NoSushiError, e:
+			except NoSushiError as e:
 				d = InlineMessageDialog(_("No connection to maki."),
 					e.args[0])
 				d.connect("response", lambda w,i: w.destroy())

@@ -541,7 +541,7 @@ def serverTree_button_press_event_cb(serverTree, event):
 	try:
 		path = serverTree.get_path_at_pos(int(event.x),int(event.y))[0]
 		tab = serverTree.get_model()[path][0]
-	except Exception,e:
+	except Exception as e:
 		tab = None
 
 	if event.button == 1:
@@ -1436,7 +1436,7 @@ def setup_logging():
 
 		logging.getLogger("").addHandler(ExceptionHandler())
 
-	except BaseException, e:
+	except BaseException as e:
 		print >> sys.stderr, "Logging init error: %s" % (e)
 
 def main():

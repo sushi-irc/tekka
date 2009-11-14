@@ -106,7 +106,7 @@ class TabControl(gobject.GObject):
 			for fun in cbFunctions:
 				try:
 					obj.connect(cb, fun)
-				except TypeError, e:
+				except TypeError as e:
 					# invalid signal
 					continue
 

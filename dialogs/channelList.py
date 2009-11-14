@@ -109,7 +109,7 @@ def listButton_clicked_cb(button):
 		try:
 			com.sushi.list(currentServer, "")
 
-		except BaseException, e:
+		except BaseException as e:
 			logging.error("Error in getting list: %s" % (e))
 			resetSignal()
 

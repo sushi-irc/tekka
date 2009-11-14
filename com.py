@@ -123,7 +123,7 @@ class SushiWrapper (gobject.GObject):
 					# try proxy methods
 					try:
 						return self._sushi.__getattr__(attr)
-					except dbus.DBusException, e:
+					except dbus.DBusException as e:
 						# method not found, return dummy
 						return errordummy(str(e))
 
@@ -180,7 +180,7 @@ def connect():
 		global bus, dbus_loop
 		try:
 			return dbus.SessionBus(mainloop=dbus_loop)
-		except DBusException, e:
+		except DBusException as e:
 			sushi._emit_error(
 				_("tekka could not connect to maki."),
 				_("Please check whether maki is running.\n"
@@ -191,7 +191,7 @@ def connect():
 	if bus_address:
 		try:
 			bus = dbus.connection.Connection(bus_address, mainloop=dbus_loop)
-		except dbus.DBusException, e:
+		except dbus.DBusException as e:
 			bus_remote_error(e)
 			bus = connect_session_bus()
 
@@ -207,7 +207,7 @@ def connect():
 	proxy = None
 	try:
 		proxy = bus.get_object("de.ikkoku.sushi", "/de/ikkoku/sushi")
-	except dbus.exceptions.DBusException, e:
+	except dbus.exceptions.DBusException as e:
 		sushi._emit_error(
 			_("tekka could not connect to maki."),
 			_("Please check whether maki is running.\n"

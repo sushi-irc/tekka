@@ -42,7 +42,7 @@ class TekkaStatusIcon(gtk.StatusIcon):
 		try:
 			self.set_from_file(
 				config.get("tekka","status_icon"))
-		except BaseException,e:
+		except BaseException as e:
 			# unknown, print it
 			logging.error("StatusIconInit: %s" % (e))
 			return

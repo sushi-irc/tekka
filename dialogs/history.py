@@ -234,7 +234,7 @@ def calendar_open_file(calendar, file):
 	try:
 #		fd = codecs.open(os.path.join(calendar.log_dir, file), "r", "utf-8")
 		fd = open(os.path.join(calendar.log_dir, file), "r")
-	except IOError,e:
+	except IOError as e:
 		logging.error("Calendar: Failed to open file %s: %s" % (file, e))
 		return None
 	return fd
@@ -363,7 +363,7 @@ def run(tab):
 		tab.server.name, tab.name)
 	try:
 		file_list = os.listdir(log_dir)
-	except OSError,e:
+	except OSError as e:
 		logging.error("calendar run failed: %s" % (e))
 		return
 	file_list.sort()
