@@ -42,6 +42,11 @@ def URLHandler(texttag, widget, event, iter, url):
 	""" do URL specific stuff """
 
 	if event.type == gtk.gdk.MOTION_NOTIFY:
+		# TODO: LP#303346
+		# TODO:: if the state is BUTTON1_MASK and this event
+		# TODO:: occurs, create a object aware of DND and
+		# TODO:: let it take over.
+
 		# cursor moved on the URL, change cursor to HAND2
 		cursor = gtk.gdk.Cursor(gtk.gdk.HAND2)
 		textWin = widget.get_window(gtk.TEXT_WINDOW_TEXT)
@@ -55,27 +60,30 @@ def URLHandler(texttag, widget, event, iter, url):
 
 		return True
 
-	if event.type == gtk.gdk.BUTTON_PRESS:
-		name = config.get("tekka","browser")
+	name = config.get("tekka","browser")
 
-		try:
-			if name and webbrowser.get(name):
-				browser = webbrowser.get(name)
-			else:
-				browser = webbrowser
-		except webbrowser.Error:
-			logging.error("Could not open a browser")
-			browser = None
+	try:
+		if name and webbrowser.get(name):
+			browser = webbrowser.get(name)
+		else:
+			browser = webbrowser
+	except webbrowser.Error:
+		logging.error("Could not open a browser")
+		browser = None
 
-		except TypeError:
-			logging.debug("Fetching bug in python2.4")
-			browser = None
+	except TypeError:
+		logging.debug("Fetching bug in python2.4")
+		browser = None
+
+	if event.type == gtk.gdk.BUTTON_RELEASE:
 
 		if event.button == 1 and browser:
 			# open URL in browser
 			browser.open(url)
 
-		elif event.button == 3:
+	elif event.type == gtk.gdk.BUTTON_PRESS:
+
+		if event.button == 3:
 			# print menu for URL actions
 			menu = gtk.Menu()
 			cb = gtk.Clipboard()
@@ -88,11 +96,13 @@ def URLHandler(texttag, widget, event, iter, url):
 				menu.append(openitem)
 
 			copyitem = gtk.MenuItem(label="Copy URL")
-			copyitem.connect("activate", lambda w,u,c: c.set_text(u), url, cb)
+			copyitem.connect("activate",
+				lambda w,u,c: c.set_text(u), url, cb)
 			menu.append(copyitem)
 
 			menu.show_all()
-			menu.popup(None, None, None, button=event.button, activate_time=event.time)
+			menu.popup(None, None, None, button=event.button,
+				activate_time=event.time)
 
 			return True
 
