@@ -18,9 +18,10 @@ On Debian-based systems these are available in the following packages:
 
                                BUILD REQUIREMENTS
 
-You will need the gettext tools.
+You will need the gettext and intltool tools.
 On Debian-based systems these are available in the following packages:
 
 * gettext
+* intltool
 
 # vi:textwidth=80:expandtab

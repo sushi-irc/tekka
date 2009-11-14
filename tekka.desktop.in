@@ -2,8 +2,8 @@
 Name=tekka IRC Client
 GenericName=IRC Client
 Comment=Chat on IRC
-Exec=@bindir@/tekka
-Icon=@sharedir@/sushi/tekka/graphics/icon.svg
+Exec=@BINDIR@/tekka
+Icon=@DATAROOTDIR@/sushi/tekka/graphics/icon.svg
 StartupNotify=true
 Terminal=false
 Type=Application

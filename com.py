@@ -88,8 +88,8 @@ class SushiWrapper (gobject.GObject):
 
 		def dummy(*args, **kwargs):
 			sushi._emit_error(
-				_("tekka failed to make a call to maki."),
-				_("Please check if maki is running.\n"))
+				_("tekka could not connect to maki."),
+				_("Please check whether maki is running."))
 
 		def errordummy(message):
 			def new(*args, **kwargs):
