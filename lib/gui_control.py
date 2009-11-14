@@ -582,6 +582,8 @@ def print_last_log(server, channel, lines=0, tab = None):
 				UInt64(lines or config.get(
 					"chatting", "last_log_lines", default="0"))):
 
+		line = helper.color.strip_color_codes(line)
+
 		buffer.insertHTML(buffer.get_end_iter(),
 			"<font foreground='%s'>%s</font>" % (
 				config.get("colors","last_log","#DDDDDD"),

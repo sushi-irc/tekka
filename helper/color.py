@@ -198,3 +198,42 @@ def get_text_color(nick):
 
 	r = lib.contrast.contrast_render_foreground_color(bg_color, color)
 	return r
+
+@types (text = basestring)
+def strip_color_codes(text):
+	""" strip all color codes (chr(3)) and the following numbers """
+	l = []
+
+	for w in text.split(chr(3)):
+		new_start = 0
+
+		# check if there's a pair of numbers or a single one
+		try:
+			int(w[0:2])
+		except ValueError:
+			try:
+				int(w[0:1])
+			except ValueError:
+				pass
+			else:
+				new_start += 1
+		else:
+			new_start += 2
+
+		# look for , if there was a number found before
+		if new_start != 0 and w[new_start:new_start+1] == ",":
+			# if a number is given, remove it including the ,
+			try:
+				int(w[new_start+1:new_start+3])
+			except ValueError:
+				try:
+					int(w[new_start+1:new_start+2])
+				except ValueError:
+					pass
+				else:
+					new_start += 2
+			else:
+				new_start += 3
+
+		l.append(w[new_start:])
+	return "".join(l)
