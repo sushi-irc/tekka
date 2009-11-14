@@ -194,6 +194,7 @@ def tekka_tab_switched_cb(tabclass, old, new):
 def tekka_tab_add_cb(tab):
 	""" a tab is added """
 	if type(gui.widgets.get_widget("outputWindow")) == WelcomeWindow:
+		# TODO: this is called often if the tab is not changed
 		hide_welcome_screen()
 
 def tekka_tab_remove_cb(tab):
@@ -1167,8 +1168,6 @@ def show_welcome_screen():
 
 def hide_welcome_screen():
 	hides = show_welcome_screen.hides
-
-	print "HIDING WELCOME"
 
 	for w in hides:
 		gui.widgets.get_widget(w).show()
