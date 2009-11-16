@@ -50,6 +50,11 @@ Indentation: Lines split up but with same context should
 					 "vars": testVar},
 				 anotherParam)
 """
+# TODO:  Introduce two ignore methods, one complete ignore method
+# TODO:: where everything from that sender is ignored and one,
+# TODO:: where it's indicated that there WAS an action but only
+# TODO:: shown what and from who
+
 
 # TODO:  would be nice to be notified (in a visual way?) if there's
 # TODO:: a new markup in the server tree for a hidden tab (not in the
