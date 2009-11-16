@@ -81,6 +81,22 @@ class WidgetsWrapper(object):
 		self.glade_widgets = glade_widgets
 		self.own_widgets = {}
 
+	def _add_local(self, obj, name):
+		""" add an object to the local dict. Checks
+			if a object with the same name does already
+			exist and raises a ValueError if that's the
+			case.
+		"""
+		if not self.glade_widgets.get_widget(name):
+			self.own_widgets[name] = obj
+		else:
+			raise ValueError, "Widgets '%s' already in widgets dict." % (
+				name)
+
+	@types (widget = gobject.GObject)
+	def add_gobject(self, obj, name):
+		self._add_local(obj, name)
+
 	@types (widget = gtk.Widget)
 	def add_widget(self, widget):
 		""" Add a widget to the dictionary.
@@ -90,11 +106,13 @@ class WidgetsWrapper(object):
 		"""
 		name = widget.get_property("name")
 
-		if not self.glade_widgets.get_widget(name):
-			widget.connect("destroy", lambda x: self.remove_widget(x))
-			self.own_widgets[name] = widget
+		try:
+			self._add_local(widget, name)
+		except ValueError:
+			raise
 		else:
-			raise ValueError, "Widgets '%s' already in widgets dict." % (name)
+			# XXX: does that make sense?
+			widget.connect("destroy", lambda x: self.remove_widget(x))
 
 	@types (widget = (basestring, gtk.Widget))
 	def remove_widget(self, widget):
@@ -260,7 +278,6 @@ gobject.signal_new(
 	(gobject.TYPE_PYOBJECT,gobject.TYPE_PYOBJECT))
 
 widgets = None
-statusIcon = None
 accelGroup = None
 searchToolbar = None
 tabs = lib.tab_control.TabControl()
@@ -369,8 +386,8 @@ def setup_statusIcon():
 			.get_screen()\
 			.get_rgb_colormap())
 
-	global statusIcon
 	statusIcon = TekkaStatusIcon()
+	widgets.add_gobject(statusIcon, "statusIcon")
 
 	if config.get_bool("tekka", "rgba"):
 		gtk.widget_pop_colormap()
@@ -402,6 +419,8 @@ def set_useable(switch):
 @types(switch=bool)
 def switch_status_icon(switch):
 	""" enables / disables status icon """
+	statusIcon = widgets.get_widget("statusIcon")
+
 	if switch:
 		if not statusIcon:
 			setup_statusIcon()
@@ -435,6 +454,7 @@ def set_urgent(switch):
 
 	win.set_urgency_hint(switch)
 
+	statusIcon = widgets.get_widget("statusIcon")
 	if statusIcon:
 		statusIcon.set_blinking(switch)
 
