@@ -795,7 +795,7 @@ def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 		and copy the selection to clipboard.
 		FIXME: this solution sucks ass.
 	"""
-	buffer = gui.get_current_output_textview().get_buffer()
+	buffer = gui.widgets.get_widget("output").get_buffer()
 	goBuffer = gui.widgets.get_widget("generalOutput").get_buffer()
 	topicBar = gui.widgets.get_widget("topicBar")
 	cb = gtk.Clipboard()
