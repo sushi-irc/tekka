@@ -193,8 +193,6 @@ class OutputWindow(gtk.ScrolledWindow):
 
 		self.connect("size-allocate", size_allocate_cb)
 
-
-
 		def value_changed_cb(sbar):
 			def idle_handler_cb():
 				adjust = sbar.get_property("adjustment")
@@ -223,6 +221,7 @@ class OutputWindow(gtk.ScrolledWindow):
 
 		def at_end_cb(widget):
 			""" scrolled to end """
+			# FIXME: check if this whole signal is necessary
 			self.auto_scroll = True
 			print green("set auto_scroll = True, at end")
 
