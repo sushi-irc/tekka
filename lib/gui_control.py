@@ -129,6 +129,10 @@ class WidgetsWrapper(object):
 		except AttributeError:
 			return getattr(self.glade_widgets, attr)
 
+def green(s,f={0:0}):
+	f[0]+=1
+	return chr(27)+"[31m"+str(f[0])+": "+chr(27)+"[32m"+s+chr(27)+"[0m"
+
 class OutputWindow(gtk.ScrolledWindow):
 
 	""" A gtk.ScrolledWindow with a TextView inside of it.
@@ -171,6 +175,8 @@ class OutputWindow(gtk.ScrolledWindow):
 
 		self.connect("size-allocate", size_allocate_cb)
 
+
+
 		def value_changed_cb(sbar):
 			def idle_handler_cb():
 				adjust = sbar.get_property("adjustment")
@@ -184,13 +190,13 @@ class OutputWindow(gtk.ScrolledWindow):
 				if (self.auto_scroll
 				and self.textview.is_smooth_scrolling()):
 					self.auto_scroll = True
-					#print "smooth scrolling => auto_scroll = True"
+					print green("smooth scrolling => auto_scroll = True")
 				elif (adjust.upper - adjust.page_size) == sbar.get_value():
 					self.auto_scroll = True
-					#print "At end => auto_scroll = True"
+					print green("At end => auto_scroll = True")
 				else:
 					self.auto_scroll = False
-					#print "Neither end nor smooth_scrolling => auto_scroll = False"
+					print green("Neither end nor smooth_scrolling => auto_scroll = False")
 				return False
 
 			gobject.idle_add(idle_handler_cb)
@@ -199,8 +205,8 @@ class OutputWindow(gtk.ScrolledWindow):
 
 		def at_end_cb(widget):
 			""" scrolled to end """
-			print "set autoscroll to True"
 			self.auto_scroll = True
+			print green("set auto_scroll = True, at end")
 
 		self.textview.connect("at-end", at_end_cb)
 

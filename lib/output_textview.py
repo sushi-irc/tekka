@@ -31,6 +31,7 @@ import gtk
 from lib.htmlbuffer import HTMLBuffer
 from helper import URLHandler
 import config
+import gui_control as gui
 
 ##
 import gobject
@@ -132,6 +133,7 @@ class OutputTextView(gtk.TextView):
 		"""
 		if None != self.smooth_id:
 			# already scrolling
+			print gui.green("Stopped smooth scrolling.")
 			return False
 
 		self.smooth_id = gobject.timeout_add(self.SCROLL_DELAY,

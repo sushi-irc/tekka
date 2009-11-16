@@ -149,8 +149,19 @@ def tekka_tab_new_message_cb(tab, mtype):
 		# FIXME: this won't reset urgent window hint and so on...
 		tab.newMessage = [] # already read
 
+		print gui.green("new message arrived. auto_scroll = %s" % (
+			tab.window.auto_scroll))
+
 		if tab.window.auto_scroll and mtype:
-			tab.window.textview.scroll_to_bottom()
+			print gui.green("well, scrolling down")
+			# FIXME:  on high load, the whole application
+			# FIXME:: hangs. High load means, you insert a
+			# FIXME:: text with around 2000 characters.
+			if tab.window.textview.is_smooth_scrolling():
+				tab.window.textview.stop_scrolling()
+				tab.window.textview.scroll_to_bottom(no_smooth = True)
+			else:
+				tab.window.textview.scroll_to_bottom()
 
 	else:
 		pass
