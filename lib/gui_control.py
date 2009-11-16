@@ -165,8 +165,7 @@ class OutputWindow(gtk.ScrolledWindow):
 
 			if alloc.height != self.old_allocation.height:
 				if self.auto_scroll:
-					adj.value = adj.upper - adj.page_size
-					self.auto_scroll = True
+					self.textview.scroll_to_bottom(no_smooth = True)
 
 			self.old_allocation = alloc
 

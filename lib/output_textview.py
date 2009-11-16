@@ -113,13 +113,14 @@ class OutputTextView(gtk.TextView):
 			# we finished scrolling
 			return False
 
-		gobject.source_remove(self.smooth_id)
-		self.smooth_id = None
 		parent = self.get_parent()
 
 		if parent:
 			vadj = parent.get_vadjustment()
 			vadj.set_value(vadj.upper - vadj.page_size)
+
+		gobject.source_remove(self.smooth_id)
+		self.smooth_id = None
 
 		self.emit("at-end")
 
@@ -144,6 +145,7 @@ class OutputTextView(gtk.TextView):
 
 	def _scroll_to_end(self):
 		""" Scroll normally to the end of the buffer """
+		# TODO: could be replaced by parent -> vscrollbar -> adj.value = 0
 		parent = self.get_parent()
 		buffer = self.get_buffer()
 		end_mark = buffer.create_mark("end", buffer.get_end_iter(), False)

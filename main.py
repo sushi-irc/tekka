@@ -144,9 +144,6 @@ def tekka_tab_new_message_cb(tab, mtype):
 		# FIXME: this won't reset urgent window hint and so on...
 		tab.newMessage = [] # already read
 
-		print "%s: auto_scroll = %s, mtype = %s" % (
-			tab, tab.window.auto_scroll, mtype)
-
 		if tab.window.auto_scroll and mtype:
 			tab.window.textview.scroll_to_bottom()
 
