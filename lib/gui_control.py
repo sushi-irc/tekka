@@ -641,25 +641,27 @@ def write_to_general_output(msgtype, timestring, server, channel, message):
 
 	widgets.get_widget("generalOutput").scroll_to_bottom()
 
+def colorize_message(msgtype, message):
+	if not config.get_bool("tekka", "color_text"):
+		return message
+	else:
+		return "<font foreground='%s'>%s</font>" % (
+			config.get("colors", "text_%s" % msgtype, "#000000"),
+			message)
+
 def channelPrint(timestamp, server, channel, message, msgtype="message"):
 	"""
 		Inserts a string formatted like "[H:M] <message>\n"
 		into the htmlbuffer of the channel `channel` on server
 		`server`.
 	"""
-	timestring = time.strftime(config.get("tekka", "time_format", "%H:%M"),
+	timestring = time.strftime(
+		config.get("tekka", "time_format", "%H:%M"),
 		time.localtime(timestamp))
 
-	if not config.get_bool("tekka", "color_text"):
-		colorHack = ""
-	else:
-		colorHack = "foreground='%s'" % (
-			config.get("colors", "text_%s" % msgtype, "#000000"))
+	cString = colorize_message(msgtype, message)
 
-	outputString = "[%s] <font %s>%s</font>" % (
-		timestring,
-		colorHack,
-		message)
+	outputString = "[%s] %s" % (timestring, cString)
 
 	channelTab = tabs.search_tab(server, channel)
 
