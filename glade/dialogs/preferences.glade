@@ -582,7 +582,7 @@ Everything matching passes the filter and will be shown except the row is negate
             <child>
               <widget class="GtkLabel" id="label6">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">_Nick Colors</property>
+                <property name="label" translatable="yes">_General Output</property>
                 <property name="use_underline">True</property>
               </widget>
               <packing>
@@ -626,7 +626,7 @@ Changes will be applied after closing this dialog.</property>
             <child>
               <widget class="GtkLabel" id="label9">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">_General Output</property>
+                <property name="label" translatable="yes">_Nick Colors</property>
                 <property name="use_underline">True</property>
               </widget>
               <packing>
