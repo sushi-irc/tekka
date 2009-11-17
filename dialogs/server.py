@@ -141,26 +141,14 @@ def serverNameEdit(cellrenderertext, path, newText):
 	# at least, update the list from maki (caching would be better..)
 	retrieveServerlist()
 
-def createServer(newServer):
-	"""
-		Create a server in maki.
-	"""
-	if not newServer.has_key("servername") \
-		or not newServer.has_key("address") \
-		or not newServer.has_key("port") \
-		or not newServer.has_key("autoconnect") \
-		or not newServer.has_key("nick") \
-		or not newServer.has_key("name"):
-
-		logging.error("wrong data to createServer: %s" % (newServer))
-		return
-
-	com.createServer(newServer)
+def createServer(serverName, data):
+	""" Create a server in maki. """
+	for (k,v) in data.items():
+		sushi.server_set(serverName, "server", k, v)
 
 def deleteServer(servername):
-	"""
-	Remove server from Serverlist widget
-	and delete server in maki.
+	""" Remove server from Serverlist widget
+		and delete server in maki.
 	"""
 	serverList = widgets.get_widget("serverList").get_model()
 
