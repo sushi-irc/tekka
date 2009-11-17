@@ -21,7 +21,10 @@ def configure (conf):
 def build (bld):
 	bld.add_subdirs('po')
 
-	bld.install_files('${DATAROOTDIR}/sushi/tekka', bld.glob('*.py'))
+	files = bld.glob('*.py')
+	files.remove('main.py')
+
+	bld.install_files('${DATAROOTDIR}/sushi/tekka', files)
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/dialogs', bld.glob('dialogs/*.py'))
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/helper', bld.glob('helper/*.py'))
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/lib', bld.glob('lib/*.py'))
@@ -64,6 +67,9 @@ def build (bld):
 			dict = {'SUSHI_VERSION': bld.env.VERSION}
 		)
 
+	bld.add_group()
+
+	for man in ('tekka.1',):
 		bld.new_task_gen(
 			source = man,
 			target = '%s.gz' % (man),
