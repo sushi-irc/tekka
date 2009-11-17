@@ -28,6 +28,7 @@ SUCH DAMAGE.
 
 import os
 import sys
+import logging
 
 from xdg.BaseDirectory import xdg_config_home, xdg_data_home, \
 	xdg_cache_home
@@ -172,10 +173,13 @@ def write_config_file():
 	ConfigParser object into the given file (config_file)
 	"""
 	if not config_parser:
-		print "Config module not loaded. I don't save anything."
+		logging.error("Config module not loaded. I don't save anything.")
 		return
 
-	# TODO: check for empty sections and don't write them.
+	# remove empty sections so the won't be written
+	for section in config_parser.sections():
+		if len(config_parser.items(section)) == 0:
+			config_parser.remove_section(section)
 
 	f = file(config_file, "w")
 	config_parser.write(f)
