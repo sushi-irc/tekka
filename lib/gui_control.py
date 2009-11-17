@@ -197,14 +197,13 @@ class OutputWindow(gtk.ScrolledWindow):
 			def idle_handler_cb():
 				adjust = sbar.get_property("adjustment")
 
-				"""
 				print "%d - %d (%d) == %d" % (adjust.upper,
 					adjust.page_size, (adjust.upper-adjust.page_size),
 					sbar.get_value())
-				"""
 
 				if (self.auto_scroll
 				and self.textview.is_smooth_scrolling()):
+					# XXX: instead of setting, ignore this completely.
 					self.auto_scroll = True
 					print green("smooth scrolling => auto_scroll = True")
 				elif (adjust.upper - adjust.page_size) == sbar.get_value():
@@ -219,13 +218,15 @@ class OutputWindow(gtk.ScrolledWindow):
 
 		self.get_vscrollbar().connect("value-changed", value_changed_cb)
 
+		"""
 		def at_end_cb(widget):
-			""" scrolled to end """
+			# scrolled to end
 			# FIXME: check if this whole signal is necessary
 			self.auto_scroll = True
 			print green("set auto_scroll = True, at end")
 
 		self.textview.connect("at-end", at_end_cb)
+		"""
 
 class OutputShell(gtk.VBox):
 

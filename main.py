@@ -124,7 +124,7 @@ def maki_disconnect_callback(sushi):
 	""" connection to maki lost """
 	# FIXME:  after disconnecting and reconnecting,
 	# FIXME:: the current tab's textview
-	# FIXME:: is still insensitive
+	# FIXME:: is still insensitive - is this good or bad?
 	gui.set_useable(False)
 
 def tekka_server_away_cb(tab, msg):
