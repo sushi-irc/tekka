@@ -37,7 +37,8 @@ import com
 import signals
 import config
 import logging
-from lib.gui_control import errorMessage, markup_escape
+from lib.gui_control import showInlineDialog, markup_escape
+from lib.inline_dialog import InlineMessageDialog
 
 widgets = None
 currentServer = None
@@ -45,13 +46,13 @@ filterExpression = None
 listView = None
 cache = []  # /list cache
 
+# TODO: get rid of those globals
+
 def clearProgressBar():
 	widgets.get_widget("progressBar").set_fraction(0)
 
 def run(server):
-	"""
-	Show the dialog until close was hit.
-	"""
+	""" Show the dialog until close was hit. """
 	if not widgets:
 		return
 
@@ -91,9 +92,18 @@ def listButton_clicked_cb(button):
 	global filterExpression, cache
 
 	try:
-		filterExpression = compile(widgets.get_widget("regexpEntry").get_text())
-	except: # TODO: sre_constants.error?
-		errorMessage("Syntaxerror in search string.", force_dialog=True)
+		filterExpression = compile(
+			widgets.get_widget("regexpEntry").get_text())
+	except BaseException as e:
+		d = InlineMessageDialog(
+			_("Channel list search error."),
+			_("You've got a syntax error in your search string. "
+				"The error is: %s\n"
+				"<b>Tip:</b> You should not use special characters "
+				"like '*' or '.' in your search string if you don't "
+				"know about regular expressions." % (e)))
+		d.connect("response", lambda w,i: w.destroy())
+		showInlineDialog(d)
 
 	listView.get_model().clear()
 
@@ -125,7 +135,8 @@ def listView_row_activated_cb(treeView, path, column):
 	except:
 		return
 
-	com.sushi.join(currentServer, channel)
+	com.sushi.join(currentServer, channel,
+		com.sushi.server_get(currentServer, channel, "key"))
 
 def sushiList(time, server, channel, user, topic):
 	"""
