@@ -85,6 +85,8 @@ class ExpandingList(gtk.Table):
 		self._add_plus_button(row, column)
 		self._add_minus_button(row, column+1)
 
+		self.emit("row-added", row)
+
 		self.show_all()
 
 	def add_row(self, under=-1):
@@ -177,6 +179,8 @@ class ExpandingList(gtk.Table):
 		# NOW remove the line
 		del self._matrix[-1]
 
+		self.emit("row-removed", index)
+
 		# bring the table to the new size
 		self._rows -= 1
 		self.resize(self._rows, self._columns)
@@ -227,6 +231,12 @@ class ExpandingList(gtk.Table):
 
 gobject.signal_new("instanced_widget", ExpandingList, gobject.SIGNAL_ACTION,
 	gobject.TYPE_NONE, (gobject.TYPE_INT, gobject.TYPE_INT, gobject.TYPE_PYOBJECT))
+
+gobject.signal_new("row-added", ExpandingList, gobject.SIGNAL_ACTION,
+	gobject.TYPE_NONE, (gobject.TYPE_INT,))
+
+gobject.signal_new("row-removed", ExpandingList, gobject.SIGNAL_ACTION,
+	gobject.TYPE_NONE, (gobject.TYPE_INT,))
 
 if __name__ == "__main__":
 	win = gtk.Window()
