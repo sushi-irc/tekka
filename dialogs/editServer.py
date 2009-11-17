@@ -28,68 +28,121 @@ SUCH DAMAGE.
 
 import gtk
 import gtk.glade
-import config
-import com
-from com import sushi
 
+import config
+
+from com import sushi
 from lib.expanding_list import ExpandingList
 
-widgets = None
-commandList = None
-
-def createCommandList(glade, function_name, widget_name, *x):
-	global commandList
-
-	if widget_name != "commandList":
-		return
-
-	commandList = ExpandingList(gtk.Entry)
-
-	sw = gtk.ScrolledWindow()
-	sw.add_with_viewport(commandList)
-	sw.show_all()
-
-	return sw
-
 def setup():
-	global widgets
+	pass
+
+def setup_widgets():
+
+	def createCommandList(glade, function_name, widget_name, *x):
+		if widget_name == "commandList":
+			commandList = ExpandingList(gtk.Entry)
+
+			sw = gtk.ScrolledWindow()
+			sw.add_with_viewport(commandList)
+
+			return sw
+
 	path = config.get("gladefiles","dialogs") + "serverEdit.glade"
+
 	gtk.glade.set_custom_handler(createCommandList)
-	widgets = gtk.glade.XML(path)
+	return gtk.glade.XML(path)
 
-def dialog_response_cb(dialog, response_id, server):
-	newServer = {}
+def get_configurator(ctype, key, server):
 
-	if response_id == gtk.RESPONSE_OK:
-		# apply the data
-		for key in ("address","port","name","nick","nickserv"):
-			exec ("value = widgets.get_widget('%sEntry').get_text()" % key)
-			sushi.server_set(server, "server", key, value)
+	def bool_configurator(key, server):
 
-		sushi.server_set(server, "server", "autoconnect",
-				str(widgets.get_widget("autoConnectCheckButton").get_active()).lower())
+		def apply_value(*arg):
+			state = str(arg[0].get_active())
+			sushi.server_set(server, "server", key, state.lower())
 
-		# apply commands
-		list = [i[0].get_text() for i in commandList.get_widget_matrix() if i[0].get_text()]
-		sushi.server_set_list(server, "server", "commands", list)
+		return apply_value
 
-	dialog.destroy()
+	def text_configurator(key, server):
 
+		def apply_value(*arg):
+			s = arg[0].get_text()
+			sushi.server_set(server, "server", key, s)
+
+		return apply_value
+
+	if ctype == "bool":
+		return bool_configurator(key, server)
+	elif ctype == "text":
+		return text_configurator(key, server)
+	return None
 
 def run(server):
-	serverdata = com.fetchServerInfo(server)
 
-	autoconnectInput = widgets.get_widget("autoConnectCheckButton")
-	# TODO: implement nickserv ghost flag
+	def dialog_response_cb(dialog, response_id):
+		dialog.destroy()
 
-	# Fill entries with given data.
-	for key in ("address","port","name","nick","nickserv"):
-		widgets.get_widget("%sEntry" % key).set_text(serverdata[key])
+	def update_commandList(widget, server):
+		list = [i[0].get_text() for i in \
+			widget.get_widget_matrix() if i[0].get_text()]
+		sushi.server_set_list(server, "server", "commands", list)
 
-	if serverdata["autoconnect"].lower() == "true":
-		autoconnectInput.set_active(True)
-	else:
-		autoconnectInput.set_active(False)
+	widgets = setup_widgets()
+
+	types = {"address":"text", "port":"text", "nick":"text",
+		"name":"text", "nickserv":"text", "autoconnect":"bool",
+		"nickserv_ghost":"bool"}
+
+	signals = {
+		"addressEntry": {
+			"key":"address",
+			"signals":("focus-out-event", "activate")},
+		"portEntry": {
+			"key":"port",
+			"signals":("focus-out-event", "activate")},
+		"nickEntry": {
+			"key":"nick",
+			"signals":("focus-out-event", "activate")},
+		"nameEntry": {
+			"key":"name",
+			"signals":("focus-out-event", "activate")},
+		"nickservEntry": {
+			"key":"nickserv",
+			"signals": ("focus-out-event", "activate")},
+		"autoConnectCheckButton": {
+			"key":"autoconnect",
+			"signals":("toggled",)},
+		"nickservGhostCheckButton": {
+			"key":"nickserv_ghost",
+			"signals":("toggled",)}
+	}
+
+	for key in signals:
+		c_type = types[signals[key]["key"]]
+		widget = widgets.get_widget(key)
+
+		configurator = get_configurator(c_type, signals[key]["key"], server)
+
+		for signal in signals[key]["signals"]:
+			widget.connect(signal, configurator)
+
+		value = sushi.server_get(server, "server", signals[key]["key"])
+
+		if c_type == "text":
+			widget.set_text(value)
+		elif c_type == "bool":
+			widget.set_active(value == "true")
+
+	# I admit, this is a little bit ugly.
+	# Get the commandList widget out of the viewport in
+	# the scrolled window
+	commandList = widgets.get_widget("commandList").get_children()[0]\
+		.get_children()[0]
+
+	commandList.connect("row-added",
+		lambda w,*x: update_commandList(w, server))
+	commandList.connect("row-removed",
+		lambda w,*x: update_commandList(w, server))
 
 	i = 0
 	for command in sushi.server_get_list(server, "server", "commands"):
@@ -98,6 +151,9 @@ def run(server):
 		i += 1
 
 	dialog = widgets.get_widget("serverEdit")
-	dialog.connect("response", dialog_response_cb, server)
+	dialog.connect("response", dialog_response_cb)
 	dialog.show_all()
+
+
+
 
