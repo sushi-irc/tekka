@@ -55,12 +55,16 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 		xml.sax.handler.ContentHandler.__init__(self)
 
 		self.textbuffer = textbuffer
+		self.ignoreableEndTags = ["msg","br","su","sb"]
+		self.URLHandler = handler
+
+		self._reset_values()
+
+	def _reset_values(self):
 		self.elms = []
 		self.tags = []
-		self.ignoreableEndTags = ["msg","br","su","sb"]
 		self.sucount = 0
 		self.sbcount = 0
-		self.URLHandler = handler
 
 	def characters(self, text):
 		"""
@@ -160,8 +164,7 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 			"",
 			tag)
 
-		# reset to start
-		self.__init__(self.textbuffer, self.URLHandler)
+		self._reset_values()
 
 
 	""" PARSING HELPER """
