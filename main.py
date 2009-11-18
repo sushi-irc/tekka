@@ -76,15 +76,16 @@ except:
 	sys.exit(1)
 
 import os
-from gobject import TYPE_STRING, TYPE_PYOBJECT, idle_add,GError
+import gobject
 import pango
 import dbus
 import webbrowser
 import locale
 import types as ptypes
 import logging
+
 import gettext
-_ = gettext.gettext
+from gettext import gettext as _
 
 # local modules
 import config
@@ -94,7 +95,6 @@ import commands
 from typecheck import types
 
 import lib.gui_control as gui
-
 from lib import dialog_control
 from lib.inline_dialog import InlineMessageDialog
 from lib import plugin_control
@@ -356,11 +356,11 @@ def menu_Dialogs_channelList_activate_cb(menuItem):
 def menu_Dialogs_dcc_activate_cb(menuItem):
 	""" show file transfers dialog """
 	try:
-		dialog_control.show_dialog("dcc", need_sushi = True)
+	    dialog_control.show_dialog("dcc", need_sushi = True)
 	except com.NoSushiError, e:
-		d = InlineMessageDialog(_("No connection to maki."), e.args[0])
-		d.connect("response", lambda w,i: w.destroy())
-		gui.showInlineDialog(d)
+	    d = InlineMessageDialog(_("No connection to maki."), e.args[0])
+	    d.connect("response", lambda w,i: w.destroy())
+	    gui.showInlineDialog(d)
 
 
 def menu_Dialogs_plugins_activate_cb(menuItem):
@@ -784,7 +784,7 @@ def output_shortcut_Page_Up(inputBar, shortcut):
 
 	n = vadj.get_value()-vadj.page_size
 	if n < 0: n = 0
-	idle_add(vadj.set_value,n)
+	gobject.idle_add(vadj.set_value,n)
 
 def output_shortcut_Page_Down(inputBar, shortcut):
 	"""
@@ -797,7 +797,7 @@ def output_shortcut_Page_Down(inputBar, shortcut):
 
 	n = vadj.get_value()+vadj.page_size
 	if n > (vadj.upper - vadj.page_size): n = vadj.upper - vadj.page_size
-	idle_add(vadj.set_value,n)
+	gobject.idle_add(vadj.set_value,n)
 
 def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 	"""
@@ -926,7 +926,7 @@ def setup_mainWindow():
 					64,
 					64))
 
-		except GError:
+		except gobject.GError:
 			# file not found
 			pass
 
@@ -984,7 +984,7 @@ def setup_serverTree():
 		channel or server name and the third is a
 		tab object.
 	"""
-	tm = gtk.TreeStore(TYPE_PYOBJECT)
+	tm = gtk.TreeStore(gobject.TYPE_PYOBJECT)
 
 	# Sorting
 	def cmpl(m,i1,i2):
@@ -1365,7 +1365,7 @@ def setupGTK():
 
 	show_welcome_screen()
 
-	idle_add(setup_paneds)
+	gobject.idle_add(setup_paneds)
 
 def tekka_excepthook(extype, exobj, extb):
 	""" we got an exception, print it in a dialog box and,
