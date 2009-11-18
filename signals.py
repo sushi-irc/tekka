@@ -31,6 +31,7 @@ from gettext import gettext as _
 import gtk
 import gobject
 import logging
+import string
 from dbus import UInt64
 import time as mtime
 
@@ -55,6 +56,15 @@ restore_list = []
 def setup():
 	sushi.g_connect("maki-connected", handle_maki_connect_cb)
 	sushi.g_connect("maki-disconnected", handle_maki_disconnect_cb)
+
+"""
+One should use this methods to connect to maki's
+signals. This API features automatic reconnection
+of the registered signals if the connection to
+maki was reset.
+- connect_signal(<name>,<handler>)
+- disconnect_signal(<name>,<handler>)
+"""
 
 @types (signal=basestring)
 def connect_signal (signal, handler):
@@ -83,7 +93,7 @@ def disconnect_signal (signal, handler):
 		ob.remove()
 		del signals[signal][handler]
 
-def connect_signals():
+def _connect_signals():
 
 	# Message-Signals
 	connect_signal("message", userMessage_cb)
@@ -119,7 +129,7 @@ def connect_signals():
 	# Maki signals
 	connect_signal("shutdown", makiShutdown_cb)
 
-def restore_signals():
+def _restore_signals():
 	global restore_list
 
 	for (signal, handler) in restore_list:
@@ -137,6 +147,10 @@ def handle_maki_disconnect_cb(sushi):
 	signals = {}
 
 def handle_maki_connect_cb(sushi):
+	""" connect to the important signals of maki
+		or, if we've done that before, reconnect
+		that signals (and all other registered)
+	"""
 
 	self = handle_maki_connect_cb
 	try:
@@ -147,14 +161,14 @@ def handle_maki_connect_cb(sushi):
 		self.init = False
 
 	if self.init:
-		connect_signals()
+		_connect_signals()
 	else:
-		restore_signals()
+		_restore_signals()
 
-	add_servers()
+	_add_servers()
 
 @types (server = basestring)
-def setup_server(server):
+def _setup_server(server):
 	tab = gui.tabs.create_server(server)
 
 	gui.tabs.add_tab(None, tab,
@@ -162,15 +176,15 @@ def setup_server(server):
 
 	return tab
 
-def add_servers():
+def _add_servers():
 	""" Adds all servers to tekka which are reported by maki. """
 	# in case we're reconnecting, clear all stuff
 	gui.widgets.get_widget("serverTree").get_model().clear()
 
 	for server in sushi.servers():
-		tab = setup_server(server)
+		tab = _setup_server(server)
 		tab.connected = True
-		add_channels(tab)
+		_add_channels(tab)
 
 	try:
 		toSwitch = gui.tabs.get_all_tabs()[1]
@@ -181,7 +195,7 @@ def add_servers():
 
 
 @types (server_tab = tabs.TekkaServer)
-def add_channels(server_tab):
+def _add_channels(server_tab):
 	"""
 		Adds all channels to tekka wich are reported by maki.
 	"""
@@ -223,46 +237,35 @@ def add_channels(server_tab):
 
 	gui.updateServerTreeShortcuts()
 
-@types (tab = tabs.TekkaTab, nick = basestring, mode = basestring)
-def updatePrefix(tab, nick, mode):
-	"""
-	checks if the mode is a prefix-mode (e.g. +o)
-	If so, the prefix of the nick `nick` in channel `channel`
-	will be updated (fetched).
-	"""
-	if not nick:
-		return
-
-	if mode[1] in tab.server.support_prefix[0]:
-		tab.nickList.set_prefix(nick,
-			sushi.user_channel_prefix(tab.server.name, tab.name, nick))
-
-		if gui.tabs.is_active(tab):
-			gui.set_user_count(len(tab.nickList),
-				tab.nickList.get_operator_count())
-
-@types (server_tab = tabs.TekkaServer, text = basestring)
 def isHighlighted (server_tab, text):
+	def has_highlight(text, needle):
+		punctuation = string.punctuation + " \n\t"
+		ln = len(needle)
+		for line in text.split("\n"):
+			i = line.find(needle)
+			if i >= 0:
+				if (line[i-1:i] in punctuation
+				and line[ln+i:ln+i+1] in punctuation):
+					return True
+		return False
+
 	highlightwords = config.get_list("chatting", "highlight_words", [])
 	highlightwords.append(server_tab.nick)
 
-	search_text = text.lower()
 	for word in highlightwords:
-		i = search_text.find(word.lower())
-
-		if i >= 0:
+		if has_highlight(text, word):
 			return True
-
 	return False
 
 @types (server = basestring, name = basestring)
-def createTab (server, name):
+def _createTab (server, name):
+	""" check if tab exists, create it if not, return the tab """
 	server_tab = gui.tabs.search_tab(server)
 	tab = gui.tabs.search_tab(server, name)
 
 	if not server_tab:
 		raise Exception(
-		"No server tab in createTab(%s, %s)" % (server,name))
+		"No server tab in _createTab(%s, %s)" % (server,name))
 
 	if not tab:
 		if name[0] in server_tab.support_chantypes:
@@ -281,7 +284,7 @@ def createTab (server, name):
 
 	return tab
 
-def getPrefix(server, channel, nick):
+def _getPrefix(server, channel, nick):
 	tab = gui.tabs.search_tab(server, channel)
 
 	if tab and tab.is_channel():
@@ -290,7 +293,7 @@ def getPrefix(server, channel, nick):
 		return ""
 
 @types (tab = tabs.TekkaTab, what = basestring, own = bool)
-def hide_output(tab, what, own = False):
+def _hide_output(tab, what, own = False):
 	""" Returns bool.
 		Check if the message type determined by "what"
 		shall be hidden or not.
@@ -316,17 +319,15 @@ def hide_output(tab, what, own = False):
 
 @types (servertab = tabs.TekkaServer, tab = tabs.TekkaTab,
 	what = basestring, own = bool)
-def show_output_exclusive(servertab, tab, what, own = False):
+def _show_output_exclusive(servertab, tab, what, own = False):
 	""" Returns bool.
 		Determine if the message identified by -what- shall
 		be shown in tab -tab- or not.
 		-servertab- is not used at the moment.
 	"""
-	return not hide_output(tab, what, own = own)
+	return not _hide_output(tab, what, own = own)
 
-"""
-Server signals
-"""
+""" Server callbacks """
 
 def serverConnect_cb(time, server):
 	"""
@@ -337,7 +338,7 @@ def serverConnect_cb(time, server):
 	tab = gui.tabs.search_tab(server)
 
 	if not tab:
-		tab = setup_server(server)
+		tab = _setup_server(server)
 
 	if tab.connected:
 		tab.connected = False
@@ -362,7 +363,7 @@ def serverConnected_cb(time, server):
 	tab = gui.tabs.search_tab(server)
 
 	if not tab:
-		tab = setup_server(server)
+		tab = _setup_server(server)
 
 	tab.connected = True
 
@@ -386,7 +387,7 @@ def serverMOTD_cb(time, server, message, first_time = {}):
 	if not first_time.has_key(server):
 		tab = gui.tabs.search_tab(server)
 		if not tab:
-			tab = setup_server(server)
+			tab = _setup_server(server)
 		else:
 			gui.tabs.update_server(tab)
 		tab.connected = True
@@ -403,10 +404,7 @@ def serverMOTD_cb(time, server, message, first_time = {}):
 	else:
 		gui.serverPrint(time, server, gui.escape(message))
 
-"""
-Signals for channel interaction
-"""
-
+""" Callbacks for channel interaction """
 
 def channelTopic_cb(time, server, from_str, channel, topic):
 	"""
@@ -470,17 +468,13 @@ def channelBanlist_cb(time, server, channel, mask, who, when):
 				gui.escape(timestring)),
 			"action")
 
-"""
-Signals for maki
-"""
+""" Callbacks of maki signals """
 
 def makiShutdown_cb(time):
 	gui.myPrint("Maki is shut down!")
 	gui.set_useable(False)
 
-"""
-Signals for users
-"""
+""" Callbacks for users """
 
 def userAway_cb(time, server):
 	"""
@@ -551,7 +545,7 @@ def userMessage_cb(timestamp, server, from_str, channel, message):
 
 	gui.channelPrint(timestamp, server, channel,
 		"&lt;%s<font foreground='%s' weight='bold'>%s</font>&gt; %s" % (
-			getPrefix(server, channel, nick),
+			_getPrefix(server, channel, nick),
 			color.get_nick_color(nick),
 			gui.escape(nick),
 			messageString,
@@ -561,13 +555,13 @@ def ownMessage_cb(timestamp, server, channel, message):
 	"""
 		The maki user wrote something on a channel or a query
 	"""
-	createTab(server, channel)
+	_createTab(server, channel)
 	nick = gui.tabs.search_tab(server).nick
 
 	gui.channelPrint(timestamp, server, channel,
 		"&lt;%s<font foreground='%s' weight='bold'>%s</font>&gt;"
 		" <font foreground='%s'>%s</font>" % (
-			getPrefix(server, channel, nick),
+			_getPrefix(server, channel, nick),
 			config.get("colors","own_nick","#000000"),
 			nick,
 			config.get("colors","own_text","#000000"),
@@ -579,7 +573,7 @@ def userQuery_cb(timestamp, server, from_str, message):
 	"""
 	nick = parse_from(from_str)[0]
 
-	createTab(server, nick)
+	_createTab(server, nick)
 
 	gui.channelPrint(timestamp, server, nick,
 		"&lt;<font foreground='%s' weight='bold'>%s</font>&gt; %s" % (
@@ -604,6 +598,23 @@ def userMode_cb(time, server, from_str, target, mode, param):
 
 		TODO: has to be colored and gettexted (o.0)
 	"""
+
+	def n_updatePrefix(tab, nick, mode):
+		""" checks if the mode is a prefix-mode (e.g. +o)
+			If so, the prefix of the nick `nick` in channel `channel`
+			will be updated (fetched).
+		"""
+		if not nick:
+			return
+
+		if mode[1] in tab.server.support_prefix[0]:
+			tab.nickList.set_prefix(nick,
+				sushi.user_channel_prefix(tab.server.name, tab.name, nick))
+
+			if gui.tabs.is_active(tab):
+				gui.set_user_count(len(tab.nickList),
+					tab.nickList.get_operator_count())
+
 	nick = parse_from(from_str)[0]
 
 	# nick: /mode target +mode param
@@ -631,7 +642,7 @@ def userMode_cb(time, server, from_str, target, mode, param):
 
 			if param: param = " "+param
 
-			if not hide_output(server_tab, "quit"):
+			if not _hide_output(server_tab, "quit"):
 
 				gui.currentServerPrint(time, server,
 					"• %(actor)s set %(mode)s%(param)s on %(target)s" % {
@@ -643,7 +654,7 @@ def userMode_cb(time, server, from_str, target, mode, param):
 		else:
 			# suitable channel/query found, print it there
 
-			updatePrefix(tab, param, mode)
+			n_updatePrefix(tab, param, mode)
 
 			type = "action"
 			victim = target
@@ -656,7 +667,7 @@ def userMode_cb(time, server, from_str, target, mode, param):
 
 			if param: param = " "+param
 
-			if show_output_exclusive(server_tab, tab, "mode", own = own):
+			if _show_output_exclusive(server_tab, tab, "mode", own = own):
 
 				gui.channelPrint(time, server, tab.name,
 					"• %(actor)s set %(mode)s%(param)s on %(victim)s." % {
@@ -826,7 +837,7 @@ def userNotice_cb(time, server, from_str, target, message):
 
 def ownAction_cb(time, server, channel, action):
 
-	createTab(server, channel)
+	_createTab(server, channel)
 
 	nickColor = config.get("colors","own_nick","#000000")
 	textColor = config.get("colors","own_text","#000000")
@@ -843,7 +854,7 @@ def actionQuery_cb(time, server, from_str, action):
 
 	nick = parse_from(from_str)[0]
 
-	createTab(server, nick)
+	_createTab(server, nick)
 
 	gui.channelPrint(time, server, nick,
 		"%s %s" % (nick, gui.escape(action)))
@@ -915,7 +926,7 @@ def userNick_cb(time, server, from_str, newNick):
 			# notification, print everytime
 			doPrint = True
 		else:
-			doPrint = show_output_exclusive(server_tab, tab, "nick", own)
+			doPrint = _show_output_exclusive(server_tab, tab, "nick", own)
 
 		if tab.is_channel():
 			if (nick in tab.nickList.get_nicks()):
@@ -967,7 +978,7 @@ def userKick_cb(time, server, from_str, channel, who, reason):
 	if who == server_tab.nick:
 		tab.joined = False
 
-		if show_output_exclusive(server_tab, tab, "kick", own = True):
+		if _show_output_exclusive(server_tab, tab, "kick", own = True):
 
 			message = _(u"« You have been kicked from %(channel)s "
 				u"by %(nick)s (%(reason)s)." % {
@@ -986,7 +997,7 @@ def userKick_cb(time, server, from_str, channel, who, reason):
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
-		if show_output_exclusive(server_tab, tab, "kick"):
+		if _show_output_exclusive(server_tab, tab, "kick"):
 
 			whoString = "<font foreground='%s' weight='bold'>%s</font>" % (
 				color.get_nick_color(who), gui.escape(who))
@@ -1023,7 +1034,7 @@ def userQuit_cb(time, server, from_str, reason):
 
 		server_tab.connected = False
 
-		hideServerPrint = hide_output(server_tab, "quit", own = True)
+		hideServerPrint = _hide_output(server_tab, "quit", own = True)
 
 		# walk through all channels and set joined = False on them
 		channels = gui.tabs.get_all_tabs(servers = [server])[1:]
@@ -1036,7 +1047,7 @@ def userQuit_cb(time, server, from_str, reason):
 		# deactivate channels/queries
 		for channelTab in channels:
 
-			hideChannelPrint = hide_output(channelTab, "quit",
+			hideChannelPrint = _hide_output(channelTab, "quit",
 				own = True)
 
 			if channelTab.is_channel():
@@ -1050,7 +1061,7 @@ def userQuit_cb(time, server, from_str, reason):
 
 	else: # another user quit the network
 
-		hideServerPrint = hide_output(server_tab, "quit")
+		hideServerPrint = _hide_output(server_tab, "quit")
 
 		if reason:
 			message = _(u"« %(nick)s has quit (%(reason)s).")
@@ -1079,7 +1090,7 @@ def userQuit_cb(time, server, from_str, reason):
 		# print in all channels where nick joined a message
 		for channelTab in channels:
 
-			hideChannelPrint = hide_output(channelTab, "quit")
+			hideChannelPrint = _hide_output(channelTab, "quit")
 
 			if channelTab.is_query():
 				# on query with `nick` only print quitmessage
@@ -1150,7 +1161,7 @@ def userJoin_cb(timestamp, server, from_str, channel):
 		if config.get_bool("tekka","switch_to_channel_after_join"):
 			gui.tabs.switch_to_path(tab.path)
 
-		doPrint = show_output_exclusive(stab, tab, "join", own = True)
+		doPrint = _show_output_exclusive(stab, tab, "join", own = True)
 
 		if doPrint:
 
@@ -1166,7 +1177,7 @@ def userJoin_cb(timestamp, server, from_str, channel):
 			raise Exception, \
 				"No tab for channel '%s' in userJoin (not me)."
 
-		doPrint = show_output_exclusive(stab, tab, "join", own = False)
+		doPrint = _show_output_exclusive(stab, tab, "join", own = False)
 
 		if doPrint:
 			message = _(u"» %(nick)s has joined %(channel)s.")
@@ -1258,7 +1269,7 @@ def userPart_cb(timestamp, server, from_str, channel, reason):
 
 		tab.joined = False
 
-		if show_output_exclusive(stab, tab, "part", own = True):
+		if _show_output_exclusive(stab, tab, "part", own = True):
 
 			channelString = "<font foreground='%s'>%s</font>" % (
 				color.get_text_color(channel), gui.escape(channel))
@@ -1286,7 +1297,7 @@ def userPart_cb(timestamp, server, from_str, channel, reason):
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
-		if show_output_exclusive(stab, tab, "part", False):
+		if _show_output_exclusive(stab, tab, "part", False):
 
 			nickString = "<font foreground='%s' weight='bold'>"\
 				"%s</font>" % (
