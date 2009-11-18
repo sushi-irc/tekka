@@ -69,19 +69,22 @@ def go_handler(tag, widget, event, iter, path_string, c = {0:None}):
 
 		# FIXME: this does not cover all exists
 		widget.connect("motion-notify-event", outer_cb)
+		widget.parent.connect("motion-notify-event", outer_cb)
 		widget.parent.parent.connect("motion-notify-event", outer_cb)
+
+	# abort event handling on <a> tags
+	for itag in iter.get_tags():
+		try:
+			itag.s_attribute["a"]
+		except KeyError:
+			pass
+		else:
+			return False
 
 	# event handling
 	if event.type == gtk.gdk.MOTION_NOTIFY:
-		for itag in iter.get_tags():
-			try:
-				itag.s_attribute["a"]
-			except KeyError:
-				switch_highlight(tag, True)
-				return True
-			else:
-				print "got itag %s" % (itag)
-				return False
+		switch_highlight(tag, True)
+		return True
 
 	if event.type == gtk.gdk.BUTTON_RELEASE:
 

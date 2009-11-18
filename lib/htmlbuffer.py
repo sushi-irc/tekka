@@ -97,9 +97,7 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 			tag.set_property("style", pango.STYLE_ITALIC)
 
 		elif name == "br":
-			self.textbuffer.insert(
-				self.textbuffer.get_end_iter(),
-				"\n")
+			self.textbuffer.insert(self.textbuffer.get_end_iter(),"\n")
 			return
 
 		elif name == "u":
