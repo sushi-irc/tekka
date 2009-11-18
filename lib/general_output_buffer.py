@@ -34,19 +34,54 @@ import lib.gui_control
 import config
 
 def go_handler(tag, widget, event, iter, path_string, c = {0:None}):
+
+	def switch_highlight(tag, switch):
+		""" switch highlighting of given tag """
+		if switch:
+			tag.set_property("weight", pango.WEIGHT_BOLD)
+		else:
+			self.tag.set_property("weight", pango.WEIGHT_NORMAL)
+
+	self = go_handler
+
+	# check for previous tag and unhighlight it
+	try: self.tag
+	except AttributeError: pass
+	else:
+		if self.tag != tag:
+			switch_highlight(tag, False)
+
+	# initialize (new) attributes
+	self.tag = tag
+	self.widget = widget
+	self.event = event
+	self.iter = iter
+	self.path_string = path_string
+
+	# __init__
 	try:
-		go_handler.c_init
+		self.c_init
 	except AttributeError:
-		cb = lambda *x: tag.set_property("weight", pango.WEIGHT_NORMAL)
+		self.c_init = True
+
+		def outer_cb(*x):
+			switch_highlight(self.tag, False)
 
 		# FIXME: this does not cover all exists
-		widget.connect("motion-notify-event", cb)
-		widget.parent.parent.connect("motion-notify-event", cb)
+		widget.connect("motion-notify-event", outer_cb)
+		widget.parent.parent.connect("motion-notify-event", outer_cb)
 
+	# event handling
 	if event.type == gtk.gdk.MOTION_NOTIFY:
-		# FIXME: it's possible that 2 tags are highlighted
-		tag.set_property("weight", pango.WEIGHT_BOLD)
-		return True
+		for itag in iter.get_tags():
+			try:
+				itag.s_attribute["a"]
+			except KeyError:
+				switch_highlight(tag, True)
+				return True
+			else:
+				print "got itag %s" % (itag)
+				return False
 
 	if event.type == gtk.gdk.BUTTON_RELEASE:
 
@@ -65,14 +100,16 @@ class GOHTMLHandler(lib.htmlbuffer.HTMLHandler):
 		lib.htmlbuffer.HTMLHandler.characters(self, text)
 
 	def startElement(self, name, attrs):
-		tag = self.textbuffer.create_tag(None)
 
 		if name == "goref":
 			if self.go_handler:
+				tag = self.textbuffer.create_tag(None)
+				tag.s_attribute = {"goref":True}
+
 				tag.connect("event", self.go_handler, attrs["path"])
 
-		self.elms.append(name)
-		self.tags.append(tag)
+				self.elms.append(name)
+				self.tags.append(tag)
 
 		lib.htmlbuffer.HTMLHandler.startElement(self, name, attrs)
 
