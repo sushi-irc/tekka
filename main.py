@@ -1342,10 +1342,6 @@ def setupGTK():
 	# set general output font
 	gui.set_font(gui.widgets.get_widget("generalOutput"), gui.get_font())
 
-	# setup general output
-	buffer = gui.get_new_buffer()
-	gui.widgets.get_widget("generalOutput").set_buffer(buffer)
-
 	# setup menu bar stuff
 	@types( user = ptypes.FunctionType )
 	def apply_visibility(wname, cvalue, user=None):

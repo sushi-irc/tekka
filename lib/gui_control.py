@@ -65,6 +65,7 @@ from lib.input_history import InputHistory
 from lib.output_textview import OutputTextView
 from lib.htmlbuffer import HTMLBuffer
 from lib.status_icon import TekkaStatusIcon
+from lib.general_output_buffer import GOHTMLBuffer
 
 class WidgetsWrapper(object):
 
@@ -346,7 +347,9 @@ def load_widgets(gladeFile, section):
 			return OutputShell(OutputWindow())
 
 		elif widget_name == "generalOutput":
-			return OutputTextView()
+			t = OutputTextView()
+			t.set_buffer(GOHTMLBuffer(handler = URLHandler.URLHandler))
+			return t
 
 		elif widget_name == "inputBar":
 			try:
@@ -630,15 +633,19 @@ def write_to_general_output(msgtype, timestring, server, channel, message):
 			errorMessage("Error in general output filter "
 				"rule '%s': '%s'." % (rule, e))
 
+	serverTab, channelTab = tabs.search_tabs(server, channel)
+
 	if channel:
 		# channel print
-		goBuffer.insertHTML(goBuffer.get_end_iter(),
+		goBuffer.go_insert(goBuffer.get_end_iter(),
 			"[%s] &lt;%s:%s&gt; %s" % (
-				timestring, server, channel, message))
+				timestring, server, channel, message),
+				channelTab)
 	else:
 		# server print
-		goBuffer.insertHTML(goBuffer.get_end_iter(),
-			"[%s] &lt;%s&gt; %s" % (timestring, server, message))
+		goBuffer.go_insert(goBuffer.get_end_iter(),
+			"[%s] &lt;%s&gt; %s" % (timestring, server, message),
+			serverTab)
 
 	widgets.get_widget("generalOutput").scroll_to_bottom()
 
