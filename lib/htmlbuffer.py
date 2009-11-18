@@ -86,6 +86,9 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 
 	def startElement(self, name, attrs):
 		tag = self.textbuffer.create_tag(None)
+		tag.s_attribute = {} # special attribute for identifying
+
+		tag.s_attribute[name] = True
 
 		if name == "b":
 			tag.set_property("weight", pango.WEIGHT_BOLD)
@@ -106,6 +109,7 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 			if self.URLHandler:
 				tag.set_property("underline", pango.UNDERLINE_SINGLE)
 				tag.connect("event", self.URLHandler, attrs["href"])
+				tag.s_attribute["a.href"] = attrs["href"]
 
 		elif name == "su":
 			self.sucount += 1
