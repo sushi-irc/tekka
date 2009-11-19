@@ -188,7 +188,10 @@ class OutputWindow(gtk.ScrolledWindow):
 
 			if alloc.height != self.old_allocation.height:
 				if self.auto_scroll:
-					self.textview.scroll_to_bottom(no_smooth = True)
+					def doit():
+						self.textview.scroll_to_bottom(no_smooth = True)
+						return False
+					gobject.idle_add(doit)
 
 			self.old_allocation = alloc
 
@@ -685,7 +688,11 @@ def channelPrint(timestamp, server, channel, message, msgtype="message"):
 			# write it to the general output, also
 			write_to_general_output(msgtype, timestring, server, channel, message)
 
-	channelTab.setNewMessage(msgtype)
+
+	def notify():
+		channelTab.setNewMessage(msgtype)
+		return False
+	gobject.idle_add(notify)
 
 def serverPrint(timestamp, server, string, msgtype="message"):
 	"""
@@ -709,7 +716,10 @@ def serverPrint(timestamp, server, string, msgtype="message"):
 		if config.get_bool("tekka", "show_general_output"):
 			write_to_general_output(msgtype, timestr, server, "", string)
 
-	serverTab.setNewMessage(msgtype)
+	def notify():
+		serverTab.setNewMessage(msgtype)
+		return False
+	gobject.idle_add(notify)
 
 def currentServerPrint(timestamp, server, string, msgtype="message"):
 	"""
