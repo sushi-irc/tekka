@@ -414,9 +414,10 @@ def mainWindow_delete_event_cb(mainWindow, event):
 		in every tab so the user does not have to
 		search were he was reading last time.
 	"""
+	statusIcon = gui.widgets.get_widget("statusIcon")
+
 	if (config.get_bool("tekka", "hide_on_close")
-		and gui.statusIcon
-		and gui.statusIcon.get_visible()):
+	and statusIcon and statusIcon.get_visible()):
 
 		for tab in gui.tabs.get_all_tabs():
 			tab.window.textview.set_read_line()
@@ -867,6 +868,8 @@ def serverTree_query_tooltip_cb(widget, x, y, kbdmode, tooltip):
 def serverTree_render_server_cb(column, renderer, model, iter):
 	""" Renderer func for column "Server" in servertree """
 	tab = model.get(iter, 0)
+	if not tab or not tab[0]:
+		return
 	renderer.set_property("markup",tab[0].markup())
 
 def nickList_render_nicks_cb(column, renderer, model, iter):
