@@ -146,11 +146,7 @@ def tekka_tab_new_markup_cb(tab):
 def tekka_tab_new_message_cb(tab, mtype):
 	""" a new message of the given type was received """
 	if gui.tabs.is_active(tab):
-		# FIXME: this won't reset urgent window hint and so on...
-		tab.newMessage = [] # already read
-
-		print gui.green("new message arrived. auto_scroll = %s" % (
-			tab.window.auto_scroll))
+		tab.setNewMessage(None)
 
 		if tab.window.auto_scroll and mtype:
 			print gui.green("well, scrolling down")
@@ -165,6 +161,10 @@ def tekka_tab_new_message_cb(tab, mtype):
 
 	else:
 		pass
+
+def tekka_tab_reset_message_cb(tab):
+	""" message stack was reset """
+	pass
 
 def tekka_tab_new_name_cb(tab, name):
 	tekka_tab_new_markup_cb(tab)
@@ -1228,6 +1228,7 @@ def setupGTK():
 	# connect tab control signals
 	gui.tabs.add_callbacks({
 		"new_message": tekka_tab_new_message_cb,
+		"reset_message": tekka_tab_reset_message_cb,
 		"new_name": tekka_tab_new_name_cb,
 		"new_path": tekka_tab_new_path_cb,
 		"add": tekka_tab_add_cb,

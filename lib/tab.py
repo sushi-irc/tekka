@@ -93,21 +93,23 @@ class TekkaTab(gobject.GObject):
 
 	@types(status = (str, type(None)))
 	def setNewMessage(self, status):
-		""" the new message status is only set if the tab is
-			not active. At the moment there the following
-			states are implemented:
+		""" A message is unique set and represents
+			the status of the tab. The message stack
+			can be reset by using None as status.
+
+			The following message states are implemented:
 			- "action" and "highlightaction"
 			- "message" and "highlightmessage"
 		"""
 		if not status:
 			self.newMessage = []
-			self.emit ("new_message", status)
+			self.emit ("reset_message")
 		else:
 			try:
 				self.newMessage.index(status)
 			except ValueError:
 				self.newMessage.append(status)
-				self.emit ("new_message", status)
+			self.emit ("new_message", status)
 		self.emit("new_markup")
 
 	def markup(self):
@@ -134,6 +136,11 @@ gobject.signal_new(
 	"new_message", TekkaTab,
 	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
 	(gobject.TYPE_PYOBJECT,))
+
+gobject.signal_new(
+	"reset_message", TekkaTab,
+	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
+	())
 
 gobject.signal_new(
 	"new_path", TekkaTab,
