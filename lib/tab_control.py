@@ -585,9 +585,9 @@ class TabControl(gobject.GObject):
 		lib.gui_control.set_window_title(tab.name)
 
 		if not tab.is_server():
-			lib.gui_control.set_nick(com.get_own_nick(tab.server.name))
+			lib.gui_control.set_nick(tab.server.nick)
 		else:
-			lib.gui_control.set_nick(com.get_own_nick(tab.name))
+			lib.gui_control.set_nick(tab.nick)
 
 	def switch_to_tab(self, tab):
 		if not tab or not tab.path:
