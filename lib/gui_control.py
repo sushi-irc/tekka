@@ -148,9 +148,11 @@ class WidgetsWrapper(object):
 		except AttributeError:
 			return getattr(self.glade_widgets, attr)
 
+"""
 def green(s,f={0:0}):
 	f[0]+=1
 	return chr(27)+"[31m"+str(f[0])+": "+chr(27)+"[32m"+s+chr(27)+"[0m"
+"""
 
 class OutputWindow(gtk.ScrolledWindow):
 
@@ -201,36 +203,25 @@ class OutputWindow(gtk.ScrolledWindow):
 			def idle_handler_cb():
 				adjust = sbar.get_property("adjustment")
 
+				"""
 				print "%d - %d (%d) == %d" % (adjust.upper,
 					adjust.page_size, (adjust.upper-adjust.page_size),
 					sbar.get_value())
+				"""
 
 				if (self.auto_scroll
 				and self.textview.is_smooth_scrolling()):
 					# XXX: instead of setting, ignore this completely.
 					self.auto_scroll = True
-					print green("smooth scrolling => auto_scroll = True")
 				elif (adjust.upper - adjust.page_size) == sbar.get_value():
 					self.auto_scroll = True
-					print green("At end => auto_scroll = True")
 				else:
 					self.auto_scroll = False
-					print green("Neither end nor smooth_scrolling => auto_scroll = False")
 				return False
 
 			gobject.idle_add(idle_handler_cb)
 
 		self.get_vscrollbar().connect("value-changed", value_changed_cb)
-
-		"""
-		def at_end_cb(widget):
-			# scrolled to end
-			# FIXME: check if this whole signal is necessary
-			self.auto_scroll = True
-			print green("set auto_scroll = True, at end")
-
-		self.textview.connect("at-end", at_end_cb)
-		"""
 
 class OutputShell(gtk.VBox):
 
@@ -661,8 +652,7 @@ def colorize_message(msgtype, message):
 			message)
 
 def channelPrint(timestamp, server, channel, message, msgtype="message"):
-	"""
-		Inserts a string formatted like "[H:M] <message>\n"
+	""" Inserts a string formatted like "[H:M] <message>\n"
 		into the htmlbuffer of the channel `channel` on server
 		`server`.
 	"""
@@ -686,8 +676,8 @@ def channelPrint(timestamp, server, channel, message, msgtype="message"):
 	if not tabs.is_active(channelTab):
 		if config.get_bool("tekka", "show_general_output"):
 			# write it to the general output, also
-			write_to_general_output(msgtype, timestring, server, channel, message)
-
+			write_to_general_output(msgtype, timestring, server,
+				channel, message)
 
 	def notify():
 		channelTab.setNewMessage(msgtype)
@@ -695,9 +685,8 @@ def channelPrint(timestamp, server, channel, message, msgtype="message"):
 	gobject.idle_add(notify)
 
 def serverPrint(timestamp, server, string, msgtype="message"):
-	"""
-		prints 'string' with "%H:%M' formatted 'timestamp' to the server-output
-		identified by 'server'
+	""" prints 'string' with "%H:%M' formatted 'timestamp' to
+		the server-output identified by 'server'
 	"""
 	serverTab = tabs.search_tab(server)
 
@@ -729,8 +718,8 @@ def currentServerPrint(timestamp, server, string, msgtype="message"):
 	serverTab, channelTab = tabs.get_current_tabs()
 
 	if (serverTab
-		and serverTab.name.lower() == server.lower()
-		and channelTab):
+	and serverTab.name.lower() == server.lower()
+	and channelTab):
 		# print in current channel
 		channelPrint(
 			timestamp, server,

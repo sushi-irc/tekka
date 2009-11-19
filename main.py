@@ -149,7 +149,6 @@ def tekka_tab_new_message_cb(tab, mtype):
 		tab.setNewMessage(None)
 
 		if tab.window.auto_scroll and mtype:
-			print gui.green("well, scrolling down")
 			# FIXME:  on high load, the whole application
 			# FIXME:: hangs. High load means, you insert a
 			# FIXME:: text with around 2000 characters.

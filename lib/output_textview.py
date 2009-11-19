@@ -123,17 +123,16 @@ class OutputTextView(gtk.TextView):
 		gobject.source_remove(self.smooth_id)
 		self.smooth_id = None
 
-		self.emit("at-end")
-
 		return False
 
 	def _smooth_scroll_to_end(self):
-		""" Call n times smooth_scroll() until
-			the end is reached.
+		""" Call SCROLL_DELAY seconds smooth_scroll
+			and scroll 1/3 of the distance.
+			If MAX_SCROLL_TIME is reached and we're
+			not at the end, fast forward.
 		"""
 		if None != self.smooth_id:
 			# already scrolling
-			print gui.green("Stopped smooth scrolling.")
 			return False
 
 		self.smooth_id = gobject.timeout_add(self.SCROLL_DELAY,
@@ -160,8 +159,6 @@ class OutputTextView(gtk.TextView):
 		if parent:
 			adjustment = parent.get_hadjustment()
 			adjustment.set_value(0)
-
-		self.emit("at-end")
 
 		# avoid recalling through idle_add
 		return False
@@ -235,5 +232,3 @@ class OutputTextView(gtk.TextView):
 
 		self.read_line = (tag, start_mark, end_mark)
 
-gobject.signal_new("at-end", OutputTextView, gobject.SIGNAL_ACTION,
-	None, ())
