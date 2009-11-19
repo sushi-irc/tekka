@@ -169,9 +169,10 @@ def tekka_tab_new_message_cb(tab, mtype):
 def tekka_tab_new_name_cb(tab, name):
 	tekka_tab_new_markup_cb(tab)
 
-def tekka_tab_connected_cb(tab, connected):
-	""" tab received a change on connected attribute """
-	gui.tabs.set_useable(tab, connected)
+def tekka_tab_server_connected_cb(tab, connected):
+	""" the server of the tab connected/disconnected """
+	if not connected:
+		gui.tabs.set_useable(tab, False)
 
 def tekka_channel_joined_cb(tab, switch):
 	""" channel received a change on joined attribute """
@@ -1232,7 +1233,7 @@ def setupGTK():
 		"add": tekka_tab_add_cb,
 		"remove": tekka_tab_remove_cb,
 		"new_markup": tekka_tab_new_markup_cb,
-		"connected": tekka_tab_connected_cb,
+		"server_connected": tekka_tab_server_connected_cb,
 		"joined": tekka_channel_joined_cb,
 		"away": tekka_server_away_cb,
 		"topic": tekka_channel_topic_cb,

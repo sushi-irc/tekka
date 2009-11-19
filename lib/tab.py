@@ -46,7 +46,7 @@ class TekkaTab(gobject.GObject):
 	@types(switch=bool)
 	def _set_connected(self, switch):
 		self._connected=switch
-		self.emit ("connected", switch)
+		self.emit ("server_connected", switch)
 		self.emit ("new_markup")
 	connected = property(lambda x: x._connected, _set_connected)
 
@@ -115,10 +115,8 @@ class TekkaTab(gobject.GObject):
 			return "<b>"+self.name+"</b>"
 		return self.name
 
-# FIXME:  rename connected to tab-connected or something similar
-# FIXME:: due to double assignment of gobject signal connected
 gobject.signal_new(
-	"connected", TekkaTab,
+	"server_connected", TekkaTab,
 	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
 	(gobject.TYPE_BOOLEAN,))
 

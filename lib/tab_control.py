@@ -138,7 +138,7 @@ class TabControl(gobject.GObject):
 		lib.gui_control.set_font(tab.window.textview, lib.gui_control.get_font())
 
 		self.connect_callbacks(tab, ("new_message","new_name",
-			"new_path","connected","new_markup"))
+			"new_path","server_connected","new_markup"))
 
 		tab.input_history = InputHistory(
 			text_callback = lib.gui_control.get_widget("inputBar").get_text)
