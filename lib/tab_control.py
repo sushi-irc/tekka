@@ -550,8 +550,6 @@ class TabControl(gobject.GObject):
 
 		lib.gui_control.get_widget("outputShell").set(tab.window)
 
-		self.emit("tab_switched", old_tab, tab)
-
 		if tab.is_channel():
 			"""
 				show up topicbar and nicklist (in case
@@ -588,6 +586,8 @@ class TabControl(gobject.GObject):
 			lib.gui_control.set_nick(tab.server.nick)
 		else:
 			lib.gui_control.set_nick(tab.nick)
+
+		self.emit("tab_switched", old_tab, tab)
 
 	def switch_to_tab(self, tab):
 		if not tab or not tab.path:
