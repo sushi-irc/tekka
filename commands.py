@@ -477,7 +477,8 @@ def tekkaQuery(currentServer, currentTab, args):
 
 	nick = args[0]
 
-	if not gui.tabs.search_tab(currentServer.name, nick):
+	tab = gui.tabs.search_tab(currentServer.name, nick)
+	if not tab:
 		# no query started
 
 		tab = gui.tabs.create_query(currentServer, nick)
@@ -486,10 +487,13 @@ def tekkaQuery(currentServer, currentTab, args):
 		gui.tabs.add_tab(currentServer, tab)
 		gui.updateServerTreeShortcuts()
 
-		output = tab.textview.get_buffer()
+		output = tab.window.textview.get_buffer()
 
 		# fetch and write history to query (if any)
 		gui.print_last_log(currentServer.name, nick)
+	else:
+		# jump to query
+		gui.tabs.switch_to_tab(tab)
 
 def tekkaClear(currentServer, currentTab, args):
 	"""
