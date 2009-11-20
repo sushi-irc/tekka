@@ -595,8 +595,6 @@ def userMode_cb(time, server, from_str, target, mode, param):
 			/mode #xesio +o nemo
 		will result in:
 			userMode(<time>,<server>,"nemo","#xesio","+o","nemo")
-
-		TODO: has to be colored and gettexted (o.0)
 	"""
 
 	def n_updatePrefix(tab, nick, mode):
@@ -642,7 +640,12 @@ def userMode_cb(time, server, from_str, target, mode, param):
 
 			if param: param = " "+param
 
-			if not _hide_output(server_tab, "quit"):
+			if not _hide_output(server_tab, "mode"):
+
+				actor = "<font foreground='%s'>%s</font>" % (
+					color.get_nick_color(actor), actor)
+				target = "<font foreground='%s'>%s</font>" % (
+					color.get_nick_color(target), target)
 
 				gui.currentServerPrint(time, server,
 					"• %(actor)s set %(mode)s%(param)s on %(target)s" % {
@@ -668,6 +671,11 @@ def userMode_cb(time, server, from_str, target, mode, param):
 			if param: param = " "+param
 
 			if _show_output_exclusive(server_tab, tab, "mode", own = own):
+
+				actor = "<font foreground='%s'>%s</font>" % (
+					color.get_nick_color(actor), actor)
+				victim = "<font foreground='%s'>%s</font>" % (
+					color.get_nick_color(victim), victim)
 
 				gui.channelPrint(time, server, tab.name,
 					"• %(actor)s set %(mode)s%(param)s on %(victim)s." % {
