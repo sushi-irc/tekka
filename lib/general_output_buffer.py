@@ -126,7 +126,7 @@ def go_handler(tag, widget, event, iter, attrs):
 
 		# left mbtn
 		if event.button == 1:
-			path = eval(path_string)
+			path = eval(self.path_string)
 			lib.gui_control.tabs.switch_to_path(path)
 
 class GOHTMLHandler(lib.htmlbuffer.HTMLHandler):
