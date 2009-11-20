@@ -459,6 +459,13 @@ def makiWhois(currentServer, currentChannel, args):
 	if not args:
 		return gui.myPrint("No server activated.")
 
+	def handler(time, server, nick, message):
+		if message:
+			signals.whois_cb(time, server, nick, message)
+		else:
+			signals.disconnect_signal("whois", handler)
+
+	signals.connect_signal("whois", handler)
 	sushi.whois(currentServer.name, args[0])
 
 """ TEKKA USER COMMANDS """

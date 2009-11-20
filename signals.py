@@ -119,7 +119,6 @@ def _connect_signals():
 	connect_signal("connect", serverConnect_cb)
 	connect_signal("connected", serverConnected_cb)
 	connect_signal("motd", serverMOTD_cb)
-	connect_signal("whois", whois_cb) # FIXME: only on demand! like list
 	connect_signal("dcc_send", dcc_send_cb)
 
 	# Channel-Signals
