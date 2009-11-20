@@ -35,6 +35,7 @@ import lib.gui_control as gui
 import gobject
 import gtk
 import pynotify
+import string
 
 # FIXME configurable highlight words
 
@@ -54,7 +55,8 @@ class notify (sushi.Plugin):
 		self.caps = pynotify.get_server_caps()
 
 		try:
-			self.pixbuf = gtk.gdk.pixbuf_new_from_file(config.get("tekka", "status_icon"))
+			self.pixbuf = gtk.gdk.pixbuf_new_from_file_at_scale(
+				config.get("tekka", "status_icon"), 128, 128)
 		except:
 			self.pixbuf = None
 
@@ -93,6 +95,17 @@ class notify (sushi.Plugin):
 
 		return message
 
+	def _has_highlight(text, needle):
+		punctuation = string.punctuation + " \n\t"
+		ln = len(needle)
+		for line in text.split("\n"):
+			i = line.find(needle)
+			if i >= 0:
+				if (line[i-1:i] in punctuation
+				and line[ln+i:ln+i+1] in punctuation):
+					return True
+		return False
+
 	def message_cb (self, timestamp, server, from_str, target, message):
 		nick = from_str.split("!")[0]
 		own_nick = self.get_nick(server)
@@ -107,7 +120,7 @@ class notify (sushi.Plugin):
 
 		if own_nick == target.lower():
 			self.notify(nick, self.escape(message))
-		elif message.lower().find(own_nick) >= 0:
+		elif _has_highlight(message, own_nick):
 			self.notify(target, "&lt;%s&gt; %s" % (nick, self.escape(message)))
 
 	def action_cb (self, time, server, from_str, target, action):
@@ -124,5 +137,5 @@ class notify (sushi.Plugin):
 
 		if own_nick == target.lower():
 			self.notify(nick, self.escape(action))
-		elif action.lower().find(own_nick) >= 0:
+		elif _has_highlight(action, own_nick):
 			self.notify(target, "%s %s" % (nick, self.escape(action)))
