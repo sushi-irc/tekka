@@ -368,6 +368,15 @@ class TabControl(gobject.GObject):
 			for row in store.iter_children(iter):
 				row[0].server = new
 
+	def get_tab_by_path(self, path):
+		if not path:
+			return
+		store = lib.gui_control.get_widget("serverTree").get_model()
+		try:
+			return store[path][0]
+		except:
+			return None
+
 	@types (servers = list, excludes = list)
 	def get_all_tabs(self, servers=[], excludes=[]):
 		"""
