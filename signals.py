@@ -498,15 +498,31 @@ def userAwayMessage_cb(timestamp, server, nick, message):
 		The user is away and the server gives us the message he left
 		for us to see why he is away and probably when he's back again.
 	"""
-	# TODO: print this one time only..
-	gui.channelPrint(
-		timestamp,
-		server,
-		nick,
-		_(u"• %(nick)s is away (%(message)s).") % {
-			"nick": nick,
-			"message": gui.escape(message)},
-		"action")
+	tab = gui.tabs.get_current_tab()
+
+
+	# XXX:  you can still write /msg <nick> and get an away message
+	# XXX:: in the query window. This would be a more complex fix.
+	try:
+		tab.printed_away_message
+	except AttributeError:
+		print_it = True
+	else:
+		print_it = not tab.printed_away_message
+
+	if print_it:
+		gui.channelPrint(
+			timestamp,
+			server,
+			nick,
+			_(u"• %(nick)s is away (%(message)s).") % {
+				"nick": nick,
+				"message": gui.escape(message)},
+			"action")
+
+
+		if tab and tab.name == nick:
+			tab.printed_away_message = True
 
 def userMessage_cb(timestamp, server, from_str, channel, message):
 	"""
