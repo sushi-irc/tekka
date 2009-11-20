@@ -56,7 +56,7 @@ class notify (sushi.Plugin):
 
 		try:
 			self.pixbuf = gtk.gdk.pixbuf_new_from_file_at_scale(
-				config.get("tekka", "status_icon"), 128, 128)
+				config.get("tekka", "status_icon"), 64, 64, True)
 		except:
 			self.pixbuf = None
 
@@ -95,7 +95,7 @@ class notify (sushi.Plugin):
 
 		return message
 
-	def _has_highlight(text, needle):
+	def _has_highlight(self, text, needle):
 		punctuation = string.punctuation + " \n\t"
 		ln = len(needle)
 		for line in text.split("\n"):
@@ -120,7 +120,7 @@ class notify (sushi.Plugin):
 
 		if own_nick == target.lower():
 			self.notify(nick, self.escape(message))
-		elif _has_highlight(message, own_nick):
+		elif self._has_highlight(message, own_nick):
 			self.notify(target, "&lt;%s&gt; %s" % (nick, self.escape(message)))
 
 	def action_cb (self, time, server, from_str, target, action):
@@ -137,5 +137,5 @@ class notify (sushi.Plugin):
 
 		if own_nick == target.lower():
 			self.notify(nick, self.escape(action))
-		elif _has_highlight(action, own_nick):
+		elif self._has_highlight(action, own_nick):
 			self.notify(target, "%s %s" % (nick, self.escape(action)))
