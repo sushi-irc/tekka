@@ -21,11 +21,17 @@ def read_loop(s):
 	while True:
 		if _stop:
 			break
+
 		try:
 			a = s.recv(4096)
 		except BaseException as e:
 			print "READ ERROR: %s" % (e)
 			break
+
+		if a == "":
+			print "No data."
+			break
+
 		i = a.find("PING :")
 		if i>=0 and last_line[-1] == "\n" and (i==0 or a[i-1] == "\n"):
 			j = a.find(" ", i+len("PING :"))
@@ -51,7 +57,6 @@ def main():
 		input = raw_input("Send: ")
 
 		if input == "/quit":
-			read_loop.stop()
 			break
 		elif input[0:len("/join")] == "/join":
 			split = input.split(" ")
@@ -82,6 +87,8 @@ def main():
 				print "Error while sending: %s" % (e)
 				break
 			last_input = input
+
+	read_loop.stop()
 
 try:
 	main()
