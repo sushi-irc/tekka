@@ -353,8 +353,7 @@ def serverConnect_cb(time, server):
 
 	gui.serverPrint(time, server, "Connecting...")
 
-	# TODO: implement status bar messages
-	#gui.statusBar.push(gui.STATUSBAR_CONNECTING, "Connecting to %s" % server)
+	gui.status.set("connecting", "Connecting to %s" % server)
 
 def serverConnected_cb(time, server):
 	"""
@@ -372,9 +371,6 @@ def serverConnected_cb(time, server):
 	servers = [server])[1:] if tab.is_query()]:
 		query.connected = True
 
-	# TODO: implement status bar messages
-	#gui.statusBar.pop(gui.STATUSBAR_CONNECTING)
-
 	gui.serverPrint(time, server, "Connected.")
 
 def serverMOTD_cb(time, server, message, first_time = {}):
@@ -390,6 +386,8 @@ def serverMOTD_cb(time, server, message, first_time = {}):
 			tab = _setup_server(server)
 		else:
 			gui.tabs.update_server(tab)
+
+		gui.status.unset("connecting")
 		tab.connected = True
 		first_time[server] = tab
 
