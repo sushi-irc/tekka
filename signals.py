@@ -233,7 +233,7 @@ def _add_channels(server_tab):
 			gui.print_last_log(server_tab.name, channel)
 
 		topic = sushi.channel_topic(server_tab.name, channel)
-		channelTopic_cb(mtime.time(), server_tab.name, "", channel, topic)
+		_report_topic(mtime.time(), server_tab.name, channel, topic)
 
 	gui.updateServerTreeShortcuts()
 
@@ -400,9 +400,17 @@ def serverMOTD_cb(time, server, message, first_time = {}):
 		del first_time[server]
 
 	else:
-		gui.serverPrint(time, server, gui.escape(message))
+		gui.serverPrint(time, server, gui.escape(message),
+			no_general_output = True)
 
 """ Callbacks for channel interaction """
+
+def _report_topic(time, server, channel, topic):
+	message = _(u"• Topic for %(channel)s: %(topic)s") % {
+		"channel": channel,
+		"topic": gui.escape(topic) }
+	gui.channelPrint(time, server, channel, message, "action",
+		no_general_output = True)
 
 def channelTopic_cb(time, server, from_str, channel, topic):
 	"""
@@ -425,10 +433,7 @@ def channelTopic_cb(time, server, from_str, channel, topic):
 
 	if not nick:
 		# just reporting the topic.
-		message = _(u"• Topic for %(channel)s: %(topic)s") % {
-			"channel": channel,
-			"topic": gui.escape(topic) }
-		gui.channelPrint(time, server, channel, message, "action")
+		_report_topic(time, server, channel, topic)
 
 	else:
 		if nick == serverTab.nick:

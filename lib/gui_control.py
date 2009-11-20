@@ -693,7 +693,8 @@ def colorize_message(msgtype, message):
 			config.get("colors", "text_%s" % msgtype, "#000000"),
 			message)
 
-def channelPrint(timestamp, server, channel, message, msgtype="message"):
+def channelPrint(timestamp, server, channel, message, msgtype="message",
+no_general_output = False):
 	""" Inserts a string formatted like "[H:M] <message>\n"
 		into the htmlbuffer of the channel `channel` on server
 		`server`.
@@ -716,7 +717,8 @@ def channelPrint(timestamp, server, channel, message, msgtype="message"):
 	buffer.insertHTML(buffer.get_end_iter(), outputString)
 
 	if not tabs.is_active(channelTab):
-		if config.get_bool("tekka", "show_general_output"):
+		if (config.get_bool("tekka", "show_general_output")
+		and not no_general_output):
 			# write it to the general output, also
 			write_to_general_output(msgtype, timestring, server,
 				channel, message)
@@ -726,7 +728,8 @@ def channelPrint(timestamp, server, channel, message, msgtype="message"):
 		return False
 	gobject.idle_add(notify)
 
-def serverPrint(timestamp, server, string, msgtype="message"):
+def serverPrint(timestamp, server, string, msgtype="message",
+no_general_output = False):
 	""" prints 'string' with "%H:%M' formatted 'timestamp' to
 		the server-output identified by 'server'
 	"""
@@ -744,7 +747,8 @@ def serverPrint(timestamp, server, string, msgtype="message"):
 	buffer.insertHTML(buffer.get_end_iter(), "[%s] %s" % (timestr, string))
 
 	if not tabs.is_active(serverTab):
-		if config.get_bool("tekka", "show_general_output"):
+		if (config.get_bool("tekka", "show_general_output")
+		and not no_general_output):
 			write_to_general_output(msgtype, timestr, server, "", string)
 
 	def notify():
