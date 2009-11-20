@@ -676,12 +676,12 @@ def write_to_general_output(msgtype, timestring, server, channel, message):
 		goBuffer.go_insert(goBuffer.get_end_iter(),
 			"[%s] &lt;%s:%s&gt; %s" % (
 				timestring, server, channel, message),
-				channelTab)
+				channelTab, msgtype)
 	else:
 		# server print
 		goBuffer.go_insert(goBuffer.get_end_iter(),
 			"[%s] &lt;%s&gt; %s" % (timestring, server, message),
-			serverTab)
+			serverTab, msgtype)
 
 	widgets.get_widget("generalOutput").scroll_to_bottom()
 

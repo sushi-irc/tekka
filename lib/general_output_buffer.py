@@ -33,7 +33,36 @@ import lib.gui_control
 
 import config
 
-def go_handler(tag, widget, event, iter, path_string, c = {0:None}):
+def build_handler_menu(tag, widget, event, iter, attrs):
+
+	def hide_message_cb(item, tab, msgtype):
+		print "would hide messages of type %s for tab %s" % (
+			msgtype, tab)
+
+	tab = lib.gui_control.tabs.get_tab_by_path(eval(attrs["path"]))
+
+	if not tab:
+		raise ValueError, "tab could not be retrieved (%s)" % (
+			attrs["path"])
+
+	items = []
+
+	items.append(gtk.MenuItem(label = tab.name))
+	items.append(gtk.SeparatorMenuItem())
+	items.append(gtk.ImageMenuItem(gtk.STOCK_ZOOM_OUT))
+	items[-1].set_label("Hide '%s' messages" % (attrs["type"]))
+	items[-1].connect("activate", hide_message_cb,
+		tab, attrs["type"])
+
+	menu = gtk.Menu()
+	for item in items:
+		menu.add(item)
+
+	menu.show_all()
+
+	return menu
+
+def go_handler(tag, widget, event, iter, attrs):
 
 	def switch_highlight(tag, switch):
 		""" switch highlighting of given tag """
@@ -56,7 +85,7 @@ def go_handler(tag, widget, event, iter, path_string, c = {0:None}):
 	self.widget = widget
 	self.event = event
 	self.iter = iter
-	self.path_string = path_string
+	self.path_string = attrs["path"]
 
 	# __init__
 	try:
@@ -86,6 +115,13 @@ def go_handler(tag, widget, event, iter, path_string, c = {0:None}):
 		switch_highlight(tag, True)
 		return True
 
+	if event.type == gtk.gdk.BUTTON_PRESS:
+		if event.button == 3:
+			# right mbtn
+			menu = build_handler_menu(tag, widget, event, iter, attrs)
+			menu.popup(None, None, None, event.button, event.time)
+			return True
+
 	if event.type == gtk.gdk.BUTTON_RELEASE:
 
 		# left mbtn
@@ -109,7 +145,7 @@ class GOHTMLHandler(lib.htmlbuffer.HTMLHandler):
 				tag = self.textbuffer.create_tag(None)
 				tag.s_attribute = {"goref":True}
 
-				tag.connect("event", self.go_handler, attrs["path"])
+				tag.connect("event", self.go_handler, attrs)
 
 				self.elms.append(name)
 				self.tags.append(tag)
@@ -133,6 +169,6 @@ class GOHTMLBuffer(lib.htmlbuffer.HTMLBuffer):
 
 		self.go_handler = go_handler
 
-	def go_insert(self, iter, text, tab):
-		self.insertHTML(iter, "<goref path='%s'>%s</goref>" % (
-			tab.path, text))
+	def go_insert(self, iter, text, tab, type):
+		self.insertHTML(iter, "<goref type='%s' path='%s'>%s</goref>" % (
+			type, tab.path, text))
