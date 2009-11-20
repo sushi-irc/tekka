@@ -118,10 +118,21 @@ class notify (sushi.Plugin):
 		elif own_nick == nick.lower():
 			return
 
+		def in_notify():
+			self.notify(target, "&lt;%s&gt; %s" % (
+				nick,
+				self.escape(message)))
+
+
 		if own_nick == target.lower():
 			self.notify(nick, self.escape(message))
 		elif self._has_highlight(message, own_nick):
-			self.notify(target, "&lt;%s&gt; %s" % (nick, self.escape(message)))
+			in_notify()
+		else:
+			for word in config.get_list("chatting","highlight_words",[]):
+				if self._has_highlight(message, word):
+					in_notify()
+					break
 
 	def action_cb (self, time, server, from_str, target, action):
 		nick = from_str.split("!")[0]
@@ -135,7 +146,16 @@ class notify (sushi.Plugin):
 		elif own_nick == nick.lower():
 			return
 
+		def in_notify():
+			self.notify(target, "%s %s" % (nick, self.escape(action)))
+
+
 		if own_nick == target.lower():
 			self.notify(nick, self.escape(action))
 		elif self._has_highlight(action, own_nick):
-			self.notify(target, "%s %s" % (nick, self.escape(action)))
+			in_notify()
+		else:
+			for word in config.get_list("chatting","highlight_words",[]):
+				if self._has_highlight(action, word):
+					in_notify()
+					break
