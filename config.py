@@ -68,7 +68,7 @@ def set_defaults():
 	defaults = {}
 
 	defaults["tekka"] = {}
-	defaults["tekka"]["logfile"] = get_path(xdg_cache_home, "sushi",
+	defaults["tekka"]["logfile"] = os.path.join(xdg_cache_home, "sushi",
 		"tekka.txt")
 	defaults["tekka"]["locale_dir"] = get_path("..", "..", "locale")
 	defaults["tekka"]["status_icon"] = get_path("graphics", "icon.svg")
@@ -81,7 +81,7 @@ def set_defaults():
 	defaults["tekka"]["use_default_font"] = "True"
 	defaults["tekka"]["font"] = "Monospace 10"
 	defaults["tekka"]["auto_expand"] = "True"
-	defaults["tekka"]["smooth_scrolling"] = "True"
+	defaults["tekka"]["smooth_scrolling"] = "False"
 
 	defaults["tekka"]["show_general_output"] = "True"
 	defaults["tekka"]["show_topicbar"] = "False"
@@ -94,7 +94,7 @@ def set_defaults():
 	defaults["tekka"]["ask_for_key_on_cannotjoin"] = "True"
 	defaults["tekka"]["switch_to_channel_after_join"] = "True"
 	defaults["tekka"]["time_format"] = "%H:%M"
-	defaults["tekka"]["whois_dialog"] = "true"
+	defaults["tekka"]["whois_dialog"] = "True"
 	defaults["tekka"]["divider_length"] = "30"
 	defaults["tekka"]["max_output_lines"] = "500"
 	defaults["tekka"]["profiling"] = "False"
