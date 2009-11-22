@@ -1,13 +1,15 @@
                                   INSTALLATION
 
-Just type "make", followed by "make install". This will install all the
-necessary files in your home directory. Other directories can be specified by
-calling make with the prefix variable, for example, "make prefix=/usr", followed
-by "make prefix=/usr install".
+Just type "./waf configure", followed by "./waf install".
+This will install all the necessary files in your home directory.
+Other directories can be specified by calling waf with the prefix
+variable, for example, "./waf configure --prefix=/usr".
 
                                   REQUIREMENTS
 
-You will need the DBus, Glade, GObject, GTK and XDG Python modules.
+For configuring, building and installing you need waf.
+
+Also you will need the DBus, Glade, GObject, GTK and XDG Python modules.
 On Debian-based systems these are available in the following packages:
 
 * python-dbus
