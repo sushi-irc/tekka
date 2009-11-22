@@ -122,9 +122,19 @@ class SushiWrapper (gobject.GObject):
 				except AttributeError:
 					# try proxy methods
 					try:
-						# TODO: Create dummy which catches:
-						# DBusException: org.freedesktop.DBus.Error.Disconnected: Connection is closed
-						return self._sushi.__getattr__(attr)
+						def attr_dummy(*args, **kwargs):
+							try:
+								return self._sushi.__getattr__(attr)(
+									*args,
+									**kwargs)
+							except dbus.DBusException as e:
+								self._emit_error(
+									_("Communication error with maki."),
+									_("There was an error while executing "
+									  "<b>'%s</b>' with DBus: \n<b>%s</b>\n"
+									  "You should keep safe that maki is "
+									  "running " % (attr, e)))
+						return attr_dummy
 					except dbus.DBusException as e:
 						# method not found, return dummy
 						return errordummy(str(e))
