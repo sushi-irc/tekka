@@ -104,9 +104,9 @@ def set_defaults():
 	defaults["dcc"] = {}
 
 	defaults["general_output"] = {}
-	defaults["general_output"]["filters"] = ""
+	defaults["general_output"]["filter"] = ""
 	"""
-	filters take place here.
+	filter take place here.
 	'type == "message" and server == "euIRC" and channel == "#bsdunix"'
 	'not (type == "action" and server == "Freenode" and channel == "#sushi-irc")'
 	"""
