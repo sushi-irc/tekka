@@ -74,8 +74,10 @@ def retrieveServerlist():
 	store.clear()
 
 	servers = com.sushi.server_list("","")
-	for server in servers:
-		addServer(server)
+
+	if servers:
+		for server in servers:
+			addServer(server)
 
 def dialog_response_cb(dialog, response_id, callback):
 	if response_id == RESPONSE_CONNECT:
