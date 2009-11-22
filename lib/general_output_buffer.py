@@ -28,6 +28,8 @@ SUCH DAMAGE.
 
 import gtk
 import pango
+from gettext import gettext as _
+
 import lib.htmlbuffer
 import lib.gui_control
 
@@ -36,8 +38,15 @@ import config
 def build_handler_menu(tag, widget, event, iter, attrs):
 
 	def hide_message_cb(item, tab, msgtype):
-		print "would hide messages of type %s for tab %s" % (
-			msgtype, tab)
+		r_tuple = build_tuple(msgtype, tab)
+		config.append_list("general_output", "filter", str(r_tuple))
+
+	def build_tuple(msgtype, tab):
+		if tab.is_channel() or tab.is_query():
+			r_tuple = (str(msgtype), str(tab.server.name), str(tab.name))
+		else:
+			r_tuple = (str(msgtype), str(tab.name))
+		return r_tuple
 
 	tab = lib.gui_control.tabs.get_tab_by_path(eval(attrs["path"]))
 
@@ -50,7 +59,11 @@ def build_handler_menu(tag, widget, event, iter, attrs):
 	items.append(gtk.MenuItem(label = tab.name))
 	items.append(gtk.SeparatorMenuItem())
 	items.append(gtk.ImageMenuItem(gtk.STOCK_ZOOM_OUT))
-	items[-1].set_label("Hide '%s' messages" % (attrs["type"]))
+
+	filter = config.get_list("general_output", "filter", [])
+	label_s = _("Hide '%s' messages")
+
+	items[-1].set_label(label_s % (attrs["type"]))
 	items[-1].connect("activate", hide_message_cb,
 		tab, attrs["type"])
 
