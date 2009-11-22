@@ -656,18 +656,20 @@ def print_last_log(server, channel, lines=0, tab = None):
 				escape(line)))
 
 def write_to_general_output(msgtype, timestring, server, channel, message):
+	""" channel can be empty """
 	goBuffer = widgets.get_widget("generalOutput").get_buffer()
 
 	filter = config.get_list("general_output", "filter", [])
 	logging.debug("filter: %s" % (filter))
 
-	for rule in filter:
+	for tuple_str in filter:
 		try:
-			if not eval(rule):
-				return
+			r_tuple = eval(tuple_str)
 		except BaseException as e:
-			errorMessage("Error in general output filter "
-				"rule '%s': '%s'." % (rule, e))
+			logging.error("Error in filter tuple '%s': %s" % (tuple_str, e))
+			continue
+		if r_tuple[0] == msgtype and r_tuple[-1] in (server, channel):
+			return
 
 	serverTab, channelTab = tabs.search_tabs(server, channel)
 

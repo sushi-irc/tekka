@@ -45,9 +45,20 @@ nickColorsList = None
 highlightList = None
 generalOutputFilterList = None
 
+MESSAGE_TYPES=('message','action',
+		'highlightmessage','highlightaction')
+
 def generalOutputFilterList_instanced_widget_cb(elist, row, column, obj):
 	if column == 0:
-		obj.set_property("label", "Negate")
+		model = gtk.ListStore(str)
+		obj.set_model(model)
+
+		renderer = gtk.CellRendererText()
+		obj.pack_start(renderer, True)
+		obj.add_attribute(renderer, "text", 0)
+
+		for row in MESSAGE_TYPES:
+			model.append((row,))
 
 def customHandler(glade, function_name, widget_name, *x):
 	if widget_name == "nickColorsList":
@@ -75,8 +86,7 @@ def customHandler(glade, function_name, widget_name, *x):
 
 		# negate, type, server, channel
 		generalOutputFilterList = ExpandingList(
-			gtk.ToggleButton, gtk.Entry,
-			gtk.Entry, gtk.Entry,
+			gtk.ComboBox, gtk.Entry, gtk.Entry,
 			no_firstrow=True)
 
 		generalOutputFilterList.connect("instanced_widget",
@@ -161,43 +171,40 @@ def fillNickColors():
 	nickColorsList.remove_row(i)
 
 def fillGeneralOutputFilters():
-	filter = config.get_list("general_output", "filter", [])
-	pattern = re.compile("^not \((.+)\)")
+	def get_type_iter(model, mtype):
+		for row in model:
+			if row[0].lower() == mtype.lower():
+				return row
+		return None
 
-	if not filter:
-		return
+	# (type, server, channel), (type, server), ...
+	filter = config.get_list("general_output", "filter", [])
 
 	i=0
-	for filter_rule in filter:
-
-		if not filter_rule:
+	for tuple in filter:
+		try:
+			e_tuple = eval(tuple)
+		except BaseException as e:
+			logging.error("Tuple '%s' in filter rule is malformed: %s" % (
+				tuple, e))
 			continue
 
-		if len(filter_rule) != 2:
-			gui.errorMessage("FAILRULE: %s" % (filter_rule))
+		widget_row = generalOutputFilterList.get_widget_matrix()[i]
+		comboxbox = widget_row[0]
+
+		iter = get_type_iter(combobox.get_model(), e_tuple[0])
+
+		if not iter:
+			logging.error("Unknown message type '%s'." % (e_tuple[0]))
 			continue
 
-		match = pattern.match(filter_rule)
+		combobox.set_active(iter)
 
-		if match:
-			filter_rule = match.groups()[0]
-			generalOutputFilterList.get_widget_matrix()[i][0].set_active(True)
+		if len(e_tuple) >= 2:
+			widget_row[1].set_text(e_tuple[1])
 
-		vars = dict([ pair.split(" == ") for pair in filter_rule.split(" and ") ])
-
-		for (key,value) in vars.items():
-			value = value.strip('"')
-			if key == "type":
-				generalOutputFilterList.get_widget_matrix()[i][1].set_text(value)
-
-			elif key == "server":
-				generalOutputFilterList.get_widget_matrix()[i][2].set_text(value)
-
-			elif key == "channel":
-				generalOutputFilterList.get_widget_matrix()[i][3].set_text(value)
-
-			else:
-				raise ValueError, "Invalid key '%s'" % (key)
+		if len(e_tuple) == 3:
+			widget_row[2].set_text(e_tuple[2])
 
 		generalOutputFilterList.add_row()
 		i+=1
@@ -214,32 +221,23 @@ def applyGeneralOutputFilter():
 	filter_list = []
 	header = ("type", "server", "channel")
 
-	for row in generalOutputFilterList.get_widget_matrix():
-		n_c = 0
-		rule = ""
-		c_l = len(row[1:len(header)])
+	for widget_row in generalOutputFilterList.get_widget_matrix():
+		cbox = widget_row[0]
 
-		if not row:
+		mtype = cbox.get_active_text()
+
+		if not mtype:
+			logging.error("No message type selected.")
 			continue
 
-		for col in row[1:len(header)]:
-			if not col.get_text():
-				continue
+		server = widget_row[1].get_text()
+		channel = widget_row[2].get_text()
 
-			# XXX: yep, this is a hole.
-			rule += "%s == \"\"\"%s\"\"\"" % (header[n_c],col.get_text())
-			n_c += 1
+		f_tuple = (mtype, server, channel)
 
-			if n_c != c_l:
-				rule += " and "
+		filter_list.append(str(f_tuple))
 
-		if row[0].get_active():
-			rule = "not (%s)" % (rule)
-
-		filter_list.append(rule)
-
-		config.set_list("general_output", "filter", filter_list)
-
+	config.set_list("general_output", "filter", filter_list)
 
 """ tekka page signals """
 
