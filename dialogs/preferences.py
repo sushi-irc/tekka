@@ -171,12 +171,6 @@ def fillNickColors():
 	nickColorsList.remove_row(i)
 
 def fillGeneralOutputFilters():
-	def get_type_iter(model, mtype):
-		for row in model:
-			if row[0].lower() == mtype.lower():
-				return row
-		return None
-
 	# (type, server, channel), (type, server), ...
 	filter = config.get_list("general_output", "filter", [])
 
@@ -190,15 +184,15 @@ def fillGeneralOutputFilters():
 			continue
 
 		widget_row = generalOutputFilterList.get_widget_matrix()[i]
-		comboxbox = widget_row[0]
+		combobox = widget_row[0]
 
-		iter = get_type_iter(combobox.get_model(), e_tuple[0])
-
-		if not iter:
+		try:
+			type_index = MESSAGE_TYPES.index(e_tuple[0])
+		except ValueError:
 			logging.error("Unknown message type '%s'." % (e_tuple[0]))
 			continue
-
-		combobox.set_active(iter)
+		else:
+			combobox.set_active(type_index)
 
 		if len(e_tuple) >= 2:
 			widget_row[1].set_text(e_tuple[1])
@@ -233,7 +227,7 @@ def applyGeneralOutputFilter():
 		server = widget_row[1].get_text()
 		channel = widget_row[2].get_text()
 
-		f_tuple = (mtype, server, channel)
+		f_tuple = (str(mtype), str(server), str(channel))
 
 		filter_list.append(str(f_tuple))
 
