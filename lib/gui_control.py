@@ -545,6 +545,20 @@ def set_topic(string):
 	tb = widgets.get_widget("topicBar")
 	tb.set_markup(string)
 
+def clear_all_outputs():
+	current_tab = tabs.get_current_tab()
+
+	if current_tab:
+		output = current_tab.window.textview
+
+		buf = output.get_buffer()
+		if buf:
+			buf.set_text("")
+
+	buf = widgets.get_widget("generalOutput").get_buffer()
+	if buf:
+		buf.set_text("")
+
 def updateServerTreeShortcuts():
 	"""	Iterates through the TreeModel
 		of the server tree and sets 9

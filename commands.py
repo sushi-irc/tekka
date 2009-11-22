@@ -508,10 +508,7 @@ def tekkaClear(currentServer, currentTab, args):
 
 		Usage: /clear
 	"""
-	if currentTab:
-		currentTab.textview.get_buffer().set_text("")
-	elif currentServer:
-		currentServer.textview.get_buffer().set_text("")
+	gui.clear_all_outputs()
 
 def tekkaHelp(currentServer, currentTab, args):
 	"""

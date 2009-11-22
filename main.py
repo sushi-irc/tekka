@@ -691,18 +691,7 @@ def output_shortcut_ctrl_l(inputBar, shortcut):
 	"""
 		Ctrl+L was hit, clear the outputs.
 	"""
-	current_tab = gui.tabs.get_current_tab()
-
-	if current_tab:
-		output = current_tab.window.textview
-
-		buf = output.get_buffer()
-		if buf:
-			buf.set_text("")
-
-	buf = gui.widgets.get_widget("generalOutput").get_buffer()
-	if buf:
-		buf.set_text("")
+	gui.clear_all_outputs()
 
 def output_shortcut_ctrl_f(inputBar, shortcut):
 	""" show/hide the search toolbar """
