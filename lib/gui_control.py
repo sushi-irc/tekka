@@ -767,6 +767,7 @@ no_general_output = False):
 		and not no_general_output):
 			write_to_general_output(msgtype, timestr, server, "", string)
 
+	# TODO: replace this with signal insert-text
 	def notify():
 		serverTab.setNewMessage(msgtype)
 		return False
