@@ -114,7 +114,7 @@ Tekka intern signals
 def sushi_error_cb(sushi, title, message):
 	d = InlineMessageDialog(title, message)
 	d.connect("response", lambda w,i: w.destroy())
-	d.show_all()
+	gui.showInlineDialog(d)
 
 def maki_connect_callback(sushi):
 	""" connection to maki etablished """
