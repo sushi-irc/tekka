@@ -241,6 +241,7 @@ def isHighlighted (server_tab, text):
 		punctuation = string.punctuation + " \n\t"
 		ln = len(needle)
 		for line in text.split("\n"):
+			line = line.lower()
 			i = line.find(needle)
 			if i >= 0:
 				if (line[i-1:i] in punctuation
