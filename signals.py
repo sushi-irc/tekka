@@ -1422,7 +1422,7 @@ def channelList_cb(time, server, channel, users, topic):
 		channelList_cb._line = 0
 
 		serverTab = gui.tabs.search_tab(server)
-		channelList_cb._buf = serverTab.textview.get_buffer()
+		channelList_cb._buf = serverTab.window.textview.get_buffer()
 
 	def print_listing(buf, text):
 		buf.insertHTML(buf.get_end_iter(), "<br/>".join(text))
