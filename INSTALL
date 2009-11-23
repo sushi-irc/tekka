@@ -1,15 +1,13 @@
                                   INSTALLATION
 
-Just type "./waf configure", followed by "./waf install".
-This will install all the necessary files in your home directory.
-Other directories can be specified by calling waf with the prefix
-variable, for example, "./waf configure --prefix=/usr".
+Just type "./waf configure --prefix=${HOME}", followed by "./waf install". This
+will install all the necessary files in your home directory. Other directories
+can be specified with the prefix option, for example, "./waf configure
+--prefix=/usr".
 
                                   REQUIREMENTS
 
-For configuring, building and installing you need waf.
-
-Also you will need the DBus, Glade, GObject, GTK and XDG Python modules.
+You will need the DBus, Glade, GObject, GTK and XDG Python modules.
 On Debian-based systems these are available in the following packages:
 
 * python-dbus
