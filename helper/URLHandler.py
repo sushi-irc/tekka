@@ -80,6 +80,8 @@ def URLHandler(texttag, widget, event, iter, url):
 		# TODO:: if the state is BUTTON1_MASK and this event
 		# TODO:: occurs, create a object aware of DND and
 		# TODO:: let it take over.
+		if event.state & gtk.gdk.BUTTON1_MASK:
+			return False
 
 		# cursor moved on the URL, change cursor to HAND2
 		cursor = gtk.gdk.Cursor(gtk.gdk.HAND2)
@@ -98,7 +100,8 @@ def URLHandler(texttag, widget, event, iter, url):
 
 	if event.type == gtk.gdk.BUTTON_RELEASE:
 
-		if event.button == 1 and browser:
+		if (event.button == 1 and browser
+		and not widget.get_buffer().get_has_selection()):
 			# open URL in browser
 			browser.open(url)
 

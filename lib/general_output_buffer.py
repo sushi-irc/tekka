@@ -125,6 +125,9 @@ def go_handler(tag, widget, event, iter, attrs):
 
 	# event handling
 	if event.type == gtk.gdk.MOTION_NOTIFY:
+		if event.state & gtk.gdk.BUTTON1_MASK:
+			return False
+
 		switch_highlight(tag, True)
 		return True
 
@@ -138,7 +141,8 @@ def go_handler(tag, widget, event, iter, attrs):
 	if event.type == gtk.gdk.BUTTON_RELEASE:
 
 		# left mbtn
-		if event.button == 1:
+		if (event.button == 1
+		and not widget.get_buffer().get_has_selection()):
 			path = eval(self.path_string)
 			lib.gui_control.tabs.switch_to_path(path)
 
