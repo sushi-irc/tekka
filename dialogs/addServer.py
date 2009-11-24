@@ -30,6 +30,7 @@ import gtk.glade
 from com import sushi
 import config
 
+from gettext import gettext as _
 import lib.gui_control as gui_control
 from lib.expanding_list import ExpandingList
 
@@ -71,7 +72,7 @@ def dialog_response_cb(dialog, response_id, callback):
 		server = widgets.get_widget("servernameEntry").get_text()
 
 		if not server:
-			gui_control.errorMessage("No server name given.", force_dialog=True)
+			gui_control.error_dialog(_("No server name given."))
 			return
 
 		# set text values

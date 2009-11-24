@@ -31,6 +31,7 @@ import gtk.glade
 import com
 import config
 import logging
+from gettext import gettext as _
 
 from lib import dialog_control
 import lib.gui_control as gui_control
@@ -87,7 +88,6 @@ def dialog_response_cb(dialog, response_id, callback):
 		paths = serverSelection.get_selected_rows()[1]
 
 		if not paths:
-			gui_control.errorMessage("No servers selected!", force_dialog=True)
 			return
 
 		toConnect = []
@@ -209,8 +209,7 @@ def openDeleteDialog(widget):
 		servername = view.get_model()[path][0]
 
 	if not servername:
-		gui_control.errorMessage("Error while retrieving server name.",
-			force_dialog = True)
+		gui_control.error_dialog(_("Error while retrieving server name."))
 		return
 
 	dialog_control.show_dialog("deleteServer", servername, delete_dialog_cb)

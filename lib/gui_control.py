@@ -822,34 +822,13 @@ def myPrint(string, html=False):
 	textview.scroll_to_bottom()
 
 @types(string=basestring, force_dialog=bool)
-def errorMessage(string, force_dialog=False):
-	# TODO: get rid of this
-	""" if GUI is initialized, and the output widget
-		has an buffer, print the error there,
-		else raise an error dialog with the given message.
-		You can force the usage of an dialog
-		with the force_dialog parameter.
-	"""
-	output = get_current_output_textview()
-
-	message = gettext.gettext("Error: %(message)s")
-
-	if output.get_buffer() and not force_dialog:
-		message = "<font foreground='%(color)s'>" + message + "</font>"
-		myPrint(message % {
-				"color": config.get("colors", "error", "#FF0000"),
-				"message": string},
-			html=True)
-	else:
-		err = gtk.MessageDialog(
-			type=gtk.MESSAGE_ERROR,
-			buttons=gtk.BUTTONS_CLOSE,
-			message_format=message % { "message": string })
-		err.run()
-		err.destroy()
-
-######################################################
-# new style error reporting sticking to the guidelines
+def error_dialog(string):
+	err = gtk.MessageDialog(
+		type=gtk.MESSAGE_ERROR,
+		buttons=gtk.BUTTONS_CLOSE,
+		message_format=string)
+	err.run()
+	err.destroy()
 
 def showInlineDialog(dialog):
 	area = widgets.get_widget("notificationWidget")
