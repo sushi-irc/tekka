@@ -58,7 +58,7 @@ class ServerTreeMenu(object):
 				  "It's possible that there are files missing. "
 				  "Check if you have appropriate permissions to "
 				  "access all files needed by tekka and restart tekka."))
-			gui_control.showInlineDialog(d)
+			gui_control.show_inline_dialog(d)
 			d.connect("response", lambda d,i: d.destroy())
 			return
 
@@ -253,7 +253,7 @@ class ServerTreeMenu(object):
 			self.current_tab.server.name,
 			self.current_tab.name)
 		d.connect("response", dialog_response_cb)
-		gui_control.showInlineDialog(d)
+		gui_control.show_inline_dialog(d)
 
 	def setKeyItem_activate_cb(self, item):
 		""" show up dialog for key setting """
@@ -269,5 +269,5 @@ class ServerTreeMenu(object):
 		d.checkButton.set_active(True)
 		d.connect("response", lambda d,i: d.destroy())
 
-		gui_control.showInlineDialog(d)
+		gui_control.show_inline_dialog(d)
 

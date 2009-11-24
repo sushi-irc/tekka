@@ -37,7 +37,7 @@ import com
 import signals
 import config
 import logging
-from lib.gui_control import showInlineDialog, markup_escape
+from lib.gui_control import show_inline_dialog, markup_escape
 from lib.inline_dialog import InlineMessageDialog
 
 widgets = None
@@ -103,7 +103,7 @@ def listButton_clicked_cb(button):
 				"like '*' or '.' in your search string if you don't "
 				"know about regular expressions." % (e)))
 		d.connect("response", lambda w,i: w.destroy())
-		showInlineDialog(d)
+		show_inline_dialog(d)
 
 	listView.get_model().clear()
 

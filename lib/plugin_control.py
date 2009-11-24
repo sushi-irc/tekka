@@ -60,7 +60,7 @@ _plugins = {}
 
 def generic_error(primary, secondary):
 	d = InlineMessageDialog(primary, secondary)
-	gui_control.showInlineDialog(d)
+	gui_control.show_inline_dialog(d)
 	d.connect("response", lambda d,i: d.destroy())
 
 def strip_suffix(filename):

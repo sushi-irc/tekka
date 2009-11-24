@@ -1400,7 +1400,7 @@ def cannotJoin(time, server, channel, reason):
 			# open a input dialog which asks for the key
 			d = key_dialog.KeyDialog(server, channel)
 			d.connect("response", key_dialog_response_cb)
-			gui.showInlineDialog(d)
+			gui.show_inline_dialog(d)
 			return
 
 		else:
@@ -1528,4 +1528,4 @@ def dcc_send_cb(time, id, server, sender, filename,
 				resumable = (status & s_resumable == s_resumable))
 
 			d.connect("response", dcc_dialog_response_cb, id)
-			gui.showInlineDialog(d)
+			gui.show_inline_dialog(d)

@@ -124,7 +124,7 @@ class TopicDialog(InlineDialog):
 					  buttons = (gtk.STOCK_OK, gtk.RESPONSE_OK,
 					  			gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL))
 				d.connect("response", outdated_dialog_response_cb, self)
-				gui_control.showInlineDialog(d)
+				gui_control.show_inline_dialog(d)
 				return
 
 			else:

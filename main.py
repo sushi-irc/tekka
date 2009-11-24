@@ -114,7 +114,7 @@ Tekka intern signals
 def sushi_error_cb(sushi, title, message):
 	d = InlineMessageDialog(title, message)
 	d.connect("response", lambda w,i: w.destroy())
-	gui.showInlineDialog(d)
+	gui.show_inline_dialog(d)
 
 def maki_connect_callback(sushi):
 	""" connection to maki etablished """
@@ -271,7 +271,7 @@ def menu_tekka_Connect_activate_cb(menuItem):
 	if not com.sushi.connected:
 		d = InlineMessageDialog(_("tekka could not connect to maki."),
 			_("Please check whether maki is running."))
-		gui.showInlineDialog(d)
+		gui.show_inline_dialog(d)
 		d.connect("response", lambda d,id: d.destroy())
 
 	else:
@@ -352,7 +352,7 @@ def menu_Dialogs_channelList_activate_cb(menuItem):
 			_("There is no active server. Click on a server tab or a "
 			"child of a server tab to activate the server."))
 		d.connect("response", lambda w,i: w.destroy())
-		gui.showInlineDialog(d)
+		gui.show_inline_dialog(d)
 
 	else:
 		try:
@@ -362,7 +362,7 @@ def menu_Dialogs_channelList_activate_cb(menuItem):
 			d = InlineMessageDialog(
 				_("No connection to maki."), e.args[0])
 			d.connect("response", lambda w,i: w.destroy())
-			gui.showInlineDialog(d)
+			gui.show_inline_dialog(d)
 
 def menu_Dialogs_dcc_activate_cb(menuItem):
 	""" show file transfers dialog """
@@ -371,7 +371,7 @@ def menu_Dialogs_dcc_activate_cb(menuItem):
 	except com.NoSushiError, e:
 	    d = InlineMessageDialog(_("No connection to maki."), e.args[0])
 	    d.connect("response", lambda w,i: w.destroy())
-	    gui.showInlineDialog(d)
+	    gui.show_inline_dialog(d)
 
 
 def menu_Dialogs_plugins_activate_cb(menuItem):
@@ -760,7 +760,7 @@ def askToRemoveTab(tab):
 	)
 	dialog.connect("response", response_handler)
 
-	gui.showInlineDialog(dialog)
+	gui.show_inline_dialog(dialog)
 
 def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 	"""

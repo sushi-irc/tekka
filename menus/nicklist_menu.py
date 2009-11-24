@@ -57,7 +57,7 @@ class NickListMenu(object):
 				  "It's possible that there are files missing. "
 				  "Check if you have appropriate permissions to "
 				  "access all files needed by tekka and restart tekka."))
-			gui_control.showInlineDialog(d)
+			gui_control.show_inline_dialog(d)
 			d.connect("response", lambda d,i: d.destroy())
 			return
 
@@ -135,7 +135,7 @@ class NickListMenu(object):
 				d = InlineMessageDialog(_("No connection to maki."),
 					e.args[0])
 				d.connect("response", lambda w,i: w.destroy())
-				gui_control.showInlineDialog(d)
+				gui_control.show_inline_dialog(d)
 
 		else:
 			sushi.sushi.whois(sTab.name, self.current_nick)

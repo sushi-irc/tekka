@@ -830,7 +830,7 @@ def error_dialog(string):
 	err.run()
 	err.destroy()
 
-def showInlineDialog(dialog):
+def show_inline_dialog(dialog):
 	area = widgets.get_widget("notificationWidget")
 
 	if dialog:

@@ -59,7 +59,7 @@ class Plugin (object):
 			}, "%(message)s" % {
 				"message": message
 			})
-		gui_control.showInlineDialog(d)
+		gui_control.show_inline_dialog(d)
 		d.connect("response", lambda d,id: d.destroy())
 
 	def get_bus(self):
