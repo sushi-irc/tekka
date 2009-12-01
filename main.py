@@ -1326,6 +1326,14 @@ def setupGTK():
 
 	# setup manual signals
 
+	gui.status.connect("set-status",
+		lambda w,s,m: gui.widgets.get_widget("statusBar")\
+		.push(gui.status.id(s), m))
+
+	gui.status.connect("unset-status",
+		lambda w,s: gui.widgets.get_widget("statusBar")\
+		.pop(gui.status.id(s)))
+
 	bar = gui.widgets.get_widget("inputBar")
 	bar.connect("key-press-event", inputBar_key_press_event_cb)
 	bar.connect("activate", inputBar_activate_cb)

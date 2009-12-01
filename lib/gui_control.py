@@ -66,6 +66,7 @@ from lib.output_textview import OutputTextView
 from lib.htmlbuffer import HTMLBuffer
 from lib.status_icon import TekkaStatusIcon
 from lib.general_output_buffer import GOHTMLBuffer
+from lib.status_manager import StatusManager
 
 class WidgetsWrapper(object):
 
@@ -267,48 +268,6 @@ class OutputShell(gtk.VBox):
 		""" Return the current OutputWindow """
 		return self.output_window
 
-class StatusManager(gobject.GObject):
-
-	def __init__(self):
-		gobject.GObject.__init__(self)
-		self.states = []
-
-	def set(self, status, message):
-		try:
-			self.states.index(status)
-		except ValueError:
-			self.states.append(status)
-			self.emit("set-status", status, message)
-			return True
-		return False
-
-	def unset(self, status):
-		try:
-			index = self.states.index(status)
-		except ValueError:
-			return False
-		self.emit("unset-status", status)
-		del self.states[index]
-		return True
-
-	def id(self, status):
-		try:
-			return self.states.index(status)
-		except ValueError:
-			raise ValueError, "Status %s not in state list." % (status)
-
-gobject.signal_new("set-status", StatusManager, gobject.SIGNAL_ACTION,
-	None, (gobject.TYPE_STRING, gobject.TYPE_STRING))
-gobject.signal_new("unset-status", StatusManager, gobject.SIGNAL_ACTION,
-	None, (gobject.TYPE_STRING,))
-
-status = StatusManager()
-
-status.connect("set-status",
-	lambda w,s,m: widgets.get_widget("statusBar").push(status.id(s), m))
-status.connect("unset-status",
-	lambda w,s: widgets.get_widget("statusBar").pop(status.id(s)))
-
 gobject.signal_new(
 	"widget-changed", OutputShell,
 	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
@@ -318,6 +277,7 @@ widgets = None
 accelGroup = None
 searchToolbar = None
 tabs = lib.tab_control.TabControl()
+status = StatusManager()
 
 def get_widget(name):
 	try:
