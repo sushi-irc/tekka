@@ -404,6 +404,7 @@ def set_useable(switch):
 		widgets.get_widget("serverTree"),
 		widgets.get_widget("nickList"),
 		widgets.get_widget("outputShell"),
+		widgets.get_widget("output"),
 		widgets.get_widget("generalOutput")
 	]
 

@@ -119,7 +119,8 @@ class TabControl(gobject.GObject):
 		if not tab is self.get_current_tab():
 			return
 
-		widgetList = [lib.gui_control.get_widget('nickList')]
+		widgetList = [lib.gui_control.get_widget('nickList'),
+			lib.gui_control.get_widget("output")]
 
 		for widget in widgetList:
 			widget.set_sensitive (switch)

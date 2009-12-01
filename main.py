@@ -69,11 +69,8 @@ pygtk.require("2.0")
 import sys
 import traceback
 
-try:
-	import gtk
-except:
-	print "Are you sure X is running?"
-	sys.exit(1)
+import gtk
+# TODO: catch gtk.Warning after init with warnings module
 
 import os
 import gobject
