@@ -274,8 +274,7 @@ gobject.signal_new(
 	(gobject.TYPE_PYOBJECT,gobject.TYPE_PYOBJECT))
 
 widgets = None
-accelGroup = None
-searchToolbar = None
+accelGroup = gtk.AccelGroup()
 tabs = lib.tab_control.TabControl()
 status = StatusManager()
 

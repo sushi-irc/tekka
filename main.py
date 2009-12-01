@@ -1052,7 +1052,6 @@ def setup_shortcuts():
 		- ctrl + u -> clear the input entry
 		- ctrl + s -> hide/show the side pane
 	"""
-	gui.accelGroup = gtk.AccelGroup()
 	gui.widgets.get_widget("mainWindow").add_accel_group(gui.accelGroup)
 
 	addShortcut(gui.accelGroup, gui.widgets.get_widget("inputBar"),
