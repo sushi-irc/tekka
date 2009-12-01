@@ -706,16 +706,17 @@ def output_shortcut_ctrl_l(inputBar, shortcut):
 
 def output_shortcut_ctrl_f(inputBar, shortcut):
 	""" show/hide the search toolbar """
-	if gui.searchToolbar.get_property("visible"):
-		gui.searchToolbar.hide()
-		return
+	sb = gui.widgets.get_widget("searchBar")
 
-	gui.searchToolbar.show_all()
-	gui.searchToolbar.grab_focus()
+	if sb.get_property("visible"):
+		sb.hide()
+	else:
+		sb.show_all()
+		sb.grab_focus()
 
 def output_shortcut_ctrl_g(inputBar, shortcut):
 	""" search further """
-	gui.searchToolbar.search_further()
+	gui.widgets.get_widget("searchBar").search_further()
 
 def serverTree_shortcut_ctrl_Page_Up(serverTree, shortcut):
 	"""
@@ -1224,8 +1225,9 @@ def setupGTK():
 	setup_mainWindow()
 
 	# to some setup on the search toolbar
-	gui.searchToolbar.hide()
-	gui.searchToolbar.textview = gui.widgets.get_widget("output")
+	searchBar = gui.widgets.get_widget("searchBar")
+	searchBar.hide()
+	searchBar.textview_callback = lambda: gui.widgets.get_widget("output")
 
 	# connect tab control signals
 	gui.tabs.add_callbacks({

@@ -363,7 +363,7 @@
                           </packing>
                         </child>
                         <child>
-                          <widget class="Custom" id="searchToolbar"/>
+                          <widget class="Custom" id="searchBar"/>
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">False</property>

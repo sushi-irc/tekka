@@ -376,8 +376,8 @@ def load_widgets(gladeFile, section):
 	global widgets
 
 	def custom_handler(glade, function_name, widget_name, *x):
-		if widget_name == "searchToolbar":
-			return setup_searchToolbar()
+		if widget_name == "searchBar":
+			return setup_searchBar()
 
 		elif widget_name == "outputShell":
 			return OutputShell(OutputWindow())
@@ -392,7 +392,6 @@ def load_widgets(gladeFile, section):
 				bar = SpellEntry()
 			except NameError:
 				bar = gtk.Entry()
-			bar.grab_focus()
 
 			return bar
 
@@ -410,9 +409,10 @@ def load_widgets(gladeFile, section):
 
 	return widgets
 
-def setup_searchToolbar():
-	global searchToolbar
+def setup_searchBar():
 	searchToolbar = SearchBar(None)
+	searchToolbar.set_property("name", "searchBar")
+
 	return searchToolbar
 
 def setup_statusIcon():
