@@ -1322,10 +1322,12 @@ def setupGTK():
 
 	# setup manual signals
 
+	# push status messages directly in the status bar
 	gui.status.connect("set-status",
 		lambda w,s,m: gui.widgets.get_widget("statusBar")\
 		.push(gui.status.id(s), m))
 
+	# pop status message if they're unset
 	gui.status.connect("unset-status",
 		lambda w,s: gui.widgets.get_widget("statusBar")\
 		.pop(gui.status.id(s)))
@@ -1334,6 +1336,7 @@ def setupGTK():
 	bar.connect("key-press-event", inputBar_key_press_event_cb)
 	bar.connect("activate", inputBar_activate_cb)
 
+	# output window switched
 	shell = gui.widgets.get_widget("outputShell")
 	shell.connect("widget-changed", outputShell_widget_changed_cb)
 	shell.reset()
