@@ -581,7 +581,8 @@ class TabControl(gobject.GObject):
 
 		elif tab.is_query() or tab.is_server():
 			# queries and server tabs don't have topics or nicklists
-			self.set_useable(tab, tab.connected)
+			if not lib.gui_control.status.get("connecting"):
+				self.set_useable(tab, tab.connected)
 
 			lib.gui_control.get_widget("topicBar").hide()
 			lib.gui_control.get_widget("VBox_nickList").hide()
