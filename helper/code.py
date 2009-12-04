@@ -6,6 +6,7 @@ def init_function_attrs(fun, **vars):
 		if they do not exist and return the function.
 
 		Usage: self = init_function_attr(myFun, a = 2, b = 3)
+		Results in: self = myFun, self.a = 2, self.b = 3
 	"""
 	for (key, val) in vars.items():
 		try:

@@ -35,6 +35,7 @@ import gtk
 import config
 from typecheck import types
 
+import helper.code
 import helper.escape
 import lib.contrast
 import lib.gui_control
@@ -74,14 +75,13 @@ def parse_color_codes_to_tags(msg):
 
 	last_i = -1
 	count = 0 # openend <font>
-	self = parse_color_codes_to_tags
 
-	try:
-		self.pattern
-		self.color_table
-	except AttributeError:
-		self.pattern = re.compile(chr(3)+COLOR_PATTERN)
-		self.color_table = COLOR_TABLE
+	# initialize attributes self.pattern / self.color_table
+	self = helper.code.init_function_attrs(
+		parse_color_codes_to_tags,
+
+		pattern 	= re.compile(chr(3)+COLOR_PATTERN),
+		color_table = COLOR_TABLE)
 
 	while True:
 		try:
@@ -150,13 +150,6 @@ def parse_color_markups_to_codes(s):
 	""" split s for %C markups and parse the numbers following.
 		After parsing, return the new string.
 	"""
-	self = parse_color_markups_to_codes
-
-	try:
-		self.color_pattern
-	except AttributeError:
-		self.color_pattern = re.compile(helper.color.COLOR_PATTERN)
-
 	s_split = helper.escape.unescape_split("%C", s, escape_char="%")
 	return chr(3).join(s_split)
 
