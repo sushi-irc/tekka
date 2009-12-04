@@ -83,6 +83,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
+                    <property name="tooltip" translatable="yes">Hide the main window in the tray if the window is closed.</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="tekka_hide_on_close_toggled"/>
@@ -99,6 +100,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
+                    <property name="tooltip" translatable="yes">Show a status icon in the tray menu.</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="tekka_show_status_icon_toggled"/>
@@ -113,6 +115,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
+                    <property name="tooltip" translatable="yes">Automatically expand server tabs.</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="tekka_auto_expand_toggled"/>
@@ -131,6 +134,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
+                    <property name="tooltip" translatable="yes">Shut down maki if tekka is closed.</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="tekka_close_maki_on_close_toggled"/>
@@ -147,6 +151,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
+                    <property name="tooltip" translatable="yes">Use the default GNOME font.</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
                     <signal name="toggled" handler="tekka_use_default_font_toggled"/>
@@ -288,6 +293,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="tooltip" translatable="yes">The color of your own nick.</property>
                     <property name="color">#000000000000</property>
                     <signal name="color_set" handler="colors_own_nick_written"/>
                   </widget>
@@ -301,6 +307,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="tooltip" translatable="yes">The color of your own text.</property>
                     <property name="color">#000000000000</property>
                     <signal name="color_set" handler="colors_own_text_written"/>
                   </widget>
@@ -331,6 +338,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="tooltip" translatable="yes">The color of foreign messages.</property>
                     <property name="color">#000000000000</property>
                     <signal name="color_set" handler="colors_messages_written"/>
                   </widget>
@@ -346,6 +354,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="tooltip" translatable="yes">The color of foreign action messages (/me).</property>
                     <property name="color">#000000000000</property>
                     <signal name="color_set" handler="colors_actions_written"/>
                   </widget>
@@ -361,6 +370,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="tooltip" translatable="yes">The color of messages with a highlight on you.</property>
                     <property name="color">#000000000000</property>
                     <signal name="color_set" handler="colors_highlighted_messages_written"/>
                   </widget>
@@ -376,6 +386,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="tooltip" translatable="yes">The color of action messages with a highlight on you.</property>
                     <property name="color">#000000000000</property>
                     <signal name="color_set" handler="colors_highlighted_actions_written"/>
                   </widget>
@@ -391,6 +402,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="tooltip" translatable="yes">The default foreign nick color.</property>
                     <property name="color">#000000000000</property>
                     <signal name="color_set" handler="colors_default_nick_written"/>
                   </widget>
@@ -406,6 +418,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="tooltip" translatable="yes">The color of the query/channel history.</property>
                     <property name="color">#000000000000</property>
                     <signal name="color_set" handler="colors_last_log_written"/>
                   </widget>
@@ -450,6 +463,7 @@
                   <widget class="GtkEntry" id="quit_message">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="tooltip" translatable="yes">The default quit message which is sent while quitting a server.</property>
                     <signal name="focus_out_event" handler="chatting_quit_message_written"/>
                   </widget>
                   <packing>
@@ -472,6 +486,7 @@
                   <widget class="GtkEntry" id="part_message">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="tooltip" translatable="yes">The default message which is sent while parting a channel.</property>
                     <signal name="focus_out_event" handler="chatting_part_message_written"/>
                   </widget>
                   <packing>
@@ -496,6 +511,7 @@
                   <widget class="GtkSpinButton" id="last_log_lines">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="tooltip" translatable="yes">The amount of history lines printed after startup.</property>
                     <property name="adjustment">10 0 100 1 0 0</property>
                     <signal name="value_changed" handler="chatting_log_lines_changed"/>
                   </widget>
@@ -522,6 +538,7 @@
                 <child>
                   <widget class="Custom" id="highlightList">
                     <property name="visible">True</property>
+                    <property name="tooltip" translatable="yes">Additional words to highlight.</property>
                   </widget>
                   <packing>
                     <property name="right_attach">2</property>
@@ -544,6 +561,7 @@
                   <widget class="GtkEntry" id="time_format">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="tooltip" translatable="yes">The timestamp format printed in front of every message.</property>
                     <property name="invisible_char">&#x25CF;</property>
                     <signal name="focus_out_event" handler="chatting_time_format_written"/>
                     <signal name="activate" handler="chatting_time_format_written"/>
@@ -578,20 +596,18 @@
                 <property name="border_width">8</property>
                 <property name="n_rows">2</property>
                 <child>
-                  <widget class="Custom" id="generalOutputFilterList">
-                    <property name="visible">True</property>
-                    <property name="creation_function">createGeneralOutputFilterList</property>
-                  </widget>
-                </child>
-                <child>
                   <widget class="GtkLabel" id="label8">
                     <property name="visible">True</property>
-                    <property name="xalign">0.11999999731779099</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Notice:&lt;/b&gt;
-First field is type, second field is server, third is the channel.
-Everything matching passes the filter and will be shown except the row is negated.</property>
+                    <property name="xalign">0.059999998658895493</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Help:&lt;/b&gt;
+The &lt;b&gt;first&lt;/b&gt; field is the &lt;u&gt;message&lt;/u&gt; type.
+The &lt;b&gt;second&lt;/b&gt; field represents the &lt;u&gt;server&lt;/u&gt; the message comes from.
+The &lt;b&gt;last&lt;/b&gt; field is the &lt;u&gt;channel/query&lt;/u&gt; which sent the message.
+
+The last field is optional.</property>
                     <property name="use_markup">True</property>
                     <property name="wrap">True</property>
+                    <property name="ellipsize">start</property>
                   </widget>
                   <packing>
                     <property name="top_attach">1</property>
@@ -599,6 +615,28 @@ Everything matching passes the filter and will be shown except the row is negate
                     <property name="y_options">GTK_SHRINK</property>
                     <property name="y_padding">6</property>
                   </packing>
+                </child>
+                <child>
+                  <widget class="GtkFrame" id="frame2">
+                    <property name="visible">True</property>
+                    <property name="label_xalign">0</property>
+                    <property name="shadow_type">none</property>
+                    <child>
+                      <widget class="Custom" id="generalOutputFilterList">
+                        <property name="visible">True</property>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkLabel" id="label15">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Filter messages&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                      </widget>
+                      <packing>
+                        <property name="type">label_item</property>
+                      </packing>
+                    </child>
+                  </widget>
                 </child>
               </widget>
               <packing>
@@ -654,6 +692,7 @@ Changes will be applied after closing this dialog.</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
+                        <property name="tooltip" translatable="yes">Enable to use colors which are sensitive to your background color.</property>
                         <property name="draw_indicator">True</property>
                         <signal name="toggled" handler="nick_contrast_colors_toggled_cb"/>
                       </widget>
@@ -694,6 +733,7 @@ Changes will be applied after closing this dialog.</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
+                    <property name="tooltip" translatable="yes">Open the advanced settings dialog to manually edit the config options.</property>
                     <property name="use_underline">True</property>
                     <signal name="clicked" handler="advanced_advancedSettingsClicked"/>
                   </widget>
