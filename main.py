@@ -202,7 +202,18 @@ def tekka_tab_switched_cb(tabclass, old, new):
 		inputBar.set_position(len(inputBar.get_text()))
 
 		if new.window.auto_scroll:
-			new.window.textview.scroll_to_bottom( no_smooth = True )
+			# XXX: Needs testing!
+			def check_for_scrolling():
+				sw = new.window
+				adj = sw.get_vadjustment()
+
+				if adj.get_value() != (adj.upper - adj.page_size):
+					sw.textview.scroll_to_bottom( no_smooth = True )
+				else:
+					print "No need for scrolling!"
+				return False
+
+			gobject.idle_add(check_for_scrolling)
 
 def tekka_tab_add_cb(tab):
 	""" a tab is added """
