@@ -38,6 +38,40 @@ def _resetCursor(widget, event, window, cursor):
 	widget.disconnect(eventIDs[widget])
 	del eventIDs[widget]
 
+def _build_url_menu(browser, url):
+	menu = gtk.Menu()
+	cb = gtk.Clipboard()
+
+	if browser:
+		openitem = gtk.MenuItem(label="Open")
+		openitem.connect("activate",
+			lambda w,b: b.open(url), browser)
+
+		menu.append(openitem)
+
+	copyitem = gtk.MenuItem(label="Copy URL")
+	copyitem.connect("activate",
+		lambda w,u,c: c.set_text(u), url, cb)
+	menu.append(copyitem)
+
+	return menu
+
+def _get_browser():
+	name = config.get("tekka","browser")
+	try:
+		if name and webbrowser.get(name):
+			browser = webbrowser.get(name)
+		else:
+			browser = webbrowser
+	except webbrowser.Error:
+		logging.error("Could not open a browser")
+		browser = None
+
+	except TypeError:
+		logging.debug("Fetching bug in python2.4")
+		browser = None
+	return browser
+
 def URLHandler(texttag, widget, event, iter, url):
 	""" do URL specific stuff """
 
@@ -60,20 +94,7 @@ def URLHandler(texttag, widget, event, iter, url):
 
 		return True
 
-	name = config.get("tekka","browser")
-
-	try:
-		if name and webbrowser.get(name):
-			browser = webbrowser.get(name)
-		else:
-			browser = webbrowser
-	except webbrowser.Error:
-		logging.error("Could not open a browser")
-		browser = None
-
-	except TypeError:
-		logging.debug("Fetching bug in python2.4")
-		browser = None
+	browser = _get_browser()
 
 	if event.type == gtk.gdk.BUTTON_RELEASE:
 
@@ -85,20 +106,7 @@ def URLHandler(texttag, widget, event, iter, url):
 
 		if event.button == 3:
 			# print menu for URL actions
-			menu = gtk.Menu()
-			cb = gtk.Clipboard()
-
-			if browser:
-				openitem = gtk.MenuItem(label="Open")
-				openitem.connect("activate",
-					lambda w,b: b.open(url), browser)
-
-				menu.append(openitem)
-
-			copyitem = gtk.MenuItem(label="Copy URL")
-			copyitem.connect("activate",
-				lambda w,u,c: c.set_text(u), url, cb)
-			menu.append(copyitem)
+			menu = _build_url_menu(browser, url)
 
 			menu.show_all()
 			menu.popup(None, None, None, button=event.button,
