@@ -89,18 +89,17 @@ class WelcomeWindow(OutputWindow):
 		com.sushi.g_connect("maki-disconnected", self.sushi_disconnected_cb)
 
 	def sushi_connected_cb(self, sushi):
-		s = _("You're connected to <b>maki</b> so the next step "
-  				"is, that you connect to a server over the server "
+		s = _("You are connected to maki. The next step "
+				"is to connect to a server via the server "
 				"dialog in the tekka menu.")
 		self.descr.set_markup(s)
 
 	def sushi_disconnected_cb(self, sushi):
-		s = _("You're not connected to <b>maki</b>, the central "
-		  		"IRC daemon which interacts with the IRC server. "
-	  			"Without <b>maki</b> you can't connect to a "
-  				"server or write messages.\n\n"
-				"If you're having problems running maki, try to "
-				"visit\n\n\thttp://sushi.ikkoku.de/\n\nand see if there's "
+		s = _("You are not connected to maki. "
+				"Without maki you can not connect to "
+				"servers or write messages.\n\n"
+				"If you are having problems running maki "
+				"visit http://sushi.ikkoku.de/ and look whether there is "
 				"a solution for your problem. Otherwise, feel free "
 				"to ask for support.")
 		self.descr.set_markup(s)
