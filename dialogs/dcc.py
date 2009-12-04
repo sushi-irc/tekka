@@ -77,6 +77,7 @@ def get_progress(p, s):
 def apply_dbus_sends():
 	# TODO: detection of removed entries
 	# FIXME: main gui freeze if gui is killed and dialog is running
+	# FIXME: only poll if there's a send/get active
 	sends = sushi.dcc_sends()
 	view = widgets.get_widget("transferView")
 	store = view.get_model()
