@@ -61,11 +61,19 @@ def generalOutputFilterList_instanced_widget_cb(elist, row, column, obj):
 			model.append((row,))
 
 def customHandler(glade, function_name, widget_name, *x):
+	def _nice_sw():
+		sw = gtk.ScrolledWindow()
+		sw.set_properties(
+			hscrollbar_policy = gtk.POLICY_AUTOMATIC,
+			vscrollbar_policy = gtk.POLICY_AUTOMATIC)
+		return sw
+
 	if widget_name == "nickColorsList":
 		global nickColorsList
 
 		nickColorsList = ExpandingList(gtk.ColorButton)
-		sw = gtk.ScrolledWindow()
+
+		sw = _nice_sw()
 		sw.add_with_viewport(nickColorsList)
 		sw.show_all()
 
@@ -75,7 +83,8 @@ def customHandler(glade, function_name, widget_name, *x):
 		global highlightList
 
 		highlightList = ExpandingList(gtk.Entry)
-		sw = gtk.ScrolledWindow()
+
+		sw = _nice_sw()
 		sw.add_with_viewport(highlightList)
 		sw.show_all()
 
@@ -94,7 +103,7 @@ def customHandler(glade, function_name, widget_name, *x):
 
 		generalOutputFilterList._add_row(0)
 
-		sw = gtk.ScrolledWindow()
+		sw = _nice_sw()
 		sw.add_with_viewport(generalOutputFilterList)
 		sw.show_all()
 
