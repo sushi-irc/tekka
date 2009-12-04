@@ -129,6 +129,8 @@ def set_defaults():
 	defaults["colors"]["text_highlightaction"] = "#0000FF"
 	defaults["colors"]["nick"] = "#2222AA" # default foreign nick color
 	defaults["colors"]["last_log"] = "#DDDDDD"
+
+	defaults["colors"]["nick_contrast_colors"] = "True"
 	defaults["colors"]["nick_colors"] = "#AA0000,#2222AA,#44AA44,#123456,#987654"
 
 	defaults["chatting"]={}

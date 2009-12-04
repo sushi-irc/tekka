@@ -621,13 +621,7 @@ Everything matching passes the filter and will be shown except the row is negate
               <widget class="GtkTable" id="nickColorsTable">
                 <property name="visible">True</property>
                 <property name="border_width">8</property>
-                <property name="n_rows">2</property>
-                <child>
-                  <widget class="Custom" id="nickColorsList">
-                    <property name="visible">True</property>
-                    <property name="creation_function">createNickColorsList</property>
-                  </widget>
-                </child>
+                <property name="n_rows">3</property>
                 <child>
                   <widget class="GtkLabel" id="label7">
                     <property name="visible">True</property>
@@ -638,10 +632,38 @@ Changes will be applied after closing this dialog.</property>
                     <property name="wrap">True</property>
                   </widget>
                   <packing>
-                    <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
                     <property name="y_options">GTK_SHRINK</property>
                     <property name="y_padding">6</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkFrame" id="frame1">
+                    <property name="visible">True</property>
+                    <property name="label_xalign">0</property>
+                    <property name="shadow_type">none</property>
+                    <child>
+                      <widget class="Custom" id="nickColorsList">
+                        <property name="visible">True</property>
+                      </widget>
+                    </child>
+                    <child>
+                      <widget class="GtkCheckButton" id="nick_contrast_colors">
+                        <property name="label" translatable="yes">Use contrast sensitive colors</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">False</property>
+                        <property name="draw_indicator">True</property>
+                        <signal name="toggled" handler="nick_contrast_colors_toggled_cb"/>
+                      </widget>
+                      <packing>
+                        <property name="type">label_item</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="bottom_attach">2</property>
                   </packing>
                 </child>
               </widget>

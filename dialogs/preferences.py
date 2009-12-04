@@ -160,6 +160,9 @@ def fillChatting():
 	widgets.get_widget("last_log_lines").set_value(float(val))
 
 def fillNickColors():
+	widgets.get_widget("nick_contrast_colors").set_active(
+		config.get_bool("colors", "nick_contrast_colors"))
+
 	colors = config.get_list("colors", "nick_colors", [])
 
 	if not colors:
@@ -334,6 +337,17 @@ def chatting_log_lines_changed(button):
 
 	config.set("chatting", "last_log_lines", str(value))
 
+""" nick colors page signals """
+
+def nick_contrast_colors_toggled_cb(button):
+	config.set("colors", "nick_contrast_colors", str(button.get_active()))
+
+
+	ncl = widgets.get_widget("nickColorsList")
+
+	if ncl:
+		ncl.set_sensitive(not button.get_active())
+
 """ advanced page signals """
 
 def advanced_advancedSettingsClicked(button):
@@ -382,6 +396,8 @@ def setup():
 		"chatting_part_message_written": chatting_part_message_written,
 		"chatting_time_format_written": chatting_time_format_written,
 		"chatting_log_lines_changed": chatting_log_lines_changed,
+	# nick colors page
+		"nick_contrast_colors_toggled_cb": nick_contrast_colors_toggled_cb,
 	# advanced page
 		"advanced_advancedSettingsClicked": advanced_advancedSettingsClicked
 	}

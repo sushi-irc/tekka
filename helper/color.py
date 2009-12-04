@@ -167,16 +167,28 @@ def get_nick_color(nick):
 		The returned color depends on the color mapping
 		set in config module.
 	"""
+	def pick_nick_color(colors, nick):
+		return colors[sum([ord(n) for n in nick]) % len(colors)]
+
 	if not config.get_bool("tekka","color_text"):
 		return
 
-	colors = lib.contrast.colors[:-1]
-	bg_color = lib.gui_control.widgets.get_widget("output").get_style().\
-		base[gtk.STATE_NORMAL]
-	color = colors[sum([ord(n) for n in nick]) % len(colors)]
+	if not config.get_bool("colors", "nick_contrast_colors"):
+		# pick a color out of the user defined list
 
-	r = lib.contrast.contrast_render_foreground_color(bg_color, color)
-	return r
+		colors = config.get_list("colors", "nick_colors", [])
+		color = pick_nick_color(colors, nick)
+
+		return color
+	else:
+		# pick a contrast color
+
+		bg_color = lib.gui_control.widgets.get_widget("output")\
+			.get_style().base[gtk.STATE_NORMAL]
+		color = pick_nick_color(lib.contrast.colors[:-1], nick)
+		r = lib.contrast.contrast_render_foreground_color(bg_color, color)
+
+		return r
 
 @types (nick = basestring)
 def get_text_color(nick):
