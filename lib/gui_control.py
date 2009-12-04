@@ -38,6 +38,7 @@ import gettext
 import gobject
 import logging
 
+from threading import Timer
 from gobject import idle_add
 from dbus import String, UInt64
 
@@ -58,6 +59,7 @@ from typecheck import types
 
 from helper.shortcuts import addShortcut, removeShortcut
 from helper import URLHandler
+import helper.code
 
 import lib.tab_control
 from lib.search_toolbar import SearchBar
@@ -791,6 +793,12 @@ def error_dialog(string):
 	err.destroy()
 
 def show_inline_dialog(dialog):
+
+	# Purpose: auto removing messages (depends on config)
+	self = helper.code.init_function_attrs(
+		show_inline_dialog,
+		timeouts = [])
+
 	area = widgets.get_widget("notificationWidget")
 
 	if dialog:
@@ -798,5 +806,23 @@ def show_inline_dialog(dialog):
 		area.add(dialog)
 		area.show_all()
 		area.set_no_show_all(True)
+
+		if config.get_bool("tekka", "idialog_timeout"):
+			def dialog_timeout_cb():
+				area.remove(dialog)
+				self.timeouts.remove(dialog_timeout_cb.timer)
+
+			t = Timer(
+				int(config.get("tekka", "idialog_timeout_seconds")),
+				dialog_timeout_cb)
+
+			dialog_timeout_cb.timer = t
+			self.timeouts.append(t)
+
+			t.start()
+
 	else:
 		area.set_property("visible", False)
+
+		for timer in self.timeouts:
+			t.cancel()

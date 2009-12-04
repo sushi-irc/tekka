@@ -82,6 +82,8 @@ def set_defaults():
 	defaults["tekka"]["font"] = "Monospace 10"
 	defaults["tekka"]["auto_expand"] = "True"
 	defaults["tekka"]["smooth_scrolling"] = "False"
+	defaults["tekka"]["idialog_timeout"] = "False"
+	defaults["tekka"]["idialog_timeout_seconds"] = "5"
 
 	defaults["tekka"]["show_general_output"] = "True"
 	defaults["tekka"]["show_topicbar"] = "False"
