@@ -100,7 +100,7 @@ class WelcomeWindow(OutputWindow):
 	  			"Without <b>maki</b> you can't connect to a "
   				"server or write messages.\n\n"
 				"If you're having problems running maki, try to "
-				"visit http://sushi.ikkoku.de/ and see if there's "
+				"visit\n\n\thttp://sushi.ikkoku.de/\n\nand see if there's "
 				"a solution for your problem. Otherwise, feel free "
 				"to ask for support.")
 		self.descr.set_markup(s)
