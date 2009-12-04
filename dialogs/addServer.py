@@ -52,6 +52,9 @@ def createCommandList(glade, fun_name, widget_name, *x):
 	commandList = ExpandingList(gtk.Entry)
 
 	sw = gtk.ScrolledWindow()
+	sw.set_properties(
+		hscrollbar_policy = gtk.POLICY_AUTOMATIC,
+		vscrollbar_policy = gtk.POLICY_AUTOMATIC)
 	sw.add_with_viewport(commandList)
 
 	sw.show_all()

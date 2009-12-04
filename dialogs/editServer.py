@@ -44,6 +44,9 @@ def setup_widgets():
 			commandList = ExpandingList(gtk.Entry)
 
 			sw = gtk.ScrolledWindow()
+			sw.set_properties(
+				hscrollbar_policy = gtk.POLICY_AUTOMATIC,
+				vscrollbar_policy = gtk.POLICY_AUTOMATIC)
 			sw.add_with_viewport(commandList)
 
 			return sw
