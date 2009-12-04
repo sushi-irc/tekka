@@ -1398,11 +1398,32 @@ def tekka_excepthook(extype, exobj, extb):
 
 			self.set_default_size(400,300)
 
+			self.error_label = gtk.Label()
+			self.error_label.set_properties(
+				width_chars = 50, wrap = True, xalign = 0.0)
+			self.error_label.set_markup(_(
+				"<span size='larger'>Error occured</span>\n\n"
+				"An error occured. We apologize for that. Please "
+				"feel free to submit an error report:\n"
+				"http://launchpad.net/sushi.tekka/bugs"))
+
 			self.tv = gtk.TextView()
 			self.tv.get_buffer().set_text(message)
+
 			self.sw = gtk.ScrolledWindow()
+			self.sw.set_properties(
+				shadow_type = gtk.SHADOW_ETCHED_IN,
+				hscrollbar_policy = gtk.POLICY_AUTOMATIC,
+				vscrollbar_policy = gtk.POLICY_AUTOMATIC)
 			self.sw.add(self.tv)
-			self.vbox.pack_start(self.sw)
+
+			self.vbox_inner = gtk.VBox()
+			self.vbox_inner.set_property("border-width", 6)
+
+			self.vbox_inner.pack_start(self.error_label)
+			self.vbox_inner.pack_end(self.sw)
+
+			self.vbox.pack_start(self.vbox_inner)
 			self.vbox.show_all()
 
 		def set_message(self, msg):
