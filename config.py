@@ -93,7 +93,7 @@ def set_defaults():
 	defaults["tekka"]["color_nick_text"] = "False" 	# color the text as well as the nick
 	defaults["tekka"]["ask_for_key_on_cannotjoin"] = "True"
 	defaults["tekka"]["switch_to_channel_after_join"] = "True"
-	defaults["tekka"]["time_format"] = "%H:%M"
+
 	defaults["tekka"]["whois_dialog"] = "True"
 	defaults["tekka"]["divider_length"] = "30"
 	defaults["tekka"]["max_output_lines"] = "500"
@@ -136,6 +136,7 @@ def set_defaults():
 	defaults["chatting"]["quit_message"] = "Leading."
 	defaults["chatting"]["part_message"] = "Partitioning."
 	defaults["chatting"]["nick_separator"] = ": "
+	defaults["chatting"]["time_format"] = "%H:%M"
 
 	defaults["autoload_plugins"] = {}
 

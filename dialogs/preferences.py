@@ -135,7 +135,7 @@ def fillColors():
 		widgets.get_widget(key).set_color(color)
 
 def fillChatting():
-	for key in ("quit_message", "part_message"):
+	for key in ("quit_message", "part_message", "time_format"):
 		val = config.get("chatting", key)
 		widgets.get_widget(key).set_text(val)
 
@@ -313,6 +313,10 @@ def chatting_part_message_written(entry, event):
 	text = entry.get_text()
 	config.set("chatting", "part_message", text)
 
+def chatting_time_format_written(entry, *x):
+	text = entry.get_text()
+	config.set("chatting", "time_format", text)
+
 def chatting_log_lines_changed(button):
 	value = int(button.get_value())
 
@@ -367,6 +371,7 @@ def setup():
 	# chatting page
 		"chatting_quit_message_written": chatting_quit_message_written,
 		"chatting_part_message_written": chatting_part_message_written,
+		"chatting_time_format_written": chatting_time_format_written,
 		"chatting_log_lines_changed": chatting_log_lines_changed,
 	# advanced page
 		"advanced_advancedSettingsClicked": advanced_advancedSettingsClicked

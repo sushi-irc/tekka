@@ -716,7 +716,7 @@ no_general_output = False):
 		`server`.
 	"""
 	timestring = time.strftime(
-		config.get("tekka", "time_format", "%H:%M"),
+		config.get("chatting", "time_format", "%H:%M"),
 		time.localtime(timestamp))
 
 	cString = colorize_message(msgtype, message)
@@ -757,7 +757,7 @@ no_general_output = False):
 
 	buffer = serverTab.window.textview.get_buffer()
 
-	timestr = time.strftime(config.get("tekka", "time_format", "%H:%M"),
+	timestr = time.strftime(config.get("chatting", "time_format", "%H:%M"),
 		time.localtime(timestamp))
 
 	buffer.insertHTML(buffer.get_end_iter(), "[%s] %s" % (timestr, string))

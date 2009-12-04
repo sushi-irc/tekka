@@ -437,7 +437,7 @@
               <widget class="GtkTable" id="chattingTable">
                 <property name="visible">True</property>
                 <property name="border_width">8</property>
-                <property name="n_rows">5</property>
+                <property name="n_rows">6</property>
                 <property name="n_columns">2</property>
                 <child>
                   <widget class="GtkLabel" id="label22">
@@ -515,8 +515,8 @@
                   </widget>
                   <packing>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">3</property>
-                    <property name="bottom_attach">4</property>
+                    <property name="top_attach">4</property>
+                    <property name="bottom_attach">5</property>
                   </packing>
                 </child>
                 <child>
@@ -525,8 +525,34 @@
                   </widget>
                   <packing>
                     <property name="right_attach">2</property>
-                    <property name="top_attach">4</property>
-                    <property name="bottom_attach">5</property>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label13">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Time format:</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkEntry" id="time_format">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="invisible_char">&#x25CF;</property>
+                    <signal name="focus_out_event" handler="chatting_time_format_written"/>
+                    <signal name="activate" handler="chatting_time_format_written"/>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
                   </packing>
                 </child>
               </widget>
