@@ -185,7 +185,6 @@
                       <widget class="GtkImageMenuItem" id="menu_Dialogs_dcc">
                         <property name="label" translatable="yes">_File Transfers</property>
                         <property name="visible">True</property>
-                        <property name="tooltip" translatable="yes">Manage File Transfers</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
                         <signal name="activate" handler="menu_Dialogs_dcc_activate_cb"/>
@@ -201,7 +200,6 @@
                       <widget class="GtkImageMenuItem" id="menu_Dialogs_plugins">
                         <property name="label" translatable="yes">_Plugins</property>
                         <property name="visible">True</property>
-                        <property name="tooltip" translatable="yes">Manage plugins</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">False</property>
                         <signal name="activate" handler="menu_Dialogs_plugins_activate_cb"/>
@@ -252,7 +250,6 @@
                     <child>
                       <widget class="GtkMenuItem" id="menu_Help_Colors">
                         <property name="visible">True</property>
-                        <property name="tooltip" translatable="yes">Show a translation between IRC color codes and real colors</property>
                         <property name="label" translatable="yes">IRC Colors</property>
                         <property name="use_underline">True</property>
                         <signal name="activate" handler="menu_Help_Colors_activate_cb"/>
