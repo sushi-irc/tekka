@@ -1008,6 +1008,7 @@ def setup_serverTree():
 
 	widget.set_model(tm)
 	widget.set_property("has-tooltip", True)
+
 	widget.connect("query-tooltip", serverTree_query_tooltip_cb)
 
 	renderer = gtk.CellRendererText()
@@ -1037,6 +1038,7 @@ def setup_nickList():
 	widget.append_column(column)
 
 	widget.set_headers_visible(False)
+	widget.set_rules_hint(True)
 
 def setup_shortcuts():
 	"""
