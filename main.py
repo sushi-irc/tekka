@@ -1093,15 +1093,6 @@ def connect_maki():
 	"""
 	com.connect()
 
-def paned_notify_cb(paned, gparam):
-	""" watch every property set for
-		paned. If the property equals
-		position, save the new value
-		to the config.
-	"""
-	if gparam.name == "position":
-		config.set("sizes", paned.name, paned.get_property("position"))
-
 def load_paned_positions():
 	""" restore the positions of the
 		paned dividers for the list,
@@ -1127,6 +1118,13 @@ def load_paned_positions():
 			continue
 
 def setup_paneds():
+
+	def paned_notify_cb(paned, gparam):
+		""" save the paned position in the config under the
+			paned's name """
+		if gparam.name == "position":
+			config.set("sizes", paned.name, paned.get_property("position"))
+
 	load_paned_positions()
 
 	sigdic = {
