@@ -187,8 +187,8 @@ class TabControl(gobject.GObject):
 		server = tab.name
 
 		if com.sushi.user_away(server, com.get_own_nick(server)):
-			# FIXME
-			tab.away = "OHAI"
+			# TODO: better query management @ LP
+			tab.away = "-- Not implemented yet --"
 
 		tab.nick = com.parse_from(com.sushi.user_from(server, ""))[0]
 		tab.support_prefix = com.sushi.support_prefix(server)
