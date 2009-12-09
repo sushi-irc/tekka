@@ -27,8 +27,11 @@ SUCH DAMAGE.
 """
 
 import gtk
-from com import sushi
 from gettext import gettext as _
+
+import signals
+import helper.dcc
+from com import sushi
 from lib.inline_dialog import InlineDialog
 
 class DCCDialog(InlineDialog):
@@ -71,19 +74,33 @@ class DCCDialog(InlineDialog):
 		self.dest_checkbox.set_active(True)
 		self.table.attach(self.dest_checkbox, 0, 1, 2, 3)
 
-		"""
-		self.filechooser = gtk.FileChooserButton("Select a Directory")
-		self.filechooser.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
-		self.filechooser.set_current_folder(sushi.dcc_send_get(id, "directory"))
-		hbox = gtk.HBox()
-		hbox.pack_start(self.filechooser, expand = True, fill = False)
-		self.table.attach(hbox, 1, 2, 1, 2, yoptions = gtk.EXPAND)
-		"""
-
 		self.vbox.add(self.table)
 
-		# TODO: connect to the dcc accept signal so that we can choose the directory
-		# TODO:: if needed (dest_checkbox is not actice)
+		signals.connect_signal("dcc_send", self.dcc_send_cb)
+
+	def dcc_send_cb(self, time, id, server, sender, filename, size,
+	progress, speed, status):
+		def file_dialog_response_cb(dialog, id, dcc_id):
+			sushi.dcc_send_set(dcc_id, "directory",
+				dialog.get_current_folder())
+			dialog.destroy()
+
+		def ask_for_directory():
+			file_dialog = gtk.FileChooserDialog(
+				title="Select a directory to save in...",
+				buttons=(gtk.STOCK_CANCEL,1,gtk.STOCK_OK,2))
+
+			file_dialog.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+			file_dialog.set_current_folder(
+				sushi.dcc_send_get(id, "directory"))
+
+			file_dialog.connect("response", file_dialog_response_cb, id)
+			file_dialog.show_all()
+
+		if (not self.dest_checkbox.get_active()
+		and id == self.transfer_id
+		and status & helper.dcc.s_running):
+			ask_for_directory()
 
 	def show(self):
 		if sushi.remote:
@@ -91,6 +108,4 @@ class DCCDialog(InlineDialog):
 		InlineDialog.show(self)
 
 	def response(self, id):
-		sushi.dcc_send_set(self.transfer_id, "directory",
-			self.filechooser.get_current_folder())
 		InlineDialog.response(self, id)

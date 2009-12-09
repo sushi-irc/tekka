@@ -1,5 +1,5 @@
 d Method to determine whether maki is remote or not (forbid dcc if so)
-- change DCC dialog so the download directory can be changed after
+d change DCC dialog so the download directory can be changed after
   accepting ([ ] save to default dir)
 d don't pop up the dcc dialog if the incoming transfer is auto
   accepted by maki
