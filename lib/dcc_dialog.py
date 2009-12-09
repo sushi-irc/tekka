@@ -47,9 +47,10 @@ class DCCDialog(InlineDialog):
 			icon = gtk.STOCK_DIALOG_INFO)
 
 		self.transfer_id = id
-		self.table = gtk.Table(rows = 2, columns = 2)
+		self.table = gtk.Table(rows = 3, columns = 1)
 
 		self.label = gtk.Label(None)
+		self.label.set_property("xalign", 0.0)
 		self.label.set_markup(
 				"<b>"+_("Incoming file transfer")+"\n</b>"+
 				_("Sender: ”%(nick)s”\n"
@@ -65,17 +66,29 @@ class DCCDialog(InlineDialog):
 				}))
 		self.table.attach(self.label, 0, 1, 0, 2)
 
-		self.flabel = gtk.Label("Directory to save incoming file: ")
-		self.table.attach(self.flabel, 1, 2, 0, 1)
+		self.dest_checkbox = gtk.CheckButton()
+		self.dest_checkbox.set_label(_("Save to the default directory"))
+		self.dest_checkbox.set_active(True)
+		self.table.attach(self.dest_checkbox, 0, 1, 2, 3)
 
+		"""
 		self.filechooser = gtk.FileChooserButton("Select a Directory")
 		self.filechooser.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
 		self.filechooser.set_current_folder(sushi.dcc_send_get(id, "directory"))
 		hbox = gtk.HBox()
 		hbox.pack_start(self.filechooser, expand = True, fill = False)
 		self.table.attach(hbox, 1, 2, 1, 2, yoptions = gtk.EXPAND)
+		"""
 
 		self.vbox.add(self.table)
+
+		# TODO: connect to the dcc accept signal so that we can choose the directory
+		# TODO:: if needed (dest_checkbox is not actice)
+
+	def show(self):
+		if sushi.remote:
+			self.dest_checkbox.set_sensitive(False)
+		InlineDialog.show(self)
 
 	def response(self, id):
 		sushi.dcc_send_set(self.transfer_id, "directory",
