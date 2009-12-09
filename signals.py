@@ -1499,13 +1499,6 @@ def dcc_send_cb(time, id, server, sender, filename,
 			sushi.dcc_send_remove(tid)
 		dialog.destroy()
 
-	(s_new,
-	 s_incoming,
-	 s_resumable,
-	 s_resumed,
-	 s_running,
-	 s_error) = [1 << n for n in range(6)]
-
 	if (server == "" and sender == "" and filename == ""
 	and size == 0 and progress == 0 and speed == 0 and status == 0):
 
@@ -1515,8 +1508,10 @@ def dcc_send_cb(time, id, server, sender, filename,
 
 	logging.debug("status is %d." % (status))
 
+	# import states
+	from helper.dcc import s_new, s_incoming, s_resumable
+
 	# handle incoming transfers
-	#
 	if status & s_incoming == s_incoming:
 
 		if status & s_new == s_new:
