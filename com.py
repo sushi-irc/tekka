@@ -64,7 +64,15 @@ class SushiWrapper (gobject.GObject):
 	@types (sushi_interface = (dbus.Interface, NoneType))
 	def __init__(self, sushi_interface):
 		gobject.GObject.__init__(self)
+
+		self.connected = False
+		self.remote = False
+
 		self._set_interface(sushi_interface)
+
+	@types(v = bool)
+	def _set_remote(self, v):
+		self._remote = v
 
 	@types (connected = bool)
 	def _set_connected(self, connected):
@@ -86,6 +94,15 @@ class SushiWrapper (gobject.GObject):
 
 	def __getattribute__(self, attr):
 
+		""" attributes prefixed with g_ will be resolved
+			by GObject's getattribute with the g_ striped.
+
+			attributes prefixed with _ will be resolved
+			as they are for SushiWrapper.
+
+			all other attributes are forwarded to self._sushi
+		"""
+
 		def dummy(*args, **kwargs):
 			sushi._emit_error(
 				_("tekka could not connect to maki."),
@@ -106,7 +123,8 @@ class SushiWrapper (gobject.GObject):
 			attr = attr[2:]
 			gobject_attr = True
 
-		if attr[0] == "_" or gobject_attr or attr == "connected":
+		if (attr[0] == "_" or gobject_attr
+		or attr in ("connected", "remote")):
 			# resolve it by gobject.__getattribute__. This function
 			# will call getattr as well if there is no matching
 			# method in the gobject hierarchy.
@@ -141,6 +159,8 @@ class SushiWrapper (gobject.GObject):
 
 		raise AttributeError(attr)
 
+	# Properties
+	remote = property(lambda s: s._remote, _set_remote)
 	connected = property(lambda s: s._connected, _set_connected)
 
 gobject.signal_new ("maki-connected", SushiWrapper, gobject.SIGNAL_ACTION,
@@ -215,6 +235,9 @@ def connect():
 
 		if bus == None:
 			return False
+
+	if type(bus) == dbus.connection.Connection:
+		sushi.remote = True
 
 	proxy = None
 	try:
