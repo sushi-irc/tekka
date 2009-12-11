@@ -26,6 +26,10 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+""" dcc inline dialog.
+	displayed on incoming dcc call
+"""
+
 import gtk
 from gettext import gettext as _
 
@@ -36,12 +40,6 @@ from lib.inline_dialog import InlineDialog
 
 class DCCDialog(InlineDialog):
 
-	"""
-	[ICON] Incoming file transfer from %s: %s. [Accept]
-	                                           [Deny]
-	       [ Dest. Dir]                        [Cancel]
-	"""
-
 	def __init__(self, id, nick, filename, size, resumable):
 		InlineDialog.__init__(self,
 			buttons = (gtk.STOCK_OK, gtk.RESPONSE_OK,
@@ -49,62 +47,84 @@ class DCCDialog(InlineDialog):
 						gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE),
 			icon = gtk.STOCK_DIALOG_INFO)
 
+		self.table = gtk.Table(rows = 3, columns = 2)
+
 		self.transfer_id = id
-		self.table = gtk.Table(rows = 3, columns = 1)
+		self.transfer_info = {
+			"id": id,
+			"nick": nick,
+			"filename": filename,
+			"size": size,
+			"resumable": resumable,
+			"original_directory": sushi.dcc_send_get(id, "directory")}
 
 		self.label = gtk.Label(None)
-		self.label.set_property("xalign", 0.0)
-		self.label.set_markup(
-				"<b>"+_("Incoming file transfer")+"\n</b>"+
-				_("Sender: ”%(nick)s”\n"
-				  "Filename: “%(filename)s“\n"
-				  "File size: %(bytes)d bytes"
-				  "%(resumable)s" % \
-				{ "nick": nick,
-				  "filename": filename,
-				  "bytes": size,
-				  "resumable": (resumable and
-				  		_("\nIf you don't choose another destination, "
-						  "this file will be resumed.") or "")
-				}))
-		self.table.attach(self.label, 0, 1, 0, 2)
+		self._update_label()
 
-		self.dest_checkbox = gtk.CheckButton()
-		self.dest_checkbox.set_label(_("Save to the default directory"))
-		self.dest_checkbox.set_active(True)
-		self.table.attach(self.dest_checkbox, 0, 1, 2, 3)
+		self.table.attach(self.label, 0, 2, 0, 2, xoptions = gtk.FILL)
+
+		# Setup the destination chooser button
+		self.destination_dialog = None
+		self.destination_button = gtk.Button(_("Select destination"))
+		self.destination_button.connect("clicked", self._destination_button_clicked_cb)
+		self.table.attach(self.destination_button, 0, 1, 2, 3, xoptions = gtk.FILL)
+		self.destination_button.set_property("border-width", 6)
 
 		self.vbox.add(self.table)
 
-		signals.connect_signal("dcc_send", self.dcc_send_cb)
+	def _destination_button_clicked_cb(self, dialog):
+		def create_file_dialog():
+			def _file_dialog_response_cb(dialog, id):
+				if id == gtk.RESPONSE_OK:
+					# apply directory
+					sushi.dcc_send_set(self.transfer_id, "directory", dialog.get_current_folder())
+					self._update_label()
 
-	def dcc_send_cb(self, time, id, server, sender, filename, size,
-	progress, speed, status):
-		def file_dialog_response_cb(dialog, id, dcc_id):
-			sushi.dcc_send_set(dcc_id, "directory",
-				dialog.get_current_folder())
-			dialog.destroy()
+				self.destination_dialog = None
+				dialog.destroy()
 
-		def ask_for_directory():
-			file_dialog = gtk.FileChooserDialog(
-				title="Select a directory to save in...",
-				buttons=(gtk.STOCK_CANCEL,1,gtk.STOCK_OK,2))
+			d = gtk.FileChooserDialog(
+				title = _("Select a destination to save the file"),
+				action = gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER,
+				buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OK, gtk.RESPONSE_OK))
 
-			file_dialog.set_action(gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
-			file_dialog.set_current_folder(
-				sushi.dcc_send_get(id, "directory"))
+			d.connect("response", _file_dialog_response_cb)
+			self.destination_dialog = d
 
-			file_dialog.connect("response", file_dialog_response_cb, id)
-			file_dialog.show_all()
+			return d
 
-		if (not self.dest_checkbox.get_active()
-		and id == self.transfer_id
-		and status & helper.dcc.s_running):
-			ask_for_directory()
+		if not self.destination_dialog:
+			d = create_file_dialog()
+			d.show_all()
+
+	def _update_label(self):
+		def resumable_str():
+			if (self.transfer_info["resumable"]
+			and sushi.dcc_send_get(self.transfer_id, "directory") \
+			== self.transfer_info["original_directory"]):
+				return _("\n<b>Info:</b> If you don't choose another "
+						"destination, this file will be resumed.")
+			else:
+				return ""
+
+		self.label.set_markup(
+			"<b>"+_("Incoming file transfer")+"\n</b>"+
+			_(	"Sender: ”%(nick)s”\n"
+	  			"Filename: “%(filename)s“\n"
+  				"File size: %(bytes)d bytes\n"
+				"Destination: %(destination)s"
+				"%(resumable)s" % \
+			{
+				"nick": self.transfer_info["nick"],
+				"filename": self.transfer_info["filename"],
+				"bytes": self.transfer_info["size"],
+				"destination": sushi.dcc_send_get(self.transfer_id, "directory"),
+				"resumable": resumable_str()
+			}))
 
 	def show(self):
 		if sushi.remote:
-			self.dest_checkbox.set_sensitive(False)
+			self.destination_button.set_sensitive(False)
 		InlineDialog.show(self)
 
 	def response(self, id):
