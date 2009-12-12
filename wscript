@@ -35,6 +35,7 @@ def build (bld):
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/glade/dialogs', bld.glob('glade/dialogs/*.glade'))
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/glade', bld.glob('glade/*.ui'))
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/glade/dialogs', bld.glob('glade/dialogs/*.ui'))
+	bld.install_files('${DATAROOTDIR}/sushi/tekka/glade/menus', bld.glob('glade/menus/*.ui'))
 
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/graphics', bld.glob('graphics/*.svg'))
 
