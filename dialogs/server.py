@@ -29,7 +29,6 @@ SUCH DAMAGE.
 import gtk
 import gtk.glade
 import com
-import config
 import logging
 from gettext import gettext as _
 
@@ -145,7 +144,7 @@ def serverNameEdit(cellrenderertext, path, newText):
 def createServer(serverName, data):
 	""" Create a server in maki. """
 	for (k,v) in data.items():
-		sushi.server_set(serverName, "server", k, v)
+		com.sushi.server_set(serverName, "server", k, v)
 
 def deleteServer(servername):
 	""" Remove server from Serverlist widget
