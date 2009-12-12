@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<interface>
+  <requires lib="gtk+" version="2.16"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkMenu" id="nickListMenu">
+    <property name="visible">True</property>
+    <signal name="deactivate" handler="nickListMenu_deactivate_cb"/>
+    <child>
+      <object class="GtkSeparatorMenuItem" id="separatorItem">
+        <property name="visible">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="kickItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Kick</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="kickItem_activate_cb"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="banItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Ban</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="banItem_activate_cb"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="whoisItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Whois</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="whoisItem_activate_cb"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="sendFileItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Send File</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="sendFileItem_activate_cb"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="modesItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Modes</property>
+        <property name="use_underline">True</property>
+        <child type="submenu">
+          <object class="GtkMenu" id="menu1">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkMenuItem" id="opItem">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Give Op</property>
+                <property name="use_underline">True</property>
+                <signal name="activate" handler="opItem_activate_cb"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="deOpItem">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Take Op</property>
+                <property name="use_underline">True</property>
+                <signal name="activate" handler="deOpItem_activate_cb"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="halfOpItem">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Give Half-Op</property>
+                <property name="use_underline">True</property>
+                <signal name="activate" handler="halfOpItem_activate_cb"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="deHalfOpItem">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Take Half-Op</property>
+                <property name="use_underline">True</property>
+                <signal name="activate" handler="deHalfOpItem_activate_cb"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="voiceItem">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Give Voice</property>
+                <property name="use_underline">True</property>
+                <signal name="activate" handler="voiceItem_activate_cb"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="deVoiceItem">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Take Voice</property>
+                <property name="use_underline">True</property>
+                <signal name="activate" handler="deVoiceItem_activate_cb"/>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

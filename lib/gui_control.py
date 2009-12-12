@@ -29,6 +29,7 @@ SUCH DAMAGE.
 """ The "core": the gui wrapper class. """
 
 # global modules
+import os
 import re
 import gtk
 import gtk.glade
@@ -45,7 +46,6 @@ from dbus import String, UInt64
 import lib.contrast
 import helper.color
 import helper.escape
-
 
 try:
 	from sexy import SpellEntry
@@ -69,6 +69,49 @@ from lib.htmlbuffer import HTMLBuffer
 from lib.status_icon import TekkaStatusIcon
 from lib.general_output_buffer import GOHTMLBuffer
 from lib.status_manager import StatusManager
+
+class GladeWrapper(object):
+	""" wrap glade to gtk.Builder """
+
+	def __init__(self, glade):
+		self.glade = glade
+
+	def get_object(self, name):
+		return self.glade.get_widget(name)
+
+	def connect_signals(self, obj, user = None):
+		if type(obj) == dict:
+			self.glade.signal_autoconnect(obj)
+
+	def __getattribute__(self, attr):
+		if attr in ("get_object","connect_signals"):
+			return object.__getattribute__(self, attr)
+		return getattr(self.glade, attr)
+
+class BuilderWrapper(object):
+
+	def __init__(self):
+		pass
+
+	def set_glade_custom_handler(self, handler):
+		if handler:
+			gtk.glade.set_custom_handler(handler)
+
+	def load_menu(self, name):
+		# menus are gtkbuilder
+		path = os.path.join(config.get("gladefiles", "menus"), name + ".ui")
+
+		builder = gtk.Builder()
+		builder.add_from_file(path)
+
+		return builder
+
+	def load_dialog(self, name, custom_handler = None):
+		path = os.path.join(config.get("gladefiles", "dialogs"), name + ".glade")
+
+		self.set_glade_custom_handler(custom_handler)
+
+		return GladeWrapper(gtk.glade.XML(path))
 
 class WidgetsWrapper(object):
 
@@ -276,6 +319,7 @@ gobject.signal_new(
 	(gobject.TYPE_PYOBJECT,gobject.TYPE_PYOBJECT))
 
 widgets = None
+builder = BuilderWrapper()
 accelGroup = gtk.AccelGroup()
 tabs = lib.tab_control.TabControl()
 status = StatusManager()

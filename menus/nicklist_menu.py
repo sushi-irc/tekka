@@ -46,8 +46,7 @@ class NickListMenu(object):
 
 	def __init__(self):
 		self.menu = None
-		self.widgets = gtk.glade.XML(
-			config.get("gladefiles", "mainwindow"), "nickListMenu")
+		self.widgets = gui_control.builder.load_menu("nickListMenu")
 		self.deactivate_handler = []
 
 		if not self.widgets:
@@ -66,6 +65,7 @@ class NickListMenu(object):
 			"kickItem_activate_cb" : self.kickItem_activate_cb,
 			"banItem_activate_cb" : self.banItem_activate_cb,
 			"whoisItem_activate_cb" : self.whoisItem_activate_cb,
+			"sendFileItem_activate_cb" : self.sendFileItem_activate_cb,
 
 			# modes
 			"deVoiceItem_activate_cb" : self.deVoiceItem_activate_cb,
@@ -76,9 +76,9 @@ class NickListMenu(object):
 			"opItem_activate_cb" : self.opItem_activate_cb
 		}
 
-		self.widgets.signal_autoconnect(sigdic)
+		self.widgets.connect_signals(sigdic)
 
-		self.menu = self.widgets.get_widget("nickListMenu")
+		self.menu = self.widgets.get_object("nickListMenu")
 
 	def get_menu(self, currentNick):
 		""" return the menu customized menu, fit to the needs of pointedTab """
@@ -139,6 +139,10 @@ class NickListMenu(object):
 
 		else:
 			sushi.sushi.whois(sTab.name, self.current_nick)
+
+	def sendFileItem_activate_cb(self, item):
+		# TODO: implement
+		pass
 
 	def deVoiceItem_activate_cb(self, item):
 		sTab,cTab = gui_control.tabs.get_current_tabs()

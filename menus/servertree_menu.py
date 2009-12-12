@@ -47,9 +47,7 @@ class ServerTreeMenu(object):
 
 	def __init__(self):
 		self.menu = None
-		self.widgets = gtk.glade.XML(
-			config.get("gladefiles", "mainwindow"),
-			"serverTree_tabMenu")
+		self.widgets = gui_control.builder.load_menu("serverTreeMenu")
 
 		if not self.widgets:
 			d = inline_dialog.InlineMessageDialog(
@@ -63,7 +61,7 @@ class ServerTreeMenu(object):
 			return
 
 		sigdic = {
-			"tabMenu_deactivate_cb" : self.deactivate_cb,
+			"serverTreeMenu_deactivate_cb" : self.deactivate_cb,
 
 			"connectItem_activate_cb" : self.connectItem_activate_cb,
 			"disconnectItem_activate_cb" : self.disconnectItem_activate_cb,
@@ -78,9 +76,9 @@ class ServerTreeMenu(object):
 			"setKeyItem_activate_cb" : self.setKeyItem_activate_cb
 		}
 
-		self.widgets.signal_autoconnect(sigdic)
+		self.widgets.connect_signals(sigdic)
 
-		self.menu = self.widgets.get_widget("serverTree_tabMenu")
+		self.menu = self.widgets.get_object("serverTreeMenu")
 
 	def get_menu(self, pointedTab):
 		""" return the menu customized menu, fit to the needs of pointedTab """
@@ -93,17 +91,17 @@ class ServerTreeMenu(object):
 		self.menu.insert(self.headline,0)
 		self.menu.show_all()
 
-		connectItem = self.widgets.get_widget("connectItem")
-		disconnectItem = self.widgets.get_widget("disconnectItem")
-		joinItem = self.widgets.get_widget("joinItem")
-		partItem = self.widgets.get_widget("partItem")
-		autoConnectItem = self.widgets.get_widget("autoConnectItem")
-		autoJoinItem = self.widgets.get_widget("autoJoinItem")
-		hideItem = self.widgets.get_widget("hideItem")
-		historyItem = self.widgets.get_widget("historyItem")
-		closeItem = self.widgets.get_widget("closeItem")
-		setTopicItem = self.widgets.get_widget("setTopicItem")
-		setKeyItem = self.widgets.get_widget("setKeyItem")
+		connectItem = self.widgets.get_object("connectItem")
+		disconnectItem = self.widgets.get_object("disconnectItem")
+		joinItem = self.widgets.get_object("joinItem")
+		partItem = self.widgets.get_object("partItem")
+		autoConnectItem = self.widgets.get_object("autoConnectItem")
+		autoJoinItem = self.widgets.get_object("autoJoinItem")
+		hideItem = self.widgets.get_object("hideItem")
+		historyItem = self.widgets.get_object("historyItem")
+		closeItem = self.widgets.get_object("closeItem")
+		setTopicItem = self.widgets.get_object("setTopicItem")
+		setKeyItem = self.widgets.get_object("setKeyItem")
 
 		# set up visibilty of menu items for each case
 		if pointedTab.is_server():
