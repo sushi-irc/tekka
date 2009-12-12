@@ -783,8 +783,17 @@ def myPrint(string, html=False):
 
 	textview.scroll_to_bottom()
 
+def question_dialog(title = "", message = ""):
+	d = gtk.MessageDialog(
+		type = gtk.MESSAGE_QUESTION,
+		buttons = gtk.BUTTONS_YES_NO,
+		message_format = message)
+	d.set_title(title)
+	return d
+
 @types(string=basestring, force_dialog=bool)
 def error_dialog(string):
+	# TODO: return dialog instead of running it
 	err = gtk.MessageDialog(
 		type=gtk.MESSAGE_ERROR,
 		buttons=gtk.BUTTONS_CLOSE,
