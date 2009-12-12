@@ -182,14 +182,10 @@ def setup():
 		if status:
 			if status[0] & s_incoming:
 				# incoming
-				image = gtk.Image()
-				image.set_from_stock(gtk.STOCK_GO_DOWN, gtk.ICON_SIZE_BUTTON)
-				renderer.set_property("pixbuf", image.get_property("pixbuf"))
+				renderer.set_property("stock-id", gtk.STOCK_GO_DOWN)
 			else:
 				# outgoing
-				image = gtk.Image()
-				image.set_from_stock(gtk.STOCK_GO_UP, gtk.ICON_SIZE_BUTTON)
-				renderer.set_property("pixbuf", image.get_property("pixbuf"))
+				renderer.set_property("stock-id", gtk.STOCK_GO_UP)
 
 	renderer = gtk.CellRendererPixbuf()
 	column = gtk.TreeViewColumn("", renderer)
