@@ -208,7 +208,10 @@ def openDeleteDialog(widget):
 		servername = view.get_model()[path][0]
 
 	if not servername:
-		gui_control.error_dialog(_("Error while retrieving server name."))
+		gui_control.show_error_dialog(
+			title = _("Error while retrieving server name."),
+			message = _("There was an error while retrieving the server name.\n"
+						"Are you connected to maki?"))
 		return
 
 	dialog_control.show_dialog("deleteServer", servername, delete_dialog_cb)

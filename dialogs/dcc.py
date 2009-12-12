@@ -167,9 +167,9 @@ def dialog_response_cb(dialog, id, poll_thread):
 			transferID = get_selected_transfer_id()
 
 			if None == transferID:
-				gui_control.error_dialog(
-					        _("No transfer selected!"))
-
+				gui_control.show_error_dialog(
+					title = _("No transfer selected!"),
+					message = _("You must select a transfer to remove it."))
 
 			else:
 				d = gui_control.question_dialog(

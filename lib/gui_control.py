@@ -792,14 +792,19 @@ def question_dialog(title = "", message = ""):
 	return d
 
 @types(string=basestring, force_dialog=bool)
-def error_dialog(string):
-	# TODO: return dialog instead of running it
+def error_dialog(title = "", message = ""):
 	err = gtk.MessageDialog(
-		type=gtk.MESSAGE_ERROR,
-		buttons=gtk.BUTTONS_CLOSE,
-		message_format=string)
-	err.run()
-	err.destroy()
+		type = gtk.MESSAGE_ERROR,
+		buttons = gtk.BUTTONS_CLOSE,
+		message_format = message)
+	err.set_title(title)
+	return err
+
+def show_error_dialog(title = "", message = ""):
+	d = error_dialog(title, message)
+	d.connect("response", lambda d,i: d.destroy())
+	d.show()
+	return d
 
 def show_inline_dialog(dialog):
 

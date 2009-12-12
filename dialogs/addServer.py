@@ -73,7 +73,9 @@ def dialog_response_cb(dialog, response_id, callback):
 		server = widgets.get_widget("servernameEntry").get_text()
 
 		if not server:
-			gui_control.error_dialog(_("No server name given."))
+			gui_control.show_error_dialog(
+				title = _("No server name given."),
+				message = _("You must enter a server name."))
 			return
 
 		# set text values
