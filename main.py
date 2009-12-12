@@ -1122,6 +1122,9 @@ def setup_paneds():
 	def paned_notify_cb(paned, gparam):
 		""" save the paned position in the config under the
 			paned's name """
+		# TODO:  if a inline dialog is shown, don't save the position or better,
+		# TODO:: calculate the position without the inline dialog (for horizontal
+		# TODO:: paneds only)
 		if gparam.name == "position":
 			config.set("sizes", paned.name, paned.get_property("position"))
 
