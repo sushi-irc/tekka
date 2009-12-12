@@ -32,6 +32,8 @@ import config
 import gobject
 import pango
 
+from lib import dialog_control
+
 widgets = None
 
 def addCategory(store, category):
@@ -99,8 +101,8 @@ def configValueEdited(renderer, path, newText):
 def setup():
 	""" called initially """
 	global widgets
-	gladePath = config.get("gladefiles", "dialogs") + "advancedPreferences.glade"
-	widgets = gtk.glade.XML(gladePath)
+
+	widgets = dialog_control.build_dialog("advancedPreferences")
 
 	configView = widgets.get_widget("configView")
 

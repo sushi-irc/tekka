@@ -30,12 +30,13 @@ import gtk
 import gtk.glade
 import config
 
+from lib.dialog_control import build_dialog
+
 widgets = None
 
 def setup():
 	global widgets
-	path = config.get("gladefiles","dialogs") + "serverDelete.glade"
-	widgets = gtk.glade.XML(path)
+	widgets = build_dialog("serverDelete")
 
 def dialog_response_cb(dialog, response_id, servername, callback):
 	if response_id == gtk.RESPONSE_YES:

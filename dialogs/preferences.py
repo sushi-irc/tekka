@@ -365,10 +365,7 @@ def setup():
 	"""
 	global widgets
 
-	path = config.get("gladefiles","dialogs") + "preferences.glade"
-
-	gtk.glade.set_custom_handler(customHandler)
-	widgets = gtk.glade.XML(path)
+	widgets = dialog_control.build_dialog("preferences", custom_handler = customHandler)
 
 	sigdic = {
 	# tekka page

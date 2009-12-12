@@ -37,6 +37,8 @@ import com
 import signals
 import config
 import logging
+
+from lib.dialog_control import build_dialog
 from lib.gui_control import show_inline_dialog, markup_escape
 from lib.inline_dialog import InlineMessageDialog
 
@@ -174,8 +176,7 @@ def dialog_response_cb(dialog, id):
 def setup():
 	global widgets, listView
 
-	path = config.get("gladefiles","dialogs") + "channelList.glade"
-	widgets = gtk.glade.XML(path)
+	widgets = build_dialog("channelList")
 
 	sigdic = {
 		"listButton_clicked_cb" : listButton_clicked_cb,

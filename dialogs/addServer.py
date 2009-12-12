@@ -32,6 +32,7 @@ import config
 
 from gettext import gettext as _
 import lib.gui_control as gui_control
+import lib.dialog_control as dialog_control
 from lib.expanding_list import ExpandingList
 
 widgets = None
@@ -64,10 +65,7 @@ def createCommandList(glade, fun_name, widget_name, *x):
 def setup():
 	global widgets
 
-	path = config.get("gladefiles","dialogs") + "serverAdd.glade"
-	gtk.glade.set_custom_handler(createCommandList)
-	widgets = gtk.glade.XML(path)
-
+	widgets = dialog_control.build_dialog("serverAdd", custom_handler = createCommandList)
 
 def dialog_response_cb(dialog, response_id, callback):
 	if response_id == RESPONSE_ADD:

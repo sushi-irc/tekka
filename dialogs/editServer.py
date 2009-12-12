@@ -33,6 +33,7 @@ import config
 
 from com import sushi
 from lib.expanding_list import ExpandingList
+from lib.dialog_control import build_dialog
 
 def setup():
 	pass
@@ -51,10 +52,7 @@ def setup_widgets():
 
 			return sw
 
-	path = config.get("gladefiles","dialogs") + "serverEdit.glade"
-
-	gtk.glade.set_custom_handler(createCommandList)
-	return gtk.glade.XML(path)
+	return build_dialog("serverEdit", custom_handler = createCommandList)
 
 def get_configurator(ctype, key, server):
 

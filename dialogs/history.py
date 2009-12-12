@@ -38,6 +38,7 @@ import logging
 import config
 import com
 
+from lib.dialog_control import build_dialog
 import lib.gui_control as gui
 from lib.search_toolbar import SearchBar
 
@@ -390,21 +391,18 @@ def run(tab):
 	# non modal..
 	dialog.show_all()
 
-def custom_handler(glade, function_name, widget_name, *x):
-	if widget_name == "searchBar":
-		return HistorySearchBar()
-	return None
-
 def setup():
 	global widgets
 
 	if widgets and widgets.get_widget("calendar"):
 		return
 
-	path = config.get("gladefiles","dialogs") + "history.glade"
+	def custom_handler(glade, function_name, widget_name, *x):
+		if widget_name == "searchBar":
+			return HistorySearchBar()
+		return None
 
-	gtk.glade.set_custom_handler(custom_handler)
-	widgets = gtk.glade.XML(path)
+	widgets = build_dialog("history", custom_handler = custom_handler)
 
 	sigdic = {
 		"calendar_month_changed_cb" : calendar_month_changed_cb,

@@ -27,7 +27,9 @@ SUCH DAMAGE.
 """
 
 import logging
+import gtk
 
+import config
 from com import sushi, NoSushiError
 from gettext import gettext as _
 
@@ -47,6 +49,13 @@ def loadDialog(name):
 
 	dialog.setup()
 	return dialog
+
+def build_dialog(name, custom_handler = None):
+	""" returns a gtk.glade.XML object """
+	path = config.get("gladefiles","dialogs") + "%s.glade" % (name)
+	if custom_handler:
+		gtk.glade.set_custom_handler(custom_handler)
+	return gtk.glade.XML(path)
 
 def show_dialog(name, *param, **dparams):
 	d = loadDialog(name)

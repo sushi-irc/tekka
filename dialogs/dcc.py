@@ -36,6 +36,8 @@ from gettext import gettext as _
 
 import config
 from com import sushi
+from lib import dialog_control
+from helper.dcc import s_incoming
 
 widgets = None
 
@@ -142,8 +144,7 @@ def run():
 def setup():
 	global widgets
 
-	path = config.get("gladefiles","dialogs") + "dcc.glade"
-	widgets = gtk.glade.XML(path)
+	widgets = dialog_control.build_dialog("dcc")
 
 	transferView = widgets.get_widget("transferView")
 	model = gtk.ListStore(TYPE_UINT64, str, str, str, TYPE_UINT64, TYPE_UINT64, str)

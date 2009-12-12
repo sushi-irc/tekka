@@ -35,6 +35,7 @@ import logging
 
 from gettext import gettext as _
 
+from lib.dialog_control import build_dialog
 from lib import plugin_control as pinterface
 import config
 
@@ -333,8 +334,7 @@ def loadPluginList():
 def setup():
 	global widgets
 
-	path = config.get("gladefiles","dialogs") + "plugins.glade"
-	widgets = gtk.glade.XML(path)
+	widgets = build_dialog("plugins")
 
 	sigdic = {
 		"loadButton_clicked_cb" : loadPlugin_clicked_cb,

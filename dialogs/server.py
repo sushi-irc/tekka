@@ -44,8 +44,7 @@ RESPONSE_CONNECT = 3
 def setup():
 	global widgets, serverSelection
 
-	path = config.get("gladefiles","dialogs") + "server.glade"
-	widgets = gtk.glade.XML(path)
+	widgets = dialog_control.build_dialog("server")
 
 	sigdic = { "addButton_clicked_cb" : openAddDialog,
 				"editButton_clicked_cb" : openEditDialog,

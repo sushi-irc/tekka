@@ -1,6 +1,7 @@
 import gtk
 import config
 import lib.tab as tabs
+from lib.dialog_control import build_dialog
 
 widgets = None
 active_tab = None
@@ -129,8 +130,7 @@ def run(current_tab):
 def setup():
 	global widgets
 
-	path = config.get("gladefiles", "dialogs") + "hide.glade"
-	widgets = gtk.glade.XML(path)
+	widgets = build_dialog("hide")
 
 	if not widgets:
 		raise Exception, "Couldn't load %s." % (path)
