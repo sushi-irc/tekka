@@ -35,7 +35,6 @@ from time import sleep
 from gettext import gettext as _
 import traceback
 
-import config
 from com import sushi
 from lib import dialog_control
 from lib import gui_control

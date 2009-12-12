@@ -28,7 +28,6 @@ SUCH DAMAGE.
 
 import gtk.glade
 from com import sushi
-import config
 
 from gettext import gettext as _
 import lib.gui_control as gui_control

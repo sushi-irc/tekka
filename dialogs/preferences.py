@@ -32,7 +32,6 @@ import config
 import gtk
 import gtk.glade
 from gobject import idle_add
-import re
 
 import logging
 

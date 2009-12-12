@@ -301,7 +301,7 @@ def loadPluginList():
 				loaded = pinterface.is_loaded(item)
 
 				try:
-					i = list.index(item)
+					list.index(item)
 				except ValueError:
 					autoload = False
 				else:

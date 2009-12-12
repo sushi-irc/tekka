@@ -133,7 +133,7 @@ def setup():
 	widgets = build_dialog("hide")
 
 	if not widgets:
-		raise Exception, "Couldn't load %s." % (path)
+		raise Exception, "Couldn't load the dialog"
 
 	sigdic = {
 		"joinButton_toggled_cb": apply_button_setting,

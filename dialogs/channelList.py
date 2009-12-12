@@ -77,6 +77,7 @@ def resetSignal(*x):
 	signals.disconnect_signal ("list", sushiList)
 
 def stopListButton_clicked_cb(button):
+	global cache
 	signals.disconnect_signal ("list", sushiList)
 	cache = [] # we don't want an incomplete cache?
 	clearProgressBar()
