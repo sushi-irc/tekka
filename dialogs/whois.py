@@ -48,6 +48,7 @@ class WhoisDialog(gtk.Dialog):
 		self.treeview = self._setup_treeview()
 
 		self.scrolled_window = gtk.ScrolledWindow()
+		self.scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
 		self.scrolled_window.add(self.treeview)
 
 		self.get_content_area().add(self.scrolled_window)
