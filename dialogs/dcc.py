@@ -38,6 +38,7 @@ import traceback
 import config
 from com import sushi
 from lib import dialog_control
+from lib import gui_control
 from helper.dcc import s_incoming
 
 widgets = None
@@ -100,7 +101,8 @@ class PollThread(Thread):
 		view = widgets.get_widget("transferView")
 		store = view.get_model()
 
-		act_sends = [n for n in sends[0]]
+		# all ids
+		act_sends = sends[0]
 
 		to_remove = set(self.last_sends) - set(act_sends)
 		to_update = set(act_sends) - to_remove
@@ -149,7 +151,22 @@ def cancel_focused_transfer(poll_thread):
 def dialog_response_cb(dialog, id, poll_thread):
 	if id == 333:
 		# remove was clicked
-		cancel_focused_transfer(poll_thread)
+		def ask_are_you_sure():
+			# ask if the user is sure about removing the transfer
+
+			def dialog_reponse_cb(dialog, id):
+				if id == gtk.RESPONSE_YES:
+					# yes, remove it!
+					cancel_focused_transfer(poll_thread)
+				dialog.destroy()
+
+			d = gui_control.question_dialog(
+				title = _("Remove file transfer?"),
+				message = _("Are you sure you want to remove the file transfer %(id)d?" % { "id":id }))
+			d.connect("response", dialog_reponse_cb)
+			d.show()
+
+		ask_are_you_sure()
 
 	else:
 		poll_thread.stop()
