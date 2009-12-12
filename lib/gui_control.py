@@ -83,9 +83,9 @@ class GladeWrapper(object):
 		if type(obj) == dict:
 			self.glade.signal_autoconnect(obj)
 
-	def __getattribute__(self, attr):
+	def __getattr__(self, attr):
 		if attr in ("get_object","connect_signals"):
-			return object.__getattribute__(self, attr)
+			return object.__getattr__(self, attr)
 		return getattr(self.glade, attr)
 
 class BuilderWrapper(object):
