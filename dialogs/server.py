@@ -43,7 +43,7 @@ RESPONSE_CONNECT = 3
 def setup():
 	global widgets, serverSelection
 
-	widgets = dialog_control.build_dialog("server")
+	widgets = gui_control.builder.load_dialog("server")
 
 	sigdic = { "addButton_clicked_cb" : openAddDialog,
 				"editButton_clicked_cb" : openEditDialog,
