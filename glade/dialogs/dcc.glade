@@ -5,8 +5,8 @@
   <widget class="GtkDialog" id="DCCDialog">
     <property name="border_width">5</property>
     <property name="title" translatable="yes">File Transfers</property>
-    <property name="default_width">400</property>
-    <property name="default_height">260</property>
+    <property name="default_width">550</property>
+    <property name="default_height">300</property>
     <property name="type_hint">normal</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox1">
