@@ -136,17 +136,21 @@ class PollThread(Thread):
 
 		self.last_sends = act_sends
 
-def cancel_focused_transfer(poll_thread):
+def cancel_transfer(transferID, poll_thread):
+	sushi.dcc_send_remove(transferID)
+	poll_thread.apply_dbus_sends()
+
+def get_selected_transfer_id():
 	view = widgets.get_widget("transferView")
 	store = view.get_model()
-
 	cursor = view.get_cursor()
 
-	if None == cursor:
-		pass
+	try:
+		id = dbus.UInt64(store[cursor[0]][COL_ID])
+	except:
+		return None
 	else:
-		sushi.dcc_send_remove(dbus.UInt64(store[cursor[0]][COL_ID]))
-		poll_thread.apply_dbus_sends()
+		return id
 
 def dialog_response_cb(dialog, id, poll_thread):
 	if id == 333:
@@ -154,17 +158,26 @@ def dialog_response_cb(dialog, id, poll_thread):
 		def ask_are_you_sure():
 			# ask if the user is sure about removing the transfer
 
-			def dialog_reponse_cb(dialog, id):
+			def dialog_reponse_cb(dialog, id, transferID):
 				if id == gtk.RESPONSE_YES:
 					# yes, remove it!
-					cancel_focused_transfer(poll_thread)
+					cancel_transfer(transferID, poll_thread)
 				dialog.destroy()
 
-			d = gui_control.question_dialog(
-				title = _("Remove file transfer?"),
-				message = _("Are you sure you want to remove the file transfer %(id)d?" % { "id":id }))
-			d.connect("response", dialog_reponse_cb)
-			d.show()
+			transferID = get_selected_transfer_id()
+
+			if None == transferID:
+				gui_control.error_dialog(
+					        _("No transfer selected!"))
+
+
+			else:
+				d = gui_control.question_dialog(
+					title = _("Remove file transfer?"),
+					message = _("Are you sure you want to remove the file transfer %(id)d?" % {
+						"id": transferID }))
+				d.connect("response", dialog_reponse_cb, transferID)
+				d.show()
 
 		ask_are_you_sure()
 
