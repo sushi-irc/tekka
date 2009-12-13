@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tekka 1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-10-23 21:02+0200\n"
+"POT-Creation-Date: 2009-12-04 20:21+0100\n"
 "PO-Revision-Date: 2009-10-09 13:09+0000\n"
 "Last-Translator: Michael Kuhn <Unknown>\n"
 "Language-Team: German\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2009-10-24 01:24+0000\n"
+"X-Launchpad-Export-Date: 2009-12-13 00:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../commands.py:56 ../commands.py:64
@@ -34,18 +34,30 @@ msgstr ""
 "Dem Kanal %(channel)s wurde nicht beigetreten. Nichts was Sie schreiben, "
 "wird gesendet."
 
-#: ../commands.py:567
+#: ../commands.py:318
+msgid "• Begin of names"
+msgstr ""
+
+#: ../commands.py:323
+msgid "• End of names"
+msgstr ""
+
+#: ../commands.py:626
 #, python-format
 msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
 msgstr ""
 "• Kommando »%(command)s« ist unbekannt, Roh-Kommando »%(raw)s« wird gesendet."
 
-#: ../com.py:63 ../com.py:72 ../com.py:142 ../com.py:154 ../com.py:182
-#: ../main.py:219 ../main.py:297
+#: ../com.py:91 ../com.py:97 ../com.py:186 ../com.py:197 ../com.py:224
+#: ../main.py:269
 msgid "tekka could not connect to maki."
 msgstr "tekka konnte sich nicht mit maki verbinden."
 
-#: ../com.py:64 ../com.py:73 ../com.py:143 ../com.py:155 ../com.py:183
+#: ../com.py:92 ../main.py:270
+msgid "Please check whether maki is running."
+msgstr "Bitte überprüfen Sie, ob maki läuft."
+
+#: ../com.py:98 ../com.py:187 ../com.py:198 ../com.py:225
 #, python-format
 msgid ""
 "Please check whether maki is running.\n"
@@ -54,236 +66,50 @@ msgstr ""
 "Bitte überprüfen Sie, ob maki läuft.\n"
 "Der folgende Fehler ist aufgetreten: %(error)s"
 
-#: ../com.py:200
+#: ../com.py:132
+msgid "Communication error with maki."
+msgstr ""
+
+#: ../com.py:133
+#, python-format
+msgid ""
+"There was an error while executing <b>'%s</b>' with DBus: \n"
+"<b>%s</b>\n"
+"You should keep safe that maki is running "
+msgstr ""
+
+#: ../com.py:240
 msgid "tekka requires a newer maki version."
 msgstr "tekka benötigt eine neuere Version von maki."
 
-#: ../com.py:201
+#: ../com.py:241
 #, python-format
 msgid "Please update maki to at least version %(version)s."
 msgstr "Bitte aktualisieren Sie maki mindestens auf Version %(version)s."
 
-#: ../main.py:220 ../main.py:298
-msgid "Please check whether maki is running."
-msgstr "Bitte überprüfen Sie, ob maki läuft."
+#: ../dialogs/channelList.py:99
+msgid "Channel list search error."
+msgstr ""
 
-#: ../main.py:308
-msgid "tekka could not determine server."
-msgstr "tekka konnte den Server nicht bestimmen."
-
-#: ../main.py:309
+#: ../dialogs/channelList.py:100
+#, python-format
 msgid ""
-"There is no active server. Click on a server tab or a child of a server tab "
-"to activate the server."
-msgstr ""
-"Kein Server ist aktiv. Klicken Sie auf den Server-Reiter oder das Kind eines "
-"Server-Reiters, um den Server zu aktivieren."
-
-#: ../main.py:534
-msgid "Reset markup"
-msgstr "Textauszeichnung zurücksetzen"
-
-#: ../main.py:714
-#, python-format
-msgid "Do you really want to close channel “%(name)s”?"
-msgstr "Wollen Sie Channel »%(name)s« wirklich schließen?"
-
-#: ../main.py:716
-#, python-format
-msgid "Do you really want to close query “%(name)s”?"
-msgstr "Wollen sie Query »%(name)s« wirklich schließen?"
-
-#: ../main.py:718
-#, python-format
-msgid "Do you really want to close server “%(name)s”?"
-msgstr "Wollen Sie Server »%(name)s« wirklich schließen?"
-
-#: ../main.py:814
-msgid "Nickname: "
-msgstr "Nickname: "
-
-#: ../main.py:817
-msgid "User: "
-msgstr "Benutzer: "
-
-#: ../main.py:818
-msgid "Topic: "
-msgstr "Thema: "
-
-#: ../main.py:820 ../main.py:824
-msgid "Last sentence: "
-msgstr "Letzter Satz: "
-
-#: ../main.py:1334
-msgid "Error occured"
-msgstr "Es ist ein Fehler aufgetreten"
-
-#: ../signals.py:396
-#, python-format
-msgid "• Topic for %(channel)s: %(topic)s"
-msgstr "• Thema in %(channel)s: %(topic)s"
-
-#: ../signals.py:403
-#, python-format
-msgid "• You changed the topic to %(topic)s."
-msgstr "• Sie haben das Thema geändert zu %(topic)s."
-
-#: ../signals.py:405
-#, python-format
-msgid "• %(nick)s changed the topic to %(topic)s."
-msgstr "• %(nick)s hat das Thema geändert zu %(topic)s."
-
-#: ../signals.py:478
-#, python-format
-msgid "• %(nick)s is away (%(message)s)."
-msgstr "• %(nick)s ist abwesend (%(message)s)."
-
-#: ../signals.py:579
-#, python-format
-msgid "• Modes for %(target)s: %(mode)s"
+"You've got a syntax error in your search string. The error is: %s\n"
+"<b>Tip:</b> You should not use special characters like '*' or '.' in your "
+"search string if you don't know about regular expressions."
 msgstr ""
 
-#: ../signals.py:649
-#, python-format
-msgid "CTCP from %(nick)s to Channel:"
-msgstr ""
+#: ../dialogs/channelList.py:197
+msgid "Channel"
+msgstr "Channel"
 
-#: ../signals.py:679
-#, python-format
-msgid "CTCP request from you to %(target)s: %(message)s"
-msgstr ""
-
-#: ../signals.py:854
-#, python-format
-msgid "• You are now known as %(newnick)s."
-msgstr "• Sie sind jetzt bekannt als %(newnick)s."
-
-#: ../signals.py:859
-#, python-format
-msgid "• %(nick)s is now known as %(newnick)s."
-msgstr "• %(nick)s ist jetzt bekannt als %(newnick)s."
-
-#: ../signals.py:925
-#, python-format
-msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
-msgstr "« Sie wurden von %(nick)s aus %(channel)s geworfen (%(reason)s)."
-
-#: ../signals.py:944
-#, python-format
-msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
-msgstr "« %(who)s wurde von %(nick)s aus %(channel)s geworfen (%(reason)s)."
-
-#: ../signals.py:984
-#, python-format
-msgid "« You have quit (%(reason)s)."
-msgstr "« Sie haben die Verbindung beendet (%(reason)s)."
-
-#: ../signals.py:986
-msgid "« You have quit."
-msgstr "« Sie haben die Verbindung beendet."
-
-#: ../signals.py:1002
-#, python-format
-msgid "« %(nick)s has quit (%(reason)s)."
-msgstr "« %(nick)s hat die Verbindung beendet (%(reason)s)."
-
-#: ../signals.py:1004
-#, python-format
-msgid "« %(nick)s has quit."
-msgstr "« %(nick)s hat die Verbindung beendet."
-
-#: ../signals.py:1101
-#, python-format
-msgid "» You have joined %(channel)s."
-msgstr "» Sie haben %(channel)s betreten."
-
-#: ../signals.py:1111
-#, python-format
-msgid "» %(nick)s has joined %(channel)s."
-msgstr "» %(nick)s hat %(channel)s betreten."
-
-#: ../signals.py:1206
-#, python-format
-msgid "« You have left %(channel)s (%(reason)s)."
-msgstr "« Sie haben %(channel)s verlassen (%(reason)s)."
-
-#: ../signals.py:1208
-#, python-format
-msgid "« You have left %(channel)s."
-msgstr "« Sie haben %(channel)s verlassen."
-
-#: ../signals.py:1230
-#, python-format
-msgid "« %(nick)s has left %(channel)s (%(reason)s)."
-msgstr "« %(nick)s hat %(channel)s verlassen (%(reason)s)."
-
-#: ../signals.py:1232
-#, python-format
-msgid "« %(nick)s has left %(channel)s."
-msgstr "« %(nick)s hat %(channel)s verlassen."
-
-#: ../signals.py:1262
-#, python-format
-msgid "• %(target)s: No such nick/channel."
-msgstr "• %(target)s: Kein solcher Nick/Channel."
-
-#: ../signals.py:1265
-#, python-format
-msgid "• %(target)s: No such server."
-msgstr "• %(target)s: Kein solcher Server."
-
-#: ../signals.py:1268
-#, python-format
-msgid "• %(target)s: No such channel."
-msgstr "• %(target)s: Kein solcher Channel."
-
-#: ../signals.py:1316 ../dialogs/channelList.py:187
+#: ../dialogs/channelList.py:197 ../signals.py:1456
 msgid "User"
 msgstr "Benutzer"
 
-#: ../signals.py:1317 ../dialogs/channelList.py:187
-#: ../glade/mainwindow.glade.h:28
+#: ../dialogs/channelList.py:197 ../signals.py:1457
 msgid "Topic"
 msgstr "Thema"
-
-#: ../signals.py:1333
-msgid "Unknown reason"
-msgstr "Unbekannter Grund"
-
-#: ../signals.py:1336
-msgid "The channel is full."
-msgstr "Der Channel ist voll."
-
-#: ../signals.py:1338
-msgid "The channel is invite-only."
-msgstr "Der Channel kann nur auf Einladung betreten werden."
-
-#: ../signals.py:1340
-msgid "You are banned."
-msgstr "Sie sind gebannt."
-
-#: ../signals.py:1354
-msgid "You need the correct channel key."
-msgstr "Sie benötigen den richtigen Channel-Schlüssel."
-
-#: ../signals.py:1357
-#, python-format
-msgid "You can not join %(channel)s: %(reason)s"
-msgstr "Sie können %(channel)s nicht betreten: %(reason)s"
-
-#: ../signals.py:1367
-#, python-format
-msgid "[%(nick)s] %(message)s"
-msgstr "[%(nick)s] %(message)s"
-
-#: ../signals.py:1372
-#, python-format
-msgid "[%(nick)s] End of whois."
-msgstr "[%(nick)s] Ende der whois-Abfrage."
-
-#: ../dialogs/channelList.py:187
-msgid "Channel"
-msgstr "Channel"
 
 #: ../dialogs/dcc.py:153
 msgid "ID"
@@ -309,6 +135,7 @@ msgstr "Größe"
 msgid "Progress"
 msgstr "Fortschritt"
 
+#. speed column
 #: ../dialogs/dcc.py:167
 msgid "Speed"
 msgstr "Geschwindigkeit"
@@ -332,11 +159,11 @@ msgstr "Whois-Anfrage auf %(server)s"
 msgid "Whois data of %(nick)s"
 msgstr "Whois-Daten von %(nick)s"
 
-#: ../dialogs/whois.py:111
+#: ../dialogs/whois.py:110
 msgid "No data received so far. Are you still connected?"
 msgstr ""
 
-#: ../dialogs/whois.py:128
+#: ../dialogs/whois.py:126
 msgid "Loading..."
 msgstr "Lade..."
 
@@ -358,24 +185,10 @@ msgid ""
 "File size: %(bytes)d bytes%(resumable)s"
 msgstr ""
 
-#: ../lib/gui_control.py:293
+#: ../lib/dialog_control.py:59
 #, python-format
-msgid "%d User"
-msgid_plural "%d Users"
-msgstr[0] "%d Benutzer"
-msgstr[1] "%d Benutzer"
-
-#: ../lib/gui_control.py:295
-#, python-format
-msgid "%d Operator"
-msgid_plural "%d Operators"
-msgstr[0] "%d Operator"
-msgstr[1] "%d Operatoren"
-
-#: ../lib/gui_control.py:662
-#, python-format
-msgid "Error: %(message)s"
-msgstr "Fehler: %(message)s"
+msgid "Can't open dialog '%s'. There's no connection to maki."
+msgstr ""
 
 #: ../lib/key_dialog.py:49
 #, python-format
@@ -386,14 +199,14 @@ msgstr "Geben Sie den Schlüssel für den Channel %(channel)s ein."
 msgid "Save key for channel"
 msgstr "Schlüssel für den Channel speichern"
 
-#: ../lib/plugin_control.py:108 ../lib/plugin_control.py:112
-#: ../lib/plugin_control.py:132 ../lib/plugin_control.py:182
-#: ../lib/plugin_control.py:335
+#: ../lib/plugin_control.py:109 ../lib/plugin_control.py:117
+#: ../lib/plugin_control.py:140 ../lib/plugin_control.py:194
+#: ../lib/plugin_control.py:347
 msgid "Plugin could not be loaded."
 msgstr "Plugin konnte nicht geladen werden."
 
-#: ../lib/plugin_control.py:108 ../lib/plugin_control.py:132
-#: ../lib/plugin_control.py:183
+#: ../lib/plugin_control.py:110 ../lib/plugin_control.py:141
+#: ../lib/plugin_control.py:195
 #, python-format
 msgid ""
 "Plugin %(plugin)s could not be loaded.\n"
@@ -402,31 +215,31 @@ msgstr ""
 "Plugin %(plugin)s konnte nicht geladen werden.\n"
 "Der folgende Fehler trat auf: %(error)s"
 
-#: ../lib/plugin_control.py:112
+#: ../lib/plugin_control.py:118
 #, python-format
 msgid "Plugin %(plugin)s could not be loaded."
 msgstr "Plugin %(plugin)s konnte nicht geladen werden."
 
-#: ../lib/plugin_control.py:161
+#: ../lib/plugin_control.py:173
 msgid "Plugin is already loaded."
 msgstr "Plugin wurde schon geladen."
 
-#: ../lib/plugin_control.py:162
+#: ../lib/plugin_control.py:174
 #, python-format
 msgid "Plugin %(plugin)s is already loaded."
 msgstr "Plugin %(plugin)s wurde schon geladen."
 
-#: ../lib/plugin_control.py:206
+#: ../lib/plugin_control.py:218
 msgid "Plugin could not be unloaded."
 msgstr "Plugin konnte nicht entladen werden."
 
-#: ../lib/plugin_control.py:206
+#: ../lib/plugin_control.py:218
 #, python-format
 msgid "Plugin %(plugin)s could not be unloaded, because it is not loaded."
 msgstr ""
 "Plugin %(plugin)s konnte nicht entladen werden, weil es nicht geladen ist."
 
-#: ../lib/plugin_control.py:336
+#: ../lib/plugin_control.py:348
 #, python-format
 msgid "Plugin %(plugin)s could not be loaded automatically."
 msgstr "Plugin %(plugin)s konnte nicht automatisch geladen werden."
@@ -439,26 +252,110 @@ msgstr "Hauptfenster verstecken"
 msgid "Show main window"
 msgstr "Hauptfenster anzeigen"
 
-#: ../lib/topic_dialog.py:64
+#: ../lib/topic_dialog.py:65
 #, python-format
 msgid "Topic for channel %(channel)s on %(server)s"
 msgstr ""
 
-#: ../lib/topic_dialog.py:118
+#: ../lib/topic_dialog.py:121
 msgid "Topic changed before."
 msgstr ""
 
-#: ../lib/topic_dialog.py:119
+#: ../lib/topic_dialog.py:122
 msgid ""
 "The topic was changed before your update. Do you want to commit the changes "
 "anyway?"
 msgstr ""
 
-#: ../menus/nicklist_menu.py:56 ../menus/servertree_menu.py:56
+#: ../lib/welcome_window.py:36
+msgid "<big><b>Welcome to tekka!</b></big>"
+msgstr ""
+
+#: ../lib/welcome_window.py:92
+msgid ""
+"You are connected to maki. The next step is to connect to a server via the "
+"server dialog in the tekka menu."
+msgstr ""
+
+#: ../lib/welcome_window.py:98
+msgid ""
+"You are not connected to maki. Without maki you can not connect to servers "
+"or write messages.\n"
+"\n"
+"If you are having problems running maki visit http://sushi.ikkoku.de/ and "
+"look whether there is a solution for your problem. Otherwise, feel free to "
+"ask for support."
+msgstr ""
+
+#: ../main.py:348
+msgid "tekka could not determine server."
+msgstr "tekka konnte den Server nicht bestimmen."
+
+#: ../main.py:349
+msgid ""
+"There is no active server. Click on a server tab or a child of a server tab "
+"to activate the server."
+msgstr ""
+"Kein Server ist aktiv. Klicken Sie auf den Server-Reiter oder das Kind eines "
+"Server-Reiters, um den Server zu aktivieren."
+
+#: ../main.py:360 ../main.py:369 ../menus/nicklist_menu.py:135
+msgid "No connection to maki."
+msgstr ""
+
+#: ../main.py:598
+msgid "Reset markup"
+msgstr "Textauszeichnung zurücksetzen"
+
+#: ../main.py:748
+#, python-format
+msgid "Do you really want to close channel “%(name)s”?"
+msgstr "Wollen Sie Channel »%(name)s« wirklich schließen?"
+
+#: ../main.py:750
+#, python-format
+msgid "Do you really want to close query “%(name)s”?"
+msgstr "Wollen sie Query »%(name)s« wirklich schließen?"
+
+#: ../main.py:752
+#, python-format
+msgid "Do you really want to close server “%(name)s”?"
+msgstr "Wollen Sie Server »%(name)s« wirklich schließen?"
+
+#. TODO: away status
+#: ../main.py:848
+msgid "Nickname: "
+msgstr "Nickname: "
+
+#: ../main.py:851
+msgid "User: "
+msgstr "Benutzer: "
+
+#: ../main.py:852
+msgid "Topic: "
+msgstr "Thema: "
+
+#: ../main.py:854 ../main.py:858
+msgid "Last sentence: "
+msgstr "Letzter Satz: "
+
+#: ../main.py:1396
+msgid "Error occured"
+msgstr "Es ist ein Fehler aufgetreten"
+
+#: ../main.py:1405
+msgid ""
+"<span size='larger' weight='bold'>Error</span>\n"
+"\n"
+"An error occured — we apologize for that. Feel free to submit a bug report "
+"at https://bugs.launchpad.net/sushi."
+msgstr ""
+
+#: ../menus/nicklist_menu.py:55 ../menus/servertree_menu.py:56
 msgid "Widget creation failed."
 msgstr ""
 
-#: ../menus/nicklist_menu.py:57
+#: ../menus/nicklist_menu.py:56
 msgid ""
 "tekka failed to create the nicklist menu.\n"
 "It's possible that there are files missing. Check if you have appropriate "
@@ -471,6 +368,502 @@ msgid ""
 "It's possible that there are files missing. Check if you have appropriate "
 "permissions to access all files needed by tekka and restart tekka."
 msgstr ""
+
+#: ../signals.py:409
+#, python-format
+msgid "• Topic for %(channel)s: %(topic)s"
+msgstr "• Thema in %(channel)s: %(topic)s"
+
+#: ../signals.py:440
+#, python-format
+msgid "• You changed the topic to %(topic)s."
+msgstr "• Sie haben das Thema geändert zu %(topic)s."
+
+#: ../signals.py:442
+#, python-format
+msgid "• %(nick)s changed the topic to %(topic)s."
+msgstr "• %(nick)s hat das Thema geändert zu %(topic)s."
+
+#: ../signals.py:523
+#, python-format
+msgid "• %(nick)s is away (%(message)s)."
+msgstr "• %(nick)s ist abwesend (%(message)s)."
+
+#: ../signals.py:643
+#, python-format
+msgid "• Modes for %(target)s: %(mode)s"
+msgstr ""
+
+#. normal ctcp
+#: ../signals.py:733
+#, python-format
+msgid "CTCP from %(nick)s to Channel:"
+msgstr ""
+
+#: ../signals.py:763
+#, python-format
+msgid "CTCP request from you to %(target)s: %(message)s"
+msgstr ""
+
+#: ../signals.py:940
+#, python-format
+msgid "• You are now known as %(newnick)s."
+msgstr "• Sie sind jetzt bekannt als %(newnick)s."
+
+#: ../signals.py:946
+#, python-format
+msgid "• %(nick)s is now known as %(newnick)s."
+msgstr "• %(nick)s ist jetzt bekannt als %(newnick)s."
+
+#: ../signals.py:1010
+#, python-format
+msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
+msgstr "« Sie wurden von %(nick)s aus %(channel)s geworfen (%(reason)s)."
+
+#: ../signals.py:1032
+#, python-format
+msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
+msgstr "« %(who)s wurde von %(nick)s aus %(channel)s geworfen (%(reason)s)."
+
+#: ../signals.py:1070
+#, python-format
+msgid "« You have quit (%(reason)s)."
+msgstr "« Sie haben die Verbindung beendet (%(reason)s)."
+
+#: ../signals.py:1072
+msgid "« You have quit."
+msgstr "« Sie haben die Verbindung beendet."
+
+#: ../signals.py:1094
+#, python-format
+msgid "« %(nick)s has quit (%(reason)s)."
+msgstr "« %(nick)s hat die Verbindung beendet (%(reason)s)."
+
+#: ../signals.py:1096
+#, python-format
+msgid "« %(nick)s has quit."
+msgstr "« %(nick)s hat die Verbindung beendet."
+
+#: ../signals.py:1199
+#, python-format
+msgid "» You have joined %(channel)s."
+msgstr "» Sie haben %(channel)s betreten."
+
+#: ../signals.py:1210
+#, python-format
+msgid "» %(nick)s has joined %(channel)s."
+msgstr "» %(nick)s hat %(channel)s betreten."
+
+#: ../signals.py:1308
+#, python-format
+msgid "« You have left %(channel)s (%(reason)s)."
+msgstr "« Sie haben %(channel)s verlassen (%(reason)s)."
+
+#: ../signals.py:1310
+#, python-format
+msgid "« You have left %(channel)s."
+msgstr "« Sie haben %(channel)s verlassen."
+
+#: ../signals.py:1340
+#, python-format
+msgid "« %(nick)s has left %(channel)s (%(reason)s)."
+msgstr "« %(nick)s hat %(channel)s verlassen (%(reason)s)."
+
+#: ../signals.py:1343
+#, python-format
+msgid "« %(nick)s has left %(channel)s."
+msgstr "« %(nick)s hat %(channel)s verlassen."
+
+#: ../signals.py:1366
+#, python-format
+msgid "• %(target)s: No such nick/channel."
+msgstr "• %(target)s: Kein solcher Nick/Channel."
+
+#: ../signals.py:1369
+#, python-format
+msgid "• %(target)s: No such server."
+msgstr "• %(target)s: Kein solcher Server."
+
+#: ../signals.py:1372
+#, python-format
+msgid "• %(target)s: No such channel."
+msgstr "• %(target)s: Kein solcher Channel."
+
+#: ../signals.py:1384
+msgid "Unknown reason"
+msgstr "Unbekannter Grund"
+
+#: ../signals.py:1387
+msgid "The channel is full."
+msgstr "Der Channel ist voll."
+
+#: ../signals.py:1389
+msgid "The channel is invite-only."
+msgstr "Der Channel kann nur auf Einladung betreten werden."
+
+#: ../signals.py:1391
+msgid "You are banned."
+msgstr "Sie sind gebannt."
+
+#: ../signals.py:1407
+msgid "You need the correct channel key."
+msgstr "Sie benötigen den richtigen Channel-Schlüssel."
+
+#: ../signals.py:1410
+#, python-format
+msgid "You can not join %(channel)s: %(reason)s"
+msgstr "Sie können %(channel)s nicht betreten: %(reason)s"
+
+#: ../signals.py:1473
+#, python-format
+msgid "[%(nick)s] %(message)s"
+msgstr "[%(nick)s] %(message)s"
+
+#: ../signals.py:1478
+#, python-format
+msgid "[%(nick)s] End of whois."
+msgstr "[%(nick)s] Ende der whois-Abfrage."
+
+#: ../glade/dialogs/about.glade.in.h:1
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Lunix https://launchpad.net/~themasterofdesaster2006\n"
+"  Michael Kuhn https://launchpad.net/~suraia\n"
+"  MixCool https://launchpad.net/~mixcool\n"
+"  Severin Heiniger https://launchpad.net/~lantash"
+
+#: ../glade/dialogs/advancedPreferences.glade.h:1
+msgid "Advanced Preferences"
+msgstr "Erweiterte Einstellungen"
+
+#: ../glade/dialogs/advancedPreferences.glade.h:2
+#: ../glade/dialogs/channelList.glade.h:2 ../glade/dialogs/dcc.glade.h:2
+#: ../glade/dialogs/hide.glade.h:11 ../glade/dialogs/history.glade.h:3
+#: ../glade/dialogs/plugins.glade.h:5
+msgid "gtk-close"
+msgstr ""
+
+#: ../glade/dialogs/channelList.glade.h:1
+msgid "Channel List"
+msgstr "Channelliste"
+
+#: ../glade/dialogs/channelList.glade.h:3
+msgid "gtk-find"
+msgstr ""
+
+#: ../glade/dialogs/channelList.glade.h:4
+msgid "gtk-stop"
+msgstr ""
+
+#: ../glade/dialogs/dcc.glade.h:1
+msgid "File Transfers"
+msgstr "Dateiübertragungen"
+
+#: ../glade/dialogs/dcc.glade.h:3
+msgid "gtk-remove"
+msgstr ""
+
+#: ../glade/dialogs/hide.glade.h:1
+msgid "<b>Message types to hide</b>"
+msgstr ""
+
+#: ../glade/dialogs/hide.glade.h:2
+msgid "<b>Other</b>"
+msgstr ""
+
+#: ../glade/dialogs/hide.glade.h:3
+msgid "<b>Own</b>"
+msgstr ""
+
+#: ../glade/dialogs/hide.glade.h:4
+msgid "Hide message types"
+msgstr ""
+
+#: ../glade/dialogs/hide.glade.h:5
+msgid "Join:"
+msgstr ""
+
+#: ../glade/dialogs/hide.glade.h:6
+msgid "Kick:"
+msgstr ""
+
+#: ../glade/dialogs/hide.glade.h:7
+msgid "Mode:"
+msgstr ""
+
+#: ../glade/dialogs/hide.glade.h:8
+msgid "Nick:"
+msgstr ""
+
+#: ../glade/dialogs/hide.glade.h:9
+msgid "Part:"
+msgstr ""
+
+#: ../glade/dialogs/hide.glade.h:10
+msgid "Quit:"
+msgstr ""
+
+#: ../glade/dialogs/history.glade.h:1
+msgid "History"
+msgstr "Chronik"
+
+#: ../glade/dialogs/history.glade.h:2
+msgid "Local search only"
+msgstr ""
+
+#: ../glade/dialogs/plugins.glade.h:1
+msgid "C_onfigure"
+msgstr ""
+
+#: ../glade/dialogs/plugins.glade.h:2
+msgid "Plugins"
+msgstr "Plugins"
+
+#: ../glade/dialogs/plugins.glade.h:3
+msgid "_Load"
+msgstr "_Laden"
+
+#: ../glade/dialogs/plugins.glade.h:4
+msgid "_Unload"
+msgstr "_Entladen"
+
+#: ../glade/dialogs/preferences.glade.h:1
+msgid "<b>Filter messages</b>"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:2
+msgid ""
+"<b>Help:</b>\n"
+"The <b>first</b> field is the <u>message</u> type.\n"
+"The <b>second</b> field represents the <u>server</u> the message comes "
+"from.\n"
+"The <b>last</b> field is the <u>channel/query</u> which sent the message.\n"
+"\n"
+"The last field is optional."
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:8
+msgid ""
+"<b>Warning:</b>\n"
+"Changes will be applied after closing this dialog."
+msgstr ""
+"<b>Warnung:</b>\n"
+"Die Änderungen werden nach Schließen dieses Dialogs angewendet."
+
+#: ../glade/dialogs/preferences.glade.h:10
+msgid "A_uto expand server tree"
+msgstr "Serverliste automatisch ausklappen"
+
+#: ../glade/dialogs/preferences.glade.h:11
+msgid "Actions:"
+msgstr "Aktionen:"
+
+#: ../glade/dialogs/preferences.glade.h:12
+msgid "Ad_vanced Settings"
+msgstr "Erweiterte Einstellungen"
+
+#: ../glade/dialogs/preferences.glade.h:13
+msgid "C_hatting"
+msgstr "Chatten"
+
+#: ../glade/dialogs/preferences.glade.h:14
+msgid "C_olors"
+msgstr "Farben"
+
+#: ../glade/dialogs/preferences.glade.h:15
+msgid "Default nick:"
+msgstr "Standard-Nickname:"
+
+#: ../glade/dialogs/preferences.glade.h:16
+msgid "Font:"
+msgstr "Schrift:"
+
+#: ../glade/dialogs/preferences.glade.h:17
+msgid "Highlighted actions:"
+msgstr "Hervorgehobene Aktionen:"
+
+#: ../glade/dialogs/preferences.glade.h:18
+msgid "Highlighted messages:"
+msgstr "Hervorgehobene Nachrichten:"
+
+#: ../glade/dialogs/preferences.glade.h:19
+msgid "Highlightwords:"
+msgstr "Hervorgehobene Wörter:"
+
+#: ../glade/dialogs/preferences.glade.h:20
+msgid ""
+"If you want to have control about <u>all</u> settings you can use the "
+"advanced settings dialog.\n"
+"\n"
+"<b>Notice:</b>\n"
+"For some options it is neccessary to restart tekka for the changes to take "
+"effect."
+msgstr ""
+"Wenn Sie Kontrolle über <u>alle</u> Einstellungen haben möchten, können Sie "
+"den Dialog »Erweiterte Einstellungen« nutzen."
+
+#: ../glade/dialogs/preferences.glade.h:24
+msgid "Last log lines:"
+msgstr "Verlaufslänge:"
+
+#: ../glade/dialogs/preferences.glade.h:25
+msgid "Last log:"
+msgstr "Verlauf:"
+
+#: ../glade/dialogs/preferences.glade.h:26
+msgid "Messages:"
+msgstr "Nachrichten:"
+
+#: ../glade/dialogs/preferences.glade.h:27
+msgid "Notification:"
+msgstr "Benachrichtigung:"
+
+#: ../glade/dialogs/preferences.glade.h:28
+msgid "Own nick:"
+msgstr "Eigener Nickname:"
+
+#: ../glade/dialogs/preferences.glade.h:29
+msgid "Own text:"
+msgstr "Eigener Text:"
+
+#: ../glade/dialogs/preferences.glade.h:30
+msgid "Part message:"
+msgstr "Verlassen-Nachricht:"
+
+#: ../glade/dialogs/preferences.glade.h:31
+msgid "Preferences"
+msgstr "Einstellungen"
+
+#: ../glade/dialogs/preferences.glade.h:32
+msgid "Quit message:"
+msgstr "Quit-Nachricht:"
+
+#: ../glade/dialogs/preferences.glade.h:33
+msgid "Shutdown _maki on close"
+msgstr "_maki mit tekka beenden"
+
+#: ../glade/dialogs/preferences.glade.h:34
+msgid "Time format:"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:35
+msgid "Use _RGBA"
+msgstr "_RGBA aktivieren"
+
+#: ../glade/dialogs/preferences.glade.h:36
+msgid "Use _default font"
+msgstr "_Standardschrift benutzen"
+
+#: ../glade/dialogs/preferences.glade.h:37
+msgid "Use contrast sensitive colors"
+msgstr ""
+
+#: ../glade/dialogs/preferences.glade.h:38 ../glade/mainwindow.glade.h:31
+msgid "_General Output"
+msgstr "_Allgemeine Ausgabe"
+
+#: ../glade/dialogs/preferences.glade.h:39
+msgid "_Hide on close"
+msgstr "Beim Beenden _verstecken"
+
+#: ../glade/dialogs/preferences.glade.h:40
+msgid "_Nick Colors"
+msgstr "_Nicknamen-Farben"
+
+#: ../glade/dialogs/preferences.glade.h:41
+msgid "_Show status icon"
+msgstr "Status-Icon anzeigen"
+
+#: ../glade/dialogs/preferences.glade.h:42 ../glade/mainwindow.glade.h:40
+msgid "_tekka"
+msgstr "_tekka"
+
+#: ../glade/dialogs/serverAdd.glade.h:1
+msgid "<b>Add Server</b>"
+msgstr "<b>Server hinzufügen</b>"
+
+#: ../glade/dialogs/serverAdd.glade.h:2 ../glade/dialogs/serverEdit.glade.h:1
+msgid "<b>Command List</b>"
+msgstr "<b>Kommandoliste</b>"
+
+#: ../glade/dialogs/serverAdd.glade.h:3
+msgid "Add Server"
+msgstr "Server hinzufügen"
+
+#: ../glade/dialogs/serverAdd.glade.h:4 ../glade/dialogs/serverEdit.glade.h:3
+msgid "Address:"
+msgstr "Adresse:"
+
+#: ../glade/dialogs/serverAdd.glade.h:5 ../glade/dialogs/serverEdit.glade.h:4
+msgid "Auto-connect:"
+msgstr "Automatisch verbinden:"
+
+#: ../glade/dialogs/serverAdd.glade.h:6 ../glade/dialogs/serverEdit.glade.h:6
+msgid "Nick name:"
+msgstr "Nickname:"
+
+#: ../glade/dialogs/serverAdd.glade.h:7 ../glade/dialogs/serverEdit.glade.h:8
+msgid "NickServ password:"
+msgstr "NickServ-Passwort:"
+
+#: ../glade/dialogs/serverAdd.glade.h:8 ../glade/dialogs/serverEdit.glade.h:9
+msgid "Port:"
+msgstr "Port:"
+
+#: ../glade/dialogs/serverAdd.glade.h:9 ../glade/dialogs/serverEdit.glade.h:10
+msgid "Real name:"
+msgstr "Realer Name:"
+
+#: ../glade/dialogs/serverAdd.glade.h:10
+msgid "Server name:"
+msgstr "Servername:"
+
+#: ../glade/dialogs/serverAdd.glade.h:11
+msgid "gtk-add"
+msgstr ""
+
+#: ../glade/dialogs/serverAdd.glade.h:12
+msgid "gtk-cancel"
+msgstr ""
+
+#: ../glade/dialogs/serverDelete.glade.h:2
+#, no-c-format
+msgid ""
+"<span weight=\"bold\" size=\"larger\">Delete Server</span>\n"
+"\n"
+"Are you sure you want to delete the server '%(server)s'?"
+msgstr ""
+"<span weight=\"bold\" size=\"larger\">Server löschen</span>\n"
+"Wollen Sie wirklich den Server '%(server)s' löschen?"
+
+#: ../glade/dialogs/serverDelete.glade.h:5
+msgid "Delete Server"
+msgstr "Server löschen"
+
+#: ../glade/dialogs/serverDelete.glade.h:6
+msgid "gtk-no"
+msgstr ""
+
+#: ../glade/dialogs/serverDelete.glade.h:7
+msgid "gtk-yes"
+msgstr ""
+
+#: ../glade/dialogs/serverEdit.glade.h:2
+msgid "<b>Edit Server</b>"
+msgstr "<b>Server bearbeiten</b>"
+
+#: ../glade/dialogs/serverEdit.glade.h:5
+msgid "Edit Server"
+msgstr "Server bearbeiten"
+
+#: ../glade/dialogs/serverEdit.glade.h:7
+msgid "NickServ Ghost:"
+msgstr ""
+
+#: ../glade/dialogs/server.glade.h:1 ../glade/mainwindow.glade.h:15
+msgid "Server List"
+msgstr "Serverliste"
 
 #: ../glade/mainwindow.glade.h:1
 msgid "Auto-connect"
@@ -508,105 +901,101 @@ msgstr "Op geben"
 msgid "Give Voice"
 msgstr "Voice geben"
 
-#: ../glade/mainwindow.glade.h:10 ../glade/dialogs/history.glade.h:1
-msgid "History"
-msgstr "Chronik"
+#: ../glade/mainwindow.glade.h:10
+msgid "H_ide Messages"
+msgstr ""
 
-#: ../glade/mainwindow.glade.h:11 ../glade/dialogs/colorTable.ui.h:6
+#: ../glade/mainwindow.glade.h:11
 msgid "IRC Colors"
 msgstr "IRC-Farben"
 
 #: ../glade/mainwindow.glade.h:12
-msgid "Join"
-msgstr "Betreten"
-
-#: ../glade/mainwindow.glade.h:13
 msgid "Kick"
 msgstr "Kicken"
 
-#: ../glade/mainwindow.glade.h:14
-msgid "Manage File Transfers"
-msgstr ""
-
-#: ../glade/mainwindow.glade.h:15
-msgid "Manage plugins"
-msgstr ""
-
-#: ../glade/mainwindow.glade.h:16
+#: ../glade/mainwindow.glade.h:13
 msgid "Modes"
 msgstr "Modi"
 
-#: ../glade/mainwindow.glade.h:17
-msgid "Part"
-msgstr "Verlassen"
-
-#: ../glade/mainwindow.glade.h:18
+#: ../glade/mainwindow.glade.h:14
 msgid "S_ide Pane"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:19 ../glade/dialogs/server.glade.h:1
-msgid "Server List"
-msgstr "Serverliste"
-
-#: ../glade/mainwindow.glade.h:20
-msgid "Set Key"
-msgstr "Schlüssel setzen"
-
-#: ../glade/mainwindow.glade.h:21
-msgid "Show a translation between IRC color codes and real colors"
+#: ../glade/mainwindow.glade.h:16
+msgid "Set _Key"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:22
+#: ../glade/mainwindow.glade.h:17
+msgid "Set _Topic"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:18
 msgid "Shutdown"
 msgstr "Beenden"
 
-#: ../glade/mainwindow.glade.h:23
+#: ../glade/mainwindow.glade.h:19
 msgid "Status _Bar"
 msgstr "Status_leiste"
 
-#: ../glade/mainwindow.glade.h:24
+#: ../glade/mainwindow.glade.h:20
 msgid "Status _Icon"
 msgstr "Status_symbol"
 
-#: ../glade/mainwindow.glade.h:25
+#: ../glade/mainwindow.glade.h:21
 msgid "Take Half-Op"
 msgstr "Half-Op nehmen"
 
-#: ../glade/mainwindow.glade.h:26
+#: ../glade/mainwindow.glade.h:22
 msgid "Take Op"
 msgstr "Op nehmen"
 
-#: ../glade/mainwindow.glade.h:27
+#: ../glade/mainwindow.glade.h:23
 msgid "Take Voice"
 msgstr "Voice nehmen"
 
-#: ../glade/mainwindow.glade.h:29
+#: ../glade/mainwindow.glade.h:24
 msgid "Whois"
 msgstr "Whois"
 
-#: ../glade/mainwindow.glade.h:30
+#: ../glade/mainwindow.glade.h:25
 msgid "_Channel List"
 msgstr "_Channel-Liste"
 
-#: ../glade/mainwindow.glade.h:31
+#: ../glade/mainwindow.glade.h:26
+msgid "_Connect"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:27
 msgid "_Debug"
 msgstr "_Debug"
 
-#: ../glade/mainwindow.glade.h:32
+#: ../glade/mainwindow.glade.h:28
 msgid "_Dialogs"
 msgstr "_Dialoge"
 
-#: ../glade/mainwindow.glade.h:33
+#: ../glade/mainwindow.glade.h:29
+msgid "_Disconnect"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:30
 msgid "_File Transfers"
 msgstr "_Dateiübertragungen"
 
-#: ../glade/mainwindow.glade.h:34 ../glade/dialogs/preferences.glade.h:32
-msgid "_General Output"
-msgstr "_Allgemeine Ausgabe"
-
-#: ../glade/mainwindow.glade.h:35
+#: ../glade/mainwindow.glade.h:32
 msgid "_Help"
 msgstr "_Hilfe"
+
+#: ../glade/mainwindow.glade.h:33
+msgid "_History"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:34
+msgid "_Join"
+msgstr ""
+
+#: ../glade/mainwindow.glade.h:35
+msgid "_Part"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:36
 msgid "_Plugins"
@@ -624,251 +1013,39 @@ msgstr "_Ansicht"
 msgid "_maki"
 msgstr "_maki"
 
-#: ../glade/mainwindow.glade.h:40 ../glade/dialogs/preferences.glade.h:36
-msgid "_tekka"
-msgstr "_tekka"
+#~ msgid "Join"
+#~ msgstr "Betreten"
 
-#: ../glade/dialogs/about.glade.h:1
-msgid "translator-credits"
-msgstr ""
-"Launchpad Contributions:\n"
-"  Lunix https://launchpad.net/~themasterofdesaster2006\n"
-"  Michael Kuhn https://launchpad.net/~suraia\n"
-"  MixCool https://launchpad.net/~mixcool\n"
-"  Severin Heiniger https://launchpad.net/~lantash"
+#~ msgid "Part"
+#~ msgstr "Verlassen"
 
-#: ../glade/dialogs/advancedPreferences.glade.h:1
-msgid "Advanced Preferences"
-msgstr "Erweiterte Einstellungen"
+#, python-format
+#~ msgid "%d User"
+#~ msgid_plural "%d Users"
+#~ msgstr[0] "%d Benutzer"
+#~ msgstr[1] "%d Benutzer"
 
-#: ../glade/dialogs/channelList.glade.h:1
-msgid "Channel List"
-msgstr "Channelliste"
+#, python-format
+#~ msgid "%d Operator"
+#~ msgid_plural "%d Operators"
+#~ msgstr[0] "%d Operator"
+#~ msgstr[1] "%d Operatoren"
 
-#: ../glade/dialogs/dcc.glade.h:1
-msgid "File Transfers"
-msgstr "Dateiübertragungen"
+#~ msgid "Set Key"
+#~ msgstr "Schlüssel setzen"
 
-#: ../glade/dialogs/history.glade.h:2
-msgid "Local search only"
-msgstr ""
+#~ msgid ""
+#~ "<b>Notice:</b>\n"
+#~ "First field is type, second field is server, third is the channel.\n"
+#~ "Everything matching passes the filter and will be shown except the row is "
+#~ "negated."
+#~ msgstr ""
+#~ "<b>Notiz:</b>\n"
+#~ "Das erste Feld stellt den Typ dar, das zweite den Server und das Dritte den "
+#~ "Kanal.\n"
+#~ "Alle passenden Zeilen passieren den Filter und werden somit angezeigt solang "
+#~ "die Zeile nicht negiert ist."
 
-#: ../glade/dialogs/plugins.glade.h:1
-msgid "C_onfigure"
-msgstr ""
-
-#: ../glade/dialogs/plugins.glade.h:2
-msgid "Plugins"
-msgstr "Plugins"
-
-#: ../glade/dialogs/plugins.glade.h:3
-msgid "_Load"
-msgstr "_Laden"
-
-#: ../glade/dialogs/plugins.glade.h:4
-msgid "_Unload"
-msgstr "_Entladen"
-
-#: ../glade/dialogs/preferences.glade.h:1
-msgid ""
-"<b>Notice:</b>\n"
-"First field is type, second field is server, third is the channel.\n"
-"Everything matching passes the filter and will be shown except the row is "
-"negated."
-msgstr ""
-"<b>Notiz:</b>\n"
-"Das erste Feld stellt den Typ dar, das zweite den Server und das Dritte den "
-"Kanal.\n"
-"Alle passenden Zeilen passieren den Filter und werden somit angezeigt solang "
-"die Zeile nicht negiert ist."
-
-#: ../glade/dialogs/preferences.glade.h:4
-msgid ""
-"<b>Warning:</b>\n"
-"Changes will be applied after closing this dialog."
-msgstr ""
-"<b>Warnung:</b>\n"
-"Die Änderungen werden nach Schließen dieses Dialogs angewendet."
-
-#: ../glade/dialogs/preferences.glade.h:6
-msgid "A_uto expand server tree"
-msgstr "Serverliste automatisch ausklappen"
-
-#: ../glade/dialogs/preferences.glade.h:7
-msgid "Actions:"
-msgstr "Aktionen:"
-
-#: ../glade/dialogs/preferences.glade.h:8
-msgid "Ad_vanced Settings"
-msgstr "Erweiterte Einstellungen"
-
-#: ../glade/dialogs/preferences.glade.h:9
-msgid "C_hatting"
-msgstr "Chatten"
-
-#: ../glade/dialogs/preferences.glade.h:10
-msgid "C_olors"
-msgstr "Farben"
-
-#: ../glade/dialogs/preferences.glade.h:11
-msgid "Default nick:"
-msgstr "Standard-Nickname:"
-
-#: ../glade/dialogs/preferences.glade.h:12
-msgid "Font:"
-msgstr "Schrift:"
-
-#: ../glade/dialogs/preferences.glade.h:13
-msgid "Highlighted actions:"
-msgstr "Hervorgehobene Aktionen:"
-
-#: ../glade/dialogs/preferences.glade.h:14
-msgid "Highlighted messages:"
-msgstr "Hervorgehobene Nachrichten:"
-
-#: ../glade/dialogs/preferences.glade.h:15
-msgid "Highlightwords:"
-msgstr "Hervorgehobene Wörter:"
-
-#: ../glade/dialogs/preferences.glade.h:16
-msgid ""
-"If you want to have control about <u>all</u> settings you can use the "
-"advanced settings dialog.\n"
-"\n"
-"<b>Notice:</b>\n"
-"For some options it is neccessary to restart tekka for the changes to take "
-"effect."
-msgstr ""
-"Wenn Sie Kontrolle über <u>alle</u> Einstellungen haben möchten, können Sie "
-"den Dialog »Erweiterte Einstellungen« nutzen."
-
-#: ../glade/dialogs/preferences.glade.h:20
-msgid "Last log lines:"
-msgstr "Verlaufslänge:"
-
-#: ../glade/dialogs/preferences.glade.h:21
-msgid "Last log:"
-msgstr "Verlauf:"
-
-#: ../glade/dialogs/preferences.glade.h:22
-msgid "Messages:"
-msgstr "Nachrichten:"
-
-#: ../glade/dialogs/preferences.glade.h:23
-msgid "Notification:"
-msgstr "Benachrichtigung:"
-
-#: ../glade/dialogs/preferences.glade.h:24
-msgid "Own nick:"
-msgstr "Eigener Nickname:"
-
-#: ../glade/dialogs/preferences.glade.h:25
-msgid "Own text:"
-msgstr "Eigener Text:"
-
-#: ../glade/dialogs/preferences.glade.h:26
-msgid "Part message:"
-msgstr "Verlassen-Nachricht:"
-
-#: ../glade/dialogs/preferences.glade.h:27
-msgid "Preferences"
-msgstr "Einstellungen"
-
-#: ../glade/dialogs/preferences.glade.h:28
-msgid "Quit message:"
-msgstr "Quit-Nachricht:"
-
-#: ../glade/dialogs/preferences.glade.h:29
-msgid "Shutdown _maki on close"
-msgstr "_maki mit tekka beenden"
-
-#: ../glade/dialogs/preferences.glade.h:30
-msgid "Use _RGBA"
-msgstr "_RGBA aktivieren"
-
-#: ../glade/dialogs/preferences.glade.h:31
-msgid "Use _default font"
-msgstr "_Standardschrift benutzen"
-
-#: ../glade/dialogs/preferences.glade.h:33
-msgid "_Hide on close"
-msgstr "Beim Beenden _verstecken"
-
-#: ../glade/dialogs/preferences.glade.h:34
-msgid "_Nick Colors"
-msgstr "_Nicknamen-Farben"
-
-#: ../glade/dialogs/preferences.glade.h:35
-msgid "_Show status icon"
-msgstr "Status-Icon anzeigen"
-
-#: ../glade/dialogs/serverAdd.glade.h:1
-msgid "<b>Add Server</b>"
-msgstr "<b>Server hinzufügen</b>"
-
-#: ../glade/dialogs/serverAdd.glade.h:2 ../glade/dialogs/serverEdit.glade.h:1
-msgid "<b>Command List</b>"
-msgstr "<b>Kommandoliste</b>"
-
-#: ../glade/dialogs/serverAdd.glade.h:3
-msgid "Add Server"
-msgstr "Server hinzufügen"
-
-#: ../glade/dialogs/serverAdd.glade.h:4 ../glade/dialogs/serverEdit.glade.h:3
-msgid "Address:"
-msgstr "Adresse:"
-
-#: ../glade/dialogs/serverAdd.glade.h:5 ../glade/dialogs/serverEdit.glade.h:4
-msgid "Auto-connect:"
-msgstr "Automatisch verbinden:"
-
-#: ../glade/dialogs/serverAdd.glade.h:6 ../glade/dialogs/serverEdit.glade.h:6
-msgid "Nick name:"
-msgstr "Nickname:"
-
-#: ../glade/dialogs/serverAdd.glade.h:7 ../glade/dialogs/serverEdit.glade.h:7
-msgid "NickServ password:"
-msgstr "NickServ-Passwort:"
-
-#: ../glade/dialogs/serverAdd.glade.h:8 ../glade/dialogs/serverEdit.glade.h:8
-msgid "Port:"
-msgstr "Port:"
-
-#: ../glade/dialogs/serverAdd.glade.h:9 ../glade/dialogs/serverEdit.glade.h:9
-msgid "Real name:"
-msgstr "Realer Name:"
-
-#: ../glade/dialogs/serverAdd.glade.h:10
-msgid "Server name:"
-msgstr "Servername:"
-
-#: ../glade/dialogs/serverDelete.glade.h:2
-#, no-c-format
-msgid ""
-"<span weight=\"bold\" size=\"larger\">Delete Server</span>\n"
-"\n"
-"Are you sure you want to delete the server '%(server)s'?"
-msgstr ""
-"<span weight=\"bold\" size=\"larger\">Server löschen</span>\n"
-"Wollen Sie wirklich den Server '%(server)s' löschen?"
-
-#: ../glade/dialogs/serverDelete.glade.h:5
-msgid "Delete Server"
-msgstr "Server löschen"
-
-#: ../glade/dialogs/serverEdit.glade.h:2
-msgid "<b>Edit Server</b>"
-msgstr "<b>Server bearbeiten</b>"
-
-#: ../glade/dialogs/serverEdit.glade.h:5
-msgid "Edit Server"
-msgstr "Server bearbeiten"
-
-#: ../glade/dialogs/colorTable.ui.h:2
-#, no-c-format
-msgid ""
-"<b>IRC to real colors</b>\n"
-"\n"
-"Example use:\n"
-"Type %C02,01 for blue foreground and black background."
-msgstr ""
+#, python-format
+#~ msgid "Error: %(message)s"
+#~ msgstr "Fehler: %(message)s"

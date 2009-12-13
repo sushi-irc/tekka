@@ -1,5 +1,5 @@
-# Hebrew translation for tekka
-# Copyright (c) 2008 Rosetta Contributors and Canonical Ltd 2008
+# Italian translation for tekka
+# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
 # This file is distributed under the same license as the tekka package.
 #
 msgid ""
@@ -7,9 +7,9 @@ msgstr ""
 "Project-Id-Version: tekka 1.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-12-04 20:21+0100\n"
-"PO-Revision-Date: 2009-10-24 07:47+0000\n"
-"Last-Translator: Yaron <sh.yaron@gmail.com>\n"
-"Language-Team: Hebrew\n"
+"PO-Revision-Date: 2009-12-09 11:08+0000\n"
+"Last-Translator: \n"
+"Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,18 +19,18 @@ msgstr ""
 
 #: ../commands.py:56 ../commands.py:64
 msgid "Warning:"
-msgstr "אזהרה:"
+msgstr ""
 
 #: ../commands.py:57
 #, python-format
 msgid "You are not connected to server %(server)s."
-msgstr "קיים חיבור לשרת %(server)s."
+msgstr ""
 
 #: ../commands.py:65
 #, python-format
 msgid ""
 "The channel %(channel)s is not joined. Everything you write will not be send."
-msgstr "לא הצטרפת לערוץ %(channel)s. כל מה שיכתב לא ישלח."
+msgstr ""
 
 #: ../commands.py:318
 msgid "• Begin of names"
@@ -43,16 +43,16 @@ msgstr ""
 #: ../commands.py:626
 #, python-format
 msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
-msgstr "• הפקודה “%(command)s”אינה ידועה, שולח את הפקודה הגולמית “%(raw)s”."
+msgstr "• Comando sconosciuto “%(command)s”, invio il comando raw “%(raw)s”."
 
 #: ../com.py:91 ../com.py:97 ../com.py:186 ../com.py:197 ../com.py:224
 #: ../main.py:269
 msgid "tekka could not connect to maki."
-msgstr "tekka נתקל בבעיה בהתחברות ל־maki."
+msgstr ""
 
 #: ../com.py:92 ../main.py:270
 msgid "Please check whether maki is running."
-msgstr "נא לבדוק האם maki פעיל."
+msgstr ""
 
 #: ../com.py:98 ../com.py:187 ../com.py:198 ../com.py:225
 #, python-format
@@ -60,8 +60,6 @@ msgid ""
 "Please check whether maki is running.\n"
 "The following error occurred: %(error)s"
 msgstr ""
-"יש לבדוק האם maki פעיל.\n"
-"השגיאה הבאה ארעה: %(error)s"
 
 #: ../com.py:132
 msgid "Communication error with maki."
@@ -77,12 +75,12 @@ msgstr ""
 
 #: ../com.py:240
 msgid "tekka requires a newer maki version."
-msgstr "tekka דורשת גרסה חדשה יותר של maki."
+msgstr ""
 
 #: ../com.py:241
 #, python-format
 msgid "Please update maki to at least version %(version)s."
-msgstr "יש לעדכן את maki לפחות לגרסה %(version)s."
+msgstr ""
 
 #: ../dialogs/channelList.py:99
 msgid "Channel list search error."
@@ -98,83 +96,81 @@ msgstr ""
 
 #: ../dialogs/channelList.py:197
 msgid "Channel"
-msgstr "ערוץ"
+msgstr "Canale"
 
 #: ../dialogs/channelList.py:197 ../signals.py:1456
 msgid "User"
-msgstr "משתמש"
+msgstr "Utente"
 
 #: ../dialogs/channelList.py:197 ../signals.py:1457
 msgid "Topic"
-msgstr "כותרת"
+msgstr "Argomento"
 
 #: ../dialogs/dcc.py:153
 msgid "ID"
-msgstr "מזהה"
+msgstr ""
 
 #: ../dialogs/dcc.py:153
 msgid "Server"
-msgstr "שרת"
+msgstr ""
 
 #: ../dialogs/dcc.py:153
 msgid "Partner"
-msgstr "שותף"
+msgstr ""
 
 #: ../dialogs/dcc.py:153
 msgid "Filename"
-msgstr "שם הקובץ"
+msgstr ""
 
 #: ../dialogs/dcc.py:153
 msgid "Size"
-msgstr "גודל"
+msgstr ""
 
 #: ../dialogs/dcc.py:161
 msgid "Progress"
-msgstr "תהליך"
+msgstr ""
 
 #. speed column
 #: ../dialogs/dcc.py:167
 msgid "Speed"
-msgstr "מהירות"
+msgstr ""
 
 #: ../dialogs/debug.py:64
 msgid "C_ompile and run"
-msgstr "הי_דור והרצה"
+msgstr ""
 
 #: ../dialogs/plugins.py:120
 #, python-format
 msgid "Configure %(name)s"
-msgstr "הגדרת %(name)s"
+msgstr ""
 
 #: ../dialogs/whois.py:73
 #, python-format
 msgid "Whois on %(server)s"
-msgstr "שאילתת whois כלפי %(server)s"
+msgstr ""
 
 #: ../dialogs/whois.py:78
 #, python-format
 msgid "Whois data of %(nick)s"
-msgstr "נתוני whois עבור %(nick)s"
+msgstr ""
 
 #: ../dialogs/whois.py:110
 msgid "No data received so far. Are you still connected?"
-msgstr "לא התקבלו נתונים עד כה. האם החיבור עדיין פעיל?"
+msgstr ""
 
 #: ../dialogs/whois.py:126
 msgid "Loading..."
-msgstr "בטעינה..."
+msgstr ""
 
 #: ../lib/dcc_dialog.py:54
 msgid "Incoming file transfer"
-msgstr "העברת קובץ נכנסת"
+msgstr ""
 
 #: ../lib/dcc_dialog.py:63
 msgid ""
 "\n"
 "If you don't choose another destination, this file will be resumed."
 msgstr ""
-"\n"
-"אם לא יבחר יעד אחר, הורדת הקובץ הנוכחי תמשך."
 
 #: ../lib/dcc_dialog.py:55
 #, python-format
@@ -183,9 +179,6 @@ msgid ""
 "Filename: “%(filename)s“\n"
 "File size: %(bytes)d bytes%(resumable)s"
 msgstr ""
-"שולח: ”%(nick)s”\n"
-"שם הקובץ: “%(filename)s“\n"
-"גודל הקובץ: %(bytes)d בתים%(resumable)s"
 
 #: ../lib/dialog_control.py:59
 #, python-format
@@ -195,17 +188,17 @@ msgstr ""
 #: ../lib/key_dialog.py:49
 #, python-format
 msgid "Enter the key for the channel %(channel)s."
-msgstr "יש להזין את המפתח עבור הערוץ %(channel)s."
+msgstr ""
 
 #: ../lib/key_dialog.py:60
 msgid "Save key for channel"
-msgstr "שמירת המפתח עבור הערוץ"
+msgstr ""
 
 #: ../lib/plugin_control.py:109 ../lib/plugin_control.py:117
 #: ../lib/plugin_control.py:140 ../lib/plugin_control.py:194
 #: ../lib/plugin_control.py:347
 msgid "Plugin could not be loaded."
-msgstr "לא ניתן לטעון את התוסף."
+msgstr ""
 
 #: ../lib/plugin_control.py:110 ../lib/plugin_control.py:141
 #: ../lib/plugin_control.py:195
@@ -214,26 +207,24 @@ msgid ""
 "Plugin %(plugin)s could not be loaded.\n"
 "The following error occurred: %(error)s"
 msgstr ""
-"לא ניתן לטעון את התוסף %(plugin)s.\n"
-"השגיאה הבאה ארעה: %(error)s"
 
 #: ../lib/plugin_control.py:118
 #, python-format
 msgid "Plugin %(plugin)s could not be loaded."
-msgstr "לא ניתן לטעון את התוסף %(plugin)s."
+msgstr ""
 
 #: ../lib/plugin_control.py:173
 msgid "Plugin is already loaded."
-msgstr "התוסף כבר נטען."
+msgstr ""
 
 #: ../lib/plugin_control.py:174
 #, python-format
 msgid "Plugin %(plugin)s is already loaded."
-msgstr "התוסף %(plugin)s כבר נטען."
+msgstr ""
 
 #: ../lib/plugin_control.py:218
 msgid "Plugin could not be unloaded."
-msgstr "לא ניתן לבטל את טעינת התוסף."
+msgstr ""
 
 #: ../lib/plugin_control.py:218
 #, python-format
@@ -243,30 +234,30 @@ msgstr ""
 #: ../lib/plugin_control.py:348
 #, python-format
 msgid "Plugin %(plugin)s could not be loaded automatically."
-msgstr "לא ניתן לטעון את התוסף %(plugin)s אוטומטית."
+msgstr ""
 
 #: ../lib/status_icon.py:67
 msgid "Hide main window"
-msgstr "הסתרת החלון הראשי"
+msgstr ""
 
 #: ../lib/status_icon.py:69
 msgid "Show main window"
-msgstr "הצגת החלון הראשי"
+msgstr ""
 
 #: ../lib/topic_dialog.py:65
 #, python-format
 msgid "Topic for channel %(channel)s on %(server)s"
-msgstr "נושא הערוץ %(channel)s ב־%(server)s"
+msgstr ""
 
 #: ../lib/topic_dialog.py:121
 msgid "Topic changed before."
-msgstr "הנושא שונה קודם לכן."
+msgstr ""
 
 #: ../lib/topic_dialog.py:122
 msgid ""
 "The topic was changed before your update. Do you want to commit the changes "
 "anyway?"
-msgstr "הנושא שונה בטרם עדכונך. האם ברצונך להחיל את השינויים בכל מקרה?"
+msgstr ""
 
 #: ../lib/welcome_window.py:36
 msgid "<big><b>Welcome to tekka!</b></big>"
@@ -290,15 +281,13 @@ msgstr ""
 
 #: ../main.py:348
 msgid "tekka could not determine server."
-msgstr "ל־tekka לא היתה אפשרות לקבוע איזה שרת."
+msgstr ""
 
 #: ../main.py:349
 msgid ""
 "There is no active server. Click on a server tab or a child of a server tab "
 "to activate the server."
 msgstr ""
-"אין שרת פעיל. יש ללחוץ על הלשונית שרת או על צאצא של לשונית שרת כדי להפעיל את "
-"השרת."
 
 #: ../main.py:360 ../main.py:369 ../menus/nicklist_menu.py:135
 msgid "No connection to maki."
@@ -306,43 +295,43 @@ msgstr ""
 
 #: ../main.py:598
 msgid "Reset markup"
-msgstr "איפוס הסימון"
+msgstr "Reset markup"
 
 #: ../main.py:748
 #, python-format
 msgid "Do you really want to close channel “%(name)s”?"
-msgstr "האם אתה בטוח שברצונך לסגור את הערוץ “%(name)s”?"
+msgstr "Vuoi veramente chiudere il canale “%(name)s”?"
 
 #: ../main.py:750
 #, python-format
 msgid "Do you really want to close query “%(name)s”?"
-msgstr "האם ברצונך לסגור את השאילתה  “%(name)s”?"
+msgstr "Vuoi veramente chiudere la query “%(name)s”?"
 
 #: ../main.py:752
 #, python-format
 msgid "Do you really want to close server “%(name)s”?"
-msgstr "האם ברצונך לסגור את השרת  “%(name)s”?"
+msgstr "Vuoi veramente chiudere il server “%(name)s”?"
 
 #. TODO: away status
 #: ../main.py:848
 msgid "Nickname: "
-msgstr "כינוי: "
+msgstr ""
 
 #: ../main.py:851
 msgid "User: "
-msgstr "משתמש: "
+msgstr ""
 
 #: ../main.py:852
 msgid "Topic: "
-msgstr "נושא: "
+msgstr ""
 
 #: ../main.py:854 ../main.py:858
 msgid "Last sentence: "
-msgstr "המשפט האחרון: "
+msgstr ""
 
 #: ../main.py:1396
 msgid "Error occured"
-msgstr "ארעה שגיאה"
+msgstr ""
 
 #: ../main.py:1405
 msgid ""
@@ -354,7 +343,7 @@ msgstr ""
 
 #: ../menus/nicklist_menu.py:55 ../menus/servertree_menu.py:56
 msgid "Widget creation failed."
-msgstr "יצירת הווידג'ט נכשלה."
+msgstr ""
 
 #: ../menus/nicklist_menu.py:56
 msgid ""
@@ -373,168 +362,167 @@ msgstr ""
 #: ../signals.py:409
 #, python-format
 msgid "• Topic for %(channel)s: %(topic)s"
-msgstr "• הנושא עבור %(channel)s:‏ %(topic)s"
+msgstr ""
 
 #: ../signals.py:440
 #, python-format
 msgid "• You changed the topic to %(topic)s."
-msgstr "• שינית את הנושא ל־%(topic)s."
+msgstr ""
 
 #: ../signals.py:442
 #, python-format
 msgid "• %(nick)s changed the topic to %(topic)s."
-msgstr "• %(nick)s שינה את הנושא ל־%(topic)s."
+msgstr ""
 
 #: ../signals.py:523
 #, python-format
 msgid "• %(nick)s is away (%(message)s)."
-msgstr "• %(nick)s הינו מרוחק (%(message)s)."
+msgstr "• %(nick)s è uscito (%(message)s)."
 
 #: ../signals.py:643
 #, python-format
 msgid "• Modes for %(target)s: %(mode)s"
-msgstr "• מצבים עבור %(target)s:‏ %(mode)s"
+msgstr ""
 
 #. normal ctcp
 #: ../signals.py:733
 #, python-format
 msgid "CTCP from %(nick)s to Channel:"
-msgstr "CTCP מ־%(nick)s אל הערוץ:"
+msgstr ""
 
 #: ../signals.py:763
 #, python-format
 msgid "CTCP request from you to %(target)s: %(message)s"
-msgstr "בקשת CTCP ממך אל %(target)s:‏ %(message)s"
+msgstr ""
 
 #: ../signals.py:940
 #, python-format
 msgid "• You are now known as %(newnick)s."
-msgstr "• כינויך החדש הינו %(newnick)s."
+msgstr "• Sei ora conosciuto come %(newnick)s."
 
 #: ../signals.py:946
 #, python-format
 msgid "• %(nick)s is now known as %(newnick)s."
-msgstr "• %(nick)s כעת ידוע תחת השם %(newnick)s."
+msgstr "• %(nick)s è ora conosciuto come %(newnick)s."
 
 #: ../signals.py:1010
 #, python-format
 msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
-msgstr "« נבעטת אל מחוץ לערוץ %(channel)s על ידי %(nick)s ‏(%(reason)s)."
+msgstr ""
+"« Sei stato cacciato dal canale %(channel)s da %(nick)s (%(reason)s)."
 
 #: ../signals.py:1032
 #, python-format
 msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr ""
-"« %(who)s נבעט אל מחוץ לערוץ %(channel)s על ידי %(nick)s ‏(%(reason)s)."
+"« %(who)s è stato cacciato dal canale %(channel)s da %(nick)s (%(reason)s)."
 
 #: ../signals.py:1070
 #, python-format
 msgid "« You have quit (%(reason)s)."
-msgstr "« יצאת מהערוץ (%(reason)s)."
+msgstr "« Sei uscito (%(reason)s)."
 
 #: ../signals.py:1072
 msgid "« You have quit."
-msgstr "« יצאת."
+msgstr "« Sei uscito."
 
 #: ../signals.py:1094
 #, python-format
 msgid "« %(nick)s has quit (%(reason)s)."
-msgstr "« %(nick)s יצא מהערוץ (%(reason)s)."
+msgstr "« %(nick)s è uscito (%(reason)s)."
 
 #: ../signals.py:1096
 #, python-format
 msgid "« %(nick)s has quit."
-msgstr "« %(nick)s יצא."
+msgstr "« %(nick)s è uscito."
 
 #: ../signals.py:1199
 #, python-format
 msgid "» You have joined %(channel)s."
-msgstr "» הצטרפת לערוץ %(channel)s."
+msgstr "» Sei entrato nel canale %(channel)s."
 
 #: ../signals.py:1210
 #, python-format
 msgid "» %(nick)s has joined %(channel)s."
-msgstr "» %(nick)s הצטרף לערוץ %(channel)s."
+msgstr ""
 
 #: ../signals.py:1308
 #, python-format
 msgid "« You have left %(channel)s (%(reason)s)."
-msgstr "« עזבת את הערוץ %(channel)s‏ (%(reason)s)."
+msgstr ""
 
 #: ../signals.py:1310
 #, python-format
 msgid "« You have left %(channel)s."
-msgstr "« עזבת את הערוץ %(channel)s."
+msgstr ""
 
 #: ../signals.py:1340
 #, python-format
 msgid "« %(nick)s has left %(channel)s (%(reason)s)."
-msgstr "« %(nick)s עזב את הערוץ %(channel)s ‏(%(reason)s)."
+msgstr ""
 
 #: ../signals.py:1343
 #, python-format
 msgid "« %(nick)s has left %(channel)s."
-msgstr "« %(nick)s עזב את הערוץ %(channel)s."
+msgstr ""
 
 #: ../signals.py:1366
 #, python-format
 msgid "• %(target)s: No such nick/channel."
-msgstr "• %(target)s: אין כינוי/ערוץ כזה."
+msgstr ""
 
 #: ../signals.py:1369
 #, python-format
 msgid "• %(target)s: No such server."
-msgstr "• %(target)s: אין שרת כזה."
+msgstr ""
 
 #: ../signals.py:1372
 #, python-format
 msgid "• %(target)s: No such channel."
-msgstr "• %(target)s: אין ערוץ כזה."
+msgstr ""
 
 #: ../signals.py:1384
 msgid "Unknown reason"
-msgstr "סיבה לא ידועה"
+msgstr "Motivo sconosciuto"
 
 #: ../signals.py:1387
 msgid "The channel is full."
-msgstr "הערוץ מלא."
+msgstr ""
 
 #: ../signals.py:1389
 msgid "The channel is invite-only."
-msgstr "הערוץ הינו למוזמנים בלבד."
+msgstr ""
 
 #: ../signals.py:1391
 msgid "You are banned."
-msgstr "נחסמת."
+msgstr "Sei stato bannato"
 
 #: ../signals.py:1407
 msgid "You need the correct channel key."
-msgstr "תזדקק למפתח הערוץ הנכון."
+msgstr ""
 
 #: ../signals.py:1410
 #, python-format
 msgid "You can not join %(channel)s: %(reason)s"
-msgstr "לא תוכל להצטרף לערוץ %(channel)s: %(reason)s"
+msgstr ""
 
 #: ../signals.py:1473
 #, python-format
 msgid "[%(nick)s] %(message)s"
-msgstr "[%(nick)s]‏ %(message)s"
+msgstr ""
 
 #: ../signals.py:1478
 #, python-format
 msgid "[%(nick)s] End of whois."
-msgstr "[%(nick)s] סיום נתוני ה־whois."
+msgstr ""
 
 #: ../glade/dialogs/about.glade.in.h:1
 msgid "translator-credits"
 msgstr ""
-"Launchpad Contributions:\n"
-"  Yaron https://launchpad.net/~sh-yaron"
 
 #: ../glade/dialogs/advancedPreferences.glade.h:1
 msgid "Advanced Preferences"
-msgstr "העדפות מתקדמות"
+msgstr ""
 
 #: ../glade/dialogs/advancedPreferences.glade.h:2
 #: ../glade/dialogs/channelList.glade.h:2 ../glade/dialogs/dcc.glade.h:2
@@ -545,7 +533,7 @@ msgstr ""
 
 #: ../glade/dialogs/channelList.glade.h:1
 msgid "Channel List"
-msgstr "רשימת הערוצים"
+msgstr "Elenco canali"
 
 #: ../glade/dialogs/channelList.glade.h:3
 msgid "gtk-find"
@@ -557,7 +545,7 @@ msgstr ""
 
 #: ../glade/dialogs/dcc.glade.h:1
 msgid "File Transfers"
-msgstr "העברות קבצים"
+msgstr ""
 
 #: ../glade/dialogs/dcc.glade.h:3
 msgid "gtk-remove"
@@ -605,27 +593,27 @@ msgstr ""
 
 #: ../glade/dialogs/history.glade.h:1
 msgid "History"
-msgstr "היסטוריה"
+msgstr "Cronologia"
 
 #: ../glade/dialogs/history.glade.h:2
 msgid "Local search only"
-msgstr "חיפוש מקומי בלבד"
+msgstr ""
 
 #: ../glade/dialogs/plugins.glade.h:1
 msgid "C_onfigure"
-msgstr "ה_גדרה"
+msgstr ""
 
 #: ../glade/dialogs/plugins.glade.h:2
 msgid "Plugins"
-msgstr "תוספים"
+msgstr "Plugin"
 
 #: ../glade/dialogs/plugins.glade.h:3
 msgid "_Load"
-msgstr "_טעינה"
+msgstr ""
 
 #: ../glade/dialogs/plugins.glade.h:4
 msgid "_Unload"
-msgstr "_פריקה"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:1
 msgid "<b>Filter messages</b>"
@@ -647,48 +635,46 @@ msgid ""
 "<b>Warning:</b>\n"
 "Changes will be applied after closing this dialog."
 msgstr ""
-"<b>אזהרה:</b>\n"
-"השינויים יחולו לאחר סגירת תיבת הדו־שיח."
 
 #: ../glade/dialogs/preferences.glade.h:10
 msgid "A_uto expand server tree"
-msgstr "הרחבת עץ ה_שרתים אוטומטית"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:11
 msgid "Actions:"
-msgstr "פעולות:"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:12
 msgid "Ad_vanced Settings"
-msgstr "הגדרות _מתקדמות"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:13
 msgid "C_hatting"
-msgstr "_שיחה"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:14
 msgid "C_olors"
-msgstr "_צבעים"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:15
 msgid "Default nick:"
-msgstr "כינוי ברירת המחדל:"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:16
 msgid "Font:"
-msgstr "גופן:"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:17
 msgid "Highlighted actions:"
-msgstr "פעולות מודגשות:"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:18
 msgid "Highlighted messages:"
-msgstr "הודעות מודגשות:"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:19
 msgid "Highlightwords:"
-msgstr "מילים מודגשות:"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:20
 msgid ""
@@ -699,50 +685,46 @@ msgid ""
 "For some options it is neccessary to restart tekka for the changes to take "
 "effect."
 msgstr ""
-"אם ישנו צורך לשלוט ב<u>כל</u> ההגדרות ניתן להשתמש בדו־שיח ההגדרות המתקדמות.\n"
-"\n"
-"<b>לתשומת לבך:</b>\n"
-"עבור אפשרויות מסוימות יש צורך להפעיל מחדש את tekka כדי שהשינויים יכנסי לתוקף."
 
 #: ../glade/dialogs/preferences.glade.h:24
 msgid "Last log lines:"
-msgstr "שורות הרישום האחרונות:"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:25
 msgid "Last log:"
-msgstr "הרישום אחרון:"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:26
 msgid "Messages:"
-msgstr "הודעות:"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:27
 msgid "Notification:"
-msgstr "התרעה:"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:28
 msgid "Own nick:"
-msgstr "כינוי עצמי:"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:29
 msgid "Own text:"
-msgstr "טקסט עצמי:"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:30
 msgid "Part message:"
-msgstr "הודעת עזיבה:"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:31
 msgid "Preferences"
-msgstr "העדפות"
+msgstr "Preferenze"
 
 #: ../glade/dialogs/preferences.glade.h:32
 msgid "Quit message:"
-msgstr "הודעת יציאה:"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:33
 msgid "Shutdown _maki on close"
-msgstr "_כיבוי maki בעת הסגירה"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:34
 msgid "Time format:"
@@ -750,11 +732,11 @@ msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:35
 msgid "Use _RGBA"
-msgstr "_שימוש ב־RGBA"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:36
 msgid "Use _default font"
-msgstr "שימוש ב_גופן ברירת המחדל"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:37
 msgid "Use contrast sensitive colors"
@@ -762,63 +744,63 @@ msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:38 ../glade/mainwindow.glade.h:31
 msgid "_General Output"
-msgstr "_פלט כללי"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:39
 msgid "_Hide on close"
-msgstr "ה_סתרה בעת הסגירה"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:40
 msgid "_Nick Colors"
-msgstr "_צבעי הכינויים"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:41
 msgid "_Show status icon"
-msgstr "הצגת _סמל המצב"
+msgstr ""
 
 #: ../glade/dialogs/preferences.glade.h:42 ../glade/mainwindow.glade.h:40
 msgid "_tekka"
-msgstr "_tekka"
+msgstr ""
 
 #: ../glade/dialogs/serverAdd.glade.h:1
 msgid "<b>Add Server</b>"
-msgstr "<b>הוספת שרת</b>"
+msgstr ""
 
 #: ../glade/dialogs/serverAdd.glade.h:2 ../glade/dialogs/serverEdit.glade.h:1
 msgid "<b>Command List</b>"
-msgstr "<b>רשימת פקודות</b>"
+msgstr ""
 
 #: ../glade/dialogs/serverAdd.glade.h:3
 msgid "Add Server"
-msgstr "הוספת שרת"
+msgstr "Aggiungi server"
 
 #: ../glade/dialogs/serverAdd.glade.h:4 ../glade/dialogs/serverEdit.glade.h:3
 msgid "Address:"
-msgstr "כתובת:‏"
+msgstr "Indirizzo:"
 
 #: ../glade/dialogs/serverAdd.glade.h:5 ../glade/dialogs/serverEdit.glade.h:4
 msgid "Auto-connect:"
-msgstr "התחברות אוטומטית:"
+msgstr ""
 
 #: ../glade/dialogs/serverAdd.glade.h:6 ../glade/dialogs/serverEdit.glade.h:6
 msgid "Nick name:"
-msgstr "כינוי:"
+msgstr ""
 
 #: ../glade/dialogs/serverAdd.glade.h:7 ../glade/dialogs/serverEdit.glade.h:8
 msgid "NickServ password:"
-msgstr "סיסמת ה־NickServ:"
+msgstr ""
 
 #: ../glade/dialogs/serverAdd.glade.h:8 ../glade/dialogs/serverEdit.glade.h:9
 msgid "Port:"
-msgstr "פתחה:"
+msgstr "Porta:"
 
 #: ../glade/dialogs/serverAdd.glade.h:9 ../glade/dialogs/serverEdit.glade.h:10
 msgid "Real name:"
-msgstr "שם אמיתי:"
+msgstr "Nome reale:"
 
 #: ../glade/dialogs/serverAdd.glade.h:10
 msgid "Server name:"
-msgstr "שם השרת:"
+msgstr "Nome server:"
 
 #: ../glade/dialogs/serverAdd.glade.h:11
 msgid "gtk-add"
@@ -838,7 +820,7 @@ msgstr ""
 
 #: ../glade/dialogs/serverDelete.glade.h:5
 msgid "Delete Server"
-msgstr "מחק את השרת"
+msgstr "Elimina server"
 
 #: ../glade/dialogs/serverDelete.glade.h:6
 msgid "gtk-no"
@@ -850,11 +832,11 @@ msgstr ""
 
 #: ../glade/dialogs/serverEdit.glade.h:2
 msgid "<b>Edit Server</b>"
-msgstr "<b>עריכת שרת</b>"
+msgstr "<b>Modifica Server</b>"
 
 #: ../glade/dialogs/serverEdit.glade.h:5
 msgid "Edit Server"
-msgstr "ערוך שרת"
+msgstr "Modifica server"
 
 #: ../glade/dialogs/serverEdit.glade.h:7
 msgid "NickServ Ghost:"
@@ -862,43 +844,43 @@ msgstr ""
 
 #: ../glade/dialogs/server.glade.h:1 ../glade/mainwindow.glade.h:15
 msgid "Server List"
-msgstr "רשימת שרתים"
+msgstr "Lista server"
 
 #: ../glade/mainwindow.glade.h:1
 msgid "Auto-connect"
-msgstr "התחברות אוטומטית"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:2
 msgid "Auto-join"
-msgstr "הצטרפות אוטומטית"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:3
 msgid "Ban"
-msgstr "חסימה"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:4
 msgid "Close"
-msgstr "סגירה"
+msgstr "Chiudi"
 
 #: ../glade/mainwindow.glade.h:5
 msgid "Connect"
-msgstr "התחברות"
+msgstr "Connetti"
 
 #: ../glade/mainwindow.glade.h:6
 msgid "Disconnect"
-msgstr "ניתוק"
+msgstr "Disconnetti"
 
 #: ../glade/mainwindow.glade.h:7
 msgid "Give Half-Op"
-msgstr "הענק חצי־מפעיל"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:8
 msgid "Give Op"
-msgstr "הענק מפעיל"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:9
 msgid "Give Voice"
-msgstr "הענק קול"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:10
 msgid "H_ide Messages"
@@ -906,15 +888,15 @@ msgstr ""
 
 #: ../glade/mainwindow.glade.h:11
 msgid "IRC Colors"
-msgstr "צבעי IRC"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:12
 msgid "Kick"
-msgstr "בעיטה"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:13
 msgid "Modes"
-msgstr "מצבים"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:14
 msgid "S_ide Pane"
@@ -930,35 +912,35 @@ msgstr ""
 
 #: ../glade/mainwindow.glade.h:18
 msgid "Shutdown"
-msgstr "כיבוי"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:19
 msgid "Status _Bar"
-msgstr "שורת ה_מצב"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:20
 msgid "Status _Icon"
-msgstr "סמל ה_מצב"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:21
 msgid "Take Half-Op"
-msgstr "שלילת חצי־מפעיל"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:22
 msgid "Take Op"
-msgstr "שלילת מפעיל"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:23
 msgid "Take Voice"
-msgstr "שלילת קול"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:24
 msgid "Whois"
-msgstr "Whois"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:25
 msgid "_Channel List"
-msgstr "רשימת ה_ערוצים"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:26
 msgid "_Connect"
@@ -966,11 +948,11 @@ msgstr ""
 
 #: ../glade/mainwindow.glade.h:27
 msgid "_Debug"
-msgstr "_ניפוי שגיאות"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:28
 msgid "_Dialogs"
-msgstr "תיבות _דו־שיח"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:29
 msgid "_Disconnect"
@@ -978,11 +960,11 @@ msgstr ""
 
 #: ../glade/mainwindow.glade.h:30
 msgid "_File Transfers"
-msgstr "העברות _קבצים"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:32
 msgid "_Help"
-msgstr "ע_זרה"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:33
 msgid "_History"
@@ -998,60 +980,16 @@ msgstr ""
 
 #: ../glade/mainwindow.glade.h:36
 msgid "_Plugins"
-msgstr "_תוספים"
+msgstr "_Plugin"
 
 #: ../glade/mainwindow.glade.h:37
 msgid "_Topic Bar"
-msgstr "סרגל ה_נושא"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:38
 msgid "_View"
-msgstr "_תצוגה"
+msgstr ""
 
 #: ../glade/mainwindow.glade.h:39
 msgid "_maki"
-msgstr "_maki"
-
-#, python-format
-#~ msgid "Error: %(message)s"
-#~ msgstr "שגיאה: %(message)s"
-
-#, python-format
-#~ msgid "%d User"
-#~ msgid_plural "%d Users"
-#~ msgstr[0] "משתמש אחד"
-#~ msgstr[1] "%d משתמשים"
-
-#, python-format
-#~ msgid "%d Operator"
-#~ msgid_plural "%d Operators"
-#~ msgstr[0] "מפעיל אחד"
-#~ msgstr[1] "%d מפעילים"
-
-#~ msgid "Part"
-#~ msgstr "עזיבה"
-
-#~ msgid "Manage File Transfers"
-#~ msgstr "ניהול העברות קבצים"
-
-#~ msgid "Join"
-#~ msgstr "הצטרף"
-
-#~ msgid "Manage plugins"
-#~ msgstr "ניהול תוספים"
-
-#~ msgid "Show a translation between IRC color codes and real colors"
-#~ msgstr "הצגת תרגום של קודים של צבעי IRC לצבעים ממשיים"
-
-#~ msgid "Set Key"
-#~ msgstr "הגדרת מפתח"
-
-#~ msgid ""
-#~ "<b>Notice:</b>\n"
-#~ "First field is type, second field is server, third is the channel.\n"
-#~ "Everything matching passes the filter and will be shown except the row is "
-#~ "negated."
-#~ msgstr ""
-#~ "<b>לתשומת לבך:</b>\n"
-#~ "השדה הראשון הוא עבור הסוג, השני עבור השרת, השלישי הוא הערוץ.\n"
-#~ "כל הנתונים התואמים שעוברים את הסינון ויוצגו יופיעו מלבד שהשורה תהיה הפוכה."
+msgstr ""
