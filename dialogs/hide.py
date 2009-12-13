@@ -1,7 +1,7 @@
 import gtk
 import config
 import lib.tab as tabs
-from lib.dialog_control import build_dialog
+from lib.gui_control import builder
 
 widgets = None
 active_tab = None
@@ -102,11 +102,11 @@ def apply_current_settings():
 	d = get_hidden_types(active_tab)
 
 	for mtype in d["hide"]:
-		button = widgets.get_widget(messagetypes[mtype])
+		button = widgets.get_object(messagetypes[mtype])
 		button.set_active(True)
 
 	for mtype in d["hide_own"]:
-		button = widgets.get_widget(messagetypes[mtype]+"_own")
+		button = widgets.get_object(messagetypes[mtype]+"_own")
 		button.set_active(True)
 
 def run(current_tab):
@@ -115,7 +115,7 @@ def run(current_tab):
 	def dialog_response_cb(dialog, id):
 		dialog.destroy()
 
-	dialog = widgets.get_widget("hideDialog")
+	dialog = widgets.get_object("hideDialog")
 
 	if not dialog:
 		raise Exception, "Hide dialog cannot be retrieved."
@@ -130,7 +130,7 @@ def run(current_tab):
 def setup():
 	global widgets
 
-	widgets = build_dialog("hide")
+	widgets = builder.load_dialog("hide")
 
 	if not widgets:
 		raise Exception, "Couldn't load the dialog"

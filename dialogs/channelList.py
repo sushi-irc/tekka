@@ -38,8 +38,7 @@ import signals
 import config
 import logging
 
-from lib.dialog_control import build_dialog
-from lib.gui_control import show_inline_dialog, markup_escape
+from lib.gui_control import show_inline_dialog, markup_escape, builder
 from lib.inline_dialog import InlineMessageDialog
 
 widgets = None
@@ -51,7 +50,7 @@ cache = []  # /list cache
 # TODO: get rid of those globals
 
 def clearProgressBar():
-	widgets.get_widget("progressBar").set_fraction(0)
+	widgets.get_object("progressBar").set_fraction(0)
 
 def run(server):
 	""" Show the dialog until close was hit. """
@@ -66,7 +65,7 @@ def run(server):
 	currentServer = server
 
 	clearProgressBar()
-	dialog = widgets.get_widget("channelList")
+	dialog = widgets.get_object("channelList")
 
 	dialog.show_all()
 
@@ -96,7 +95,7 @@ def listButton_clicked_cb(button):
 
 	try:
 		filterExpression = compile(
-			widgets.get_widget("regexpEntry").get_text())
+			widgets.get_object("regexpEntry").get_text())
 	except BaseException as e:
 		d = InlineMessageDialog(
 			_("Channel list search error."),
@@ -158,7 +157,7 @@ def sushiList(time, server, channel, user, topic):
 		clearProgressBar()
 		return
 
-	widgets.get_widget("progressBar").pulse()
+	widgets.get_object("progressBar").pulse()
 
 	store = listView.get_model()
 	if (not filterExpression
@@ -177,7 +176,7 @@ def dialog_response_cb(dialog, id):
 def setup():
 	global widgets, listView
 
-	widgets = build_dialog("channelList")
+	widgets = builder.load_dialog("channelList")
 
 	sigdic = {
 		"listButton_clicked_cb" : listButton_clicked_cb,
@@ -188,10 +187,10 @@ def setup():
 
 	widgets.signal_autoconnect(sigdic)
 
-	diag = widgets.get_widget("channelList")
+	diag = widgets.get_object("channelList")
 	diag.connect("response", dialog_response_cb)
 
-	listView = widgets.get_widget("listView")
+	listView = widgets.get_object("listView")
 	model = gtk.ListStore(str, int, str) # channel | user | topic
 	listView.set_model(model)
 

@@ -97,7 +97,7 @@ class PollThread(Thread):
 		if len(sends) == 0:
 			return
 
-		view = widgets.get_widget("transferView")
+		view = widgets.get_object("transferView")
 		store = view.get_model()
 
 		# all ids
@@ -140,7 +140,7 @@ def cancel_transfer(transferID, poll_thread):
 	poll_thread.apply_dbus_sends()
 
 def get_selected_transfer_id():
-	view = widgets.get_widget("transferView")
+	view = widgets.get_object("transferView")
 	store = view.get_model()
 	cursor = view.get_cursor()
 
@@ -185,7 +185,7 @@ def dialog_response_cb(dialog, id, poll_thread):
 		dialog.destroy()
 
 def run():
-	dialog = widgets.get_widget("DCCDialog")
+	dialog = widgets.get_object("DCCDialog")
 
 	poll_thread = PollThread()
 	poll_thread.start()
@@ -200,9 +200,9 @@ def create_list_model():
 def setup():
 	global widgets
 
-	widgets = dialog_control.build_dialog("dcc")
+	widgets = gui_control.builder.load_dialog("dcc")
 
-	transferView = widgets.get_widget("transferView")
+	transferView = widgets.get_object("transferView")
 	transferView.set_model(create_list_model())
 
 	# add direction icon column

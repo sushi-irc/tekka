@@ -35,7 +35,7 @@ import logging
 
 from gettext import gettext as _
 
-from lib.dialog_control import build_dialog
+from lib.gui_control import builder
 from lib import plugin_control as pinterface
 import config
 
@@ -56,13 +56,13 @@ def dialog_response_cb(dialog, response_id):
 		dialog.destroy()
 
 def run():
-	dialog = widgets.get_widget("plugins")
+	dialog = widgets.get_object("plugins")
 
 	dialog.connect("response", dialog_response_cb)
 	dialog.show_all()
 
 def loadPlugin_clicked_cb(button):
-	view = widgets.get_widget("pluginView")
+	view = widgets.get_object("pluginView")
 	store = view.get_model()
 
 	path = view.get_cursor()[0]
@@ -76,7 +76,7 @@ def loadPlugin_clicked_cb(button):
 		store.set(store.get_iter(path), COL_LOADED, True)
 
 def unloadPlugin_clicked_cb(button):
-	view = widgets.get_widget("pluginView")
+	view = widgets.get_object("pluginView")
 	store = view.get_model()
 
 	path = view.get_cursor()[0]
@@ -105,7 +105,7 @@ def configureButton_clicked_cb(button):
 
 		dialog.destroy()
 
-	pluginView = widgets.get_widget("pluginView")
+	pluginView = widgets.get_object("pluginView")
 	path = pluginView.get_cursor()[0]
 
 	try:
@@ -272,12 +272,12 @@ def pluginView_button_press_event_cb(pluginView, event):
 		options = pinterface.get_options(pluginName)
 
 		if options:
-			widgets.get_widget("configureButton").set_sensitive(True)
+			widgets.get_object("configureButton").set_sensitive(True)
 		else:
-			widgets.get_widget("configureButton").set_sensitive(False)
+			widgets.get_object("configureButton").set_sensitive(False)
 
 def loadPluginList():
-	view = widgets.get_widget("pluginView")
+	view = widgets.get_object("pluginView")
 
 	view.get_model().clear()
 
@@ -334,7 +334,7 @@ def loadPluginList():
 def setup():
 	global widgets
 
-	widgets = build_dialog("plugins")
+	widgets = builder.load_dialog("plugins")
 
 	sigdic = {
 		"loadButton_clicked_cb" : loadPlugin_clicked_cb,
@@ -345,7 +345,7 @@ def setup():
 
 	widgets.signal_autoconnect(sigdic)
 
-	pluginView = widgets.get_widget("pluginView")
+	pluginView = widgets.get_object("pluginView")
 	model = gtk.ListStore(
 		TYPE_BOOLEAN, # chkbutton
 		TYPE_BOOLEAN, # chkbutton

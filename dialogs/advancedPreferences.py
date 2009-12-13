@@ -32,7 +32,7 @@ import config
 import gobject
 import pango
 
-from lib import dialog_control
+from lib import dialog_control, gui_control
 
 widgets = None
 
@@ -47,7 +47,7 @@ def fillConfigView():
 	fill config treeview with categories,
 	options/values and defaults
 	"""
-	configView = widgets.get_widget("configView")
+	configView = widgets.get_object("configView")
 	configStore = configView.get_model()
 
 	for category in ("tekka","colors","chatting"):
@@ -82,7 +82,7 @@ def renderDefaultValue(column, renderer, model, iter):
 	pass
 
 def configValueEdited(renderer, path, newText):
-	model = widgets.get_widget("configView").get_model()
+	model = widgets.get_object("configView").get_model()
 	treeIter = model.get_iter(path)
 
 	catIter = model.iter_parent(treeIter)
@@ -102,9 +102,9 @@ def setup():
 	""" called initially """
 	global widgets
 
-	widgets = dialog_control.build_dialog("advancedPreferences")
+	widgets = gui_control.builder.load_dialog("advancedPreferences")
 
-	configView = widgets.get_widget("configView")
+	configView = widgets.get_object("configView")
 
 	c = 0
 	for name in ("Option", "Value", "Default Value"):
@@ -130,7 +130,7 @@ def setup():
 	configView.set_model(store)
 
 def run():
-	dialog = widgets.get_widget("advancedPreferences")
+	dialog = widgets.get_object("advancedPreferences")
 
 	fillConfigView()
 

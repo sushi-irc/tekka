@@ -64,12 +64,12 @@ def createCommandList(glade, fun_name, widget_name, *x):
 def setup():
 	global widgets
 
-	widgets = dialog_control.build_dialog("serverAdd", custom_handler = createCommandList)
+	widgets = gui_control.builder.load_dialog("serverAdd", custom_handler = createCommandList)
 
 def dialog_response_cb(dialog, response_id, callback):
 	if response_id == RESPONSE_ADD:
 
-		server = widgets.get_widget("servernameEntry").get_text()
+		server = widgets.get_object("servernameEntry").get_text()
 
 		if not server:
 			gui_control.show_error_dialog(
@@ -79,13 +79,13 @@ def dialog_response_cb(dialog, response_id, callback):
 
 		# set text values
 		for key in ("address","port","nick","name","nickserv"):
-			exec ("value = widgets.get_widget('%sEntry').get_text()" % key)
+			exec ("value = widgets.get_object('%sEntry').get_text()" % key)
 			if value:
 				sushi.server_set(server, "server", key, value)
 
 		# set autoconnect bool
 		sushi.server_set(server, "server", "autoconnect",
-			str (widgets.get_widget("autoConnectCheckButton").get_active()).lower())
+			str (widgets.get_object("autoConnectCheckButton").get_active()).lower())
 
 		# set up commands
 		list = [i[0].get_text() for i in commandList.get_widget_matrix() if i[0].get_text()]
@@ -96,7 +96,7 @@ def dialog_response_cb(dialog, response_id, callback):
 
 
 def run(callback):
-	dialog = widgets.get_widget("serverAdd")
+	dialog = widgets.get_object("serverAdd")
 
 	dialog.connect("response", dialog_response_cb, callback)
 	dialog.show_all()

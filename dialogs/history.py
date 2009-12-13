@@ -38,7 +38,6 @@ import logging
 import config
 import com
 
-from lib.dialog_control import build_dialog
 import lib.gui_control as gui
 from lib.search_toolbar import SearchBar
 
@@ -103,7 +102,7 @@ class HistorySearchBar(SearchBar):
 		if not self.search_term or not self.textview or not self.calendar:
 			return
 
-		if widgets.get_widget("localSearchButton").get_active():
+		if widgets.get_object("localSearchButton").get_active():
 			return SearchBar.search_button_clicked_cb(self, button)
 
 		"""
@@ -342,7 +341,7 @@ def calendar_day_selected_cb(calendar):
 	"""
 		get the history of calendar.day from maki.
 	"""
-	buffer = widgets.get_widget("historyView").get_buffer()
+	buffer = widgets.get_object("historyView").get_buffer()
 
 	(start, end) = get_calendar_offsets(calendar,
 		*calendar.get_properties("year","month","day"))
@@ -370,7 +369,7 @@ def run(tab):
 	file_list.sort()
 
 
-	calendar = widgets.get_widget("calendar")
+	calendar = widgets.get_object("calendar")
 	calendar.tab = tab
 	calendar.files = file_list
 	calendar.log_dir = log_dir
@@ -382,7 +381,7 @@ def run(tab):
 	calendar.select_month(ltime.tm_mon-1, ltime.tm_year)
 	calendar.select_day(ltime.tm_mday)
 
-	dialog = widgets.get_widget("historyDialog")
+	dialog = widgets.get_object("historyDialog")
 
 	dialog.set_title(tab.name)
 
@@ -394,7 +393,7 @@ def run(tab):
 def setup():
 	global widgets
 
-	if widgets and widgets.get_widget("calendar"):
+	if widgets and widgets.get_object("calendar"):
 		return
 
 	def custom_handler(glade, function_name, widget_name, *x):
@@ -402,7 +401,7 @@ def setup():
 			return HistorySearchBar()
 		return None
 
-	widgets = build_dialog("history", custom_handler = custom_handler)
+	widgets = gui.builder.load_dialog("history", custom_handler = custom_handler)
 
 	sigdic = {
 		"calendar_month_changed_cb" : calendar_month_changed_cb,
@@ -418,18 +417,18 @@ def setup():
 	# TODO: init targetNameBox with files
 	# NAME, PATH
 	#liststore = gtk.Liststore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-	#widgets.get_widget("targetNameBox").set_model(liststore)
+	#widgets.get_object("targetNameBox").set_model(liststore)
 	"""
 	for i in files:
 		iter = liststore.insert()
 		liststore.set(iter, name, path)
 	"""
 
-	searchBar = widgets.get_widget("searchBar")
-	searchBar.textview = widgets.get_widget("historyView")
-	searchBar.calendar = widgets.get_widget("calendar")
+	searchBar = widgets.get_object("searchBar")
+	searchBar.textview = widgets.get_object("historyView")
+	searchBar.calendar = widgets.get_object("calendar")
 
-	widgets.get_widget("calendar").connect("realize", calendar_realize_cb)
+	widgets.get_object("calendar").connect("realize", calendar_realize_cb)
 
-	gui.set_font(widgets.get_widget("historyView"), gui.get_font())
+	gui.set_font(widgets.get_object("historyView"), gui.get_font())
 

@@ -30,13 +30,13 @@ import gtk
 import gtk.glade
 import config
 
-from lib.dialog_control import build_dialog
+from lib.gui_control import builder
 
 widgets = None
 
 def setup():
 	global widgets
-	widgets = build_dialog("serverDelete")
+	widgets = builder.load_dialog("serverDelete")
 
 def dialog_response_cb(dialog, response_id, servername, callback):
 	if response_id == gtk.RESPONSE_YES:
@@ -47,9 +47,9 @@ def run(servername, callback):
 	"""
 		Returns True if the server should be deleted, otherwise False
 	"""
-	dialog = widgets.get_widget("serverDelete")
+	dialog = widgets.get_object("serverDelete")
 
-	label = widgets.get_widget("warningLabel")
+	label = widgets.get_object("warningLabel")
 	label.set_text(label.get_text() % {"server": servername})
 
 	dialog.connect("response", dialog_response_cb, servername, callback)

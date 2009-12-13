@@ -53,7 +53,7 @@ def setup():
 	widgets.signal_autoconnect(sigdic)
 
 	# enable multiple selection
-	serverSelection = widgets.get_widget("serverList").get_selection()
+	serverSelection = widgets.get_object("serverList").get_selection()
 	serverSelection.set_mode(gtk.SELECTION_MULTIPLE)
 
 def addServer(name):
@@ -61,7 +61,7 @@ def addServer(name):
 	Add server from maki to the Serverlist.get_model()
 	(ListStore)
 	"""
-	serverList = widgets.get_widget("serverList").get_model()
+	serverList = widgets.get_object("serverList").get_model()
 	serverList.append([name])
 
 def retrieveServerlist():
@@ -69,7 +69,7 @@ def retrieveServerlist():
 		Fetch server list from maki and get
 		infos about every server.
 	"""
-	store = widgets.get_widget("serverList").get_model()
+	store = widgets.get_object("serverList").get_model()
 	store.clear()
 
 	servers = com.sushi.server_list("","")
@@ -82,7 +82,7 @@ def dialog_response_cb(dialog, response_id, callback):
 	if response_id == RESPONSE_CONNECT:
 		# get the selected server(s)
 
-		serverList = widgets.get_widget("serverList").get_model()
+		serverList = widgets.get_object("serverList").get_model()
 		paths = serverSelection.get_selected_rows()[1]
 
 		if not paths:
@@ -100,10 +100,10 @@ def dialog_response_cb(dialog, response_id, callback):
 	dialog.destroy()
 
 def run(callback):
-	dialog = widgets.get_widget("serverDialog")
+	dialog = widgets.get_object("serverDialog")
 
 	# get the treeview
-	serverView = widgets.get_widget("serverList")
+	serverView = widgets.get_object("serverList")
 
 	# add servercolumn
 	renderer = gtk.CellRendererText()
@@ -132,7 +132,7 @@ def serverNameEdit(cellrenderertext, path, newText):
 	"""
 
 	try:
-		oldText = widgets.get_widget("serverList").get_model()[path][0]
+		oldText = widgets.get_object("serverList").get_model()[path][0]
 	except IndexError:
 		return
 
@@ -150,7 +150,7 @@ def deleteServer(servername):
 	""" Remove server from Serverlist widget
 		and delete server in maki.
 	"""
-	serverList = widgets.get_widget("serverList").get_model()
+	serverList = widgets.get_object("serverList").get_model()
 
 	for row in serverList:
 		if row[0] == servername:
@@ -165,7 +165,7 @@ def openAddDialog(widget):
 	dialog_control.show_dialog("addServer", add_dialog_cb)
 
 def openEditDialog(widget):
-	view = widgets.get_widget("serverList")
+	view = widgets.get_object("serverList")
 	serverList = view.get_model()
 
 	path = view.get_cursor()[0]
@@ -194,7 +194,7 @@ def delete_dialog_cb(servername):
 	deleteServer(servername)
 
 def openDeleteDialog(widget):
-	view = widgets.get_widget("serverList")
+	view = widgets.get_object("serverList")
 
 	path = view.get_cursor()[0]
 	servername = None

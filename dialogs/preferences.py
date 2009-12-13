@@ -111,7 +111,7 @@ def customHandler(glade, function_name, widget_name, *x):
 	return None
 
 def fillTekka():
-	table = widgets.get_widget("tekkaTable")
+	table = widgets.get_object("tekkaTable")
 
 	# set checkbuttons
 	for child in table.get_children():
@@ -126,7 +126,7 @@ def fillTekka():
 
 	# set font labels
 	font = config.get("tekka", "font")
-	widgets.get_widget("fontSelectButton").set_font_name(font)
+	widgets.get_object("fontSelectButton").set_font_name(font)
 
 def fillColors():
 	for key in ("own_nick", "own_text", "notification",
@@ -140,12 +140,12 @@ def fillColors():
 		except:
 			color = gtk.gdk.Color()
 
-		widgets.get_widget(key).set_color(color)
+		widgets.get_object(key).set_color(color)
 
 def fillChatting():
 	for key in ("quit_message", "part_message", "time_format"):
 		val = config.get("chatting", key)
-		widgets.get_widget(key).set_text(val)
+		widgets.get_object(key).set_text(val)
 
 	i = 0
 	for highlight in config.get_list("chatting", "highlight_words", []):
@@ -156,10 +156,10 @@ def fillChatting():
 	highlightList.remove_row(i)
 
 	val = config.get("chatting", "last_log_lines", default=0)
-	widgets.get_widget("last_log_lines").set_value(float(val))
+	widgets.get_object("last_log_lines").set_value(float(val))
 
 def fillNickColors():
-	widgets.get_widget("nick_contrast_colors").set_active(
+	widgets.get_object("nick_contrast_colors").set_active(
 		config.get_bool("colors", "nick_contrast_colors"))
 
 	colors = config.get_list("colors", "nick_colors", [])
@@ -342,7 +342,7 @@ def nick_contrast_colors_toggled_cb(button):
 	config.set("colors", "nick_contrast_colors", str(button.get_active()))
 
 
-	ncl = widgets.get_widget("nickColorsList")
+	ncl = widgets.get_object("nickColorsList")
 
 	if ncl:
 		ncl.set_sensitive(not button.get_active())
@@ -364,7 +364,7 @@ def setup():
 	"""
 	global widgets
 
-	widgets = dialog_control.build_dialog("preferences", custom_handler = customHandler)
+	widgets = gui.builder.load_dialog("preferences", custom_handler = customHandler)
 
 	sigdic = {
 	# tekka page
@@ -408,7 +408,7 @@ def dialog_response_cb(dialog, response_id):
 	dialog.destroy()
 
 def run():
-	dialog = widgets.get_widget("preferencesDialog")
+	dialog = widgets.get_object("preferencesDialog")
 
 	fillTekka()
 	fillColors()

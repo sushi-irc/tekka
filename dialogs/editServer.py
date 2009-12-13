@@ -33,7 +33,7 @@ import config
 
 from com import sushi
 from lib.expanding_list import ExpandingList
-from lib.dialog_control import build_dialog
+from lib.gui_control import builder
 
 def setup():
 	pass
@@ -52,7 +52,7 @@ def setup_widgets():
 
 			return sw
 
-	return build_dialog("serverEdit", custom_handler = createCommandList)
+	return builder.load_dialog("serverEdit", custom_handler = createCommandList)
 
 def get_configurator(ctype, key, server):
 
@@ -120,7 +120,7 @@ def run(server):
 
 	for key in signals:
 		c_type = types[signals[key]["key"]]
-		widget = widgets.get_widget(key)
+		widget = widgets.get_object(key)
 
 		configurator = get_configurator(c_type, signals[key]["key"], server)
 
@@ -137,7 +137,7 @@ def run(server):
 	# I admit, this is a little bit ugly.
 	# Get the commandList widget out of the viewport in
 	# the scrolled window
-	commandList = widgets.get_widget("commandList").get_children()[0]\
+	commandList = widgets.get_object("commandList").get_children()[0]\
 		.get_children()[0]
 
 	commandList.connect("row-added",
@@ -151,7 +151,7 @@ def run(server):
 		commandList.add_row()
 		i += 1
 
-	dialog = widgets.get_widget("serverEdit")
+	dialog = widgets.get_object("serverEdit")
 	dialog.connect("response", dialog_response_cb)
 	dialog.show_all()
 
