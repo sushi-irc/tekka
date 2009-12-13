@@ -29,13 +29,15 @@ SUCH DAMAGE.
 import gtk
 import dbus
 import logging
+import pango
 from gobject import TYPE_UINT64
 from threading import Thread
 from time import sleep
 from gettext import gettext as _
 import traceback
 
-from com import sushi
+import config
+from com import parse_from, sushi
 from lib import dialog_control
 from lib import gui_control
 from helper.dcc import s_incoming
@@ -122,6 +124,10 @@ class PollThread(Thread):
 						COL_SPEED, speed)
 				else:
 					# add new entry
+
+					if not config.get_bool("dcc", "show_ident_in_dialog"):
+						sender = parse_from(sender)[0]
+
 					iter = store.append(row = (
 						status, id, server,
 						sender, filename,
@@ -227,6 +233,10 @@ def setup():
 		column.set_resizable(True)
 		transferView.append_column(column)
 		c += 1
+
+	partner_col = transferView.get_column(COL_PARTNER)
+	partner_col.set_expand(True)
+	partner_col.get_cell_renderers()[0].set_property("ellipsize", pango.ELLIPSIZE_END)
 
 	# progress column
 	renderer = gtk.CellRendererProgress()

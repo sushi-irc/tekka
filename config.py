@@ -104,6 +104,7 @@ def set_defaults():
 	defaults["tekka"]["browser"] = None
 
 	defaults["dcc"] = {}
+	defaults["dcc"]["show_ident_in_dialog"] = "False"
 
 	defaults["general_output"] = {}
 	defaults["general_output"]["filter"] = ""
