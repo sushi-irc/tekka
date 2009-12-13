@@ -91,6 +91,9 @@ class NickListMenu(object):
 		self.menu.insert(headerItem, 0)
 		headerItem.show()
 
+		if sushi.remote:
+			self.widgets.get_object("sendFileItem").set_sensitive(False)
+
 		self.deactivate_handler.append(
 			(lambda menu,header: menu.remove(header), headerItem))
 
@@ -141,8 +144,24 @@ class NickListMenu(object):
 			sushi.sushi.whois(sTab.name, self.current_nick)
 
 	def sendFileItem_activate_cb(self, item):
-		# TODO: implement
-		pass
+		sTab,cTab = gui_control.tabs.get_current_tabs()
+
+		def dialog_response_cb(dialog, id):
+			if id == gtk.RESPONSE_OK:
+				file = dialog.get_filename()
+				if not file:
+					gui_control.show_error_dialog(
+						title = _("No file selected"),
+						message = _("You didn't select a file to send. Aborting."))
+				else:
+					sushi.dcc_send(sTab.name, self.current_nick, file)
+			dialog.destroy()
+
+		d = gtk.FileChooserDialog(
+			title = _("Choose a file to send to %(nick)s" % {"nick": self.current_nick}),
+			buttons = (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+		d.connect("response", dialog_response_cb)
+		d.show()
 
 	def deVoiceItem_activate_cb(self, item):
 		sTab,cTab = gui_control.tabs.get_current_tabs()
