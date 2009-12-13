@@ -50,7 +50,7 @@ def fillConfigView():
 	configView = widgets.get_object("configView")
 	configStore = configView.get_model()
 
-	for category in ("tekka","colors","chatting"):
+	for category in ("tekka","colors","chatting","dcc","colors"):
 		cDict = config.get(category, default=None)
 
 		if not cDict:
