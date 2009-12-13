@@ -27,6 +27,8 @@ SUCH DAMAGE.
 """
 
 import gtk
+import glib
+import gobject
 import dbus
 import logging
 import pango
@@ -41,6 +43,7 @@ from com import parse_from, sushi
 from lib import dialog_control
 from lib import gui_control
 from helper.dcc import s_incoming
+from helper.code import init_function_attrs
 
 widgets = None
 
@@ -57,93 +60,68 @@ widgets = None
 
 # TODO: accept/deny for incomings
 
-class PollThread(Thread):
+def get_progress(p, s):
+	return int(float(p)/s*100)
 
-	def __init__(self):
-		Thread.__init__(self)
+def apply_dbus_sends():
+	def reset():
+		del apply_dbus_sends.last_sends
+		del apply_dbus_sends.row_id_map
+		del apply_dbus_sends.reset
+	self = init_function_attrs(apply_dbus_sends, last_sends = [], row_id_map = {}, reset = reset)
 
-		self._stop = True
+	sends = sushi.dcc_sends()
 
-		self.row_id_map = {}
-		self.last_sends = []
+	if len(sends) == 0:
+		return
 
-	def run(self):
-		Thread.run(self)
+	view = widgets.get_object("transferView")
+	store = view.get_model()
 
-		while not self._stop:
+	# all ids
+	act_sends = sends[0]
 
-			gtk.gdk.threads_enter()
-			try:
-				self.apply_dbus_sends()
-			except BaseException as e:
-				logging.error("Error in PollThread: %s\n%s" % (e, traceback.format_exc()))
-			gtk.gdk.threads_leave()
+	to_remove = set(self.last_sends) - set(act_sends)
+	to_update = set(act_sends) - to_remove
 
-			sleep(1)
+	for i in range(len(sends[0])):
+		id, server, sender, filename, size, progress, speed, status = \
+		[sends[n][i] for n in range(len(sends))]
 
-	def start(self):
-		self._stop = False
-		Thread.start(self)
-
-	def stop(self):
-		self._stop = True
-
-	def get_progress(self, p, s):
-		return int(float(p)/s*100)
-
-	def apply_dbus_sends(self):
-		# FIXME: main gui freeze if main window is killed and dialog is still running
-
-		sends = sushi.dcc_sends()
-
-		if len(sends) == 0:
-			return
-
-		view = widgets.get_object("transferView")
-		store = view.get_model()
-
-		# all ids
-		act_sends = sends[0]
-
-		to_remove = set(self.last_sends) - set(act_sends)
-		to_update = set(act_sends) - to_remove
-
-		for i in range(len(sends[0])):
-			id, server, sender, filename, size, progress, speed, status = \
-			[sends[n][i] for n in range(len(sends))]
-
-			if id in to_update:
-				if self.row_id_map.has_key(id):
-					# update existing entry
-					iter = self.row_id_map[id].iter
-
-					store.set(iter,
-						COL_STATUS, status,
-						COL_SIZE, size,
-						COL_PROGRESS, self.get_progress(progress, size),
-						COL_SPEED, speed)
-				else:
-					# add new entry
-
-					if not config.get_bool("dcc", "show_ident_in_dialog"):
-						sender = parse_from(sender)[0]
-
-					iter = store.append(row = (
-						status, id, server,
-						sender, filename,
-						size, self.get_progress(progress, size),
-						speed))
-					self.row_id_map[id] = store[store.get_path(iter)]
-
-		for id in to_remove:
+		if id in to_update:
 			if self.row_id_map.has_key(id):
-				store.remove(self.row_id_map[id].iter)
+				# update existing entry
+				iter = self.row_id_map[id].iter
 
-		self.last_sends = act_sends
+				store.set(iter,
+					COL_STATUS, status,
+					COL_SIZE, size,
+					COL_PROGRESS, get_progress(progress, size),
+					COL_SPEED, speed)
+			else:
+				# add new entry
 
-def cancel_transfer(transferID, poll_thread):
+				if not config.get_bool("dcc", "show_ident_in_dialog"):
+					sender = parse_from(sender)[0]
+
+				iter = store.append(row = (
+					status, id, server,
+					sender, filename,
+					size, get_progress(progress, size),
+					speed))
+				self.row_id_map[id] = store[store.get_path(iter)]
+
+	for id in to_remove:
+		if self.row_id_map.has_key(id):
+			store.remove(self.row_id_map[id].iter)
+
+	self.last_sends = act_sends
+
+	return True
+
+def cancel_transfer(transferID):
 	sushi.dcc_send_remove(transferID)
-	poll_thread.apply_dbus_sends()
+	apply_dbus_sends()
 
 def get_selected_transfer_id():
 	view = widgets.get_object("transferView")
@@ -157,7 +135,7 @@ def get_selected_transfer_id():
 	else:
 		return id
 
-def dialog_response_cb(dialog, id, poll_thread):
+def dialog_response_cb(dialog, id, timer_id):
 	if id == 333:
 		# remove was clicked
 		def ask_are_you_sure():
@@ -166,7 +144,7 @@ def dialog_response_cb(dialog, id, poll_thread):
 			def dialog_reponse_cb(dialog, id, transferID):
 				if id == gtk.RESPONSE_YES:
 					# yes, remove it!
-					cancel_transfer(transferID, poll_thread)
+					cancel_transfer(transferID)
 				dialog.destroy()
 
 			transferID = get_selected_transfer_id()
@@ -187,17 +165,22 @@ def dialog_response_cb(dialog, id, poll_thread):
 		ask_are_you_sure()
 
 	else:
-		poll_thread.stop()
+		global widgets
+		gobject.source_remove(timer_id)
+		apply_dbus_sends.reset()
 		dialog.destroy()
+		widgets = None
 
 def run():
 	dialog = widgets.get_object("DCCDialog")
 
-	poll_thread = PollThread()
-	poll_thread.start()
+	if dialog.get_property("visible"):
+		return
 
-	dialog.connect("response", dialog_response_cb, poll_thread)
-	dialog.show_all()
+	poll_timer_id = glib.timeout_add(1000, apply_dbus_sends)
+
+	dialog.connect("response", dialog_response_cb, poll_timer_id)
+	dialog.show()
 
 def create_list_model():
 	# status | id | server | sender | filename | size | progress | speed
@@ -205,6 +188,9 @@ def create_list_model():
 
 def setup():
 	global widgets
+
+	if widgets != None:
+		return
 
 	widgets = gui_control.builder.load_dialog("dcc")
 
