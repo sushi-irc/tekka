@@ -1357,6 +1357,11 @@ def userError_cb(time, server, domain, reason, arguments):
 	elif domain == "cannot_join":
 		cannotJoin(time, server, arguments[0], reason)
 
+	elif domain == "privilege":
+		if reason == "channel_operator":
+			message = _(u"• You are not a channel operator.")
+			gui.channelPrint(time, server, arguments[0], message)
+
 def noSuch(time, server, target, type):
 	""" Signal is emitted if maki can't find the target on the server. """
 
