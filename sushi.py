@@ -53,6 +53,15 @@ class Plugin (object):
 	def __init__(self, plugin_name):
 		self._plugin_name = plugin_name
 
+		com.sushi.g_connect("maki-connected", self.maki_connected_cb)
+		com.sushi.g_connect("maki-disconnected", self.maki_disconnected_cb)
+
+	def maki_connected_cb(self, interface):
+		pass
+
+	def maki_disconnected_cb(self, interface):
+		pass
+
 	def display_error(self, message):
 		d = InlineMessageDialog("Plugin “%(plugin)s” caused an error." % {
 				"plugin": self._plugin_name
