@@ -284,5 +284,5 @@ class MainMenuContext(MenuContextType):
 		self.maki = self.MakiMenuContext(name = "menu_maki", widgets = self.widgets)
 		self.view = self.ViewMenuContext(name = "menu_View", widgets = self.widgets)
 		self.dialogs = self.DialogsMenuContext(name = "menu_Dialogs", widgets = self.widgets)
-
+		self.help = self.HelpMenuContext(name = "menu_Help", widgets = self.widgets)
 
