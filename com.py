@@ -213,11 +213,7 @@ def connect():
 		try:
 			return dbus.SessionBus(mainloop=dbus_loop)
 		except DBusException as e:
-			sushi._emit_error(
-				_("tekka could not connect to maki."),
-				_("Please check whether maki is running.\n"
-				"The following error occurred: %(error)s") % {
-					"error": str(e) })
+			bus_remote_error(e)
 			return None
 
 	if bus_address:
@@ -239,17 +235,10 @@ def connect():
 	if type(bus) == dbus.connection.Connection:
 		sushi.remote = True
 
-	proxy = None
 	try:
 		proxy = bus.get_object("de.ikkoku.sushi", "/de/ikkoku/sushi")
 	except dbus.exceptions.DBusException as e:
-		sushi._emit_error(
-			_("tekka could not connect to maki."),
-			_("Please check whether maki is running.\n"
-			"The following error occurred: %(error)s") % {
-				"error": str(e) })
-
-	if not proxy:
+		bus_remote_error(e)
 		return False
 
 	sushi._set_interface(dbus.Interface(proxy, "de.ikkoku.sushi"))
