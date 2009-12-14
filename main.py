@@ -984,6 +984,7 @@ def setup_serverTree():
 		description, the second is the identifying
 		channel or server name and the third is a
 		tab object.
+		XXX: mostly deprecated by GtkBuilder
 	"""
 	tm = gtk.TreeStore(gobject.TYPE_PYOBJECT)
 
@@ -1024,6 +1025,7 @@ def setup_nickList():
 		Two columns (both rendered) were set up.
 		The first is the prefix and the second
 		the nick name.
+		XXX: deprecated by GtkBuilder
 	"""
 	widget = gui.widgets.get_widget("nickList")
 	widget.set_model(None)
@@ -1122,9 +1124,6 @@ def setup_paneds():
 	def paned_notify_cb(paned, gparam):
 		""" save the paned position in the config under the
 			paned's name """
-		# TODO:  if a inline dialog is shown, don't save the position or better,
-		# TODO:: calculate the position without the inline dialog (for horizontal
-		# TODO:: paneds only)
 		if gparam.name == "position":
 			config.set("sizes", paned.name, paned.get_property("position"))
 
@@ -1139,6 +1138,8 @@ def setup_paneds():
 		"outputVPaned_notify_cb":
 			paned_notify_cb,
 		}
+	# TODO:  catch inline dialog popups and restore the horizontal
+	# TODO:: paned position (when they're closed?)
 	gui.widgets.signal_autoconnect(sigdic)
 
 	return False

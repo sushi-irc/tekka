@@ -70,6 +70,39 @@ from lib.status_icon import TekkaStatusIcon
 from lib.general_output_buffer import GOHTMLBuffer
 from lib.status_manager import StatusManager
 
+"""
+What about a concept like retrieving a object
+from glade/gtkbuilder and build a proxy object around
+it so the signals in main.py can be handled in the proxy
+and the proxy object can replace the origin object
+in the glade object store.
+
+Code example:
+obj = gui.widgets.get_widget("serverTree")
+
+class ServerTree(object):
+	def __init__(self, w):
+		self.widget = w
+
+		w.connect("serverTree_realize_cb", self.realize_cb)
+
+	def realize_cb(self, *x):
+		pass
+
+	def __getattr__(self, attr):
+		return getattr(self.w, attr)
+
+gui.widgets.set_widget("serverTree", ServerTree(obj))
+
+That would clean up the namespace massively.
+A possible contra would be that the signal autoconnect won't
+work anymore.
+A pro would be, that one could easily define new context objects,
+like "ChatContext" which is a meta object holding input entry,
+output window and general output. This context can handle signals
+which are needed by all that components.
+"""
+
 class GladeWrapper(object):
 	""" wrap glade to gtk.Builder """
 
@@ -194,12 +227,6 @@ class WidgetsWrapper(object):
 		except AttributeError:
 			return getattr(self.glade_widgets, attr)
 
-"""
-def green(s,f={0:0}):
-	f[0]+=1
-	return chr(27)+"[31m"+str(f[0])+": "+chr(27)+"[32m"+s+chr(27)+"[0m"
-"""
-
 class OutputWindow(gtk.ScrolledWindow):
 
 	""" A gtk.ScrolledWindow with a TextView inside of it.
@@ -318,12 +345,14 @@ gobject.signal_new(
 	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
 	(gobject.TYPE_PYOBJECT,gobject.TYPE_PYOBJECT))
 
+# TODO: replace widgets with a GladeWrapper
 widgets = None
 builder = BuilderWrapper()
 accelGroup = gtk.AccelGroup()
 tabs = lib.tab_control.TabControl()
 status = StatusManager()
 
+# TODO: get rid of this in favor of widgets as a wrapper
 def get_widget(name):
 	try:
 		return widgets.get_widget(name)
