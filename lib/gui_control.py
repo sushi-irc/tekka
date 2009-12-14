@@ -879,6 +879,13 @@ def show_error_dialog(title = "", message = ""):
 	d.show()
 	return d
 
+def show_maki_connection_error(title, message):
+	d = InlineMessageDialog(
+		_("tekka could not connect to maki."),
+		_("Please check whether maki is running."))
+	d.connect("response", lambda d,id: d.destroy())
+	show_inline_dialog(d)
+
 def show_inline_dialog(dialog):
 
 	# Purpose: auto removing messages (depends on config)
