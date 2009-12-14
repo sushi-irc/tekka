@@ -353,7 +353,7 @@ def serverConnect_cb(time, server):
 
 	gui.serverPrint(time, server, "Connecting...")
 
-	gui.status.set("connecting", "Connecting to %s" % server)
+	gui.status.set_visible("connecting", "Connecting to %s" % server)
 
 def serverConnected_cb(time, server):
 	"""

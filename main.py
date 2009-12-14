@@ -1326,7 +1326,7 @@ def setupGTK():
 	# setup manual signals
 
 	# push status messages directly in the status bar
-	gui.status.connect("set-status",
+	gui.status.connect("set-visible-status",
 		lambda w,s,m: gui.widgets.get_widget("statusBar")\
 		.push(gui.status.id(s), m))
 

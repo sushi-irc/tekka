@@ -12,15 +12,20 @@ class StatusManager(gobject.GObject):
 		gobject.GObject.__init__(self)
 		self.states = []
 
-	def set(self, status, message):
-		""" Set the given status with a message """
+	def set(self, status):
+		""" Set the given status """
 		try:
 			self.states.index(status)
 		except ValueError:
 			self.states.append(status)
-			self.emit("set-status", status, message)
+			self.emit("set-status", status)
 			return True
 		return False
+
+	def set_visible(self, status, message):
+		""" Set the given status with a message which can be processed """
+		if self.set(status):
+			self.emit("set-visible-status", status, message)
 
 	def unset(self, status):
 		""" Unset the given status """
@@ -51,7 +56,9 @@ class StatusManager(gobject.GObject):
 			raise ValueError, "Status %s not in state list." % (status)
 
 gobject.signal_new("set-status", StatusManager, gobject.SIGNAL_ACTION,
-	None, (gobject.TYPE_STRING, gobject.TYPE_STRING))
+	None, (gobject.TYPE_STRING,))
+gobject.signal_new("set-visible-status", StatusManager,
+	gobject.SIGNAL_ACTION, None, (gobject.TYPE_STRING, gobject.TYPE_STRING))
 gobject.signal_new("unset-status", StatusManager, gobject.SIGNAL_ACTION,
 	None, (gobject.TYPE_STRING,))
 
