@@ -259,154 +259,6 @@ def tekka_tab_remove_cb(tab):
 Glade signals
 """
 
-def menu_tekka_Connect_activate_cb(menuItem):
-	"""
-		menuBar -> tekka -> connect was clicked,
-		show up server dialog and connect to the
-		returned server (if any).
-	"""
-
-	def server_dialog_callback(server_list):
-		if server_list:
-			for server in server_list:
-				com.sushi.connect(server)
-
-	if not com.sushi.connected:
-		d = InlineMessageDialog(_("tekka could not connect to maki."),
-			_("Please check whether maki is running."))
-		gui.show_inline_dialog(d)
-		d.connect("response", lambda d,id: d.destroy())
-
-	else:
-		dialog_control.show_dialog("server", server_dialog_callback)
-
-def menu_View_showGeneralOutput_toggled_cb(menuItem):
-	"""
-		Deactivate or enable (hide/show) the general output
-		widget.
-	"""
-	sw = gui.widgets.get_widget("scrolledWindow_generalOutput")
-
-	if menuItem.get_active():
-		sw.show_all()
-		config.set("tekka","show_general_output","True")
-	else:
-		sw.hide()
-		config.set("tekka","show_general_output","False")
-
-def menu_View_showSidePane_toggled_cb(menuItem):
-	""" Toggle side pane (listVPaned) """
-	p = gui.widgets.get_widget("listVPaned")
-
-	if menuItem.get_active():
-		p.show()
-		config.set("tekka","show_side_pane", "True")
-	else:
-		p.hide()
-		config.set("tekka","show_side_pane", "False")
-
-
-def menu_View_showStatusBar_toggled_cb(menuItem):
-	"""
-		hide or show the status bar.
-	"""
-	bar = gui.widgets.get_widget("statusBar")
-	if menuItem.get_active():
-		bar.show()
-		config.set("tekka","show_status_bar","True")
-	else:
-		bar.hide()
-		config.set("tekka","show_status_bar","False")
-
-def menu_View_showStatusIcon_toggled_cb(menuItem):
-	"""
-	hide or show the status icon
-	"""
-	if not menuItem.get_active():
-		config.set("tekka", "show_status_icon", "False")
-		gui.switch_status_icon(False)
-
-	else:
-		config.set("tekka", "show_status_icon", "True")
-		gui.switch_status_icon(True)
-
-def menu_View_showTopicBar_toggled_cb(menuItem):
-	""" hide or show topic bar """
-	if not menuItem.get_active():
-		config.set("tekka", "show_topicbar", str(False))
-		gui.widgets.get_widget("topicBar").hide()
-	else:
-		config.set("tekka", "show_topicbar", str(True))
-		tb = gui.widgets.get_widget("topicBar")
-
-		cTab = gui.tabs.get_current_tab()
-
-		if cTab and cTab.is_channel():
-			tb.set_text(cTab.topic)
-
-		tb.show()
-
-def menu_Dialogs_channelList_activate_cb(menuItem):
-	""" show channel list dialog. """
-	sTab,cTab = gui.tabs.get_current_tabs()
-
-	if not sTab:
-		d = InlineMessageDialog(_("tekka could not determine server."),
-			_("There is no active server. Click on a server tab or a "
-			"child of a server tab to activate the server."))
-		d.connect("response", lambda w,i: w.destroy())
-		gui.show_inline_dialog(d)
-
-	else:
-		try:
-			dialog_control.show_dialog("channelList", sTab.name,
-				need_sushi = True)
-		except com.NoSushiError, e:
-			d = InlineMessageDialog(
-				_("No connection to maki."), e.args[0])
-			d.connect("response", lambda w,i: w.destroy())
-			gui.show_inline_dialog(d)
-
-def menu_Dialogs_dcc_activate_cb(menuItem):
-	""" show file transfers dialog """
-	try:
-	    dialog_control.show_dialog("dcc", need_sushi = True)
-	except com.NoSushiError, e:
-	    d = InlineMessageDialog(_("No connection to maki."), e.args[0])
-	    d.connect("response", lambda w,i: w.destroy())
-	    gui.show_inline_dialog(d)
-
-
-def menu_Dialogs_plugins_activate_cb(menuItem):
-	"""
-	show plugin load/unload/list dialog.
-	"""
-	dialog_control.show_dialog("plugins")
-
-def menu_Dialogs_debug_activate_cb(menuItem):
-	dialog_control.show_dialog("debug")
-
-def menu_Dialogs_preferences_activate_cb(menuItem):
-	dialog_control.show_dialog("preferences")
-
-def menu_Help_Colors_activate_cb(menuItem):
-	dialog_control.show_dialog("colorTable")
-
-def menu_Help_about_activate_cb(menuItem):
-	"""
-		Show the about dialog!
-	"""
-	def about_response_cb(dialog, response_id):
-		dialog.destroy()
-
-	widgets = gtk.glade.XML(
-		config.get("gladefiles","dialogs") + "about.glade")
-
-	d = widgets.get_widget("aboutDialog")
-	d.connect("response", about_response_cb)
-
-	d.show_all()
-
 def mainWindow_scroll_event_cb(mainWindow, event):
 	if (event.state & gtk.gdk.MOD1_MASK
 	and event.direction == gtk.gdk.SCROLL_DOWN):
@@ -958,7 +810,7 @@ def setup_mainWindow():
 
 	win.connect("scroll-event", mainWindow_scroll_event_cb)
 
-	win.show_all()
+	win.show()
 
 def treemodel_rows_reordered_cb(treemodel, path, iter, new_order):
 	""" new_order is not accessible, so hack arround it... """
@@ -1254,51 +1106,6 @@ def setupGTK():
 
 	# connect main window signals:
 	sigdic = {
-		# tekka menu
-		"menu_tekka_Connect_activate_cb":
-			menu_tekka_Connect_activate_cb,
-		"menu_tekka_Quit_activate_cb":
-			gtk.main_quit,
-
-		# maki menu
-		"menu_maki_Connect_activate_cb":
-			lambda w: connect_maki(),
-		"menu_maki_Disconnect_activate_cb":
-			lambda w: com.disconnect(),
-		"menu_maki_Shutdown_activate_cb":
-			lambda w: com.sushi.shutdown(
-				config.get("chatting", "quit_message", "")),
-
-		# view menu
-		"menu_View_showGeneralOutput_toggled_cb":
-			menu_View_showGeneralOutput_toggled_cb,
-		"menu_View_showSidePane_toggled_cb":
-			menu_View_showSidePane_toggled_cb,
-		"menu_View_showStatusBar_toggled_cb":
-			menu_View_showStatusBar_toggled_cb,
-		"menu_View_showStatusIcon_toggled_cb":
-			menu_View_showStatusIcon_toggled_cb,
-		"menu_View_showTopicBar_toggled_cb":
-			menu_View_showTopicBar_toggled_cb,
-
-		# dialogs menu
-		"menu_Dialogs_channelList_activate_cb":
-			menu_Dialogs_channelList_activate_cb,
-		"menu_Dialogs_dcc_activate_cb" :
-			menu_Dialogs_dcc_activate_cb,
-		"menu_Dialogs_plugins_activate_cb" :
-			menu_Dialogs_plugins_activate_cb,
-		"menu_Dialogs_debug_activate_cb" :
-			menu_Dialogs_debug_activate_cb,
-		"menu_Dialogs_preferences_activate_cb" :
-			menu_Dialogs_preferences_activate_cb,
-
-		# help menu
-		"menu_Help_Colors_activate_cb":
-			menu_Help_Colors_activate_cb,
-		"menu_Help_about_activate_cb":
-			menu_Help_about_activate_cb,
-
 		# main window signals
 		"mainWindow_delete_event_cb":
 			mainWindow_delete_event_cb,
@@ -1364,22 +1171,6 @@ def setupGTK():
 
 	# set general output font
 	gui.set_font(gui.widgets.get_widget("generalOutput"), gui.get_font())
-
-	# setup menu bar stuff
-	@types( user = ptypes.FunctionType )
-	def apply_visibility(wname, cvalue, user=None):
-		button = gui.widgets.get_widget(wname)
-		if config.get_bool("tekka", cvalue):
-			if user: user()
-			button.set_active(True)
-		button.toggled()
-
-	apply_visibility("menu_View_showGeneralOutput", "show_general_output")
-	apply_visibility("menu_View_showSidePane", "show_side_pane")
-	apply_visibility("menu_View_showStatusBar", "show_status_bar")
-	apply_visibility("menu_View_showStatusIcon", "show_status_icon",
-		lambda: gui.setup_statusIcon())
-	apply_visibility("menu_View_showTopicBar", "show_topicbar")
 
 	setup_shortcuts()
 

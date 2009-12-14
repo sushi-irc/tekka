@@ -419,6 +419,7 @@ def load_widgets(gladeFile, section):
 		elif widget_name == "generalOutput":
 			t = OutputTextView()
 			t.set_buffer(GOHTMLBuffer(handler = URLHandler.URLHandler))
+			t.show()
 			return t
 
 		elif widget_name == "inputBar":
@@ -426,7 +427,7 @@ def load_widgets(gladeFile, section):
 				bar = SpellEntry()
 			except NameError:
 				bar = gtk.Entry()
-
+			bar.show()
 			return bar
 
 		elif widget_name == "notificationWidget":
@@ -440,6 +441,13 @@ def load_widgets(gladeFile, section):
 	gtk.glade.set_custom_handler(custom_handler)
 
 	widgets = WidgetsWrapper(gtk.glade.XML(gladeFile, section))
+
+	def setup_mainmenu_context():
+		from menus.mainmenu_context import MainMenuContext
+		return MainMenuContext(name = "mainMenuBar", widgets = widgets)
+
+	mainmenu = setup_mainmenu_context()
+	widgets.add_gobject(mainmenu, "mainMenuContext")
 
 	return widgets
 

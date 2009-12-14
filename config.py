@@ -86,8 +86,9 @@ def set_defaults():
 	defaults["tekka"]["idialog_timeout_seconds"] = "5"
 
 	defaults["tekka"]["show_general_output"] = "True"
-	defaults["tekka"]["show_topicbar"] = "False"
+	defaults["tekka"]["show_topic_bar"] = "False"
 	defaults["tekka"]["show_side_pane"] = "True"
+	defaults["tekka"]["show_status_bar"] = "True"
 
 	defaults["tekka"]["rgba"] = "False"
 	defaults["tekka"]["close_maki_on_close"] = "False"
