@@ -1053,8 +1053,6 @@ def setupGTK():
 		Connects gobject widget signals to code.
 		Setup widgets.
 	"""
-	global commands, signals
-
 	gladefiles = config.get("gladefiles", default={})
 
 	# setup locale stuff
@@ -1308,9 +1306,6 @@ def main():
 	connect_maki()
 
 	plugin_control.load_autoloads()
-
-	# initialize threading, needed by dcc dialog
-	gtk.gdk.threads_init()
 
 	# start main loop
 	gtk.main()
