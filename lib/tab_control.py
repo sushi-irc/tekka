@@ -123,6 +123,8 @@ class TabControl(gobject.GObject):
 			lib.gui_control.get_widget("output")]
 
 		for widget in widgetList:
+			if widget.get_property("sensitive") == switch:
+				continue
 			widget.set_sensitive (switch)
 
 	def _create_tab(self, tabtype, name, *args, **kwargs):
@@ -574,7 +576,9 @@ class TabControl(gobject.GObject):
 
 			lib.gui_control.set_topic(lib.gui_control.markup_escape(tab.topic))
 
-			lib.gui_control.get_widget("VBox_nickList").show_all()
+			if config.get_bool("tekka","show_topic_bar"):
+				lib.gui_control.get_widget("topicBar").show()
+			lib.gui_control.get_widget("VBox_nickList").show()
 			lib.gui_control.get_widget("nickList").set_model(tab.nickList)
 
 		elif tab.is_query() or tab.is_server():
@@ -582,7 +586,8 @@ class TabControl(gobject.GObject):
 			if not lib.gui_control.status.get("connecting"):
 				self.set_useable(tab, tab.connected)
 
-			lib.gui_control.get_widget("topicBar").hide()
+			if config.get_bool("tekka","show_topic_bar"):
+				lib.gui_control.get_widget("topicBar").hide()
 			lib.gui_control.get_widget("VBox_nickList").hide()
 
 		# reset message notification
