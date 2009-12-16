@@ -33,8 +33,6 @@ import dbus
 import logging
 import pango
 from gobject import TYPE_UINT64
-from threading import Thread
-from time import sleep
 from gettext import gettext as _
 import traceback
 
@@ -72,7 +70,7 @@ def apply_dbus_sends():
 
 	sends = sushi.dcc_sends()
 
-	if len(sends) == 0:
+	if (sends == None and not sushi.connected) or len(sends) == 0:
 		return
 
 	view = widgets.get_object("transferView")
