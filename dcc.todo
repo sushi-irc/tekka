@@ -7,5 +7,7 @@ d don't pop up the dcc dialog if the incoming transfer is auto
   accepted
 d refresh the dcc sends dialog only, if there are sends active
 d implement remove and resume in the dcc sends dialog
+- implement "open directory" in context menu for dcc dialog
+d dcc dialog does not work after reconnect
 
 d = done
