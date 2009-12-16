@@ -38,6 +38,7 @@ import pango
 import gettext
 import gobject
 import logging
+from math import ceil
 
 from threading import Timer
 from gobject import idle_add
@@ -286,7 +287,7 @@ class OutputWindow(gtk.ScrolledWindow):
 				and self.textview.is_smooth_scrolling()):
 					# XXX: instead of setting, ignore this completely.
 					self.auto_scroll = True
-				elif (adjust.upper - adjust.page_size) == sbar.get_value():
+				elif ceil(adjust.upper - adjust.page_size) == ceil(sbar.get_value()):
 					self.auto_scroll = True
 				else:
 					self.auto_scroll = False
