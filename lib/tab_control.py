@@ -578,6 +578,7 @@ class TabControl(gobject.GObject):
 
 			if config.get_bool("tekka","show_topic_bar"):
 				lib.gui_control.get_widget("topicBar").show()
+
 			lib.gui_control.get_widget("VBox_nickList").show()
 			lib.gui_control.get_widget("nickList").set_model(tab.nickList)
 
@@ -588,6 +589,7 @@ class TabControl(gobject.GObject):
 
 			if config.get_bool("tekka","show_topic_bar"):
 				lib.gui_control.get_widget("topicBar").hide()
+
 			lib.gui_control.get_widget("VBox_nickList").hide()
 
 		# reset message notification

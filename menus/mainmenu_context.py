@@ -177,12 +177,12 @@ class MainMenuContext(MenuContextType):
 
 		def showTopicBar_toggled_cb(self, item):
 			""" toggle visibililty of topic bar """
-			if not item.get_active():
+			if item.get_active():
 				gui.widgets.get_widget("topicBar").show()
 			else:
 				gui.widgets.get_widget("topicBar").hide()
 
-			config.set("tekka", "show_topic_bar", str(True))
+			config.set("tekka", "show_topic_bar", str(item.get_active()))
 
 	class DialogsMenuContext(MenuContextType):
 
