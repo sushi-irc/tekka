@@ -53,13 +53,13 @@ class Plugin (object):
 	def __init__(self, plugin_name):
 		self._plugin_name = plugin_name
 
-		com.sushi.g_connect("maki-connected", self.maki_connected_cb)
-		com.sushi.g_connect("maki-disconnected", self.maki_disconnected_cb)
+		tekka.com.sushi.g_connect("maki-connected", self.maki_connected)
+		tekka.com.sushi.g_connect("maki-disconnected", self.maki_disconnected)
 
-	def maki_connected_cb(self, interface):
+	def maki_connected(self, interface):
 		pass
 
-	def maki_disconnected_cb(self, interface):
+	def maki_disconnected(self, interface):
 		pass
 
 	def display_error(self, message):
