@@ -87,8 +87,11 @@ def handle_maki_disconnect_cb(sushi):
 
 	for signal in signals:
 		for handler in signals[signal]:
-			signals[signal][handler].remove()
-			restore_list.append((signal, handler))
+			h = signals[signal][handler]
+
+			if h:
+				h.remove()
+				restore_list.append((signal, handler))
 
 	signals = {}
 

@@ -26,13 +26,14 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
-from . import com
-from . import commands
-from . import signals
-from . import config
-from . import gui
+from tekka import com
+from tekka import config
+from tekka import commands
+from tekka import signals
+from tekka import config
+from tekka import gui
 
-from .lib.inline_dialog import InlineMessageDialog
+from tekka.lib.inline_dialog import InlineMessageDialog
 
 """
 TYPE_STRING: Takes one argument (default string)
@@ -53,8 +54,8 @@ class Plugin (object):
 	def __init__(self, plugin_name):
 		self._plugin_name = plugin_name
 
-		tekka.com.sushi.g_connect("maki-connected", self.maki_connected)
-		tekka.com.sushi.g_connect("maki-disconnected", self.maki_disconnected)
+		com.sushi.g_connect("maki-connected", self.maki_connected)
+		com.sushi.g_connect("maki-disconnected", self.maki_disconnected)
 
 	def maki_connected(self, interface):
 		pass

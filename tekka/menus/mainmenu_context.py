@@ -93,7 +93,9 @@ class MainMenuContext(MenuContextType):
 
 		def shutdown_activate_cb(self, item):
 			if not com.sushi.connected:
-				gui.mgmt.show_maki_connection_error()
+				gui.mgmt.show_maki_connection_error(
+					_("No connection to maki."),
+					_("You can't shutdown maki. You're not connected."))
 			else:
 				com.sushi.shutdown(config.get(
 					"chatting",

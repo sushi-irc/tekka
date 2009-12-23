@@ -29,8 +29,8 @@ SUCH DAMAGE.
 import sushi
 
 # tekka-specific
-import config
-import lib.gui_control as gui
+import tekka.config as config
+import tekka.gui as gui
 
 import gobject
 import gtk

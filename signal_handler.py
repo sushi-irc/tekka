@@ -24,48 +24,59 @@ from tekka.lib import dcc_dialog
 from tekka.helper import color
 from tekka.typecheck import types
 
+init = False
+
+
 def setup():
 	sushi.g_connect("maki-connected", maki_connected_cb)
 	sushi.g_connect("maki-disconnected", maki_disconnected_cb)
 
-	# Message-Signals
-	connect_signal("message", userMessage_cb)
-	connect_signal("notice", userNotice_cb)
-	connect_signal("action", userAction_cb)
-	connect_signal("away_message", userAwayMessage_cb)
-	connect_signal("ctcp", userCTCP_cb)
-	connect_signal("error", userError_cb)
-
-	# action signals
-	connect_signal("part", userPart_cb)
-	connect_signal("join", userJoin_cb)
-	connect_signal("names", userNames_cb)
-	connect_signal("quit", userQuit_cb)
-	connect_signal("kick", userKick_cb)
-	connect_signal("nick", userNick_cb)
-	connect_signal("away", userAway_cb)
-	connect_signal("back", userBack_cb)
-	connect_signal("mode", userMode_cb)
-	connect_signal("oper", userOper_cb)
-
-	# Server-Signals
-	connect_signal("connect", serverConnect_cb)
-	connect_signal("connected", serverConnected_cb)
-	connect_signal("motd", serverMOTD_cb)
-	connect_signal("dcc_send", dcc_send_cb)
-
-	# Channel-Signals
-	connect_signal("topic", channelTopic_cb)
-	connect_signal("banlist", channelBanlist_cb)
-
-	# Maki signals
-	connect_signal("shutdown", makiShutdown_cb)
 
 def maki_connected_cb(sushi):
+	global init
+
+	if init == False:
+		# Message-Signals
+		connect_signal("message", userMessage_cb)
+		connect_signal("notice", userNotice_cb)
+		connect_signal("action", userAction_cb)
+		connect_signal("away_message", userAwayMessage_cb)
+		connect_signal("ctcp", userCTCP_cb)
+		connect_signal("error", userError_cb)
+
+		# action signals
+		connect_signal("part", userPart_cb)
+		connect_signal("join", userJoin_cb)
+		connect_signal("names", userNames_cb)
+		connect_signal("quit", userQuit_cb)
+		connect_signal("kick", userKick_cb)
+		connect_signal("nick", userNick_cb)
+		connect_signal("away", userAway_cb)
+		connect_signal("back", userBack_cb)
+		connect_signal("mode", userMode_cb)
+		connect_signal("oper", userOper_cb)
+
+		# Server-Signals
+		connect_signal("connect", serverConnect_cb)
+		connect_signal("connected", serverConnected_cb)
+		connect_signal("motd", serverMOTD_cb)
+		connect_signal("dcc_send", dcc_send_cb)
+
+		# Channel-Signals
+		connect_signal("topic", channelTopic_cb)
+		connect_signal("banlist", channelBanlist_cb)
+
+		# Maki signals
+		connect_signal("shutdown", makiShutdown_cb)
+
+		init = True
+
 	_add_servers()
+
 
 def maki_disconnected_cb(sushi):
 	pass
+
 
 @types (server = basestring)
 def _setup_server(server):
@@ -75,6 +86,7 @@ def _setup_server(server):
 		update_shortcuts = config.get_bool("tekka","server_shortcuts"))
 
 	return tab
+
 
 def _add_servers():
 	""" Adds all servers to tekka which are reported by maki. """

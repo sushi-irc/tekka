@@ -35,11 +35,10 @@ import logging
 
 from gettext import gettext as _
 
-from lib.gui_control import builder
-from lib import plugin_control as pinterface
-import config
-
-import sushi as psushi
+from ..gui import builder
+from ..lib import plugin_control as pinterface
+from .. import config
+from ..lib import psushi
 
 widgets = None
 
