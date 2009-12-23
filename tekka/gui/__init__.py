@@ -1,10 +1,9 @@
+import gtk
 
-from .manager import widgets
+from ._widgets import widgets
 
-from ..lib.status_manager import StatusManager
-status = StatusManager()
+from ._status_manager import status
 
-from .tab_control import TabControl
-tabs = TabControl()
-
-from .mgmt import *
+# TODO:  add a shortcut handling abstraction
+# TODO:: to get rid of this
+accelGroup = gtk.AccelGroup()

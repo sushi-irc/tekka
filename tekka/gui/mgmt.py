@@ -1,13 +1,18 @@
 # coding:utf-8
 
-# XXX to make the following line possible, it's necessary to remove
-# the from mgmt import * in gui/__init__.py
-#from ..helper import color
-import tekka.helper
-from ..typecheck import types
-from ..lib import tab as tabs
+import gtk
+import gobject
+import pango
 
-def get_font ():
+from .. import config
+
+from ._widgets import widgets
+
+from ..helper import color
+from ..helper import code
+from ..typecheck import types
+
+def get_font():
 
 	if not config.get_bool("tekka", "use_default_font"):
 		return config.get("tekka", "font")
@@ -165,6 +170,8 @@ def set_topic(string):
 
 def clear_all_outputs():
 
+	from . import tabs
+
 	def clear(buf):
 		if buf: buf.set_text("")
 
@@ -180,282 +187,6 @@ def clear_all_outputs():
 	buf = widgets.get_widget("generalOutput").get_buffer()
 
 	clear(buf)
-
-
-def updateServerTreeShortcuts():
-	"""	Iterates through the TreeModel
-		of the server tree and sets 9
-		shortcuts to tabs for switching.
-	"""
-	global accelGroup
-
-	tabList = tabs.get_all_tabs()
-	st = widgets.get_widget("serverTree")
-
-	for i in range(1, 10):
-		removeShortcut(accelGroup, st, "<alt>%d" % (i))
-
-	c = 1
-	for tab in tabList:
-		if c == 10:
-			break
-
-		if (tab.is_server()
-		and not config.get("tekka", "server_shortcuts")):
-			continue
-
-		addShortcut(accelGroup, st, "<alt>%d" % (c),
-			lambda w, s, p: tabs.switch_to_path(p), tab.path)
-
-		c+=1
-
-
-def _escape_ml(msg):
-	""" escape every invalid character via gobject.markup_escape_text
-		from the given string but leave the irc color/bold characters:
-		- chr(2)
-		- chr(3)
-		- chr(31)
-	"""
-
-	msg = msg.replace("%","%%") # escape %
-	msg = msg.replace(chr(2), "%2")
-	msg = msg.replace(chr(31), "%31")
-	msg = msg.replace(chr(3), "%3")
-
-	msg = gobject.markup_escape_text(msg)
-
-	l = helper.escape.unescape_split("%2", msg, escape_char="%")
-	msg = chr(2).join(l)
-
-	l = helper.escape.unescape_split("%3", msg, escape_char="%")
-	msg = chr(3).join(l)
-
-	l = helper.escape.unescape_split("%31", msg, escape_char="%")
-	msg = chr(31).join(l)
-
-	return msg.replace("%%","%")
-
-
-def markup_escape(msg):
-	""" escape for pango markup language """
-	msg = _escape_ml(msg)
-
-	# don't want bold/underline, can't use it
-	msg = msg.replace(chr(2), "")
-	msg = msg.replace(chr(31), "")
-
-	msg = color.parse_color_codes_to_tags(msg)
-
-	return msg
-
-
-def escape(msg):
-	"""	Converts special characters in msg and returns
-		the new string. This function should only
-		be used in combination with HTMLBuffer.
-	"""
-	msg = _escape_ml(msg)
-
-	msg = msg.replace(chr(2), "<sb/>") # bold-char
-	msg = msg.replace(chr(31), "<su/>") # underline-char
-
-	msg = color.parse_color_codes_to_tags(msg)
-
-	return msg
-
-
-@types (server = basestring, channel = basestring, lines = int,
-	tab = (type(None), tabs.TekkaTab))
-def print_last_log(server, channel, lines=0, tab = None):
-	"""	Fetch the given amount of lines of history for
-		the channel on the given server and print it to the
-		channel's textview.
-	"""
-	if not tab:
-		tab = tabs.search_tab(server, channel)
-
-	if not tab:
-		return
-
-	buffer = tab.window.textview.get_buffer()
-
-	if not buffer:
-		logging.error("last_log('%s','%s'): no buffer" % (server,channel))
-		return
-
-	lines = UInt64(lines or config.get("chatting", "last_log_lines", "0"))
-
-	for line in com.sushi.log(server, channel, lines):
-
-		line = color.strip_color_codes(line)
-
-		buffer.insertHTML(buffer.get_end_iter(),
-			"<font foreground='%s'>%s</font>" % (
-				config.get("colors","last_log","#DDDDDD"),
-				escape(line)))
-
-
-def write_to_general_output(msgtype, timestring, server, channel, message):
-	""" channel can be empty """
-	goBuffer = widgets.get_widget("generalOutput").get_buffer()
-
-	filter = config.get_list("general_output", "filter", [])
-	logging.debug("filter: %s" % (filter))
-
-	for tuple_str in filter:
-
-		try:
-			r_tuple = eval(tuple_str)
-
-		except BaseException as e:
-			logging.error("Error in filter tuple '%s': %s" % (
-							tuple_str, e))
-			continue
-
-		# if the rule matches, abort execution
-		if r_tuple[0] == msgtype and r_tuple[-1] in (server, channel):
-			return
-
-	serverTab, channelTab = tabs.search_tabs(server, channel)
-
-	if channel:
-		# channel print
-		goBuffer.go_insert(
-						goBuffer.get_end_iter(),
-						"[%s] &lt;%s:%s&gt; %s" % (
-						  timestring, server, channel, message),
-						channelTab, msgtype)
-	else:
-		# server print
-		goBuffer.go_insert(
-						goBuffer.get_end_iter(),
-						"[%s] &lt;%s&gt; %s" % (
-						  timestring, server, message),
-						serverTab, msgtype)
-
-	widgets.get_widget("generalOutput").scroll_to_bottom()
-
-
-def colorize_message(msgtype, message):
-	if not config.get_bool("tekka", "color_text"):
-		return message
-
-	else:
-		return "<font foreground='%s'>%s</font>" % (
-					config.get("colors", "text_%s" % msgtype, "#000000"),
-					message)
-
-
-def channelPrint(timestamp, server, channel, message,
-  msgtype="message", no_general_output = False):
-	""" print a string with a formatted timestamp to the buffer
-		of a tab identified by channel and server where channel
-		can be the name of a query or a channel.
-
-		If no_general_output is True, the string is also printed
-		to the general output.
-
-		At the end, notify all others about the new string.
-	"""
-	timestring = time.strftime(
-					config.get("chatting", "time_format", "%H:%M"),
-					time.localtime(timestamp))
-
-	cString = colorize_message(msgtype, message)
-
-	outputString = "[%s] %s" % (timestring, cString)
-
-	channelTab = tabs.search_tab(server, channel)
-
-	if not channelTab:
-
-		logging.error("No such channel %s:%s" % (server, channel))
-		return
-
-	buffer = channelTab.window.textview.get_buffer()
-	buffer.insertHTML(buffer.get_end_iter(), outputString)
-
-	if not tabs.is_active(channelTab):
-
-		if (config.get_bool("tekka", "show_general_output")
-		and not no_general_output):
-
-			# write it to the general output, also
-			write_to_general_output(msgtype, timestring, server,
-				channel, message)
-
-	def notify():
-
-		channelTab.setNewMessage(msgtype)
-		return False
-
-	gobject.idle_add(notify)
-
-
-def serverPrint(timestamp, server, string, msgtype="message",
-  no_general_output = False):
-	""" print a string with a formatted timestamp to the buffer
-		of the server tab identified by server.
-
-		If no_general_output is False, the string is printed to
-		the general output, too.
-
-		At the end, notify all others about the new string.
-	"""
-
-	serverTab = tabs.search_tab(server)
-
-	if not serverTab:
-		logging.error("Server %s does not exist." % (server))
-		return
-
-	buffer = serverTab.window.textview.get_buffer()
-
-	timestr = time.strftime(
-						config.get("chatting", "time_format", "%H:%M"),
-						time.localtime(timestamp))
-
-	buffer.insertHTML(buffer.get_end_iter(), "[%s] %s" % (timestr, string))
-
-	if not tabs.is_active(serverTab):
-
-		if (config.get_bool("tekka", "show_general_output")
-		and not no_general_output):
-
-			write_to_general_output(msgtype, timestr, server, "", string)
-
-	def notify():
-
-		serverTab.setNewMessage(msgtype)
-		return False
-
-	gobject.idle_add(notify)
-
-
-def currentServerPrint(timestamp, server, string, msgtype="message"):
-	"""
-		Prints the string on the current tab of server (if any).
-		Otherwise it prints directly in the server tab.
-	"""
-	serverTab, channelTab = tabs.get_current_tabs()
-
-	if (serverTab
-	and serverTab.name.lower() == server.lower()
-	and channelTab):
-
-		# print in current channel
-		channelPrint(
-					timestamp,
-					server,
-					channelTab.name,
-					string,
-					msgtype)
-
-	else:
-
-		# print to server tab
-		serverPrint(timestamp, server, string, msgtype)
 
 
 @types(string=basestring, html=bool)
@@ -551,7 +282,7 @@ def show_inline_dialog(dialog):
 	""" show an InlineDialog in the notificationWidget """
 
 	# Purpose: auto removing messages (depends on config)
-	self = helper.code.init_function_attrs(
+	self = code.init_function_attrs(
 										show_inline_dialog,
 										timeouts = [])
 

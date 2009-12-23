@@ -62,3 +62,4 @@ gobject.signal_new("set-visible-status", StatusManager,
 gobject.signal_new("unset-status", StatusManager, gobject.SIGNAL_ACTION,
 	None, (gobject.TYPE_STRING,))
 
+status = StatusManager()

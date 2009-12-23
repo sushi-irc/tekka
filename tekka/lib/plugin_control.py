@@ -59,7 +59,7 @@ _plugins = {}
 
 def generic_error(primary, secondary):
 	d = InlineMessageDialog(primary, secondary)
-	gui.show_inline_dialog(d)
+	gui.mgmt.show_inline_dialog(d)
 	d.connect("response", lambda d,i: d.destroy())
 
 def strip_suffix(filename):
@@ -152,7 +152,11 @@ def _unload_module(name):
 	""" unload the module loaded by imp.load_module
 		by deleting it's reference from sys.modules
 	"""
-	del sys.modules[name]
+	try:
+		del sys.modules[name]
+	except KeyError as e:
+		logging.debug("plugin_control: failed to unload.",
+			exc_info = True)
 
 
 def load(filename):
@@ -340,9 +344,13 @@ def get_options(filename):
 
 def load_autoloads():
 	autoloads = config.get("autoload_plugins").items()
+
 	for opt,filename in autoloads:
 		logging.info("autoloading '%s'" % (filename))
+
 		if not load(filename):
-			generic_error(_("Plugin could not be loaded."),
-				_("Plugin %(plugin)s could not be loaded automatically.") % {"plugin": filename})
+			generic_error(
+				_("Plugin could not be loaded."),
+				_("Plugin %(plugin)s could not be loaded "
+				"automatically.") % {"plugin": filename})
 

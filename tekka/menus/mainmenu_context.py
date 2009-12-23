@@ -59,7 +59,7 @@ class MainMenuContext(MenuContextType):
 						com.sushi.connect(server)
 
 			if not com.sushi.connected:
-				gui.show_maki_connection_error()
+				gui.mgmt.show_maki_connection_error()
 			else:
 				dialog_control.show_dialog("server", server_dialog_callback)
 
@@ -93,7 +93,7 @@ class MainMenuContext(MenuContextType):
 
 		def shutdown_activate_cb(self, item):
 			if not com.sushi.connected:
-				gui.show_maki_connection_error()
+				gui.mgmt.show_maki_connection_error()
 			else:
 				com.sushi.shutdown(config.get(
 					"chatting",
@@ -135,7 +135,7 @@ class MainMenuContext(MenuContextType):
 			apply_visibility("menu_View_showSidePane", "show_side_pane")
 			apply_visibility("menu_View_showStatusBar", "show_status_bar")
 			apply_visibility("menu_View_showStatusIcon", "show_status_icon",
-				lambda: gui.setup_statusIcon())
+				lambda: gui.builder.setup_statusIcon())
 			apply_visibility("menu_View_showTopicBar", "show_topic_bar")
 
 		def showGeneralOutput_toggled_cb(self, item):
@@ -173,7 +173,7 @@ class MainMenuContext(MenuContextType):
 
 		def showStatusIcon_toggled_cb(self, item):
 			""" toggle visibility of status icon """
-			gui.switch_status_icon(item.get_active())
+			gui.mgmt.switch_status_icon(item.get_active())
 			config.set("tekka", "show_status_icon", str(item.get_active()))
 
 		def showTopicBar_toggled_cb(self, item):
@@ -213,7 +213,7 @@ class MainMenuContext(MenuContextType):
 		def show_no_sushi_error(self, exp):
 			d = InlineMessageDialog(_("No connection to maki."), exp.args[0])
 			d.connect("response", lambda w,i: w.destroy())
-			gui.show_inline_dialog(d)
+			gui.mgmt.show_inline_dialog(d)
 
 		def channelList_activate_cb(self, item):
 			""" Show the channel list dialog or display an error message
@@ -227,7 +227,7 @@ class MainMenuContext(MenuContextType):
 					"a server tab or a child of a server "
 					"tab to activate the server."))
 				d.connect("response", lambda w,i: w.destroy())
-				gui.show_inline_dialog(d)
+				gui.mgmt.show_inline_dialog(d)
 
 			else:
 				try:

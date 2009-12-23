@@ -1,7 +1,9 @@
 import gtk
 
-from .manager import widgets, WidgetsWrapper
+from ._widgets import widgets, WidgetsWrapper
+from .. import gui
 
+from .. import config
 from ..typecheck import types
 
 from ..lib.htmlbuffer import HTMLBuffer
@@ -13,6 +15,8 @@ from ..lib.output_shell import OutputShell
 from ..lib.output_window import OutputWindow
 from ..helper import URLHandler
 
+from ..helper.shortcuts import addShortcut
+
 def get_new_buffer():
 	""" Returns a HTMLBuffer with assigned URL handler. """
 	buffer = HTMLBuffer(handler = URLHandler.URLHandler)
@@ -22,6 +26,7 @@ def get_new_buffer():
 def get_new_output_window():
 	w = OutputWindow()
 	return w
+
 
 def setup_searchBar():
 	searchToolbar = SearchBar(None)

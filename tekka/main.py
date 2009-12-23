@@ -84,13 +84,13 @@ import gettext
 from gettext import gettext as _
 
 import tekka.gui as gui
+import tekka.gui.tabs
 
 # local modules
 import tekka.config as config
 import tekka.com as com
 import tekka.signals as signals
 import tekka.commands as commands
-import tekka.signal_handler as signal_handler
 
 from tekka.typecheck import types
 
@@ -119,20 +119,20 @@ def sushi_error_cb(sushi, title, message):
 
 	d = InlineMessageDialog(title, message)
 	d.connect("response", response_cb)
-	gui.show_inline_dialog(d)
+	gui.mgmt.show_inline_dialog(d)
 
 	gui.status.set_visible(title, title)
 
 def maki_connect_callback(sushi):
 	""" connection to maki etablished """
-	gui.set_useable(True)
+	gui.mgmt.set_useable(True)
 
 def maki_disconnect_callback(sushi):
 	""" connection to maki lost """
 	# FIXME:  after disconnecting and reconnecting,
 	# FIXME:: the current tab's textview
 	# FIXME:: is still insensitive - is this good or bad?
-	gui.set_useable(False)
+	gui.mgmt.set_useable(False)
 
 def tekka_server_away_cb(tab, msg):
 	pass
@@ -142,7 +142,7 @@ def tekka_server_new_nick_cb(tab, nick):
 
 	if (tab in activeTabs
 	or (not tab.is_server() and tab.server in activeTabs)):
-		gui.set_nick(nick)
+		gui.mgmt.set_nick(nick)
 
 def tekka_tab_new_markup_cb(tab):
 	# FIXME: is there a better solution than _this_?
@@ -251,13 +251,13 @@ def tekka_tab_remove_cb(tab):
 			# lock interface
 			# XXX:  maybe the inputBar should
 			# XXX:: useable, though.
-			gui.set_useable(False)
+			gui.mgmt.set_useable(False)
 		else:
 			gui.tabs.switch_to_tab(nextTab)
 
 	elif (tab.is_server()
 	and len(gui.get_widget("serverTree").get_model()) == 1):
-		gui.set_useable(False)
+		gui.mgmt.set_useable(False)
 
 """
 Glade signals
@@ -304,7 +304,7 @@ def mainWindow_focus_in_event_cb(mainWindow, event):
 		If we were in urgent status, the user
 		recognized it now so disable the urgent thing.
 	"""
-	gui.set_urgent(False)
+	gui.mgmt.set_urgent(False)
 	return False
 
 def mainWindow_size_allocate_cb(mainWindow, alloc):
@@ -620,7 +620,7 @@ def askToRemoveTab(tab):
 	)
 	dialog.connect("response", response_handler)
 
-	gui.show_inline_dialog(dialog)
+	gui.mgmt.show_inline_dialog(dialog)
 
 def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 	"""
@@ -816,6 +816,7 @@ def setup_mainWindow():
 
 	win.show()
 
+
 def treemodel_rows_reordered_cb(treemodel, path, iter, new_order):
 	""" new_order is not accessible, so hack arround it... """
 	updated = False
@@ -838,6 +839,7 @@ def treemodel_rows_reordered_cb(treemodel, path, iter, new_order):
 				updated = True
 
 			child[0].path = child.path
+
 
 def setup_serverTree():
 	"""
@@ -881,6 +883,7 @@ def setup_serverTree():
 	widget.append_column(column)
 	widget.set_headers_visible(False)
 
+
 def setup_nickList():
 	"""
 		Sets up a empty nickList widget.
@@ -903,6 +906,7 @@ def setup_nickList():
 
 	widget.set_headers_visible(False)
 	widget.set_rules_hint(True)
+
 
 def setup_shortcuts():
 	"""
@@ -1102,9 +1106,8 @@ def setupGTK():
 		"joined": tekka_channel_joined_cb,
 		"away": tekka_server_away_cb,
 		"topic": tekka_channel_topic_cb,
-		"new_nick": tekka_server_new_nick_cb })
-
-	gui.tabs.connect("tab_switched", tekka_tab_switched_cb)
+		"new_nick": tekka_server_new_nick_cb,
+		"tab_switched": tekka_tab_switched_cb })
 
 	# connect main window signals:
 	sigdic = {
@@ -1169,15 +1172,17 @@ def setupGTK():
 	setup_fonts()
 
 	# set input font
-	gui.set_font(gui.widgets.get_widget("inputBar"), gui.get_font())
+	gui.mgmt.set_font(gui.widgets.get_widget("inputBar"),
+		gui.mgmt.get_font())
 
 	# set general output font
-	gui.set_font(gui.widgets.get_widget("generalOutput"), gui.get_font())
+	gui.mgmt.set_font(gui.widgets.get_widget("generalOutput"),
+		gui.mgmt.get_font())
 
 	setup_shortcuts()
 
 	# disable the GUI and wait for commands :-)
-	gui.set_useable(False)
+	gui.mgmt.set_useable(False)
 
 	show_welcome_screen()
 
@@ -1207,7 +1212,8 @@ def tekka_excepthook(extype, exobj, extb):
 			self.error_label.set_markup(_(
 				"<span size='larger' weight='bold'>Error</span>\n\n"
 				"An error occured — we apologize for that. "
-				"Feel free to submit a bug report at https://bugs.launchpad.net/sushi."))
+				"Feel free to submit a bug report at "
+				"https://bugs.launchpad.net/sushi."))
 
 			self.tv = gtk.TextView()
 			self.tv.get_buffer().set_text(message)
@@ -1283,10 +1289,9 @@ def setup_logging():
 	except BaseException as e:
 		print >> sys.stderr, "Logging init error: %s" % (e)
 
-def main():
-	"""
-	Entry point. The program starts here.
-	"""
+
+def setup():
+	""" Setup the UI """
 
 	# load config file, apply defaults
 	config.setup()
@@ -1306,8 +1311,9 @@ def main():
 	# setup exception handler
 	sys.excepthook = tekka_excepthook
 
-	# setup signal handlers (use gtk,sushi,signals)
-	signal_handler.setup()
+
+def main():
+	""" Fire up the UI """
 
 	# connect to maki daemon
 	connect_maki()
@@ -1324,11 +1330,3 @@ def main():
 	if config.get_bool("tekka", "close_maki_on_close"):
 		com.sushi.shutdown(config.get("chatting", "quit_message", ""))
 
-if __name__ == "__main__":
-
-	main()
-
-"""
-	The best thing while coding is that anything seems to be working
-	and some piece of code silently drops your data to /dev/null. :]
-"""
