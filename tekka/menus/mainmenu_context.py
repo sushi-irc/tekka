@@ -58,8 +58,8 @@ class MainMenuContext(MenuContextType):
 					for server in server_list:
 						com.sushi.connect(server)
 
-				dialog_control.show_dialog(
-					"server", server_dialog_callback, need_sushi = True)
+			dialog_control.show_dialog(
+				"server", server_dialog_callback, need_sushi = True)
 
 		def quit_activate_cb(self, item):
 			main_quit()

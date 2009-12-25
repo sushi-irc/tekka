@@ -28,10 +28,10 @@ SUCH DAMAGE.
 import gtk
 import re
 
-import config
-import helper.color
-import lib.gui_control
-import lib.contrast
+from .. import config
+from .. import gui
+from ..helper import color
+from ..lib import contrast
 
 builder = gtk.Builder()
 
@@ -40,7 +40,7 @@ def dialog_responce_cb(dialog, id):
 
 def run():
 
-	output_bg = lib.gui_control.widgets.get_widget("output")\
+	output_bg = gui.widgets.get_widget("output")\
 		.get_style().base[gtk.STATE_NORMAL]
 	pattern = re.compile("eventbox([0-9]*)")
 	table = builder.get_object("table1")
@@ -56,10 +56,10 @@ def run():
 
 		i = int(match.groups()[0]) - 1
 
-		ccolor = helper.color.COLOR_TABLE[i]
+		ccolor = color.COLOR_TABLE[i]
 
 		box.modify_bg(gtk.STATE_NORMAL,
-			lib.contrast.contrast_render_foreground_color(output_bg,
+			contrast.contrast_render_foreground_color(output_bg,
 				ccolor))
 
 

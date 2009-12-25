@@ -28,12 +28,12 @@ SUCH DAMAGE.
 
 import gtk
 import gtk.glade
-import com
 import logging
 from gettext import gettext as _
 
-from lib import dialog_control
-import lib.gui_control as gui_control
+from .. import com
+from ..lib import dialog_control
+from .. import gui
 
 widgets = None
 serverSelection = None
@@ -43,7 +43,7 @@ RESPONSE_CONNECT = 3
 def setup():
 	global widgets, serverSelection
 
-	widgets = gui_control.builder.load_dialog("server")
+	widgets = gui.builder.load_dialog("server")
 
 	sigdic = { "addButton_clicked_cb" : openAddDialog,
 				"editButton_clicked_cb" : openEditDialog,
@@ -207,7 +207,7 @@ def openDeleteDialog(widget):
 		servername = view.get_model()[path][0]
 
 	if not servername:
-		gui_control.show_error_dialog(
+		gui.mgmt.show_error_dialog(
 			title = _("Error while retrieving server name."),
 			message = _("There was an error while retrieving the server name.\n"
 						"Are you connected to maki?"))
