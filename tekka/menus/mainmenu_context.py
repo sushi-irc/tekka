@@ -58,10 +58,8 @@ class MainMenuContext(MenuContextType):
 					for server in server_list:
 						com.sushi.connect(server)
 
-			if not com.sushi.connected:
-				gui.mgmt.show_maki_connection_error()
-			else:
-				dialog_control.show_dialog("server", server_dialog_callback)
+				dialog_control.show_dialog(
+					"server", server_dialog_callback, need_sushi = True)
 
 		def quit_activate_cb(self, item):
 			main_quit()

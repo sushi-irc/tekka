@@ -3,6 +3,7 @@
 import gtk
 import gobject
 import pango
+from gettext import gettext as _
 
 from .. import config
 
@@ -11,6 +12,8 @@ from ._widgets import widgets
 from ..helper import color
 from ..helper import code
 from ..typecheck import types
+
+from ..lib.inline_dialog import InlineMessageDialog
 
 def get_font():
 
@@ -224,36 +227,6 @@ def myPrint(string, html=False):
 			output.insert(output.get_end_iter(), "\n"+string)
 
 	textview.scroll_to_bottom()
-
-
-def question_dialog(title = "", message = ""):
-	""" create a dialog with a question mark, a title and a message.
-		This dialog has two buttons (yes, no) and does not handle
-		it's response.
-	"""
-	d = gtk.MessageDialog(
-		   		  type = gtk.MESSAGE_QUESTION,
-			   buttons = gtk.BUTTONS_YES_NO,
-		message_format = message)
-
-	d.set_title(title)
-
-	return d
-
-
-def error_dialog(title = "", message = ""):
-	""" create a dialog with a exclamation mark, a title and a message.
-		This dialog has one close button and does not handle it's
-		response.
-	"""
-	err = gtk.MessageDialog(
-				  type = gtk.MESSAGE_ERROR,
-			   buttons = gtk.BUTTONS_CLOSE,
-		message_format = message)
-
-	err.set_title(title)
-
-	return err
 
 
 def show_error_dialog(title = "", message = ""):

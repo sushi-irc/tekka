@@ -34,7 +34,7 @@ import tekka.config
 from tekka.com import sushi, NoSushiError
 
 def loadDialog(name):
-	importName = "dialogs."+name
+	importName = "tekka.dialogs."+name
 	try:
 		dialog = __import__(importName)
 	except ImportError as e:

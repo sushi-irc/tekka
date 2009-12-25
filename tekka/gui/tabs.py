@@ -798,7 +798,7 @@ def create_server(server):
 
 @types(server = basestring, child = basestring)
 def search_tab(server, child = ""):
-	store = lib.gui_control.get_widget("serverTree").get_model()
+	store = widgets.get_widget("serverTree").get_model()
 
 	for row in store:
 		if row[0].name.lower() == server.lower():
@@ -824,7 +824,7 @@ def search_tabs(server, name=""):
 		(<serverTab>,None)
 		(None,None)
 	"""
-	store = lib.gui_control.get_widget("serverTree").get_model()
+	store = widgets.get_widget("serverTree").get_model()
 	for row in store:
 		if row[0].name.lower() == server.lower():
 			if not name:
@@ -1032,10 +1032,12 @@ def get_all_tabs(servers=[], excludes=[]):
 
 def get_current_tab():
 	""" Returns the current tab """
-	store = lib.gui_control.get_widget("serverTree").get_model()
+	global _currentPath
+
+	store = widgets.get_widget("serverTree").get_model()
 
 	try:
-		return store[self.currentPath][0]
+		return store[_currentPath][0]
 	except (IndexError,TypeError):
 		return None
 

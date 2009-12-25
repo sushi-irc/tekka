@@ -31,8 +31,6 @@ import time
 from dbus import UInt64
 
 from types import MethodType, FunctionType
-from typecheck import types
-
 from gettext import gettext as _
 
 from . import signals
@@ -43,6 +41,7 @@ from . import gui
 from .helper import color
 from .com import sushi
 from .lib.inline_dialog import InlineMessageDialog
+from .typecheck import types
 
 def warnNoConnection(tab):
 	if tab.is_server():
@@ -72,7 +71,7 @@ def makiConnect(currentServer, currentChannel, args):
 		Usage: /connect <server>
 	"""
 	if not args:
-		return gui.myPrint("Usage: /connect <servername>")
+		return gui.mgmt.myPrint("Usage: /connect <servername>")
 
 	sushi.connect(args[0])
 
@@ -94,7 +93,7 @@ def makiQuit(currentServer, currentChannel, args):
 		else:
 			# /quit [<reason>]
 			if not currentServer:
-				return gui.myPrint("Could not determine server.")
+				return gui.mgmt.myPrint("Could not determine server.")
 			reason = " ".join(args)
 			if not reason:
 				reason = config.get("chatting", "quit_message", "")
@@ -102,7 +101,7 @@ def makiQuit(currentServer, currentChannel, args):
 	else:
 		# /quit
 		if not currentServer:
-			return gui.myPrint("Could not determine server.")
+			return gui.mgmt.myPrint("Could not determine server.")
 		sushi.quit(currentServer.name,
 			config.get("chatting", "quit_message", ""))
 
@@ -113,10 +112,10 @@ def makiNick(currentServer, currentChannel, args):
 		Usage: /nick <new nick>
 	"""
 	if not args:
-		return gui.myPrint("Usage: /nick <new nick>")
+		return gui.mgmt.myPrint("Usage: /nick <new nick>")
 
 	if not currentServer:
-		return gui.myPrint("Can't determine my server.")
+		return gui.mgmt.myPrint("Can't determine my server.")
 
 	sushi.nick(currentServer.name, args[0])
 
@@ -138,7 +137,7 @@ def makiPart(currentServer, currentChannel, args):
 		else:
 			# /part [<reason>]
 			if not currentChannel:
-				return gui.myPrint("Could not determine channel.")
+				return gui.mgmt.myPrint("Could not determine channel.")
 			reason = " ".join(args)
 			if not reason:
 				reason = config.get("chatting", "part_message", "")
@@ -146,7 +145,7 @@ def makiPart(currentServer, currentChannel, args):
 	else:
 		# /part
 		if not currentChannel:
-			return gui.myPrint("Could not determine channel.")
+			return gui.mgmt.myPrint("Could not determine channel.")
 		sushi.part(currentServer.name, currentChannel.name, config.get("chatting", "part_message", ""))
 
 def makiJoin(currentServer, currentChannel, args):
@@ -158,13 +157,13 @@ def makiJoin(currentServer, currentChannel, args):
 		Usage: /join [<channel> [<key>]]
 	"""
 	if not currentServer:
-		return gui.myPrint("Can't determine server.")
+		return gui.mgmt.myPrint("Can't determine server.")
 
 	if not args:
 		if currentChannel and not currentChannel.joined:
 			return sushi.join(currentServer.name, currentChannel.name, "")
 		else:
-			return gui.myPrint("Usage: /join <channel> [<key>]")
+			return gui.mgmt.myPrint("Usage: /join <channel> [<key>]")
 
 	sushi.join(currentServer.name, args[0], " ".join(args[1:]))
 
@@ -178,10 +177,10 @@ def makiAction(currentServer, currentChannel, args):
 		Results in: nemo giggles.
 	"""
 	if not args:
-		return gui.myPrint("Usage: /me <text>")
+		return gui.mgmt.myPrint("Usage: /me <text>")
 
 	if not currentChannel:
-		return gui.myPrint("Can't find active channel.")
+		return gui.mgmt.myPrint("Can't find active channel.")
 
 	sushi.action(currentServer.name, currentChannel.name, " ".join(args))
 
@@ -193,10 +192,10 @@ def makiKick(currentServer, currentTab, args):
 		Usage: /kick <user> [<reason>]
 	"""
 	if not args:
-		return gui.myPrint("Usage: /kick <user> [<reason>]")
+		return gui.mgmt.myPrint("Usage: /kick <user> [<reason>]")
 
 	if not currentTab or not currentTab.is_channel():
-		return gui.myPrint("You're not on a channel")
+		return gui.mgmt.myPrint("You're not on a channel")
 
 	sushi.kick(currentServer.name, currentTab.name, args[0], " ".join(args[1:]))
 
@@ -211,10 +210,10 @@ def makiMode(currentServer, currentChannel, args):
 		OR:	  /mode #xesio +m
 	"""
 	if not args or len(args) < 1:
-		return gui.myPrint("Usage: /mode <target> (+|-)<mode> [<param>]")
+		return gui.mgmt.myPrint("Usage: /mode <target> (+|-)<mode> [<param>]")
 
 	if not currentServer:
-		return gui.myPrint("Could not determine server.")
+		return gui.mgmt.myPrint("Could not determine server.")
 
 	if len(args) >= 2:
 		# a parameter is given
@@ -230,10 +229,10 @@ def makiTopic(serverTab, channelTab, args):
 		Usage: /topic [<text>]
 	"""
 	if not channelTab or not channelTab.is_channel():
-		return gui.myPrint("No channel active.")
+		return gui.mgmt.myPrint("No channel active.")
 
 	if not args:
-		return gui.myPrint(
+		return gui.mgmt.myPrint(
 		"Topic for channel %(channel)s: '%(topic)s'" % {
 			"channel": channelTab.name,
 			"topic": color.parse_color_codes_to_tags(channelTab.topic)
@@ -252,7 +251,7 @@ def makiAway(serverTab, channelTab, args):
 		Usage: /away [<reason>]
 	"""
 	if not serverTab:
-		return gui.myPrint("Can't determine server.")
+		return gui.mgmt.myPrint("Can't determine server.")
 
 	sushi.away(serverTab.name, " ".join(args))
 
@@ -263,7 +262,7 @@ def makiBack(serverTab, channelTab, args):
 		Usage: /back
 	"""
 	if not serverTab:
-		return gui.myPrint("Can't determine server.")
+		return gui.mgmt.myPrint("Can't determine server.")
 	sushi.back(serverTab.name)
 
 def makiNickserv(serverTab, channelTab, args):
@@ -274,7 +273,7 @@ def makiNickserv(serverTab, channelTab, args):
 		Usage: /nickserv
 	"""
 	if not serverTab:
-		return gui.myPrint("Can't determine server.")
+		return gui.mgmt.myPrint("Can't determine server.")
 
 	sushi.nickserv(serverTab.name)
 
@@ -285,10 +284,10 @@ def makiCTCP(serverTab, channelTab, args):
 		Usage: /ctcp <target> <message>
 	"""
 	if not args or len(args) < 2:
-		return gui.myPrint("Usage: /ctcp <target> <message>")
+		return gui.mgmt.myPrint("Usage: /ctcp <target> <message>")
 
 	if not serverTab:
-		return gui.myPrint("Could not determine server.")
+		return gui.mgmt.myPrint("Could not determine server.")
 
 	sushi.ctcp(serverTab.name, args[0], " ".join(args[1:]))
 
@@ -349,7 +348,7 @@ def tekkaNames(serverTab, channelTab, args):
 	elif len(args) == 1:
 		request(serverTab.name, args[0])
 	else:
-		gui.myPrint("Usage: /names [<channel>]")
+		gui.mgmt.myPrint("Usage: /names [<channel>]")
 
 def makiNotice(serverTab, channelTab, args):
 	"""
@@ -362,10 +361,10 @@ def makiNotice(serverTab, channelTab, args):
 		Usage: /notice <target> <message>
 	"""
 	if not args or len(args) < 2:
-		return gui.myPrint("Usage: /notice <target> <message>")
+		return gui.mgmt.myPrint("Usage: /notice <target> <message>")
 
 	if not serverTab:
-		return gui.myPrint("Could not determine server.")
+		return gui.mgmt.myPrint("Could not determine server.")
 
 	sushi.notice(serverTab.name, args[0], " ".join(args[1:]))
 
@@ -377,10 +376,10 @@ def makiMessage(serverTab, channelTab, args):
 		Usage: /msg <target> <message>
 	"""
 	if not args or len(args) < 2:
-		return gui.myPrint("Usage: /msg <target> <message>")
+		return gui.mgmt.myPrint("Usage: /msg <target> <message>")
 
 	if not serverTab:
-		return gui.myPrint("Could not determine server.")
+		return gui.mgmt.myPrint("Could not determine server.")
 
 	com.sendMessage(serverTab.name, args[0], " ".join(args[1:]))
 
@@ -391,10 +390,10 @@ def makiOper(serverTab, channelTab, args):
 		Usage: /oper <user> <pass>
 	"""
 	if not args or len(args) < 2:
-		return gui.myPrint("Usage: /oper <user> <pass>")
+		return gui.mgmt.myPrint("Usage: /oper <user> <pass>")
 
 	if not serverTab:
-		return gui.myPrint("Could not determine server.")
+		return gui.mgmt.myPrint("Could not determine server.")
 
 	sushi.oper(serverTab.name, args[0], " ".join(args[1:]))
 
@@ -407,7 +406,7 @@ def makiList(serverTab, channelTab, args):
 		Usage: /list [<channel>]
 	"""
 	if not serverTab:
-		return gui.myPrint("Could not determine server.")
+		return gui.mgmt.myPrint("Could not determine server.")
 
 	try:
 		# channel specific listing?
@@ -430,10 +429,10 @@ def makiRaw(serverTab, channelTab, args):
 		Usage: /raw <command> [<further text>]
 	"""
 	if not args:
-		return gui.myPrint("Usage: /raw <command>")
+		return gui.mgmt.myPrint("Usage: /raw <command>")
 
 	if not serverTab:
-		return gui.myPrint("Could not determine server.")
+		return gui.mgmt.myPrint("Could not determine server.")
 
 	# upper-case the command
 	args[0] = args[0].upper()
@@ -454,7 +453,7 @@ def makiWhois(currentServer, currentChannel, args):
 		Usage: /whois <user mask>
 	"""
 	if not args:
-		return gui.myPrint("No server activated.")
+		return gui.mgmt.myPrint("No server activated.")
 
 	def handler(time, server, nick, message):
 		if message:
@@ -474,10 +473,10 @@ def tekkaQuery(currentServer, currentTab, args):
 		Usage: /query <nick>
 	"""
 	if not args:
-		return gui.myPrint("Usage: /query <nick>")
+		return gui.mgmt.myPrint("Usage: /query <nick>")
 
 	if not currentServer:
-		return gui.myPrint("Can't determine server.")
+		return gui.mgmt.myPrint("Can't determine server.")
 
 	nick = args[0]
 
@@ -515,11 +514,11 @@ def tekkaHelp(currentServer, currentTab, args):
 	"""
 	global _commands
 	if not args:
-		return gui.myPrint("Usage: /help <command>")
+		return gui.mgmt.myPrint("Usage: /help <command>")
 	if _commands.has_key(args[0]):
-		gui.myPrint(_commands[args[0]].__doc__.replace("\t",""))
+		gui.mgmt.myPrint(_commands[args[0]].__doc__.replace("\t",""))
 	else:
-		gui.myPrint("No help for %s available." % (args[0]))
+		gui.mgmt.myPrint("No help for %s available." % (args[0]))
 
 
 _commands = {
@@ -601,7 +600,7 @@ def parseInput(text):
 
 		if not cmd:
 			# / typed
-			return gui.myPrint("No command given.")
+			return gui.mgmt.myPrint("No command given.")
 
 		# search for the command
 		global _commands
@@ -611,7 +610,7 @@ def parseInput(text):
 			# can send it as RAW.
 
 			if not serverTab:
-				return gui.myPrint("No server active.")
+				return gui.mgmt.myPrint("No server active.")
 
 			# build raw command
 			raw = cmd.upper()
@@ -619,7 +618,7 @@ def parseInput(text):
 			if len(argv) > 1:
 				raw +=  " " + " ".join(argv[1:])
 
-			gui.myPrint(_(
+			gui.mgmt.myPrint(_(
 				u"• Unknown command “%(command)s”, "\
 				u"sending raw command “%(raw)s”.") % {
 					"command": cmd,

@@ -32,15 +32,14 @@ IRC color specifications
 import re
 import gtk
 
-import tekka.config
-from tekka.typecheck import types
+from .. import config
+from ..typecheck import types
 
-import tekka.helper.code
-import tekka.helper.escape
+from . import code
+from . import escape
 
 from ..lib import contrast
 from .. import gui
-# EOH
 
 COLOR_PATTERN = "([0-9]{1,2})(,[0-9]{1,2}){0,1}.*"
 COLOR_TABLE =  {
@@ -79,7 +78,7 @@ def parse_color_codes_to_tags(msg):
 	count = 0 # openend <font>
 
 	# initialize attributes self.pattern / self.color_table
-	self = helper.code.init_function_attrs(
+	self = code.init_function_attrs(
 		parse_color_codes_to_tags,
 
 		pattern 	= re.compile(chr(3)+COLOR_PATTERN),
@@ -152,7 +151,7 @@ def parse_color_markups_to_codes(s):
 	""" split s for %C markups and parse the numbers following.
 		After parsing, return the new string.
 	"""
-	s_split = helper.escape.unescape_split("%C", s, escape_char="%")
+	s_split = escape.unescape_split("%C", s, escape_char="%")
 	return chr(3).join(s_split)
 
 @types (nick = basestring)

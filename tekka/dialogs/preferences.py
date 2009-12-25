@@ -28,16 +28,15 @@ SUCH DAMAGE.
 
 # UHF = ultra high frequency :]
 
-import config
 import gtk
 import gtk.glade
+import logging
 from gobject import idle_add
 
-import logging
-
-import lib.gui_control as gui
-from lib import dialog_control
-from lib.expanding_list import ExpandingList
+from .. import gui
+from .. import config
+from ..lib import dialog_control
+from ..lib.expanding_list import ExpandingList
 
 widgets = None
 nickColorsList = None
@@ -249,7 +248,7 @@ def applyGeneralOutputFilter():
 def tekka_show_status_icon_toggled(button):
 	config.set("tekka", "show_status_icon",
 			str(button.get_active()))
-	gui.switch_status_icon(button.get_active())
+	gui.mgmt.switch_status_icon(button.get_active())
 
 def tekka_hide_on_close_toggled(button):
 	config.set("tekka", "hide_on_close",
@@ -260,13 +259,13 @@ def tekka_font_clicked(button):
 
 	if font:
 		config.set("tekka", "font", font)
-		gui.apply_new_font()
+		gui.mgmt.apply_new_font()
 
 def tekka_use_default_font_toggled(button):
 	config.set("tekka", "use_default_font",
 			str(button.get_active()))
 
-	gui.apply_new_font()
+	gui.mgmt.apply_new_font()
 
 def tekka_auto_expand_toggled(button):
 	config.set("tekka", "auto_expand",

@@ -36,12 +36,12 @@ from gobject import TYPE_UINT64
 from gettext import gettext as _
 import traceback
 
-import config
-from com import parse_from, sushi
-from lib import dialog_control
-from lib import gui_control
-from helper.dcc import s_incoming
-from helper.code import init_function_attrs
+from .. import config
+from ..com import parse_from, sushi
+from ..lib import dialog_control
+from .. import gui
+from ..helper.dcc import s_incoming
+from ..helper.code import init_function_attrs
 
 widgets = None
 
@@ -148,15 +148,16 @@ def dialog_response_cb(dialog, id, timer_id):
 			transferID = get_selected_transfer_id()
 
 			if None == transferID:
-				gui_control.show_error_dialog(
+				gui.mgmt.show_error_dialog(
 					title = _("No transfer selected!"),
 					message = _("You must select a transfer to remove it."))
 
 			else:
-				d = gui_control.question_dialog(
+				d = gui.builder.question_dialog(
 					title = _("Remove file transfer?"),
-					message = _("Are you sure you want to remove the file transfer %(id)d?" % {
-						"id": transferID }))
+					message = _("Are you sure you want to remove the "
+						"file transfer %(id)d?" % {
+							"id": transferID }))
 				d.connect("response", dialog_reponse_cb, transferID)
 				d.show()
 
@@ -190,7 +191,7 @@ def setup():
 	if widgets != None:
 		return
 
-	widgets = gui_control.builder.load_dialog("dcc")
+	widgets = gui.builder.load_dialog("dcc")
 
 	transferView = widgets.get_object("transferView")
 	transferView.set_model(create_list_model())
