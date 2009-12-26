@@ -35,11 +35,11 @@ import codecs
 import re
 import logging
 
-import config
-import com
+from .. import config
+from .. import com
 
-import lib.gui_control as gui
-from lib.search_toolbar import SearchBar
+from .. import gui
+from ..lib.search_toolbar import SearchBar
 
 widgets = None
 date_pattern = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
@@ -430,5 +430,7 @@ def setup():
 
 	widgets.get_object("calendar").connect("realize", calendar_realize_cb)
 
-	gui.set_font(widgets.get_object("historyView"), gui.get_font())
+	gui.mgmt.set_font(
+		widgets.get_object("historyView"),
+		gui.mgmt.get_font())
 
