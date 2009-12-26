@@ -87,24 +87,25 @@ import tekka.gui as gui
 import tekka.gui.tabs
 
 # local modules
-import tekka.config as config
-import tekka.com as com
-import tekka.signals as signals
-import tekka.commands as commands
+from . import config
+from . import com
+from . import signals
+from . import commands
 
-from tekka.typecheck import types
+from .typecheck import types
 
-import tekka.lib.dialog_control as dialog_control
-import tekka.lib.plugin_control as plugin_control
+from .lib import dialog_control as dialog_control
+from .lib import plugin_control as plugin_control
 
+from .lib import nick_list_store
+from .lib.inline_dialog import InlineMessageDialog
+from .lib.welcome_window import WelcomeWindow
 
-from tekka.lib.inline_dialog import InlineMessageDialog
-from tekka.lib.welcome_window import WelcomeWindow
+from .helper import tabcompletion
+from .helper import markup
+from .helper.shortcuts import addShortcut, removeShortcut
 
-from tekka.helper.shortcuts import addShortcut, removeShortcut
-from tekka.helper import tabcompletion
-
-from tekka.menus import *
+from .menus import *
 
 import gui.builder
 import gui.shortcuts
@@ -484,7 +485,7 @@ def nickList_row_activated_cb(nickList, path, column):
 	serverTab,channelTab = gui.tabs.get_current_tabs()
 
 	try:
-		name = nickList.get_model()[path][lib.nick_list_store.COLUMN_NICK]
+		name = nickList.get_model()[path][nick_list_store.COLUMN_NICK]
 	except TypeError:
 		# nickList has no model
 		return
@@ -532,7 +533,7 @@ def nickList_button_press_event_cb(nickList, event):
 		if nick:
 			# display nick specific menu
 
-			nick = nick[lib.nick_list_store.COLUMN_NICK]
+			nick = nick[nick_list_store.COLUMN_NICK]
 
 			menu = nicklist_menu.NickListMenu().get_menu(nick)
 
@@ -691,8 +692,8 @@ def serverTree_query_tooltip_cb(widget, x, y, kbdmode, tooltip):
 	def limit(s):
 		limit = int(config.get("tekka","popup_line_limit"))
 		if len(s) > limit:
-			return gui.escape(s[:limit-3]+u"...")
-		return gui.escape(s)
+			return markup.escape(s[:limit-3]+u"...")
+		return markup.escape(s)
 
 	path = widget.get_path_at_pos(x,y)
 
@@ -708,7 +709,7 @@ def serverTree_query_tooltip_cb(widget, x, y, kbdmode, tooltip):
 
 	if tab.is_server():
 		# TODO: away status
-		s = "<b>" + _("Nickname: ") + "</b>" +  gui.escape(tab.nick)
+		s = "<b>" + _("Nickname: ") + "</b>" +  markup.escape(tab.nick)
 
 	elif tab.is_channel():
 		s = "<b>" +_("User: ") + "</b>" + str(len(tab.nickList)) +\

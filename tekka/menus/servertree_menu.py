@@ -30,6 +30,7 @@ import gtk
 from gettext import gettext as _
 
 from .. import config
+from ..gui import builder
 from ..com import sushi
 from ..helper.singleton import SingletonMeta
 
@@ -44,7 +45,7 @@ class ServerTreeMenu(object):
 
 	def __init__(self):
 		self.menu = None
-		self.widgets = gui.builder.load_menu("serverTreeMenu")
+		self.widgets = builder.load_menu("serverTreeMenu")
 
 		if not self.widgets:
 			d = inline_dialog.InlineMessageDialog(
