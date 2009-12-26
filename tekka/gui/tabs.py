@@ -443,7 +443,7 @@ class TekkaServer(TekkaTab):
 			this tab
 		"""
 
-		cServerTab, cChannelTab = gui.tabs.get_current_tabs()
+		cServerTab, cChannelTab = get_current_tabs()
 
 		if (cServerTab and cServerTab.name.lower() == self.name.lower()
 		and cChannelTab):
