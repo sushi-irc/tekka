@@ -964,7 +964,7 @@ def userKick_cb(time, server, from_str, channel, who, reason):
 		tab.nickList.remove_nick(who)
 
 		if tab.is_active():
-			gui.set_user_count(
+			gui.mgmt.set_user_count(
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
@@ -1085,7 +1085,7 @@ def userQuit_cb(time, server, from_str, reason):
 
 				if channelTab.is_active():
 					# update gui display for usercount
-					gui.set_user_count(len(nickList),
+					gui.mgmt.set_user_count(len(nickList),
 						nickList.get_operator_count())
 
 				if not (hideServerPrint or hideChannelPrint):
@@ -1121,7 +1121,7 @@ def userJoin_cb(timestamp, server, from_str, channel):
 		tab.nickList.clear()
 
 		if tab.is_active():
-			gui.set_user_count(
+			gui.mgmt.set_user_count(
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
@@ -1165,7 +1165,7 @@ def userJoin_cb(timestamp, server, from_str, channel):
 		tab.nickList.append_nick(nick)
 
 		if tab.is_active():
-			gui.set_user_count(len(tab.nickList),
+			gui.mgmt.set_user_count(len(tab.nickList),
 				tab.nickList.get_operator_count())
 
 	if doPrint:
@@ -1214,7 +1214,7 @@ def userNames_cb(timestamp, server, channel, nicks, prefixes):
 				tab.nickList.set_prefix(nicks[i], prefixes[i], sort=False)
 
 		if tab.is_active():
-			gui.set_user_count(
+			gui.mgmt.set_user_count(
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
@@ -1263,7 +1263,7 @@ def userPart_cb(timestamp, server, from_str, channel, reason):
 		tab.nickList.remove_nick(nick)
 
 		if tab.is_active():
-			gui.set_user_count(
+			gui.mgmt.set_user_count(
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
 
