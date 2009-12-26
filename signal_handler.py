@@ -131,7 +131,7 @@ def _add_channels(server_tab):
 		tab.topicsetter = ""
 
 		if tab.is_active():
-			gui.set_topic(gui.output.markup_escape(tab.topic))
+			gui.set_topic(markup.markup_escape(tab.topic))
 			gui.mgmt.set_user_count(
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
@@ -347,7 +347,7 @@ def channelTopic_cb(time, server, from_str, channel, topic):
 	channelTab.topicsetter = nick
 
 	if channelTab == gui.tabs.get_current_tab():
-		gui.mgmt.set_topic(gui.output.markup_escape(topic))
+		gui.mgmt.set_topic(markup.markup_escape(topic))
 
 	if not nick:
 		# just reporting the topic.
@@ -391,7 +391,7 @@ def channelBanlist_cb(time, server, channel, mask, who, when):
 """ Callbacks of maki signals """
 
 def makiShutdown_cb(time):
-	gui.output.myPrint("Maki is shut down!")
+	gui.mgmt.myPrint("Maki is shut down!")
 	gui.mgmt.set_useable(False)
 
 """ Callbacks for users """
@@ -779,7 +779,7 @@ def userNotice_cb(time, server, from_str, target, message):
 		A user noticed to a channel (target).
 	"""
 	nick = parse_from(from_str)[0]
-	(server_tab, target_tab) = gui.tabs.search_tab(server, target)
+	(server_tab, target_tab) = gui.tabs.search_tabs(server, target)
 
 	if nick.lower() == server_tab.nick.lower():
 		ownNotice_cb(time, server, target, message)

@@ -408,7 +408,7 @@ class TekkaServer(TekkaTab):
 
 		buffer.insertHTML(
 			buffer.get_end_iter(),
-			"[%s] %s" % (timestr, string))
+			"[%s] %s" % (timestr, message))
 
 		if not self.is_active():
 
@@ -419,7 +419,7 @@ class TekkaServer(TekkaTab):
 					msgtype,
 					timestr,
 					self,
-					string)
+					message)
 
 		def notify():
 			self.set_new_message(msgtype)
