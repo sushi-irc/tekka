@@ -107,6 +107,7 @@ from tekka.helper import tabcompletion
 from tekka.menus import *
 
 import gui.builder
+import gui.shortcuts
 
 """
 Tekka intern signals
@@ -152,8 +153,8 @@ def tekka_tab_new_markup_cb(tab):
 
 def tekka_tab_new_message_cb(tab, mtype):
 	""" a new message of the given type was received """
-	if gui.tabs.is_active(tab):
-		tab.setNewMessage(None)
+	if tab.is_active():
+		tab.set_new_message(None)
 
 		if tab.window.auto_scroll and mtype:
 			# FIXME:  on high load, the whole application
@@ -414,7 +415,7 @@ def serverTree_misc_menu_reset_activate_cb(menuItem):
 	reset the markup of all tabs
 	"""
 	for tab in gui.tabs.get_all_tabs():
-		tab.setNewMessage(None)
+		tab.set_new_message(None)
 
 def serverTree_button_press_event_cb(serverTree, event):
 	"""
@@ -824,8 +825,8 @@ def treemodel_rows_reordered_cb(treemodel, path, iter, new_order):
 		if not row[0]:
 			continue
 
-		if gui.tabs.currentPath == row[0].path and not updated:
-			gui.tabs.currentPath = row.path
+		if gui.tabs._currentPath == row[0].path and not updated:
+			gui.tabs._currentPath = row.path
 			updated = True
 
 		row[0].path = row.path
@@ -834,8 +835,8 @@ def treemodel_rows_reordered_cb(treemodel, path, iter, new_order):
 			if not child[0]:
 				continue
 
-			if gui.tabs.currentPath == child[0].path and not updated:
-				gui.tabs.currentPath = child.path
+			if gui.tabs._currentPath == child[0].path and not updated:
+				gui.tabs._currentPath = child.path
 				updated = True
 
 			child[0].path = child.path
@@ -906,48 +907,6 @@ def setup_nickList():
 
 	widget.set_headers_visible(False)
 	widget.set_rules_hint(True)
-
-
-def setup_shortcuts():
-	"""
-		Set shortcuts to widgets.
-
-		- ctrl + page_up -> scroll to prev tab in server tree
-		- ctrl + page_down -> scroll to next tab in server tree
-		- ctrl + w -> close the current tab
-		- ctrl + l -> clear the output buffer
-		- ctrl + u -> clear the input entry
-		- ctrl + s -> hide/show the side pane
-	"""
-	gui.widgets.get_widget("mainWindow").add_accel_group(gui.accelGroup)
-
-	addShortcut(gui.accelGroup, gui.widgets.get_widget("inputBar"),
-		"<ctrl>u", inputBar_shortcut_ctrl_u)
-	addShortcut(gui.accelGroup, gui.widgets.get_widget("inputBar"),
-		"<ctrl>l", output_shortcut_ctrl_l)
-	addShortcut(gui.accelGroup, gui.widgets.get_widget("inputBar"),
-		"<ctrl>f", output_shortcut_ctrl_f)
-	addShortcut(gui.accelGroup, gui.widgets.get_widget("inputBar"),
-		"<ctrl>g", output_shortcut_ctrl_g)
-
-	addShortcut(gui.accelGroup, gui.widgets.get_widget("serverTree"),
-		"<ctrl>Page_Up", serverTree_shortcut_ctrl_Page_Up)
-	addShortcut(gui.accelGroup, gui.widgets.get_widget("serverTree"),
-		"<ctrl>Page_Down", serverTree_shortcut_ctrl_Page_Down)
-	addShortcut(gui.accelGroup, gui.widgets.get_widget("serverTree"),
-		"<ctrl>w", serverTree_shortcut_ctrl_w)
-
-	addShortcut(gui.accelGroup, gui.widgets.get_widget("inputBar"),
-		"Page_Up", output_shortcut_Page_Up)
-	addShortcut(gui.accelGroup, gui.widgets.get_widget("inputBar"),
-		"Page_Down", output_shortcut_Page_Down)
-
-	addShortcut(gui.accelGroup, gui.widgets.get_widget("inputBar"),
-		"<ctrl>c", inputBar_shortcut_ctrl_c)
-
-	addShortcut(gui.accelGroup,
-		gui.widgets.get_widget("menu_View_showSidePane"), "<ctrl>s",
-		lambda w,s: w.set_active(not w.get_active()))
 
 
 def connect_maki():
@@ -1179,7 +1138,20 @@ def setupGTK():
 	gui.mgmt.set_font(gui.widgets.get_widget("generalOutput"),
 		gui.mgmt.get_font())
 
-	setup_shortcuts()
+	gui.shortcuts.add_handlers({
+			"clear_outputs": output_shortcut_ctrl_l,
+			"output_page_up": output_shortcut_Page_Up,
+			"output_page_down": output_shortcut_Page_Down,
+			"input_clear_line": inputBar_shortcut_ctrl_u,
+			"input_search": output_shortcut_ctrl_f,
+			"input_search_further": output_shortcut_ctrl_g,
+			"input_copy": inputBar_shortcut_ctrl_c,
+			"servertree_previous": serverTree_shortcut_ctrl_Page_Up,
+			"servertree_next": serverTree_shortcut_ctrl_Page_Down,
+			"servertree_close": serverTree_shortcut_ctrl_w,
+			"show_sidepane": lambda w,s: w.set_active(not w.get_active()),
+		})
+	gui.shortcuts.setup_shortcuts()
 
 	# disable the GUI and wait for commands :-)
 	gui.mgmt.set_useable(False)
