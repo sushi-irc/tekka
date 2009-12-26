@@ -27,6 +27,7 @@ SUCH DAMAGE.
 
 import gtk
 import gobject
+import time
 import logging
 from dbus import UInt64
 
@@ -211,6 +212,19 @@ class TekkaTab(gobject.GObject):
 		raise NotImplementedError
 
 
+	def write_raw(self, msg, type="message"):
+		buf = self.window.textview.buffer
+		end = buf.get_end_iter()
+
+		buf.insert_at_iter(end, msg)
+
+		def notify():
+			self.set_new_message(type)
+			return False
+
+		gobject.idle_add(notify)
+
+
 	def print_last_log(self, lines=0):
 		"""	Fetch the given amount of lines of history for
 			the channel on the given server and print it to the
@@ -227,6 +241,13 @@ class TekkaTab(gobject.GObject):
 			"chatting",
 			"last_log_lines",
 			"0"))
+
+		if type(self) == TekkaServer:
+			server = self.name
+			channel = ""
+		else:
+			server = self.server.name
+			channel = self.name
 
 		for line in com.sushi.log(server, channel, lines):
 
@@ -388,7 +409,7 @@ class TekkaServer(TekkaTab):
 			buffer.get_end_iter(),
 			"[%s] %s" % (timestr, string))
 
-		if not gui.tabs.is_active(self):
+		if not self.is_active():
 
 			if (config.get_bool("tekka", "show_general_output")
 			and not no_general_output):
@@ -531,7 +552,7 @@ class TekkaQuery(TekkaTab):
 		buffer = self.window.textview.get_buffer()
 		buffer.insertHTML(buffer.get_end_iter(), outputString)
 
-		if not gui.tabs.is_active(self):
+		if not self.is_active():
 
 			if (config.get_bool("tekka", "show_general_output")
 			and not no_general_output):
@@ -643,7 +664,7 @@ class TekkaChannel(TekkaTab):
 		buffer = self.window.textview.get_buffer()
 		buffer.insertHTML(buffer.get_end_iter(), outputString)
 
-		if not tabs.is_active(self):
+		if not self.is_active():
 
 			if (config.get_bool("tekka", "show_general_output")
 			and not no_general_output):
@@ -738,7 +759,7 @@ def call_callback(name, *args):
 			logging.error(e, exc_info = True)
 			continue
 
-@types(tabtype = (TekkaServer, TekkaChannel, TekkaQuery))
+@types(tabtype = TekkaTab)
 def _create_tab(tabtype, name, *args, **kwargs):
 	""" instance class of type tabtype, connect signals,
 		create output window and setup input history.
@@ -787,7 +808,8 @@ def create_query(server, name):
 
 @types (server = basestring)
 def create_server(server):
-	tab = self._create_tab(TekkaServer, server)
+	print TekkaServer, type(TekkaServer)
+	tab = _create_tab(TekkaServer, server)
 
 	tab.update()
 
@@ -859,7 +881,7 @@ def add_tab(server, object, update_shortcuts=True):
 	iter = store.append(serverIter, row=(object,))
 	object.path = store.get_path(iter)
 
-	callbacks = self.get_callbacks("add")
+	callbacks = get_callbacks("add")
 
 	for cb in callbacks:
 		cb(object)
@@ -902,13 +924,13 @@ def remove_tab(tab, update_shortcuts=True):
 			nextIter = None
 	path = tab.path
 
-	callbacks = self.get_callbacks("remove")
+	callbacks = get_callbacks("remove")
 
 	for cb in callbacks:
 		cb(tab)
 
 	store.remove(row.iter)
-	self.__updateLowerRows(store, nextIter)
+	__updateLowerRows(store, nextIter)
 
 	if update_shortcuts:
 		mgmt.update_servertree_shortcuts()

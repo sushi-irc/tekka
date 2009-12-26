@@ -22,6 +22,7 @@ from tekka.lib import key_dialog
 from tekka.lib import dcc_dialog
 
 from tekka.helper import color
+from tekka.helper import markup
 from tekka.typecheck import types
 
 init = False
@@ -129,7 +130,7 @@ def _add_channels(server_tab):
 		tab.topic = sushi.channel_topic(server_tab.name, channel)
 		tab.topicsetter = ""
 
-		if gui.tabs.is_active(tab):
+		if tab.is_active():
 			gui.set_topic(gui.output.markup_escape(tab.topic))
 			gui.mgmt.set_user_count(
 				len(tab.nickList),
@@ -141,12 +142,12 @@ def _add_channels(server_tab):
 
 		if add:
 			gui.tabs.add_tab(server_tab, tab, update_shortcuts = False)
-			gui.output.print_last_log(server_tab.name, channel)
+			tab.print_last_log()
 
 		topic = sushi.channel_topic(server_tab.name, channel)
 		_report_topic(mtime.time(), server_tab.name, channel, topic)
 
-	gui.mgmt.update_servertree_shortcuts()
+	gui.shortcuts.update_servertree_shortcuts()
 
 def isHighlighted (server_tab, text):
 	def has_highlight(text, needle):
@@ -187,7 +188,7 @@ def _createTab (server, name):
 
 		tab.connected = True
 		gui.tabs.add_tab(server_tab, tab)
-		gui.output.print_last_log(server, name)
+		tab.print_last_log()
 
 	if tab.name != name:
 		# the name of the tab differs from the
@@ -263,7 +264,7 @@ def serverConnect_cb(time, server):
 					channelTab.joined=False
 				channelTab.connected=False
 
-	gui.output.serverPrint(time, server, "Connecting...")
+	tab.write(time, "Connecting...")
 
 	gui.status.set_visible("connecting", "Connecting to %s" % server)
 
@@ -283,7 +284,7 @@ def serverConnected_cb(time, server):
 	servers = [server])[1:] if tab.is_query()]:
 		query.connected = True
 
-	gui.output.serverPrint(time, server, "Connected.")
+	tab.write(time, "Connected.")
 
 def serverMOTD_cb(time, server, message, first_time = {}):
 	""" Server is sending a MOTD.
@@ -312,7 +313,7 @@ def serverMOTD_cb(time, server, message, first_time = {}):
 		del first_time[server]
 
 	else:
-		gui.output.serverPrint(time, server, gui.output.escape(message),
+		first_time[server].write(time, markup.escape(message),
 			no_general_output = True)
 
 """ Callbacks for channel interaction """
@@ -320,9 +321,14 @@ def serverMOTD_cb(time, server, message, first_time = {}):
 def _report_topic(time, server, channel, topic):
 	message = _(u"• Topic for %(channel)s: %(topic)s") % {
 		"channel": channel,
-		"topic": gui.output.escape(topic) }
-	gui.output.channelPrint(time, server, channel, message, "action",
-		no_general_output = True)
+		"topic": markup.escape(topic) }
+
+	tab = gui.tabs.search_tab(server, channel)
+
+	if not tab:
+		raise Exception, "%s:%s not found." % (server, channel)
+
+	tab.write(time, message, "action", no_general_output = True)
 
 def channelTopic_cb(time, server, from_str, channel, topic):
 	"""
@@ -353,34 +359,33 @@ def channelTopic_cb(time, server, from_str, channel, topic):
 		else:
 			message = _(u"• %(nick)s changed the topic to %(topic)s.")
 
-		gui.output.channelPrint(
-			time, server, channel,
-			message % {
-				"nick": nick,
-				"topic": gui.output.escape(topic) },
-			"action")
+		channelTab.write(time, message % {
+								"nick": nick,
+								"topic": markup.escape(topic) },
+						"action")
 
 def channelBanlist_cb(time, server, channel, mask, who, when):
 	"""
 		ban list signal.
 	"""
+	self = code.init_function_attrs(channelBanlist_cb,
+		tab = gui.tabs.search_tab(server, channel))
+
 	if not mask and not who and when == -1:
-		gui.output.channelPrint(
-			time, server, channel,
-			"End of banlist.", "action")
+		self.tab.write(time, "End of banlist.", "action")
+		code.reset_function_attrs(channelBanlist_cb)
+
 	else:
 		timestring = mtime.strftime(
 			"%Y-%m-%d %H:%M:%S",
 			mtime.localtime(when))
 
-		gui.output.channelPrint(
+		self.tab.write(
 			time,
-			server,
-			channel,
 			"%s by %s on %s" % (
-				gui.output.escape(mask),
-				gui.output.escape(who),
-				gui.output.escape(timestring)),
+				markup.escape(mask),
+				markup.escape(who),
+				markup.escape(timestring)),
 			"action")
 
 """ Callbacks of maki signals """
@@ -410,6 +415,7 @@ def userBack_cb(time, server):
 	if tab:
 		tab.away = ""
 
+
 def userAwayMessage_cb(timestamp, server, nick, message):
 	"""
 		The user is away and the server gives us the message he left
@@ -428,25 +434,23 @@ def userAwayMessage_cb(timestamp, server, nick, message):
 		print_it = not tab.printed_away_message
 
 	if print_it:
-		gui.output.channelPrint(
+		tab.write(
 			timestamp,
-			server,
-			nick,
 			_(u"• %(nick)s is away (%(message)s).") % {
 				"nick": nick,
-				"message": gui.output.escape(message)},
+				"message": markup.escape(message)},
 			"action")
-
 
 		if tab and tab.name == nick:
 			tab.printed_away_message = True
+
 
 def userMessage_cb(timestamp, server, from_str, channel, message):
 	"""
 		PRIVMSGs are coming in here.
 	"""
 	nick = parse_from(from_str)[0]
-	server_tab = gui.tabs.search_tab(server)
+	(server_tab, channel_tab) = gui.tabs.search_tabs(server, channel)
 
 	if nick.lower() == server_tab.nick.lower():
 		ownMessage_cb(timestamp, server, channel, message)
@@ -456,7 +460,7 @@ def userMessage_cb(timestamp, server, from_str, channel, message):
 		userQuery_cb(timestamp, server, from_str, message)
 		return
 
-	message = gui.output.escape(message)
+	message = markup.escape(message)
 
 	if isHighlighted(server_tab, message):
 		# set mode to highlight and disable setting
@@ -474,29 +478,31 @@ def userMessage_cb(timestamp, server, from_str, channel, message):
 		messageString = "<font foreground='%s'>%s</font>" % (
 			color.get_text_color(nick), message)
 
-	gui.output.channelPrint(timestamp, server, channel,
+	channel_tab.write(timestamp,
 		"&lt;%s<font foreground='%s' weight='bold'>%s</font>&gt; %s" % (
 			_getPrefix(server, channel, nick),
 			color.get_nick_color(nick),
-			gui.output.escape(nick),
+			markup.escape(nick),
 			messageString,
 		), type)
+
 
 def ownMessage_cb(timestamp, server, channel, message):
 	"""
 		The maki user wrote something on a channel or a query
 	"""
-	_createTab(server, channel)
+	tab = _createTab(server, channel)
 	nick = gui.tabs.search_tab(server).nick
 
-	gui.output.channelPrint(timestamp, server, channel,
-		"&lt;%s<font foreground='%s' weight='bold'>%s</font>&gt;"
-		" <font foreground='%s'>%s</font>" % (
-			_getPrefix(server, channel, nick),
-			config.get("colors","own_nick","#000000"),
-			nick,
-			config.get("colors","own_text","#000000"),
-			gui.output.escape(message)))
+	tab.write(timestamp,
+			"&lt;%s<font foreground='%s' weight='bold'>%s</font>&gt;"
+			" <font foreground='%s'>%s</font>" % (
+				_getPrefix(server, channel, nick),
+				config.get("colors","own_nick","#000000"),
+				nick,
+				config.get("colors","own_text","#000000"),
+				markup.escape(message)))
+
 
 def userQuery_cb(timestamp, server, from_str, message):
 	"""
@@ -504,17 +510,18 @@ def userQuery_cb(timestamp, server, from_str, message):
 	"""
 	nick = parse_from(from_str)[0]
 
-	_createTab(server, nick)
+	tab = _createTab(server, nick)
 
-	gui.output.channelPrint(timestamp, server, nick,
+	tab.write(timestamp,
 		"&lt;<font foreground='%s' weight='bold'>%s</font>&gt; %s" % (
 			color.get_nick_color(nick),
-			gui.output.escape(nick),
-			gui.output.escape(message)
+			markup.escape(nick),
+			markup.escape(message)
 		), "message")
 
 	# queries are important
 	gui.mgmt.set_urgent(True)
+
 
 def userMode_cb(time, server, from_str, target, mode, param):
 	"""
@@ -540,7 +547,7 @@ def userMode_cb(time, server, from_str, target, mode, param):
 			tab.nickList.set_prefix(nick,
 				sushi.user_channel_prefix(tab.server.name, tab.name, nick))
 
-			if gui.tabs.is_active(tab):
+			if tab.is_active():
 				gui.mgmt.set_user_count(len(tab.nickList),
 					tab.nickList.get_operator_count())
 
@@ -551,7 +558,8 @@ def userMode_cb(time, server, from_str, target, mode, param):
 
 	if not nick:
 		# only a mode listing
-		gui.output.currentServerPrint(time, server,
+		server_tab.current_print(
+			time,
 			_("• Modes for %(target)s: %(mode)s") % {
 				"target":target,
 				"mode":mode},
@@ -578,7 +586,8 @@ def userMode_cb(time, server, from_str, target, mode, param):
 				target = "<font foreground='%s'>%s</font>" % (
 					color.get_nick_color(target), target)
 
-				gui.output.currentServerPrint(time, server,
+				server_tab.current_write(
+					time,
 					"• %(actor)s set %(mode)s%(param)s on %(target)s" % {
 						"actor":actor,
 						"mode":mode,
@@ -608,12 +617,12 @@ def userMode_cb(time, server, from_str, target, mode, param):
 				victim = "<font foreground='%s'>%s</font>" % (
 					color.get_nick_color(victim), victim)
 
-				gui.output.channelPrint(time, server, tab.name,
+				tab.write(time,
 					"• %(actor)s set %(mode)s%(param)s on %(victim)s." % {
-							"actor":actor,
-							"mode":mode,
-							"param":param,
-							"victim":victim},
+						"actor": actor,
+						"mode": mode,
+						"param": param,
+						"victim": victim},
 					type)
 
 
@@ -621,7 +630,8 @@ def userOper_cb(time, server):
 	"""
 		yay, somebody gives the user oper rights.
 	"""
-	gui.output.currentServerPrint(time, server, "• You got oper access.")
+	server_tab = gui.tabs.search_tab(server)
+	server_tab.current_write(time, "• You got oper access.")
 
 
 def userCTCP_cb(time, server,  from_str, target, message):
@@ -631,7 +641,7 @@ def userCTCP_cb(time, server,  from_str, target, message):
 		and not queried.
 	"""
 	nick = parse_from(from_str)[0]
-	server_tab = gui.tabs.search_tab(server)
+	(server_tab, target_tab) = gui.tabs.search_tabs(server, target)
 
 	if nick.lower() == server_tab.nick.lower():
 		# we wrote us
@@ -644,11 +654,11 @@ def userCTCP_cb(time, server,  from_str, target, message):
 	else:
 		# normal ctcp
 		headline = _("CTCP from %(nick)s to Channel:") % {
-			"nick": gui.output.escape(nick)}
+			"nick": markup.escape(nick)}
 
-		gui.output.channelPrint(time, server, target,
+		target_tab.write(time,
 			"<font foreground='#00DD33'>%s</font> %s" %	(
-				headline, gui.output.escape(message)))
+				headline, markup.escape(message)))
 
 
 def ownCTCP_cb(time, server, target, message):
@@ -664,19 +674,19 @@ def ownCTCP_cb(time, server, target, message):
 		nickColor = config.get("colors","own_nick","#000000")
 		textColor = config.get("colors","own_text","#000000")
 
-		gui.output.channelPrint(time, server, tab.name,
+		tab.write(time,
 			"&lt;CTCP:<font foreground='%s' weight='bold'>%s</font>&gt; "
 			"<font foreground='%s'>%s</font>" % (
 				nickColor,
 				server_tab.nick,
 				textColor,
-				gui.output.escape(message)))
+				markup.escape(message)))
 
 	else:
-		gui.output.serverPrint(time, server,
+		server_tab.write(time,
 			_("CTCP request from you to %(target)s: %(message)s") % {
-				"target": gui.output.escape(target),
-				"message": gui.output.escape(message)})
+				"target": markup.escape(target),
+				"message": markup.escape(message)})
 
 def queryCTCP_cb(time, server, from_str, message):
 	"""
@@ -685,24 +695,24 @@ def queryCTCP_cb(time, server, from_str, message):
 		If no query window is open, send it to the server tab.
 	"""
 	nick = parse_from(from_str)[0]
-	tab = gui.tabs.search_tab(server, nick)
+	(server_tab, tab) = gui.tabs.search_tabs(server, nick)
 
 	if tab:
-		gui.output.channelPrint(time, server, tab.name, \
+		tab.write(time,
 				"&lt;CTCP:<font foreground='%s' weight='bold'>%s"
 				"</font>&gt; <font foreground='%s'>%s</font>" % (
 					color.get_nick_color(nick),
-					gui.output.escape(nick),
+					markup.escape(nick),
 					color.get_text_color(nick),
-					gui.output.escape(message)))
+					markup.escape(message)))
 	else:
-		gui.output.currentServerPrint(time, server,
+		server_tab.current_write(time,
 				"&lt;CTCP:<font foreground='%s' weight='bold'>%s"
 				"</font>&gt; <font foreground='%s'>%s</font>" % (
 					color.get_nick_color(nick),
-					gui.output.escape(nick),
+					markup.escape(nick),
 					color.get_text_color(nick),
-					gui.output.escape(message)))
+					markup.escape(message)))
 
 def ownNotice_cb(time, server, target, message):
 	"""
@@ -716,17 +726,21 @@ def ownNotice_cb(time, server, target, message):
 	ownNick = server_tab.nick
 
 	if tab:
-		gui.output.channelPrint(time, server, tab.name, \
+		tab.write(time,
 			"&gt;<font foreground='%s' weight='bold'>%s</font>&lt; "
-			"<font foreground='%s'>%s</font>" % \
-				(color.get_nick_color(target), gui.output.escape(target),
-				color.get_text_color(target), gui.output.escape(message)))
+			"<font foreground='%s'>%s</font>" % (
+				color.get_nick_color(target),
+				markup.escape(target),
+				color.get_text_color(target),
+				markup.escape(message)))
 	else:
-		gui.output.currentServerPrint(time, server,
+		server_tab.current_write(time,
 			"&gt;<font foreground='%s' weight='bold'>%s</font>&lt; "
-			"<font foreground='%s'>%s</font>" % \
-				(color.get_nick_color(target), gui.output.escape(target),
-				color.get_text_color(target), gui.output.escape(message)))
+			"<font foreground='%s'>%s</font>" % (
+				color.get_nick_color(target),
+				markup.escape(target),
+				color.get_text_color(target),
+				markup.escape(message)))
 
 
 def queryNotice_cb(time, server, from_str, message):
@@ -735,79 +749,88 @@ def queryNotice_cb(time, server, from_str, message):
 	"""
 	nick = parse_from(from_str)[0]
 
-	tab = gui.tabs.search_tab(server, nick)
+	(server_tab, tab) = gui.tabs.search_tabs(server, nick)
+
 	if tab:
 		if tab.name != nick:
 			# correct notation of tab name
 			tab.name = nick
 
 	if tab:
-		gui.output.channelPrint(time, server, tab.name,
+		tab.write(time,
 				"-<font foreground='%s' weight='bold'>%s</font>- "
-				"<font foreground='%s'>%s</font>" % \
-				(color.get_nick_color(nick), gui.output.escape(nick),
-				color.get_text_color(nick), gui.output.escape(message)))
+				"<font foreground='%s'>%s</font>" % (
+					color.get_nick_color(nick),
+					markup.escape(nick),
+					color.get_text_color(nick),
+					markup.escape(message)))
 	else:
-		gui.output.currentServerPrint(time, server,
+		server_tab.current_write(time,
 				"-<font foreground='%s' weight='bold'>%s</font>- "
-				"<font foreground='%s'>%s</font>" % \
-				(color.get_nick_color(nick), gui.output.escape(nick),
-				color.get_text_color(nick), gui.output.escape(message)))
+				"<font foreground='%s'>%s</font>" % (
+					color.get_nick_color(nick),
+					markup.escape(nick),
+					color.get_text_color(nick),
+					markup.escape(message)))
+
 
 def userNotice_cb(time, server, from_str, target, message):
 	"""
 		A user noticed to a channel (target).
 	"""
 	nick = parse_from(from_str)[0]
-	server_tab = gui.tabs.search_tab(server)
+	(server_tab, target_tab) = gui.tabs.search_tab(server, target)
 
 	if nick.lower() == server_tab.nick.lower():
 		ownNotice_cb(time, server, target, message)
 		return
+
 	elif target.lower() == server_tab.nick.lower():
 		queryNotice_cb(time, server, from_str, message)
 		return
 
-	gui.output.channelPrint(time, server, target,
+	target_tab.write(time,
 			"-<font foreground='%s' weight='bold'>%s</font>- "
 			"<font foreground='%s'>%s</font>" % (
 				color.get_nick_color(nick),
-				gui.output.escape(nick),
+				markup.escape(nick),
 				color.get_text_color(nick),
-				gui.output.escape(message)))
+				markup.escape(message)))
+
 
 def ownAction_cb(time, server, channel, action):
 
-	_createTab(server, channel)
+	tab = _createTab(server, channel)
 
 	nickColor = config.get("colors","own_nick","#000000")
 	textColor = config.get("colors","own_text","#000000")
 
-	gui.output.channelPrint(time, server, channel,
+	tab.write(time,
 		"<font foreground='%s' weight='bold'>%s</font> "
 		"<font foreground='%s'>%s</font>" % (
 			nickColor,
 			gui.tabs.search_tab(server).nick,
 			textColor,
-			gui.output.escape(action)))
+			markup.escape(action)))
+
 
 def actionQuery_cb(time, server, from_str, action):
+	""" action in a query """
 
 	nick = parse_from(from_str)[0]
 
-	_createTab(server, nick)
+	tab = _createTab(server, nick)
 
-	gui.output.channelPrint(time, server, nick,
-		"%s %s" % (nick, gui.output.escape(action)))
+	tab.write(time, "%s %s" % (nick, markup.escape(action)))
 
 	gui.mgmt.set_urgent(True)
 
+
 def userAction_cb(time, server, from_str, channel, action):
-	"""
-		A user sent a action (text in third person)
-	"""
+	""" normal action """
+
 	nick = parse_from(from_str)[0]
-	server_tab = gui.tabs.search_tab(server)
+	(server_tab, channel_tab) = gui.tabs.search_tabs(server, channel)
 
 	if nick.lower() == server_tab.nick.lower():
 		ownAction_cb(time, server, channel, action)
@@ -817,20 +840,26 @@ def userAction_cb(time, server, from_str, channel, action):
 		actionQuery_cb(time, server, from_str, action)
 		return
 
-	action = gui.output.escape(action)
+	action = markup.escape(action)
 
 	if isHighlighted(server_tab, action):
 		type = "highlightaction"
 		actionString = action
 		gui.mgmt.set_urgent(True)
+
 	else:
 		type = "action"
 		actionString = "<font foreground='%s'>%s</font>" % (
 			color.get_text_color(nick), action)
 
-	gui.output.channelPrint(time, server, channel,
-		"<font foreground='%s' weight='bold'>%s</font> %s" % (
-			color.get_nick_color(nick), nick, actionString), type)
+	channel_tab.write(
+			time,
+			"<font foreground='%s' weight='bold'>%s</font> %s" % (
+				color.get_nick_color(nick),
+				nick,
+				actionString),
+			type)
+
 
 def userNick_cb(time, server, from_str, newNick):
 	"""
@@ -876,23 +905,25 @@ def userNick_cb(time, server, from_str, newNick):
 				continue
 
 		if tab.is_query() and tab.name != newNick:
+			# ignore not associated queries
 			continue
 
 		nickString = "<font foreground='%s' weight='bold'>%s</font>" % (
 			color.get_nick_color(nick),
-			gui.output.escape(nick))
+			markup.escape(nick))
 
 		newNickString = "<font foreground='%s' weight='bold'>%s</font>" % (
 			color.get_nick_color(newNick),
-			gui.escape(newNick))
+			markup.escape(newNick))
 
 		if doPrint:
-			gui.channelPrint(time, server, tab.name,
+			tab.write(time,
 				message % {
 					"nick": nickString,
 					"newnick": newNickString
 				},
 				"action")
+
 
 def userKick_cb(time, server, from_str, channel, who, reason):
 	"""
@@ -908,13 +939,13 @@ def userKick_cb(time, server, from_str, channel, who, reason):
 		return
 
 	channelString = "<font foreground='%s'>%s</font>" % (
-		color.get_text_color(channel), gui.escape(channel))
+		color.get_text_color(channel), markup.escape(channel))
 
 	nickString = "<font foreground='%s' weight='bold'>%s</font>" % (
-		color.get_nick_color(nick), gui.escape(nick))
+		color.get_nick_color(nick), markup.escape(nick))
 
 	reasonString = "<font foreground='%s'>%s</font>" % (
-		color.get_text_color(nick), gui.escape(reason))
+		color.get_text_color(nick), markup.escape(reason))
 
 	if who == server_tab.nick:
 		tab.joined = False
@@ -927,13 +958,12 @@ def userKick_cb(time, server, from_str, channel, who, reason):
 					"nick": nickString,
 					"reason": reasonString })
 
-			gui.channelPrint(time, server, channel, message,
-				"highlightaction")
+			tab.write(time, message, "highlightaction")
 
 	else:
 		tab.nickList.remove_nick(who)
 
-		if gui.tabs.is_active(tab):
+		if tab.is_active():
 			gui.set_user_count(
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
@@ -941,7 +971,7 @@ def userKick_cb(time, server, from_str, channel, who, reason):
 		if _show_output_exclusive(server_tab, tab, "kick"):
 
 			whoString = "<font foreground='%s' weight='bold'>%s</font>" % (
-				color.get_nick_color(who), gui.escape(who))
+				color.get_nick_color(who), markup.escape(who))
 
 			message = _(u"« %(who)s was kicked from %(channel)s by "
 						u"%(nick)s (%(reason)s).") % {
@@ -950,7 +980,7 @@ def userKick_cb(time, server, from_str, channel, who, reason):
 				"nick": nickString,
 				"reason": reasonString }
 
-			gui.channelPrint(time, server, channel, message, "action")
+			tab.write(time, message, "action")
 
 def userQuit_cb(time, server, from_str, reason):
 	"""
@@ -997,8 +1027,9 @@ def userQuit_cb(time, server, from_str, reason):
 			channelTab.connected = False
 
 			if not (hideServerPrint or hideChannelPrint):
-				gui.channelPrint(time, server, channelTab.name,
-					message % {"reason": reason}, "action")
+				channelTab.write(time, message % {
+									"reason": reason},
+								"action")
 
 	else: # another user quit the network
 
@@ -1012,11 +1043,11 @@ def userQuit_cb(time, server, from_str, reason):
 		nickString = "<font foreground='%s' weight='bold'>"\
 			"%s</font>" % (
 				color.get_nick_color(nick),
-				gui.escape(nick))
+				markup.escape(nick))
 
 		reasonString = "<font foreground='%s'>%s</font>" % (
 			color.get_text_color(nick),
-			gui.escape(reason))
+			markup.escape(reason))
 
 		message = message % {
 			"nick": nickString,
@@ -1038,8 +1069,7 @@ def userQuit_cb(time, server, from_str, reason):
 
 				if (not (hideChannelPrint or hideServerPrint)
 				and channelTab.name.lower() == nick.lower()):
-					gui.channelPrint(time, server, channelTab.name,
-						message, "action")
+					channelTab.write(time, message, "action")
 
 				# skip nickList modification for queries
 				continue
@@ -1053,14 +1083,13 @@ def userQuit_cb(time, server, from_str, reason):
 			if nick in nicks:
 				nickList.remove_nick(nick)
 
-				if gui.tabs.is_active(channelTab):
+				if channelTab.is_active():
 					# update gui display for usercount
 					gui.set_user_count(len(nickList),
 						nickList.get_operator_count())
 
 				if not (hideServerPrint or hideChannelPrint):
-					gui.channelPrint(time, server, channelTab.name,
-						message, "action")
+					channelTab.write(time, message, "action")
 
 
 def userJoin_cb(timestamp, server, from_str, channel):
@@ -1087,11 +1116,11 @@ def userJoin_cb(timestamp, server, from_str, channel):
 					"userJoin_cb: adding tab for channel '%s' failed." % (
 					channel)
 
-			gui.print_last_log(server, channel)
+			tab.print_last_log()
 
 		tab.nickList.clear()
 
-		if gui.tabs.is_active(tab):
+		if tab.is_active():
 			gui.set_user_count(
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
@@ -1108,7 +1137,7 @@ def userJoin_cb(timestamp, server, from_str, channel):
 
 			nickString = "You"
 			channelString = "<font foreground='%s'>%s</font>" % (
-				color.get_text_color(channel), gui.escape(channel))
+				color.get_text_color(channel), markup.escape(channel))
 
 			message = _(u"» You have joined %(channel)s.")
 
@@ -1126,16 +1155,16 @@ def userJoin_cb(timestamp, server, from_str, channel):
 			nickString = "<font foreground='%s' weight='bold'>"\
 				"%s</font>" % (
 					color.get_nick_color(nick),
-					gui.escape(nick))
+					markup.escape(nick))
 
 			channelString = "<font foreground='%s'>%s</font>" % (
 				color.get_text_color(channel),
-				gui.escape(channel))
+				markup.escape(channel))
 
 
 		tab.nickList.append_nick(nick)
 
-		if gui.tabs.is_active(tab):
+		if tab.is_active():
 			gui.set_user_count(len(tab.nickList),
 				tab.nickList.get_operator_count())
 
@@ -1144,7 +1173,7 @@ def userJoin_cb(timestamp, server, from_str, channel):
 			"nick": nickString,
 			"channel": channelString }
 
-		gui.channelPrint(timestamp, server, channel, message, "action")
+		tab.write(timestamp, message, "action")
 
 def userNames_cb(timestamp, server, channel, nicks, prefixes):
 	"""
@@ -1166,7 +1195,7 @@ def userNames_cb(timestamp, server, channel, nicks, prefixes):
 			raise Exception, "adding tab for channel '%s' failed." % (
 				channel)
 
-		gui.print_last_log(server, channel)
+		tab.print_last_log()
 
 		tab.joined = True
 		tab.connected = True
@@ -1184,7 +1213,7 @@ def userNames_cb(timestamp, server, channel, nicks, prefixes):
 			if prefixes[i]:
 				tab.nickList.set_prefix(nicks[i], prefixes[i], sort=False)
 
-		if gui.tabs.is_active(tab):
+		if tab.is_active():
 			gui.set_user_count(
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
@@ -1213,27 +1242,27 @@ def userPart_cb(timestamp, server, from_str, channel, reason):
 		if _show_output_exclusive(stab, tab, "part", own = True):
 
 			channelString = "<font foreground='%s'>%s</font>" % (
-				color.get_text_color(channel), gui.escape(channel))
+				color.get_text_color(channel), markup.escape(channel))
 
 			reasonString = "<font foreground='%s'>%s</font>" % (
-				color.get_text_color(nick), gui.escape(reason))
+				color.get_text_color(nick), markup.escape(reason))
 
 			if reason:
 				message = _(u"« You have left %(channel)s (%(reason)s).")
 			else:
 				message = _(u"« You have left %(channel)s.")
 
-			gui.channelPrint(timestamp, server, channel,
-				message % {
-					"channel": channelString,
-					"reason": reasonString },
-				"action")
+			tab.write(timestamp,
+						message % {
+							"channel": channelString,
+							"reason": reasonString },
+						"action")
 
 	else: # another user parted
 
 		tab.nickList.remove_nick(nick)
 
-		if gui.tabs.is_active(tab):
+		if tab.is_active():
 			gui.set_user_count(
 				len(tab.nickList),
 				tab.nickList.get_operator_count())
@@ -1242,13 +1271,13 @@ def userPart_cb(timestamp, server, from_str, channel, reason):
 
 			nickString = "<font foreground='%s' weight='bold'>"\
 				"%s</font>" % (
-				color.get_nick_color(nick), gui.escape(nick))
+				color.get_nick_color(nick), markup.escape(nick))
 
 			channelString = "<font foreground='%s'>%s</font>" % (
-				color.get_text_color(channel), gui.escape(channel))
+				color.get_text_color(channel), markup.escape(channel))
 
 			reasonString = "<font foreground='%s'>%s</font>" % (
-				color.get_text_color(nick), gui.escape(reason))
+				color.get_text_color(nick), markup.escape(reason))
 
 			if reason:
 				message = _(u"« %(nick)s has left %(channel)s "\
@@ -1256,13 +1285,13 @@ def userPart_cb(timestamp, server, from_str, channel, reason):
 			else:
 				message = _(u"« %(nick)s has left %(channel)s.")
 
-			gui.channelPrint(timestamp, server, channel,
-				message % {
-					"nick": nickString,
-					"channel": channelString,
-					"reason": reasonString
-					},
-				"action")
+			tab.write(timestamp,
+						message % {
+							"nick": nickString,
+							"channel": channelString,
+							"reason": reasonString},
+						"action")
+
 
 def userError_cb(time, server, domain, reason, arguments):
 	if domain == "no_such":
@@ -1273,28 +1302,31 @@ def userError_cb(time, server, domain, reason, arguments):
 
 	elif domain == "privilege":
 		if reason == "channel_operator":
+			tab = gui.tabs.search_tab(server, arguments[0])
+
 			message = _(u"• You are not a channel operator.")
-			gui.channelPrint(time, server, arguments[0], message)
+			tab.write(time, message)
+
 
 def noSuch(time, server, target, type):
 	""" Signal is emitted if maki can't find the target on the server. """
 
-	tab = gui.tabs.search_tab(server, target)
+	(server_tab, tab) = gui.tabs.search_tabs(server, target)
 
 	if type == "nick":
 		error = _(u"• %(target)s: No such nick/channel.") % {
-			"target": gui.escape(target) }
+			"target": markup.escape(target) }
 	elif type == "server":
 		error = _(u"• %(target)s: No such server.") % {
-			"target": gui.escape(target) }
+			"target": markup.escape(target) }
 	elif type == "channel":
 		error = _(u"• %(target)s: No such channel.") % {
-			"target": gui.escape(target) }
+			"target": markup.escape(target) }
 
 	if tab:
-		gui.channelPrint(time, server, target, error)
+		tab.write(time, error)
 	else:
-		gui.serverPrint(time, server, error)
+		server_tab.write(time, error)
 
 def cannotJoin(time, server, channel, reason):
 	""" The channel could not be joined.
@@ -1325,77 +1357,75 @@ def cannotJoin(time, server, channel, reason):
 		else:
 			message = _("You need the correct channel key.")
 
-	gui.currentServerPrint (time, server,
+	server_tab = gui.tabs.search_tab(server)
+
+	server_tab.current_write(time,
 		_("You can not join %(channel)s: %(reason)s" % {
 			"channel":channel,
 			"reason":message
-			}
-		))
+			}))
+
 
 def channelList_cb(time, server, channel, users, topic):
 	""" Signal for /list command.
 		Prints content of the listing.
 	"""
 
-	def init_channelList():
-		channelList_cb._text = []
-		channelList_cb._line = 0
+	self = code.init_function_attrs(channelList_cb,
+		_text=[],
+		_line=0,
+		_tab=gui.tabs.search_tab(server))
 
-		serverTab = gui.tabs.search_tab(server)
-		channelList_cb._buf = serverTab.window.textview.get_buffer()
-
-	def print_listing(buf, text):
-		buf.insertHTML(buf.get_end_iter(), "<br/>".join(text))
+	def print_listing():
+		self._tab.write_raw("<br/>".join(self._text))
 		return False
-
-	try:
-		channelList_cb._init
-	except AttributeError:
-		channelList_cb._init = 0
-
-	if not channelList_cb._init:
-		init_channelList()
-		channelList_cb._init = 1
 
 	if not channel and not topic and users == -1:
 		# listing ended, reset variables
 
-		if channelList_cb._line > 0:
+		def print_end():
+			self._tab.write(time, "End of list.")
+			return False
+
+		if self._line > 0:
 			# print rest
-			gobject.idle_add(print_listing, channelList_cb._buf,
-				channelList_cb._text)
+			gobject.idle_add(print_listing)
 
-		gobject.idle_add(gui.serverPrint, time, server, "End of list.")
+		gobject.idle_add(print_end)
 
-		init_channelList()
-		channelList_cb._init = 0
+		code.reset_function_attrs(channelList_cb)
 
 	else:
-		channelList_cb._text.append(("• <b>%s</b><br/>"+
-			"\t%d "+_("User")+"<br/>"+
-			"\t"+_("Topic")+": \"%s\"") % \
-			(gui.escape(channel), users, gui.escape(topic)))
+		self._text.append(("• <b>%s</b><br/>\t%d "+_("User")+"<br/>"+
+							"\t"+_("Topic")+": \"%s\"") % (
+								markup.escape(channel),
+								users,
+								markup.escape(topic)))
 
-		channelList_cb._line += 1
+		self._line += 1
 
-		if channelList_cb._line == 10:
-			gobject.idle_add(print_listing, channelList_cb._buf,
-				channelList_cb._text)
+		if self._line == 10:
+			gobject.idle_add(print_listing)
 
-			channelList_cb._text = []
-			channelList_cb._line = 0
+			self._text = []
+			self._line = 0
+
 
 def whois_cb(time, server, nick, message):
 	""" message = "" => end of whois """
+
+	server_tab = gui.tabs.search_tab(server)
+
 	if message:
-		gui.serverPrint(time, server,
+		server_tab.write(time,
 			_(u"[%(nick)s] %(message)s") % {
-				"nick": gui.escape(nick),
-				"message": gui.escape(message) })
+				"nick": markup.escape(nick),
+				"message": markup.escape(message) })
 	else:
-		gui.serverPrint(time, server,
+		server_tab.write(time,
 			_(u"[%(nick)s] End of whois.") % {
-				"nick": gui.escape(nick) })
+				"nick": markup.escape(nick) })
+
 
 def dcc_send_cb(time, id, server, sender, filename,
 			 size, progress, speed, status):

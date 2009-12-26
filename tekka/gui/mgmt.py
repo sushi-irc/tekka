@@ -3,6 +3,7 @@
 import gtk
 import gobject
 import pango
+import gettext
 from gettext import gettext as _
 
 from .. import config
