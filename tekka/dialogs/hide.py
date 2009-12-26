@@ -1,7 +1,8 @@
 import gtk
-import config
-import lib.tab as tabs
-from lib.gui_control import builder
+
+from .. import config
+from ..gui import tabs
+from ..gui import builder
 
 widgets = None
 active_tab = None
