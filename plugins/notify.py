@@ -69,7 +69,7 @@ class notify (sushi.Plugin):
 		self.disconnect_signal("action", self.action_cb)
 
 	def notify (self, subject, body):
-		if gui.has_focus():
+		if gui.mgmt.has_focus():
 			return
 
 		notification = pynotify.Notification(subject, body)
