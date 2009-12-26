@@ -27,12 +27,12 @@ SUCH DAMAGE.
 """
 
 import gtk.glade
-from com import sushi
-
 from gettext import gettext as _
-import lib.gui_control as gui_control
-import lib.dialog_control as dialog_control
-from lib.expanding_list import ExpandingList
+
+from ..com import sushi
+from .. import gui
+from ..lib import dialog_control
+from ..lib.expanding_list import ExpandingList
 
 widgets = None
 commandList = None
@@ -64,7 +64,7 @@ def createCommandList(glade, fun_name, widget_name, *x):
 def setup():
 	global widgets
 
-	widgets = gui_control.builder.load_dialog("serverAdd", custom_handler = createCommandList)
+	widgets = gui.builder.load_dialog("serverAdd", custom_handler = createCommandList)
 
 def dialog_response_cb(dialog, response_id, callback):
 	if response_id == RESPONSE_ADD:
@@ -72,7 +72,7 @@ def dialog_response_cb(dialog, response_id, callback):
 		server = widgets.get_object("servernameEntry").get_text()
 
 		if not server:
-			gui_control.show_error_dialog(
+			gui.mgmt.show_error_dialog(
 				title = _("No server name given."),
 				message = _("You must enter a server name."))
 			return

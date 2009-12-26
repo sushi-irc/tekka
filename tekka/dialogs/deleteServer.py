@@ -28,9 +28,9 @@ SUCH DAMAGE.
 
 import gtk
 import gtk.glade
-import config
 
-from lib.gui_control import builder
+from .. import config
+from ..gui import builder
 
 widgets = None
 

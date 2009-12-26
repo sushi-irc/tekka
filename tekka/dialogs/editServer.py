@@ -29,11 +29,11 @@ SUCH DAMAGE.
 import gtk
 import gtk.glade
 
-import config
+from .. import config
 
-from com import sushi
-from lib.expanding_list import ExpandingList
-from lib.gui_control import builder
+from ..com import sushi
+from ..lib.expanding_list import ExpandingList
+from ..gui import builder
 
 def setup():
 	pass
