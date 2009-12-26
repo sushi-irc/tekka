@@ -52,12 +52,21 @@ from ..helper import markup
 from ..typecheck import types
 
 
-def __write_to_general_output(msgtype, timestring, tab, message):
+def _write_to_general_output(msgtype, timestring, tab, message):
 	""" channel can be empty """
 	goBuffer = widgets.get_widget("generalOutput").get_buffer()
 
 	filter = config.get_list("general_output", "filter", [])
 	logging.debug("filter: %s" % (filter))
+
+
+	if type(tab) == TekkaServer:
+		server = tab.name
+		channel = ""
+	else:
+		server = tab.server.name
+		channel = tab.name
+
 
 	for tuple_str in filter:
 
