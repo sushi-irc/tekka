@@ -255,7 +255,7 @@ def tekka_tab_remove_cb(tab):
 			# XXX:: useable, though.
 			gui.mgmt.set_useable(False)
 		else:
-			gui.tabs.switch_to_tab(nextTab)
+			nextTab.switch_to()
 
 	elif (tab.is_server()
 	and len(gui.get_widget("serverTree").get_model()) == 1):
@@ -503,7 +503,7 @@ def nickList_row_activated_cb(nickList, path, column):
 	gui.tabs.add_tab(serverTab, query)
 
 	gui.print_last_log("", "", tab = query)
-	gui.tabs.switch_to_tab(query)
+	query.switch_to()
 
 def nickList_button_press_event_cb(nickList, event):
 	"""

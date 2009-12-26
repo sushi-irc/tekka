@@ -496,7 +496,7 @@ def tekkaQuery(currentServer, currentTab, args):
 		gui.print_last_log(currentServer.name, nick)
 	else:
 		# jump to query
-		gui.tabs.switch_to_tab(tab)
+		tab.switch_to()
 
 def tekkaClear(currentServer, currentTab, args):
 	"""

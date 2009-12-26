@@ -1,6 +1,6 @@
 import gtk
 
-from . import tabs
+import tekka.gui.tabs # FIXME: .tabs is using this file, too.
 from . import widgets
 from .. import config
 from ..helper import shortcuts
@@ -87,6 +87,8 @@ def update_servertree_shortcuts():
 		shortcuts to tabs for switching.
 	"""
 	global _accelGroup
+
+	tabs = tekka.gui.tabs
 
 	tabList = tabs.get_all_tabs()
 	st = widgets.get_widget("serverTree")

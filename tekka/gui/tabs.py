@@ -33,6 +33,7 @@ from dbus import UInt64
 
 from . import builder
 from . import mgmt
+from . import shortcuts
 from . import _widgets
 widgets = _widgets.widgets
 
@@ -893,7 +894,7 @@ def add_tab(server, object, update_shortcuts=True):
 			store.get_path(store.iter_parent(iter)), True)
 
 	if update_shortcuts:
-		mgmt.update_servertree_shortcuts()
+		shortcuts.update_servertree_shortcuts()
 
 	return object.path
 
@@ -933,7 +934,7 @@ def remove_tab(tab, update_shortcuts=True):
 	__updateLowerRows(store, nextIter)
 
 	if update_shortcuts:
-		mgmt.update_servertree_shortcuts()
+		shortcuts.update_servertree_shortcuts()
 
 	return True
 
