@@ -30,7 +30,7 @@ import gtk
 from gettext import gettext as _
 
 from .. import config
-from ..gui import builder
+from .. import gui
 from ..com import sushi
 from ..helper.singleton import SingletonMeta
 
@@ -45,7 +45,7 @@ class ServerTreeMenu(object):
 
 	def __init__(self):
 		self.menu = None
-		self.widgets = builder.load_menu("serverTreeMenu")
+		self.widgets = gui.builder.load_menu("serverTreeMenu")
 
 		if not self.widgets:
 			d = inline_dialog.InlineMessageDialog(
@@ -54,7 +54,7 @@ class ServerTreeMenu(object):
 				  "It's possible that there are files missing. "
 				  "Check if you have appropriate permissions to "
 				  "access all files needed by tekka and restart tekka."))
-			gui_control.show_inline_dialog(d)
+			gui.mgmt.show_inline_dialog(d)
 			d.connect("response", lambda d,i: d.destroy())
 			return
 
@@ -197,8 +197,8 @@ class ServerTreeMenu(object):
 				self.current_tab.name,
 				config.get("chatting", "quit_message", ""))
 
-		gui_control.tabs.remove_tab(self.current_tab)
-		gui_control.updateServerTreeShortcuts()
+		gui.tabs.remove_tab(self.current_tab)
+		gui.shortcuts.updateServerTreeShortcuts()
 
 	def autoJoinItem_toggled_cb(self, item):
 		""" set the auto join state of the tab to the state
@@ -249,7 +249,7 @@ class ServerTreeMenu(object):
 			self.current_tab.server.name,
 			self.current_tab.name)
 		d.connect("response", dialog_response_cb)
-		gui_control.show_inline_dialog(d)
+		gui.mgmt.show_inline_dialog(d)
 
 	def setKeyItem_activate_cb(self, item):
 		""" show up dialog for key setting """
@@ -265,5 +265,5 @@ class ServerTreeMenu(object):
 		d.checkButton.set_active(True)
 		d.connect("response", lambda d,i: d.destroy())
 
-		gui_control.show_inline_dialog(d)
+		gui.mgmt.show_inline_dialog(d)
 
