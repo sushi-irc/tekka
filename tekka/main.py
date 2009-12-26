@@ -179,11 +179,11 @@ def tekka_tab_new_name_cb(tab, name):
 def tekka_tab_server_connected_cb(tab, connected):
 	""" the server of the tab connected/disconnected """
 	if not connected:
-		gui.tabs.set_useable(tab, False)
+		tab.set_useable(False)
 
 def tekka_channel_joined_cb(tab, switch):
 	""" channel received a change on joined attribute """
-	gui.tabs.set_useable(tab, switch)
+	tab.set_useable(switch)
 
 def tekka_channel_topic_cb(tab, topic):
 	""" topic set """
@@ -193,7 +193,7 @@ def tekka_tab_new_path_cb(tab, new_path):
 	""" a new path is set to the path """
 	pass
 
-def tekka_tab_switched_cb(tabclass, old, new):
+def tekka_tab_switched_cb(old, new):
 	""" switched from tab old to tab new """
 	inputBar = gui.widgets.get_widget("inputBar")
 
