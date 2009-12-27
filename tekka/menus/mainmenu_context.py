@@ -8,6 +8,7 @@ from .. import gui
 from ..lib import dialog_control
 from ..lib.inline_dialog import InlineMessageDialog
 
+
 class MenuContextType(object):
 
 	def __init__(self, name = "", widgets = None):
@@ -32,7 +33,9 @@ class MenuContextType(object):
 				pass
 		return object.__getattr__(self, attr)
 
+
 class MainMenuContext(MenuContextType):
+
 
 	class TekkaMenuContext(MenuContextType):
 
@@ -58,11 +61,17 @@ class MainMenuContext(MenuContextType):
 					for server in server_list:
 						com.sushi.connect(server)
 
-			dialog_control.show_dialog(
-				"server", server_dialog_callback, need_sushi = True)
+			try:
+				dialog_control.show_dialog(
+					"server", server_dialog_callback, need_sushi = True)
+			except com.NoSushiError as e:
+				d = InlineMessageDialog("NoSushiError", e.args[0])
+				d.connect("response", lambda w,i: w.destroy())
+				gui.mgmt.show_inline_dialog(d)
 
 		def quit_activate_cb(self, item):
 			main_quit()
+
 
 	class MakiMenuContext(MenuContextType):
 
@@ -98,6 +107,7 @@ class MainMenuContext(MenuContextType):
 				com.sushi.shutdown(config.get(
 					"chatting",
 					"quit_message", ""))
+
 
 	class ViewMenuContext(MenuContextType):
 
@@ -185,6 +195,7 @@ class MainMenuContext(MenuContextType):
 
 			config.set("tekka", "show_topic_bar", str(item.get_active()))
 
+
 	class DialogsMenuContext(MenuContextType):
 
 		""" Dialogs menu
@@ -252,6 +263,7 @@ class MainMenuContext(MenuContextType):
 		def preferences_activate_cb(self, item):
 			dialog_control.show_dialog("preferences")
 
+
 	class HelpMenuContext(MenuContextType):
 
 		""" Help menu
@@ -278,12 +290,27 @@ class MainMenuContext(MenuContextType):
 			d.connect("response", lambda d,i: d.destroy())
 			d.show_all()
 
+
 	def __init__(self, *args, **kwargs):
 		MenuContextType.__init__(self, *args, **kwargs)
 
-		self.tekka = self.TekkaMenuContext(name = "menu_tekka", widgets = self.widgets)
-		self.maki = self.MakiMenuContext(name = "menu_maki", widgets = self.widgets)
-		self.view = self.ViewMenuContext(name = "menu_View", widgets = self.widgets)
-		self.dialogs = self.DialogsMenuContext(name = "menu_Dialogs", widgets = self.widgets)
-		self.help = self.HelpMenuContext(name = "menu_Help", widgets = self.widgets)
+		self.tekka = self.TekkaMenuContext(
+			name="menu_tekka",
+			widgets=self.widgets)
+
+		self.maki = self.MakiMenuContext(
+			name="menu_maki",
+			widgets=self.widgets)
+
+		self.view = self.ViewMenuContext(
+			name="menu_View",
+			widgets=self.widgets)
+
+		self.dialogs = self.DialogsMenuContext(
+			name="menu_Dialogs",
+			widgets=self.widgets)
+
+		self.help = self.HelpMenuContext(
+			name="menu_Help",
+			widgets=self.widgets)
 
