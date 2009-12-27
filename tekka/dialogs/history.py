@@ -41,27 +41,39 @@ from .. import com
 from .. import gui
 from ..lib.search_toolbar import SearchBar
 
+
 widgets = None
 date_pattern = re.compile(r"(\d{4})-(\d{2})-(\d{2})")
 
+
 def _rsplit_generator(text, substring, start=None):
-	# TODO: test performance
-	if start == None:
-		next = len(text)
+	if start != None:
+		rStart = start
 	else:
-		next = start
+		rStart = len(text)
 
-	while True:
-		stext = text[0:next]
-		split = stext.rsplit(substring, 1)
-
-		if next <= 0 or len(split) == 1:
-			break
-
-		next -= len(substring)+len(split[1])
-		yield next, split[1]
-	else:
+	if text.rfind(substring) < 0:
+		yield (-1, text)
 		raise StopIteration
+
+	split = text.split(substring, rStart)
+	split.reverse()
+
+	lastHigh = rStart
+
+	for i in split:
+		index = text.rfind(i, 0, lastHigh)
+
+		if index >= 0:
+			if i == "" and i != text:
+				index = 0
+			elif text[index - len(substring):index] == substring:
+				# complete match
+				lastHigh = index
+
+		yield (index, i)
+	raise StopIteration
+
 
 class HistorySearchBar(SearchBar):
 
