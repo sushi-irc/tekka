@@ -30,8 +30,8 @@ import logging
 import gtk
 from gettext import gettext as _
 
-import tekka.config
-from tekka.com import sushi, NoSushiError
+from ..com import sushi, NoSushiError
+
 
 def loadDialog(name):
 	importName = "tekka.dialogs."+name
@@ -49,6 +49,7 @@ def loadDialog(name):
 
 	dialog.setup()
 	return dialog
+
 
 def show_dialog(name, *param, **dparams):
 	d = loadDialog(name)
