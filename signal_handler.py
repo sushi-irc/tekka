@@ -295,10 +295,11 @@ def serverMOTD_cb(time, server, message, first_time = {}):
 	"""
 	if not first_time.has_key(server):
 		tab = gui.tabs.search_tab(server)
+
 		if not tab:
 			tab = _setup_server(server)
 		else:
-			gui.tabs.update_server(tab)
+			tab.update()
 
 		gui.status.unset("connecting")
 		tab.connected = True
