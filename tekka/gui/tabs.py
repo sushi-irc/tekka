@@ -903,7 +903,7 @@ def add_tab(server, object, update_shortcuts=True):
 			store.get_path(store.iter_parent(iter)), True)
 
 	if update_shortcuts:
-		shortcuts.update_servertree_shortcuts()
+		shortcuts.assign_numeric_tab_shortcuts(get_all_tabs())
 
 	return object.path
 
@@ -943,7 +943,7 @@ def remove_tab(tab, update_shortcuts=True):
 	__updateLowerRows(store, nextIter)
 
 	if update_shortcuts:
-		shortcuts.update_servertree_shortcuts()
+		shortcuts.assign_numeric_tab_shortcuts(get_all_tabs())
 
 	return True
 

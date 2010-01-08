@@ -147,7 +147,7 @@ def _add_channels(server_tab):
 		topic = sushi.channel_topic(server_tab.name, channel)
 		_report_topic(mtime.time(), server_tab.name, channel, topic)
 
-	gui.shortcuts.update_servertree_shortcuts()
+	gui.shortcuts.assign_numeric_tab_shortcuts(gui.tabs.get_all_tabs())
 
 def isHighlighted (server_tab, text):
 	def has_highlight(text, needle):

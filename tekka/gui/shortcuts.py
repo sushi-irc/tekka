@@ -1,6 +1,5 @@
 import gtk
 
-import tekka.gui.tabs # FIXME: .tabs is using this file, too.
 from . import widgets
 from .. import config
 from ..helper import shortcuts
@@ -81,16 +80,12 @@ def setup_shortcuts():
 	associate_handler("show_sidepane", "<ctrl>s", "menu_View_showSidePane")
 
 
-def update_servertree_shortcuts():
-	"""	Iterates through the TreeModel
-		of the server tree and sets 9
-		shortcuts to tabs for switching.
+def assign_numeric_tab_shortcuts(tabList):
+	""" assign numeric shortcuts (alt+N) for each
+		tab in the list tabs.
 	"""
 	global _accelGroup
 
-	tabs = tekka.gui.tabs
-
-	tabList = tabs.get_all_tabs()
 	st = widgets.get_widget("serverTree")
 
 	for i in range(1, 10):
@@ -106,7 +101,7 @@ def update_servertree_shortcuts():
 			continue
 
 		shortcuts.addShortcut(_accelGroup, st, "<alt>%d" % (c),
-			lambda w, s, p: tabs.switch_to_path(p), tab.path)
+			lambda w, s, p: p.switch_to(), tab)
 
 		c+=1
 

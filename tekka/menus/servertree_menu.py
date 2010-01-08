@@ -198,7 +198,7 @@ class ServerTreeMenu(object):
 				config.get("chatting", "quit_message", ""))
 
 		gui.tabs.remove_tab(self.current_tab)
-		gui.shortcuts.update_servertree_shortcuts()
+		gui.shortcuts.assign_numeric_tab_shortcuts(gui.tabs.get_all_tabs())
 
 	def autoJoinItem_toggled_cb(self, item):
 		""" set the auto join state of the tab to the state
