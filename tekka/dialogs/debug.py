@@ -28,8 +28,7 @@ SUCH DAMAGE.
 
 import gtk
 from gettext import gettext as _
-import lib.gui_control as gui
-import __main__
+from .. import gui
 import logging
 
 error_textview = gtk.TextView()
