@@ -32,6 +32,7 @@ class WelcomeWindow(OutputWindow):
 		# Create Header label
 		self.label = gtk.Label()
 		self.label.set_property("yalign", 1)
+		self.label.set_property("xalign", 0.05)
 		self.label.set_markup(
 			_("<big><b>Welcome to tekka!</b></big>"))
 
@@ -49,15 +50,17 @@ class WelcomeWindow(OutputWindow):
 
 		self.table.attach(self.lbox, 1, 2, 0, 1,
 			xoptions=gtk.FILL|gtk.EXPAND,
-			yoptions = gtk.FILL|gtk.EXPAND)
+			yoptions=gtk.FILL|gtk.EXPAND)
 
 		# Create Description label
 		self.descr = gtk.Label()
 		self.descr.set_properties(
-			selectable = True,
-			use_markup = True,
-			width_chars = 30,
-			wrap = True)
+			xalign=0.05,
+			yalign=0.2,
+			selectable=True,
+			use_markup=True,
+			width_chars=30,
+			wrap=True)
 
 		# Add Description to table
 		self.dbox = gtk.EventBox()
