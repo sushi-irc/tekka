@@ -33,13 +33,16 @@ from gettext import gettext as _
 import gtk
 import gtk.glade
 
-import com
-import signals
-import config
 import logging
 
-from lib.gui_control import show_inline_dialog, markup_escape, builder
-from lib.inline_dialog import InlineMessageDialog
+from .. import com
+from .. import signals
+from .. import config
+
+from ..gui import builder
+from ..gui.mgmt import show_inline_dialog
+from ..helper.markup import markup_escape
+from ..lib.inline_dialog import InlineMessageDialog
 
 widgets = None
 currentServer = None
@@ -52,12 +55,14 @@ cache = []  # /list cache
 def clearProgressBar():
 	widgets.get_object("progressBar").set_fraction(0)
 
+
 def run(server):
 	""" Show the dialog until close was hit. """
-	if not widgets:
-		return
 
 	global currentServer, cache
+
+	if not widgets:
+		return
 
 	# clear the cache at the beginning
 	cache = []
@@ -69,17 +74,20 @@ def run(server):
 
 	dialog.show_all()
 
-	return True
+	return True # XXX: what is this for?
+
 
 def resetSignal(*x):
 	""" reset the list signal to the original state """
 	signals.disconnect_signal ("list", sushiList)
+
 
 def stopListButton_clicked_cb(button):
 	global cache
 	signals.disconnect_signal ("list", sushiList)
 	cache = [] # we don't want an incomplete cache?
 	clearProgressBar()
+
 
 def listButton_clicked_cb(button):
 	"""
@@ -125,6 +133,7 @@ def listButton_clicked_cb(button):
 			logging.error("Error in getting list: %s" % (e))
 			resetSignal()
 
+
 def listView_row_activated_cb(treeView, path, column):
 	"""
 	clicked on a channel.
@@ -139,6 +148,7 @@ def listView_row_activated_cb(treeView, path, column):
 
 	com.sushi.join(currentServer, channel,
 		com.sushi.server_get(currentServer, channel, "key"))
+
 
 def sushiList(time, server, channel, user, topic):
 	"""
@@ -167,11 +177,13 @@ def sushiList(time, server, channel, user, topic):
 		store.append(row=(markup_escape(channel), int(user),
 			markup_escape(topic)))
 
+
 def dialog_response_cb(dialog, id):
 	if id in (gtk.RESPONSE_NONE, gtk.RESPONSE_DELETE_EVENT,
 	gtk.RESPONSE_CLOSE):
 		resetSignal()
 		dialog.destroy()
+
 
 def setup():
 	global widgets, listView
