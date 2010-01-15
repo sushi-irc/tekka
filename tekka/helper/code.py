@@ -11,11 +11,14 @@ def init_function_attrs(fun, **vars):
 		Usage: self = init_function_attr(myFun, a = 2, b = 3)
 		Results in: self = myFun, self.a = 2, self.b = 3
 	"""
+	unique_attr = _generate_unique_attribute(fun)
+
 	try:
-		getattr(fun, _generate_unique_attribute(fun))
+		getattr(fun, unique_attr)
 	except AttributeError:
 		for (key, val) in vars.items():
 			setattr(fun, key, val)
+		setattr(fun, unique_attr, True)
 
 	return fun
 
