@@ -1511,11 +1511,10 @@ def dcc_send_cb(time, id, server, sender, filename,
 						  "filename":filename,
 						  "sender":sender,
 						  "size":size,
-						  "server":server}))
+						  "server":server}),
+					icon=gtk.STOCK_DIALOG_INFO)
 
 				d.connect("response", lambda d,i: d.destroy())
 				gui.mgmt.show_inline_dialog(d)
 
 				self.dcc_notifies[id] = True
-
-
