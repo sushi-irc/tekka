@@ -778,27 +778,33 @@ def queryNotice_cb(time, server, from_str, message):
 
 
 def userNotice_cb(time, server, from_str, target, message):
-	"""
-		A user noticed to a channel (target).
-	"""
+	""" An incoming notice """
 	nick = parse_from(from_str)[0]
 	(server_tab, target_tab) = gui.tabs.search_tabs(server, target)
 
 	if nick.lower() == server_tab.nick.lower():
+		# we wrote that notice
 		ownNotice_cb(time, server, target, message)
 		return
 
 	elif target.lower() == server_tab.nick.lower():
+		# it's supposed to be a private (query) message
 		queryNotice_cb(time, server, from_str, message)
 		return
 
-	target_tab.write(time,
-			"-<font foreground='%s' weight='bold'>%s</font>- "
-			"<font foreground='%s'>%s</font>" % (
+	message = "-<font foreground='%s' weight='bold'>%s</font>- "\
+			  "<font foreground='%s'>%s</font>" % (
 				color.get_nick_color(nick),
 				markup.escape(nick),
 				color.get_text_color(nick),
-				markup.escape(message)))
+				markup.escape(message))
+
+	if target_tab == None:
+		# global notice
+		server_tab.current_write(time, message)
+	else:
+		# channel/query notice
+		target_tab.write(time, message)
 
 
 def ownAction_cb(time, server, channel, action):
