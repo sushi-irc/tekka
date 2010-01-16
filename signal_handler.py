@@ -20,7 +20,9 @@ from tekka.com import sushi, parse_from
 from tekka.signals import connect_signal
 from tekka.lib import key_dialog
 from tekka.lib import dcc_dialog
+from tekka.lib import inline_dialog
 
+from tekka.helper import code
 from tekka.helper import color
 from tekka.helper import markup
 from tekka.typecheck import types
@@ -1352,7 +1354,7 @@ def cannotJoin(time, server, channel, reason):
 			# open a input dialog which asks for the key
 			d = key_dialog.KeyDialog(server, channel)
 			d.connect("response", key_dialog_response_cb)
-			gui.show_inline_dialog(d)
+			gui.mgmt.show_inline_dialog(d)
 			return
 
 		else:
@@ -1449,19 +1451,32 @@ def dcc_send_cb(time, id, server, sender, filename,
 			sushi.dcc_send_remove(tid)
 		dialog.destroy()
 
+
+	# create dcc_news new-transfer-cache
+	self = code.init_function_attrs(dcc_send_cb,
+		dcc_news={},
+		dcc_notifies={})
+
 	if (server == "" and sender == "" and filename == ""
 	and size == 0 and progress == 0 and speed == 0 and status == 0):
 
 		# send was removed
 		logging.debug("filetransfer %d removed." % (id))
+
+		try:
+			del self.dcc_news[id]
+			del self.dcc_notifies[id]
+		except KeyError:
+			pass
+
 		return
 
 	logging.debug("status is %d." % (status))
 
-	# import states
-	from helper.dcc import s_new, s_incoming, s_resumable
+	# import dcc transfer states
+	from tekka.helper.dcc import s_new, s_incoming, s_resumable, s_running
 
-	# handle incoming transfers
+	# handle incoming transfer
 	if status & s_incoming == s_incoming:
 
 		if status & s_new == s_new:
@@ -1472,7 +1487,29 @@ def dcc_send_cb(time, id, server, sender, filename,
 				filename, size,
 				resumable = (status & s_resumable == s_resumable))
 
+			self.dcc_news[id] = True
+
 			d.connect("response", dcc_dialog_response_cb, id)
-			gui.show_inline_dialog(d)
+			gui.mgmt.show_inline_dialog(d)
+
+		elif status & s_running and status & s_incoming:
+			if not self.dcc_news.has_key(id) and not self.dcc_notifies.has_key(id):
+				# notify about auto accepted file transfer
+				d = inline_dialog.InlineMessageDialog(
+					_("Auto accepted file transfer"),
+					_("maki auto accepted the following file transfer:\n"
+					  "Filename: %(filename)s\n"
+					  "Sender: %(filename)s\n"
+					  "Size: %(size)s\n"
+					  "Server: %(server)s" % {
+						  "filename":filename,
+						  "sender":sender,
+						  "size":size,
+						  "server":server}))
+
+				d.connect("response", lambda d,i: d.destroy())
+				gui.mgmt.show_inline_dialog(d)
+
+				self.dcc_notifies[id] = True
 
 
