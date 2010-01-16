@@ -41,7 +41,6 @@ from ..com import parse_from, sushi
 from ..lib import dialog_control
 from .. import gui
 from ..helper.dcc import s_incoming
-from ..helper.code import init_function_attrs
 
 widgets = None
 
@@ -58,68 +57,83 @@ widgets = None
 
 # TODO: accept/deny for incomings
 
+class DCCWatcher(object):
+
+	def __init__(self):
+		self.timer_id = glib.timeout_add(1000, self._refresh_sends)
+
+		self._init_cache()
+
+	def stop(self):
+		""" stop watching for dcc sends periodically """
+		gobject.source_remove(self.timer_id)
+
+	def refresh(self):
+		""" manually refresh the list by calling this method """
+		self._refresh_sends()
+
+	def _init_cache(self):
+		self.last_sends = []
+		self.row_id_map = {}
+
+	def _refresh_sends(self):
+		sends = sushi.dcc_sends()
+
+		if (sends == None and not sushi.connected) or len(sends) == 0:
+			return
+
+		view = widgets.get_object("transferView")
+		store = view.get_model()
+
+		# all ids
+		act_sends = sends[0]
+
+		to_remove = set(self.last_sends) - set(act_sends)
+		to_update = set(act_sends) - to_remove
+
+		for i in range(len(sends[0])):
+			id, server, sender, filename, size, progress, speed, status = \
+			[sends[n][i] for n in range(len(sends))]
+
+			if id in to_update:
+				if self.row_id_map.has_key(id):
+					# update existing entry
+					iter = self.row_id_map[id].iter
+
+					store.set(iter,
+						COL_STATUS, status,
+						COL_SIZE, size,
+						COL_PROGRESS, get_progress(progress, size),
+						COL_SPEED, speed)
+				else:
+					# add new entry
+
+					if not config.get_bool("dcc", "show_ident_in_dialog"):
+						sender = parse_from(sender)[0]
+
+					iter = store.append(row = (
+						status, id, server,
+						sender, filename,
+						size, get_progress(progress, size),
+						speed))
+
+					self.row_id_map[id] = store[store.get_path(iter)]
+
+		for id in to_remove:
+			if self.row_id_map.has_key(id):
+				store.remove(self.row_id_map[id].iter)
+
+		self.last_sends = act_sends
+
+		return True
+
+
 def get_progress(p, s):
 	return int(float(p)/s*100)
 
-def apply_dbus_sends():
-	def reset():
-		del apply_dbus_sends.last_sends
-		del apply_dbus_sends.row_id_map
-		del apply_dbus_sends.reset
-	self = init_function_attrs(apply_dbus_sends, last_sends = [], row_id_map = {}, reset = reset)
-
-	sends = sushi.dcc_sends()
-
-	if (sends == None and not sushi.connected) or len(sends) == 0:
-		return
-
-	view = widgets.get_object("transferView")
-	store = view.get_model()
-
-	# all ids
-	act_sends = sends[0]
-
-	to_remove = set(self.last_sends) - set(act_sends)
-	to_update = set(act_sends) - to_remove
-
-	for i in range(len(sends[0])):
-		id, server, sender, filename, size, progress, speed, status = \
-		[sends[n][i] for n in range(len(sends))]
-
-		if id in to_update:
-			if self.row_id_map.has_key(id):
-				# update existing entry
-				iter = self.row_id_map[id].iter
-
-				store.set(iter,
-					COL_STATUS, status,
-					COL_SIZE, size,
-					COL_PROGRESS, get_progress(progress, size),
-					COL_SPEED, speed)
-			else:
-				# add new entry
-
-				if not config.get_bool("dcc", "show_ident_in_dialog"):
-					sender = parse_from(sender)[0]
-
-				iter = store.append(row = (
-					status, id, server,
-					sender, filename,
-					size, get_progress(progress, size),
-					speed))
-				self.row_id_map[id] = store[store.get_path(iter)]
-
-	for id in to_remove:
-		if self.row_id_map.has_key(id):
-			store.remove(self.row_id_map[id].iter)
-
-	self.last_sends = act_sends
-
-	return True
-
-def cancel_transfer(transferID):
+def cancel_transfer(transferID, watcher):
 	sushi.dcc_send_remove(transferID)
-	apply_dbus_sends()
+	watcher.refresh()
 
 def get_selected_transfer_id():
 	view = widgets.get_object("transferView")
@@ -133,8 +147,9 @@ def get_selected_transfer_id():
 	else:
 		return id
 
-def dialog_response_cb(dialog, id, timer_id):
-	if id == 333:
+def dialog_response_cb(dialog, id, watcher):
+	if id == 333: # FIXME:  replace this with a meaningful ID
+				  # FIXME:: or connect to the button directly
 		# remove was clicked
 		def ask_are_you_sure():
 			# ask if the user is sure about removing the transfer
@@ -142,7 +157,7 @@ def dialog_response_cb(dialog, id, timer_id):
 			def dialog_reponse_cb(dialog, id, transferID):
 				if id == gtk.RESPONSE_YES:
 					# yes, remove it!
-					cancel_transfer(transferID)
+					cancel_transfer(transferID, watcher)
 				dialog.destroy()
 
 			transferID = get_selected_transfer_id()
@@ -165,9 +180,10 @@ def dialog_response_cb(dialog, id, timer_id):
 
 	else:
 		global widgets
-		gobject.source_remove(timer_id)
-		apply_dbus_sends.reset()
+
+		watcher.stop()
 		dialog.destroy()
+
 		widgets = None
 
 def run():
@@ -176,9 +192,9 @@ def run():
 	if dialog.get_property("visible"):
 		return
 
-	poll_timer_id = glib.timeout_add(1000, apply_dbus_sends)
+	watcher = DCCWatcher()
 
-	dialog.connect("response", dialog_response_cb, poll_timer_id)
+	dialog.connect("response", dialog_response_cb, watcher)
 	dialog.show()
 
 def create_list_model():
