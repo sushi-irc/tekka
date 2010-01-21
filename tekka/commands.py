@@ -504,7 +504,7 @@ def tekkaClear(currentServer, currentTab, args):
 
 		Usage: /clear
 	"""
-	gui.clear_all_outputs()
+	gui.mgmt.clear_all_outputs()
 
 def tekkaHelp(currentServer, currentTab, args):
 	"""

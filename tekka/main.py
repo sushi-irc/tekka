@@ -563,7 +563,7 @@ def output_shortcut_ctrl_l(inputBar, shortcut):
 	"""
 		Ctrl+L was hit, clear the outputs.
 	"""
-	gui.clear_all_outputs()
+	gui.mgmt.clear_all_outputs()
 
 def output_shortcut_ctrl_f(inputBar, shortcut):
 	""" show/hide the search toolbar """
