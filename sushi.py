@@ -53,8 +53,8 @@ class Plugin (object):
 	def __init__(self, plugin_name):
 		self._plugin_name = plugin_name
 
-		com.sushi.g_connect("maki-connected", self.maki_connected)
-		com.sushi.g_connect("maki-disconnected", self.maki_disconnected)
+		tekka.com.sushi.g_connect("maki-connected", self.maki_connected)
+		tekka.com.sushi.g_connect("maki-disconnected", self.maki_disconnected)
 
 	def maki_connected(self, interface):
 		pass
