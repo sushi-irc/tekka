@@ -108,7 +108,7 @@ class NickListMenu(object):
 		self.deactivate_handler = []
 
 	def kickItem_activate_cb(self, item):
-		sTab,cTab = gui_control.tabs.get_current_tabs()
+		sTab,cTab = gui.tabs.get_current_tabs()
 
 		if not cTab or not cTab.is_channel():
 			return
@@ -116,7 +116,7 @@ class NickListMenu(object):
 		sushi.kick(sTab.name, cTab.name, self.current_nick, "")
 
 	def banItem_activate_cb(self, item):
-		sTab,cTab = gui_control.tabs.get_current_tabs()
+		sTab,cTab = gui.tabs.get_current_tabs()
 
 		if not cTab or not cTab.is_channel():
 			return
@@ -124,7 +124,7 @@ class NickListMenu(object):
 		sushi.mode(sTab.name, cTab.name, "+b %s*!*@*" % (self.current_nick) )
 
 	def whoisItem_activate_cb(self, item):
-		sTab,cTab = gui_control.tabs.get_current_tabs()
+		sTab,cTab = gui.tabs.get_current_tabs()
 
 		if not sTab:
 			return
@@ -137,19 +137,19 @@ class NickListMenu(object):
 				d = InlineMessageDialog(_("No connection to maki."),
 					e.args[0])
 				d.connect("response", lambda w,i: w.destroy())
-				gui_control.show_inline_dialog(d)
+				gui.mgmt.show_inline_dialog(d)
 
 		else:
 			sushi.sushi.whois(sTab.name, self.current_nick)
 
 	def sendFileItem_activate_cb(self, item):
-		sTab,cTab = gui_control.tabs.get_current_tabs()
+		sTab,cTab = gui.tabs.get_current_tabs()
 
 		def dialog_response_cb(dialog, id):
 			if id == gtk.RESPONSE_OK:
 				file = dialog.get_filename()
 				if not file:
-					gui_control.show_error_dialog(
+					gui.mgmt.show_error_dialog(
 						title = _("No file selected"),
 						message = _("You didn't select a file to send. Aborting."))
 				else:

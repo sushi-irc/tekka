@@ -31,8 +31,8 @@ import gobject
 from gobject import TYPE_STRING
 from gettext import gettext as _
 
-import signals
-import com
+from .. import signals
+from .. import com
 
 class WhoisDialog(gtk.Dialog):
 
