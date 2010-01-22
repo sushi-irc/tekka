@@ -1,6 +1,7 @@
 # profiling imports
 import os
 import sys
+import logging
 import cProfile
 
 from xdg.BaseDirectory import xdg_cache_home

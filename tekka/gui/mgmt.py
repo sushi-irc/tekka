@@ -5,6 +5,7 @@ import gobject
 import pango
 import gettext
 from gettext import gettext as _
+from threading import Timer
 
 from .. import config
 
