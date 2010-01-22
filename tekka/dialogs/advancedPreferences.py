@@ -28,11 +28,12 @@ SUCH DAMAGE.
 
 import gtk
 import gtk.glade
-import config
 import gobject
 import pango
 
-from lib import dialog_control, gui_control
+from ..lib import dialog_control
+from .. import gui
+from .. import config
 
 widgets = None
 
@@ -102,7 +103,7 @@ def setup():
 	""" called initially """
 	global widgets
 
-	widgets = gui_control.builder.load_dialog("advancedPreferences")
+	widgets = gui.builder.load_dialog("advancedPreferences")
 
 	configView = widgets.get_object("configView")
 
