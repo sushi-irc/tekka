@@ -6,57 +6,208 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tekka 1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-04 20:21+0100\n"
-"PO-Revision-Date: 2009-12-09 22:34+0000\n"
+"POT-Creation-Date: 2010-01-23 00:26+0100\n"
+"PO-Revision-Date: 2009-12-13 03:24+0000\n"
 "Last-Translator: Raphael Durand <rdurand2@free.fr>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2009-12-13 00:20+0000\n"
+"X-Launchpad-Export-Date: 2010-01-23 00:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: ../commands.py:56 ../commands.py:64
-msgid "Warning:"
-msgstr "Attention:"
-
-#: ../commands.py:57
+#: ../signal_handler.py:325
 #, python-format
-msgid "You are not connected to server %(server)s."
-msgstr "Vous n'êtes pas connecté au serveur %(server)s."
+msgid "• Topic for %(channel)s: %(topic)s"
+msgstr "• Sujet du %(channel)s: %(topic)s"
 
-#: ../commands.py:65
+#: ../signal_handler.py:361
+#, python-format
+msgid "• You changed the topic to %(topic)s."
+msgstr "• Vous avez changé le sujet du canal en %(topic)s."
+
+#: ../signal_handler.py:363
+#, python-format
+msgid "• %(nick)s changed the topic to %(topic)s."
+msgstr "• %(nick)s a changé le sujet du canal en %(topic)s."
+
+#: ../signal_handler.py:442
+#, python-format
+msgid "• %(nick)s is away (%(message)s)."
+msgstr "• %(nick)s est absent (%(message)s)."
+
+#: ../signal_handler.py:566
+#, python-format
+msgid "• Modes for %(target)s: %(mode)s"
+msgstr "• Modes pour %(target)s: %(mode)s"
+
+#. normal ctcp
+#: ../signal_handler.py:659
+#, python-format
+msgid "CTCP from %(nick)s to Channel:"
+msgstr "CTCP de %(nick)s pour le canal:"
+
+#: ../signal_handler.py:690
+#, python-format
+msgid "CTCP request from you to %(target)s: %(message)s"
+msgstr "Demande CTCP pour vous de %(target)s: %(message)s"
+
+#: ../signal_handler.py:892
+#, python-format
+msgid "• You are now known as %(newnick)s."
+msgstr "• Vous vous appellez maintenant %(newnick)s."
+
+#: ../signal_handler.py:898
+#, python-format
+msgid "• %(nick)s is now known as %(newnick)s."
+msgstr "• %(nick)s s'appelle maintenant %(newnick)s."
+
+#: ../signal_handler.py:964
+#, python-format
+msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
+msgstr "« Vous avez été éjecté de %(channel)s par %(nick)s (%(reason)s)."
+
+#: ../signal_handler.py:985
+#, python-format
+msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
+msgstr "« %(who)s a été ejecté de %(channel)s par %(nick)s (%(reason)s)."
+
+#: ../signal_handler.py:1023
+#, python-format
+msgid "« You have quit (%(reason)s)."
+msgstr "« Vous avez quitté le canal (%(reason)s)."
+
+#: ../signal_handler.py:1025
+msgid "« You have quit."
+msgstr "« Vous avez quitté le canal."
+
+#: ../signal_handler.py:1048
+#, python-format
+msgid "« %(nick)s has quit (%(reason)s)."
+msgstr "« %(nick)s a quitté le canal (%(reason)s)."
+
+#: ../signal_handler.py:1050
+#, python-format
+msgid "« %(nick)s has quit."
+msgstr "« %(nick)s a quitté le canal."
+
+#: ../signal_handler.py:1151
+#, python-format
+msgid "» You have joined %(channel)s."
+msgstr "» Vous avez rejoint %(channel)s."
+
+#: ../signal_handler.py:1162
+#, python-format
+msgid "» %(nick)s has joined %(channel)s."
+msgstr "» %(nick)s a rejoint %(channel)s."
+
+#: ../signal_handler.py:1260
+#, python-format
+msgid "« You have left %(channel)s (%(reason)s)."
+msgstr "« Vous avez quitté %(channel)s (%(reason)s)."
+
+#: ../signal_handler.py:1262
+#, python-format
+msgid "« You have left %(channel)s."
+msgstr "« You avez quitté %(channel)s."
+
+#: ../signal_handler.py:1292
+#, python-format
+msgid "« %(nick)s has left %(channel)s (%(reason)s)."
+msgstr "« %(nick)s a quitté %(channel)s (%(reason)s)."
+
+#: ../signal_handler.py:1295
+#, python-format
+msgid "« %(nick)s has left %(channel)s."
+msgstr "« %(nick)s a quitté %(channel)s."
+
+#: ../signal_handler.py:1316
+msgid "• You are not a channel operator."
+msgstr ""
+
+#: ../signal_handler.py:1326
+#, python-format
+msgid "• %(target)s: No such nick/channel."
+msgstr "• %(target)s: Aucun pseudo/canal de ce nom."
+
+#: ../signal_handler.py:1329
+#, python-format
+msgid "• %(target)s: No such server."
+msgstr "• %(target)s: Aucun server."
+
+#: ../signal_handler.py:1332
+#, python-format
+msgid "• %(target)s: No such channel."
+msgstr "• %(target)s: Aucun canal"
+
+#: ../signal_handler.py:1344
+msgid "Unknown reason"
+msgstr "Raison inconnue"
+
+#: ../signal_handler.py:1347
+msgid "The channel is full."
+msgstr "Le canal est plein."
+
+#: ../signal_handler.py:1349
+msgid "The channel is invite-only."
+msgstr "Le canal est sur invitation uniquement."
+
+#: ../signal_handler.py:1351
+msgid "You are banned."
+msgstr "Vous êtes banni."
+
+#: ../signal_handler.py:1367
+msgid "You need the correct channel key."
+msgstr "Vous devez entrez le bon mot de passe de canal."
+
+#: ../signal_handler.py:1372
+#, python-format
+msgid "You can not join %(channel)s: %(reason)s"
+msgstr "Vous ne pouvez joindre%(channel)s: %(reason)s"
+
+#: ../signal_handler.py:1408 ../tekka/dialogs/channelList.py:210
+msgid "User"
+msgstr "Utilisateur"
+
+#: ../signal_handler.py:1409 ../tekka/dialogs/channelList.py:210
+msgid "Topic"
+msgstr "Sujet"
+
+#: ../signal_handler.py:1430
+#, python-format
+msgid "[%(nick)s] %(message)s"
+msgstr "[%(nick)s] %(message)s"
+
+#: ../signal_handler.py:1435
+#, python-format
+msgid "[%(nick)s] End of whois."
+msgstr "[%(nick)s] Fin du whois."
+
+#: ../signal_handler.py:1505
+msgid "Auto accepted file transfer"
+msgstr ""
+
+#: ../signal_handler.py:1506
 #, python-format
 msgid ""
-"The channel %(channel)s is not joined. Everything you write will not be send."
+"maki auto accepted the following file transfer:\n"
+"Filename: %(filename)s\n"
+"Sender: %(filename)s\n"
+"Size: %(size)s\n"
+"Server: %(server)s"
 msgstr ""
-"Le canal %(channel)s n'a pas été rejoint. Rien de ce que vous écrivez ne "
-"sera envoyé."
 
-#: ../commands.py:318
-msgid "• Begin of names"
-msgstr "Début des noms"
-
-#: ../commands.py:323
-msgid "• End of names"
-msgstr "Fin des noms"
-
-#: ../commands.py:626
-#, python-format
-msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
-msgstr "• Commande inconnue “%(command)s”, commande brute envoyée “%(raw)s”."
-
-#: ../com.py:91 ../com.py:97 ../com.py:186 ../com.py:197 ../com.py:224
-#: ../main.py:269
+#: ../tekka/com.py:108 ../tekka/com.py:114 ../tekka/com.py:206
+#: ../tekka/gui/mgmt.py:248
 msgid "tekka could not connect to maki."
 msgstr "tekka n'a pu se connecter à maki"
 
-#: ../com.py:92 ../main.py:270
+#: ../tekka/com.py:109 ../tekka/gui/mgmt.py:249
 msgid "Please check whether maki is running."
 msgstr "Veuillez vérifier si maki est démarré."
 
-#: ../com.py:98 ../com.py:187 ../com.py:198 ../com.py:225
+#: ../tekka/com.py:115 ../tekka/com.py:207
 #, python-format
 msgid ""
 "Please check whether maki is running.\n"
@@ -65,11 +216,11 @@ msgstr ""
 "Veuillez vérifier si maki est démarré.\n"
 "L'erreur suivant a été rencontrée:%(error)s"
 
-#: ../com.py:132
+#: ../tekka/com.py:150
 msgid "Communication error with maki."
 msgstr "Erreur de communication avec maki."
 
-#: ../com.py:133
+#: ../tekka/com.py:151
 #, python-format
 msgid ""
 "There was an error while executing <b>'%s</b>' with DBus: \n"
@@ -80,20 +231,58 @@ msgstr ""
 "<b>%s</b>\n"
 "Vous devriez vérifier que maki est lancé. "
 
-#: ../com.py:240
+#: ../tekka/com.py:252
 msgid "tekka requires a newer maki version."
 msgstr "tekka nécessite une plus récente version de maki"
 
-#: ../com.py:241
+#: ../tekka/com.py:253
 #, python-format
 msgid "Please update maki to at least version %(version)s."
 msgstr "Maki nécessite d'être au moins en version %(version)s."
 
-#: ../dialogs/channelList.py:99
+#: ../tekka/commands.py:52 ../tekka/commands.py:60
+msgid "Warning:"
+msgstr "Attention:"
+
+#: ../tekka/commands.py:53
+#, python-format
+msgid "You are not connected to server %(server)s."
+msgstr "Vous n'êtes pas connecté au serveur %(server)s."
+
+#: ../tekka/commands.py:61
+#, python-format
+msgid ""
+"The channel %(channel)s is not joined. Everything you write will not be send."
+msgstr ""
+"Le canal %(channel)s n'a pas été rejoint. Rien de ce que vous écrivez ne "
+"sera envoyé."
+
+#: ../tekka/commands.py:314
+msgid "• Begin of names"
+msgstr "Début des noms"
+
+#: ../tekka/commands.py:319
+msgid "• End of names"
+msgstr "Fin des noms"
+
+#: ../tekka/commands.py:622
+#, python-format
+msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
+msgstr "• Commande inconnue “%(command)s”, commande brute envoyée “%(raw)s”."
+
+#: ../tekka/dialogs/addServer.py:76
+msgid "No server name given."
+msgstr ""
+
+#: ../tekka/dialogs/addServer.py:77
+msgid "You must enter a server name."
+msgstr ""
+
+#: ../tekka/dialogs/channelList.py:109
 msgid "Channel list search error."
 msgstr "Erreur de recherche de la liste des canaux."
 
-#: ../dialogs/channelList.py:100
+#: ../tekka/dialogs/channelList.py:110
 #, python-format
 msgid ""
 "You've got a syntax error in your search string. The error is: %s\n"
@@ -106,121 +295,163 @@ msgstr ""
 "'.' dans votre expression de recherche si vous ne maitrisez pas les "
 "expression régulières."
 
-#: ../dialogs/channelList.py:197
+#: ../tekka/dialogs/channelList.py:210
 msgid "Channel"
 msgstr "Canal"
 
-#: ../dialogs/channelList.py:197 ../signals.py:1456
-msgid "User"
-msgstr "Utilisateur"
+#: ../tekka/dialogs/dcc.py:167
+msgid "No transfer selected!"
+msgstr ""
 
-#: ../dialogs/channelList.py:197 ../signals.py:1457
-msgid "Topic"
-msgstr "Sujet"
+#: ../tekka/dialogs/dcc.py:168
+msgid "You must select a transfer to remove it."
+msgstr ""
 
-#: ../dialogs/dcc.py:153
+#: ../tekka/dialogs/dcc.py:172
+msgid "Remove file transfer?"
+msgstr ""
+
+#: ../tekka/dialogs/dcc.py:173
+#, python-format
+msgid "Are you sure you want to remove the file transfer %(id)d?"
+msgstr ""
+
+#: ../tekka/dialogs/dcc.py:232
 msgid "ID"
 msgstr "Identifiant"
 
-#: ../dialogs/dcc.py:153
+#: ../tekka/dialogs/dcc.py:232
 msgid "Server"
 msgstr "Serveur"
 
-#: ../dialogs/dcc.py:153
+#: ../tekka/dialogs/dcc.py:232
 msgid "Partner"
 msgstr "Partenaire"
 
-#: ../dialogs/dcc.py:153
+#: ../tekka/dialogs/dcc.py:232
 msgid "Filename"
 msgstr "Nom de fichier"
 
-#: ../dialogs/dcc.py:153
+#: ../tekka/dialogs/dcc.py:232
 msgid "Size"
 msgstr "Taille"
 
-#: ../dialogs/dcc.py:161
+#: ../tekka/dialogs/dcc.py:244
 msgid "Progress"
 msgstr "Avancement"
 
 #. speed column
-#: ../dialogs/dcc.py:167
+#: ../tekka/dialogs/dcc.py:250
 msgid "Speed"
 msgstr "Vitesse"
 
-#: ../dialogs/debug.py:64
+#: ../tekka/dialogs/debug.py:63
 msgid "C_ompile and run"
 msgstr "C_ompiler et lancer"
 
-#: ../dialogs/plugins.py:120
+#: ../tekka/dialogs/plugins.py:120
 #, python-format
 msgid "Configure %(name)s"
 msgstr "Configurer %(name)s"
 
-#: ../dialogs/whois.py:73
+#: ../tekka/dialogs/server.py:211
+msgid "Error while retrieving server name."
+msgstr ""
+
+#: ../tekka/dialogs/server.py:212
+msgid ""
+"There was an error while retrieving the server name.\n"
+"Are you connected to maki?"
+msgstr ""
+
+#: ../tekka/dialogs/whois.py:74
 #, python-format
 msgid "Whois on %(server)s"
 msgstr "Whois on %(server)s"
 
-#: ../dialogs/whois.py:78
+#: ../tekka/dialogs/whois.py:79
 #, python-format
 msgid "Whois data of %(nick)s"
 msgstr "Données whois de %(nick)s"
 
-#: ../dialogs/whois.py:110
+#: ../tekka/dialogs/whois.py:111
 msgid "No data received so far. Are you still connected?"
 msgstr "Aucune donnée reçue jusque là. Etes-vous toujours connecté ?"
 
-#: ../dialogs/whois.py:126
+#: ../tekka/dialogs/whois.py:127
 msgid "Loading..."
 msgstr "Chargement..."
 
-#: ../lib/dcc_dialog.py:54
+#: ../tekka/gui/mgmt.py:145
+#, python-format
+msgid "%d User"
+msgid_plural "%d Users"
+msgstr[0] "%d Utilisateur"
+msgstr[1] "%d Utilisateurs"
+
+#: ../tekka/gui/mgmt.py:147
+#, python-format
+msgid "%d Operator"
+msgid_plural "%d Operators"
+msgstr[0] "%d opérateur"
+msgstr[1] "%d opérateurs"
+
+#: ../tekka/lib/dcc_dialog.py:67
+msgid "Select destination"
+msgstr ""
+
+#: ../tekka/lib/dcc_dialog.py:86
+msgid "Select a destination to save the file"
+msgstr ""
+
+#: ../tekka/lib/dcc_dialog.py:104
+msgid ""
+"\n"
+"<b>Info:</b> If you don't choose another destination, this file will be "
+"resumed."
+msgstr ""
+
+#: ../tekka/lib/dcc_dialog.py:110
 msgid "Incoming file transfer"
 msgstr "Arrivée d'un transfert de fichier"
 
-#: ../lib/dcc_dialog.py:63
-msgid ""
-"\n"
-"If you don't choose another destination, this file will be resumed."
-msgstr ""
-"\n"
-"Si vous ne choisissez pas une autre destination, le fichier sera mis en "
-"pause."
-
-#: ../lib/dcc_dialog.py:55
+#: ../tekka/lib/dcc_dialog.py:111
 #, python-format
 msgid ""
 "Sender: ”%(nick)s”\n"
 "Filename: “%(filename)s“\n"
-"File size: %(bytes)d bytes%(resumable)s"
+"File size: %(bytes)d bytes\n"
+"Destination: %(destination)s%(resumable)s"
 msgstr ""
-"Expéditeur: ”%(nick)s”\n"
-"Nom de fichier: “%(filename)s“\n"
-"Taille du fichier: %(bytes)d bytes%(resumable)s"
 
-#: ../lib/dialog_control.py:59
+#: ../tekka/lib/dialog_control.py:62
 #, python-format
 msgid "Can't open dialog '%s'. There's no connection to maki."
 msgstr ""
 "Ne peut ouvrir la boite de dialogue '%s'.Il n'y a aucune connexion à maki."
 
-#: ../lib/key_dialog.py:49
+#: ../tekka/lib/general_output_buffer.py:63
+#, python-format
+msgid "Hide '%s' messages"
+msgstr ""
+
+#: ../tekka/lib/key_dialog.py:50
 #, python-format
 msgid "Enter the key for the channel %(channel)s."
 msgstr "Entrez le mot de passe du canal %(channel)s."
 
-#: ../lib/key_dialog.py:60
+#: ../tekka/lib/key_dialog.py:61
 msgid "Save key for channel"
 msgstr "Enregistrer le mot de passe du canal."
 
-#: ../lib/plugin_control.py:109 ../lib/plugin_control.py:117
-#: ../lib/plugin_control.py:140 ../lib/plugin_control.py:194
-#: ../lib/plugin_control.py:347
+#: ../tekka/lib/plugin_control.py:108 ../tekka/lib/plugin_control.py:116
+#: ../tekka/lib/plugin_control.py:139 ../tekka/lib/plugin_control.py:197
+#: ../tekka/lib/plugin_control.py:353
 msgid "Plugin could not be loaded."
 msgstr "Le plugin n'a pu être chargé."
 
-#: ../lib/plugin_control.py:110 ../lib/plugin_control.py:141
-#: ../lib/plugin_control.py:195
+#: ../tekka/lib/plugin_control.py:109 ../tekka/lib/plugin_control.py:140
+#: ../tekka/lib/plugin_control.py:198
 #, python-format
 msgid ""
 "Plugin %(plugin)s could not be loaded.\n"
@@ -229,53 +460,53 @@ msgstr ""
 "Le plugin %(plugin)s n'a pu être chargé.\n"
 "L'erreur suivante a été rencontrée: %(error)s"
 
-#: ../lib/plugin_control.py:118
+#: ../tekka/lib/plugin_control.py:117
 #, python-format
 msgid "Plugin %(plugin)s could not be loaded."
 msgstr "Le plugin %(plugin)s ne peut pas être chargé."
 
-#: ../lib/plugin_control.py:173
+#: ../tekka/lib/plugin_control.py:176
 msgid "Plugin is already loaded."
 msgstr "Le plugin est déjà chargé."
 
-#: ../lib/plugin_control.py:174
+#: ../tekka/lib/plugin_control.py:177
 #, python-format
 msgid "Plugin %(plugin)s is already loaded."
 msgstr "Le plugin %(plugin)s est déjà chargé."
 
-#: ../lib/plugin_control.py:218
+#: ../tekka/lib/plugin_control.py:221
 msgid "Plugin could not be unloaded."
 msgstr "Le plugin ne peut pas être déchargé."
 
-#: ../lib/plugin_control.py:218
+#: ../tekka/lib/plugin_control.py:221
 #, python-format
 msgid "Plugin %(plugin)s could not be unloaded, because it is not loaded."
 msgstr ""
 "Le plugin %(plugin)s ne peut pas être déchargé, parce qu'il n'est pas chargé."
 
-#: ../lib/plugin_control.py:348
+#: ../tekka/lib/plugin_control.py:354
 #, python-format
 msgid "Plugin %(plugin)s could not be loaded automatically."
 msgstr "Le plugin %(plugin)s n'a pa pu être chargé automatiquement."
 
-#: ../lib/status_icon.py:67
+#: ../tekka/lib/status_icon.py:67
 msgid "Hide main window"
 msgstr "Cacher la fenêtre principale"
 
-#: ../lib/status_icon.py:69
+#: ../tekka/lib/status_icon.py:69
 msgid "Show main window"
 msgstr "Afficher la fenêtre principale"
 
-#: ../lib/topic_dialog.py:65
+#: ../tekka/lib/topic_dialog.py:67
 #, python-format
 msgid "Topic for channel %(channel)s on %(server)s"
 msgstr "Sujet du canal %(channel)s sur le serveur %(server)s"
 
-#: ../lib/topic_dialog.py:121
+#: ../tekka/lib/topic_dialog.py:123
 msgid "Topic changed before."
 msgstr "Topic modifié précédemment"
 
-#: ../lib/topic_dialog.py:122
+#: ../tekka/lib/topic_dialog.py:124
 msgid ""
 "The topic was changed before your update. Do you want to commit the changes "
 "anyway?"
@@ -283,11 +514,11 @@ msgstr ""
 "Le sujet du canal a été modifié avant votre mise à jour. Voulez vous valider "
 "cette modification quand même ?"
 
-#: ../lib/welcome_window.py:36
+#: ../tekka/lib/welcome_window.py:37
 msgid "<big><b>Welcome to tekka!</b></big>"
 msgstr "<big><b>Bienvenue dans tekka!</b></big>"
 
-#: ../lib/welcome_window.py:92
+#: ../tekka/lib/welcome_window.py:95
 msgid ""
 "You are connected to maki. The next step is to connect to a server via the "
 "server dialog in the tekka menu."
@@ -295,7 +526,7 @@ msgstr ""
 "Vous êtes connecté à maki. La prochaine étape est de se connecter à un "
 "serveur via le dialogue serveur dans le menu tekka."
 
-#: ../lib/welcome_window.py:98
+#: ../tekka/lib/welcome_window.py:101
 msgid ""
 "You are not connected to maki. Without maki you can not connect to servers "
 "or write messages.\n"
@@ -307,63 +538,47 @@ msgstr ""
 "Vous n'êtes pas connecté à maki. Sans maki vous ne pouvez pas vous connecter "
 "à un serveur ni envoyer de message."
 
-#: ../main.py:348
-msgid "tekka could not determine server."
-msgstr "tekka ne peut pas determiner le server."
-
-#: ../main.py:349
-msgid ""
-"There is no active server. Click on a server tab or a child of a server tab "
-"to activate the server."
-msgstr ""
-"Il n'y a pas de serveur actif. Cliquez sur un onglet ou un sous-onglet de "
-"serveur pour activer le serveur."
-
-#: ../main.py:360 ../main.py:369 ../menus/nicklist_menu.py:135
-msgid "No connection to maki."
-msgstr "Aucune connexion à maki."
-
-#: ../main.py:598
+#: ../tekka/main.py:462
 msgid "Reset markup"
 msgstr "Réinitialiser les signets."
 
-#: ../main.py:748
+#: ../tekka/main.py:612
 #, python-format
 msgid "Do you really want to close channel “%(name)s”?"
 msgstr "Voulez vous vraiment fermer le canal “%(name)s”?"
 
-#: ../main.py:750
+#: ../tekka/main.py:614
 #, python-format
 msgid "Do you really want to close query “%(name)s”?"
 msgstr "Voulez vous vraiment fermer la requête “%(name)s”?"
 
-#: ../main.py:752
+#: ../tekka/main.py:616
 #, python-format
 msgid "Do you really want to close server “%(name)s”?"
 msgstr "Voulez vous vraiment fermer le serveur “%(name)s”?"
 
 #. TODO: away status
-#: ../main.py:848
+#: ../tekka/main.py:712
 msgid "Nickname: "
 msgstr "Pseudonyme: "
 
-#: ../main.py:851
+#: ../tekka/main.py:715
 msgid "User: "
 msgstr "Utilisateur: "
 
-#: ../main.py:852
+#: ../tekka/main.py:716
 msgid "Topic: "
 msgstr "Sujet : "
 
-#: ../main.py:854 ../main.py:858
+#: ../tekka/main.py:718 ../tekka/main.py:722
 msgid "Last sentence: "
 msgstr "Dernière phrase: "
 
-#: ../main.py:1396
+#: ../tekka/main.py:1177
 msgid "Error occured"
 msgstr "Erreur rencontrée"
 
-#: ../main.py:1405
+#: ../tekka/main.py:1186
 msgid ""
 "<span size='larger' weight='bold'>Error</span>\n"
 "\n"
@@ -371,11 +586,32 @@ msgid ""
 "at https://bugs.launchpad.net/sushi."
 msgstr "<span size='larger' weight='bold'>Erreur</span>"
 
-#: ../menus/nicklist_menu.py:55 ../menus/servertree_menu.py:56
+#: ../tekka/menus/mainmenu_context.py:104
+#: ../tekka/menus/mainmenu_context.py:225 ../tekka/menus/nicklist_menu.py:137
+msgid "No connection to maki."
+msgstr "Aucune connexion à maki."
+
+#: ../tekka/menus/mainmenu_context.py:105
+msgid "You can't shutdown maki. You're not connected."
+msgstr ""
+
+#: ../tekka/menus/mainmenu_context.py:236
+msgid "tekka could not determine server."
+msgstr "tekka ne peut pas determiner le server."
+
+#: ../tekka/menus/mainmenu_context.py:237
+msgid ""
+"There is no active server. Click on a server tab or a child of a server tab "
+"to activate the server."
+msgstr ""
+"Il n'y a pas de serveur actif. Cliquez sur un onglet ou un sous-onglet de "
+"serveur pour activer le serveur."
+
+#: ../tekka/menus/nicklist_menu.py:53 ../tekka/menus/servertree_menu.py:52
 msgid "Widget creation failed."
 msgstr "Echec de création du widget"
 
-#: ../menus/nicklist_menu.py:56
+#: ../tekka/menus/nicklist_menu.py:54
 msgid ""
 "tekka failed to create the nicklist menu.\n"
 "It's possible that there are files missing. Check if you have appropriate "
@@ -386,7 +622,20 @@ msgstr ""
 "permissions appropriée pour accéder aux fichiers nécessaires à takka et "
 "redémarrez takka."
 
-#: ../menus/servertree_menu.py:57
+#: ../tekka/menus/nicklist_menu.py:153
+msgid "No file selected"
+msgstr ""
+
+#: ../tekka/menus/nicklist_menu.py:154
+msgid "You didn't select a file to send. Aborting."
+msgstr ""
+
+#: ../tekka/menus/nicklist_menu.py:160
+#, python-format
+msgid "Choose a file to send to %(nick)s"
+msgstr ""
+
+#: ../tekka/menus/servertree_menu.py:53
 msgid ""
 "tekka failed to create the server tree menu.\n"
 "It's possible that there are files missing. Check if you have appropriate "
@@ -396,161 +645,6 @@ msgstr ""
 "Il est possible que des fichiers soient manquants. Vérifiez si vous avez les "
 "permissions appropriée pour accéder aux fichiers nécessaires à takka et "
 "redémarrez takka."
-
-#: ../signals.py:409
-#, python-format
-msgid "• Topic for %(channel)s: %(topic)s"
-msgstr "• Sujet du %(channel)s: %(topic)s"
-
-#: ../signals.py:440
-#, python-format
-msgid "• You changed the topic to %(topic)s."
-msgstr "• Vous avez changé le sujet du canal en %(topic)s."
-
-#: ../signals.py:442
-#, python-format
-msgid "• %(nick)s changed the topic to %(topic)s."
-msgstr "• %(nick)s a changé le sujet du canal en %(topic)s."
-
-#: ../signals.py:523
-#, python-format
-msgid "• %(nick)s is away (%(message)s)."
-msgstr "• %(nick)s est absent (%(message)s)."
-
-#: ../signals.py:643
-#, python-format
-msgid "• Modes for %(target)s: %(mode)s"
-msgstr "• Modes pour %(target)s: %(mode)s"
-
-#. normal ctcp
-#: ../signals.py:733
-#, python-format
-msgid "CTCP from %(nick)s to Channel:"
-msgstr "CTCP de %(nick)s pour le canal:"
-
-#: ../signals.py:763
-#, python-format
-msgid "CTCP request from you to %(target)s: %(message)s"
-msgstr "Demande CTCP pour vous de %(target)s: %(message)s"
-
-#: ../signals.py:940
-#, python-format
-msgid "• You are now known as %(newnick)s."
-msgstr "• Vous vous appellez maintenant %(newnick)s."
-
-#: ../signals.py:946
-#, python-format
-msgid "• %(nick)s is now known as %(newnick)s."
-msgstr "• %(nick)s s'appelle maintenant %(newnick)s."
-
-#: ../signals.py:1010
-#, python-format
-msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
-msgstr "« Vous avez été éjecté de %(channel)s par %(nick)s (%(reason)s)."
-
-#: ../signals.py:1032
-#, python-format
-msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
-msgstr "« %(who)s a été ejecté de %(channel)s par %(nick)s (%(reason)s)."
-
-#: ../signals.py:1070
-#, python-format
-msgid "« You have quit (%(reason)s)."
-msgstr "« Vous avez quitté le canal (%(reason)s)."
-
-#: ../signals.py:1072
-msgid "« You have quit."
-msgstr "« Vous avez quitté le canal."
-
-#: ../signals.py:1094
-#, python-format
-msgid "« %(nick)s has quit (%(reason)s)."
-msgstr "« %(nick)s a quitté le canal (%(reason)s)."
-
-#: ../signals.py:1096
-#, python-format
-msgid "« %(nick)s has quit."
-msgstr "« %(nick)s a quitté le canal."
-
-#: ../signals.py:1199
-#, python-format
-msgid "» You have joined %(channel)s."
-msgstr "» Vous avez rejoint %(channel)s."
-
-#: ../signals.py:1210
-#, python-format
-msgid "» %(nick)s has joined %(channel)s."
-msgstr "» %(nick)s a rejoint %(channel)s."
-
-#: ../signals.py:1308
-#, python-format
-msgid "« You have left %(channel)s (%(reason)s)."
-msgstr "« Vous avez quitté %(channel)s (%(reason)s)."
-
-#: ../signals.py:1310
-#, python-format
-msgid "« You have left %(channel)s."
-msgstr "« You avez quitté %(channel)s."
-
-#: ../signals.py:1340
-#, python-format
-msgid "« %(nick)s has left %(channel)s (%(reason)s)."
-msgstr "« %(nick)s a quitté %(channel)s (%(reason)s)."
-
-#: ../signals.py:1343
-#, python-format
-msgid "« %(nick)s has left %(channel)s."
-msgstr "« %(nick)s a quitté %(channel)s."
-
-#: ../signals.py:1366
-#, python-format
-msgid "• %(target)s: No such nick/channel."
-msgstr "• %(target)s: Aucun pseudo/canal de ce nom."
-
-#: ../signals.py:1369
-#, python-format
-msgid "• %(target)s: No such server."
-msgstr "• %(target)s: Aucun server."
-
-#: ../signals.py:1372
-#, python-format
-msgid "• %(target)s: No such channel."
-msgstr "• %(target)s: Aucun canal"
-
-#: ../signals.py:1384
-msgid "Unknown reason"
-msgstr "Raison inconnue"
-
-#: ../signals.py:1387
-msgid "The channel is full."
-msgstr "Le canal est plein."
-
-#: ../signals.py:1389
-msgid "The channel is invite-only."
-msgstr "Le canal est sur invitation uniquement."
-
-#: ../signals.py:1391
-msgid "You are banned."
-msgstr "Vous êtes banni."
-
-#: ../signals.py:1407
-msgid "You need the correct channel key."
-msgstr "Vous devez entrez le bon mot de passe de canal."
-
-#: ../signals.py:1410
-#, python-format
-msgid "You can not join %(channel)s: %(reason)s"
-msgstr "Vous ne pouvez joindre%(channel)s: %(reason)s"
-
-#: ../signals.py:1473
-#, python-format
-msgid "[%(nick)s] %(message)s"
-msgstr "[%(nick)s] %(message)s"
-
-#: ../signals.py:1478
-#, python-format
-msgid "[%(nick)s] End of whois."
-msgstr "[%(nick)s] Fin du whois."
 
 #: ../glade/dialogs/about.glade.in.h:1
 msgid "translator-credits"
@@ -567,9 +661,8 @@ msgid "Advanced Preferences"
 msgstr "Préférences avancées"
 
 #: ../glade/dialogs/advancedPreferences.glade.h:2
-#: ../glade/dialogs/channelList.glade.h:2 ../glade/dialogs/dcc.glade.h:2
-#: ../glade/dialogs/hide.glade.h:11 ../glade/dialogs/history.glade.h:3
-#: ../glade/dialogs/plugins.glade.h:5
+#: ../glade/dialogs/channelList.glade.h:2 ../glade/dialogs/hide.glade.h:11
+#: ../glade/dialogs/history.glade.h:3 ../glade/dialogs/plugins.glade.h:5
 msgid "gtk-close"
 msgstr "Fermer"
 
@@ -588,10 +681,6 @@ msgstr "Stop"
 #: ../glade/dialogs/dcc.glade.h:1
 msgid "File Transfers"
 msgstr "Transferts de fichiers"
-
-#: ../glade/dialogs/dcc.glade.h:3
-msgid "gtk-remove"
-msgstr "Supprimer"
 
 #: ../glade/dialogs/hide.glade.h:1
 msgid "<b>Message types to hide</b>"
@@ -790,7 +879,7 @@ msgstr "Utiliser la police par _defaut"
 msgid "Use contrast sensitive colors"
 msgstr "Utiliser des conleurs sensibles au contraste"
 
-#: ../glade/dialogs/preferences.glade.h:38 ../glade/mainwindow.glade.h:31
+#: ../glade/dialogs/preferences.glade.h:38 ../glade/mainwindow.glade.h:13
 msgid "_General Output"
 msgstr "Canal de sortie _général"
 
@@ -806,9 +895,13 @@ msgstr "_Couleur des pseudonymes"
 msgid "_Show status icon"
 msgstr "_Montrer icone de statut"
 
-#: ../glade/dialogs/preferences.glade.h:42 ../glade/mainwindow.glade.h:40
+#: ../glade/dialogs/preferences.glade.h:42 ../glade/mainwindow.glade.h:19
 msgid "_tekka"
 msgstr "_tekka"
+
+#: ../glade/dialogs/server.glade.h:1 ../glade/mainwindow.glade.h:5
+msgid "Server List"
+msgstr "Liste des serveurs"
 
 #: ../glade/dialogs/serverAdd.glade.h:1
 msgid "<b>Add Server</b>"
@@ -893,170 +986,154 @@ msgstr "Modifier le serveur"
 msgid "NickServ Ghost:"
 msgstr "NickServ Ghost:"
 
-#: ../glade/dialogs/server.glade.h:1 ../glade/mainwindow.glade.h:15
-msgid "Server List"
-msgstr "Liste des serveurs"
-
 #: ../glade/mainwindow.glade.h:1
-msgid "Auto-connect"
-msgstr "Connexion automatique"
-
-#: ../glade/mainwindow.glade.h:2
-msgid "Auto-join"
-msgstr "Connexion automatique:"
-
-#: ../glade/mainwindow.glade.h:3
-msgid "Ban"
-msgstr "Bannir"
-
-#: ../glade/mainwindow.glade.h:4
-msgid "Close"
-msgstr "Fermer"
-
-#: ../glade/mainwindow.glade.h:5
 msgid "Connect"
 msgstr "Connexion"
 
-#: ../glade/mainwindow.glade.h:6
+#: ../glade/mainwindow.glade.h:2
 msgid "Disconnect"
 msgstr "Déconnexion"
 
-#: ../glade/mainwindow.glade.h:7
-msgid "Give Half-Op"
-msgstr "Donner les droits de demi-opérateur"
-
-#: ../glade/mainwindow.glade.h:8
-msgid "Give Op"
-msgstr "Donner les droits opérateur"
-
-#: ../glade/mainwindow.glade.h:9
-msgid "Give Voice"
-msgstr "Donner la parole"
-
-#: ../glade/mainwindow.glade.h:10
-msgid "H_ide Messages"
-msgstr "Cacher les messages"
-
-#: ../glade/mainwindow.glade.h:11
+#: ../glade/mainwindow.glade.h:3
 msgid "IRC Colors"
 msgstr "Couleurs IRC"
 
-#: ../glade/mainwindow.glade.h:12
-msgid "Kick"
-msgstr "Expulser"
-
-#: ../glade/mainwindow.glade.h:13
-msgid "Modes"
-msgstr "Modes"
-
-#: ../glade/mainwindow.glade.h:14
+#: ../glade/mainwindow.glade.h:4
 msgid "S_ide Pane"
 msgstr "Panel latéral"
 
-#: ../glade/mainwindow.glade.h:16
-msgid "Set _Key"
-msgstr "Définir la _touche"
-
-#: ../glade/mainwindow.glade.h:17
-msgid "Set _Topic"
-msgstr "Définir _sujet"
-
-#: ../glade/mainwindow.glade.h:18
+#: ../glade/mainwindow.glade.h:6
 msgid "Shutdown"
 msgstr "Éteindre"
 
-#: ../glade/mainwindow.glade.h:19
+#: ../glade/mainwindow.glade.h:7
 msgid "Status _Bar"
 msgstr "_Barre d'état"
 
-#: ../glade/mainwindow.glade.h:20
+#: ../glade/mainwindow.glade.h:8
 msgid "Status _Icon"
 msgstr "Icône de statut"
 
-#: ../glade/mainwindow.glade.h:21
-msgid "Take Half-Op"
-msgstr "Retirer les droits de demi-opérateur"
-
-#: ../glade/mainwindow.glade.h:22
-msgid "Take Op"
-msgstr "Retirer les droits d'opérateur"
-
-#: ../glade/mainwindow.glade.h:23
-msgid "Take Voice"
-msgstr "Retirer la parole"
-
-#: ../glade/mainwindow.glade.h:24
-msgid "Whois"
-msgstr "Whois"
-
-#: ../glade/mainwindow.glade.h:25
+#: ../glade/mainwindow.glade.h:9
 msgid "_Channel List"
 msgstr "Listes des _canaux"
 
-#: ../glade/mainwindow.glade.h:26
-msgid "_Connect"
-msgstr "_Connexion"
-
-#: ../glade/mainwindow.glade.h:27
+#: ../glade/mainwindow.glade.h:10
 msgid "_Debug"
 msgstr "_Débogage"
 
-#: ../glade/mainwindow.glade.h:28
+#: ../glade/mainwindow.glade.h:11
 msgid "_Dialogs"
 msgstr "Boîte de _dialogue"
 
-#: ../glade/mainwindow.glade.h:29
-msgid "_Disconnect"
-msgstr "_Déconnecter"
-
-#: ../glade/mainwindow.glade.h:30
+#: ../glade/mainwindow.glade.h:12
 msgid "_File Transfers"
 msgstr "Transferts de _fichiers"
 
-#: ../glade/mainwindow.glade.h:32
+#: ../glade/mainwindow.glade.h:14
 msgid "_Help"
 msgstr "_Aide"
 
-#: ../glade/mainwindow.glade.h:33
-msgid "_History"
-msgstr "_Historique"
-
-#: ../glade/mainwindow.glade.h:34
-msgid "_Join"
-msgstr "_Joindre"
-
-#: ../glade/mainwindow.glade.h:35
-msgid "_Part"
-msgstr "_Sortir"
-
-#: ../glade/mainwindow.glade.h:36
+#: ../glade/mainwindow.glade.h:15
 msgid "_Plugins"
 msgstr "_Plugins"
 
-#: ../glade/mainwindow.glade.h:37
+#: ../glade/mainwindow.glade.h:16
 msgid "_Topic Bar"
 msgstr "_Barre de sujet"
 
-#: ../glade/mainwindow.glade.h:38
+#: ../glade/mainwindow.glade.h:17
 msgid "_View"
 msgstr "_Affichage"
 
-#: ../glade/mainwindow.glade.h:39
+#: ../glade/mainwindow.glade.h:18
 msgid "_maki"
 msgstr "_maki"
-
-#, python-format
-#~ msgid "%d Operator"
-#~ msgid_plural "%d Operators"
-#~ msgstr[0] "%d opérateur"
-#~ msgstr[1] "%d opérateurs"
 
 #, python-format
 #~ msgid "Error: %(message)s"
 #~ msgstr "Erreur: %(message)s"
 
+#~ msgid ""
+#~ "\n"
+#~ "If you don't choose another destination, this file will be resumed."
+#~ msgstr ""
+#~ "\n"
+#~ "Si vous ne choisissez pas une autre destination, le fichier sera mis en "
+#~ "pause."
+
 #, python-format
-#~ msgid "%d User"
-#~ msgid_plural "%d Users"
-#~ msgstr[0] "%d Utilisateur"
-#~ msgstr[1] "%d Utilisateurs"
+#~ msgid ""
+#~ "Sender: ”%(nick)s”\n"
+#~ "Filename: “%(filename)s“\n"
+#~ "File size: %(bytes)d bytes%(resumable)s"
+#~ msgstr ""
+#~ "Expéditeur: ”%(nick)s”\n"
+#~ "Nom de fichier: “%(filename)s“\n"
+#~ "Taille du fichier: %(bytes)d bytes%(resumable)s"
+
+#~ msgid "gtk-remove"
+#~ msgstr "Supprimer"
+
+#~ msgid "Close"
+#~ msgstr "Fermer"
+
+#~ msgid "Auto-join"
+#~ msgstr "Connexion automatique:"
+
+#~ msgid "Auto-connect"
+#~ msgstr "Connexion automatique"
+
+#~ msgid "Ban"
+#~ msgstr "Bannir"
+
+#~ msgid "Set _Key"
+#~ msgstr "Définir la _touche"
+
+#~ msgid "H_ide Messages"
+#~ msgstr "Cacher les messages"
+
+#~ msgid "Modes"
+#~ msgstr "Modes"
+
+#~ msgid "Set _Topic"
+#~ msgstr "Définir _sujet"
+
+#~ msgid "Kick"
+#~ msgstr "Expulser"
+
+#~ msgid "Give Op"
+#~ msgstr "Donner les droits opérateur"
+
+#~ msgid "Give Voice"
+#~ msgstr "Donner la parole"
+
+#~ msgid "Give Half-Op"
+#~ msgstr "Donner les droits de demi-opérateur"
+
+#~ msgid "Whois"
+#~ msgstr "Whois"
+
+#~ msgid "_Connect"
+#~ msgstr "_Connexion"
+
+#~ msgid "Take Voice"
+#~ msgstr "Retirer la parole"
+
+#~ msgid "Take Op"
+#~ msgstr "Retirer les droits d'opérateur"
+
+#~ msgid "Take Half-Op"
+#~ msgstr "Retirer les droits de demi-opérateur"
+
+#~ msgid "_Disconnect"
+#~ msgstr "_Déconnecter"
+
+#~ msgid "_History"
+#~ msgstr "_Historique"
+
+#~ msgid "_Join"
+#~ msgstr "_Joindre"
+
+#~ msgid "_Part"
+#~ msgstr "_Sortir"
