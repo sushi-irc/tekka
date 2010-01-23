@@ -1505,11 +1505,11 @@ def dcc_send_cb(time, id, server, sender, filename,
 					_("Auto accepted file transfer"),
 					_("maki auto accepted the following file transfer:\n"
 					  "Filename: %(filename)s\n"
-					  "Sender: %(filename)s\n"
+					  "Sender: %(sender)s\n"
 					  "Size: %(size)s\n"
 					  "Server: %(server)s" % {
 						  "filename":filename,
-						  "sender":sender,
+						  "sender":parse_from(sender)[0],
 						  "size":size,
 						  "server":server}),
 					icon=gtk.STOCK_DIALOG_INFO)
