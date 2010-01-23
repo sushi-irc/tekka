@@ -172,7 +172,7 @@ class ServerTreeMenu(object):
 	def joinChannelItem_activate_cb(self, item):
 		""" pop up a dialog to ask which channel should be joined """
 		if self.current_tab and self.current_tab.is_server():
-			print "Yay!"
+			dialog_control.show_dialog("join", self.current_tab.name)
 
 	def joinItem_activate_cb(self, item):
 		""" join channel without key """
