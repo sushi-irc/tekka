@@ -163,7 +163,7 @@ class NickListMenu(object):
 		d.show()
 
 	def deVoiceItem_activate_cb(self, item):
-		sTab,cTab = gui_control.tabs.get_current_tabs()
+		sTab,cTab = gui.tabs.get_current_tabs()
 
 		if not cTab or not cTab.is_channel():
 			return
@@ -171,7 +171,7 @@ class NickListMenu(object):
 		sushi.mode(sTab.name, cTab.name, "-v %s" % (self.current_nick) )
 
 	def voiceItem_activate_cb(self, item):
-		sTab,cTab = gui_control.tabs.get_current_tabs()
+		sTab,cTab = gui.tabs.get_current_tabs()
 
 		if not cTab or not cTab.is_channel():
 			return
@@ -179,7 +179,7 @@ class NickListMenu(object):
 		sushi.mode(sTab.name, cTab.name, "+v %s" % (self.current_nick) )
 
 	def deHalfOpItem_activate_cb(self, item):
-		sTab,cTab = gui_control.tabs.get_current_tabs()
+		sTab,cTab = gui.tabs.get_current_tabs()
 
 		if not cTab or not cTab.is_channel():
 			return
@@ -187,7 +187,7 @@ class NickListMenu(object):
 		sushi.mode(sTab.name, cTab.name, "-h %s" % (self.current_nick) )
 
 	def halfOpItem_activate_cb(self, item):
-		sTab,cTab = gui_control.tabs.get_current_tabs()
+		sTab,cTab = gui.tabs.get_current_tabs()
 
 		if not cTab or not cTab.is_channel():
 			return
@@ -195,7 +195,7 @@ class NickListMenu(object):
 		sushi.mode(sTab.name, cTab.name, "+h %s" % (self.current_nick) )
 
 	def deOpItem_activate_cb(self, item):
-		sTab,cTab = gui_control.tabs.get_current_tabs()
+		sTab,cTab = gui.tabs.get_current_tabs()
 
 		if not cTab or not cTab.is_channel():
 			return
@@ -203,7 +203,7 @@ class NickListMenu(object):
 		sushi.mode(sTab.name, cTab.name, "-o %s" % (self.current_nick) )
 
 	def opItem_activate_cb(self, item):
-		sTab,cTab = gui_control.tabs.get_current_tabs()
+		sTab,cTab = gui.tabs.get_current_tabs()
 
 		if not cTab or not cTab.is_channel():
 			return
