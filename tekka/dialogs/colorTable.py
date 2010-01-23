@@ -35,7 +35,7 @@ from ..lib import contrast
 
 builder = gtk.Builder()
 
-def dialog_responce_cb(dialog, id):
+def dialog_response_cb(dialog, id):
 	dialog.destroy()
 
 def run():
@@ -72,4 +72,4 @@ def setup():
 	builder.add_from_file(path)
 
 	dialog = builder.get_object("colorTable")
-	dialog.connect("response", dialog_responce_cb)
+	dialog.connect("response", dialog_response_cb)
