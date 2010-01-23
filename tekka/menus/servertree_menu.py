@@ -63,6 +63,7 @@ class ServerTreeMenu(object):
 
 			"connectItem_activate_cb" : self.connectItem_activate_cb,
 			"disconnectItem_activate_cb" : self.disconnectItem_activate_cb,
+			"joinChannelItem_activate_cb" : self.joinChannelItem_activate_cb,
 			"joinItem_activate_cb" : self.joinItem_activate_cb,
 			"partItem_activate_cb" : self.partItem_activate_cb,
 			"closeItem_activate_cb" : self.closeItem_activate_cb,
@@ -91,6 +92,7 @@ class ServerTreeMenu(object):
 
 		connectItem = self.widgets.get_object("connectItem")
 		disconnectItem = self.widgets.get_object("disconnectItem")
+		joinChannelItem = self.widgets.get_object("joinChannelItem")
 		joinItem = self.widgets.get_object("joinItem")
 		partItem = self.widgets.get_object("partItem")
 		autoConnectItem = self.widgets.get_object("autoConnectItem")
@@ -126,6 +128,7 @@ class ServerTreeMenu(object):
 			connectItem.hide()
 			disconnectItem.hide()
 			autoConnectItem.hide()
+			joinChannelItem.hide()
 
 			if sushi.server_get(
 			pointedTab.server.name, pointedTab.name, "autojoin") == "true":
@@ -147,6 +150,7 @@ class ServerTreeMenu(object):
 			disconnectItem.hide()
 			joinItem.hide()
 			partItem.hide()
+			joinChannelItem.hide()
 
 		return self.menu
 
@@ -164,6 +168,11 @@ class ServerTreeMenu(object):
 			sushi.quit(
 				self.current_tab.name,
 				config.get("chatting", "quit_message", ""))
+
+	def joinChannelItem_activate_cb(self, item):
+		""" pop up a dialog to ask which channel should be joined """
+		if self.current_tab and self.current_tab.is_server():
+			print "Yay!"
 
 	def joinItem_activate_cb(self, item):
 		""" join channel without key """
