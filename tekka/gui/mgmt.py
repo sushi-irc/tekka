@@ -271,6 +271,8 @@ def show_inline_dialog(dialog):
 		area.set_no_show_all(True)
 
 		if config.get_bool("tekka", "idialog_timeout"):
+			# FIXME:  input dialogs would be removed regardless
+			# FIXME:: of focus
 
 			def dialog_timeout_cb():
 				area.remove(dialog)

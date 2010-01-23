@@ -392,6 +392,12 @@ def inputBar_key_press_event_cb(inputBar, event):
 	if key != "Tab":
 		tabcompletion.stopIteration()
 
+
+def notificationWidget_remove_cb(area, widget):
+	""" restore the focus if a inline dialog is closed """
+	gui.widgets.get_widget("inputBar").grab_focus()
+
+
 def outputShell_widget_changed_cb(shell, old_widget, new_widget):
 	""" old_widget: OutputWindow
 		new_widget: OutputWindow
@@ -1114,9 +1120,14 @@ def setupGTK():
 		lambda w,s: gui.widgets.get_widget("statusBar")\
 		.pop(gui.status.id(s)))
 
+	# events/signals to react on user typed input
 	bar = gui.widgets.get_widget("inputBar")
 	bar.connect("key-press-event", inputBar_key_press_event_cb)
 	bar.connect("activate", inputBar_activate_cb)
+
+	# focus restore on inline dialog close
+	area = gui.widgets.get_widget("notificationWidget")
+	area.connect("remove", notificationWidget_remove_cb)
 
 	# output window switched
 	shell = gui.widgets.get_widget("outputShell")
