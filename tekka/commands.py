@@ -488,12 +488,12 @@ def tekkaQuery(currentServer, currentTab, args):
 		tab.connected = True
 
 		gui.tabs.add_tab(currentServer, tab)
-		gui.updateServerTreeShortcuts()
+		gui.shortcuts.assign_numeric_tab_shortcuts(gui.tabs.get_all_tabs())
 
 		output = tab.window.textview.get_buffer()
 
 		# fetch and write history to query (if any)
-		gui.print_last_log(currentServer.name, nick)
+		tab.print_last_log()
 	else:
 		# jump to query
 		tab.switch_to()
