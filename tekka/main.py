@@ -508,7 +508,7 @@ def nickList_row_activated_cb(nickList, path, column):
 
 	gui.tabs.add_tab(serverTab, query)
 
-	gui.print_last_log("", "", tab = query)
+	query.print_last_log()
 	query.switch_to()
 
 def nickList_button_press_event_cb(nickList, event):
