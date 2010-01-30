@@ -223,10 +223,11 @@ class TekkaTab(gobject.GObject):
 
 
 	def write_raw(self, msg, type="message"):
-		buf = self.window.textview.buffer
+		""" unformatted, without timestamp """
+		buf = self.window.textview.get_buffer()
 		end = buf.get_end_iter()
 
-		buf.insert_at_iter(end, msg)
+		buf.insert_html(end, msg)
 
 		def notify():
 			self.set_new_message(type)
