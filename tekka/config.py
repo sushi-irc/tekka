@@ -34,8 +34,8 @@ from xdg.BaseDirectory import xdg_config_home, xdg_data_home, \
 	xdg_cache_home
 import ConfigParser
 
-from tekka.typecheck import types
-from tekka.helper.escape import unescape_split, escape_join
+from .typecheck import types
+from .helper.escape import unescape_split, escape_join
 
 prefix = ""
 defaults = {}
