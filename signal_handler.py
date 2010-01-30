@@ -1375,51 +1375,6 @@ def cannotJoin(time, server, channel, reason):
 			}))
 
 
-def channelList_cb(time, server, channel, users, topic):
-	""" Signal for /list command.
-		Prints content of the listing.
-	"""
-
-	self = code.init_function_attrs(channelList_cb,
-		_text=[],
-		_line=0,
-		_tab=gui.tabs.search_tab(server))
-
-	def print_listing():
-		self._tab.write_raw("<br/>".join(self._text))
-		return False
-
-	if not channel and not topic and users == -1:
-		# listing ended, reset variables
-
-		def print_end():
-			self._tab.write(time, "End of list.")
-			return False
-
-		if self._line > 0:
-			# print rest
-			gobject.idle_add(print_listing)
-
-		gobject.idle_add(print_end)
-
-		code.reset_function_attrs(channelList_cb)
-
-	else:
-		self._text.append(("• <b>%s</b><br/>\t%d "+_("User")+"<br/>"+
-							"\t"+_("Topic")+": \"%s\"") % (
-								markup.escape(channel),
-								users,
-								markup.escape(topic)))
-
-		self._line += 1
-
-		if self._line == 10:
-			gobject.idle_add(print_listing)
-
-			self._text = []
-			self._line = 0
-
-
 def whois_cb(time, server, nick, message):
 	""" message = "" => end of whois """
 
