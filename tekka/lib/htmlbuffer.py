@@ -272,7 +272,15 @@ class HTMLBuffer(gtk.TextBuffer):
 				self.get_iter_at_offset(ioff)
 			)
 
+	def insert_html(self, *args, **kwargs):
+		return self.insertHTML(*args, **kwargs)
+
 	def insertHTML(self, iter, text):
+		""" parse text for HTML markups before adding
+			it to the buffer at the given iter.
+
+			This method is deprecated. Use insert_html.
+		"""
 		startoffset = iter.get_offset()
 
 		if gtk.TextBuffer.get_char_count(self) > 0:
