@@ -58,7 +58,7 @@ Are you sure you want to delete the server '%(server)s'?</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">gtk-no</property>
+                <property name="label">gtk-no</property>
                 <property name="use_stock">True</property>
                 <property name="response_id">-9</property>
               </widget>
@@ -68,7 +68,7 @@ Are you sure you want to delete the server '%(server)s'?</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="label" translatable="yes">gtk-yes</property>
+                <property name="label">gtk-yes</property>
                 <property name="use_stock">True</property>
                 <property name="response_id">-8</property>
               </widget>

@@ -129,7 +129,7 @@
             <property name="layout_style">end</property>
             <child>
               <widget class="GtkButton" id="closeButton">
-                <property name="label" translatable="yes">gtk-close</property>
+                <property name="label">gtk-close</property>
                 <property name="response_id">-6</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
