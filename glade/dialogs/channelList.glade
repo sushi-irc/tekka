@@ -33,7 +33,7 @@
                 </child>
                 <child>
                   <widget class="GtkButton" id="listButton">
-                    <property name="label" translatable="yes">gtk-find</property>
+                    <property name="label">gtk-find</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
@@ -47,7 +47,7 @@
                 </child>
                 <child>
                   <widget class="GtkButton" id="stopListButton">
-                    <property name="label" translatable="yes">gtk-stop</property>
+                    <property name="label">gtk-stop</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
@@ -108,7 +108,7 @@
             </child>
             <child>
               <widget class="GtkButton" id="cancelButton">
-                <property name="label" translatable="yes">gtk-close</property>
+                <property name="label">gtk-close</property>
                 <property name="response_id">-7</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
