@@ -39,6 +39,7 @@ from . import com
 from . import gui
 
 from .helper import color
+from .helper import markup
 from .com import sushi
 from .lib.inline_dialog import InlineMessageDialog
 from .typecheck import types
@@ -426,7 +427,6 @@ def makiList(serverTab, channelTab, args):
 		Usage: /list [<channel>]
 	"""
 	from .helper import code
-	from .helper import markup
 	import gobject
 
 	def channelList_cb(time, server, channel, users, topic):
@@ -521,12 +521,30 @@ def makiWhois(currentServer, currentChannel, args):
 
 		Usage: /whois <user mask>
 	"""
+	def whois_cb(time, server, nick, message):
+		""" message = "" => end of whois """
+
+		server_tab = gui.tabs.search_tab(server)
+
+		if message:
+			server_tab.write(time,
+				_(u"[%(nick)s] %(message)s") % {
+					"nick": markup.escape(nick),
+					"message": markup.escape(message) })
+		else:
+			server_tab.write(time,
+				_(u"[%(nick)s] End of whois.") % {
+					"nick": markup.escape(nick) })
+
+
+	# begin of command function
+
 	if not args:
 		return gui.mgmt.myPrint("No server activated.")
 
 	def handler(time, server, nick, message):
 		if message:
-			signals.whois_cb(time, server, nick, message)
+			whois_cb(time, server, nick, message)
 		else:
 			signals.disconnect_signal("whois", handler)
 
