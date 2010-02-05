@@ -1401,22 +1401,6 @@ def cannotJoin(time, server, channel, reason):
 			}))
 
 
-def whois_cb(time, server, nick, message):
-	""" message = "" => end of whois """
-
-	server_tab = gui.tabs.search_tab(server)
-
-	if message:
-		server_tab.write(time,
-			_(u"[%(nick)s] %(message)s") % {
-				"nick": markup.escape(nick),
-				"message": markup.escape(message) })
-	else:
-		server_tab.write(time,
-			_(u"[%(nick)s] End of whois.") % {
-				"nick": markup.escape(nick) })
-
-
 def dcc_send_cb(time, id, server, sender, filename,
 			 size, progress, speed, status):
 	"""
