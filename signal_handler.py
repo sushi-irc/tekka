@@ -587,7 +587,7 @@ def userMode_cb(time, server, from_str, target, mode, param):
 
 	if not nick:
 		# only a mode listing
-		server_tab.current_print(
+		server_tab.current_write(
 			time,
 			_("• Modes for %(target)s: %(mode)s") % {
 				"target":target,
