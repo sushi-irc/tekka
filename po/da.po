@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tekka 1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-23 00:26+0100\n"
-"PO-Revision-Date: 2010-01-01 15:17+0000\n"
-"Last-Translator: nanker <Unknown>\n"
+"POT-Creation-Date: 2010-01-30 23:37+0100\n"
+"PO-Revision-Date: 2010-01-23 00:37+0000\n"
+"Last-Translator: Michael Kuhn <Unknown>\n"
 "Language-Team: Danish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-01-23 00:00+0000\n"
+"X-Launchpad-Export-Date: 2010-02-11 20:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../signal_handler.py:325
@@ -166,34 +166,26 @@ msgstr "Du har brug for den korrekte kanal nøgle."
 msgid "You can not join %(channel)s: %(reason)s"
 msgstr "Du kan ikke tilslutte %(channel)s: %(reason)s"
 
-#: ../signal_handler.py:1408 ../tekka/dialogs/channelList.py:210
-msgid "User"
-msgstr "Bruger"
-
-#: ../signal_handler.py:1409 ../tekka/dialogs/channelList.py:210
-msgid "Topic"
-msgstr "Emne"
-
-#: ../signal_handler.py:1430
+#: ../signal_handler.py:1385
 #, python-format
 msgid "[%(nick)s] %(message)s"
 msgstr "[%(nick)s] %(message)s"
 
-#: ../signal_handler.py:1435
+#: ../signal_handler.py:1390
 #, python-format
 msgid "[%(nick)s] End of whois."
 msgstr "[%(nick)s] Slut på hvem-er."
 
-#: ../signal_handler.py:1505
+#: ../signal_handler.py:1460
 msgid "Auto accepted file transfer"
 msgstr ""
 
-#: ../signal_handler.py:1506
+#: ../signal_handler.py:1461
 #, python-format
 msgid ""
 "maki auto accepted the following file transfer:\n"
 "Filename: %(filename)s\n"
-"Sender: %(filename)s\n"
+"Sender: %(sender)s\n"
 "Size: %(size)s\n"
 "Server: %(server)s"
 msgstr ""
@@ -237,30 +229,38 @@ msgstr "tekka kræver en nyere maki version."
 msgid "Please update maki to at least version %(version)s."
 msgstr "Opdatér venligst maki til mindst version %(version)s."
 
-#: ../tekka/commands.py:52 ../tekka/commands.py:60
+#: ../tekka/commands.py:53 ../tekka/commands.py:62
 msgid "Warning:"
 msgstr "Advarsel:"
 
-#: ../tekka/commands.py:53
+#: ../tekka/commands.py:54
 #, python-format
 msgid "You are not connected to server %(server)s."
 msgstr "Du er ikke forbundet til server %(server)s."
 
-#: ../tekka/commands.py:61
+#: ../tekka/commands.py:63
 #, python-format
 msgid ""
 "The channel %(channel)s is not joined. Everything you write will not be send."
 msgstr ""
 
-#: ../tekka/commands.py:314
+#: ../tekka/commands.py:330
 msgid "• Begin of names"
 msgstr "Begyndelse af navne"
 
-#: ../tekka/commands.py:319
+#: ../tekka/commands.py:335
 msgid "• End of names"
 msgstr "Slutning af navne"
 
-#: ../tekka/commands.py:622
+#: ../tekka/commands.py:462 ../tekka/dialogs/channelList.py:210
+msgid "User"
+msgstr "Bruger"
+
+#: ../tekka/commands.py:463 ../tekka/dialogs/channelList.py:210
+msgid "Topic"
+msgstr "Emne"
+
+#: ../tekka/commands.py:691
 #, python-format
 msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
 msgstr "• Ukendt kommando “%(command)s”, sender rå kommando “%(raw)s”."
@@ -519,47 +519,47 @@ msgid ""
 "ask for support."
 msgstr ""
 
-#: ../tekka/main.py:462
+#: ../tekka/main.py:468
 msgid "Reset markup"
 msgstr "Nulstil markering"
 
-#: ../tekka/main.py:612
+#: ../tekka/main.py:618
 #, python-format
 msgid "Do you really want to close channel “%(name)s”?"
 msgstr "Ønsker du virkelig at lukke kanal \"%(name)s\"?"
 
-#: ../tekka/main.py:614
+#: ../tekka/main.py:620
 #, python-format
 msgid "Do you really want to close query “%(name)s”?"
 msgstr "Ønsker du virkelig at lukke forespørgelse \"%(name)s\"?"
 
-#: ../tekka/main.py:616
+#: ../tekka/main.py:622
 #, python-format
 msgid "Do you really want to close server “%(name)s”?"
 msgstr "Ønsker du virkelig at lukke server \"%(name)s\"?"
 
 #. TODO: away status
-#: ../tekka/main.py:712
+#: ../tekka/main.py:718
 msgid "Nickname: "
 msgstr ""
 
-#: ../tekka/main.py:715
+#: ../tekka/main.py:721
 msgid "User: "
 msgstr "Bruger: "
 
-#: ../tekka/main.py:716
+#: ../tekka/main.py:722
 msgid "Topic: "
 msgstr "Emne: "
 
-#: ../tekka/main.py:718 ../tekka/main.py:722
+#: ../tekka/main.py:724 ../tekka/main.py:728
 msgid "Last sentence: "
 msgstr ""
 
-#: ../tekka/main.py:1177
+#: ../tekka/main.py:1188
 msgid "Error occured"
 msgstr "Fejl opstod"
 
-#: ../tekka/main.py:1186
+#: ../tekka/main.py:1197
 msgid ""
 "<span size='larger' weight='bold'>Error</span>\n"
 "\n"
@@ -623,29 +623,16 @@ msgstr ""
 "Launchpad Contributions:\n"
 "  EFJoKeR https://launchpad.net/~jlassesen\n"
 "  Jimmy Frydkær Jensen https://launchpad.net/~jimmy-frydkaer\n"
+"  Michael Kuhn https://launchpad.net/~suraia\n"
 "  nanker https://launchpad.net/~nanker"
 
 #: ../glade/dialogs/advancedPreferences.glade.h:1
 msgid "Advanced Preferences"
 msgstr "Advancerede Indstillinger"
 
-#: ../glade/dialogs/advancedPreferences.glade.h:2
-#: ../glade/dialogs/channelList.glade.h:2 ../glade/dialogs/hide.glade.h:11
-#: ../glade/dialogs/history.glade.h:3 ../glade/dialogs/plugins.glade.h:5
-msgid "gtk-close"
-msgstr "gtk-luk"
-
 #: ../glade/dialogs/channelList.glade.h:1
 msgid "Channel List"
 msgstr "Kanal liste"
-
-#: ../glade/dialogs/channelList.glade.h:3
-msgid "gtk-find"
-msgstr "gtk-find"
-
-#: ../glade/dialogs/channelList.glade.h:4
-msgid "gtk-stop"
-msgstr "gtk-stop"
 
 #: ../glade/dialogs/dcc.glade.h:1
 msgid "File Transfers"
@@ -913,14 +900,6 @@ msgstr "Reele Navn:"
 msgid "Server name:"
 msgstr "Server Navn:"
 
-#: ../glade/dialogs/serverAdd.glade.h:11
-msgid "gtk-add"
-msgstr "gtk-tilføj"
-
-#: ../glade/dialogs/serverAdd.glade.h:12
-msgid "gtk-cancel"
-msgstr "gtk-annullér"
-
 #: ../glade/dialogs/serverDelete.glade.h:2
 #, no-c-format
 msgid ""
@@ -935,14 +914,6 @@ msgstr ""
 #: ../glade/dialogs/serverDelete.glade.h:5
 msgid "Delete Server"
 msgstr "Fjern Server"
-
-#: ../glade/dialogs/serverDelete.glade.h:6
-msgid "gtk-no"
-msgstr "gtk-nej"
-
-#: ../glade/dialogs/serverDelete.glade.h:7
-msgid "gtk-yes"
-msgstr "gtk-ja"
 
 #: ../glade/dialogs/serverEdit.glade.h:2
 msgid "<b>Edit Server</b>"
@@ -1082,3 +1053,24 @@ msgstr "_maki"
 #~ "Første felt er type, andet felt er server, tredje felt er kanalen.\n"
 #~ "Alt der matcher passere filteret og vil blive vist undtaget rækken der "
 #~ "nægtes."
+
+#~ msgid "gtk-find"
+#~ msgstr "gtk-find"
+
+#~ msgid "gtk-stop"
+#~ msgstr "gtk-stop"
+
+#~ msgid "gtk-close"
+#~ msgstr "gtk-luk"
+
+#~ msgid "gtk-yes"
+#~ msgstr "gtk-ja"
+
+#~ msgid "gtk-add"
+#~ msgstr "gtk-tilføj"
+
+#~ msgid "gtk-cancel"
+#~ msgstr "gtk-annullér"
+
+#~ msgid "gtk-no"
+#~ msgstr "gtk-nej"

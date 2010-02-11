@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tekka 1.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-23 00:26+0100\n"
+"POT-Creation-Date: 2010-01-30 23:37+0100\n"
 "PO-Revision-Date: 2009-07-13 13:49+0000\n"
 "Last-Translator: Michael Kuhn <Unknown>\n"
 "Language-Team: Bulgarian\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-01-23 00:00+0000\n"
+"X-Launchpad-Export-Date: 2010-02-11 20:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../signal_handler.py:325
@@ -168,34 +168,26 @@ msgstr "Трябва ти ключ за този канал."
 msgid "You can not join %(channel)s: %(reason)s"
 msgstr "Неможеш да се присъединиш към  %(channel)s: %(reason)s"
 
-#: ../signal_handler.py:1408 ../tekka/dialogs/channelList.py:210
-msgid "User"
-msgstr "Потребител"
-
-#: ../signal_handler.py:1409 ../tekka/dialogs/channelList.py:210
-msgid "Topic"
-msgstr "Тема"
-
-#: ../signal_handler.py:1430
+#: ../signal_handler.py:1385
 #, python-format
 msgid "[%(nick)s] %(message)s"
 msgstr ""
 
-#: ../signal_handler.py:1435
+#: ../signal_handler.py:1390
 #, python-format
 msgid "[%(nick)s] End of whois."
 msgstr "[%(nick)s] Край на whois."
 
-#: ../signal_handler.py:1505
+#: ../signal_handler.py:1460
 msgid "Auto accepted file transfer"
 msgstr ""
 
-#: ../signal_handler.py:1506
+#: ../signal_handler.py:1461
 #, python-format
 msgid ""
 "maki auto accepted the following file transfer:\n"
 "Filename: %(filename)s\n"
-"Sender: %(filename)s\n"
+"Sender: %(sender)s\n"
 "Size: %(size)s\n"
 "Server: %(server)s"
 msgstr ""
@@ -237,30 +229,38 @@ msgstr ""
 msgid "Please update maki to at least version %(version)s."
 msgstr ""
 
-#: ../tekka/commands.py:52 ../tekka/commands.py:60
+#: ../tekka/commands.py:53 ../tekka/commands.py:62
 msgid "Warning:"
 msgstr ""
 
-#: ../tekka/commands.py:53
+#: ../tekka/commands.py:54
 #, python-format
 msgid "You are not connected to server %(server)s."
 msgstr ""
 
-#: ../tekka/commands.py:61
+#: ../tekka/commands.py:63
 #, python-format
 msgid ""
 "The channel %(channel)s is not joined. Everything you write will not be send."
 msgstr ""
 
-#: ../tekka/commands.py:314
+#: ../tekka/commands.py:330
 msgid "• Begin of names"
 msgstr ""
 
-#: ../tekka/commands.py:319
+#: ../tekka/commands.py:335
 msgid "• End of names"
 msgstr ""
 
-#: ../tekka/commands.py:622
+#: ../tekka/commands.py:462 ../tekka/dialogs/channelList.py:210
+msgid "User"
+msgstr "Потребител"
+
+#: ../tekka/commands.py:463 ../tekka/dialogs/channelList.py:210
+msgid "Topic"
+msgstr "Тема"
+
+#: ../tekka/commands.py:691
 #, python-format
 msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
 msgstr ""
@@ -519,47 +519,47 @@ msgid ""
 "ask for support."
 msgstr ""
 
-#: ../tekka/main.py:462
+#: ../tekka/main.py:468
 msgid "Reset markup"
 msgstr "Премахни маркираното"
 
-#: ../tekka/main.py:612
+#: ../tekka/main.py:618
 #, python-format
 msgid "Do you really want to close channel “%(name)s”?"
 msgstr "Сигурен ли си, че искаш да затвориш този канал “%(name)s”?"
 
-#: ../tekka/main.py:614
+#: ../tekka/main.py:620
 #, python-format
 msgid "Do you really want to close query “%(name)s”?"
 msgstr "Сигурен ли си, че искаш да затвориш ЛС “%(name)s”?"
 
-#: ../tekka/main.py:616
+#: ../tekka/main.py:622
 #, python-format
 msgid "Do you really want to close server “%(name)s”?"
 msgstr "Сигурен ли си, че искаш да напуснеш сървъра “%(name)s”?"
 
 #. TODO: away status
-#: ../tekka/main.py:712
+#: ../tekka/main.py:718
 msgid "Nickname: "
 msgstr ""
 
-#: ../tekka/main.py:715
+#: ../tekka/main.py:721
 msgid "User: "
 msgstr ""
 
-#: ../tekka/main.py:716
+#: ../tekka/main.py:722
 msgid "Topic: "
 msgstr ""
 
-#: ../tekka/main.py:718 ../tekka/main.py:722
+#: ../tekka/main.py:724 ../tekka/main.py:728
 msgid "Last sentence: "
 msgstr ""
 
-#: ../tekka/main.py:1177
+#: ../tekka/main.py:1188
 msgid "Error occured"
 msgstr ""
 
-#: ../tekka/main.py:1186
+#: ../tekka/main.py:1197
 msgid ""
 "<span size='larger' weight='bold'>Error</span>\n"
 "\n"
@@ -627,23 +627,9 @@ msgstr ""
 msgid "Advanced Preferences"
 msgstr "Разширени опции"
 
-#: ../glade/dialogs/advancedPreferences.glade.h:2
-#: ../glade/dialogs/channelList.glade.h:2 ../glade/dialogs/hide.glade.h:11
-#: ../glade/dialogs/history.glade.h:3 ../glade/dialogs/plugins.glade.h:5
-msgid "gtk-close"
-msgstr ""
-
 #: ../glade/dialogs/channelList.glade.h:1
 msgid "Channel List"
 msgstr "Списък канал"
-
-#: ../glade/dialogs/channelList.glade.h:3
-msgid "gtk-find"
-msgstr ""
-
-#: ../glade/dialogs/channelList.glade.h:4
-msgid "gtk-stop"
-msgstr ""
 
 #: ../glade/dialogs/dcc.glade.h:1
 msgid "File Transfers"
@@ -911,14 +897,6 @@ msgstr "Истинско име:"
 msgid "Server name:"
 msgstr "Име на сървър:"
 
-#: ../glade/dialogs/serverAdd.glade.h:11
-msgid "gtk-add"
-msgstr ""
-
-#: ../glade/dialogs/serverAdd.glade.h:12
-msgid "gtk-cancel"
-msgstr ""
-
 #: ../glade/dialogs/serverDelete.glade.h:2
 #, no-c-format
 msgid ""
@@ -930,14 +908,6 @@ msgstr ""
 #: ../glade/dialogs/serverDelete.glade.h:5
 msgid "Delete Server"
 msgstr "Изтрии сървър"
-
-#: ../glade/dialogs/serverDelete.glade.h:6
-msgid "gtk-no"
-msgstr ""
-
-#: ../glade/dialogs/serverDelete.glade.h:7
-msgid "gtk-yes"
-msgstr ""
 
 #: ../glade/dialogs/serverEdit.glade.h:2
 msgid "<b>Edit Server</b>"
