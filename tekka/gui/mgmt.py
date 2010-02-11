@@ -35,6 +35,7 @@ from threading import Timer
 
 from .. import config
 
+from .builder import setup_statusIcon
 from ._widgets import widgets
 
 from ..helper import color
@@ -113,6 +114,7 @@ def switch_status_icon(switch):
 
 		if not statusIcon:
 			setup_statusIcon()
+			return
 
 		statusIcon.set_visible(True)
 
