@@ -30,6 +30,7 @@ glade/dialogs/colorTable.ui
 glade/dialogs/dcc.glade
 glade/dialogs/hide.glade
 glade/dialogs/history.glade
+glade/dialogs/join.ui
 glade/dialogs/plugins.glade
 glade/dialogs/preferences.glade
 glade/dialogs/server.glade
