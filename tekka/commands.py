@@ -56,7 +56,7 @@ def warnNoConnection(tab):
 			"server": name } )
 	dialog.connect("response", lambda w,i: w.destroy() )
 
-	gui.show_inline_dialog(dialog)
+	gui.mgmt.show_inline_dialog(dialog)
 
 
 def warnNotJoined(cTab):
@@ -65,7 +65,7 @@ def warnNotJoined(cTab):
 		"write will not be send.") % { "channel": cTab.name })
 	dialog.connect("response", lambda w,i: w.destroy())
 
-	gui.show_inline_dialog(dialog)
+	gui.mgmt.show_inline_dialog(dialog)
 
 
 def makiConnect(currentServer, currentChannel, args):
