@@ -109,6 +109,8 @@ def setup_statusIcon():
 	if config.get_bool("tekka", "rgba"):
 		gtk.widget_pop_colormap()
 
+	statusIcon.set_visible(True)
+
 
 @types(gladeFile=basestring, section=basestring)
 def load_widgets(gladeFile, section):
