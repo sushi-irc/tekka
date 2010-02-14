@@ -4,17 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: tekka 1.1\n"
+"Project-Id-Version: tekka 1.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-23 00:26+0100\n"
-"PO-Revision-Date: 2009-12-13 03:24+0000\n"
-"Last-Translator: Nicolás M. Zahlut <nzahlut@live.com>\n"
+"POT-Creation-Date: 2010-01-30 23:37+0100\n"
+"PO-Revision-Date: 2010-02-05 11:41+0000\n"
+"Last-Translator: Hector Louzao <os390l@gmail.com>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-01-23 00:00+0000\n"
+"X-Launchpad-Export-Date: 2010-02-14 21:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../signal_handler.py:325
@@ -124,7 +124,7 @@ msgstr "« %(nick)s ha dejado %(channel)s."
 
 #: ../signal_handler.py:1316
 msgid "• You are not a channel operator."
-msgstr ""
+msgstr "• Usted no es un operador de canal."
 
 #: ../signal_handler.py:1326
 #, python-format
@@ -166,37 +166,34 @@ msgstr "Necesita la llave correcta del canal."
 msgid "You can not join %(channel)s: %(reason)s"
 msgstr "No se puede unirse a %(channel)s: %(reason)s"
 
-#: ../signal_handler.py:1408 ../tekka/dialogs/channelList.py:210
-msgid "User"
-msgstr "Usuario"
-
-#: ../signal_handler.py:1409 ../tekka/dialogs/channelList.py:210
-msgid "Topic"
-msgstr "Tema"
-
-#: ../signal_handler.py:1430
+#: ../signal_handler.py:1385
 #, python-format
 msgid "[%(nick)s] %(message)s"
 msgstr "[%(nick)s] %(message)s"
 
-#: ../signal_handler.py:1435
+#: ../signal_handler.py:1390
 #, python-format
 msgid "[%(nick)s] End of whois."
 msgstr "%(nick)s] fin de whois."
 
-#: ../signal_handler.py:1505
+#: ../signal_handler.py:1460
 msgid "Auto accepted file transfer"
-msgstr ""
+msgstr "Auto aceptar la transferencia de archivos"
 
-#: ../signal_handler.py:1506
+#: ../signal_handler.py:1461
 #, python-format
 msgid ""
 "maki auto accepted the following file transfer:\n"
 "Filename: %(filename)s\n"
-"Sender: %(filename)s\n"
+"Sender: %(sender)s\n"
 "Size: %(size)s\n"
 "Server: %(server)s"
 msgstr ""
+"Maki auto aceptado la transferencia de archivos siguientes:\n"
+"Nombre del archivo: %(filename)s\n"
+"Remitente: %(sender)s\n"
+"Tamaño: %(size)s\n"
+"Servidor: %(server)s"
 
 #: ../tekka/com.py:108 ../tekka/com.py:114 ../tekka/com.py:206
 #: ../tekka/gui/mgmt.py:248
@@ -240,42 +237,50 @@ msgstr "tekka requiere una versión superior de maki."
 msgid "Please update maki to at least version %(version)s."
 msgstr "Por favor actualice maki al menos a la versión %(version)s."
 
-#: ../tekka/commands.py:52 ../tekka/commands.py:60
+#: ../tekka/commands.py:53 ../tekka/commands.py:62
 msgid "Warning:"
 msgstr "Advertencia:"
 
-#: ../tekka/commands.py:53
+#: ../tekka/commands.py:54
 #, python-format
 msgid "You are not connected to server %(server)s."
 msgstr "No está conectado al servidor %(server)s."
 
-#: ../tekka/commands.py:61
+#: ../tekka/commands.py:63
 #, python-format
 msgid ""
 "The channel %(channel)s is not joined. Everything you write will not be send."
 msgstr ""
 "No está unido al canal %(channel)s . Nada de lo que escriba será enviado."
 
-#: ../tekka/commands.py:314
+#: ../tekka/commands.py:330
 msgid "• Begin of names"
 msgstr "Inicio de nombres"
 
-#: ../tekka/commands.py:319
+#: ../tekka/commands.py:335
 msgid "• End of names"
 msgstr "Fin de nombres"
 
-#: ../tekka/commands.py:622
+#: ../tekka/commands.py:462 ../tekka/dialogs/channelList.py:210
+msgid "User"
+msgstr "Usuario"
+
+#: ../tekka/commands.py:463 ../tekka/dialogs/channelList.py:210
+msgid "Topic"
+msgstr "Tema"
+
+#: ../tekka/commands.py:691
 #, python-format
 msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
 msgstr "Orden desconocida “%(command)s”, enviando orden errónea  “%(raw)s”."
 
 #: ../tekka/dialogs/addServer.py:76
 msgid "No server name given."
-msgstr ""
+msgstr "Nombre del servidor no informado."
 
 #: ../tekka/dialogs/addServer.py:77
 msgid "You must enter a server name."
-msgstr ""
+msgstr "Debe introducir un nombre de servidor."
 
 #: ../tekka/dialogs/channelList.py:109
 msgid "Channel list search error."
@@ -298,20 +303,21 @@ msgstr "Canal"
 
 #: ../tekka/dialogs/dcc.py:167
 msgid "No transfer selected!"
-msgstr ""
+msgstr "Ausencia de transferencia seleccionado!"
 
 #: ../tekka/dialogs/dcc.py:168
 msgid "You must select a transfer to remove it."
-msgstr ""
+msgstr "Usted debe seleccionar una transferencia para eliminarlo."
 
 #: ../tekka/dialogs/dcc.py:172
 msgid "Remove file transfer?"
-msgstr ""
+msgstr "Eliminar la transferencia de archivos?"
 
 #: ../tekka/dialogs/dcc.py:173
 #, python-format
 msgid "Are you sure you want to remove the file transfer %(id)d?"
 msgstr ""
+"¿Estás seguro de que deseas eliminar la transferencia de archivos %(id)d?"
 
 #: ../tekka/dialogs/dcc.py:232
 msgid "ID"
@@ -353,13 +359,15 @@ msgstr "Configurar %(name)s"
 
 #: ../tekka/dialogs/server.py:211
 msgid "Error while retrieving server name."
-msgstr ""
+msgstr "Error al recuperar el nombre del servidor."
 
 #: ../tekka/dialogs/server.py:212
 msgid ""
 "There was an error while retrieving the server name.\n"
 "Are you connected to maki?"
 msgstr ""
+"Se produjo un error al recuperar el nombre del servidor.\n"
+"¿Estás conectado a Maki?"
 
 #: ../tekka/dialogs/whois.py:74
 #, python-format
@@ -395,11 +403,11 @@ msgstr[1] "%d Operadores"
 
 #: ../tekka/lib/dcc_dialog.py:67
 msgid "Select destination"
-msgstr ""
+msgstr "Seleccione destino"
 
 #: ../tekka/lib/dcc_dialog.py:86
 msgid "Select a destination to save the file"
-msgstr ""
+msgstr "Seleccione un destino para guardar el archivo"
 
 #: ../tekka/lib/dcc_dialog.py:104
 msgid ""
@@ -407,6 +415,8 @@ msgid ""
 "<b>Info:</b> If you don't choose another destination, this file will be "
 "resumed."
 msgstr ""
+"\n"
+"<b>Info:</b> Si usted no elige otro destino, este archivo se reanudará."
 
 #: ../tekka/lib/dcc_dialog.py:110
 msgid "Incoming file transfer"
@@ -420,6 +430,10 @@ msgid ""
 "File size: %(bytes)d bytes\n"
 "Destination: %(destination)s%(resumable)s"
 msgstr ""
+"Remitente: \"%(nick)s\"\n"
+"Nombre del archivo:  \"%(filename)s\"\n"
+"Tamaño del archivo: %(bytes)d bytes\n"
+"Destino: %(destination)s%(resumable)s"
 
 #: ../tekka/lib/dialog_control.py:62
 #, python-format
@@ -429,7 +443,7 @@ msgstr "No se pudo abrir el diálogo '%s'. No hay conexión con maki."
 #: ../tekka/lib/general_output_buffer.py:63
 #, python-format
 msgid "Hide '%s' messages"
-msgstr ""
+msgstr "Ocultar '%s' Mensajes"
 
 #: ../tekka/lib/key_dialog.py:50
 #, python-format
@@ -538,47 +552,47 @@ msgstr ""
 "busque una solución a su problema. De no encontrarla, siéntase libre de "
 "preguntar al soporte."
 
-#: ../tekka/main.py:462
+#: ../tekka/main.py:468
 msgid "Reset markup"
 msgstr "Reiniciar marcación"
 
-#: ../tekka/main.py:612
+#: ../tekka/main.py:618
 #, python-format
 msgid "Do you really want to close channel “%(name)s”?"
 msgstr "¿Realmente quieres cerrar el canal “%(name)s”?"
 
-#: ../tekka/main.py:614
+#: ../tekka/main.py:620
 #, python-format
 msgid "Do you really want to close query “%(name)s”?"
 msgstr "¿Realmente quiere cerrar la consulta “%(name)s”?"
 
-#: ../tekka/main.py:616
+#: ../tekka/main.py:622
 #, python-format
 msgid "Do you really want to close server “%(name)s”?"
 msgstr "¿Realmente quieres cerrar el servidor “%(name)s”?"
 
 #. TODO: away status
-#: ../tekka/main.py:712
+#: ../tekka/main.py:718
 msgid "Nickname: "
 msgstr "Nickname: "
 
-#: ../tekka/main.py:715
+#: ../tekka/main.py:721
 msgid "User: "
 msgstr "Usuario: "
 
-#: ../tekka/main.py:716
+#: ../tekka/main.py:722
 msgid "Topic: "
 msgstr "Tema: "
 
-#: ../tekka/main.py:718 ../tekka/main.py:722
+#: ../tekka/main.py:724 ../tekka/main.py:728
 msgid "Last sentence: "
 msgstr "Última linea: "
 
-#: ../tekka/main.py:1177
+#: ../tekka/main.py:1188
 msgid "Error occured"
 msgstr "Ocurrió un error"
 
-#: ../tekka/main.py:1186
+#: ../tekka/main.py:1197
 msgid ""
 "<span size='larger' weight='bold'>Error</span>\n"
 "\n"
@@ -597,7 +611,7 @@ msgstr "Ninguna conexión con maki."
 
 #: ../tekka/menus/mainmenu_context.py:105
 msgid "You can't shutdown maki. You're not connected."
-msgstr ""
+msgstr "Usted no puede apagar maki. Usted no está conectado."
 
 #: ../tekka/menus/mainmenu_context.py:236
 msgid "tekka could not determine server."
@@ -628,16 +642,16 @@ msgstr ""
 
 #: ../tekka/menus/nicklist_menu.py:153
 msgid "No file selected"
-msgstr ""
+msgstr "No se ha seleccionado ningún archivo"
 
 #: ../tekka/menus/nicklist_menu.py:154
 msgid "You didn't select a file to send. Aborting."
-msgstr ""
+msgstr "Usted no ha seleccionado un archivo a enviar. Abortar."
 
 #: ../tekka/menus/nicklist_menu.py:160
 #, python-format
 msgid "Choose a file to send to %(nick)s"
-msgstr ""
+msgstr "Elija un archivo para enviar al %(nick)s"
 
 #: ../tekka/menus/servertree_menu.py:53
 msgid ""
@@ -654,37 +668,15 @@ msgstr ""
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  A. Emmanuel Mendoza https://launchpad.net/~a.emmanuelmendoza\n"
-"  DiegoJ https://launchpad.net/~diegojromerolopez\n"
-"  Feder Sáiz https://launchpad.net/~federsaiz\n"
-"  Federico Vera https://launchpad.net/~fedevera\n"
-"  Felipe Besoain https://launchpad.net/~fbesoain\n"
-"  Monkey https://launchpad.net/~monkey-libre\n"
-"  Nicolás M. Zahlut https://launchpad.net/~nzahlut\n"
-"  Paco Molinero https://launchpad.net/~franciscomol\n"
-"  Stefano Prenna https://launchpad.net/~stefanoprenna"
+"  Hector Louzao https://launchpad.net/~hhlp"
 
 #: ../glade/dialogs/advancedPreferences.glade.h:1
 msgid "Advanced Preferences"
 msgstr "Preferencias Avanzadas"
 
-#: ../glade/dialogs/advancedPreferences.glade.h:2
-#: ../glade/dialogs/channelList.glade.h:2 ../glade/dialogs/hide.glade.h:11
-#: ../glade/dialogs/history.glade.h:3 ../glade/dialogs/plugins.glade.h:5
-msgid "gtk-close"
-msgstr "gtk-close"
-
 #: ../glade/dialogs/channelList.glade.h:1
 msgid "Channel List"
 msgstr "Lista de Canales"
-
-#: ../glade/dialogs/channelList.glade.h:3
-msgid "gtk-find"
-msgstr "gtk-find"
-
-#: ../glade/dialogs/channelList.glade.h:4
-msgid "gtk-stop"
-msgstr "gtk-stop"
 
 #: ../glade/dialogs/dcc.glade.h:1
 msgid "File Transfers"
@@ -960,14 +952,6 @@ msgstr "Nombre real:"
 msgid "Server name:"
 msgstr "Nombre del servidor:"
 
-#: ../glade/dialogs/serverAdd.glade.h:11
-msgid "gtk-add"
-msgstr "gtk-add"
-
-#: ../glade/dialogs/serverAdd.glade.h:12
-msgid "gtk-cancel"
-msgstr "gtk-cancel"
-
 #: ../glade/dialogs/serverDelete.glade.h:2
 #, no-c-format
 msgid ""
@@ -982,14 +966,6 @@ msgstr ""
 #: ../glade/dialogs/serverDelete.glade.h:5
 msgid "Delete Server"
 msgstr "Eliminar Servidor"
-
-#: ../glade/dialogs/serverDelete.glade.h:6
-msgid "gtk-no"
-msgstr "gtk-no"
-
-#: ../glade/dialogs/serverDelete.glade.h:7
-msgid "gtk-yes"
-msgstr "gtk-yes"
 
 #: ../glade/dialogs/serverEdit.glade.h:2
 msgid "<b>Edit Server</b>"
@@ -1067,110 +1043,23 @@ msgstr "_Ver"
 msgid "_maki"
 msgstr "_maki"
 
-#~ msgid "Take Voice"
-#~ msgstr "Tomar Voz"
+#~ msgid "gtk-stop"
+#~ msgstr "gtk-stop"
 
-#~ msgid "Take Op"
-#~ msgstr "Quitar Op"
+#~ msgid "gtk-no"
+#~ msgstr "gtk-no"
 
-#~ msgid "Ban"
-#~ msgstr "Banear"
+#~ msgid "gtk-close"
+#~ msgstr "gtk-close"
 
-#~ msgid "Close"
-#~ msgstr "Cerrar"
+#~ msgid "gtk-find"
+#~ msgstr "gtk-find"
 
-#~ msgid "Give Op"
-#~ msgstr "Dar Op"
+#~ msgid "gtk-add"
+#~ msgstr "gtk-add"
 
-#~ msgid "Give Voice"
-#~ msgstr "Dar voz"
+#~ msgid "gtk-cancel"
+#~ msgstr "gtk-cancel"
 
-#~ msgid "Modes"
-#~ msgstr "Modos"
-
-#~ msgid "Part"
-#~ msgstr "Parte"
-
-#~ msgid "Auto-connect"
-#~ msgstr "Auto-conectar"
-
-#, python-format
-#~ msgid "Error: %(message)s"
-#~ msgstr "Error: %(message)s"
-
-#~ msgid ""
-#~ "\n"
-#~ "If you don't choose another destination, this file will be resumed."
-#~ msgstr ""
-#~ "\n"
-#~ "Sí no selecciona otro destino, el archivo se continuará."
-
-#, python-format
-#~ msgid ""
-#~ "Sender: ”%(nick)s”\n"
-#~ "Filename: “%(filename)s“\n"
-#~ "File size: %(bytes)d bytes%(resumable)s"
-#~ msgstr ""
-#~ "Remitente: ”%(nick)s”\n"
-#~ "Nombre de archivo: “%(filename)s“\n"
-#~ "Tamaño de archivo: %(bytes)d bytes%(resumable)s"
-
-#~ msgid "Auto-join"
-#~ msgstr "Conectarse automáticamente"
-
-#~ msgid "Join"
-#~ msgstr "Unirse"
-
-#~ msgid "Kick"
-#~ msgstr "Patear"
-
-#~ msgid "Manage File Transfers"
-#~ msgstr "Administrar Transferencia de Archivos"
-
-#~ msgid "Set Key"
-#~ msgstr "Establecer Llave"
-
-#~ msgid "Manage plugins"
-#~ msgstr "Administrar complementos"
-
-#~ msgid "Whois"
-#~ msgstr "Quién es"
-
-#~ msgid ""
-#~ "<b>Notice:</b>\n"
-#~ "First field is type, second field is server, third is the channel.\n"
-#~ "Everything matching passes the filter and will be shown except the row is "
-#~ "negated."
-#~ msgstr ""
-#~ "<b>Nota:</b>\n"
-#~ "El primer campo es el tipo, el segundo campo el servidor y el tercero es el "
-#~ "canal.\n"
-#~ "Todo lo que coincida pasa el filtro y será mostrado, a menos que la fila "
-#~ "este negada."
-
-#~ msgid "H_ide Messages"
-#~ msgstr "O_cultar Mensajes"
-
-#~ msgid "Set _Topic"
-#~ msgstr "Estabelcer _Tema"
-
-#~ msgid "_Part"
-#~ msgstr "_Parte"
-
-#~ msgid "gtk-remove"
-#~ msgstr "gtk-remove"
-
-#~ msgid "Set _Key"
-#~ msgstr "Establecer _clave"
-
-#~ msgid "_Connect"
-#~ msgstr "_Conectar"
-
-#~ msgid "_Disconnect"
-#~ msgstr "_Desconectar"
-
-#~ msgid "_History"
-#~ msgstr "_Historial"
-
-#~ msgid "_Join"
-#~ msgstr "Unirse"
+#~ msgid "gtk-yes"
+#~ msgstr "gtk-yes"
