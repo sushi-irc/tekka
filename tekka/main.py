@@ -258,7 +258,7 @@ def tekka_tab_remove_cb(tab):
 			nextTab.switch_to()
 
 	elif (tab.is_server()
-	and len(gui.get_widget("serverTree").get_model()) == 1):
+	and len(gui.widgets.get_widget("serverTree").get_model()) == 1):
 		gui.mgmt.set_useable(False)
 
 """
