@@ -26,11 +26,11 @@ tekka/menus/servertree_menu.py
 glade/dialogs/about.glade.in
 glade/dialogs/advancedPreferences.glade
 glade/dialogs/channelList.glade
-glade/dialogs/colorTable.ui
+[type: gettext/glade] glade/dialogs/colorTable.ui
 glade/dialogs/dcc.glade
 glade/dialogs/hide.glade
 glade/dialogs/history.glade
-glade/dialogs/join.ui
+[type: gettext/glade] glade/dialogs/join.ui
 glade/dialogs/plugins.glade
 glade/dialogs/preferences.glade
 glade/dialogs/server.glade
@@ -38,5 +38,5 @@ glade/dialogs/serverAdd.glade
 glade/dialogs/serverDelete.glade
 glade/dialogs/serverEdit.glade
 glade/mainwindow.glade
-glade/menus/nickListMenu.ui
-glade/menus/serverTreeMenu.ui
+[type: gettext/glade] glade/menus/nickListMenu.ui
+[type: gettext/glade] glade/menus/serverTreeMenu.ui
