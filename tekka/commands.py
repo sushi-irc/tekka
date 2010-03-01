@@ -316,16 +316,22 @@ def tekkaNames(serverTab, channelTab, args):
 		Usage: /names [<channel>]
 	"""
 	def request(server,channel):
+		""" print the name listing in the queried tab (if it's active)
+			or in the current tab
+		"""
 		def names_cb(time, server, channel, nicks, prefixes):
+
 			self = names_cb
 
 			def print_message(message):
-				if self.no_channel:
-					gui.currentServerPrint(time, server, message,
-						"action")
+				if self.tab.is_active():
+					# print in the channel we query
+					self.tab.write(time, message, "action")
+				elif self.tab.is_server():
+					self.tab.current_write(time, message, "action")
 				else:
-					gui.channelPrint(time, server, channel, message,
-						"action")
+					# print in the current channel
+					self.tab.server.current_write(time, message, "action")
 
 			if self.first:
 				print_message(_("• Begin of names"))
@@ -343,7 +349,7 @@ def tekkaNames(serverTab, channelTab, args):
 						color.get_nick_color(nicks[i]),
 						nicks[i])
 
-					if (i+1) % 5 == 0:
+					if (i+1) % self.max_col == 0:
 						print_message(message)
 						message = ""
 					else:
@@ -352,8 +358,11 @@ def tekkaNames(serverTab, channelTab, args):
 				print_message(message)
 
 
-		names_cb.no_channel = not channel
 		names_cb.first = True
+		names_cb.max_col = int(config.get("tekka","names_columns"))
+		s,c = gui.tabs.search_tabs(server, channel)
+		names_cb.tab = c or s
+
 		signals.connect_signal("names", names_cb)
 		sushi.names(server, channel)
 

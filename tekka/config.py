@@ -102,6 +102,7 @@ def set_defaults():
 	defaults["tekka"]["max_output_lines"] = "500"
 	defaults["tekka"]["profiling"] = "False"
 	defaults["tekka"]["popup_line_limit"] = "10"
+	defaults["tekka"]["names_columns"] = "5"
 	defaults["tekka"]["browser"] = None
 
 	defaults["dcc"] = {}
