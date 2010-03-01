@@ -645,6 +645,11 @@ def parseInput(text):
 	split text for blank, strip the command
 	and search for it in _commands-dict.
 	Call the underlying function if found.
+	Paramters for the function are:
+	- the current server or None
+	- the current channel or None
+	- A list of words typed after the command
+	  ("parameters") split by space
 	"""
 	if not text:
 		return
@@ -682,7 +687,7 @@ def parseInput(text):
 	else:
 		# we got a command here
 
-		argv = text[1:].split(" ")
+		argv = text[1:].rstrip().split(" ")
 		cmd = argv[0]
 
 		if not cmd:
