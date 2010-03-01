@@ -97,12 +97,12 @@ def set_defaults():
 	defaults["tekka"]["ask_for_key_on_cannotjoin"] = "True"
 	defaults["tekka"]["switch_to_channel_after_join"] = "True"
 
-	defaults["tekka"]["whois_dialog"] = "True"
-	defaults["tekka"]["divider_length"] = "30"
-	defaults["tekka"]["max_output_lines"] = "500"
-	defaults["tekka"]["profiling"] = "False"
+	defaults["tekka"]["whois_dialog"] = "True"      # pop up a dialog on /whois?
+	defaults["tekka"]["divider_length"] = "30"      # how much spaces one divider has
+	defaults["tekka"]["max_output_lines"] = "500"   # max. lines in one output window
+	defaults["tekka"]["profiling"] = "False"        # performance profiling switch
 	defaults["tekka"]["popup_line_limit"] = "10"
-	defaults["tekka"]["names_columns"] = "5"
+	defaults["tekka"]["names_columns"] = "5"        # nicks in one row in /names output
 	defaults["tekka"]["browser"] = None
 
 	defaults["dcc"] = {}

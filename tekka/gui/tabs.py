@@ -300,8 +300,10 @@ class TekkaTab(gobject.GObject):
 
 		return False
 
+
 	def switch_to(self):
 		switch_to_path(self.path)
+
 
 gobject.signal_new(
 	"server_connected",
@@ -441,6 +443,7 @@ class TekkaServer(TekkaTab):
 			return False
 
 		gobject.idle_add(notify)
+
 
 	def current_write(self, timestamp, message, msgtype="message",
 	no_general_output=False):
