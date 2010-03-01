@@ -1216,24 +1216,11 @@ def userNames_cb(timestamp, server, channel, nicks, prefixes):
 	remove the nick to make sure it isn't there (hac--workaround),
 	add the nick, fetch the prefix for it and at least
 	update the user count.
-
-	To avoid a non existent channel this method checks against
-	a missing channel tab and adds it if needed.
 	"""
 	tab = gui.tabs.search_tab(server, channel)
 
-	if not tab:
-		serverTab = gui.tabs.search_tab(server)
-		tab = gui.tabs.create_channel(serverTab, channel)
-
-		if not gui.tabs.add_tab(serverTab, tab):
-			raise Exception, "adding tab for channel '%s' failed." % (
-				channel)
-
-		tab.print_last_log()
-
-		tab.joined = True
-		tab.connected = True
+	if not tab: # /names for unexisting channel?
+		return
 
 	if not nicks:
 		# end of list
