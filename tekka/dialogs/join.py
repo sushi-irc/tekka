@@ -35,6 +35,10 @@ from .. import gui
 
 builder = gtk.Builder()
 
+def reset_values():
+	builder.get_object("autoJoinCheckButton").set_active(False)
+	builder.get_object("nameEntry").set_text("#")
+
 def dialog_response_cb(dialog, id):
 	global _current_server, builder
 
@@ -49,7 +53,8 @@ def dialog_response_cb(dialog, id):
 					channel,
 					"autojoin",
 					"true")
-	dialog.destroy()
+	dialog.hide()
+	reset_values()
 
 def run(current_server):
 	if not current_server:
