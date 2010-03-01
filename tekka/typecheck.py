@@ -62,10 +62,13 @@ def types (**type_dict):
 					# given, let python handle this.
 					continue
 
+				# FIXME redundant code here...
+
 				if type (t_type) == tuple:
 					# more than one type given
 					if (not isinstance(foreign, t_type)
-					and not issubclass(foreign, t_type)):
+					and (foreign == type(type)
+					and not issubclass(foreign, t_type))):
 						typelist_name = " or ".join (
 							[n.__name__ for n in t_type])
 						raise_error (typelist_name, foreign_type.__name__)
@@ -75,7 +78,8 @@ def types (**type_dict):
 					# one type to check
 
 					if (not isinstance(foreign, t_type)
-					and not issubclass(foreign, t_type)):
+					and (foreign == type(type)
+					and not issubclass(foreign, t_type))):
 						raise_error (t_type.__name__, foreign_type.__name__)
 
 				else:
