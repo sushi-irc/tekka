@@ -155,14 +155,14 @@ class TekkaTab(gobject.GObject):
 	def __init__(self, name, window = None):
 		gobject.GObject.__init__(self)
 
-		self.window = window
-		self.path = ()
-		self.name = name
-		self.newMessage = []
-		self.connected = False
-		self.input_text = ""
+		self.window = window   # the associated GUI output widget
+		self.path = ()         # the path in the server tree
+		self.name = name       # identifying name
+		self.newMessage = []   # status array of unread message types
+		self.connected = False # status flag if the tab's server is connected
+		self.input_text = ""   # last typed input text
 
-		self.input_history = None
+		self.input_history = None # input_history object placeholder
 
 
 	def __repr__(self):
@@ -310,12 +310,14 @@ gobject.signal_new(
 	gobject.TYPE_NONE,
 	(gobject.TYPE_BOOLEAN,))
 
+""" The tab's markup has changed """
 gobject.signal_new(
 	"new_markup",
 	TekkaTab,
 	gobject.SIGNAL_ACTION,
 	gobject.TYPE_NONE,())
 
+""" The tab's unread messages buffer changed """
 gobject.signal_new(
 	"new_message",
 	TekkaTab,
@@ -323,6 +325,7 @@ gobject.signal_new(
 	gobject.TYPE_NONE,
 	(gobject.TYPE_PYOBJECT,))
 
+""" The unread messages buffer was reset """
 gobject.signal_new(
 	"reset_message",
 	TekkaTab,
@@ -330,6 +333,7 @@ gobject.signal_new(
 	gobject.TYPE_NONE,
 	())
 
+""" The tab's path in the server tree changed """
 gobject.signal_new(
 	"new_path",
 	TekkaTab,
@@ -337,6 +341,7 @@ gobject.signal_new(
 	gobject.TYPE_NONE,
 	(gobject.TYPE_PYOBJECT,))
 
+""" The tab's name changed (new name as parameter) """
 gobject.signal_new(
 	"new_name",
 	TekkaTab,
@@ -381,10 +386,10 @@ class TekkaServer(TekkaTab):
 	def __init__(self, name, textview=None):
 		TekkaTab.__init__(self, name, textview)
 
-		self.nick = ""
-		self.away = ""
-		self.support_prefix = ()
-		self.support_chantypes = ()
+		self.nick = ""               # IRC nick
+		self.away = ""               # Away message
+		self.support_prefix = ()     # Which prefixed are supported
+		self.support_chantypes = ()  # Which chantypes are supported
 
 
 	def is_server(self):
@@ -477,21 +482,25 @@ class TekkaServer(TekkaTab):
 		self.support_prefix = com.sushi.support_prefix(server)
 		self.support_chantypes = com.sushi.support_chantypes(server)
 
+""" Away status changed (message as parameter) """
 gobject.signal_new(
 	"away",
 	TekkaServer, gobject.SIGNAL_ACTION,
 	gobject.TYPE_NONE, (gobject.TYPE_STRING,))
 
+""" Supported chantypes set (tuple as parameter) """
 gobject.signal_new(
 	"channeltypes_set",
 	TekkaServer, gobject.SIGNAL_ACTION,
 	gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
 
+""" Supported prefixed set (tuple as parameter) """
 gobject.signal_new(
 	"prefix_set",
 	TekkaServer, gobject.SIGNAL_ACTION,
 	gobject.TYPE_NONE, (gobject.TYPE_PYOBJECT,))
 
+""" IRC nick changed (nick as parameter) """
 gobject.signal_new(
 	"new_nick",
 	TekkaServer, gobject.SIGNAL_ACTION,
@@ -584,9 +593,6 @@ class TekkaQuery(TekkaTab):
 
 
 class TekkaChannel(TekkaTab):
-	"""
-		A typically channel tab.
-	"""
 
 	@types(switch=bool)
 	def _set_joined(self, switch):
@@ -607,14 +613,15 @@ class TekkaChannel(TekkaTab):
 
 	def __init__(self, name, server, textview=None,
 		nicklist=None, topic="", topicsetter=""):
+
 		TekkaTab.__init__(self, name, textview)
 
-		self.nickList = nicklist
-		self.topic = topic
-		self.topicSetter = topicsetter
-		self.joined = False
+		self.nickList = nicklist        # nick list object
+		self.topic = topic              # topic string
+		self.topicSetter = topicsetter  # the nick of the topic setter
+		self.joined = False             # status flag
 
-		self.server = server
+		self.server = server            # the server name string
 
 
 	def is_channel(self):
@@ -693,6 +700,7 @@ class TekkaChannel(TekkaTab):
 
 		gobject.idle_add(notify)
 
+""" Joined status changed. status as parameter """
 gobject.signal_new(
 	"joined",
 	TekkaChannel,
@@ -700,6 +708,7 @@ gobject.signal_new(
 	gobject.TYPE_NONE,
 	(gobject.TYPE_BOOLEAN,))
 
+""" Topic changed. topic as parameter """
 gobject.signal_new(
 	"topic",
 	TekkaChannel,
