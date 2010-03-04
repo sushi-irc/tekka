@@ -629,6 +629,37 @@ def cmd_help(currentServer, currentTab, args):
 		gui.mgmt.myPrint("No help for %s available." % (args[0]))
 
 
+def cmd_invoke_test(currentServer, currentTab, args):
+	"""
+		Loads a test file and executes it.
+
+		Usage: /invoke_test <path>
+	"""
+	if len(args) != 1:
+		return gui.myPrint("Usage: /invoke_test <path>")
+
+	import os
+	import imp
+
+	path, file = os.path.split(args[0])
+
+	name = file.split(".")[0]
+
+	try:
+		mod_info = imp.find_module(name, [path])
+		test_module = imp.load_module(name, *mod_info)
+
+	except ImportError as e:
+		gui.mgmt.myPrint("invoke_test failed: %s" % (e))
+		return
+
+	try:
+		test_module.start_test(gui)
+	except Exception as e:
+		gui.mgmt.myPrint("invoke_test run failed: %s" % (e))
+		return
+
+
 def setup():
 	_commands = {
 		"connect" : cmd_connect,
@@ -645,6 +676,7 @@ def setup():
 		"back" : cmd_back,
 	"nickserv" : cmd_nickserv,
 		"ctcp" : cmd_ctcp,
+	"invoke_test": cmd_invoke_test,
 		"names" :  cmd_names,
 		"notice" : cmd_notice,
 		"msg" : cmd_message,
