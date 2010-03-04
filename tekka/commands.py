@@ -28,6 +28,8 @@ SUCH DAMAGE.
 from types import MethodType, FunctionType
 
 from . import gui
+from . import com
+
 from .helper import color
 from .com import sushi
 from .typecheck import types
