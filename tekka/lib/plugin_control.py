@@ -37,6 +37,8 @@ unload(filename)
 -> del plugins[filename]
 """
 
+# FIXME: this file should be top level, too...
+
 import os
 import imp
 import sys
