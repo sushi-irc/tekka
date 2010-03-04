@@ -28,10 +28,13 @@ SUCH DAMAGE.
 
 import tekka.main
 import signal_handler
+import command_handler
 
 import sushi
 
 tekka.main.setup()
+
 signal_handler.setup()
+command_handler.setup()
 
 tekka.main.main()

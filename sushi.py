@@ -88,11 +88,11 @@ class Plugin (object):
 			return func(server.name, target.name, args)
 
 #		self.emit("command_add", command, func)
-		return commands.addCommand(command, func_proxy)
+		return commands.add_command(command, func_proxy)
 
 	def remove_command(self, command):
 #		self.emit("command_remove", command, func)
-		return commands.removeCommand(command)
+		return commands.remove_command(command)
 
 	def connect_signal(self, signal, func):
 #		self.emit("signal_connect", signal, func)
