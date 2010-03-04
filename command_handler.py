@@ -483,7 +483,11 @@ def cmd_list(serverTab, channelTab, args):
 				self._text = []
 				self._line = 0
 
-	# actual function:
+	# cmd_list:
+
+	# make the callback accessible for cmd_stop_list
+	cmd_list.list_cb = channelList_cb
+
 	if not serverTab:
 		return gui.mgmt.myPrint("Could not determine server.")
 
@@ -525,7 +529,11 @@ def cmd_stop_list(serverTab, channelTab, args):
 
 		Usage: /stoplist
 	"""
-	signals.disconnect_signal("list", signals.channelList_cb)
+	try:
+		signals.disconnect_signal("list", cmd_list.list_cb)
+	except AttributeError:
+		# already stopped
+		return
 
 
 def cmd_whois(currentServer, currentChannel, args):
