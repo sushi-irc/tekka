@@ -985,7 +985,7 @@ def setup_fonts():
 			if not config.get_bool("tekka", "use_default_font"):
 				return
 
-			gui.apply_new_font()
+			gui.mgmt.apply_new_font()
 
 		c = gconf.client_get_default()
 
