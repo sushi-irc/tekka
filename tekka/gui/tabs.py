@@ -479,7 +479,7 @@ class TekkaServer(TekkaTab):
 
 		if com.sushi.user_away(server, com.get_own_nick(server)):
 			# TODO: better query management @ LP
-			tab.away = "-- Not implemented yet --"
+			self.away = "-- Not implemented yet --"
 
 		self.nick = com.parse_from(com.sushi.user_from(server, ""))[0]
 		self.support_prefix = com.sushi.support_prefix(server)
