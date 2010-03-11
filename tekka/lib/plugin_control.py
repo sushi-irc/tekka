@@ -156,7 +156,7 @@ def _unload_module(name):
 	"""
 	try:
 		del sys.modules[name]
-	except KeyError as e:
+	except KeyError:
 		logging.debug("plugin_control: failed to unload.",
 			exc_info = True)
 
@@ -261,7 +261,6 @@ def get_info(filename):
 			return None
 		return info
 	else:
-		name = strip_suffix(filename)
 		mod_info = _find_module(filename)
 
 		if not mod_info:

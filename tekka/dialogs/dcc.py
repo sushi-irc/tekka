@@ -55,8 +55,6 @@ widgets = None
 
 # TODO: mark status for every row
 
-# TODO: accept/deny for incomings
-
 class DCCWatcher(object):
 
 	def __init__(self):

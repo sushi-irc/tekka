@@ -70,8 +70,6 @@ class OutputWindow(gtk.ScrolledWindow):
 				determine if we wanted to be at the bottom
 				(auto_scroll = True) and scroll down.
 			"""
-			adj = win.get_vscrollbar().get_adjustment()
-
 			if alloc.height != self.old_allocation.height:
 
 				if self.auto_scroll:
