@@ -573,6 +573,11 @@ def nickList_button_press_event_cb(nickList, event):
 	return False
 
 
+def outputVBox_size_allocate_cb(vbox, allocation):
+	""" Fix the width of the topic bar """
+	gui.widgets.get_widget("topicBar").set_size_request(allocation.width, -1)
+
+
 """ Shortcut callbacks """
 
 def inputBar_shortcut_ctrl_u(inputBar, shortcut):
@@ -1132,6 +1137,8 @@ def setupGTK():
 		"nickList_button_press_event_cb":
 			nickList_button_press_event_cb,
 
+		"outputVBox_size_allocate_cb":
+			outputVBox_size_allocate_cb,
 	}
 
 	gui.widgets.signal_autoconnect(sigdic)
