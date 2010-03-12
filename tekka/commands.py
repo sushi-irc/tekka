@@ -41,15 +41,16 @@ _commands = {}
 @types(text=basestring)
 def parseInput(text):
 	"""
-	parse color codes (%Cn[,m]),
-	split text for blank, strip the command
-	and search for it in _commands-dict.
-	Call the underlying function if found.
-	Paramters for the function are:
-	- the current server or None
-	- the current channel or None
-	- A list of words typed after the command
-	  ("parameters") split by space
+	1. Parse color codes (%Cn[,m]),
+	2. Split text for blank, strip the command
+	   and search for it in _commands-dict.
+	3. Call the underlying function if found.
+
+	   Paramters for the function are:
+	   - the current server or None
+	   - the current channel or None
+	   - A list of words typed after the command
+	     ("parameters") split by space
 	"""
 	if not text:
 		return
@@ -135,6 +136,7 @@ def add_command(command, function):
 	_commands[command] = function
 
 	return True
+
 
 @types(command=basestring)
 def remove_command(command):

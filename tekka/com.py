@@ -37,12 +37,18 @@ from types import NoneType
 
 from tekka.typecheck import types
 
-dbus_loop = DBusGMainLoop()
-required_version = (1, 1, 0)
-bus = None
+
+"""
+The com module caches the nick,
+provides a persistent interface to maki,
+provides methods to connect / disconnect
+maki and to send messages.
+"""
+
 
 class NoSushiError (BaseException):
 	pass
+
 
 class SushiWrapper (gobject.GObject):
 
@@ -61,6 +67,7 @@ class SushiWrapper (gobject.GObject):
 		to the intern sushi interface.
 	"""
 
+
 	@types (sushi_interface = (dbus.Interface, NoneType))
 	def __init__(self, sushi_interface):
 		gobject.GObject.__init__(self)
@@ -70,9 +77,11 @@ class SushiWrapper (gobject.GObject):
 
 		self._set_interface(sushi_interface)
 
+
 	@types(v = bool)
 	def _set_remote(self, v):
 		self._remote = v
+
 
 	@types (connected = bool)
 	def _set_connected(self, connected):
@@ -83,14 +92,17 @@ class SushiWrapper (gobject.GObject):
 
 		self._connected = connected
 
+
 	@types (interface = (dbus.Interface, NoneType))
 	def _set_interface(self, interface):
 		self._sushi = interface
 		self._set_connected(interface != None)
 
+
 	@types (title = basestring, msg = basestring)
 	def _emit_error(self, title, msg):
 		self.g_emit("sushi-error", title, msg)
+
 
 	def __getattribute__(self, attr):
 
@@ -159,9 +171,11 @@ class SushiWrapper (gobject.GObject):
 
 		raise AttributeError(attr)
 
+
 	# Properties
 	remote = property(lambda s: s._remote, _set_remote)
 	connected = property(lambda s: s._connected, _set_connected)
+
 
 gobject.signal_new ("maki-connected", SushiWrapper, gobject.SIGNAL_ACTION,
 	None, ())
@@ -170,12 +184,18 @@ gobject.signal_new ("maki-disconnected", SushiWrapper,
 gobject.signal_new ("sushi-error", SushiWrapper,
 	gobject.SIGNAL_ACTION, None, (str, str))
 
+
+dbus_loop = DBusGMainLoop()
+required_version = (1, 1, 0)
+bus = None
+
 sushi = SushiWrapper(None)
 
 myNick = {}
 
 _shutdown_callback = None
 _nick_callback = None
+
 
 def disable_sushi_on_fail(cmethod):
 	""" decorator: disable sushi wrapper if connect fails """
@@ -186,6 +206,7 @@ def disable_sushi_on_fail(cmethod):
 			sushi._set_interface(None)
 		return ret
 	return new
+
 
 @disable_sushi_on_fail
 def connect():
@@ -264,6 +285,7 @@ def connect():
 
 	return True
 
+
 def disconnect():
 	global sushi, _shutdown_callback, _nick_callback
 	sushi._set_interface(None)
@@ -273,6 +295,7 @@ def disconnect():
 
 	if _nick_callback:
 		_nick_callback.remove()
+
 
 def parse_from (from_str):
 	h = from_str.split("!", 2)
@@ -287,12 +310,11 @@ def parse_from (from_str):
 
 	return (h[0], t[0], t[1])
 
-"""
-Signals: nickchange (nick => _nickSignal)
-"""
+
 
 def _shutdownSignal(time):
 	disconnect()
+
 
 def _nickSignal(time, server, from_str, new_nick):
 	nick = parse_from(from_str)[0]
@@ -300,9 +322,6 @@ def _nickSignal(time, server, from_str, new_nick):
 	if not nick or nick == get_own_nick(server):
 		cache_own_nick(server, new_nick)
 
-"""
-Commands
-"""
 
 
 def sendMessage(server, channel, text):
