@@ -179,10 +179,8 @@ class sound(sushi.Plugin):
 
 	def _message_cb(self, time, server, from_str, target, msg):
 
-		print "sound: message received."
-
 		if (self.get_config(
-					"beep_%s" % (tab_id_str(server, target))) == "True"):
-			print "sound: will beep on %s:%s!" % (server,target)
+				"beep_%s" % (tab_id_str(server, target))) == "True"):
+
 			self.beep()
 
