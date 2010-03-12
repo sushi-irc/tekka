@@ -49,22 +49,45 @@ TYPE_CHOICE: Takes n key/value tuple and a default index.
  TYPE_CHOICE
 ) = range(5)
 
+
 class Plugin (object):
-	# TODO: on unload the plugin should unload it's signals and commands
+
 
 	def __init__(self, plugin_name):
 		self._plugin_name = plugin_name
 
+		self.__signals = {}
+		self.__commands = {}
+
 		com.sushi.g_connect("maki-connected", self.maki_connected)
 		com.sushi.g_connect("maki-disconnected", self.maki_disconnected)
 
+
+	def unload(self):
+		""" unregister all signals and commands used by
+			this plugin
+		"""
+
+		for (signal, hlist) in self.__signals:
+			for handler in hlist:
+				signals.disconnect_signal(signal, handler)
+
+		for (command, handler) in self.__commands:
+			commands.remove_command(command, handler)
+
+
 	def maki_connected(self, interface):
+		""" hook, called if connection to maki is etablished """
 		pass
+
 
 	def maki_disconnected(self, interface):
+		""" hook, called if connection to maki is cut """
 		pass
 
+
 	def display_error(self, message):
+
 		d = InlineMessageDialog("Plugin “%(plugin)s” caused an error." % {
 				"plugin": self._plugin_name
 			}, "%(message)s" % {
@@ -73,8 +96,11 @@ class Plugin (object):
 		gui.show_inline_dialog(d)
 		d.connect("response", lambda d,id: d.destroy())
 
+
 	def get_bus(self):
+
 		return com.sushi
+
 
 	def get_nick(self, server):
 		nick = com.get_own_nick(server)
@@ -84,33 +110,63 @@ class Plugin (object):
 
 		return nick
 
+
 	def add_command(self, command, func):
+
 		def func_proxy (server, target, args):
 			return func(server.name, target.name, args)
 
-#		self.emit("command_add", command, func)
-		return commands.add_command(command, func_proxy)
+		if commands.add_command(command, func_proxy):
+			self.__commands[command] = func_proxy
+			return True
+
+		return False
+
 
 	def remove_command(self, command):
-#		self.emit("command_remove", command, func)
-		return commands.remove_command(command)
+
+		if commands.remove_command(command):
+			del self.__commands[commands]
+			return True
+
+		return False
+
 
 	def connect_signal(self, signal, func):
-#		self.emit("signal_connect", signal, func)
-		return signals.connect_signal(signal, func)
+
+		if signals.connect_signal(signal, func):
+
+			if self.__signals.has_key(signal):
+				self.__signals[signal].append(func)
+			else:
+				self.__signals[signal] = [func]
+			return True
+
+		return False
+
 
 	def disconnect_signal(self, signal, func):
-#		self.emit("signal_disconnect", signal, func)
-		return signals.disconnect_signal(signal, func)
+
+		if signals.disconnect_signal(signal, func):
+
+			i = self.__signals[signal].index(func)
+			del self.__signals[signal][i]
+			return True
+
+		return False
+
 
 	def set_config(self, name, value):
+
 		section = "plugin_%s" % (self._plugin_name)
 
 		config.create_section(section)
 
 		return config.set(section, name, value)
 
+
 	def get_config(self, name, default = None):
+
 		section = "plugin_%s" % (self._plugin_name)
 
 		return config.get(section, name, default)
