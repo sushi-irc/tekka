@@ -50,11 +50,6 @@ Indentation: Lines split up but with same context should
 					 "vars": testVar},
 				 anotherParam)
 """
-# TODO:  Introduce two ignore methods, one complete ignore method
-# TODO:: where everything from that sender is ignored and one,
-# TODO:: where it's indicated that there WAS an action but only
-# TODO:: shown what and from who
-
 
 # TODO:  would be nice to be notified (in a visual way?) if there's
 # TODO:: a new markup in the server tree for a hidden tab (not in the
@@ -115,6 +110,8 @@ Tekka intern signals
 """
 
 def sushi_error_cb(sushi, title, message):
+	""" Error in sushi interface occured. """
+
 	def response_cb(d, i):
 		gui.status.unset(title)
 		d.destroy()
@@ -125,35 +122,50 @@ def sushi_error_cb(sushi, title, message):
 
 	gui.status.set_visible(title, title)
 
+
 def maki_connect_callback(sushi):
 	""" connection to maki etablished """
+
 	gui.mgmt.set_useable(True)
+
 
 def maki_disconnect_callback(sushi):
 	""" connection to maki lost """
+
 	# FIXME:  after disconnecting and reconnecting,
 	# FIXME:: the current tab's textview
 	# FIXME:: is still insensitive - is this good or bad?
 	gui.mgmt.set_useable(False)
 
-def tekka_server_away_cb(tab, msg):
-	pass
 
 def tekka_server_new_nick_cb(tab, nick):
+	""" New nick for the given tab. Apply the new nick in
+		the GUI if the tab or a tab with the same server is active.
+	"""
+
 	activeTabs = gui.tabs.get_current_tabs()
 
 	if (tab in activeTabs
 	or (not tab.is_server() and tab.server in activeTabs)):
 		gui.mgmt.set_nick(nick)
 
+
 def tekka_tab_new_markup_cb(tab):
+	""" Push the CellRenderer to re-render the serverTree """
+
 	# FIXME: is there a better solution than _this_?
 	if tab.path:
 		store = gui.widgets.get_widget("serverTree").get_model()
 		store.set_value(store.get_iter(tab.path), 0, tab)
 
+
 def tekka_tab_new_message_cb(tab, mtype):
-	""" a new message of the given type was received """
+	""" A new message of the given type was received.
+		If the tab is active, reset the message buffer
+		and scroll the tab's textview to bottom if
+		auto scrolling is enabled for this window.
+	"""
+
 	if tab.is_active():
 		tab.set_new_message(None)
 
@@ -170,32 +182,27 @@ def tekka_tab_new_message_cb(tab, mtype):
 	else:
 		pass
 
-def tekka_tab_reset_message_cb(tab):
-	""" message stack was reset """
-	pass
 
 def tekka_tab_new_name_cb(tab, name):
 	tekka_tab_new_markup_cb(tab)
 
+
 def tekka_tab_server_connected_cb(tab, connected):
 	""" the server of the tab connected/disconnected """
+
 	if not connected:
 		tab.set_useable(False)
 
+
 def tekka_channel_joined_cb(tab, switch):
 	""" channel received a change on joined attribute """
+
 	tab.set_useable(switch)
 
-def tekka_channel_topic_cb(tab, topic):
-	""" topic set """
-	pass
-
-def tekka_tab_new_path_cb(tab, new_path):
-	""" a new path is set to the path """
-	pass
 
 def tekka_tab_switched_cb(old, new):
 	""" switched from tab old to tab new """
+
 	inputBar = gui.widgets.get_widget("inputBar")
 
 	if old:
@@ -224,11 +231,14 @@ def tekka_tab_switched_cb(old, new):
 
 			gobject.idle_add(check_for_scrolling)
 
+
 def tekka_tab_add_cb(tab):
 	""" a tab is added """
+
 	if type(gui.widgets.get_widget("outputWindow")) == WelcomeWindow:
-		# TODO: this is called often if the tab is not changed
+		# FIXME: this is called often if the tab is not changed
 		hide_welcome_screen()
+
 
 def tekka_tab_remove_cb(tab):
 	""" a tab is about to be removed """
@@ -261,11 +271,12 @@ def tekka_tab_remove_cb(tab):
 	and len(gui.widgets.get_widget("serverTree").get_model()) == 1):
 		gui.mgmt.set_useable(False)
 
-"""
-Glade signals
-"""
 
 def mainWindow_scroll_event_cb(mainWindow, event):
+	""" MOD1 + SCROLL_DOWN -> Next tab
+		MOD1 + SCROLL_UP -> Prev. tab
+	"""
+
 	if (event.state & gtk.gdk.MOD1_MASK
 	and event.direction == gtk.gdk.SCROLL_DOWN):
 		gui.tabs.switch_to_next()
@@ -273,6 +284,7 @@ def mainWindow_scroll_event_cb(mainWindow, event):
 	elif (event.state & gtk.gdk.MOD1_MASK
 	and event.direction == gtk.gdk.SCROLL_UP):
 		gui.tabs.switch_to_previous()
+
 
 def mainWindow_delete_event_cb(mainWindow, event):
 	"""
@@ -285,6 +297,7 @@ def mainWindow_delete_event_cb(mainWindow, event):
 		in every tab so the user does not have to
 		search were he was reading last time.
 	"""
+
 	statusIcon = gui.widgets.get_widget("statusIcon")
 
 	if (config.get_bool("tekka", "hide_on_close")
@@ -300,28 +313,29 @@ def mainWindow_delete_event_cb(mainWindow, event):
 	else:
 		gtk.main_quit()
 
+
 def mainWindow_focus_in_event_cb(mainWindow, event):
 	"""
 		User re-focused the main window.
 		If we were in urgent status, the user
 		recognized it now so disable the urgent thing.
 	"""
+
 	gui.mgmt.set_urgent(False)
 	return False
 
+
 def mainWindow_size_allocate_cb(mainWindow, alloc):
-	"""
-		Main window was resized.
-		Store the new size in the config.
-	"""
+	""" Main window was resized, store the new size in the config. """
+
 	if not mainWindow.window.get_state() & gtk.gdk.WINDOW_STATE_MAXIMIZED:
 		config.set("sizes","window_width",alloc.width)
 		config.set("sizes","window_height",alloc.height)
 
+
 def mainWindow_window_state_event_cb(mainWindow, event):
-	"""
-		Window state was changed.
-		Track maximifoo and save it.
+	""" Window state was changed.
+		If it's maximized or unmaximized, save that state.
 	"""
 
 	if event.new_window_state & gtk.gdk.WINDOW_STATE_MAXIMIZED:
@@ -329,14 +343,15 @@ def mainWindow_window_state_event_cb(mainWindow, event):
 	else:
 		config.set("tekka","window_maximized","False")
 
+
 def inputBar_activate_cb(inputBar):
+	""" Enter hit, pass the inputBar text over to the
+		commands.parseInput method and add the text
+		to the input history (if there's one).
+
+		The inputBar is cleared after that.
 	"""
-		Receives if a message in the input bar
-		was entered and sent.
-		The entered message will be passed
-		to the commands module (parseInput(text))
-		and the input bar will be cleared.
-	"""
+
 	text = inputBar.get_text()
 
 	tab = gui.tabs.get_current_tab()
@@ -349,11 +364,16 @@ def inputBar_activate_cb(inputBar):
 
 	inputBar.set_text("")
 
+
 def inputBar_key_press_event_cb(inputBar, event):
+	""" Up -> Input history previous entry
+		Down -> Input history next entry
+		Tab -> Completion of the current word
+
+		Everything else than tab ->
+			No further completion wished, tell that.
 	"""
-		Key pressed in inputBar.
-		Implements tab and command completion.
-	"""
+
 	key =  gtk.gdk.keyval_name(event.keyval)
 	tab =  gui.tabs.get_current_tab()
 
@@ -511,6 +531,7 @@ def nickList_row_activated_cb(nickList, path, column):
 	query.print_last_log()
 	query.switch_to()
 
+
 def nickList_button_press_event_cb(nickList, event):
 	"""
 		A button pressed inner nickList.
@@ -551,25 +572,21 @@ def nickList_button_press_event_cb(nickList, event):
 
 	return False
 
-def outputVBox_size_allocate_cb(outputVBox, alloc):
-	widget = gui.widgets.get_widget("topicBar")
-	widget.set_size_request(alloc.width, -1)
 
-"""
-	Shortcut callbacks
-"""
+""" Shortcut callbacks """
 
 def inputBar_shortcut_ctrl_u(inputBar, shortcut):
-	"""
-		Ctrl + U was hit, clear the inputBar
-	"""
+	""" Ctrl + U was hit, clear the inputBar """
+
 	gui.widgets.get_widget("inputBar").set_text("")
+
 
 def output_shortcut_ctrl_l(inputBar, shortcut):
 	"""
 		Ctrl+L was hit, clear the outputs.
 	"""
 	gui.mgmt.clear_all_outputs()
+
 
 def output_shortcut_ctrl_f(inputBar, shortcut):
 	""" show/hide the search toolbar """
@@ -581,21 +598,24 @@ def output_shortcut_ctrl_f(inputBar, shortcut):
 		sb.show_all()
 		sb.grab_focus()
 
+
 def output_shortcut_ctrl_g(inputBar, shortcut):
 	""" search further """
+
 	gui.widgets.get_widget("searchBar").search_further()
 
+
 def serverTree_shortcut_ctrl_Page_Up(serverTree, shortcut):
-	"""
-		Ctrl+Page_Up was hit, go up in server tree
-	"""
+	""" Ctrl+Page_Up was hit, go up in server tree """
+
 	gui.tabs.switch_to_previous()
 
+
 def serverTree_shortcut_ctrl_Page_Down(serverTree, shortcut):
-	"""
-		Ctrl+Page_Down was hit, go down in server tree
-	"""
+	""" Ctrl+Page_Down was hit, go down in server tree """
+
 	gui.tabs.switch_to_next()
+
 
 def askToRemoveTab(tab):
 	def response_handler(dialog, response_id):
@@ -630,10 +650,9 @@ def askToRemoveTab(tab):
 
 	gui.mgmt.show_inline_dialog(dialog)
 
+
 def serverTree_shortcut_ctrl_w(serverTree, shortcut):
-	"""
-		Ctrl+W was hit, close the current tab (if any)
-	"""
+	""" Ctrl+W was hit, close the current tab (if any) """
 
 	tab = gui.tabs.get_current_tab()
 
@@ -641,6 +660,7 @@ def serverTree_shortcut_ctrl_w(serverTree, shortcut):
 		return
 
 	askToRemoveTab(tab)
+
 
 def output_shortcut_Page_Up(inputBar, shortcut):
 	"""
@@ -655,18 +675,22 @@ def output_shortcut_Page_Up(inputBar, shortcut):
 	if n < 0: n = 0
 	gobject.idle_add(vadj.set_value,n)
 
+
 def output_shortcut_Page_Down(inputBar, shortcut):
-	"""
-		Page_Down was hit, scroll down in output
-	"""
+	""" Page_Down was hit, scroll down in output """
+
 	vadj = gui.widgets.get_widget("outputWindow").get_vadjustment()
 
 	if (vadj.upper - vadj.page_size) == vadj.get_value():
 		return # we are already at bottom
 
 	n = vadj.get_value()+vadj.page_size
-	if n > (vadj.upper - vadj.page_size): n = vadj.upper - vadj.page_size
+
+	if n > (vadj.upper - vadj.page_size):
+		n = vadj.upper - vadj.page_size
+
 	gobject.idle_add(vadj.set_value,n)
+
 
 def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 	"""
@@ -692,8 +716,21 @@ def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 		text = text[bounds[0]:bounds[1]]
 		cb.set_text(text)
 
+
 def serverTree_query_tooltip_cb(widget, x, y, kbdmode, tooltip):
-	""" show tooltips for treeview rows """
+	""" show tooltips for treeview rows.
+
+		Server tabs:
+			Nick: <nickname>
+
+		Channel tabs:
+			Users: <count>
+			Topic: <topic>
+			Last Sentence: <last sentence>
+
+		Query tabs:
+			Last Sentence: <last sentence>
+	"""
 
 	def limit(s):
 		limit = int(config.get("tekka","popup_line_limit"))
@@ -732,12 +769,17 @@ def serverTree_query_tooltip_cb(widget, x, y, kbdmode, tooltip):
 
 	return True
 
+
 def serverTree_render_server_cb(column, renderer, model, iter):
 	""" Renderer func for column "Server" in servertree """
+
 	tab = model.get(iter, 0)
+
 	if not tab or not tab[0]:
 		return
+
 	renderer.set_property("markup",tab[0].markup())
+
 
 def nickList_render_nicks_cb(column, renderer, model, iter):
 	""" Renderer func for column "Nicks" in NickList """
@@ -767,9 +809,8 @@ def nickList_render_nicks_cb(column, renderer, model, iter):
 
 	# TODO: highlighing of users which are away
 
-"""
-Initial setup routines
-"""
+
+""" Initial setup routines """
 
 def setup_mainWindow():
 	"""
@@ -916,22 +957,12 @@ def setup_nickList():
 	widget.set_rules_hint(True)
 
 
-def connect_maki():
-	"""
-		Tries to connect to maki over DBus.
-		If succesful, the GUI is enabled (gui.setUseable(True))
-		and signals, dialogs, menus as well as the commands module
-		were set up.
-
-		See also: maki_connect_callback
-	"""
-	com.connect()
-
 def load_paned_positions():
 	""" restore the positions of the
 		paned dividers for the list,
 		main and output paneds.
 	"""
+
 	paneds = [
 		gui.widgets.get_widget("listVPaned"),
 		gui.widgets.get_widget("mainHPaned"),
@@ -950,6 +981,7 @@ def load_paned_positions():
 			logging.error("Failed to set position for paned %s" % (
 				paned.name))
 			continue
+
 
 def setup_paneds():
 
@@ -975,6 +1007,7 @@ def setup_paneds():
 	gui.widgets.signal_autoconnect(sigdic)
 
 	return False
+
 
 def setup_fonts():
 	""" add default font callback """
@@ -1015,11 +1048,13 @@ def show_welcome_screen():
 	com.sushi.g_connect("maki-disconnected",
 		lambda sushi: s.set_sensitive(True))
 
+
 def hide_welcome_screen():
 	hides = show_welcome_screen.hides
 
 	for w in hides:
 		gui.widgets.get_widget(w).show()
+
 
 def setupGTK():
 	"""
@@ -1062,16 +1097,12 @@ def setupGTK():
 	# connect tab control signals
 	gui.tabs.add_callbacks({
 		"new_message": tekka_tab_new_message_cb,
-		"reset_message": tekka_tab_reset_message_cb,
 		"new_name": tekka_tab_new_name_cb,
-		"new_path": tekka_tab_new_path_cb,
 		"add": tekka_tab_add_cb,
 		"remove": tekka_tab_remove_cb,
 		"new_markup": tekka_tab_new_markup_cb,
 		"server_connected": tekka_tab_server_connected_cb,
 		"joined": tekka_channel_joined_cb,
-		"away": tekka_server_away_cb,
-		"topic": tekka_channel_topic_cb,
 		"new_nick": tekka_server_new_nick_cb,
 		"tab_switched": tekka_tab_switched_cb })
 
@@ -1101,9 +1132,6 @@ def setupGTK():
 		"nickList_button_press_event_cb":
 			nickList_button_press_event_cb,
 
-		# output vbox signals
-		"outputVBox_size_allocate_cb":
-			outputVBox_size_allocate_cb,
 	}
 
 	gui.widgets.signal_autoconnect(sigdic)
@@ -1172,6 +1200,7 @@ def setupGTK():
 
 	gobject.idle_add(setup_paneds)
 
+
 def tekka_excepthook(extype, exobj, extb):
 	""" we got an exception, print it in a dialog box and,
 		if possible, to the standard output.
@@ -1182,7 +1211,9 @@ def tekka_excepthook(extype, exobj, extb):
 		dialog.destroy()
 
 	class ErrorDialog(gtk.Dialog):
+
 		def __init__(self, message):
+
 			gtk.Dialog.__init__(self,
 				parent = gui.widgets.get_widget("mainWindow"),
 				title = _("Error occured"),
@@ -1218,8 +1249,10 @@ def tekka_excepthook(extype, exobj, extb):
 			self.vbox.pack_start(self.vbox_inner)
 			self.vbox.show_all()
 
+
 		def set_message(self, msg):
 			self.tv.get_buffer().set_text(msg)
+
 
 	message = "%s\n%s: %s\n" % (
 		"".join(traceback.format_tb(extb)),
@@ -1300,7 +1333,7 @@ def main():
 	""" Fire up the UI """
 
 	# connect to maki daemon
-	connect_maki()
+	com.connect()
 
 	plugin_control.load_autoloads()
 

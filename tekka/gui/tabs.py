@@ -141,7 +141,6 @@ class TekkaTab(gobject.GObject):
 	@types(path=tuple)
 	def _set_path(self, path):
 		self._path = path
-		self.emit ("new_path", path)
 	path = property(lambda x: x._path, _set_path)
 
 
@@ -202,7 +201,6 @@ class TekkaTab(gobject.GObject):
 		"""
 		if not status:
 			self.newMessage = []
-			self.emit ("reset_message")
 		else:
 			try:
 				self.newMessage.index(status)
@@ -322,22 +320,6 @@ gobject.signal_new(
 """ The tab's unread messages buffer changed """
 gobject.signal_new(
 	"new_message",
-	TekkaTab,
-	gobject.SIGNAL_ACTION,
-	gobject.TYPE_NONE,
-	(gobject.TYPE_PYOBJECT,))
-
-""" The unread messages buffer was reset """
-gobject.signal_new(
-	"reset_message",
-	TekkaTab,
-	gobject.SIGNAL_ACTION,
-	gobject.TYPE_NONE,
-	())
-
-""" The tab's path in the server tree changed """
-gobject.signal_new(
-	"new_path",
 	TekkaTab,
 	gobject.SIGNAL_ACTION,
 	gobject.TYPE_NONE,
@@ -797,7 +779,7 @@ def _create_tab(tabtype, name, *args, **kwargs):
 	mgmt.set_font(tab.window.textview, mgmt.get_font())
 
 	connect_tab_callbacks(tab, ("new_message","new_name",
-		"new_path","server_connected","new_markup", "reset_message"))
+		"server_connected","new_markup"))
 
 	tab.input_history = InputHistory(
 		text_callback = widgets.get_widget("inputBar").get_text)
@@ -818,7 +800,7 @@ def create_channel(server, name):
 
 	tab = _create_tab(TekkaChannel, name, server, nicklist = ns)
 
-	connect_tab_callbacks(tab, ("joined","topic"))
+	connect_tab_callbacks(tab, ("joined",))
 
 	return tab
 
@@ -836,7 +818,7 @@ def create_server(server):
 
 	tab.update()
 
-	connect_tab_callbacks(tab, ("away","new_nick"))
+	connect_tab_callbacks(tab, ("new_nick",))
 
 	return tab
 
