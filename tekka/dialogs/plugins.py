@@ -40,6 +40,7 @@ from ..lib import plugin_control as pinterface
 from .. import config
 from ..lib import psushi
 
+
 widgets = None
 
 (COL_LOADED,
@@ -50,17 +51,32 @@ widgets = None
  COL_DESC,
  COL_AUTHOR) = range(7)
 
-def dialog_response_cb(dialog, response_id):
-	if response_id != 0:
-		dialog.destroy()
 
 def run():
-	dialog = widgets.get_object("plugins")
+	""" show the dialog """
 
+	def dialog_response_cb(dialog, response_id):
+		if response_id != 0:
+			dialog.destroy()
+
+	dialog = widgets.get_object("plugins")
 	dialog.connect("response", dialog_response_cb)
 	dialog.show_all()
 
+
+def update_button_sensitivity(loaded):
+	widgets.get_object("unloadButton").set_sensitive(loaded)
+	widgets.get_object("loadButton").set_sensitive(not loaded)
+
+
 def loadPlugin_clicked_cb(button):
+	""" load active plugin.
+
+		on success:
+		- set loaded flag in treeview
+		- update button states
+	"""
+
 	view = widgets.get_object("pluginView")
 	store = view.get_model()
 
@@ -73,12 +89,22 @@ def loadPlugin_clicked_cb(button):
 
 	if pinterface.load(store[path][COL_NAME]):
 		store.set(store.get_iter(path), COL_LOADED, True)
+		update_button_sensitivity(loaded=True)
+
 
 def unloadPlugin_clicked_cb(button):
+	""" unload active plugin.
+
+		on success:
+		- set COL_LOADED in treeview False
+		- update button states
+	"""
+
 	view = widgets.get_object("pluginView")
 	store = view.get_model()
 
 	path = view.get_cursor()[0]
+
 	if not path:
 		# TODO: see todo in loadPlugin_clicked_cb
 		return
@@ -87,6 +113,8 @@ def unloadPlugin_clicked_cb(button):
 
 	if pinterface.unload(store[path][COL_NAME]):
 		store.set(store.get_iter(path), COL_LOADED, False)
+		update_button_sensitivity(loaded=False)
+
 
 def configureButton_clicked_cb(button):
 	""" build and show configuration dialog for the currently
@@ -270,8 +298,7 @@ def pluginView_button_press_event_cb(pluginView, event):
 
 		loaded = pluginView.get_model()[path][COL_LOADED]
 
-		widgets.get_object("unloadButton").set_sensitive(loaded)
-		widgets.get_object("loadButton").set_sensitive(not loaded)
+		update_button_sensitivity(loaded)
 
 		options = pinterface.get_options(pluginName)
 
