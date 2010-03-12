@@ -268,6 +268,11 @@ def pluginView_button_press_event_cb(pluginView, event):
 		except TypeError:
 			return # s.a.a.
 
+		loaded = pluginView.get_model()[path][COL_LOADED]
+
+		widgets.get_object("unloadButton").set_sensitive(loaded)
+		widgets.get_object("loadButton").set_sensitive(not loaded)
+
 		options = pinterface.get_options(pluginName)
 
 		if options:
