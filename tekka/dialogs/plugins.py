@@ -127,7 +127,7 @@ def configureButton_clicked_cb(button):
 	dataMap = {} # config_key : value
 	rowCount = 0
 
-	for (opt, label, type, value) in options:
+	for (opt, label, vtype, value) in options:
 
 		wLabel = gtk.Label(label+": ")
 		wLabel.set_property("xalign", 0)
@@ -137,7 +137,7 @@ def configureButton_clicked_cb(button):
 		cValue = config.get(cSection, opt) or value
 		dataMap[opt] = cValue or value
 
-		if type == psushi.TYPE_STRING:
+		if vtype == psushi.TYPE_STRING:
 			# Simple text entry
 			widget = gtk.Entry()
 			widget.set_text(cValue)
@@ -146,7 +146,7 @@ def configureButton_clicked_cb(button):
 				lambda w,f,o: f(o,w.get_text()),
 				dataMap.__setitem__, opt)
 
-		elif type == psushi.TYPE_PASSWORD:
+		elif vtype == psushi.TYPE_PASSWORD:
 			# Hidden char. entry
 			widget = gtk.Entry()
 			widget.set_text(cValue)
@@ -156,7 +156,7 @@ def configureButton_clicked_cb(button):
 				lambda w,f,o: f(o, w.get_text()),
 				dataMap.__setitem__, opt)
 
-		elif type == psushi.TYPE_NUMBER:
+		elif vtype == psushi.TYPE_NUMBER:
 			# Number entry field
 			widget = gtk.SpinButton()
 			widget.set_range(-99999,99999)
@@ -164,22 +164,22 @@ def configureButton_clicked_cb(button):
 			widget.set_value(int(cValue))
 
 			widget.connect("value-changed",
-				lambda w,f,o: f(o, w.get_value()),
+				lambda w,f,o: f(o, w.get_value_as_int()),
 				dataMap.__setitem__, opt)
 
-		elif type == psushi.TYPE_BOOL:
+		elif vtype == psushi.TYPE_BOOL:
 			# Check button for boolean values
 			widget = gtk.CheckButton()
-			if type(value) == bool:
+			if type(cValue) == bool:
 				widget.set_active(cValue)
 			else:
-				widgets.set_active(cValue.lower() != "false")
+				widget.set_active(cValue.lower() != "false")
 
-			widget.connect("toggle",
+			widget.connect("toggled",
 				lambda w,f,o: f(o, w.get_active()),
 				dataMap.__setitem__, opt)
 
-		elif type == psushi.TYPE_CHOICE:
+		elif vtype == psushi.TYPE_CHOICE:
 			# Multiple values. Stored as [0] = key and [1] = value
 			wModel = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
 			widget = gtk.ComboBox(wModel)
@@ -210,7 +210,7 @@ def configureButton_clicked_cb(button):
 				widget.set_active(0)
 
 		else:
-			raise TypeError, "Wrong type given: %d" % (type)
+			raise TypeError, "Wrong type given: %d" % (vtype)
 
 
 		table.attach(wLabel, 0, 1, rowCount, rowCount+1)

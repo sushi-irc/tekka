@@ -136,7 +136,7 @@ def _load_module(filename, mod_info):
 	try:
 		plugin = imp.load_module(modname, *mod_info)
 
-	except ImportError as e:
+	except Exception as e:
 		generic_error(
 			_("Plugin could not be loaded."),
 			_("Plugin %(plugin)s could not be loaded.\n"

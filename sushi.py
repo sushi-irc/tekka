@@ -50,6 +50,7 @@ TYPE_CHOICE: Takes n key/value tuple and a default index.
 ) = range(5)
 
 class Plugin (object):
+	# TODO: on unload the plugin should unload it's signals and commands
 
 	def __init__(self, plugin_name):
 		self._plugin_name = plugin_name
