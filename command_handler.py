@@ -436,7 +436,6 @@ def cmd_list(serverTab, channelTab, args):
 
 		Usage: /list [<channel>]
 	"""
-	from .helper import code
 	import gobject
 
 	def channelList_cb(time, server, channel, users, topic):
