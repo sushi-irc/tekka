@@ -15,6 +15,7 @@ GStreamer as playing backend.
 
 import sushi
 import tekka
+from tekka import com
 import gtk
 import subprocess
 
@@ -178,6 +179,9 @@ class sound(sushi.Plugin):
 
 
 	def _message_cb(self, time, server, from_str, target, msg):
+
+		if com.parse_from(from_str)[0] == self.get_nick(server):
+			return
 
 		if (self.get_config(
 				"beep_%s" % (tab_id_str(server, target))) == "True"):
