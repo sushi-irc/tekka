@@ -90,6 +90,7 @@ class SushiWrapper (gobject.GObject):
 		else:
 			self.g_emit("maki-disconnected")
 
+		self.__recent_reconnect = True
 		self._connected = connected
 
 
@@ -116,17 +117,27 @@ class SushiWrapper (gobject.GObject):
 		"""
 
 		def dummy(*args, **kwargs):
-			sushi._emit_error(
-				_("tekka could not connect to maki."),
-				_("Please check whether maki is running."))
+			""" called if no connection is active """
+
+			if self.__recent_reconnect:
+				self.__recent_reconnect = False
+
+				sushi._emit_error(
+					_("tekka could not connect to maki."),
+					_("Please check whether maki is running."))
+
+			pass
 
 		def errordummy(message):
+			""" called if a DBusError was catched """
+
 			def new(*args, **kwargs):
 				sushi._emit_error(
 					_("tekka could not connect to maki."),
 					_("Please check whether maki is running.\n"
-					"The following error occurred: %(error)s") % {
-						"error": message })
+					  "The following error occurred: %(error)s") % {
+							"error": message })
+
 			return new
 
 		gobject_attr = False
@@ -155,8 +166,8 @@ class SushiWrapper (gobject.GObject):
 						def attr_dummy(*args, **kwargs):
 							try:
 								return self._sushi.__getattr__(attr)(
-									*args,
-									**kwargs)
+											*args,
+											**kwargs)
 							except dbus.DBusException as e:
 								self._emit_error(
 									_("Communication error with maki."),
@@ -164,6 +175,7 @@ class SushiWrapper (gobject.GObject):
 									  "<b>'%s</b>' with DBus: \n<b>%s</b>\n"
 									  "You should keep safe that maki is "
 									  "running " % (attr, e)))
+
 						return attr_dummy
 					except dbus.DBusException as e:
 						# method not found, return dummy
@@ -177,8 +189,8 @@ class SushiWrapper (gobject.GObject):
 	connected = property(lambda s: s._connected, _set_connected)
 
 
-gobject.signal_new ("maki-connected", SushiWrapper, gobject.SIGNAL_ACTION,
-	None, ())
+gobject.signal_new ("maki-connected", SushiWrapper,
+	gobject.SIGNAL_ACTION, None, ())
 gobject.signal_new ("maki-disconnected", SushiWrapper,
 	gobject.SIGNAL_ACTION, None, ())
 gobject.signal_new ("sushi-error", SushiWrapper,
