@@ -38,8 +38,7 @@ from gettext import gettext as _
 from ..gui import builder
 from ..lib import plugin_control as pinterface
 from .. import config
-from ..lib import psushi
-
+from ..lib import plugin_config_dialog
 
 widgets = None
 
@@ -123,140 +122,20 @@ def configureButton_clicked_cb(button):
 
 	def dialog_response_cb(dialog, rID):
 		""" apply the values and close the configuration dialog """
-		cSection = pinterface.get_plugin_config_section(plugin_name)
-		config.create_section(cSection)
 
-		for (key, value) in dialog.map.items():
-			logging.debug("DRCB: Result: %s -> %s" % (key, str(value)))
-			config.set(cSection, key, str(value))
-
+		dialog.save()
 		dialog.destroy()
 
 	pluginView = widgets.get_object("pluginView")
 	path = pluginView.get_cursor()[0]
 
-	try:
-		options = pinterface.get_options(
-			pluginView.get_model()[path][COL_NAME])
-	except IndexError:
-		return
-
 	plugin_name = pluginView.get_model()[path][COL_NAME]
-	cSection = pinterface.get_plugin_config_section(plugin_name)
 
-	dialog = gtk.Dialog(
-		title = _("Configure %(name)s" % {"name": plugin_name}),
-		buttons = (gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE))
+	dialog = plugin_config_dialog.PluginConfigDialog(plugin_name)
 	dialog.connect("response", dialog_response_cb)
 
-	table = gtk.Table(rows = len(options), columns = 2)
-	table.set_property("column-spacing", 12)
-
-	dataMap = {} # config_key : value
-	rowCount = 0
-
-	for (opt, label, vtype, value) in options:
-
-		wLabel = gtk.Label(label+": ")
-		wLabel.set_property("xalign", 0)
-
-		widget = None
-
-		cValue = config.get(cSection, opt) or value
-		dataMap[opt] = cValue or value
-
-		if vtype == psushi.TYPE_STRING:
-			# Simple text entry
-			widget = gtk.Entry()
-			widget.set_text(cValue)
-
-			widget.connect("changed",
-				lambda w,f,o: f(o,w.get_text()),
-				dataMap.__setitem__, opt)
-
-		elif vtype == psushi.TYPE_PASSWORD:
-			# Hidden char. entry
-			widget = gtk.Entry()
-			widget.set_text(cValue)
-			widget.set_property("visibility", False)
-
-			widget.connect("changed",
-				lambda w,f,o: f(o, w.get_text()),
-				dataMap.__setitem__, opt)
-
-		elif vtype == psushi.TYPE_NUMBER:
-			# Number entry field
-			widget = gtk.SpinButton()
-			widget.set_range(-99999,99999)
-			widget.set_increments(1, 5)
-			widget.set_value(int(cValue))
-
-			widget.connect("value-changed",
-				lambda w,f,o: f(o, w.get_value_as_int()),
-				dataMap.__setitem__, opt)
-
-		elif vtype == psushi.TYPE_BOOL:
-			# Check button for boolean values
-			widget = gtk.CheckButton()
-			if type(cValue) == bool:
-				widget.set_active(cValue)
-			else:
-				widget.set_active(cValue.lower() != "false")
-
-			widget.connect("toggled",
-				lambda w,f,o: f(o, w.get_active()),
-				dataMap.__setitem__, opt)
-
-		elif vtype == psushi.TYPE_CHOICE:
-			# Multiple values. Stored as [0] = key and [1] = value
-			wModel = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-			widget = gtk.ComboBox(wModel)
-
-			widget.connect("changed",
-				lambda w,f,o: f(o, w.get_active() >= 0 \
-				and w.get_model()[w.get_active()][1] or ""),
-				dataMap.__setitem__, opt)
-
-			wRenderer = gtk.CellRendererText()
-			widget.pack_start(wRenderer, True)
-			widget.add_attribute(wRenderer, "text", 0)
-
-			for (key, val) in value:
-				wModel.append(row = (key, val))
-
-			# this is tricky, if there's a saved value,
-			# find the matching value (second field!)
-			# and set the index to that position.
-			if cValue and cValue != value:
-				i = 0
-				for row in wModel:
-					if row[1] == cValue:
-						break
-					i+=1
-				widget.set_active(i)
-			else:
-				widget.set_active(0)
-
-		else:
-			raise TypeError, "Wrong type given: %d" % (vtype)
-
-
-		table.attach(wLabel, 0, 1, rowCount, rowCount+1)
-		table.attach(widget, 1, 2, rowCount, rowCount+1)
-
-		rowCount += 1
-
-	dialog.plugin_name = plugin_name
-	dialog.map = dataMap
-
-	# put another vbox arround it because
-	# d.vbox.set_property("border-width",..) does not work...
-	vbox = gtk.VBox()
-	vbox.set_property("border-width", 12)
-	vbox.pack_start(table)
-	dialog.vbox.pack_start(vbox)
-
 	dialog.show_all()
+
 
 def cellRendererToggle_toggled_cb(renderer, path, pluginView):
 	store = pluginView.get_model()
@@ -278,6 +157,7 @@ def cellRendererToggle_toggled_cb(renderer, path, pluginView):
 	else:
 		# activated
 		config.set("autoload_plugins", str(len(list)+1), name)
+
 
 def pluginView_button_press_event_cb(pluginView, event):
 	""" activate the configure button if the selected plugin
@@ -306,6 +186,7 @@ def pluginView_button_press_event_cb(pluginView, event):
 			widgets.get_object("configureButton").set_sensitive(True)
 		else:
 			widgets.get_object("configureButton").set_sensitive(False)
+
 
 def loadPluginList():
 	view = widgets.get_object("pluginView")
@@ -362,6 +243,7 @@ def loadPluginList():
 
 	return True
 
+
 def setup():
 	global widgets
 
@@ -394,19 +276,27 @@ def setup():
 	column.set_resizable(True)
 	pluginView.append_column(column)
 
+	# Create the other columns
 	c = 1
-	for name in ("Autoload","Name","Path","Version","Description", "Author"):
+
+	for name in ("Autoload","Name","Path","Version",
+				 "Description", "Author"):
+
 		if c == 1:
 			renderer = gtk.CellRendererToggle()
 			renderer.set_data("column", c)
-			renderer.connect("toggled", cellRendererToggle_toggled_cb, pluginView)
+			renderer.connect("toggled", cellRendererToggle_toggled_cb,
+										pluginView)
 			column = gtk.TreeViewColumn(name, renderer, active=c)
+
 		else:
 			renderer = gtk.CellRendererText()
 			column = gtk.TreeViewColumn(name, renderer, text=c)
+
 		column.set_resizable(True)
 		column.set_fixed_width(80)
 		pluginView.append_column(column)
+
 		c+=1
 
 	loadPluginList()
