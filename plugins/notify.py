@@ -97,6 +97,7 @@ class notify (sushi.Plugin):
 
 	def _has_highlight(self, text, needle):
 		punctuation = string.punctuation + " \n\t"
+		needle = needle.lower()
 		ln = len(needle)
 		for line in text.split("\n"):
 			line = line.lower()

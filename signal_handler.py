@@ -180,6 +180,7 @@ def _add_channels(server_tab):
 def isHighlighted (server_tab, text):
 	def has_highlight(text, needle):
 		punctuation = string.punctuation + " \n\t"
+		needle = needle.lower()
 		ln = len(needle)
 		for line in text.split("\n"):
 			line = line.lower()
