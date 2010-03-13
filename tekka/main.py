@@ -89,7 +89,6 @@ from . import commands
 
 from .typecheck import types
 
-from .lib import dialog_control as dialog_control
 from .lib import plugin_control as plugin_control
 
 from .lib import nick_list_store
@@ -499,7 +498,7 @@ def serverTree_row_activated_cb(serverTree, path, column):
 	model = serverTree.get_model()
 	tab = model[path][0]
 
-	dialog_control.show_dialog("history", tab)
+	gui.dialogs.show_dialog("history", tab)
 
 def nickList_row_activated_cb(nickList, path, column):
 	"""

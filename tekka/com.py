@@ -251,7 +251,8 @@ def connect():
 
 	if bus_address:
 		try:
-			bus = dbus.connection.Connection(bus_address, mainloop=dbus_loop)
+			bus = dbus.connection.Connection(bus_address,
+					mainloop=dbus_loop)
 		except dbus.DBusException as e:
 			bus_remote_error(e)
 			bus = connect_session_bus()
@@ -337,9 +338,7 @@ def _nickSignal(time, server, from_str, new_nick):
 
 
 def sendMessage(server, channel, text):
-	"""
-		sends a PRIVMSG to channel @channel on server @server
-	"""
+	""" sends a PRIVMSG to channel @channel on server @server """
 	text = re.sub('(^|\s)(_\S+_)(\s|$)', '\\1' + chr(31) + '\\2' + chr(31) + '\\3', text)
 	text = re.sub('(^|\s)(\*\S+\*)(\s|$)', '\\1' + chr(2) + '\\2' + chr(2) + '\\3', text)
 

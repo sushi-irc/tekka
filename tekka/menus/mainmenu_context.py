@@ -32,7 +32,6 @@ from .. import com
 from .. import config
 from .. import gui
 
-from ..lib import dialog_control
 from ..lib.inline_dialog import InlineMessageDialog
 
 
@@ -89,7 +88,7 @@ class MainMenuContext(MenuContextType):
 						com.sushi.connect(server)
 
 			try:
-				dialog_control.show_dialog(
+				gui.dialogs.show_dialog(
 					"server", server_dialog_callback, need_sushi = True)
 			except com.NoSushiError as e:
 				d = InlineMessageDialog("NoSushiError", e.args[0])
@@ -269,7 +268,7 @@ class MainMenuContext(MenuContextType):
 
 			else:
 				try:
-					dialog_control.show_dialog(
+					gui.dialogs.show_dialog(
 					"channelList", sTab.name, need_sushi = True)
 				except com.NoSushiError as e:
 					self.show_no_sushi_error(e)
@@ -277,18 +276,18 @@ class MainMenuContext(MenuContextType):
 		def dcc_activate_cb(self, item):
 			""" show file transfers dialog """
 			try:
-				dialog_control.show_dialog("dcc", need_sushi = True)
+				gui.dialogs.show_dialog("dcc", need_sushi = True)
 			except com.NoSushiError as e:
 				self.show_no_sushi_error(e)
 
 		def plugins_activate_cb(self, item):
-			dialog_control.show_dialog("plugins")
+			gui.dialogs.show_dialog("plugins")
 
 		def debug_activate_cb(self, item):
-			dialog_control.show_dialog("debug")
+			gui.dialogs.show_dialog("debug")
 
 		def preferences_activate_cb(self, item):
-			dialog_control.show_dialog("preferences")
+			gui.dialogs.show_dialog("preferences")
 
 
 	class HelpMenuContext(MenuContextType):
@@ -308,7 +307,7 @@ class MainMenuContext(MenuContextType):
 				self.about_activate_cb })
 
 		def colors_activate_cb(self, item):
-			dialog_control.show_dialog("colorTable")
+			gui.dialogs.show_dialog("colorTable")
 
 		def about_activate_cb(self, item):
 			widgets = gui.builder.load_dialog("about")

@@ -32,7 +32,6 @@ import logging
 from gettext import gettext as _
 
 from .. import com
-from ..lib import dialog_control
 from .. import gui
 
 widgets = None
@@ -162,7 +161,7 @@ def add_dialog_cb():
 	retrieveServerlist()
 
 def openAddDialog(widget):
-	dialog_control.show_dialog("addServer", add_dialog_cb)
+	gui.dialogs.show_dialog("addServer", add_dialog_cb)
 
 def openEditDialog(widget):
 	view = widgets.get_object("serverList")
@@ -180,7 +179,7 @@ def openEditDialog(widget):
 	else:
 		servername = serverList[path][0]
 
-	data = dialog_control.show_dialog("editServer", servername)
+	data = gui.dialogs.show_dialog("editServer", servername)
 
 	if not servername:
 		logging.error("openEditDialog: Error in retrieving the servername")
@@ -213,4 +212,4 @@ def openDeleteDialog(widget):
 						"Are you connected to maki?"))
 		return
 
-	dialog_control.show_dialog("deleteServer", servername, delete_dialog_cb)
+	gui.dialogs.show_dialog("deleteServer", servername, delete_dialog_cb)

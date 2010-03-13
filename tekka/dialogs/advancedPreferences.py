@@ -31,7 +31,6 @@ import gtk.glade
 import gobject
 import pango
 
-from ..lib import dialog_control
 from .. import gui
 from .. import config
 

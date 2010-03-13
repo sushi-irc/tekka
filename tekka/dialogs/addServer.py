@@ -31,7 +31,6 @@ from gettext import gettext as _
 
 from ..com import sushi
 from .. import gui
-from ..lib import dialog_control
 from ..lib.expanding_list import ExpandingList
 
 widgets = None

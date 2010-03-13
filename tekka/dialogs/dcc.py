@@ -38,7 +38,6 @@ import traceback
 
 from .. import config
 from ..com import parse_from, sushi
-from ..lib import dialog_control
 from .. import gui
 from ..helper.dcc import s_incoming
 

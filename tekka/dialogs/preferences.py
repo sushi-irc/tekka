@@ -35,7 +35,6 @@ from gobject import idle_add
 
 from .. import gui
 from .. import config
-from ..lib import dialog_control
 from ..lib.expanding_list import ExpandingList
 
 widgets = None
@@ -349,7 +348,7 @@ def nick_contrast_colors_toggled_cb(button):
 """ advanced page signals """
 
 def advanced_advancedSettingsClicked(button):
-	d = dialog_control.loadDialog("advancedPreferences")
+	d = gui.dialogs.loadDialog("advancedPreferences")
 	if not d:
 		logging.error("advanced settings dialog setup failed")
 		return

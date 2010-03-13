@@ -37,7 +37,7 @@ from ..helper.singleton import SingletonMeta
 from ..lib import inline_dialog
 from ..lib import key_dialog
 from ..lib import topic_dialog
-from ..lib import dialog_control
+
 
 class ServerTreeMenu(object):
 
@@ -172,7 +172,7 @@ class ServerTreeMenu(object):
 	def joinChannelItem_activate_cb(self, item):
 		""" pop up a dialog to ask which channel should be joined """
 		if self.current_tab and self.current_tab.is_server():
-			dialog_control.show_dialog("join", self.current_tab.name)
+			gui.dialogs.show_dialog("join", self.current_tab.name)
 
 	def joinItem_activate_cb(self, item):
 		""" join channel without key """
@@ -236,14 +236,14 @@ class ServerTreeMenu(object):
 		if not self.current_tab or self.current_tab.is_server():
 			return
 
-		dialog_control.show_dialog("hide", self.current_tab)
+		gui.dialogs.show_dialog("hide", self.current_tab)
 
 	def historyItem_activate_cb(self, item):
 		""" show up history dialog for current tab. """
 		if not self.current_tab or self.current_tab.is_server():
 			return
 
-		dialog_control.show_dialog("history", self.current_tab)
+		gui.dialogs.show_dialog("history", self.current_tab)
 
 	def setTopicItem_activate_cb(self, item):
 		""" show up inline dialog to change topic """
