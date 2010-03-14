@@ -80,8 +80,7 @@ def maki_connected_cb(sushi):
 		connect_signal("quit", userQuit_cb)
 		connect_signal("kick", userKick_cb)
 		connect_signal("nick", userNick_cb)
-		connect_signal("away", userAway_cb)
-		connect_signal("back", userBack_cb)
+		connect_signal("user_away", userAway_cb)
 		connect_signal("mode", userMode_cb)
 		connect_signal("oper", userOper_cb)
 
@@ -154,6 +153,10 @@ def _add_channels(server_tab):
 
 		tab.nickList.clear()
 		tab.nickList.add_nicks(nicks, prefixes)
+
+		for nick in nicks:
+			# FIXME inefficient → nicks, prefixes, aways = …?
+			tab.nickList.set_away(nick, sushi.user_away(server_tab.name, nick))
 
 		tab.topic = sushi.channel_topic(server_tab.name, channel)
 		tab.topicsetter = ""
@@ -425,26 +428,6 @@ def makiShutdown_cb(time):
 	gui.mgmt.set_useable(False)
 
 """ Callbacks for users """
-
-def userAway_cb(time, server):
-	"""
-		maki says that we are away.
-	"""
-	tab = gui.tabs.search_tab(server)
-
-	if tab:
-		tab.away = "-- Not implemented yet --"
-
-
-def userBack_cb(time, server):
-	"""
-		maki says that we are back from away being.
-	"""
-	tab = gui.tabs.search_tab(server)
-
-	if tab:
-		tab.away = ""
-
 
 def userAwayMessage_cb(timestamp, server, nick, message):
 	"""
@@ -961,6 +944,33 @@ def userNick_cb(time, server, from_str, newNick):
 				"action")
 
 
+def userAway_cb(time, server, from_str, away):
+	nick = parse_from(from_str)[0]
+	server_tab = gui.tabs.search_tab(server)
+
+	if not server_tab:
+		return
+
+	if nick == server_tab.nick:
+		if away:
+			server_tab.away = "-- Not implemented yet --"
+		else:
+			server_tab.away = ""
+
+	# iterate over all channels and look if the nick is
+	# present there.
+	for tab in gui.tabs.get_all_tabs(servers = [server])[1:]:
+
+		if tab.is_channel():
+			if nick in tab.nickList.get_nicks():
+				tab.nickList.set_away(nick, away)
+
+		elif tab.is_query():
+			if tab.name == nick:
+				# FIXME
+				continue
+
+
 def userKick_cb(time, server, from_str, channel, who, reason):
 	"""
 		signal emitted if a user got kicked.
@@ -1218,9 +1228,9 @@ def userNames_cb(timestamp, server, channel, nicks, prefixes):
 	add the nick, fetch the prefix for it and at least
 	update the user count.
 	"""
-	tab = gui.tabs.search_tab(server, channel)
+	server_tab, tab = gui.tabs.search_tabs(server, channel)
 
-	if not tab: # /names for unexisting channel?
+	if not server_tab or not tab: # /names for unexisting channel?
 		return
 
 	if not nicks:
@@ -1235,6 +1245,9 @@ def userNames_cb(timestamp, server, channel, nicks, prefixes):
 
 			if prefixes[i]:
 				tab.nickList.set_prefix(nicks[i], prefixes[i], sort=False)
+
+			# FIXME inefficient
+			tab.nickList.set_away(nicks[i], sushi.user_away(server_tab.name, nicks[i]))
 
 		if tab.is_active():
 			gui.mgmt.set_user_count(

@@ -34,6 +34,7 @@ from ..typecheck import types
 
 COLUMN_PREFIX=0
 COLUMN_NICK=1
+COLUMN_AWAY=2
 
 class NickListStore(gtk.ListStore):
 	"""
@@ -48,9 +49,9 @@ class NickListStore(gtk.ListStore):
 	nick is a string.
 	"""
 
-	def __init__(self, nicks=None, prefixes=None):
+	def __init__(self, nicks=None, prefixes=None, aways=None):
 		gtk.ListStore.__init__(self, gobject.TYPE_STRING,
-			gobject.TYPE_STRING)
+			gobject.TYPE_STRING, gobject.TYPE_BOOLEAN)
 
 		self.__modes = []
 		# user count, operator count, dowehaveoperators?
@@ -59,6 +60,9 @@ class NickListStore(gtk.ListStore):
 
 		if nicks and prefixes and len(nicks) == len(prefixes):
 			self.add_nicks(nicks, prefixes)
+
+		if aways and len(aways) == len(nicks):
+			self.set_aways(nicks, aways)
 
 	def __len__(self):
 		return self.__count
@@ -76,6 +80,13 @@ class NickListStore(gtk.ListStore):
 			if row[COLUMN_NICK].lower() == needle.lower():
 				return row
 		return None
+
+	def set_aways(self, nicks, aways):
+		if not nicks or not aways:
+			return
+
+		for i in range(len(nicks)):
+			self.set_away(nicks[i], aways[i])
 
 	def add_nicks(self, nicks, prefixes):
 		"""
@@ -112,6 +123,7 @@ class NickListStore(gtk.ListStore):
 
 		self.set(iter, COLUMN_NICK, nick)
 		self.set(iter, COLUMN_PREFIX, "")
+		self.set(iter, COLUMN_AWAY, False)
 
 		self.__count += 1
 
@@ -155,6 +167,14 @@ class NickListStore(gtk.ListStore):
 		if count_reset:
 			self.__count = 0
 			self.__opcount = 0
+
+	def set_away(self, nick, away):
+		row = self.find_nick_row(nick)
+
+		if not row:
+			return
+
+		row[COLUMN_AWAY] = away
 
 	def set_prefix(self, nick, prefix, sort=True):
 		"""

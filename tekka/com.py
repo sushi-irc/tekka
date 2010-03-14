@@ -198,7 +198,7 @@ gobject.signal_new ("sushi-error", SushiWrapper,
 
 
 dbus_loop = DBusGMainLoop()
-required_version = (1, 1, 0)
+required_version = (1, 2, 0)
 bus = None
 
 sushi = SushiWrapper(None)

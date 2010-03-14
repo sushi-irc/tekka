@@ -799,11 +799,13 @@ def nickList_render_nicks_cb(column, renderer, model, iter):
 		return
 
 	nick = model.get(iter, 1)
+	away = model.get(iter, 2)
 
 	if not nick:
 		return
 
 	nick = nick[0]
+	away = away[0]
 
 	# highlight own nick
 	if com.get_own_nick(serverTab.name) == nick:
@@ -811,7 +813,10 @@ def nickList_render_nicks_cb(column, renderer, model, iter):
 	else:
 		renderer.set_property("weight", pango.WEIGHT_NORMAL)
 
-	# TODO: highlighing of users which are away
+	if away:
+		renderer.set_property("style", pango.STYLE_ITALIC)
+	else:
+		renderer.set_property("style", pango.STYLE_NORMAL)
 
 
 """ Initial setup routines """
