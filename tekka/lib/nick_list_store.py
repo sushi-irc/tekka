@@ -261,10 +261,10 @@ class NickListStore(gtk.ListStore):
 		for j in range(len(self)):
 
 			i = j - 1
-			current = [self[j][0],self[j][1]]
+			current = [self[j][0],self[j][1],self[j][2]]
 
 			while i > -1 and compare(self[i], current):
-				self.set(self[i+1].iter, 0, self[i][0], 1, self[i][1])
+				self.set(self[i+1].iter, 0, self[i][0], 1, self[i][1], 2, self[i][2])
 				i -= 1
 
-			self.set(self[i+1].iter, 0, current[0], 1, current[1])
+			self.set(self[i+1].iter, 0, current[0], 1, current[1], 2, current[2])
