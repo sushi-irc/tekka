@@ -189,8 +189,8 @@ def tekka_tab_new_name_cb(tab, name):
 def tekka_tab_server_connected_cb(tab, connected):
 	""" the server of the tab connected/disconnected """
 
-	if not connected:
-		tab.set_useable(False)
+	if tab.is_active():
+		tab.set_useable(connected)
 
 
 def tekka_channel_joined_cb(tab, switch):
