@@ -196,7 +196,8 @@ def tekka_tab_server_connected_cb(tab, connected):
 def tekka_channel_joined_cb(tab, switch):
 	""" channel received a change on joined attribute """
 
-	tab.set_useable(switch)
+	if tab.is_active():
+		tab.set_useable(switch)
 
 
 def tekka_tab_switched_cb(old, new):
