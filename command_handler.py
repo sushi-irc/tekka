@@ -450,6 +450,9 @@ def cmd_list(serverTab, channelTab, args):
 
 		def print_listing():
 			self._tab.write_raw("<br/>".join(self._text))
+
+			self._text = []
+			self._line = 0
 			return False
 
 		if not channel and not topic and users == -1:
@@ -467,20 +470,20 @@ def cmd_list(serverTab, channelTab, args):
 
 			code.reset_function_attrs(channelList_cb)
 
+			signals.disconnect_signal("list", channelList_cb)
+
 		else:
 			self._text.append(("• <b>%s</b><br/>\t%d "+_("User")+"<br/>"+
 								"\t"+_("Topic")+": \"%s\"") % (
 									markup.escape(channel),
 									users,
 									markup.escape(topic)))
-
 			self._line += 1
 
 			if self._line == 10:
+
 				gobject.idle_add(print_listing)
 
-				self._text = []
-				self._line = 0
 
 	# cmd_list:
 
