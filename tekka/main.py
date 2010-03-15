@@ -152,10 +152,27 @@ def tekka_server_new_nick_cb(tab, nick):
 def tekka_tab_new_markup_cb(tab):
 	""" Push the CellRenderer to re-render the serverTree """
 
-	# FIXME: is there a better solution than _this_?
-	if tab.path:
-		store = gui.widgets.get_widget("serverTree").get_model()
-		store.set_value(store.get_iter(tab.path), 0, tab)
+	if not tab.path:
+		return
+
+	""" Possibly a better solution but dunno how to
+		go further from here:
+
+	st = gui.widgets.get_widget("serverTree")
+	col = st.get_column(0)
+	(renderer,) = col.get_cell_renderers()
+
+	renderer.render(
+					st.get_bin_window(),
+					st,
+					st.get_background_area(tab.path, col),
+					st.get_cell_area(tab.path, col),
+					st.get_cell_area(tab.path, col),
+					0)
+	"""
+
+	store = gui.widgets.get_widget("serverTree").get_model()
+	store[tab.path][0] = tab
 
 
 def tekka_tab_new_message_cb(tab, mtype):
