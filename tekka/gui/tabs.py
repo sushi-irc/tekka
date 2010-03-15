@@ -199,6 +199,8 @@ class TekkaTab(gobject.GObject):
 			- "action" and "highlightaction"
 			- "message" and "highlightmessage"
 		"""
+		new = False
+
 		if not status:
 			self.newMessage = []
 		else:
@@ -206,8 +208,11 @@ class TekkaTab(gobject.GObject):
 				self.newMessage.index(status)
 			except ValueError:
 				self.newMessage.append(status)
+				new = True
 			self.emit ("new_message", status)
-		self.emit("new_markup")
+
+		if not status or new:
+			self.emit("new_markup")
 
 
 	def markup(self):
