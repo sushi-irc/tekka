@@ -50,6 +50,10 @@ class FadingBox(gtk.EventBox):
 
 
 	def reset_background(self):
+		""" reset the background color to what it should be according
+			to the gtkrc loaded
+		"""
+
 		style = self.get_style().copy()
 		style.bg[gtk.STATE_NORMAL] = self._origin_bg_color.copy()
 		self.set_style(style)
@@ -58,7 +62,6 @@ class FadingBox(gtk.EventBox):
 	def _fade_timeout(self, color):
 
 		def do_timeout(self, color):
-			print "timeout %s" % (color.to_string())
 			style = self.get_style().copy()
 			style.bg[gtk.STATE_NORMAL] = color.copy()
 			self.set_style(style)
@@ -87,15 +90,14 @@ class FadingBox(gtk.EventBox):
 
 
 	def _fade_bg(self, color):
+		""" modifiy each color channel of the background color according
+			to color and refresh the style with the new background color
+		"""
 
 		if not self._timeout_id:
 			return False
 
 		bg_color = self.bg_color
-
-		print "BEFORE: %s %s %s" % (int(bg_color.red), int(bg_color.green),
-			int(bg_color.blue))
-
 
 		(rdone, bg_color.red) = self._fade_channel(bg_color.red,
 												   color.red)
@@ -104,16 +106,12 @@ class FadingBox(gtk.EventBox):
 		(bdone, bg_color.blue) = self._fade_channel(bg_color.blue,
 													color.blue)
 
-		print "AFTER: %s %s %s" % (int(bg_color.red), int(bg_color.green),
-			int(bg_color.blue))
 
 		self.bg_color = bg_color
 
 		style = self.get_style().copy()
 		style.bg[gtk.STATE_NORMAL] = bg_color.copy()
 		self.set_style(style)
-
-		print "iterating %d"  % (self._timeout_id)
 
 		if rdone and gdone and bdone:
 			self.stop_fading()
@@ -128,15 +126,11 @@ class FadingBox(gtk.EventBox):
 		"""
 
 		if self._timeout_id:
-			print "fade in progress!"
-			return # already fading
+			return False # already fading
 
 
-		self.mstyle = self.get_style().copy()
-		self.bg_color = self.mstyle.bg[gtk.STATE_NORMAL].copy()
-
-		print "fade(%s -> %s)" % (self.bg_color.to_string(),
-								  to_color.to_string())
+		style = self.get_style()
+		self.bg_color = style.bg[gtk.STATE_NORMAL].copy()
 
 		self._timeout_id = gobject.timeout_add(interval,
 											   self._fade_bg,
@@ -146,6 +140,7 @@ class FadingBox(gtk.EventBox):
 										  self._fade_timeout,
 										  to_color)
 
+		return True
 
 	def stop_fading(self):
 
@@ -155,7 +150,7 @@ class FadingBox(gtk.EventBox):
 
 			self._timeout_id = None
 			self._timer = None
-			print "FINI"
+
 			self.emit("fade-finished")
 
 
