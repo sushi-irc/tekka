@@ -28,8 +28,6 @@ SUCH DAMAGE.
 import gobject
 import gtk
 
-from threading import Timer
-
 
 class FadingBox(gtk.EventBox):
 
@@ -39,7 +37,11 @@ class FadingBox(gtk.EventBox):
 
 	MAX_FADING_TIME = 700 # miliseconds
 
+	# background color as defined in style rc
 	origin_bg_color = property(lambda s: s._origin_bg_color.copy(), None)
+
+	# bool property if fading is in progress
+	is_fading = property(lambda s: s._timeout_id != None, None)
 
 	def __init__(self):
 		super(FadingBox,self).__init__()
@@ -141,6 +143,7 @@ class FadingBox(gtk.EventBox):
 										  to_color)
 
 		return True
+
 
 	def stop_fading(self):
 

@@ -155,22 +155,6 @@ def tekka_tab_new_markup_cb(tab):
 	if not tab.path:
 		return
 
-	""" Possibly a better solution but dunno how to
-		go further from here:
-
-	st = gui.widgets.get_widget("serverTree")
-	col = st.get_column(0)
-	(renderer,) = col.get_cell_renderers()
-
-	renderer.render(
-					st.get_bin_window(),
-					st,
-					st.get_background_area(tab.path, col),
-					st.get_cell_area(tab.path, col),
-					st.get_cell_area(tab.path, col),
-					0)
-	"""
-
 	store = gui.widgets.get_widget("serverTree").get_model()
 	store[tab.path][0] = tab
 
@@ -454,12 +438,13 @@ def outputShell_widget_changed_cb(shell, old_widget, new_widget):
 	gui.widgets.remove_widget(old_widget.textview)
 	gui.widgets.add_widget(new_widget.textview)
 
+
 def serverTree_misc_menu_reset_activate_cb(menuItem):
-	"""
-	reset the markup of all tabs
-	"""
+	""" reset the markup of all tabs """
+
 	for tab in gui.tabs.get_all_tabs():
 		tab.set_new_message(None)
+
 
 def serverTree_button_press_event_cb(serverTree, event):
 	"""
@@ -511,12 +496,14 @@ def serverTree_button_press_event_cb(serverTree, event):
 
 	return False
 
+
 def serverTree_row_activated_cb(serverTree, path, column):
 	""" open the history dialog for the pointed tab """
 	model = serverTree.get_model()
 	tab = model[path][0]
 
 	gui.dialogs.show_dialog("history", tab)
+
 
 def nickList_row_activated_cb(nickList, path, column):
 	"""
@@ -1304,6 +1291,7 @@ def tekka_excepthook(extype, exobj, extb):
 		self.dialog.set_message(message)
 
 	sys.__excepthook__(extype, exobj, extb)
+
 
 def setup_logging():
 	""" set the path of the logfile to tekka.logfile config
