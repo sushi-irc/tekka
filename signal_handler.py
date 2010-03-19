@@ -296,7 +296,7 @@ def serverConnect_cb(time, server):
 					channelTab.joined=False
 				channelTab.connected=False
 
-	tab.write(time, "Connecting...")
+	tab.write(time, "Connecting...", msgtype="action")
 
 	gui.status.set_visible("connecting", "Connecting to %s" % server)
 
@@ -316,7 +316,7 @@ def serverConnected_cb(time, server):
 	servers = [server])[1:] if tab.is_query()]:
 		query.connected = True
 
-	tab.write(time, "Connected.")
+	tab.write(time, "Connected.", msgtype="action")
 
 def serverMOTD_cb(time, server, message, first_time = {}):
 	""" Server is sending a MOTD.
