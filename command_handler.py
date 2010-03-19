@@ -268,6 +268,7 @@ def cmd_away(serverTab, channelTab, args):
 		return gui.mgmt.myPrint("Can't determine server.")
 
 	sushi.away(serverTab.name, " ".join(args))
+	serverTab.current_write(time.time(), _("You are now away."))
 
 
 def cmd_back(serverTab, channelTab, args):
@@ -278,7 +279,9 @@ def cmd_back(serverTab, channelTab, args):
 	"""
 	if not serverTab:
 		return gui.mgmt.myPrint("Can't determine server.")
+
 	sushi.back(serverTab.name)
+	serverTab.current_write(time.time(), _("You are now back."))
 
 
 def cmd_nickserv(serverTab, channelTab, args):
