@@ -41,6 +41,7 @@ from ..lib.search_toolbar import SearchBar
 from ..lib.output_textview import OutputTextView
 from ..lib.output_shell import OutputShell
 from ..lib.output_window import OutputWindow
+from ..lib.spell_entry import SpellEntry
 from ..helper import URLHandler
 
 from ..helper.shortcuts import addShortcut
@@ -126,30 +127,27 @@ def load_widgets(gladeFile, section):
 			return setup_searchBar()
 
 		elif widget_name == "outputShell":
+
 			return OutputShell(OutputWindow())
 
 		elif widget_name == "generalOutput":
+
 			t = OutputTextView()
 			t.set_buffer(GOHTMLBuffer(handler = URLHandler.URLHandler))
 			t.show()
-
 			return t
 
 		elif widget_name == "inputBar":
-			try:
-				bar = SpellEntry()
-			except NameError:
-				bar = gtk.Entry()
 
+			bar = SpellEntry()
 			bar.show()
-
 			return bar
 
 		elif widget_name == "notificationWidget":
+
 			align = gtk.VBox()
 			align.set_no_show_all(True)
 			align.set_property("visible", False)
-
 			return align
 
 		return None

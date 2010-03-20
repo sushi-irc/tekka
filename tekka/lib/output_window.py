@@ -42,6 +42,9 @@ class OutputWindow(gtk.ScrolledWindow):
 		This widget is supposed to be hold by a OutputShell.
 	"""
 
+	__gtype_name__ = "OutputWindow"
+
+
 	def __init__(self):
 		gtk.ScrolledWindow.__init__(self)
 

@@ -200,6 +200,8 @@ class ScanHandler(xml.sax.ContentHandler):
 
 class HTMLBuffer(gtk.TextBuffer):
 
+	__gtype_name__ = "HTMLBuffer"
+
 	def __init__(self, handler=None, tagtable=None):
 		self.lines = 0
 

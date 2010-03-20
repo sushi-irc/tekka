@@ -176,6 +176,8 @@ class GOHTMLHandler(htmlbuffer.HTMLHandler):
 
 class GOHTMLBuffer(htmlbuffer.HTMLBuffer):
 
+	__gtype_name__ = "GOHTMLBuffer"
+
 	def __init__(self, go_handler=go_handler, handler=None,
 	tagtable=None):
 		htmlbuffer.HTMLBuffer.__init__(self, handler, tagtable)
