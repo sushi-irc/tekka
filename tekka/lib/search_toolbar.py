@@ -28,10 +28,8 @@ SUCH DAMAGE.
 
 import gtk
 
-try:
-	from sexy import SpellEntry
-except ImportError:
-	pass
+from .spell_entry import SpellEntry
+
 
 class SearchBar(gtk.Table):
 
@@ -79,10 +77,7 @@ class SearchBar(gtk.Table):
 			self.attach(self.top_hseparator, 0, 2, 0, 1)
 			self.child_set_property(self.top_hseparator, "y-options", gtk.FILL)
 
-		try:
-			self.search_entry = SpellEntry()
-		except NameError:
-			self.search_entry = gtk.Entry()
+		self.search_entry = SpellEntry()
 
 		self.attach(self.search_entry, 0, 1, 1, 2)
 		self.child_set_property(self.search_entry, "y-options", gtk.SHRINK)

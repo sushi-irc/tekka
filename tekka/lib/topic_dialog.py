@@ -28,11 +28,6 @@ SUCH DAMAGE.
 
 import gtk
 
-try:
-	from sexy import SpellEntry
-except ImportError:
-	pass
-
 from gettext import gettext as _
 
 from .. import signals
@@ -41,7 +36,7 @@ from .. import gui
 from ..helper import color
 from ..com import sushi
 from .inline_dialog import InlineDialog, InlineMessageDialog
-
+from .spell_entry import SpellEntry
 
 class TopicDialog(InlineDialog):
 
@@ -71,10 +66,7 @@ class TopicDialog(InlineDialog):
 				})
 		self.table.attach(self.label, 0, 1, 0, 1)
 
-		try:
-			self.topicBar = SpellEntry()
-		except NameError:
-			self.topicBar = gtk.Entry()
+		self.topicBar = SpellEntry()
 
 		self.table.attach(self.topicBar, 0, 1, 1, 2)
 
