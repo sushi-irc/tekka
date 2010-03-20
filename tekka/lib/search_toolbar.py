@@ -33,6 +33,8 @@ from .spell_entry import SpellEntry
 
 class SearchBar(gtk.Table):
 
+	__gtype_name__ = "SearchBar"
+
 	def set_textview(self, textview):
 		if self.textview_callback:
 			self._textview = self.textview_callback()
