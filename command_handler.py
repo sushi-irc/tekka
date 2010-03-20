@@ -370,6 +370,10 @@ def cmd_names(serverTab, channelTab, args):
 		signals.connect_signal("names", names_cb)
 		sushi.names(server, channel)
 
+	if channelTab and not channelTab.is_channel():
+		gui.mgmt.myPrint("/names can only be used on channel tabs.")
+		return
+
 	if not args:
 		if channelTab:
 			request(serverTab.name, channelTab.name)
