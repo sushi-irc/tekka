@@ -1,0 +1,22 @@
+<!-- Start glade with GLADE_CATALOG_PATH=. glade-3 -->
+<?xml version="1.0" encoding="UTF-8"?>
+<glade-catalog name="glade_widgets" library="gladepython" domain="glade-3" depends="gtk+">
+
+	<init-function>glade_python_init</init-function>
+
+	<glade-widget-classes>
+        <glade-widget-class title="Spell Entry" generic-name="spellentry" name="SpellEntry"/>
+		<glade-widget-class title="Search Bar" generic-name="searchbar" name="SearchBar">
+			<properties>
+			<property id="n-rows" query="False" default="0" save="False" visible="False"/>
+			<property id="n-columns" query="False" default="0" save="False" visible="False"/>
+			</properties>
+		</glade-widget-class>
+    </glade-widget-classes>
+
+	<glade-widget-group name="TekkaWidgets" title="Tekka Widgets">
+        <glade-widget-class-ref name="SpellEntry"/>
+		<glade-widget-class-ref name="SearchBar"/>
+	</glade-widget-group>
+
+</glade-catalog>
