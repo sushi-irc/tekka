@@ -35,6 +35,8 @@ import xml.sax.handler
 
 from StringIO import StringIO
 
+from .. import gui
+
 from ..helper.url import URLToTag
 from .. import config
 
@@ -131,7 +133,7 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 		elif name == "msg":
 			# start tag to avoid errors due to
 			# missing overall-tag
-			pass
+			self._parseFont(tag, attrs)
 
 		else:
 			logging.error("HTMLBuffer: Unknown tag %s" % (name))
@@ -205,6 +207,7 @@ class HTMLBuffer(gtk.TextBuffer):
 	def __init__(self, handler=None, tagtable=None):
 		self.lines = 0
 
+		self.odd_line = False
 
 		if tagtable:
 			self.tagtable = tagtable
@@ -289,7 +292,14 @@ class HTMLBuffer(gtk.TextBuffer):
 			text = "<br/>" + text
 
 		text = URLToTag(text)
-		text = "<msg>%s</msg>" % text
+
+		if self.odd_line:
+			color = gui.widgets.get_widget("output").get_style().base[gtk.STATE_INSENSITIVE]
+			text = "<msg paragraph-background='%s'>%s</msg>" % (color.to_string(), text)
+		else:
+			text = "<msg>%s</msg>" % text
+
+		self.odd_line = not self.odd_line
 
 		def applyToParser(text):
 			try:
