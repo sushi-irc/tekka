@@ -973,13 +973,15 @@ def load_paned_positions():
 	"""
 
 	paneds = [
-		gui.widgets.get_object("list_vpaned"),
-		gui.widgets.get_object("main_hpaned"),
-		gui.widgets.get_object("output_vpaned")]
+		"list_vpaned",
+		"main_hpaned",
+		"output_vpaned"]
 
-	for paned in paneds:
+	for paned_name in paneds:
+		paned = gui.widgets.get_object(paned_name)
 		paned.set_property("position-set", True)
-		position = config.get("sizes", paned.name, None)
+
+		position = config.get("sizes", paned_name, None)
 
 		if position == None:
 			continue
