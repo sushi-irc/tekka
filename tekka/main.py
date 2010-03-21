@@ -434,9 +434,6 @@ def outputShell_widget_changed_cb(shell, old_widget, new_widget):
 	and type(new_widget) != WelcomeWindow):
 		hide_welcome_screen()
 
-	new_widget.set_property("name", "output_window")
-	new_widget.textview.set_property("name", "output")
-
 	gui.widgets.remove_object("output_window")
 	gui.widgets.add_object(new_widget, "output_window")
 

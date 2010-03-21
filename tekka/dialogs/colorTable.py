@@ -47,7 +47,7 @@ def run():
 	boxes = [n for n in table.get_children() if type(n) == gtk.EventBox]
 
 	for box in boxes:
-		name = box.get_property("name")
+		name = gtk.Buildable.get_name(box)
 
 		match = pattern.match(name)
 

@@ -78,7 +78,7 @@ def check_empty_section(cat, data):
 def apply_button_setting(button):
 	cat = get_tab_category(active_tab)
 	d = get_hidden_types(active_tab)
-	mtype = buttons[button.get_property("name")]
+	mtype = buttons[gtk.Buildable.get_name(button)]
 
 	if not button.get_active():
 		# remove entry
@@ -103,7 +103,7 @@ def apply_button_setting(button):
 def apply_own_button_setting(button):
 	cat = get_tab_category(active_tab)
 	d = get_hidden_types(active_tab)
-	mtype = buttons[button.get_property("name")[:-4]]
+	mtype = buttons[gtk.Buildable.get_name(button)[:-4]]
 
 	if not button.get_active():
 		# remove own entry
