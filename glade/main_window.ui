@@ -16,6 +16,7 @@
       <!-- column-name Tab -->
       <column type="GObject"/>
     </columns>
+    <signal name="rows_reordered" handler="tab_store_rows_reordered"/>
   </object>
   <object class="GtkWindow" id="main_window">
     <property name="default_width">440</property>
@@ -23,11 +24,11 @@
     <accel-groups>
       <group name="main_accel_group"/>
     </accel-groups>
-    <signal name="scroll_event" handler="main_window_scroll_event"/>
+    <signal name="window_state_event" handler="main_window_window_state_event"/>
     <signal name="focus_in_event" handler="main_window_focus_in_event"/>
+    <signal name="scroll_event" handler="main_window_scroll_event"/>
     <signal name="size_allocate" handler="main_window_size_allocate"/>
     <signal name="delete_event" handler="main_window_delete_event"/>
-    <signal name="window_state_event" handler="main_window_window_state_event"/>
     <child>
       <object class="GtkVBox" id="main_vbox">
         <property name="visible">True</property>

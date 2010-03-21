@@ -817,7 +817,6 @@ def create_query(server, name):
 
 @types (server = basestring)
 def create_server(server):
-	print TekkaServer, type(TekkaServer)
 	tab = _create_tab(TekkaServer, server)
 
 	tab.update()

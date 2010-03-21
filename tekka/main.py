@@ -428,8 +428,6 @@ def outputShell_widget_changed_cb(shell, old_widget, new_widget):
 		- output_window <- new_widget
 		- output        <- new_widget.textview
 	"""
-	print "widgets changed: %s to %s" % (old_widget, new_widget)
-
 	if (type(old_widget) == WelcomeWindow
 	and type(new_widget) != WelcomeWindow):
 		hide_welcome_screen()
@@ -1109,7 +1107,7 @@ def setupGTK():
 			mainWindow_focus_in_event_cb,
 		"main_window_size_allocate":
 			mainWindow_size_allocate_cb,
-		"main_window_window_state_event_cb":
+		"main_window_window_state_event":
 			mainWindow_window_state_event_cb,
 		"main_window_scroll_event":
 			mainWindow_scroll_event_cb,
@@ -1142,7 +1140,7 @@ def setupGTK():
 		# nick list signals
 		"nicks_view_row_activated":
 			nickList_row_activated_cb,
-		"nicks_view_button_press_event_cb":
+		"nicks_view_button_press_event":
 			nickList_button_press_event_cb,
 
 		"output_vbox_size_allocate":
@@ -1183,7 +1181,7 @@ def setupGTK():
 	# tools menu context
 		"tools_channel_list_item_activate":
 			mmc.tools.channelList_activate_cb,
-		"tools_file_transfer_item_activate" :
+		"tools_file_transfers_item_activate" :
 			mmc.tools.dcc_activate_cb,
 		"tools_plugins_item_activate" :
 			mmc.tools.plugins_activate_cb,
