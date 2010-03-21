@@ -3,21 +3,18 @@
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-requires glade_widgets 0.0 -->
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkListStore" id="tab_store">
-    <columns>
-      <!-- column-name Name -->
-      <column type="gchararray"/>
-      <!-- column-name Tab -->
-      <column type="GObject"/>
-    </columns>
-    <signal name="rows_reordered" handler="tab_store_rows_reordered"/>
-  </object>
   <object class="GtkListStore" id="nicks_store">
     <columns>
       <!-- column-name Prefix -->
       <column type="gchararray"/>
       <!-- column-name Nick -->
       <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkTreeStore" id="tab_store">
+    <columns>
+      <!-- column-name Tab -->
+      <column type="GObject"/>
     </columns>
   </object>
   <object class="GtkWindow" id="main_window">
@@ -282,7 +279,6 @@
                 <signal name="size_allocate" handler="output_vbox_size_allocate"/>
                 <child>
                   <object class="GtkLabel" id="topic_label">
-                    <property name="visible">True</property>
                     <property name="label" translatable="yes">#topic</property>
                     <property name="use_markup">True</property>
                     <property name="selectable">True</property>
@@ -404,6 +400,7 @@
                     <property name="can_focus">True</property>
                     <property name="hscrollbar_policy">automatic</property>
                     <property name="vscrollbar_policy">automatic</property>
+                    <property name="shadow_type">etched-in</property>
                     <child>
                       <object class="GtkTreeView" id="tabs_view">
                         <property name="visible">True</property>
@@ -457,6 +454,7 @@
                         <property name="can_focus">True</property>
                         <property name="hscrollbar_policy">automatic</property>
                         <property name="vscrollbar_policy">automatic</property>
+                        <property name="shadow_type">etched-in</property>
                         <child>
                           <object class="GtkTreeView" id="nicks_view">
                             <property name="visible">True</property>
@@ -485,6 +483,9 @@
                                 <property name="expand">True</property>
                                 <child>
                                   <object class="GtkCellRendererText" id="nicks_store_nick_renderer"/>
+                                  <attributes>
+                                    <attribute name="text">1</attribute>
+                                  </attributes>
                                 </child>
                               </object>
                             </child>

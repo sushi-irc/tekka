@@ -161,8 +161,8 @@ def set_window_title(title):
 
 @types(nick=basestring)
 def set_nick(nick):
-	""" Sets nick as label text of nickLabel. """
-	widgets.get_widget("nickLabel").set_text(nick)
+	""" Sets nick as label text of nick_label. """
+	widgets.get_widget("nick_label").set_text(nick)
 
 
 @types(normal=int, ops=int)
@@ -174,7 +174,7 @@ def set_user_count(normal, ops):
 	m_ops = gettext.ngettext(
 		"%d Operator", "%d Operators", ops) % (ops)
 
-	widgets.get_widget("nickList_label").set_text(
+	widgets.get_widget("nick_stats_label").set_text(
 		"%(users)s – %(ops)s" % {
 			"users": m_users, "ops": m_ops })
 

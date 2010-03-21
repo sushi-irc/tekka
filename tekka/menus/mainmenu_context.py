@@ -130,6 +130,9 @@ class MainMenuContext(MenuContextType):
 		def __init__(self, *args, **kwargs):
 			MenuContextType.__init__(self, *args, **kwargs)
 
+		def apply_visibilty_settings(self):
+			""" read config, apply visibilites on widgets """
+
 			def apply_visibility(wname, cvalue, user=None):
 				button = self.widgets.get_widget(wname)
 				if config.get_bool("tekka", cvalue):
@@ -169,7 +172,7 @@ class MainMenuContext(MenuContextType):
 
 		def showStatusBar_toggled_cb(self, item):
 			""" toggle visibility of status bar """
-			bar = gui.widgets.get_widget("statusBar")
+			bar = gui.widgets.get_widget("statusbar")
 
 			if item.get_active():
 				bar.show()

@@ -54,7 +54,7 @@ from ..typecheck import types
 
 def _write_to_general_output(msgtype, timestring, tab, message):
 	""" channel can be empty """
-	goBuffer = widgets.get_widget("generalOutput").get_buffer()
+	goBuffer = widgets.get_widget("general_output").get_buffer()
 
 	filter = config.get_list("general_output", "filter", [])
 	logging.debug("filter: %s" % (filter))
@@ -104,7 +104,7 @@ def _write_to_general_output(msgtype, timestring, tab, message):
 						tab,
 						msgtype)
 
-	widgets.get_widget("generalOutput").scroll_to_bottom()
+	widgets.get_widget("general_output").scroll_to_bottom()
 
 
 def colorize_message(msgtype, message):
@@ -275,7 +275,7 @@ class TekkaTab(gobject.GObject):
 
 	def set_useable(self, switch):
 		widgetList = [
-			widgets.get_widget('nickList'),
+			widgets.get_widget('nicks_view'),
 			widgets.get_widget("output")]
 
 		for widget in widgetList:
@@ -787,7 +787,7 @@ def _create_tab(tabtype, name, *args, **kwargs):
 		"server_connected","new_markup"))
 
 	tab.input_history = InputHistory(
-		text_callback = widgets.get_widget("inputBar").get_text)
+		text_callback = widgets.get_widget("input_entry").get_text)
 
 	return tab
 

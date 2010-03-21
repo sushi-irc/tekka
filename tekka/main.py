@@ -1048,6 +1048,8 @@ def show_welcome_screen():
 
 
 def hide_welcome_screen():
+	""" undo the hiding from show_welcome_screen """
+
 	hides = show_welcome_screen.hides
 
 	for w in hides:
@@ -1055,11 +1057,8 @@ def hide_welcome_screen():
 
 
 def setupGTK():
-	"""
-		Set locale, parse glade files.
-		Connects gobject widget signals to code.
-		Setup widgets.
-	"""
+	""" Set locale, load UI file, connect signals, setup widgets. """
+
 	gladefiles = config.get("gladefiles", default={})
 
 	# setup locale stuff
@@ -1211,7 +1210,11 @@ def setupGTK():
 		lambda w,s: gui.widgets.get_widget("statusbar")\
 		.pop(gui.status.id(s)))
 
+	# initialize output_shell again (signals are connected now)
 	gui.widgets.get_widget("output_shell").reset()
+
+	# apply visibility to widgets from config
+	mmc.view.apply_visibilty_settings()
 
 	# setup more complex widgets
 	setup_tabs_view()
@@ -1273,8 +1276,9 @@ def tekka_excepthook(extype, exobj, extb):
 			self.set_default_size(400,300)
 
 			self.error_label = gtk.Label()
-			self.error_label.set_properties(
-				width_chars = 50, wrap = True, xalign = 0.0)
+			self.error_label.set_properties(width_chars=50,
+											wrap=True,
+											xalign=0.0)
 			self.error_label.set_markup(_(
 				"<span size='larger' weight='bold'>Error</span>\n\n"
 				"An error occured — we apologize for that. "
