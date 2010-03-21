@@ -14,7 +14,8 @@ class TekkaBuilder(gtk.Builder):
 		return None
 
 	def add_object(self, object, name):
-		if self._widgets.has_key(name):
+		if (super(TekkaBuilder,self).get_object(name)
+		or self._widgets.has_key(name)):
 			raise ValueError, "Object '%s' already in Builder." % (name)
 		self._widgets[name] = object
 		return True
