@@ -31,7 +31,6 @@ from . import widgets
 from .. import config
 from ..helper import shortcuts
 
-_accelGroup = gtk.AccelGroup()
 _handlers = {
 		"clear_outputs": [],
 		"output_page_up": [],
@@ -67,7 +66,7 @@ def associate_handler(short_name, shortcut, widget):
 	try:
 		for handler in _handlers[short_name]:
 			shortcuts.addShortcut(
-				_accelGroup,
+				widgets.get_widget("main_accel_group"),
 				widgets.get_widget(widget),
 				shortcut,
 				handler)
@@ -86,9 +85,6 @@ def setup_shortcuts():
 		- ctrl + u -> clear the input entry
 		- ctrl + s -> hide/show the side pane
 	"""
-	global _accelGroup
-
-	widgets.get_widget("main_window").add_accel_group(_accelGroup)
 
 	associate_handler("clear_outputs", "<ctrl>l", "input_entry")
 
@@ -111,12 +107,12 @@ def assign_numeric_tab_shortcuts(tabList):
 	""" assign numeric shortcuts (alt+N) for each
 		tab in the list tabs.
 	"""
-	global _accelGroup
 
 	st = widgets.get_widget("tabs_view")
+	ag = widgets.get_widget("main_accel_group")
 
 	for i in range(1, 10):
-		shortcuts.removeShortcut(_accelGroup, st, "<alt>%d" % (i))
+		shortcuts.removeShortcut(ag, st, "<alt>%d" % (i))
 
 	c = 1
 	for tab in tabList:
@@ -127,7 +123,7 @@ def assign_numeric_tab_shortcuts(tabList):
 		and not config.get("tekka", "server_shortcuts")):
 			continue
 
-		shortcuts.addShortcut(_accelGroup, st, "<alt>%d" % (c),
+		shortcuts.addShortcut(ag, st, "<alt>%d" % (c),
 			lambda w, s, p: p.switch_to(), tab)
 
 		c+=1

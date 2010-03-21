@@ -20,6 +20,9 @@
   <object class="GtkWindow" id="main_window">
     <property name="default_width">440</property>
     <property name="default_height">300</property>
+    <accel-groups>
+      <group name="main_accel_group"/>
+    </accel-groups>
     <signal name="scroll_event" handler="main_window_scroll_event"/>
     <signal name="focus_in_event" handler="main_window_focus_in_event"/>
     <signal name="size_allocate" handler="main_window_size_allocate"/>
@@ -54,8 +57,10 @@
                       <object class="GtkImageMenuItem" id="tekka_quit_item">
                         <property name="label">gtk-quit</property>
                         <property name="visible">True</property>
+                        <property name="accel_path">&lt;ctrl&gt;/q</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
+                        <property name="accel_group">main_accel_group</property>
                         <signal name="activate" handler="tekka_quit_item_activate"/>
                       </object>
                     </child>
@@ -554,4 +559,5 @@
     <property name="visible">True</property>
     <property name="stock">gtk-select-color</property>
   </object>
+  <object class="GtkAccelGroup" id="main_accel_group"/>
 </interface>
