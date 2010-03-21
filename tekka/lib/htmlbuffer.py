@@ -294,8 +294,10 @@ class HTMLBuffer(gtk.TextBuffer):
 		text = URLToTag(text)
 
 		if self.odd_line:
-			color = gui.widgets.get_widget("output").get_style().base[gtk.STATE_INSENSITIVE]
-			text = "<msg paragraph-background='%s'>%s</msg>" % (color.to_string(), text)
+			color = gui.widgets.get_object("output").get_style().base[
+									gtk.STATE_INSENSITIVE]
+			text = "<msg paragraph-background='%s'>%s</msg>" % (
+									color.to_string(), text)
 		else:
 			text = "<msg>%s</msg>" % text
 
