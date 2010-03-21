@@ -855,10 +855,16 @@ def treemodel_rows_reordered_cb(treemodel, path, iter, new_order):
 
 
 def paned_notify_cb(paned, gparam):
+	if not paned_notify_cb.init_done:
+		return
+
 	# TODO:  catch inline dialog popups and restore the horizontal
 	# TODO:: paned position (when they're closed?)
 	if gparam.name == "position":
-		config.set("sizes", paned.name, paned.get_property("position"))
+		config.set("sizes", gtk.Buildable.get_name(paned),
+					paned.get_property("position"))
+
+paned_notify_cb.init_done = False
 
 
 """ Initial setup routines """
@@ -993,6 +999,7 @@ def load_paned_positions():
 
 def setup_paneds():
 	load_paned_positions()
+	paned_notify_cb.init_done = True
 	return False
 
 
@@ -1074,10 +1081,6 @@ def setupGTK():
 
 	setup_main_window()
 
-	# FIXME:  this should connect it's signals separate
-	# FIXME:: and be called at the end of the setup so
-	# FIXME:: no widget resize can influence it
-	setup_paneds()
 
 	mmc = gui.widgets.get_object("main_menu_context")
 
@@ -1247,6 +1250,8 @@ def setupGTK():
 	gui.mgmt.set_useable(False)
 
 	show_welcome_screen()
+
+	gobject.idle_add(setup_paneds)
 
 
 def tekka_excepthook(extype, exobj, extb):
