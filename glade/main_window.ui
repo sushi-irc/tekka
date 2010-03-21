@@ -360,6 +360,10 @@
                               <object class="SpellEntry" id="input_entry">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="has_focus">True</property>
+                                <property name="can_default">True</property>
+                                <property name="has_default">True</property>
+                                <property name="receives_default">True</property>
                                 <property name="invisible_char">&#x2022;</property>
                                 <signal name="key_press_event" handler="input_entry_key_press_event"/>
                                 <signal name="activate" handler="input_entry_activate"/>
@@ -410,6 +414,7 @@
                       <object class="GtkTreeView" id="tabs_view">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="has_tooltip">True</property>
                         <property name="model">tab_store</property>
                         <property name="headers_visible">False</property>
                         <property name="headers_clickable">False</property>

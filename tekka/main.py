@@ -943,11 +943,6 @@ def setup_tabs_view():
 	model.set_sort_column_id(1, gtk.SORT_ASCENDING)
 
 	# Setup the renderer
-	widget = gui.widgets.get_widget("tabs_view")
-	widget.set_property("has-tooltip", True)
-
-	renderer = gtk.CellRendererText()
-
 	column = gui.widgets.get_widget("tabs_view_name_column")
 	column.set_cell_data_func(
 				gui.widgets.get_widget("tabs_view_name_renderer"),
