@@ -1,0 +1,556 @@
+<?xml version="1.0"?>
+<interface>
+  <requires lib="gtk+" version="2.16"/>
+  <!-- interface-requires glade_widgets 0.0 -->
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkListStore" id="tab_store">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+      <!-- column-name Tab -->
+      <column type="GObject"/>
+    </columns>
+    <signal name="rows_reordered" handler="tab_store_rows_reordered"/>
+  </object>
+  <object class="GtkListStore" id="nicks_store">
+    <columns>
+      <!-- column-name Prefix -->
+      <column type="gchararray"/>
+      <!-- column-name Nick -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkWindow" id="main_window">
+    <property name="default_width">440</property>
+    <property name="default_height">300</property>
+    <signal name="scroll_event" handler="main_window_scroll_event"/>
+    <signal name="focus_in_event" handler="main_window_focus_in_event"/>
+    <signal name="size_allocate" handler="main_window_size_allocate"/>
+    <signal name="delete_event" handler="main_window_delete_event"/>
+    <signal name="window_state_event" handler="main_window_window_state_event"/>
+    <child>
+      <object class="GtkVBox" id="main_vbox">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkMenuBar" id="menubar">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkMenuItem" id="tekka_menu_item">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_tekka</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="tekka_menu">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="tekka_server_list_item">
+                        <property name="label" translatable="yes">_Server List</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image1</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="tekka_server_list_item_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="tekka_quit_item">
+                        <property name="label">gtk-quit</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="tekka_quit_item_activate"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="maki_menu_item">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_maki</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="maki_menu">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="maki_connect_item">
+                        <property name="label">gtk-connect</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="maki_connect_item_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="maki_disconnect_item">
+                        <property name="label">gtk-disconnect</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="maki_disconnect_item_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="maki_shutdown_item">
+                        <property name="label" translatable="yes">_Shutdown</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image2</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="maki_shutdown_item_activate"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="view_menu_item">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_View</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="view_menu">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkCheckMenuItem" id="view_general_output_item">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_General Output</property>
+                        <property name="use_underline">True</property>
+                        <signal name="toggled" handler="view_general_output_item_toggled"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkCheckMenuItem" id="view_side_pane_item">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">S_ide Pane</property>
+                        <property name="use_underline">True</property>
+                        <signal name="toggled" handler="view_side_pane_item_toggled"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkCheckMenuItem" id="view_status_bar_item">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Status _Bar</property>
+                        <property name="use_underline">True</property>
+                        <signal name="toggled" handler="view_status_bar_item_toggled"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkCheckMenuItem" id="view_status_icon_item">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Status _Icon</property>
+                        <property name="use_underline">True</property>
+                        <signal name="toggled" handler="view_status_icon_item_toggled"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkCheckMenuItem" id="view_topic_bar_item">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">_Topic Bar</property>
+                        <property name="use_underline">True</property>
+                        <signal name="toggled" handler="view_topic_bar_item_toggled"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="tools_menu_item">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">T_ools</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="tools_menu">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="tools_channel_list_item">
+                        <property name="label" translatable="yes">_Channel List</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image3</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="tools_channel_list_item_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="tools_file_transfers_item">
+                        <property name="label" translatable="yes">_File Transfers</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image4</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="tools_file_transfers_item_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="tools_plugins_item">
+                        <property name="label" translatable="yes">P_lugins</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image5</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="tools_plugins_item_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="tools_debug_item">
+                        <property name="label" translatable="yes">_Debug</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image6</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="tools_debug_item_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="tools_preferences_item">
+                        <property name="label">gtk-preferences</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="tools_preferences_item_activate"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuItem" id="help_menu_item">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">_Help</property>
+                <property name="use_underline">True</property>
+                <child type="submenu">
+                  <object class="GtkMenu" id="help_menu">
+                    <property name="visible">True</property>
+                    <child>
+                      <object class="GtkImageMenuItem" id="help_irc_colors_item">
+                        <property name="label" translatable="yes">IRC _Colors</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image7</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="help_irc_colors_item_activate"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="help_about_item">
+                        <property name="label">gtk-about</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="use_stock">True</property>
+                        <signal name="activate" handler="help_about_item_activate"/>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkVBox" id="notification_vbox">
+            <property name="orientation">vertical</property>
+            <signal name="remove" handler="notification_vbox_remove"/>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkHPaned" id="main_hpaned">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <signal name="notify" handler="main_hpaned_notify"/>
+            <child>
+              <object class="GtkVBox" id="output_vbox">
+                <property name="visible">True</property>
+                <property name="border_width">6</property>
+                <property name="orientation">vertical</property>
+                <signal name="size_allocate" handler="output_vbox_size_allocate"/>
+                <child>
+                  <object class="GtkLabel" id="topic_label">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">#topic</property>
+                    <property name="use_markup">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkVPaned" id="output_vpaned">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="orientation">vertical</property>
+                    <signal name="notify" handler="output_vpaned_notify"/>
+                    <child>
+                      <object class="OutputWindow" id="general_output_window">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="hscrollbar_policy">automatic</property>
+                        <property name="vscrollbar_policy">automatic</property>
+                        <property name="shadow_type">etched-in</property>
+                      </object>
+                      <packing>
+                        <property name="resize">False</property>
+                        <property name="shrink">True</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkVBox" id="chat_vbox">
+                        <property name="visible">True</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="OutputShell" id="output_shell">
+                            <property name="visible">True</property>
+                            <property name="orientation">vertical</property>
+                            <signal name="widget_changed" handler="output_shell_widget_changed"/>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="SearchBar" id="output_searchbar">
+                            <property name="visible">True</property>
+                            <child>
+                              <placeholder/>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkHBox" id="input_hbox">
+                            <property name="visible">True</property>
+                            <property name="border_width">3</property>
+                            <child>
+                              <object class="GtkLabel" id="nick_label">
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">#nick</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="padding">11</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="SpellEntry" id="input_entry">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="invisible_char">&#x2022;</property>
+                                <signal name="key_press_event" handler="input_entry_key_press_event"/>
+                                <signal name="activate" handler="input_entry_activate"/>
+                              </object>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="resize">True</property>
+                        <property name="shrink">True</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="pack_type">end</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">True</property>
+                <property name="shrink">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkVPaned" id="list_vpaned">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="border_width">6</property>
+                <property name="orientation">vertical</property>
+                <signal name="notify" handler="list_vpaned_notify"/>
+                <child>
+                  <object class="GtkScrolledWindow" id="tabs_window">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hscrollbar_policy">automatic</property>
+                    <property name="vscrollbar_policy">automatic</property>
+                    <child>
+                      <object class="GtkTreeView" id="tabs_view">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="model">tab_store</property>
+                        <property name="headers_visible">False</property>
+                        <property name="headers_clickable">False</property>
+                        <property name="search_column">0</property>
+                        <signal name="button_press_event" handler="tabs_view_button_press_event"/>
+                        <signal name="query_tooltip" handler="tabs_view_query_tooltip"/>
+                        <signal name="row_activated" handler="tabs_view_row_activated"/>
+                        <child>
+                          <object class="GtkTreeViewColumn" id="tabs_view_name_column">
+                            <property name="title">Name</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="tabs_view_name_renderer"/>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="resize">False</property>
+                    <property name="shrink">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkVBox" id="nicks_vbox">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkAlignment" id="nick_stats_alignment">
+                        <property name="visible">True</property>
+                        <property name="border_width">3</property>
+                        <child>
+                          <object class="GtkLabel" id="nick_stats_label">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">x Users - y Operators</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkScrolledWindow" id="nicks_window">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="hscrollbar_policy">automatic</property>
+                        <property name="vscrollbar_policy">automatic</property>
+                        <child>
+                          <object class="GtkTreeView" id="nicks_view">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="headers_visible">False</property>
+                            <property name="headers_clickable">False</property>
+                            <property name="rules_hint">True</property>
+                            <property name="search_column">0</property>
+                            <property name="enable_tree_lines">True</property>
+                            <signal name="button_press_event" handler="nicks_view_button_press_event"/>
+                            <signal name="row_activated" handler="nicks_view_row_activated"/>
+                            <child>
+                              <object class="GtkTreeViewColumn" id="nicks_store_prefix_column">
+                                <property name="title">Prefix</property>
+                                <child>
+                                  <object class="GtkCellRendererText" id="nicks_store_prefix_renderer"/>
+                                  <attributes>
+                                    <attribute name="text">0</attribute>
+                                  </attributes>
+                                </child>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkTreeViewColumn" id="nicks_store_nick_column">
+                                <property name="title">Nick</property>
+                                <property name="expand">True</property>
+                                <child>
+                                  <object class="GtkCellRendererText" id="nicks_store_nick_renderer"/>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="resize">False</property>
+                    <property name="shrink">True</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">False</property>
+                <property name="shrink">True</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkStatusbar" id="statusbar">
+            <property name="visible">True</property>
+            <property name="spacing">2</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="stock">gtk-network</property>
+  </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="stock">gtk-cancel</property>
+  </object>
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="stock">gtk-dnd-multiple</property>
+  </object>
+  <object class="GtkImage" id="image4">
+    <property name="visible">True</property>
+    <property name="stock">gtk-save</property>
+  </object>
+  <object class="GtkImage" id="image5">
+    <property name="visible">True</property>
+    <property name="stock">gtk-execute</property>
+  </object>
+  <object class="GtkImage" id="image6">
+    <property name="visible">True</property>
+    <property name="stock">gtk-find</property>
+  </object>
+  <object class="GtkImage" id="image7">
+    <property name="visible">True</property>
+    <property name="stock">gtk-select-color</property>
+  </object>
+</interface>
