@@ -40,7 +40,7 @@ class OutputShell(gtk.VBox):
 	__gtype_name__ = "OutputShell"
 
 	@types (widget = OutputWindow)
-	def __init__(self, window):
+	def __init__(self, window=OutputWindow()):
 		""" Takes a default window which is shown if reset() is
 			called (which is the default).
 		"""

@@ -77,7 +77,7 @@ def types (**type_dict):
 					# one type to check
 
 					if (not isinstance(foreign, t_type)
-					and (not issubclass(foreign, t_type))):
+					and (foreign == type and not issubclass(foreign, t_type))):
 						raise_error (t_type.__name__, foreign_type.__name__)
 
 				else:

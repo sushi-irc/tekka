@@ -35,7 +35,7 @@ from threading import Timer
 
 from .. import config
 
-from .builder import setup_statusIcon
+from .builder import build_status_icon
 from ._widgets import widgets
 
 from ..helper import color
@@ -68,14 +68,14 @@ def apply_new_font():
 
 	font = get_font()
 
-	for row in widgets.get_widget("serverTree").get_model():
+	for row in widgets.get_widget("tabs_view").get_model():
 		for child in row.iterchildren():
 			set_font(child[0].window.textview, font)
 		set_font(row[0].window.textview, font)
 
 	set_font(widgets.get_widget("output"), font)
-	set_font(widgets.get_widget("inputBar"), font)
-	set_font(widgets.get_widget("generalOutput"), font)
+	set_font(widgets.get_widget("input_entry"), font)
+	set_font(widgets.get_widget("general_output_window"), font)
 
 
 @types(switch=bool)
@@ -88,18 +88,18 @@ def set_useable(switch):
 	global gui_is_useable
 
 	widgetList = [
-		widgets.get_widget("inputBar"),
-		widgets.get_widget("serverTree"),
-		widgets.get_widget("nickList"),
-		widgets.get_widget("outputShell"),
+		widgets.get_widget("input_entry"),
+		widgets.get_widget("tabs_view"),
+		widgets.get_widget("nicks_view"),
+		widgets.get_widget("output_shell"),
 		widgets.get_widget("output"),
-		widgets.get_widget("generalOutput")
+		widgets.get_widget("general_output_window")
 	]
 
 	for widget in widgetList:
 		widget.set_sensitive(switch)
 
-	if switch: widgets.get_widget("inputBar").grab_focus()
+	if switch: widgets.get_widget("input_entry").grab_focus()
 
 	gui_is_useable = switch
 
@@ -108,12 +108,12 @@ def set_useable(switch):
 def switch_status_icon(switch):
 	""" enables / disables status icon """
 
-	statusIcon = widgets.get_widget("statusIcon")
+	statusIcon = widgets.get_widget("status_icon")
 
 	if switch:
 
 		if not statusIcon:
-			setup_statusIcon()
+			build_status_icon()
 			return
 
 		statusIcon.set_visible(True)
@@ -129,7 +129,7 @@ def switch_status_icon(switch):
 def has_focus():
 	""" return wether the mainwindow has focus or not """
 
-	win = widgets.get_widget("mainWindow")
+	win = widgets.get_widget("main_window")
 
 	return win.has_toplevel_focus()
 
@@ -139,7 +139,7 @@ def set_urgent(switch):
 	""" Sets or unsets the urgent status to the main window.
 		If the status icon is enabled it will be set flashing.
 	"""
-	win = widgets.get_widget("mainWindow")
+	win = widgets.get_widget("main_window")
 
 	if has_focus():
 		# don't urgent if we have already the focus
@@ -147,7 +147,7 @@ def set_urgent(switch):
 
 	win.set_urgency_hint(switch)
 
-	statusIcon = widgets.get_widget("statusIcon")
+	statusIcon = widgets.get_widget("status_icon")
 
 	if statusIcon:
 		statusIcon.set_blinking(switch)
@@ -156,7 +156,7 @@ def set_urgent(switch):
 @types(title=basestring)
 def set_window_title(title):
 	""" Sets the window title to the main window. """
-	widgets.get_widget("mainWindow").set_title(title)
+	widgets.get_widget("main_window").set_title(title)
 
 
 @types(nick=basestring)
@@ -197,7 +197,7 @@ def set_topic(string):
 	""" Sets the given string as text in
 		the topic bar.
 	"""
-	tb = widgets.get_widget("topicBar")
+	tb = widgets.get_widget("topic_label")
 	tb.set_markup(string)
 
 
@@ -217,7 +217,7 @@ def clear_all_outputs():
 
 		clear(buf)
 
-	buf = widgets.get_widget("generalOutput").get_buffer()
+	buf = widgets.get_widget("general_output").get_buffer()
 
 	clear(buf)
 
@@ -282,14 +282,14 @@ def show_maki_connection_error(title, message):
 
 
 def show_inline_dialog(dialog):
-	""" show an InlineDialog in the notificationWidget """
+	""" show an InlineDialog in the notification_vbox"""
 
 	# Purpose: auto removing messages (depends on config)
 	self = code.init_function_attrs(
 										show_inline_dialog,
 										timeouts = [])
 
-	area = widgets.get_widget("notificationWidget")
+	area = widgets.get_widget("notification_vbox")
 
 	if dialog:
 

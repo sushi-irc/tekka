@@ -32,17 +32,17 @@ from ..typecheck import types
 
 class WidgetsWrapper(object):
 
-	""" Wrap a glade XML widget object
+	""" Wrap a GtkBuilder object
 		so one can manually add own widgets
 		and access them as if they lie in
-		the XML object.
+		the object.
 
 		Every unknown method call will be
-		forwarded to the glade object.
+		forwarded to the builder object.
 	"""
 
-	def __init__(self, glade_widgets):
-		self.glade_widgets = glade_widgets
+	def __init__(self, builder_object):
+		self.builder_object = builder_object
 		self.own_widgets = {}
 
 	def _add_local(self, obj, name):
@@ -51,15 +51,15 @@ class WidgetsWrapper(object):
 			exist and raises a ValueError if that's the
 			case.
 		"""
-		if not self.glade_widgets.get_widget(name):
+		if not self.builder_object.get_object(name):
 			self.own_widgets[name] = obj
 
 		else:
 			raise ValueError, "Widgets '%s' already in widgets dict." % (
 				name)
 
-	def set_glade_widgets(self, gladeObject):
-		self.glade_widgets = gladeObject
+	def set_builder_object(self, builder_object):
+		self.builder_object = builder_object
 
 	@types (widget = gobject.GObject)
 	def add_gobject(self, obj, name):
@@ -70,7 +70,7 @@ class WidgetsWrapper(object):
 		""" Add a widget to the dictionary.
 
 			Throws ValueError if the widget's name
-			exists in the glade object.
+			exists in the builder object.
 		"""
 		name = widget.get_property("name")
 
@@ -100,7 +100,7 @@ class WidgetsWrapper(object):
 
 	@types (name = basestring)
 	def get_widget(self, name):
-		""" Return our own widget if found, else look in glade.
+		""" Return our own widget if found, else look in builder.
 			Returns None if no widget is found.
 		"""
 		try:
@@ -108,7 +108,7 @@ class WidgetsWrapper(object):
 		except KeyError:
 			pass
 
-		w = self.glade_widgets.get_widget(name)
+		w = self.builder_object.get_object(name)
 
 		if w:
 			return w
@@ -120,7 +120,7 @@ class WidgetsWrapper(object):
 			return object.__getattr__(self, attr)
 
 		except AttributeError:
-			return getattr(self.glade_widgets, attr)
+			return getattr(self.builder_object, attr)
 
 
 widgets = WidgetsWrapper(None)

@@ -830,7 +830,7 @@ def create_server(server):
 
 @types(server = basestring, child = basestring)
 def search_tab(server, child = ""):
-	store = widgets.get_widget("serverTree").get_model()
+	store = widgets.get_widget("tab_store")
 
 	for row in store:
 		if row[0].name.lower() == server.lower():
@@ -856,7 +856,7 @@ def search_tabs(server, name=""):
 		(<serverTab>,None)
 		(None,None)
 	"""
-	store = widgets.get_widget("serverTree").get_model()
+	store = widgets.get_widget("tab_store")
 	for row in store:
 		if row[0].name.lower() == server.lower():
 			if not name:
@@ -879,7 +879,7 @@ def add_tab(server, object, update_shortcuts=True):
 		On succes the method returns the path
 		to the new tab, otherwise None.
 	"""
-	store = widgets.get_widget("serverTree").get_model()
+	store = widgets.get_widget("tab_store")
 
 	serverIter = None
 
@@ -899,7 +899,7 @@ def add_tab(server, object, update_shortcuts=True):
 	if server and config.get("tekka", "auto_expand"):
 		# expand the whole server tab
 		path = store.get_path(serverIter)
-		widgets.get_widget("serverTree").expand_row(
+		widgets.get_widget("tabs_view").expand_row(
 			store.get_path(store.iter_parent(iter)), True)
 
 	if update_shortcuts:
@@ -915,7 +915,7 @@ def remove_tab(tab, update_shortcuts=True):
 		to to the unique identifying path stored
 		inner the tekkaTab.
 	"""
-	store = widgets.get_widget("serverTree").get_model()
+	store = widgets.get_widget("tab_store")
 
 	try:
 		row = store[tab.path]
@@ -990,7 +990,7 @@ def __updateLowerRows(store, iter):
 @types (old = TekkaTab, new = TekkaTab)
 def replace_tab(old, new):
 	"""	Replaces the tab `old` with the tab `new`. """
-	store = widgets.get_widget("serverTree").get_model()
+	store = widgets.get_widget("tab_store")
 
 	try:
 		row = store[old.path]
@@ -1011,7 +1011,7 @@ def get_tab_by_path(path):
 	if not path:
 		return
 
-	store = widgets.get_widget("serverTree").get_model()
+	store = widgets.get_widget("tab_store")
 
 	try:
 		return store[path][0]
@@ -1031,7 +1031,7 @@ def get_all_tabs(servers=[], excludes=[]):
 		Note:  if there's a newly row inserted, the
 		Note:: tab-column can be None.
 	"""
-	store = widgets.get_widget("serverTree").get_model()
+	store = widgets.get_widget("tab_store")
 
 	tabs = []
 
@@ -1066,7 +1066,7 @@ def get_current_tab():
 	""" Returns the current tab """
 	global _currentPath
 
-	store = widgets.get_widget("serverTree").get_model()
+	store = widgets.get_widget("tab_store")
 
 	try:
 		return store[_currentPath][0]
@@ -1089,7 +1089,7 @@ def get_current_tabs():
 	"""
 	global _currentPath
 
-	store = widgets.get_widget("serverTree").get_model()
+	store = widgets.get_widget("tab_store")
 
 	if not _currentPath:
 		return None,None
@@ -1115,7 +1115,7 @@ def get_current_tabs():
 
 
 def get_next_server(current):
-	store = widgets.get_widget("serverTree").get_model()
+	store = widgets.get_widget("tab_store")
 	useNext = False
 
 	for row in store:
@@ -1165,8 +1165,8 @@ def switch_to_path(path):
 	if not mgmt.gui_is_useable:
 		return
 
-	serverTree = widgets.get_widget("serverTree")
-	store = serverTree.get_model()
+	tabs_view = widgets.get_widget("tabs_view")
+	store = widgets.get_widget("tab_store")
 
 	if not path:
 		logging.error("switch_to_path(): empty path given, aborting.")
@@ -1181,12 +1181,12 @@ def switch_to_path(path):
 
 	old_tab = get_current_tab()
 
-	serverTree.set_cursor(path)
+	tabs_view.set_cursor(path)
 
 	global _currentPath
 	_currentPath = path
 
-	widgets.get_widget("outputShell").set(tab.window)
+	widgets.get_widget("output_shell").set(tab.window)
 
 	if tab.is_channel():
 		"""
@@ -1203,10 +1203,10 @@ def switch_to_path(path):
 		mgmt.set_topic(markup.markup_escape(tab.topic))
 
 		if config.get_bool("tekka","show_topic_bar"):
-			widgets.get_widget("topicBar").show()
+			widgets.get_widget("topic_label").show()
 
-		widgets.get_widget("VBox_nickList").show()
-		widgets.get_widget("nickList").set_model(tab.nickList)
+		widgets.get_widget("nicks_vbox").show()
+		widgets.get_widget("nicks_view").set_model(tab.nickList)
 
 	elif tab.is_query() or tab.is_server():
 		# queries and server tabs don't have topics or nicklists
@@ -1214,9 +1214,9 @@ def switch_to_path(path):
 			tab.set_useable(tab.connected)
 
 		if config.get_bool("tekka","show_topic_bar"):
-			widgets.get_widget("topicBar").hide()
+			widgets.get_widget("topic_label").hide()
 
-		widgets.get_widget("VBox_nickList").hide()
+		widgets.get_widget("nicks_vbox").hide()
 
 	# reset message notification
 	tab.set_new_message(None)

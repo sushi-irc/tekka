@@ -29,7 +29,6 @@ import gtk
 import os
 
 from ._widgets import widgets, WidgetsWrapper
-from .. import gui
 
 from .. import config
 from ..typecheck import types
@@ -45,6 +44,7 @@ from ..lib.spell_entry import SpellEntry
 from ..helper import URLHandler
 
 from ..helper.shortcuts import addShortcut
+
 
 def get_new_buffer():
 	""" Returns a HTMLBuffer with assigned URL handler. """
@@ -87,25 +87,18 @@ def error_dialog(title = "", message = ""):
 	return err
 
 
-def setup_searchBar():
-	searchToolbar = SearchBar(None)
-	searchToolbar.set_property("name", "searchBar")
-
-	return searchToolbar
-
-
-def setup_statusIcon():
+def build_status_icon():
 	"""
 	Sets up the status icon.
 	"""
 	if config.get_bool("tekka", "rgba"):
 		gtk.widget_push_colormap(
-			widgets.get_widget("mainWindow") \
-			.get_screen() \
-			.get_rgb_colormap())
+			widgets.get_widget("main_window")\
+			.get_screen().get_rgb_colormap()
+		)
 
 	statusIcon = TekkaStatusIcon()
-	widgets.add_gobject(statusIcon, "statusIcon")
+	widgets.add_gobject(statusIcon, "status_icon")
 
 	if config.get_bool("tekka", "rgba"):
 		gtk.widget_pop_colormap()
@@ -113,78 +106,27 @@ def setup_statusIcon():
 	statusIcon.set_visible(True)
 
 
-@types(gladeFile=basestring, section=basestring)
-def load_widgets(gladeFile, section):
-	""" load the given section from gladeFile
-		into widgets and return them.
-		This method is ususally called from main.py
-		to initialize the GUI
+@types(ui_file=basestring, section=basestring)
+def load_main_window(ui_file):
+	""" Load the widgets from the UI file, do simple setup on them,
+		setup the widgets wrapper and return it.
+		After succesful setup, load-finished is emitted.
 	"""
-	global widgets
 
-	def custom_handler(glade, function_name, widget_name, *x):
-		if widget_name == "searchBar":
-			return setup_searchBar()
+	builder = gtk.Builder()
 
-		elif widget_name == "outputShell":
+	builder.add_from_file(ui_file)
 
-			return OutputShell(OutputWindow())
-
-		elif widget_name == "generalOutput":
-
-			t = OutputTextView()
-			t.set_buffer(GOHTMLBuffer(handler = URLHandler.URLHandler))
-			t.show()
-			return t
-
-		elif widget_name == "inputBar":
-
-			bar = SpellEntry()
-			bar.show()
-			return bar
-
-		elif widget_name == "notificationWidget":
-
-			align = gtk.VBox()
-			align.set_no_show_all(True)
-			align.set_property("visible", False)
-			return align
-
-		return None
-
-	gtk.glade.set_custom_handler(custom_handler)
-
-	gladeObj = gtk.glade.XML(gladeFile, section)
-
-	widgets.set_glade_widgets(gladeObj)
+	widgets.set_builder_object(builder)
 
 	def setup_mainmenu_context():
 		from ..menus.mainmenu_context import MainMenuContext
-		return MainMenuContext(name = "mainMenuBar", widgets = widgets)
+		return MainMenuContext(name="menubar", widgets=widgets)
 
 	mainmenu = setup_mainmenu_context()
-	widgets.add_gobject(mainmenu, "mainMenuContext")
+	widgets.add_gobject(mainmenu, "main_menu_context")
 
-	return gladeObj
-
-
-class GladeWrapper(object):
-	""" wrap glade to gtk.Builder """
-
-	def __init__(self, glade):
-		self.glade = glade
-
-	def get_object(self, name):
-		return self.glade.get_widget(name)
-
-	def connect_signals(self, obj, user = None):
-		if type(obj) == dict:
-			self.glade.signal_autoconnect(obj)
-
-	def __getattr__(self, attr):
-		if attr in ("get_object","connect_signals"):
-			return object.__getattr__(self, attr)
-		return getattr(self.glade, attr)
+	return widgets
 
 
 def load_menu(name):
@@ -194,12 +136,33 @@ def load_menu(name):
 					name + ".ui")
 
 	builder = gtk.Builder()
+
 	builder.add_from_file(path)
 
 	return builder
 
 
 def load_dialog(name, custom_handler = None):
+
+	class GladeWrapper(object):
+		""" wrap glade to gtk.Builder """
+
+		def __init__(self, glade):
+			self.glade = glade
+
+		def get_object(self, name):
+			return self.glade.get_widget(name)
+
+		def connect_signals(self, obj, user = None):
+			if type(obj) == dict:
+				self.glade.signal_autoconnect(obj)
+
+		def __getattr__(self, attr):
+			if attr in ("get_object","connect_signals"):
+				return object.__getattr__(self, attr)
+			return getattr(self.glade, attr)
+
+
 	path = os.path.join(
 					config.get("gladefiles", "dialogs"),
 					name + ".glade")

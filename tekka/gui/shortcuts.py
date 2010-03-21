@@ -88,23 +88,23 @@ def setup_shortcuts():
 	"""
 	global _accelGroup
 
-	widgets.get_widget("mainWindow").add_accel_group(_accelGroup)
+	widgets.get_widget("main_window").add_accel_group(_accelGroup)
 
-	associate_handler("clear_outputs", "<ctrl>l", "inputBar")
+	associate_handler("clear_outputs", "<ctrl>l", "input_entry")
 
-	associate_handler("input_clear_line", "<ctrl>u", "inputBar")
-	associate_handler("input_search", "<ctrl>f", "inputBar")
-	associate_handler("input_search_further", "<ctrl>g", "inputBar")
-	associate_handler("input_copy", "<ctrl>c", "inputBar")
+	associate_handler("input_clear_line", "<ctrl>u", "input_entry")
+	associate_handler("input_search", "<ctrl>f", "input_entry")
+	associate_handler("input_search_further", "<ctrl>g", "input_entry")
+	associate_handler("input_copy", "<ctrl>c", "input_entry")
 
-	associate_handler("servertree_previous", "<ctrl>Page_Up", "serverTree")
-	associate_handler("servertree_next", "<ctrl>Page_Down", "serverTree")
-	associate_handler("servertree_close", "<ctrl>w", "serverTree")
+	associate_handler("servertree_previous", "<ctrl>Page_Up", "tabs_view")
+	associate_handler("servertree_next", "<ctrl>Page_Down", "tabs_view")
+	associate_handler("servertree_close", "<ctrl>w", "tabs_view")
 
-	associate_handler("output_page_up", "Page_Up", "inputBar")
-	associate_handler("output_page_down", "Page_Down", "inputBar")
+	associate_handler("output_page_up", "Page_Up", "input_entry")
+	associate_handler("output_page_down", "Page_Down", "input_entry")
 
-	associate_handler("show_sidepane", "<ctrl>s", "menu_View_showSidePane")
+	associate_handler("show_sidepane", "<ctrl>s", "view_side_pane_item")
 
 
 def assign_numeric_tab_shortcuts(tabList):
@@ -113,7 +113,7 @@ def assign_numeric_tab_shortcuts(tabList):
 	"""
 	global _accelGroup
 
-	st = widgets.get_widget("serverTree")
+	st = widgets.get_widget("tabs_view")
 
 	for i in range(1, 10):
 		shortcuts.removeShortcut(_accelGroup, st, "<alt>%d" % (i))

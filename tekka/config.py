@@ -158,7 +158,7 @@ def set_defaults():
 	# sections defined below are not added to the configParser and
 	# can't be set by the set method (will raise NoSectionError)
 	defaults["gladefiles"] = {}
-	defaults["gladefiles"]["mainwindow"] = get_path("glade", "mainwindow.glade")
+	defaults["gladefiles"]["mainwindow"] = get_path("glade", "main_window.ui")
 	defaults["gladefiles"]["menus"] = get_path("glade", "menus") + os.path.sep
 	defaults["gladefiles"]["dialogs"] = get_path("glade", "dialogs") + os.path.sep
 
