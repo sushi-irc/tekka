@@ -44,6 +44,9 @@ class OutputWindow(gtk.ScrolledWindow):
 
 	__gtype_name__ = "OutputWindow"
 
+	def show(self):
+		super(OutputWindow,self).show()
+		self.textview.show()
 
 	def __init__(self):
 		gtk.ScrolledWindow.__init__(self)
@@ -124,5 +127,7 @@ class OutputWindow(gtk.ScrolledWindow):
 			# XXX:: instead of connect
 			gobject.idle_add(idle_handler_cb)
 
-		self.get_vscrollbar().connect("value-changed", value_changed_cb)
+		def doit():
+			self.get_vscrollbar().connect("value-changed", value_changed_cb)
+		gobject.idle_add(doit)
 
