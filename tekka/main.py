@@ -979,9 +979,9 @@ def load_paned_positions():
 
 	for paned_name in paneds:
 		paned = gui.widgets.get_object(paned_name)
-		paned.set_property("position-set", True)
 
 		position = config.get("sizes", paned_name, None)
+		paned.set_property("position-set", True)
 
 		if position == None:
 			continue
