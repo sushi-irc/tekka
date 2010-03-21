@@ -955,7 +955,6 @@ def setup_general_ouptut():
 	"""
 	w = gui.widgets.get_object("general_output_window")
 	w.textview.set_buffer(GOHTMLBuffer(handler=URLHandler))
-
 	gui.widgets.add_object(w.textview, "general_output")
 
 
@@ -1076,6 +1075,9 @@ def setupGTK():
 
 	setup_main_window()
 
+	# FIXME:  this should connect it's signals separate
+	# FIXME:: and be called at the end of the setup so
+	# FIXME:: no widget resize can influence it
 	setup_paneds()
 
 	mmc = gui.widgets.get_object("main_menu_context")
