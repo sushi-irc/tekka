@@ -34,16 +34,11 @@ from .. import config
 from ..typecheck import types
 
 from ..lib.htmlbuffer import HTMLBuffer
-from ..lib.general_output_buffer import GOHTMLBuffer
 from ..lib.status_icon import TekkaStatusIcon
-from ..lib.search_toolbar import SearchBar
-from ..lib.output_textview import OutputTextView
-from ..lib.output_shell import OutputShell
 from ..lib.output_window import OutputWindow
-from ..lib.spell_entry import SpellEntry
+from ..lib.output_shell import OutputShell
+from ..lib.search_toolbar import SearchBar
 from ..helper import URLHandler
-
-from ..helper.shortcuts import addShortcut
 
 
 def get_new_buffer():
