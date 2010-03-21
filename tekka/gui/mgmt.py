@@ -36,7 +36,7 @@ from threading import Timer
 from .. import config
 
 from .builder import build_status_icon
-from ._widgets import widgets
+from ._builder import widgets
 
 from ..helper import color
 from ..helper import code
@@ -68,14 +68,14 @@ def apply_new_font():
 
 	font = get_font()
 
-	for row in widgets.get_widget("tabs_view").get_model():
+	for row in widgets.get_object("tabs_view").get_model():
 		for child in row.iterchildren():
 			set_font(child[0].window.textview, font)
 		set_font(row[0].window.textview, font)
 
-	set_font(widgets.get_widget("output"), font)
-	set_font(widgets.get_widget("input_entry"), font)
-	set_font(widgets.get_widget("general_output_window"), font)
+	set_font(widgets.get_object("output"), font)
+	set_font(widgets.get_object("input_entry"), font)
+	set_font(widgets.get_object("general_output_window"), font)
 
 
 @types(switch=bool)
@@ -88,18 +88,18 @@ def set_useable(switch):
 	global gui_is_useable
 
 	widgetList = [
-		widgets.get_widget("input_entry"),
-		widgets.get_widget("tabs_view"),
-		widgets.get_widget("nicks_view"),
-		widgets.get_widget("output_shell"),
-		widgets.get_widget("output"),
-		widgets.get_widget("general_output_window")
+		widgets.get_object("input_entry"),
+		widgets.get_object("tabs_view"),
+		widgets.get_object("nicks_view"),
+		widgets.get_object("output_shell"),
+		widgets.get_object("output"),
+		widgets.get_object("general_output_window")
 	]
 
 	for widget in widgetList:
 		widget.set_sensitive(switch)
 
-	if switch: widgets.get_widget("input_entry").grab_focus()
+	if switch: widgets.get_object("input_entry").grab_focus()
 
 	gui_is_useable = switch
 
@@ -108,7 +108,7 @@ def set_useable(switch):
 def switch_status_icon(switch):
 	""" enables / disables status icon """
 
-	statusIcon = widgets.get_widget("status_icon")
+	statusIcon = widgets.get_object("status_icon")
 
 	if switch:
 
@@ -129,7 +129,7 @@ def switch_status_icon(switch):
 def has_focus():
 	""" return wether the mainwindow has focus or not """
 
-	win = widgets.get_widget("main_window")
+	win = widgets.get_object("main_window")
 
 	return win.has_toplevel_focus()
 
@@ -139,7 +139,7 @@ def set_urgent(switch):
 	""" Sets or unsets the urgent status to the main window.
 		If the status icon is enabled it will be set flashing.
 	"""
-	win = widgets.get_widget("main_window")
+	win = widgets.get_object("main_window")
 
 	if has_focus():
 		# don't urgent if we have already the focus
@@ -147,7 +147,7 @@ def set_urgent(switch):
 
 	win.set_urgency_hint(switch)
 
-	statusIcon = widgets.get_widget("status_icon")
+	statusIcon = widgets.get_object("status_icon")
 
 	if statusIcon:
 		statusIcon.set_blinking(switch)
@@ -156,13 +156,13 @@ def set_urgent(switch):
 @types(title=basestring)
 def set_window_title(title):
 	""" Sets the window title to the main window. """
-	widgets.get_widget("main_window").set_title(title)
+	widgets.get_object("main_window").set_title(title)
 
 
 @types(nick=basestring)
 def set_nick(nick):
 	""" Sets nick as label text of nick_label. """
-	widgets.get_widget("nick_label").set_text(nick)
+	widgets.get_object("nick_label").set_text(nick)
 
 
 @types(normal=int, ops=int)
@@ -174,7 +174,7 @@ def set_user_count(normal, ops):
 	m_ops = gettext.ngettext(
 		"%d Operator", "%d Operators", ops) % (ops)
 
-	widgets.get_widget("nick_stats_label").set_text(
+	widgets.get_object("nick_stats_label").set_text(
 		"%(users)s – %(ops)s" % {
 			"users": m_users, "ops": m_ops })
 
@@ -197,7 +197,7 @@ def set_topic(string):
 	""" Sets the given string as text in
 		the topic bar.
 	"""
-	tb = widgets.get_widget("topic_label")
+	tb = widgets.get_object("topic_label")
 	tb.set_markup(string)
 
 
@@ -217,7 +217,7 @@ def clear_all_outputs():
 
 		clear(buf)
 
-	buf = widgets.get_widget("general_output").get_buffer()
+	buf = widgets.get_object("general_output").get_buffer()
 
 	clear(buf)
 
@@ -230,7 +230,7 @@ def myPrint(string, html=False):
 		the insertHTML-method falling back to normal insert
 		if it's not possible to insert via insertHTML.
 	"""
-	textview = widgets.get_widget("output")
+	textview = widgets.get_object("output")
 	output = textview.get_buffer()
 
 	if not output:
@@ -289,7 +289,7 @@ def show_inline_dialog(dialog):
 										show_inline_dialog,
 										timeouts = [])
 
-	area = widgets.get_widget("notification_vbox")
+	area = widgets.get_object("notification_vbox")
 
 	if dialog:
 

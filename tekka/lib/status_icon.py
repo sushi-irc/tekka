@@ -52,7 +52,7 @@ class TekkaStatusIcon(gtk.StatusIcon):
 
 	def activate_cb(self, icon):
 		"""	Click on status icon """
-		mw = gui.widgets.get_widget("main_window")
+		mw = gui.widgets.get_object("main_window")
 
 		if mw.get_property("visible"):
 			mw.hide()
@@ -63,7 +63,7 @@ class TekkaStatusIcon(gtk.StatusIcon):
 		""" User wants to see the menu of the status icon """
 		m = gtk.Menu()
 
-		if gui.widgets.get_widget("main_window").get_property("visible"):
+		if gui.widgets.get_object("main_window").get_property("visible"):
 			msg = _("Hide main window")
 		else:
 			msg = _("Show main window")

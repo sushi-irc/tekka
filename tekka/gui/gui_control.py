@@ -103,7 +103,7 @@ and the proxy object can replace the origin object
 in the glade object store.
 
 Code example:
-obj = gui.widgets.get_widget("serverTree")
+obj = gui.widgets.get_object("serverTree")
 
 class ServerTree(object):
 	def __init__(self, w):

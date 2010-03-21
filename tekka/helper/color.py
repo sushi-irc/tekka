@@ -69,7 +69,7 @@ def parse_color_codes_to_tags(msg):
 		and use them as foreground/background.
 	"""
 	def get_gdk_color(ccolor):
-		bg_color = gui.widgets.get_widget("output").\
+		bg_color = gui.widgets.get_object("output").\
 			get_style().base[gtk.STATE_NORMAL]
 		return contrast.contrast_render_foreground_color(
 			bg_color, ccolor)
@@ -177,7 +177,7 @@ def get_nick_color(nick):
 	else:
 		# pick a contrast color
 
-		bg_color = gui.widgets.get_widget("output")\
+		bg_color = gui.widgets.get_object("output")\
 			.get_style().base[gtk.STATE_NORMAL]
 		color = pick_nick_color(contrast.colors[:-1], nick)
 		r = contrast.contrast_render_foreground_color(bg_color, color)
@@ -197,7 +197,7 @@ def get_text_color(nick):
 	if not colors or not config.get_bool("tekka","color_nick_text"):
 		return config.get("colors","text_message","#000000")
 
-	bg_color = gui.widgets.get_widget("output").get_style().\
+	bg_color = gui.widgets.get_object("output").get_style().\
 		base[gtk.STATE_NORMAL]
 
 	color = colors[sum([ord(n) for n in nick]) % len(colors)]

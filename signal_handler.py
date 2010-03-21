@@ -119,7 +119,7 @@ def _setup_server(server):
 def _add_servers():
 	""" Adds all servers to tekka which are reported by maki. """
 	# in case we're reconnecting, clear all stuff
-	gui.widgets.get_widget("tab_store").clear()
+	gui.widgets.get_object("tab_store").clear()
 
 	for server in sushi.servers():
 		tab = _setup_server(server)

@@ -66,8 +66,8 @@ def associate_handler(short_name, shortcut, widget):
 	try:
 		for handler in _handlers[short_name]:
 			shortcuts.addShortcut(
-				widgets.get_widget("main_accel_group"),
-				widgets.get_widget(widget),
+				widgets.get_object("main_accel_group"),
+				widgets.get_object(widget),
 				shortcut,
 				handler)
 
@@ -108,8 +108,8 @@ def assign_numeric_tab_shortcuts(tabList):
 		tab in the list tabs.
 	"""
 
-	st = widgets.get_widget("tabs_view")
-	ag = widgets.get_widget("main_accel_group")
+	st = widgets.get_object("tabs_view")
+	ag = widgets.get_object("main_accel_group")
 
 	for i in range(1, 10):
 		shortcuts.removeShortcut(ag, st, "<alt>%d" % (i))

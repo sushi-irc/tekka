@@ -40,7 +40,7 @@ def dialog_response_cb(dialog, id):
 
 def run():
 
-	output_bg = gui.widgets.get_widget("output")\
+	output_bg = gui.widgets.get_object("output")\
 		.get_style().base[gtk.STATE_NORMAL]
 	pattern = re.compile("eventbox([0-9]*)")
 	table = builder.get_object("table1")

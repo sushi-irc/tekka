@@ -156,7 +156,7 @@ def tekka_tab_new_markup_cb(tab):
 	if not tab.path:
 		return
 
-	store = gui.widgets.get_widget("tab_store")
+	store = gui.widgets.get_object("tab_store")
 	store[tab.path][0] = tab
 
 
@@ -205,7 +205,7 @@ def tekka_channel_joined_cb(tab, switch):
 def tekka_tab_switched_cb(old, new):
 	""" switched from tab old to tab new """
 
-	inputBar = gui.widgets.get_widget("input_entry")
+	inputBar = gui.widgets.get_object("input_entry")
 
 	if old:
 		itext = inputBar.get_text()
@@ -237,7 +237,7 @@ def tekka_tab_switched_cb(old, new):
 def tekka_tab_add_cb(tab):
 	""" a tab is added """
 
-	if type(gui.widgets.get_widget("output_window")) == WelcomeWindow:
+	if type(gui.widgets.get_object("output_window")) == WelcomeWindow:
 		# FIXME: this is called often if the tab is not changed
 		hide_welcome_screen()
 
@@ -270,7 +270,7 @@ def tekka_tab_remove_cb(tab):
 			nextTab.switch_to()
 
 	elif (tab.is_server()
-	and len(gui.widgets.get_widget("tab_store")) == 1):
+	and len(gui.widgets.get_object("tab_store")) == 1):
 		gui.mgmt.set_useable(False)
 
 
@@ -300,7 +300,7 @@ def mainWindow_delete_event_cb(mainWindow, event):
 		search were he was reading last time.
 	"""
 
-	statusIcon = gui.widgets.get_widget("status_icon")
+	statusIcon = gui.widgets.get_object("status_icon")
 
 	if (config.get_bool("tekka", "hide_on_close")
 	and statusIcon and statusIcon.get_visible()):
@@ -417,7 +417,7 @@ def inputBar_key_press_event_cb(inputBar, event):
 
 def notificationWidget_remove_cb(area, widget):
 	""" restore the focus if a inline dialog is closed """
-	gui.widgets.get_widget("input_entry").grab_focus()
+	gui.widgets.get_object("input_entry").grab_focus()
 
 
 def outputShell_widget_changed_cb(shell, old_widget, new_widget):
@@ -437,11 +437,11 @@ def outputShell_widget_changed_cb(shell, old_widget, new_widget):
 	new_widget.set_property("name", "output_window")
 	new_widget.textview.set_property("name", "output")
 
-	gui.widgets.remove_widget(old_widget)
-	gui.widgets.add_widget(new_widget)
+	gui.widgets.remove_object("output_window")
+	gui.widgets.add_object(new_widget, "output_window")
 
-	gui.widgets.remove_widget(old_widget.textview)
-	gui.widgets.add_widget(new_widget.textview)
+	gui.widgets.remove_object("output")
+	gui.widgets.add_object(new_widget.textview, "output")
 
 
 def serverTree_misc_menu_reset_activate_cb(menuItem):
@@ -586,7 +586,7 @@ def outputVBox_size_allocate_cb(vbox, allocation):
 	""" Fix the width of the topic bar """
 	return
 # FIXME: this makes the UI wide wide wide wide wide...
-	gui.widgets.get_widget("topic_label").set_size_request(
+	gui.widgets.get_object("topic_label").set_size_request(
 				allocation.width, -1)
 
 
@@ -595,7 +595,7 @@ def outputVBox_size_allocate_cb(vbox, allocation):
 def inputBar_shortcut_ctrl_u(inputBar, shortcut):
 	""" Ctrl + U was hit, clear the inputBar """
 
-	gui.widgets.get_widget("input_entry").set_text("")
+	gui.widgets.get_object("input_entry").set_text("")
 
 
 def output_shortcut_ctrl_l(inputBar, shortcut):
@@ -607,7 +607,7 @@ def output_shortcut_ctrl_l(inputBar, shortcut):
 
 def output_shortcut_ctrl_f(inputBar, shortcut):
 	""" show/hide the search toolbar """
-	sb = gui.widgets.get_widget("output_searchbar")
+	sb = gui.widgets.get_object("output_searchbar")
 
 	if sb.get_property("visible"):
 		sb.hide()
@@ -619,7 +619,7 @@ def output_shortcut_ctrl_f(inputBar, shortcut):
 def output_shortcut_ctrl_g(inputBar, shortcut):
 	""" search further """
 
-	gui.widgets.get_widget("output_searchbar").search_further()
+	gui.widgets.get_object("output_searchbar").search_further()
 
 
 def serverTree_shortcut_ctrl_Page_Up(serverTree, shortcut):
@@ -683,7 +683,7 @@ def output_shortcut_Page_Up(inputBar, shortcut):
 	"""
 		Page_Up was hit, scroll up in output
 	"""
-	vadj = gui.widgets.get_widget("output_window").get_vadjustment()
+	vadj = gui.widgets.get_object("output_window").get_vadjustment()
 
 	if vadj.get_value() == 0.0:
 		return # at top already
@@ -696,7 +696,7 @@ def output_shortcut_Page_Up(inputBar, shortcut):
 def output_shortcut_Page_Down(inputBar, shortcut):
 	""" Page_Down was hit, scroll down in output """
 
-	vadj = gui.widgets.get_widget("output_window").get_vadjustment()
+	vadj = gui.widgets.get_object("output_window").get_vadjustment()
 
 	if (vadj.upper - vadj.page_size) == vadj.get_value():
 		return # we are already at bottom
@@ -716,9 +716,9 @@ def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 		and copy the selection to clipboard.
 		FIXME: this solution sucks ass.
 	"""
-	buffer = gui.widgets.get_widget("output").get_buffer()
-	goBuffer = gui.widgets.get_widget("general_output").get_buffer()
-	topicBar = gui.widgets.get_widget("topic_label")
+	buffer = gui.widgets.get_object("output").get_buffer()
+	goBuffer = gui.widgets.get_object("general_output").get_buffer()
+	topicBar = gui.widgets.get_object("topic_label")
 	cb = gtk.Clipboard()
 
 	if buffer.get_property("has-selection"):
@@ -873,7 +873,7 @@ def setup_main_window():
 		- set window size
 		- set window state
 	"""
-	win = gui.widgets.get_widget("main_window")
+	win = gui.widgets.get_object("main_window")
 
 	if config.get_bool("tekka", "rgba"):
 		colormap = win.get_screen().get_rgba_colormap()
@@ -916,7 +916,7 @@ def setup_main_window():
 	for widget in ("general_output_window",
 				   "tabs_window",
 				   "nicks_window"):
-		gui.widgets.get_widget(widget).connect("scroll-event",
+		gui.widgets.get_object(widget).connect("scroll-event",
 											   kill_mod1_scroll)
 
 	win.show()
@@ -924,7 +924,7 @@ def setup_main_window():
 
 def setup_tabs_view():
 	""" Setup tab sorting, setup tab rendering """
-	model = gui.widgets.get_widget("tab_store")
+	model = gui.widgets.get_object("tab_store")
 
 	# Sorting
 	def cmpl(m,i1,i2):
@@ -943,9 +943,9 @@ def setup_tabs_view():
 	model.set_sort_column_id(1, gtk.SORT_ASCENDING)
 
 	# Setup the renderer
-	column = gui.widgets.get_widget("tabs_view_name_column")
+	column = gui.widgets.get_object("tabs_view_name_column")
 	column.set_cell_data_func(
-				gui.widgets.get_widget("tabs_view_name_renderer"),
+				gui.widgets.get_object("tabs_view_name_renderer"),
 				serverTree_render_server_cb)
 
 
@@ -953,18 +953,17 @@ def setup_general_ouptut():
 	""" set the textview's buffer to a GOHTMLBuffer and add
 		the textview as general_output to the widgets store
 	"""
-	w = gui.widgets.get_widget("general_output_window")
+	w = gui.widgets.get_object("general_output_window")
 	w.textview.set_buffer(GOHTMLBuffer(handler=URLHandler))
 
-	w.textview.set_property("name", "general_output")
-	gui.widgets.add_widget(w.textview)
+	gui.widgets.add_object(w.textview, "general_output")
 
 
 def setup_nicks_view():
 	""" setup custom rendering of nick column """
-	column = gui.widgets.get_widget("nicks_store_nick_column")
+	column = gui.widgets.get_object("nicks_store_nick_column")
 	column.set_cell_data_func(
-			gui.widgets.get_widget("nicks_store_nick_renderer"),
+			gui.widgets.get_object("nicks_store_nick_renderer"),
 			nickList_render_nicks_cb)
 
 
@@ -975,9 +974,9 @@ def load_paned_positions():
 	"""
 
 	paneds = [
-		gui.widgets.get_widget("list_vpaned"),
-		gui.widgets.get_widget("main_hpaned"),
-		gui.widgets.get_widget("output_vpaned")]
+		gui.widgets.get_object("list_vpaned"),
+		gui.widgets.get_object("main_hpaned"),
+		gui.widgets.get_object("output_vpaned")]
 
 	for paned in paneds:
 		paned.set_property("position-set", True)
@@ -1029,9 +1028,9 @@ def show_welcome_screen():
 	self.hides = ("general_output_window", "list_vpaned")
 
 	for w in self.hides:
-		gui.widgets.get_widget(w).hide()
+		gui.widgets.get_object(w).hide()
 
-	s = gui.widgets.get_widget("output_shell")
+	s = gui.widgets.get_object("output_shell")
 
 	w = WelcomeWindow()
 
@@ -1048,7 +1047,7 @@ def hide_welcome_screen():
 	hides = show_welcome_screen.hides
 
 	for w in hides:
-		gui.widgets.get_widget(w).show()
+		gui.widgets.get_object(w).show()
 
 
 def setupGTK():
@@ -1079,11 +1078,11 @@ def setupGTK():
 
 	setup_paneds()
 
-	mmc = gui.widgets.get_widget("main_menu_context")
+	mmc = gui.widgets.get_object("main_menu_context")
 
 	# tell the searchbar where it can get it's input
 	gui.widgets.get_object("output_searchbar").textview_callback =\
-		lambda: gui.widgets.get_widget("output")
+		lambda: gui.widgets.get_object("output")
 
 	# connect tab control signals
 	gui.tabs.add_callbacks({
@@ -1199,16 +1198,16 @@ def setupGTK():
 
 	# push status messages directly in the status bar
 	gui.status.connect("set-visible-status",
-		lambda w,s,m: gui.widgets.get_widget("statusbar")\
+		lambda w,s,m: gui.widgets.get_object("statusbar")\
 		.push(gui.status.id(s), m))
 
 	# pop status message if they're unset
 	gui.status.connect("unset-status",
-		lambda w,s: gui.widgets.get_widget("statusbar")\
+		lambda w,s: gui.widgets.get_object("statusbar")\
 		.pop(gui.status.id(s)))
 
 	# initialize output_shell again (signals are connected now)
-	gui.widgets.get_widget("output_shell").reset()
+	gui.widgets.get_object("output_shell").reset()
 
 	# apply visibility to widgets from config
 	mmc.view.apply_visibilty_settings()
@@ -1221,11 +1220,11 @@ def setupGTK():
 	setup_fonts()
 
 	# set input font
-	gui.mgmt.set_font(gui.widgets.get_widget("input_entry"),
+	gui.mgmt.set_font(gui.widgets.get_object("input_entry"),
 					  gui.mgmt.get_font())
 
 	# set general output font
-	gui.mgmt.set_font(gui.widgets.get_widget("general_output"),
+	gui.mgmt.set_font(gui.widgets.get_object("general_output"),
 					  gui.mgmt.get_font())
 
 	gui.shortcuts.add_handlers({
@@ -1263,7 +1262,7 @@ def tekka_excepthook(extype, exobj, extb):
 		def __init__(self, message):
 
 			gtk.Dialog.__init__(self,
-				parent = gui.widgets.get_widget("main_window"),
+				parent = gui.widgets.get_object("main_window"),
 				title = _("Error occured"),
 				buttons = (gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE))
 

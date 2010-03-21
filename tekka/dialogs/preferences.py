@@ -147,7 +147,7 @@ def fillChatting():
 
 	i = 0
 	for highlight in config.get_list("chatting", "highlight_words", []):
-		highlightList.get_widget_matrix()[i][0].set_text(highlight)
+		highlightList.get_object_matrix()[i][0].set_text(highlight)
 		highlightList.add_row()
 		i+=1
 
@@ -173,7 +173,7 @@ def fillNickColors():
 		except:
 			c = gtk.gdk.Color()
 
-		nickColorsList.get_widget_matrix()[i][0].set_color(c)
+		nickColorsList.get_object_matrix()[i][0].set_color(c)
 		nickColorsList.add_row()
 		i+=1
 
@@ -192,7 +192,7 @@ def fillGeneralOutputFilters():
 				tuple, e))
 			continue
 
-		widget_row = generalOutputFilterList.get_widget_matrix()[i]
+		widget_row = generalOutputFilterList.get_object_matrix()[i]
 		combobox = widget_row[0]
 
 		try:
@@ -215,16 +215,16 @@ def fillGeneralOutputFilters():
 
 
 def applyNickColors():
-	config.set_list("colors","nick_colors", [n[0].get_color().to_string() for n in nickColorsList.get_widget_matrix() if n and len(n) >= 1])
+	config.set_list("colors","nick_colors", [n[0].get_color().to_string() for n in nickColorsList.get_object_matrix() if n and len(n) >= 1])
 
 def applyChatting():
-	config.set_list("chatting", "highlight_words", [n[0].get_text() for n in highlightList.get_widget_matrix() if n])
+	config.set_list("chatting", "highlight_words", [n[0].get_text() for n in highlightList.get_object_matrix() if n])
 
 def applyGeneralOutputFilter():
 	filter_list = []
 	header = ("type", "server", "channel")
 
-	for widget_row in generalOutputFilterList.get_widget_matrix():
+	for widget_row in generalOutputFilterList.get_object_matrix():
 		cbox = widget_row[0]
 
 		mtype = cbox.get_active_text()

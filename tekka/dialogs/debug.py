@@ -48,7 +48,7 @@ def run():
 
 	dialog = gtk.Dialog(
 		title="Debug dialog",
-		parent=gui.widgets.get_widget("mainWindow"),
+		parent=gui.widgets.get_object("mainWindow"),
 		flags=gtk.DIALOG_DESTROY_WITH_PARENT,
 		buttons=( (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL) ))
 

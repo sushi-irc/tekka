@@ -28,7 +28,7 @@ SUCH DAMAGE.
 import gtk
 import os
 
-from ._widgets import widgets, WidgetsWrapper
+from ._builder import widgets
 
 from .. import config
 from ..typecheck import types
@@ -93,12 +93,12 @@ def build_status_icon():
 	"""
 	if config.get_bool("tekka", "rgba"):
 		gtk.widget_push_colormap(
-			widgets.get_widget("main_window")\
+			widgets.get_object("main_window")\
 			.get_screen().get_rgb_colormap()
 		)
 
 	statusIcon = TekkaStatusIcon()
-	widgets.add_gobject(statusIcon, "status_icon")
+	widgets.add_object(statusIcon, "status_icon")
 
 	if config.get_bool("tekka", "rgba"):
 		gtk.widget_pop_colormap()
@@ -113,18 +113,14 @@ def load_main_window(ui_file):
 		After succesful setup, load-finished is emitted.
 	"""
 
-	builder = gtk.Builder()
-
-	builder.add_from_file(ui_file)
-
-	widgets.set_builder_object(builder)
+	widgets.add_from_file(ui_file)
 
 	def setup_mainmenu_context():
 		from ..menus.mainmenu_context import MainMenuContext
 		return MainMenuContext(name="menubar", widgets=widgets)
 
 	mainmenu = setup_mainmenu_context()
-	widgets.add_gobject(mainmenu, "main_menu_context")
+	widgets.add_object(mainmenu, "main_menu_context")
 
 	return widgets
 
@@ -151,7 +147,7 @@ def load_dialog(name, custom_handler = None):
 			self.glade = glade
 
 		def get_object(self, name):
-			return self.glade.get_widget(name)
+			return self.glade.get_object(name)
 
 		def connect_signals(self, obj, user = None):
 			if type(obj) == dict:

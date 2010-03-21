@@ -43,7 +43,7 @@ class MenuContextType(object):
 
 		self.widgets = widgets
 		self.signals = []
-		self.menu = widgets.get_widget(name)
+		self.menu = widgets.get_object(name)
 
 
 	def __getattr__(self, attr):
@@ -134,7 +134,7 @@ class MainMenuContext(MenuContextType):
 			""" read config, apply visibilites on widgets """
 
 			def apply_visibility(wname, cvalue, user=None):
-				button = self.widgets.get_widget(wname)
+				button = self.widgets.get_object(wname)
 				if config.get_bool("tekka", cvalue):
 					if user: user()
 					button.set_active(True)
@@ -150,7 +150,7 @@ class MainMenuContext(MenuContextType):
 
 		def showGeneralOutput_toggled_cb(self, item):
 			""" toggle visibility of general output """
-			sw = gui.widgets.get_widget("general_output_window")
+			sw = gui.widgets.get_object("general_output_window")
 
 			if item.get_active():
 				sw.show()
@@ -161,7 +161,7 @@ class MainMenuContext(MenuContextType):
 
 		def showSidePane_toggled_cb(self, item):
 			""" toggle visibility of side pane """
-			p = gui.widgets.get_widget("list_vpaned")
+			p = gui.widgets.get_object("list_vpaned")
 
 			if item.get_active():
 				p.show()
@@ -172,7 +172,7 @@ class MainMenuContext(MenuContextType):
 
 		def showStatusBar_toggled_cb(self, item):
 			""" toggle visibility of status bar """
-			bar = gui.widgets.get_widget("statusbar")
+			bar = gui.widgets.get_object("statusbar")
 
 			if item.get_active():
 				bar.show()
@@ -189,9 +189,9 @@ class MainMenuContext(MenuContextType):
 		def showTopicBar_toggled_cb(self, item):
 			""" toggle visibililty of topic bar """
 			if item.get_active():
-				gui.widgets.get_widget("topic_label").show()
+				gui.widgets.get_object("topic_label").show()
 			else:
-				gui.widgets.get_widget("topic_label").hide()
+				gui.widgets.get_object("topic_label").hide()
 
 			config.set("tekka", "show_topic_bar", str(item.get_active()))
 
@@ -269,7 +269,7 @@ class MainMenuContext(MenuContextType):
 		def about_activate_cb(self, item):
 			widgets = gui.builder.load_dialog("about")
 
-			d = widgets.get_widget("aboutDialog")
+			d = widgets.get_object("aboutDialog")
 			d.connect("response", lambda d,i: d.destroy())
 			d.show_all()
 
