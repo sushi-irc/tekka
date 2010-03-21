@@ -1082,6 +1082,8 @@ def setupGTK():
 
 	setup_main_window()
 
+	setup_paneds()
+
 	mmc = gui.widgets.get_widget("main_menu_context")
 
 	# tell the searchbar where it can get it's input
@@ -1250,9 +1252,6 @@ def setupGTK():
 	gui.mgmt.set_useable(False)
 
 	show_welcome_screen()
-
-	# setup paned positions if everythings rendered
-	gobject.idle_add(setup_paneds)
 
 
 def tekka_excepthook(extype, exobj, extb):
