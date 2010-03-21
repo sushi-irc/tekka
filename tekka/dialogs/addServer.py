@@ -87,7 +87,7 @@ def dialog_response_cb(dialog, response_id, callback):
 			str (widgets.get_object("autoConnectCheckButton").get_active()).lower())
 
 		# set up commands
-		list = [i[0].get_text() for i in commandList.get_object_matrix() if i[0].get_text()]
+		list = [i[0].get_text() for i in commandList.get_widget_matrix() if i[0].get_text()]
 		sushi.server_set_list(server, "server", "commands", list)
 		callback()
 

@@ -142,7 +142,7 @@ def load_dialog(name, custom_handler = None):
 			self.glade = glade
 
 		def get_object(self, name):
-			return self.glade.get_object(name)
+			return self.glade.get_widget(name)
 
 		def connect_signals(self, obj, user = None):
 			if type(obj) == dict:

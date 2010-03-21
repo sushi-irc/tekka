@@ -85,7 +85,7 @@ def run(server):
 
 	def update_commandList(widget, server):
 		list = [i[0].get_text() for i in \
-			widget.get_object_matrix() if i[0].get_text()]
+			widget.get_widget_matrix() if i[0].get_text()]
 		sushi.server_set_list(server, "server", "commands", list)
 
 	widgets = setup_widgets()
@@ -147,7 +147,7 @@ def run(server):
 
 	i = 0
 	for command in sushi.server_get_list(server, "server", "commands"):
-		commandList.get_object_matrix()[i][0].set_text(command)
+		commandList.get_widget_matrix()[i][0].set_text(command)
 		commandList.add_row()
 		i += 1
 

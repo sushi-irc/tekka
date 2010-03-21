@@ -54,7 +54,7 @@ class ExpandingList(gtk.Table):
 		else:
 			pass
 
-	def get_object_matrix(self):
+	def get_widget_matrix(self):
 		return self._matrix
 
 	def _add_row(self, row):
