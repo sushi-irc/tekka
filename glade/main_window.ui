@@ -349,7 +349,7 @@
                             <child>
                               <object class="GtkLabel" id="nick_label">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">#nick</property>
+                                <property name="label" translatable="yes"></property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
