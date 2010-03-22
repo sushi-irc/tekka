@@ -148,8 +148,7 @@ class sound(sushi.Plugin):
 
 		cmd = self.get_config("beep_command")
 
-		if cmd != "":
-
+		if type(cmd) == str and cmd != "":
 			subprocess.Popen(cmd.split(" "))
 			return
 
