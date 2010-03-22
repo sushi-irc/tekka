@@ -856,11 +856,13 @@ def paned_notify_cb(paned, gparam):
 	if not paned_notify_cb.init_done:
 		return
 
-	# TODO:  catch inline dialog popups and restore the horizontal
-	# TODO:: paned position (when they're closed?)
 	if gparam.name == "position":
-		config.set("sizes", gtk.Buildable.get_name(paned),
-					paned.get_property("position"))
+
+		# only save if there are no inline dialogs displayed
+		ids = gui.widgets.get_object("notification_vbox").get_children()
+		if len(ids) == 0:
+			config.set("sizes", gtk.Buildable.get_name(paned),
+						paned.get_property("position"))
 
 paned_notify_cb.init_done = False
 
