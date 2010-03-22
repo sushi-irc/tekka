@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<interface>
+  <requires lib="gtk+" version="2.16"/>
+  <!-- interface-requires glade_widgets 0.0 -->
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkDialog" id="history_dialog">
+    <property name="border_width">5</property>
+    <property name="default_width">650</property>
+    <property name="default_height">350</property>
+    <property name="type_hint">normal</property>
+    <property name="has_separator">False</property>
+    <signal name="response" handler="history_dialog_response"/>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="dialog-vbox1">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child>
+          <object class="GtkHBox" id="hbox1">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkVBox" id="calender_vbox">
+                <property name="visible">True</property>
+                <property name="border_width">6</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkComboBox" id="target_combobox">
+                    <property name="visible">True</property>
+                    <property name="model">target_tree</property>
+                    <signal name="changed" handler="target_combobox_changed"/>
+                    <child>
+                      <object class="GtkCellRendererText" id="combo_renderer"/>
+                      <attributes>
+                        <attribute name="text">0</attribute>
+                      </attributes>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkCalendar" id="calendar">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="year">2010</property>
+                    <property name="month">2</property>
+                    <property name="day">22</property>
+                    <signal name="next_month" handler="calendar_date_changed"/>
+                    <signal name="day_selected" handler="calendar_day_selected"/>
+                    <signal name="prev_year" handler="calendar_date_changed"/>
+                    <signal name="next_year" handler="calendar_date_changed"/>
+                    <signal name="prev_month" handler="calendar_date_changed"/>
+                    <signal name="month_changed" handler="calendar_date_changed"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkVBox" id="history_box">
+                <property name="visible">True</property>
+                <property name="border_width">7</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkScrolledWindow" id="history_window">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hscrollbar_policy">automatic</property>
+                    <property name="vscrollbar_policy">automatic</property>
+                    <property name="shadow_type">etched-in</property>
+                    <child>
+                      <object class="GtkTextView" id="history_view">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="SearchBar" id="searchbar">
+                    <property name="visible">True</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area1">
+            <property name="visible">True</property>
+            <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton" id="close_button">
+                <property name="label">gtk-close</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="0">close_button</action-widget>
+    </action-widgets>
+  </object>
+  <object class="HTMLBuffer" id="history_buffer"/>
+  <object class="GtkTreeStore" id="target_tree">
+    <columns>
+      <!-- column-name target -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+</interface>

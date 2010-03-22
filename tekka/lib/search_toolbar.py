@@ -54,7 +54,7 @@ class SearchBar(gtk.Table):
 	last_iter = None
 	last_result = ""
 
-	def __init__(self, textview,
+	def __init__(self, textview=None,
 		textview_callback = None,
 		separator=False,
 		autohide=True):
