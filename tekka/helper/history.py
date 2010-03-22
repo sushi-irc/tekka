@@ -35,7 +35,8 @@ def get_available_conversations(server):
 	if not os.path.exists(log_dir):
 		return []
 
-	return [dir for dir in os.listdir(log_dir) if os.path.isdir(dir)]
+	return [dir for dir in os.listdir(log_dir) if os.path.isdir(
+											   os.path.join(log_dir, dir))]
 
 
 @types(server=basestring, target=basestring)
@@ -50,7 +51,8 @@ def get_available_logs(server, target):
 		return []
 
 	return [f for f in os.listdir(log_dir) if FILEPATTERN.match(f)
-											and os.path.isfile(f)]
+											and os.path.isfile(
+												os.path.join(log_dir, f))]
 
 @types(log_file=basestring)
 def get_log_date(log_file):
@@ -72,12 +74,12 @@ def parse_day_offsets(fd):
 	last_day = 0
 
 	for line in fd:
-		match = DATEPATTERN.match(fd)
+		match = DATEPATTERN.match(line)
 
 		if not match:
 			continue
 
-		(year, month, day, hour, rest) = match.groups()
+		(year, month, day, hour, minute, second) = match.groups()
 
 		if day != last_day:
 			offsets[(year, month, day)] = (start, offset)
