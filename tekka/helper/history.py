@@ -2,12 +2,13 @@
 	note that history stuff is only possible
 	if maki is not running remote.
 """
+import re
 import os
 from ..com import sushi
 from ..typecheck import types
 
 FILEPATTERN= re.compile(r'([0-9]+)-([0-9]+)\.txt')
-DATEPATTERN= re.compile(r'[(0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)')
+DATEPATTERN= re.compile(r'^([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)')
 
 def get_log_dir():
 	return sushi.config_get("directories","logs")
@@ -20,7 +21,7 @@ def get_available_servers():
 
 	log_dir = get_log_dir()
 
-	return [dir for dir in os.listdir(log_dir) if os.path.isdir(dir)]
+	return [dir for dir in os.listdir(log_dir)]
 
 
 @types(server=basestring)
@@ -54,7 +55,7 @@ def get_available_logs(server, target):
 @types(log_file=basestring)
 def get_log_date(log_file):
 	""" return (year,month) tuple """
-	match = FILEPATTERN.group(log_file)
+	match = FILEPATTERN.match(log_file)
 
 	if not match:
 		return ""
@@ -62,4 +63,27 @@ def get_log_date(log_file):
 	return match.groups()
 
 
+@types(fd=file)
+def parse_day_offsets(fd):
+	offsets = {}
 
+	start = fd.tell()
+	offset = fd.tell()
+	last_day = 0
+
+	for line in fd:
+		match = DATEPATTERN.match(fd)
+
+		if not match:
+			continue
+
+		(year, month, day, hour, rest) = match.groups()
+
+		if day != last_day:
+			offsets[(year, month, day)] = (start, offset)
+			last_day = day
+			start = offset
+
+		offset += len(line)
+
+	return offsets
