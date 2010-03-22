@@ -11,6 +11,9 @@ class HistoryDialog(object):
 
 	def __init__(self, history_tab):
 		self.current_path = ()
+		self.current_file = None
+		self.current_offsets = {}
+
 		self.builder = gtk.Builder()
 
 		path = config.get("gladefiles","dialogs")
@@ -23,6 +26,7 @@ class HistoryDialog(object):
 		self.switch_to_target(history_tab.server.name, history_tab.name)
 
 	def fill_target_tree(self):
+		""" fill target tree store with server/targets """
 		store = self.builder.get_object("target_tree")
 
 		for server in history.get_available_servers():
@@ -32,6 +36,7 @@ class HistoryDialog(object):
 				store.append(server_iter, (conv,))
 
 	def switch_to_target(self, server, target):
+		""" switch to combo box entry identified by server / target """
 		cbox = self.builder.get_object("target_combobox")
 		store = self.builder.get_object("target_tree")
 
@@ -45,6 +50,9 @@ class HistoryDialog(object):
 									"target": target})
 
 	def get_current_names(self):
+		""" return (server, target) of current selection
+			return (server, None) if no target is active
+		"""
 		store = self.builder.get_object("target_tree")
 		iter = store.get_iter(self.current_path)
 		target = store.get_value(iter, 0)
@@ -57,6 +65,7 @@ class HistoryDialog(object):
 		return (server, target)
 
 	def update_calendar(self):
+		""" update the calendar markings """
 		calendar = self.builder.get_object("calendar")
 		calendar.clear_marks()
 
@@ -79,15 +88,31 @@ class HistoryDialog(object):
 					print e
 					return
 
-				for (year, month, day) in history.parse_day_offsets(
-											fd).keys():
+				self.current_file = path
+				self.current_offsets = history.parse_day_offsets(fd)
+
+				for (year, month, day) in self.current_offsets.keys():
 					calendar.mark_day(day)
 
 	def calendar_date_changed(self, calendar):
 		self.update_calendar()
 
 	def calendar_day_selected(self, calendar):
-		pass
+		if not self.current_file:
+			return
+		(year, month, day) = calendar.get_properties("year", "month",
+													"day")
+		if not self.current_offsets.has_key((year, month, day)):
+			return
+
+		(start, end) = self.current_offsets[(year, month, day)]
+
+		buffer = self.builder.get_object("history_buffer")
+
+		fd = file(self.current_file, "r")
+		fd.seek(start)
+		buffer.set_text(fd.read(end - start))
+
 
 	def target_combobox_changed(self, box):
 		self.current_path = box.get_model().get_path(box.get_active_iter())

@@ -92,7 +92,7 @@ def parse_day_offsets(fd):
 		if day != last_day:
 			offsets[(year, month, last_day)] = (start, offset)
 			last_day = day
-			start = offset + 1
+			start = offset
 
 		offset += len(line)
 

@@ -83,6 +83,7 @@
                       <object class="GtkTextView" id="history_view">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="buffer">history_buffer</property>
                       </object>
                     </child>
                   </object>
