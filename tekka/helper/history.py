@@ -6,7 +6,8 @@ import os
 from ..com import sushi
 from ..typecheck import types
 
-FILEPATTERN= re.compile('[0-9]+-[0-9]+\.txt')
+FILEPATTERN= re.compile(r'([0-9]+)-([0-9]+)\.txt')
+DATEPATTERN= re.compile(r'[(0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)')
 
 def get_log_dir():
 	return sushi.config_get("directories","logs")
@@ -49,5 +50,16 @@ def get_available_logs(server, target):
 
 	return [f for f in os.listdir(log_dir) if FILEPATTERN.match(f)
 											and os.path.isfile(f)]
+
+@types(log_file=basestring)
+def get_log_date(log_file):
+	""" return (year,month) tuple """
+	match = FILEPATTERN.group(log_file)
+
+	if not match:
+		return ""
+
+	return match.groups()
+
 
 
