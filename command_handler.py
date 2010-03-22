@@ -27,6 +27,8 @@ SUCH DAMAGE.
 """
 import time
 
+import traceback
+
 from gettext import gettext as _
 
 from tekka.lib.inline_dialog import InlineMessageDialog
@@ -665,7 +667,8 @@ def cmd_invoke_test(currentServer, currentTab, args):
 	try:
 		test_module.start_test(gui)
 	except Exception as e:
-		gui.mgmt.myPrint("invoke_test run failed: %s" % (e))
+		gui.mgmt.myPrint("invoke_test run failed: %s\n%s" % (e,
+						traceback.format_exc()))
 		return
 
 
