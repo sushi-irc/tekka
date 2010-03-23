@@ -64,7 +64,11 @@ class HistoryDialog(object):
 	def get_current_names(self):
 		""" return (server, target) of current selection
 			return (server, None) if no target is active
+			return (None, None) if no entry is active
 		"""
+		if not self.current_path:
+			return (None, None)
+
 		store = self.builder.get_object("target_tree")
 		iter = store.get_iter(self.current_path)
 		target = store.get_value(iter, 0)
@@ -83,7 +87,7 @@ class HistoryDialog(object):
 
 		(server, target) = self.get_current_names()
 
-		if not target:
+		if not server or not target:
 			return
 
 		(year, month) = calendar.get_properties("year","month")
