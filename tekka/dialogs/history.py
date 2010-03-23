@@ -87,6 +87,7 @@ class HistoryDialog(object):
 			return
 
 		(year, month) = calendar.get_properties("year","month")
+		month += 1 # 1-12 instead of 0-11
 
 		for log in history.get_available_logs(server, target):
 			(lyear, lmonth) = history.get_log_date(log)
@@ -97,7 +98,7 @@ class HistoryDialog(object):
 				try:
 					fd = file(path, "r")
 				except Exception,e:
-					print e
+					print "Exception %s while open %s." % (e, path)
 					return
 
 				self.current_file = path
@@ -165,8 +166,8 @@ class HistoryDialog(object):
 
 		(year, month) = calendar.get_properties("year","month")
 
-		if month == 12:
-			month = 1
+		if month == 11:
+			month = 0
 			year += 1
 		else:
 			month += 1
@@ -197,6 +198,7 @@ class HistoryDialog(object):
 			return
 		(year, month, day) = calendar.get_properties("year", "month",
 													"day")
+		month += 1 # we work with 1-12 not 0-11 like the calendar widget
 		if not self.current_offsets.has_key((year, month, day)):
 			return
 
@@ -221,6 +223,7 @@ class HistoryDialog(object):
 	def target_combobox_changed(self, box):
 		self.current_path = box.get_model().get_path(box.get_active_iter())
 		self.update_calendar()
+		self.search_in_progress = False
 
 	def history_dialog_response(self, dialog, id):
 		dialog.destroy()
