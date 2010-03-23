@@ -282,7 +282,6 @@
                 <property name="visible">True</property>
                 <property name="border_width">6</property>
                 <property name="orientation">vertical</property>
-                <signal name="size_allocate" handler="output_vbox_size_allocate"/>
                 <child>
                   <object class="GtkLabel" id="topic_label">
                     <property name="label" translatable="yes">#topic</property>
