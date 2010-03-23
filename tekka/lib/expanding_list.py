@@ -30,7 +30,6 @@ import gtk
 import gobject
 import logging
 
-# FIXME: last filled item can't be removed
 
 class ExpandingList(gtk.Table):
 
@@ -150,8 +149,10 @@ class ExpandingList(gtk.Table):
 		if index > (self._rows - 1) or index < 0:
 			raise Exception("index out of bounds")
 
-		# You can't delete the last row
 		if self._rows == 1:
+			# replace the last row with a new, empty one
+			self.add_row(under=0)
+			self.remove_row(0)
 			return
 
 		cells = self._matrix[index]
