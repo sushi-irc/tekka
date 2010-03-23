@@ -577,14 +577,6 @@ def nickList_button_press_event_cb(nickList, event):
 	return False
 
 
-def outputVBox_size_allocate_cb(vbox, allocation):
-	""" Fix the width of the topic bar """
-	return
-# FIXME: this makes the UI wide wide wide wide wide...
-	gui.widgets.get_object("topic_label").set_size_request(
-				allocation.width, -1)
-
-
 """ Shortcut callbacks """
 
 def inputBar_shortcut_ctrl_u(inputBar, shortcut):
@@ -836,9 +828,11 @@ def treemodel_rows_reordered_cb(treemodel, path, iter, new_order):
 			continue
 
 		if gui.tabs._currentPath == row[0].path and not updated:
+			# update the currentPath cache
 			gui.tabs._currentPath = row.path
 			updated = True
 
+		# update the tab's path cache
 		row[0].path = row.path
 
 		for child in row.iterchildren():
@@ -849,6 +843,7 @@ def treemodel_rows_reordered_cb(treemodel, path, iter, new_order):
 				gui.tabs._currentPath = child.path
 				updated = True
 
+			# update path's tab cache
 			child[0].path = child.path
 
 
@@ -1144,9 +1139,6 @@ def setupGTK():
 			nickList_row_activated_cb,
 		"nicks_view_button_press_event":
 			nickList_button_press_event_cb,
-
-		"output_vbox_size_allocate":
-			outputVBox_size_allocate_cb,
 
 		# watch for position change of paneds
 		"list_vpaned_notify":
