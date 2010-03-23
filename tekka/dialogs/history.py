@@ -174,15 +174,22 @@ class HistoryDialog(object):
 		calendar.set_properties(year=year, month=month)
 
 	def search(self,*x):
+		needle = self.builder.get_object(
+					"searchbar").search_entry.get_text()
+		if not needle:
+			self.abort_search()
+			return
+
 		self.search_in_progress = True
 		if not self.search_local():
-			if not self.load_next_month():
+			if not self.search_in_progress or not self.load_next_month():
 				self.abort_search()
 				return
 			self.search_local()
 
 	def abort_search(self):
 		self.search_in_progress = False
+		self.update_calendar()
 
 	def load_current_day(self):
 		calendar = self.builder.get_object("calendar")
