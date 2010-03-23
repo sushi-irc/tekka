@@ -186,6 +186,7 @@ class HistoryDialog(object):
 			if not self.search_in_progress or not self.load_next_month():
 				self.abort_search()
 				return
+			# TODO: search every day...
 			self.search_local()
 
 	def abort_search(self):
