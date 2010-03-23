@@ -14,6 +14,11 @@ class HistoryDialog(object):
 		self.current_file = None
 		self.current_offsets = {}
 
+		# last search result position
+		self.last_search_iter = None
+		self.last_result = None
+		self.search_in_progress = False
+
 		self.builder = gtk.Builder()
 
 		path = config.get("gladefiles","dialogs")
@@ -24,6 +29,13 @@ class HistoryDialog(object):
 		self.fill_target_tree()
 
 		self.switch_to_target(history_tab.server.name, history_tab.name)
+		self.load_current_day()
+
+		bar = self.builder.get_object("searchbar")
+		bar.set_autohide(False)
+		bar.set_standard_behaviour(False)
+		bar.search_button.connect("clicked", self.search)
+		bar.search_entry.connect("activate", self.search)
 
 	def fill_target_tree(self):
 		""" fill target tree store with server/targets """
@@ -64,7 +76,7 @@ class HistoryDialog(object):
 		server = store.get_value(parent_iter, 0)
 		return (server, target)
 
-	def update_calendar(self):
+	def update_calendar(self, highlight=True):
 		""" update the calendar markings """
 		calendar = self.builder.get_object("calendar")
 		calendar.clear_marks()
@@ -91,13 +103,89 @@ class HistoryDialog(object):
 				self.current_file = path
 				self.current_offsets = history.parse_day_offsets(fd)
 
-				for (year, month, day) in self.current_offsets.keys():
-					calendar.mark_day(day)
+				if highlight:
+					for (year, month, day) in self.current_offsets.keys():
+						calendar.mark_day(day)
 
-	def calendar_date_changed(self, calendar):
-		self.update_calendar()
 
-	def calendar_day_selected(self, calendar):
+	def search_calender_marks(self):
+		needle = self.builder.get_object(
+					"searchbar").search_entry.get_text()
+
+		if not self.current_file or not needle:
+			return
+
+		calender = self.builder.get_object("calendar")
+		calender.clear_marks()
+
+		if not self.current_offsets:
+			return
+
+		fd = file(self.current_file, "r")
+		for ((year, month, day),
+			(start,end)) in self.current_offsets.items():
+
+			fd.seek(start)
+
+			if fd.read(end-start).find(needle) >= 0:
+				calender.mark_day(day)
+
+
+	def search_local(self):
+		view = self.builder.get_object("history_view")
+		buffer = self.builder.get_object("history_buffer")
+		needle = self.builder.get_object(
+					"searchbar").search_entry.get_text()
+
+		if not needle:
+			return False
+
+		if (not self.last_search_iter or self.last_result != needle):
+			# new search
+			self.last_search_iter = buffer.get_start_iter()
+			self.search_calender_marks()
+
+		result = self.last_search_iter.forward_search(needle,
+									gtk.TEXT_SEARCH_TEXT_ONLY)
+
+		if not result:
+			return False
+
+		self.last_iter = result[1]
+		self.last_result = buffer.get_text(*result)
+
+		buffer.select_range(*result)
+
+		# scroll the textview to the result
+		view.scroll_to_iter(result[0], 0.0)
+		return True
+
+	def load_next_month(self):
+		calendar = self.builder.get_object("calendar")
+
+		(year, month) = calendar.get_properties("year","month")
+
+		if month == 12:
+			month = 1
+			year += 1
+		else:
+			month += 1
+
+		calendar.set_properties(year=year, month=month)
+
+	def search(self,*x):
+		self.search_in_progress = True
+		if not self.search_local():
+			if not self.load_next_month():
+				self.abort_search()
+				return
+			self.search_local()
+
+	def abort_search(self):
+		self.search_in_progress = False
+
+	def load_current_day(self):
+		calendar = self.builder.get_object("calendar")
 		if not self.current_file:
 			return
 		(year, month, day) = calendar.get_properties("year", "month",
@@ -113,6 +201,15 @@ class HistoryDialog(object):
 		fd.seek(start)
 		buffer.set_text(fd.read(end - start))
 
+	def calendar_date_changed(self, calendar):
+		if not self.search_in_progress:
+			self.update_calendar()
+		else:
+			self.update_calendar(highlight=False)
+			self.search_calender_marks()
+
+	def calendar_day_selected(self, calendar):
+		self.load_current_day()
 
 	def target_combobox_changed(self, box):
 		self.current_path = box.get_model().get_path(box.get_active_iter())
