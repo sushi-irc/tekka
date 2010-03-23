@@ -299,21 +299,21 @@ def show_inline_dialog(dialog):
 		area.set_no_show_all(True)
 
 		if config.get_bool("tekka", "idialog_timeout"):
-			# FIXME:  input dialogs would be removed regardless
-			# FIXME:: of focus
 
 			def dialog_timeout_cb():
 				area.remove(dialog)
 				self.timeouts.remove(dialog_timeout_cb.timer)
 
-			t = Timer(
-				int(config.get("tekka", "idialog_timeout_seconds")),
-				dialog_timeout_cb)
+			if isinstance(dialog, InlineMessageDialog):
+				# let only messages disappear
+				t = Timer(
+					int(config.get("tekka", "idialog_timeout_seconds")),
+					dialog_timeout_cb)
 
-			dialog_timeout_cb.timer = t
-			self.timeouts.append(t)
+				dialog_timeout_cb.timer = t
+				self.timeouts.append(t)
 
-			t.start()
+				t.start()
 
 	else:
 		area.set_property("visible", False)
