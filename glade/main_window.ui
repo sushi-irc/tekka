@@ -24,10 +24,10 @@
     <accel-groups>
       <group name="main_accel_group"/>
     </accel-groups>
-    <signal name="window_state_event" handler="main_window_window_state_event"/>
+    <signal name="size_allocate" handler="main_window_size_allocate"/>
     <signal name="focus_in_event" handler="main_window_focus_in_event"/>
     <signal name="scroll_event" handler="main_window_scroll_event"/>
-    <signal name="size_allocate" handler="main_window_size_allocate"/>
+    <signal name="window_state_event" handler="main_window_window_state_event"/>
     <signal name="delete_event" handler="main_window_delete_event"/>
     <child>
       <object class="GtkVBox" id="main_vbox">
@@ -284,12 +284,15 @@
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkLabel" id="topic_label">
+                    <property name="xpad">4</property>
                     <property name="label" translatable="yes">#topic</property>
                     <property name="use_markup">True</property>
                     <property name="selectable">True</property>
+                    <property name="ellipsize">end</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
+                    <property name="padding">6</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -335,6 +338,9 @@
                             <child>
                               <placeholder/>
                             </child>
+                            <child>
+                              <placeholder/>
+                            </child>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -348,7 +354,6 @@
                             <child>
                               <object class="GtkLabel" id="nick_label">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes"></property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
