@@ -356,8 +356,7 @@ class HistoryDialog(object):
 		dialog.destroy()
 
 	def history_buffer_changed(self, buffer, *x):
-		if self.search_in_progress:
-			self.last_search_iter = buffer.get_start_iter()
+		self.last_search_iter = buffer.get_start_iter()
 
 
 
