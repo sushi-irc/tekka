@@ -45,6 +45,9 @@ class HistoryDialog(object):
 		if not self.verify_remote():
 			return
 
+		gui.mgmt.set_font(self.builder.get_object("history_view"),
+						  gui.mgmt.get_font())
+
 		self.fill_target_tree()
 
 		self.switch_to_target(history_tab.server.name, history_tab.name)
@@ -311,12 +314,12 @@ class HistoryDialog(object):
 	def load_current_day(self):
 		calendar = self.builder.get_object("calendar")
 		if not self.current_file:
-			return
+			return False
 		(year, month, day) = calendar.get_properties("year", "month",
 													"day")
 		month += 1 # we work with 1-12 not 0-11 like the calendar widget
 		if not self.current_offsets.has_key((year, month, day)):
-			return
+			return False
 
 		(start, end) = self.current_offsets[(year, month, day)]
 
@@ -325,6 +328,7 @@ class HistoryDialog(object):
 		fd = file(self.current_file, "r")
 		fd.seek(start)
 		buffer.set_text(strip_date(fd.read(end - start)))
+		return True
 
 	def calendar_date_changed(self, calendar):
 		if not self.search_in_progress:
@@ -334,7 +338,8 @@ class HistoryDialog(object):
 			self.search_calender_marks()
 
 	def calendar_day_selected(self, calendar):
-		self.load_current_day()
+		if not self.load_current_day():
+			self.builder.get_object("history_buffer").set_text("")
 
 	def target_combobox_changed(self, box):
 		self.current_path = box.get_model().get_path(box.get_active_iter())

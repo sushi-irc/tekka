@@ -83,6 +83,7 @@
                       <object class="GtkTextView" id="history_view">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="wrap_mode">word-char</property>
                         <property name="buffer">history_buffer</property>
                       </object>
                     </child>
@@ -94,6 +95,9 @@
                 <child>
                   <object class="SearchBar" id="searchbar">
                     <property name="visible">True</property>
+                    <child>
+                      <placeholder/>
+                    </child>
                     <child>
                       <placeholder/>
                     </child>
