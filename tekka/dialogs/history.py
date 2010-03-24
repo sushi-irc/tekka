@@ -309,12 +309,18 @@ class HistoryDialog(object):
 					return self.search()
 				else:
 					# no next month, abort search
-					self.search_in_progress = False
+					self.reset_search()
 					print "SEARCH ENDED!"
 					return
 
-	def abort_search(self):
+	def reset_search(self):
+		""" reset search variables """
 		self.search_in_progress = False
+		self.last_search_iter = None
+
+	def abort_search(self):
+		""" clear the search markup and reset variables """
+		self.reset_search()
 		self.update_calendar()
 
 	def load_current_day(self):
@@ -356,7 +362,8 @@ class HistoryDialog(object):
 		dialog.destroy()
 
 	def history_buffer_changed(self, buffer, *x):
-		self.last_search_iter = buffer.get_start_iter()
+		if self.search_in_progress:
+			self.last_search_iter = buffer.get_start_iter()
 
 
 
