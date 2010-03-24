@@ -9,6 +9,16 @@ from .. import config
 from ..com import sushi
 from ..helper import history
 
+def strip_date(text):
+	new = []
+	for line in text.split("\n"):
+		match = history.DATEPATTERN.match(line)
+		if match:
+			time_len = len(line[match.start():match.end()].split(" ")[-1])
+			new.append(line[match.end()-time_len:])
+		else:
+			new.append(line)
+	return "\n".join(new)
 
 class HistoryDialog(object):
 
@@ -314,7 +324,7 @@ class HistoryDialog(object):
 
 		fd = file(self.current_file, "r")
 		fd.seek(start)
-		buffer.set_text(fd.read(end - start))
+		buffer.set_text(strip_date(fd.read(end - start)))
 
 	def calendar_date_changed(self, calendar):
 		if not self.search_in_progress:
