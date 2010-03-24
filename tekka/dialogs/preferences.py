@@ -144,6 +144,10 @@ def fillColors():
 		btn.set_active(config.get("colors","rules_color") == "auto")
 		btn.toggled()
 
+		btn = widgets.get_widget("rules_color_yesno")
+		btn.set_active(config.get_bool("tekka","text_rules"))
+		btn.toggled()
+
 
 def fillChatting():
 	for key in ("quit_message", "part_message", "time_format"):
@@ -325,6 +329,12 @@ def colors_rules_autodetect_toggled(button):
 		config.set("colors","rules_color","auto")
 	widgets.get_widget("rules_color").set_sensitive(not button.get_active())
 
+def colors_rules_color_yesno_toggled(button):
+	flag = button.get_active()
+	config.set("tekka", "text_rules", str(flag))
+	widgets.get_widget("auto_rule_color").set_sensitive(flag)
+	widgets.get_widget("rules_color").set_sensitive(flag)
+
 
 """ chatting page signals """
 
@@ -401,6 +411,7 @@ def setup():
 		"colors_last_log_written": colors_last_log_written,
 		"colors_rules_color_written": colors_rules_color_written,
 		"colors_rules_autodetect_toggled": colors_rules_autodetect_toggled,
+		"colors_rules_color_yesno_toggled": colors_rules_color_yesno_toggled,
 	# chatting page
 		"chatting_quit_message_written": chatting_quit_message_written,
 		"chatting_part_message_written": chatting_part_message_written,

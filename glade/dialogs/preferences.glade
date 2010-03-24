@@ -186,7 +186,7 @@
               <widget class="GtkTable" id="colorsTable">
                 <property name="visible">True</property>
                 <property name="border_width">8</property>
-                <property name="n_rows">11</property>
+                <property name="n_rows">12</property>
                 <property name="n_columns">2</property>
                 <child>
                   <widget class="GtkLabel" id="label10">
@@ -444,9 +444,6 @@
                   </packing>
                 </child>
                 <child>
-                  <placeholder/>
-                </child>
-                <child>
                   <widget class="GtkCheckButton" id="auto_rule_color">
                     <property name="label" translatable="yes">Autodetect rules color</property>
                     <property name="visible">True</property>
@@ -458,6 +455,26 @@
                   <packing>
                     <property name="top_attach">10</property>
                     <property name="bottom_attach">11</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <widget class="GtkCheckButton" id="rules_color_yesno">
+                    <property name="label" translatable="yes">Enable rules color</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="toggled" handler="colors_rules_color_yesno_toggled"/>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">11</property>
+                    <property name="bottom_attach">12</property>
                   </packing>
                 </child>
               </widget>
