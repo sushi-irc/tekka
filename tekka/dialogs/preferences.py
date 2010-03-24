@@ -131,7 +131,7 @@ def fillColors():
 	for key in ("own_nick", "own_text", "notification",
 				"text_message", "text_action", "nick",
 				"text_highlightmessage", "text_highlightaction",
-				"last_log"):
+				"last_log","rules_color"):
 		val = config.get("colors", key)
 
 		try:
@@ -141,13 +141,15 @@ def fillColors():
 
 		widgets.get_object(key).set_color(color)
 
+		btn = widgets.get_widget("rules_color_yesno")
+		btn.set_active(config.get_bool("tekka","text_rules"))
+		btn.toggled()
+
 		btn = widgets.get_widget("auto_rule_color")
 		btn.set_active(config.get("colors","rules_color") == "auto")
 		btn.toggled()
 
-		btn = widgets.get_widget("rules_color_yesno")
-		btn.set_active(config.get_bool("tekka","text_rules"))
-		btn.toggled()
+
 
 
 def fillChatting():
