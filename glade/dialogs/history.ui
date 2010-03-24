@@ -144,7 +144,9 @@
       <action-widget response="0">close_button</action-widget>
     </action-widgets>
   </object>
-  <object class="HTMLBuffer" id="history_buffer"/>
+  <object class="HTMLBuffer" id="history_buffer">
+    <signal name="changed" handler="history_buffer_changed"/>
+  </object>
   <object class="GtkTreeStore" id="target_tree">
     <columns>
       <!-- column-name target -->

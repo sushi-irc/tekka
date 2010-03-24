@@ -176,6 +176,10 @@ class HistoryDialog(object):
 
 
 	def search_local(self):
+		""" search in the text loaded into history_buffer and highlight
+			the needle if found.
+			Returns True on success otherwise False
+		"""
 		view = self.builder.get_object("history_view")
 		buffer = self.builder.get_object("history_buffer")
 		needle = self.builder.get_object(
@@ -247,6 +251,10 @@ class HistoryDialog(object):
 		return True
 
 	def search(self,*x):
+		""" search for a needle, mark all days where something
+			was found. On every hit, iterate further until no
+			further matches are found.
+		"""
 		needle = self.builder.get_object(
 					"searchbar").search_entry.get_text()
 		if not needle:
@@ -272,13 +280,11 @@ class HistoryDialog(object):
 				print "got possible days, %s" % (possible_days,)
 				# switch to smallest possible day
 				calendar.select_day(sorted(possible_days)[0])
-				self.last_search_iter = self.builder.get_object("history_buffer").get_start_iter()
 				self.search()
 			else:
 				# no days with data this month. load next month (if avail)
 				if self.load_next_month():
 					print "loading next month"
-					self.last_search_iter = self.builder.get_object("history_buffer").get_start_iter()
 					return self.search()
 				else:
 					# no next month, abort search
@@ -312,7 +318,6 @@ class HistoryDialog(object):
 		if not self.search_in_progress:
 			self.update_calendar()
 		else:
-
 			self.update_calendar(highlight=False)
 			self.search_calender_marks()
 
@@ -326,6 +331,12 @@ class HistoryDialog(object):
 
 	def history_dialog_response(self, dialog, id):
 		dialog.destroy()
+
+	def history_buffer_changed(self, *x):
+		if self.search_in_progress:
+			self.last_search_iter = self.builder.get_object(
+										"history_buffer").get_start_iter()
+
 
 
 def run(tab):
