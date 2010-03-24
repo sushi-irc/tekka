@@ -1,5 +1,6 @@
 import os
 import gtk
+import calendar
 
 from gettext import gettext as _
 
@@ -216,6 +217,21 @@ class HistoryDialog(object):
 
 		calendar.set_properties(year=year, month=month)
 
+	def load_next_day(self):
+		cwidget = self.builder.get_object("calendar")
+
+		(year, month, day) = cwidget.get_properties("year", "month", "day")
+
+		month_range = calendar.monthrange(year, month+1)
+
+		if day == month_range[1]:
+			load_next_month()
+			day = calendar.monthrange(year,month+2)[0]
+		else
+			day += 1
+
+		cwidget.set_properties(day=day)
+
 	def search(self,*x):
 		needle = self.builder.get_object(
 					"searchbar").search_entry.get_text()
@@ -225,11 +241,11 @@ class HistoryDialog(object):
 
 		self.search_in_progress = True
 		if not self.search_local():
-			if not self.search_in_progress or not self.load_next_month():
-				self.abort_search()
-				return
-			# TODO: search every day...
-			self.search_local()
+			if self.search_in_progress:
+				load_next_day()
+				if not self.search_local():
+					if self.search_in_progress:
+						self.search_local()
 
 	def abort_search(self):
 		self.search_in_progress = False
