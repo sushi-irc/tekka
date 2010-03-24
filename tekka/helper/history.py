@@ -14,9 +14,9 @@ def get_log_dir():
 	return sushi.config_get("directories","logs")
 
 
-def get_available_servers():
+def get_available_servers(force_remote=False):
 	""" return a list with all servers containing logs """
-	if sushi.remote:
+	if not force_remote and sushi.remote:
 		return []
 
 	log_dir = get_log_dir()
@@ -26,9 +26,9 @@ def get_available_servers():
 
 
 @types(server=basestring)
-def get_available_conversations(server):
+def get_available_conversations(server, force_remote=False):
 	""" return a list with all available logged channels/queries """
-	if sushi.remote or not server:
+	if (not force_remote and sushi.remote) or not server:
 		return []
 
 	log_dir = os.path.join(get_log_dir(), server)
@@ -41,9 +41,9 @@ def get_available_conversations(server):
 
 
 @types(server=basestring, target=basestring)
-def get_available_logs(server, target):
+def get_available_logs(server, target, force_remote=False):
 	""" return a list with all available logs for the target """
-	if sushi.remote or not server or not basestring:
+	if (not force_remote and sushi.remote) or not server or not basestring:
 		return []
 
 	log_dir = os.path.join(get_log_dir(), server, target)
