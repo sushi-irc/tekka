@@ -3,7 +3,9 @@ import gtk
 
 from gettext import gettext as _
 
+from .. import gui
 from .. import config
+from ..com import sushi
 from ..helper import history
 
 
@@ -19,12 +21,18 @@ class HistoryDialog(object):
 		self.last_result = None
 		self.search_in_progress = False
 
+		# use log API despite remotely maki connection
+		self.force_remote = False
+
 		self.builder = gtk.Builder()
 
 		path = config.get("gladefiles","dialogs")
 		self.builder.add_from_file(os.path.join(path, "history.ui"))
 
 		self.builder.connect_signals(self)
+
+		if not self.verify_remote():
+			return
 
 		self.fill_target_tree()
 
@@ -37,14 +45,41 @@ class HistoryDialog(object):
 		bar.search_button.connect("clicked", self.search)
 		bar.search_entry.connect("activate", self.search)
 
+	def verify_remote(self):
+		""" ask user if he wants to try reading logs even if maki
+			is connected via sushi-remote. This is useful if maki
+			runs on the same host.
+		"""
+		if not sushi.remote:
+			return True
+
+		d = gui.builder.question_dialog(
+				_("Read history anyways?"),
+				_("maki is connected remotely. It's possible that "
+				  "the history is not accessible. Do you want to "
+				  "try anyways?"))
+
+		id = d.run()
+		d.destroy()
+
+		if id == gtk.RESPONSE_YES:
+			self.force_remote = True
+			return True
+		else:
+			self.builder.get_object("history_dialog").destroy()
+			return False
+
+
 	def fill_target_tree(self):
 		""" fill target tree store with server/targets """
 		store = self.builder.get_object("target_tree")
 
-		for server in history.get_available_servers():
+		for server in history.get_available_servers(
+									force_remote=self.force_remote):
 			server_iter = store.append(None, (server,))
 
-			for conv in history.get_available_conversations(server):
+			for conv in history.get_available_conversations(server,
+									force_remote=self.force_remote):
 				store.append(server_iter, (conv,))
 
 	def switch_to_target(self, server, target):
@@ -81,7 +116,9 @@ class HistoryDialog(object):
 		return (server, target)
 
 	def update_calendar(self, highlight=True):
-		""" update the calendar markings """
+		""" update the calendar markings if highlight is True and
+			the cache variables self.current_file and self.current_offsets
+		"""
 		calendar = self.builder.get_object("calendar")
 		calendar.clear_marks()
 
@@ -93,7 +130,8 @@ class HistoryDialog(object):
 		(year, month) = calendar.get_properties("year","month")
 		month += 1 # 1-12 instead of 0-11
 
-		for log in history.get_available_logs(server, target):
+		for log in history.get_available_logs(server, target,
+										force_remote=self.force_remote):
 			(lyear, lmonth) = history.get_log_date(log)
 
 			if year == lyear and lmonth == month:

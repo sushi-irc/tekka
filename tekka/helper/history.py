@@ -21,6 +21,9 @@ def get_available_servers(force_remote=False):
 
 	log_dir = get_log_dir()
 
+	if not os.path.exists(log_dir):
+		return []
+
 	return [dir for dir in os.listdir(log_dir) if os.path.isdir(
 									os.path.join(log_dir, dir))]
 
