@@ -84,13 +84,16 @@ def parse_day_offsets(fd):
 	offset = fd.tell()
 	last_day = 0
 
+	year = month = day = hour = minute = second = 0
+
 	for line in fd:
 		match = DATEPATTERN.match(line)
 
 		if not match:
 			continue
 
-		(year, month, day, hour, minute, second) = [int(n) for n in match.groups()]
+		(year, month, day, hour, minute, second) = [int(n)
+				for n in match.groups()]
 
 		if day != last_day:
 			offsets[(year, month, last_day)] = (start, offset)
@@ -98,5 +101,8 @@ def parse_day_offsets(fd):
 			start = offset
 
 		offset += len(line)
+
+	if last_day != 0:
+		offsets[(year, month, last_day)] = (start, offset)
 
 	return offsets
