@@ -245,7 +245,9 @@ class HistoryDialog(object):
 		low_month = sorted(available_months[low_year])[0] - 1
 
 		# get first day
-		day = mod_calendar.monthrange(low_year, low_month)[0]
+		# XXX this mustnt be a day which has search results so it would
+		# probably better to set the day to a day with search result
+		day = mod_calendar.monthrange(low_year, low_month+1)[0]
 
 		calendar.set_properties(year=low_year, month=low_month, day=day)
 		return True
