@@ -1,5 +1,6 @@
 import os
 import gtk
+import time
 import calendar as mod_calendar
 
 from gettext import gettext as _
@@ -47,6 +48,11 @@ class HistoryDialog(object):
 
 		gui.mgmt.set_font(self.builder.get_object("history_view"),
 						  gui.mgmt.get_font())
+
+		# jump to current date
+		(year, month, day) = time.localtime(time.time())[0:3]
+		self.builder.get_object("calendar").set_properties(
+			year=year, month=month-1, day=day)
 
 		self.fill_target_tree()
 
