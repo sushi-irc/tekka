@@ -1,6 +1,6 @@
 import os
 import gtk
-import calendar
+import calendar as mod_calendar
 
 from gettext import gettext as _
 
@@ -192,10 +192,10 @@ class HistoryDialog(object):
 		result = self.last_search_iter.forward_search(needle,
 									gtk.TEXT_SEARCH_TEXT_ONLY)
 
-		if not result:
+		if not result or result == self.last_result:
 			return False
 
-		self.last_iter = result[1]
+		self.last_search_iter = result[1]
 		self.last_result = buffer.get_text(*result)
 
 		buffer.select_range(*result)
@@ -205,47 +205,86 @@ class HistoryDialog(object):
 		return True
 
 	def load_next_month(self):
+		""" find the next possible month with data in it and
+			jump to it. Return True on success, otherwise False
+		"""
 		calendar = self.builder.get_object("calendar")
 
 		(year, month) = calendar.get_properties("year","month")
 
-		if month == 11:
-			month = 0
-			year += 1
-		else:
-			month += 1
+		real_month = month + 1
 
-		calendar.set_properties(year=year, month=month)
+		(server, target) = self.get_current_names()
 
-	def load_next_day(self):
-		cwidget = self.builder.get_object("calendar")
+		if not server and not target:
+			return False
 
-		(year, month, day) = cwidget.get_properties("year", "month", "day")
+		available_months = {}
 
-		month_range = calendar.monthrange(year, month+1)
+		for log in history.get_available_logs(server, target,
+									force_remote=self.force_remote):
 
-		if day == month_range[1]:
-			load_next_month()
-			day = calendar.monthrange(year,month+2)[0]
-		else
-			day += 1
+			(dyear, dmonth) = history.get_log_date(log)
 
-		cwidget.set_properties(day=day)
+			if dyear > year or (dyear == year and dmonth > real_month):
+				if not available_months.has_key(dyear):
+					available_months[dyear] = []
+				available_months[dyear].append(dmonth)
+
+		if not available_months:
+			return False
+
+		# get lowest possible year
+		low_year = sorted(available_months.keys())[0]
+
+		# get lowest month in year
+		low_month = sorted(available_months[low_year])[0] - 1
+
+		# get first day
+		day = mod_calendar.monthrange(low_year, low_month)[0]
+
+		calendar.set_properties(year=low_year, month=low_month, day=day)
+		return True
 
 	def search(self,*x):
 		needle = self.builder.get_object(
 					"searchbar").search_entry.get_text()
 		if not needle:
+			print "aborting search.."
 			self.abort_search()
 			return
 
 		self.search_in_progress = True
+		print "in search"
+
 		if not self.search_local():
-			if self.search_in_progress:
-				load_next_day()
-				if not self.search_local():
-					if self.search_in_progress:
-						self.search_local()
+			# no results at current day, search for the next one.
+			print "local didnt succeed..."
+			calendar = self.builder.get_object("calendar")
+			(cyear,cmonth,cday) = calendar.get_properties("year","month",
+														  "day")
+			cmonth += 1
+			possible_days = []
+			for (year, month, day) in self.current_offsets:
+				if year == cyear and cmonth == month and day > cday:
+					possible_days.append(day)
+			if possible_days:
+				print "got possible days, %s" % (possible_days,)
+				# switch to smallest possible day
+				calendar.select_day(sorted(possible_days)[0])
+				self.last_search_iter = self.builder.get_object("history_buffer").get_start_iter()
+				self.search()
+			else:
+				# no days with data this month. load next month (if avail)
+				if self.load_next_month():
+					print "loading next month"
+					self.last_search_iter = self.builder.get_object("history_buffer").get_start_iter()
+					return self.search()
+				else:
+					# no next month, abort search
+					self.search_in_progress = False
+					print "SEARCH ENDED!"
+					return
 
 	def abort_search(self):
 		self.search_in_progress = False
@@ -273,6 +312,7 @@ class HistoryDialog(object):
 		if not self.search_in_progress:
 			self.update_calendar()
 		else:
+
 			self.update_calendar(highlight=False)
 			self.search_calender_marks()
 
