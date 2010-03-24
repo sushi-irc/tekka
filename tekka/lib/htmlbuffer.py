@@ -293,11 +293,15 @@ class HTMLBuffer(gtk.TextBuffer):
 
 		text = URLToTag(text)
 
-		if self.odd_line:
-			color = gui.widgets.get_object("output").get_style().base[
-									gtk.STATE_INSENSITIVE]
+		if config.get_bool("tekka","text_rules") and self.odd_line:
+			color = config.get("colors","rules_color")
+
+			if color == "auto":
+				color = gui.widgets.get_object("output").get_style().base[
+								gtk.STATE_INSENSITIVE].to_string()
+
 			text = "<msg paragraph-background='%s'>%s</msg>" % (
-									color.to_string(), text)
+						color, text)
 		else:
 			text = "<msg>%s</msg>" % text
 

@@ -104,6 +104,7 @@ def set_defaults():
 	defaults["tekka"]["popup_line_limit"] = "10"
 	defaults["tekka"]["names_columns"] = "5"        # nicks in one row in /names output
 	defaults["tekka"]["browser"] = None
+	defaults["tekka"]["text_rules"] = "True"
 
 	defaults["dcc"] = {}
 	defaults["dcc"]["show_ident_in_dialog"] = "False"
@@ -137,6 +138,7 @@ def set_defaults():
 
 	defaults["colors"]["nick_contrast_colors"] = "True"
 	defaults["colors"]["nick_colors"] = "#AA0000,#2222AA,#44AA44,#123456,#987654"
+	defaults["colors"]["rules_color"] = "auto" # color for htmlbuffer ruling
 
 	defaults["chatting"]={}
 	defaults["chatting"]["last_log_lines"] = "10"

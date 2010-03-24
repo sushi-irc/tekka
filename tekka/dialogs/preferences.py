@@ -140,6 +140,11 @@ def fillColors():
 
 		widgets.get_object(key).set_color(color)
 
+		btn = widgets.get_widget("auto_rule_color")
+		btn.set_active(config.get("colors","rules_color") == "auto")
+		btn.toggled()
+
+
 def fillChatting():
 	for key in ("quit_message", "part_message", "time_format"):
 		val = config.get("chatting", key)
@@ -312,6 +317,15 @@ def colors_default_nick_written(button):
 def colors_last_log_written(button):
 	colors_set_color_from_button(button, "last_log")
 
+def colors_rules_color_written(button):
+	colors_set_color_from_button(button, "rules_color")
+
+def colors_rules_autodetect_toggled(button):
+	if button.get_active():
+		config.set("colors","rules_color","auto")
+	widgets.get_widget("rules_color").set_sensitive(not button.get_active())
+
+
 """ chatting page signals """
 
 def chatting_quit_message_written(entry, event):
@@ -385,6 +399,8 @@ def setup():
 				colors_highlighted_actions_written,
 		"colors_default_nick_written": colors_default_nick_written,
 		"colors_last_log_written": colors_last_log_written,
+		"colors_rules_color_written": colors_rules_color_written,
+		"colors_rules_autodetect_toggled": colors_rules_autodetect_toggled,
 	# chatting page
 		"chatting_quit_message_written": chatting_quit_message_written,
 		"chatting_part_message_written": chatting_part_message_written,

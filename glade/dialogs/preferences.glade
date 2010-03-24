@@ -186,7 +186,7 @@
               <widget class="GtkTable" id="colorsTable">
                 <property name="visible">True</property>
                 <property name="border_width">8</property>
-                <property name="n_rows">9</property>
+                <property name="n_rows">11</property>
                 <property name="n_columns">2</property>
                 <child>
                   <widget class="GtkLabel" id="label10">
@@ -414,6 +414,50 @@
                     <property name="right_attach">2</property>
                     <property name="top_attach">8</property>
                     <property name="bottom_attach">9</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label16">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Rules color:</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">9</property>
+                    <property name="bottom_attach">10</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkColorButton" id="rules_color">
+                    <property name="visible">True</property>
+                    <property name="sensitive">False</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="color">#000000000000</property>
+                    <signal name="color_set" handler="colors_rules_color_written"/>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">9</property>
+                    <property name="bottom_attach">10</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <widget class="GtkCheckButton" id="auto_rule_color">
+                    <property name="label" translatable="yes">Autodetect rules color</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="toggled" handler="colors_rules_autodetect_toggled"/>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">10</property>
+                    <property name="bottom_attach">11</property>
                   </packing>
                 </child>
               </widget>
