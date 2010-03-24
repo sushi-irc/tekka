@@ -371,7 +371,6 @@
                                 <property name="has_default">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="invisible_char">&#x2022;</property>
-                                <property name="text" translatable="yes">s</property>
                                 <signal name="key_press_event" handler="input_entry_key_press_event"/>
                                 <signal name="activate" handler="input_entry_activate"/>
                               </object>
