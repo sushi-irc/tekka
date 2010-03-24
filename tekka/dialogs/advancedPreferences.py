@@ -48,7 +48,7 @@ def fillConfigView():
 	options/values and defaults
 	"""
 	configView = widgets.get_object("configView")
-	configStore = configView.get_model()
+	configStore = widgets.get_object("pref_store")
 
 	for category in ("tekka","colors","chatting","dcc","colors"):
 		cDict = config.get(category, default=None)
@@ -78,9 +78,6 @@ def renderValue(column, renderer, model, iter):
 	else:
 		renderer.set_property("editable", True)
 
-def renderDefaultValue(column, renderer, model, iter):
-	pass
-
 def configValueEdited(renderer, path, newText):
 	model = widgets.get_object("configView").get_model()
 	treeIter = model.get_iter(path)
@@ -102,32 +99,19 @@ def setup():
 	""" called initially """
 	global widgets
 
-	widgets = gui.builder.load_dialog("advancedPreferences")
+	widgets = gui.builder.load_dialog("advancedPreferences",builder=True)
 
 	configView = widgets.get_object("configView")
 
-	c = 0
-	for name in ("Option", "Value", "Default Value"):
-		renderer = gtk.CellRendererText()
+	widgets.get_object("value_renderer").connect("edited",
+			configValueEdited)
+	widgets.get_object("value_column").set_cell_data_func(
+			widgets.get_object("value_renderer"),
+			renderValue)
+	widgets.get_object("option_column").set_cell_data_func(
+			widgets.get_object("option_renderer"),
+			renderOption)
 
-		if name == "Value":
-			# value column is editable
-			renderer.set_property("editable", True)
-			renderer.connect("edited", configValueEdited)
-
-		column = gtk.TreeViewColumn(name, renderer, text=c)
-
-		# set custom rendering function (render<key>)
-		column.set_cell_data_func(renderer,
-				eval("render%s" % name.replace(" ","")))
-
-		configView.append_column(column)
-		c+=1
-
-	store = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING,
-			gobject.TYPE_STRING)
-
-	configView.set_model(store)
 
 def run():
 	dialog = widgets.get_object("advancedPreferences")

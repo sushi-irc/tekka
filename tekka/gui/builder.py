@@ -133,7 +133,7 @@ def load_menu(name):
 	return builder
 
 
-def load_dialog(name, custom_handler = None):
+def load_dialog(name, custom_handler = None, builder=False):
 
 	class GladeWrapper(object):
 		""" wrap glade to gtk.Builder """
@@ -153,10 +153,19 @@ def load_dialog(name, custom_handler = None):
 				return object.__getattr__(self, attr)
 			return getattr(self.glade, attr)
 
+	if not builder:
+		extension = ".glade"
+	else:
+		extension = ".ui"
 
 	path = os.path.join(
 					config.get("gladefiles", "dialogs"),
-					name + ".glade")
+					name + extension)
+
+	if builder:
+		builder = gtk.Builder()
+		builder.add_from_file(path)
+		return builder
 
 	if custom_handler:
 		gtk.glade.set_custom_handler(custom_handler)
