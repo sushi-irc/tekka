@@ -1,8 +1,18 @@
 <?xml version="1.0"?>
-<glade-interface>
-  <!-- interface-requires gtk+ 2.16 -->
+<interface>
+  <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy toplevel-contextual -->
-  <widget class="GtkDialog" id="channelList">
+  <object class="GtkListStore" id="listStore">
+    <columns>
+      <!-- column-name Channel -->
+      <column type="gchararray"/>
+      <!-- column-name User -->
+      <column type="gint"/>
+      <!-- column-name Topic -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
+  <object class="GtkDialog" id="channelList">
     <property name="border_width">6</property>
     <property name="title" translatable="yes">Channel List</property>
     <property name="window_position">center-on-parent</property>
@@ -11,95 +21,140 @@
     <property name="type_hint">dialog</property>
     <property name="has_separator">False</property>
     <child internal-child="vbox">
-      <widget class="GtkVBox" id="dialog-vbox5">
+      <object class="GtkVBox" id="dialog-vbox5">
         <property name="visible">True</property>
+        <property name="orientation">vertical</property>
         <child>
-          <widget class="GtkVBox" id="vbox1">
+          <object class="GtkVBox" id="vbox1">
             <property name="visible">True</property>
+            <property name="orientation">vertical</property>
             <property name="spacing">6</property>
             <child>
-              <widget class="GtkHBox" id="searchHBox">
+              <object class="GtkHBox" id="searchHBox">
                 <property name="visible">True</property>
                 <property name="spacing">6</property>
                 <child>
-                  <widget class="GtkEntry" id="regexpEntry">
+                  <object class="GtkEntry" id="regexpEntry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <signal name="activate" handler="regexpEntry_activate_cb"/>
-                  </widget>
+                  </object>
                   <packing>
                     <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="listButton">
+                  <object class="GtkButton" id="listButton">
                     <property name="label">gtk-find</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_stock">True</property>
                     <signal name="clicked" handler="listButton_clicked_cb"/>
-                  </widget>
+                  </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="stopListButton">
+                  <object class="GtkButton" id="stopListButton">
                     <property name="label">gtk-stop</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
                     <property name="use_stock">True</property>
                     <signal name="clicked" handler="stopListButton_clicked_cb"/>
-                  </widget>
+                  </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="position">2</property>
                   </packing>
                 </child>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkScrolledWindow" id="scrolledWindow_listView">
+              <object class="GtkScrolledWindow" id="scrolledWindow_listView">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="hscrollbar_policy">automatic</property>
                 <property name="vscrollbar_policy">automatic</property>
                 <property name="shadow_type">etched-in</property>
                 <child>
-                  <widget class="GtkTreeView" id="listView">
+                  <object class="GtkTreeView" id="listView">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="border_width">12</property>
+                    <property name="model">listStore</property>
+                    <property name="search_column">0</property>
                     <signal name="row_activated" handler="listView_row_activated_cb"/>
-                  </widget>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="channelColumn">
+                        <property name="min_width">85</property>
+                        <property name="title">Channel</property>
+                        <property name="clickable">True</property>
+                        <property name="sort_column_id">0</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="channelRenderer"/>
+                          <attributes>
+                            <attribute name="text">0</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="userColumn">
+                        <property name="title">User</property>
+                        <property name="clickable">True</property>
+                        <property name="sort_column_id">1</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="userRenderer"/>
+                          <attributes>
+                            <attribute name="text">1</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="topicColumn">
+                        <property name="title">Topic</property>
+                        <property name="expand">True</property>
+                        <property name="clickable">True</property>
+                        <property name="sort_column_id">2</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="topicRenderer"/>
+                          <attributes>
+                            <attribute name="markup">2</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
                 </child>
-              </widget>
+              </object>
               <packing>
                 <property name="position">1</property>
               </packing>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="position">0</property>
           </packing>
         </child>
         <child internal-child="action_area">
-          <widget class="GtkHButtonBox" id="dialog-action_area5">
+          <object class="GtkHButtonBox" id="dialog-action_area5">
             <property name="visible">True</property>
             <property name="layout_style">edge</property>
             <child>
-              <widget class="GtkProgressBar" id="progressBar">
+              <object class="GtkProgressBar" id="progressBar">
                 <property name="visible">True</property>
                 <property name="activity_mode">True</property>
                 <property name="pulse_step">0.070000005140900601</property>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
@@ -107,28 +162,30 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="cancelButton">
+              <object class="GtkButton" id="cancelButton">
                 <property name="label">gtk-close</property>
-                <property name="response_id">-7</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
-              </widget>
+              </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="position">1</property>
               </packing>
             </child>
-          </widget>
+          </object>
           <packing>
             <property name="expand">False</property>
             <property name="pack_type">end</property>
             <property name="position">0</property>
           </packing>
         </child>
-      </widget>
+      </object>
     </child>
-  </widget>
-</glade-interface>
+    <action-widgets>
+      <action-widget response="-7">cancelButton</action-widget>
+    </action-widgets>
+  </object>
+</interface>

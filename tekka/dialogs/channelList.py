@@ -47,7 +47,6 @@ from ..lib.inline_dialog import InlineMessageDialog
 widgets = None
 currentServer = None
 filterExpression = None
-listView = None
 cache = []  # /list cache
 
 # TODO: get rid of those globals
@@ -73,8 +72,6 @@ def run(server):
 	dialog = widgets.get_object("channelList")
 
 	dialog.show_all()
-
-	return True # XXX: what is this for?
 
 
 def resetSignal(*x):
@@ -115,7 +112,7 @@ def listButton_clicked_cb(button):
 		d.connect("response", lambda w,i: w.destroy())
 		show_inline_dialog(d)
 
-	listView.get_model().clear()
+	widgets.get_object("listStore").clear()
 
 	if cache:
 		# use cached values
@@ -169,7 +166,7 @@ def sushiList(time, server, channel, user, topic):
 
 	widgets.get_object("progressBar").pulse()
 
-	store = listView.get_model()
+	store = widgets.get_object("listStore")
 	if (not filterExpression
 		or (filterExpression
 			and (filterExpression.search(channel)
@@ -186,9 +183,9 @@ def dialog_response_cb(dialog, id):
 
 
 def setup():
-	global widgets, listView
+	global widgets
 
-	widgets = builder.load_dialog("channelList")
+	widgets = builder.load_dialog("channelList", builder=True)
 
 	sigdic = {
 		"listButton_clicked_cb" : listButton_clicked_cb,
@@ -197,18 +194,7 @@ def setup():
 		"listView_row_activated_cb" : listView_row_activated_cb
 	}
 
-	widgets.signal_autoconnect(sigdic)
+	widgets.connect_signals(sigdic)
 
 	diag = widgets.get_object("channelList")
 	diag.connect("response", dialog_response_cb)
-
-	listView = widgets.get_object("listView")
-	model = gtk.ListStore(str, int, str) # channel | user | topic
-	listView.set_model(model)
-
-	c = 0
-	for name in (_("Channel"), _("User"), _("Topic")):
-		renderer = gtk.CellRendererText()
-		column = gtk.TreeViewColumn(name, renderer, markup=c)
-		listView.append_column(column)
-		c+=1
