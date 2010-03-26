@@ -158,7 +158,7 @@ def run(current_tab):
 def setup():
 	global widgets
 
-	widgets = builder.load_dialog("hide")
+	widgets = builder.load_dialog("hide", builder=True)
 
 	if not widgets:
 		raise Exception, "Couldn't load the dialog"
@@ -179,4 +179,4 @@ def setup():
 
 	}
 
-	widgets.signal_autoconnect(sigdic)
+	widgets.connect_signals(sigdic)
