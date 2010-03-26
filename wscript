@@ -49,8 +49,8 @@ def build (bld):
 	# FIXME
 	bld.new_task_gen(
 		features = 'subst',
-		source = 'glade/dialogs/about.glade.in',
-		target = 'glade/dialogs/about.glade',
+		source = 'glade/dialogs/about.ui.in',
+		target = 'glade/dialogs/about.ui',
 		install_path = '${DATAROOTDIR}/sushi/tekka/glade/dialogs',
 		dict = {'SUSHI_VERSION': bld.env.VERSION}
 	)
