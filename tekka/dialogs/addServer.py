@@ -33,39 +33,12 @@ from ..com import sushi
 from .. import gui
 from ..lib.expanding_list import ExpandingList
 
-widgets = None
-commandList = None
-
 RESPONSE_ADD = 1
 
-def createCommandList(glade, fun_name, widget_name, *x):
-	"""
-	create the command list widget.
-	this function is called by glade
-	"""
-	global commandList
-
-	if widget_name != "commandList":
-		return None
-
-	commandList = ExpandingList(gtk.Entry)
-
-	sw = gtk.ScrolledWindow()
-	sw.set_properties(
-		hscrollbar_policy = gtk.POLICY_AUTOMATIC,
-		vscrollbar_policy = gtk.POLICY_AUTOMATIC)
-	sw.add_with_viewport(commandList)
-
-	sw.show_all()
-
-	return sw
-
 def setup():
-	global widgets
+	pass
 
-	widgets = gui.builder.load_dialog("serverAdd", custom_handler = createCommandList)
-
-def dialog_response_cb(dialog, response_id, callback):
+def dialog_response_cb(dialog, response_id, callback, widgets):
 	if response_id == RESPONSE_ADD:
 
 		server = widgets.get_object("servernameEntry").get_text()
@@ -84,10 +57,14 @@ def dialog_response_cb(dialog, response_id, callback):
 
 		# set autoconnect bool
 		sushi.server_set(server, "server", "autoconnect",
-			str (widgets.get_object("autoConnectCheckButton").get_active()).lower())
+			str (widgets.get_object(
+					"autoConnectCheckButton").get_active()).lower())
 
 		# set up commands
-		list = [i[0].get_text() for i in commandList.get_widget_matrix() if i[0].get_text()]
+		list = [i[0].get_text() for i in
+			widgets.get_object("commandList").get_widget_matrix()
+			if i[0].get_text()]
+
 		sushi.server_set_list(server, "server", "commands", list)
 		callback()
 
@@ -95,8 +72,10 @@ def dialog_response_cb(dialog, response_id, callback):
 
 
 def run(callback):
+	widgets = gui.builder.load_dialog("serverAdd", builder=True)
+
 	dialog = widgets.get_object("serverAdd")
 
-	dialog.connect("response", dialog_response_cb, callback)
+	dialog.connect("response", dialog_response_cb, callback, widgets)
 	dialog.show_all()
 
