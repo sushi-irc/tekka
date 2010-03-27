@@ -137,8 +137,8 @@ def configureButton_clicked_cb(button):
 	dialog.show_all()
 
 
-def cellRendererToggle_toggled_cb(renderer, path, pluginView):
-	store = pluginView.get_model()
+def autoloadRenderer_toggled_cb(renderer, path):
+	store = widgets.get_object("pluginStore")
 
 	iter = store.get_iter(path)
 	value = not store.get_value(iter, COL_AUTOLOAD)
@@ -247,56 +247,21 @@ def loadPluginList():
 def setup():
 	global widgets
 
-	widgets = builder.load_dialog("plugins")
+	widgets = builder.load_dialog("plugins", builder=True)
 
 	sigdic = {
-		"loadButton_clicked_cb" : loadPlugin_clicked_cb,
-		"unloadButton_clicked_cb" : unloadPlugin_clicked_cb,
-		"configureButton_clicked_cb": configureButton_clicked_cb,
-		"pluginView_button_press_event_cb": pluginView_button_press_event_cb
+		"loadButton_clicked_cb":
+			loadPlugin_clicked_cb,
+		"unloadButton_clicked_cb":
+			unloadPlugin_clicked_cb,
+		"configureButton_clicked_cb":
+			configureButton_clicked_cb,
+		"pluginView_button_press_event_cb":
+			pluginView_button_press_event_cb,
+		"autoloadRenderer_toggled_cb":
+			autoloadRenderer_toggled_cb,
 	}
 
-	widgets.signal_autoconnect(sigdic)
-
-	pluginView = widgets.get_object("pluginView")
-	model = gtk.ListStore(
-		TYPE_BOOLEAN, # chkbutton
-		TYPE_BOOLEAN, # chkbutton
-		str, # name
-		str, # path
-		str, # version
-		str, # description
-		str) # author
-	pluginView.set_model(model)
-
-	# isLoaded column
-	renderer = gtk.CellRendererToggle()
-	renderer.set_data("column", 0)
-	column = gtk.TreeViewColumn("Loaded", renderer, active=0)
-	column.set_resizable(True)
-	pluginView.append_column(column)
-
-	# Create the other columns
-	c = 1
-
-	for name in ("Autoload","Name","Path","Version",
-				 "Description", "Author"):
-
-		if c == 1:
-			renderer = gtk.CellRendererToggle()
-			renderer.set_data("column", c)
-			renderer.connect("toggled", cellRendererToggle_toggled_cb,
-										pluginView)
-			column = gtk.TreeViewColumn(name, renderer, active=c)
-
-		else:
-			renderer = gtk.CellRendererText()
-			column = gtk.TreeViewColumn(name, renderer, text=c)
-
-		column.set_resizable(True)
-		column.set_fixed_width(80)
-		pluginView.append_column(column)
-
-		c+=1
+	widgets.connect_signals(sigdic)
 
 	loadPluginList()
