@@ -5,5 +5,6 @@ from tekka.lib.output_shell import OutputShell
 from tekka.lib.output_window import OutputWindow
 from tekka.lib.htmlbuffer import HTMLBuffer
 from tekka.lib.general_output_buffer import GOHTMLBuffer
+from tekka.lib.expanding_list import ExpandingList
 
 print SpellEntry

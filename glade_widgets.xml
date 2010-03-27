@@ -34,6 +34,20 @@
 		<glade-widget-class title="GO HTML Buffer"
 							generic-name="gohtmlbuffer"
 							name="GOHTMLBuffer"/>
+		<glade-widget-class title="Expanding List"
+							generic-name="expandinglist"
+							name="ExpandingList">
+			<properties>
+				<property id="n-rows" query="False" default="1"
+						  save="False" visible="False"/>
+				<property id="n-columns" query="False" default="1"
+						  save="False" visible="False"/>
+				<property id="str_widgets" query="True"
+						  default="(gtk.Entry,)"
+						  save="True" visible="True"
+						  name="Widgets"/>
+			</properties>
+		</glade-widget-class>
     </glade-widget-classes>
 
 	<glade-widget-group name="TekkaWidgets" title="Tekka Widgets">
@@ -43,6 +57,7 @@
 		<glade-widget-class-ref name="OutputWindow"/>
 		<glade-widget-class-ref name="HTMLBuffer"/>
 		<glade-widget-class-ref name="GOHTMLBuffer"/>
+		<glade-widget-class-ref name="ExpandingList"/>
 	</glade-widget-group>
 
 </glade-catalog>

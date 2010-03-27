@@ -33,18 +33,36 @@ import logging
 
 class ExpandingList(gtk.Table):
 
-	def __init__(self, *widgets, **kwargs):
+	__gtype_name__ = "ExpandingList"
 
-		if not widgets:
-			raise Exception("init takes at least one widget type.")
+	# add ability of setting widgets as tuple represended by a string.
+	# This is a hack for glade support
+	def set_str_widgets(self, str_widgets):
+		try:
+			widgets = eval(str_widgets)
+		except Exception as e:
+			logging.debug("Error in set_str_widgets: %s" % (e,),
+						  exc_info=True)
+			return
+		self.init_widgets(widgets)
+	str_widgets = gobject.property(setter=set_str_widgets, type=str)
+
+	def __init__(self, *widgets, **kwargs):
 
 		self._rows = 1
 		self._columns = len(widgets) + 2
-		self._widgets = widgets
-
 		self._matrix = [ [] ]
+		self._widgets = ()
 
 		gtk.Table.__init__(self, rows=1, columns=self._columns)
+
+		if not widgets:
+			return
+
+		init_widgets(widgets, **kwargs)
+
+	def init_widgets(self, widgets, **kwargs):
+		self._widgets = widgets
 
 		try:
 			kwargs["no_firstrow"]
@@ -63,6 +81,8 @@ class ExpandingList(gtk.Table):
 		a minus (remove) button. It also extends
 		the matrix which holds the widgets.
 		"""
+
+
 		self._matrix[row]=[]
 		column = 0
 
@@ -95,6 +115,8 @@ class ExpandingList(gtk.Table):
 		if under is not given or is under 0,
 		the new row is added under the last one.
 		"""
+		if not self._widgets:
+			return
 
 		# determine the row to add the new row under
 		if under >= 0:
@@ -146,6 +168,9 @@ class ExpandingList(gtk.Table):
 		Remove the row with the given index from
 		the table.
 		"""
+		if not self._widgets:
+			return
+
 		if index > (self._rows - 1) or index < 0:
 			raise Exception("index out of bounds")
 
