@@ -52,7 +52,6 @@ widgets = None
  COL_PROGRESS,
  COL_SPEED) = range(8)
 
-# TODO: mark status for every row
 
 class DCCWatcher(object):
 
@@ -161,8 +160,8 @@ def dialog_response_cb(dialog, id, watcher):
 
 			if None == transferID:
 				gui.mgmt.show_error_dialog(
-					title = _("No transfer selected!"),
-					message = _("You must select a transfer to remove it."))
+					title=_("No transfer selected!"),
+					message=_("You must select a transfer to remove it."))
 
 			else:
 				d = gui.builder.question_dialog(
@@ -194,20 +193,13 @@ def run():
 	dialog.connect("response", dialog_response_cb, watcher)
 	dialog.show()
 
-def create_list_model():
-	# status | id | server | sender | filename | size | progress | speed
-	return gtk.ListStore(TYPE_UINT64, TYPE_UINT64, str, str, str, TYPE_UINT64, TYPE_UINT64, str)
-
 def setup():
 	global widgets
 
 	if widgets != None:
 		return
 
-	widgets = gui.builder.load_dialog("dcc")
-
-	transferView = widgets.get_object("transferView")
-	transferView.set_model(create_list_model())
+	widgets = gui.builder.load_dialog("dcc", builder=True)
 
 	# add direction icon column
 	def type_symbol_render_cb(column, renderer, model, iter):
@@ -220,30 +212,7 @@ def setup():
 				# outgoing
 				renderer.set_property("stock-id", gtk.STOCK_GO_UP)
 
-	renderer = gtk.CellRendererPixbuf()
-	column = gtk.TreeViewColumn("", renderer)
-	column.set_cell_data_func(renderer, type_symbol_render_cb)
-	transferView.append_column(column)
+	widgets.get_object("statusColumn").set_cell_data_func(
+			widgets.get_object("statusRenderer"),
+			type_symbol_render_cb)
 
-	c = 1
-	for name in (_("ID"), _("Server"), _("Partner"), _("Filename"), _("Size")):
-		column = gtk.TreeViewColumn(name, gtk.CellRendererText(), text = c)
-		column.set_resizable(True)
-		transferView.append_column(column)
-		c += 1
-
-	partner_col = transferView.get_column(COL_PARTNER)
-	partner_col.set_expand(True)
-	partner_col.get_cell_renderers()[0].set_property("ellipsize", pango.ELLIPSIZE_END)
-
-	# progress column
-	renderer = gtk.CellRendererProgress()
-	column = gtk.TreeViewColumn(_("Progress"), renderer, value = c)
-	column.set_resizable(True)
-	transferView.append_column(column)
-	c+= 1
-
-	# speed column
-	column = gtk.TreeViewColumn(_("Speed"), gtk.CellRendererText(), text = c)
-	column.set_resizable(True)
-	transferView.append_column(column)
