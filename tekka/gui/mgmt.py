@@ -35,7 +35,7 @@ from threading import Timer
 
 from .. import config
 
-from .builder import build_status_icon
+from .builder import build_status_icon, error_dialog
 from ._builder import widgets
 
 from ..helper import color
