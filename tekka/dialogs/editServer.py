@@ -33,26 +33,12 @@ from .. import config
 
 from ..com import sushi
 from ..lib.expanding_list import ExpandingList
-from ..gui import builder
+from .. import gui
+
 
 def setup():
 	pass
 
-def setup_widgets():
-
-	def createCommandList(glade, function_name, widget_name, *x):
-		if widget_name == "commandList":
-			commandList = ExpandingList(gtk.Entry)
-
-			sw = gtk.ScrolledWindow()
-			sw.set_properties(
-				hscrollbar_policy = gtk.POLICY_AUTOMATIC,
-				vscrollbar_policy = gtk.POLICY_AUTOMATIC)
-			sw.add_with_viewport(commandList)
-
-			return sw
-
-	return builder.load_dialog("serverEdit", custom_handler = createCommandList)
 
 def get_configurator(ctype, key, server):
 
@@ -78,17 +64,19 @@ def get_configurator(ctype, key, server):
 		return text_configurator(key, server)
 	return None
 
+
 def run(server):
 
 	def dialog_response_cb(dialog, response_id):
 		dialog.destroy()
 
 	def update_commandList(widget, server):
-		list = [i[0].get_text() for i in \
-			widget.get_widget_matrix() if i[0].get_text()]
+		list = [i[0].get_text() for i in widget.get_widget_matrix()
+				if i[0].get_text()]
 		sushi.server_set_list(server, "server", "commands", list)
 
-	widgets = setup_widgets()
+	widgets =  gui.builder.load_dialog("serverEdit", builder=True)
+
 
 	types = {"address":"text", "port":"text", "nick":"text",
 		"name":"text", "nickserv":"text", "autoconnect":"bool",
@@ -134,17 +122,15 @@ def run(server):
 		elif c_type == "bool":
 			widget.set_active(value == "true")
 
-	# I admit, this is a little bit ugly.
-	# Get the commandList widget out of the viewport in
-	# the scrolled window
-	commandList = widgets.get_object("commandList").get_children()[0]\
-		.get_children()[0]
 
-	commandList.connect("row-added",
-		lambda w,*x: update_commandList(w, server))
-	commandList.connect("row-removed",
-		lambda w,*x: update_commandList(w, server))
+	bsignals = {"commandList_row_added_cb":
+					lambda w,*x: update_commandList(w, server),
+				"commandList_row_removed_cb":
+					lambda w,*x: update_commandList(w, server)
+			   }
+	widgets.connect_signals(bsignals)
 
+	# fill the command list with the existing commands
 	i = 0
 	for command in sushi.server_get_list(server, "server", "commands"):
 		commandList.get_widget_matrix()[i][0].set_text(command)
