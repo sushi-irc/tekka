@@ -1,6 +1,6 @@
 # coding: UTF-8
 """
-Copyright (c) 2008 Marian Tietz
+Copyright (c) 2008-2010 Marian Tietz
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -27,7 +27,7 @@ SUCH DAMAGE.
 """
 
 import gtk
-import gtk.glade
+import gobject
 import logging
 from gettext import gettext as _
 
@@ -39,37 +39,42 @@ serverSelection = None
 
 RESPONSE_CONNECT = 3
 
+
 def setup():
 	global widgets, serverSelection
 
-	widgets = gui.builder.load_dialog("server")
+	if widgets:
+		return
 
-	sigdic = { "addButton_clicked_cb" : openAddDialog,
-				"editButton_clicked_cb" : openEditDialog,
-				"deleteButton_clicked_cb" : openDeleteDialog
-			}
+	widgets = gui.builder.load_dialog("server", builder=True)
 
-	widgets.signal_autoconnect(sigdic)
+	sigdic = {  "addButton_clicked_cb":
+					lambda w: openAddDialog(),
+				"editButton_clicked_cb":
+					lambda w: openEditDialog(),
+				"deleteButton_clicked_cb":
+					lambda w: openDeleteDialog(),
+				"serverRenderer_edited_cb":
+					serverNameEdited
+			 }
+
+	widgets.connect_signals(sigdic)
 
 	# enable multiple selection
 	serverSelection = widgets.get_object("serverList").get_selection()
 	serverSelection.set_mode(gtk.SELECTION_MULTIPLE)
 
+
 def addServer(name):
-	"""
-	Add server from maki to the Serverlist.get_model()
-	(ListStore)
-	"""
-	serverList = widgets.get_object("serverList").get_model()
-	serverList.append([name])
+	""" Add server from maki to the list store """
+	widgets.get_object("serverStore").append([name])
+
 
 def retrieveServerlist():
-	"""
-		Fetch server list from maki and get
+	""" Fetch server list from maki and get
 		infos about every server.
 	"""
-	store = widgets.get_object("serverList").get_model()
-	store.clear()
+	widgets.get_object("serverStore").clear()
 
 	servers = com.sushi.server_list("","")
 
@@ -77,47 +82,23 @@ def retrieveServerlist():
 		for server in servers:
 			addServer(server)
 
-def dialog_response_cb(dialog, response_id, callback):
-	if response_id == RESPONSE_CONNECT:
-		# get the selected server(s)
 
-		serverList = widgets.get_object("serverList").get_model()
-		paths = serverSelection.get_selected_rows()[1]
+def serverNameEdited(renderer, path, newText):
+	""" User edited column in serverView """
 
-		if not paths:
-			return
+	try:
+		oldText = widgets.get_object("serverStore")[path][0]
+	except IndexError:
+		return
 
-		toConnect = []
-		for path in paths:
-			toConnect.append(serverList[path][0])
+	com.sushi.server_rename(oldText, newText)
 
-		callback(toConnect)
+	# at last, update the list from maki (caching would be better..)
+	retrieveServerlist()
 
-	else:
-		callback(None)
-
-	dialog.destroy()
 
 def run(callback):
 	dialog = widgets.get_object("serverDialog")
-
-	# get the treeview
-	serverView = widgets.get_object("serverList")
-
-	# add servercolumn
-	renderer = gtk.CellRendererText()
-	renderer.set_property("editable", True)
-	renderer.connect("edited", serverNameEdit)
-
-	column = gtk.TreeViewColumn("Server", renderer, text=0)
-	column.set_resizable(False)
-	column.set_sort_column_id(0)
-
-	serverView.append_column(column)
-
-	# setup the serverList
-	serverList = gtk.ListStore(str)
-	serverView.set_model(serverList)
 
 	retrieveServerlist()
 
@@ -125,45 +106,29 @@ def run(callback):
 	dialog.show_all()
 
 
-def serverNameEdit(cellrenderertext, path, newText):
-	"""
-	User edited column in serverView
-	"""
-
-	try:
-		oldText = widgets.get_object("serverList").get_model()[path][0]
-	except IndexError:
-		return
-
-	com.sushi.server_rename(oldText, newText)
-
-	# at least, update the list from maki (caching would be better..)
-	retrieveServerlist()
-
 def createServer(serverName, data):
 	""" Create a server in maki. """
 	for (k,v) in data.items():
 		com.sushi.server_set(serverName, "server", k, v)
 
+
 def deleteServer(servername):
 	""" Remove server from Serverlist widget
 		and delete server in maki.
 	"""
-	serverList = widgets.get_object("serverList").get_model()
+	serverList = widgets.get_object("serverStore")
 
 	for row in serverList:
 		if row[0] == servername:
 			serverList.remove(row.iter)
 			com.sushi.server_remove(servername, "", "")
 
-def add_dialog_cb():
-	""" indicates, server was added """
-	retrieveServerlist()
 
-def openAddDialog(widget):
+def openAddDialog():
 	gui.dialogs.show_dialog("addServer", add_dialog_cb)
 
-def openEditDialog(widget):
+
+def openEditDialog():
 	view = widgets.get_object("serverList")
 	serverList = view.get_model()
 
@@ -188,11 +153,8 @@ def openEditDialog(widget):
 	if data:
 		retrieveServerlist()
 
-def delete_dialog_cb(servername):
-	""" indicates that the server can be deleted """
-	deleteServer(servername)
 
-def openDeleteDialog(widget):
+def openDeleteDialog():
 	view = widgets.get_object("serverList")
 
 	path = view.get_cursor()[0]
@@ -207,9 +169,43 @@ def openDeleteDialog(widget):
 
 	if not servername:
 		gui.mgmt.show_error_dialog(
-			title = _("Error while retrieving server name."),
-			message = _("There was an error while retrieving the server name.\n"
-						"Are you connected to maki?"))
+			title=_("Error while retrieving server name."),
+			message=_("There was an error while retrieving the server "
+					  "name.\nAre you connected to maki?"))
 		return
 
 	gui.dialogs.show_dialog("deleteServer", servername, delete_dialog_cb)
+
+
+def dialog_response_cb(dialog, response_id, callback):
+	if response_id == RESPONSE_CONNECT:
+		# get the selected server(s)
+
+		serverList = widgets.get_object("serverStore")
+		paths = serverSelection.get_selected_rows()[1]
+
+		if not paths:
+			return
+
+		toConnect = []
+		for path in paths:
+			toConnect.append(serverList[path][0])
+
+		callback(toConnect)
+
+	else:
+		callback(None)
+
+	dialog.hide()
+
+
+def add_dialog_cb():
+	""" indicates, server was added """
+	retrieveServerlist()
+
+
+def delete_dialog_cb(servername):
+	""" indicates that the server can be deleted """
+	deleteServer(servername)
+
+
