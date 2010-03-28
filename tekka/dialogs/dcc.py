@@ -31,8 +31,6 @@ import glib
 import gobject
 import dbus
 import logging
-import pango
-from gobject import TYPE_UINT64
 from gettext import gettext as _
 import traceback
 

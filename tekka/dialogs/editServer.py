@@ -27,12 +27,7 @@ SUCH DAMAGE.
 """
 
 import gtk
-import gtk.glade
-
-from .. import config
-
 from ..com import sushi
-from ..lib.expanding_list import ExpandingList
 from .. import gui
 
 
