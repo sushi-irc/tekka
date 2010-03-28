@@ -27,16 +27,10 @@ SUCH DAMAGE.
 """
 
 import gtk
-import gtk.glade
-
-from .. import config
 from ..gui import builder
 
-widgets = None
-
 def setup():
-	global widgets
-	widgets = builder.load_dialog("serverDelete")
+	pass
 
 def dialog_response_cb(dialog, response_id, servername, callback):
 	if response_id == gtk.RESPONSE_YES:
@@ -44,9 +38,9 @@ def dialog_response_cb(dialog, response_id, servername, callback):
 	dialog.destroy()
 
 def run(servername, callback):
-	"""
-		Returns True if the server should be deleted, otherwise False
-	"""
+	""" Returns True if the server should be deleted, otherwise False """
+	widgets = builder.load_dialog("serverDelete", builder=True)
+
 	dialog = widgets.get_object("serverDelete")
 
 	label = widgets.get_object("warningLabel")
