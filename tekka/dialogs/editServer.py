@@ -70,7 +70,7 @@ def run(server):
 				if i[0].get_text()]
 		sushi.server_set_list(server, "server", "commands", list)
 
-	widgets =  gui.builder.load_dialog("serverEdit", builder=True)
+	widgets =  gui.builder.load_dialog("serverEdit")
 
 
 	types = {"address":"text", "port":"text", "nick":"text",

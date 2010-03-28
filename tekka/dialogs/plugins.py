@@ -27,7 +27,6 @@ SUCH DAMAGE.
 """
 
 import gtk
-import gtk.glade
 import os
 import gobject
 from gobject import TYPE_BOOLEAN
@@ -247,7 +246,7 @@ def loadPluginList():
 def setup():
 	global widgets
 
-	widgets = builder.load_dialog("plugins", builder=True)
+	widgets = builder.load_dialog("plugins")
 
 	sigdic = {
 		"loadButton_clicked_cb":

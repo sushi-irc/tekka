@@ -158,7 +158,7 @@ def run(current_tab):
 def setup():
 	global widgets
 
-	widgets = builder.load_dialog("hide", builder=True)
+	widgets = builder.load_dialog("hide")
 
 	if not widgets:
 		raise Exception, "Couldn't load the dialog"

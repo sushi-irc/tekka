@@ -7,7 +7,7 @@ can be specified with the prefix option, for example, "./waf configure
 
                                   REQUIREMENTS
 
-You will need the DBus, Glade, GObject, GTK and XDG Python modules.
+You will need the DBus, GObject, GTK and XDG Python modules.
 On Debian-based systems these are available in the following packages:
 
 * python-dbus

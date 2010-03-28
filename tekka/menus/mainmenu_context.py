@@ -267,7 +267,7 @@ class MainMenuContext(MenuContextType):
 			gui.dialogs.show_dialog("colorTable")
 
 		def about_activate_cb(self, item):
-			widgets = gui.builder.load_dialog("about", builder=True)
+			widgets = gui.builder.load_dialog("about")
 
 			d = widgets.get_object("aboutDialog")
 			d.connect("response", lambda d,i: d.destroy())

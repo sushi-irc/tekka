@@ -31,7 +31,6 @@ from re import compile
 from gettext import gettext as _
 
 import gtk
-import gtk.glade
 
 import logging
 
@@ -185,7 +184,7 @@ def dialog_response_cb(dialog, id):
 def setup():
 	global widgets
 
-	widgets = builder.load_dialog("channelList", builder=True)
+	widgets = builder.load_dialog("channelList")
 
 	sigdic = {
 		"listButton_clicked_cb" : listButton_clicked_cb,

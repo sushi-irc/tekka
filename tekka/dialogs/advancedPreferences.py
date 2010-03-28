@@ -27,7 +27,6 @@ SUCH DAMAGE.
 """
 
 import gtk
-import gtk.glade
 import gobject
 import pango
 
@@ -99,7 +98,7 @@ def setup():
 	""" called initially """
 	global widgets
 
-	widgets = gui.builder.load_dialog("advancedPreferences",builder=True)
+	widgets = gui.builder.load_dialog("advancedPreferences")
 
 	configView = widgets.get_object("configView")
 

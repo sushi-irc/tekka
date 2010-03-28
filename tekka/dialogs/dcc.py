@@ -197,7 +197,7 @@ def setup():
 	if widgets != None:
 		return
 
-	widgets = gui.builder.load_dialog("dcc", builder=True)
+	widgets = gui.builder.load_dialog("dcc")
 
 	# add direction icon column
 	def type_symbol_render_cb(column, renderer, model, iter):

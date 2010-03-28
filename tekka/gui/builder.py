@@ -134,43 +134,13 @@ def load_menu(name):
 	return builder
 
 
-def load_dialog(name, custom_handler = None, builder=False):
-
-	class GladeWrapper(object):
-		""" wrap glade to gtk.Builder """
-
-		def __init__(self, glade):
-			self.glade = glade
-
-		def get_object(self, name):
-			return self.glade.get_widget(name)
-
-		def connect_signals(self, obj, user = None):
-			if type(obj) == dict:
-				self.glade.signal_autoconnect(obj)
-
-		def __getattr__(self, attr):
-			if attr in ("get_object","connect_signals"):
-				return object.__getattr__(self, attr)
-			return getattr(self.glade, attr)
-
-	if not builder:
-		extension = ".glade"
-	else:
-		extension = ".ui"
-
+def load_dialog(name):
 	path = os.path.join(
-					config.get("uifiles", "dialogs"),
-					name + extension)
+		config.get("uifiles", "dialogs"),
+		name + ".ui"
+	)
 
-	if builder:
-		builder = gtk.Builder()
-		builder.add_from_file(path)
-		return builder
+	builder = gtk.Builder()
+	builder.add_from_file(path)
 
-	if custom_handler:
-		gtk.glade.set_custom_handler(custom_handler)
-
-	return GladeWrapper(gtk.glade.XML(path))
-
-
+	return builder

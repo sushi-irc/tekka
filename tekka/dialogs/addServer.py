@@ -26,7 +26,6 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
-import gtk.glade
 from gettext import gettext as _
 
 from ..com import sushi
@@ -72,7 +71,7 @@ def dialog_response_cb(dialog, response_id, callback, widgets):
 
 
 def run(callback):
-	widgets = gui.builder.load_dialog("serverAdd", builder=True)
+	widgets = gui.builder.load_dialog("serverAdd")
 
 	dialog = widgets.get_object("serverAdd")
 

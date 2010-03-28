@@ -39,7 +39,7 @@ def dialog_response_cb(dialog, response_id, servername, callback):
 
 def run(servername, callback):
 	""" Returns True if the server should be deleted, otherwise False """
-	widgets = builder.load_dialog("serverDelete", builder=True)
+	widgets = builder.load_dialog("serverDelete")
 
 	dialog = widgets.get_object("serverDelete")
 

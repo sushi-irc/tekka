@@ -29,7 +29,6 @@ SUCH DAMAGE.
 # UHF = ultra high frequency :]
 
 import gtk
-import gtk.glade
 import logging
 from gobject import idle_add
 
@@ -335,11 +334,11 @@ def advanced_advancedSettingsClicked(button):
 
 def setup():
 	"""
-	read glade stuff
+	read ui stuff
 	"""
 	global widgets
 
-	widgets = gui.builder.load_dialog("preferences", builder=True)
+	widgets = gui.builder.load_dialog("preferences")
 
 	sigdic = {
 	# tekka page

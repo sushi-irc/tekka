@@ -27,7 +27,6 @@ SUCH DAMAGE.
 """
 
 import gtk
-import gtk.glade
 import pango
 import logging
 import xml.sax

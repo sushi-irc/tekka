@@ -45,7 +45,7 @@ def setup():
 	if widgets:
 		return
 
-	widgets = gui.builder.load_dialog("server", builder=True)
+	widgets = gui.builder.load_dialog("server")
 
 	sigdic = {  "addButton_clicked_cb":
 					lambda w: openAddDialog(),
