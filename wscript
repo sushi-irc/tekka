@@ -34,11 +34,9 @@ def build (bld):
 
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/plugins', bld.glob('plugins/*.py'))
 
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/glade', bld.glob('glade/*.glade'))
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/glade/dialogs', bld.glob('glade/dialogs/*.glade'))
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/glade', bld.glob('glade/*.ui'))
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/glade/dialogs', bld.glob('glade/dialogs/*.ui'))
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/glade/menus', bld.glob('glade/menus/*.ui'))
+	bld.install_files('${DATAROOTDIR}/sushi/tekka/ui', bld.glob('ui/*.ui'))
+	bld.install_files('${DATAROOTDIR}/sushi/tekka/ui/dialogs', bld.glob('ui/dialogs/*.ui'))
+	bld.install_files('${DATAROOTDIR}/sushi/tekka/ui/menus', bld.glob('ui/menus/*.ui'))
 
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/graphics', bld.glob('graphics/*.svg'))
 
@@ -49,9 +47,9 @@ def build (bld):
 	# FIXME
 	bld.new_task_gen(
 		features = 'subst',
-		source = 'glade/dialogs/about.ui.in',
-		target = 'glade/dialogs/about.ui',
-		install_path = '${DATAROOTDIR}/sushi/tekka/glade/dialogs',
+		source = 'ui/dialogs/about.ui.in',
+		target = 'ui/dialogs/about.ui',
+		install_path = '${DATAROOTDIR}/sushi/tekka/ui/dialogs',
 		dict = {'SUSHI_VERSION': bld.env.VERSION}
 	)
 

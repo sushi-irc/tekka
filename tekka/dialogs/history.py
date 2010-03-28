@@ -38,7 +38,7 @@ class HistoryDialog(object):
 
 		self.builder = gtk.Builder()
 
-		path = config.get("gladefiles","dialogs")
+		path = config.get("uifiles","dialogs")
 		self.builder.add_from_file(os.path.join(path, "history.ui"))
 
 		self.builder.connect_signals(self)

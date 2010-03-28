@@ -124,7 +124,7 @@ def load_main_window(ui_file):
 def load_menu(name):
 	# menus are gtkbuilder
 	path = os.path.join(
-					config.get("gladefiles", "menus"),
+					config.get("uifiles", "menus"),
 					name + ".ui")
 
 	builder = gtk.Builder()
@@ -160,7 +160,7 @@ def load_dialog(name, custom_handler = None, builder=False):
 		extension = ".ui"
 
 	path = os.path.join(
-					config.get("gladefiles", "dialogs"),
+					config.get("uifiles", "dialogs"),
 					name + extension)
 
 	if builder:

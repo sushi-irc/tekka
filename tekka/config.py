@@ -61,7 +61,7 @@ def set_defaults():
 		A further point is that this way realizes
 		"private" values which are not written
 		to config files but can be used with the same
-		API. For example the section "gladefiles".
+		API. For example the section "uifiles".
 	"""
 	global defaults
 
@@ -159,10 +159,10 @@ def set_defaults():
 
 	# sections defined below are not added to the configParser and
 	# can't be set by the set method (will raise NoSectionError)
-	defaults["gladefiles"] = {}
-	defaults["gladefiles"]["mainwindow"] = get_path("glade", "main_window.ui")
-	defaults["gladefiles"]["menus"] = get_path("glade", "menus") + os.path.sep
-	defaults["gladefiles"]["dialogs"] = get_path("glade", "dialogs") + os.path.sep
+	defaults["uifiles"] = {}
+	defaults["uifiles"]["mainwindow"] = get_path("ui", "main_window.ui")
+	defaults["uifiles"]["menus"] = get_path("ui", "menus") + os.path.sep
+	defaults["uifiles"]["dialogs"] = get_path("ui", "dialogs") + os.path.sep
 
 
 

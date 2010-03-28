@@ -1,5 +1,4 @@
 *.swp
 *.pyc
 
-*.glade.h
 *.ui.h

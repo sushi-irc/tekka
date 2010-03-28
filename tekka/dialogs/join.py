@@ -79,7 +79,7 @@ def setup():
 	if builder.get_object("joinDialog") != None:
 		return
 
-	path = config.get("gladefiles","dialogs") + "join.ui"
+	path = config.get("uifiles","dialogs") + "join.ui"
 
 	builder.add_from_file(path)
 

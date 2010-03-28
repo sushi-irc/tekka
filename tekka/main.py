@@ -1053,7 +1053,7 @@ def hide_welcome_screen():
 def setupGTK():
 	""" Set locale, load UI file, connect signals, setup widgets. """
 
-	gladefiles = config.get("gladefiles", default={})
+	uifiles = config.get("uifiles", default={})
 
 	# setup locale stuff
 	try:
@@ -1073,8 +1073,8 @@ def setupGTK():
 	gettext.bindtextdomain("tekka", config.get("tekka","locale_dir"))
 	gettext.textdomain("tekka")
 
-	# parse glade file for main window
-	gui.builder.load_main_window(gladefiles["mainwindow"])
+	# parse ui file for main window
+	gui.builder.load_main_window(uifiles["mainwindow"])
 
 	setup_main_window()
 
