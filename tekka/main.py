@@ -1058,6 +1058,8 @@ def setupGTK():
 	# setup locale stuff
 	try:
 		locale.setlocale(locale.LC_ALL, '')
+		locale.bindtextdomain("tekka", config.get("tekka","locale_dir"))
+		locale.textdomain("tekka")
 	except:
 		pass
 
