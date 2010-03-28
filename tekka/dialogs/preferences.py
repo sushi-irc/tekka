@@ -38,9 +38,6 @@ from .. import config
 from ..lib.expanding_list import ExpandingList
 
 widgets = None
-nickColorsList = None
-highlightList = None
-generalOutputFilterList = None
 
 MESSAGE_TYPES=('message','action',
 		'highlightmessage','highlightaction')
@@ -56,57 +53,6 @@ def generalOutputFilterList_instanced_widget_cb(elist, row, column, obj):
 
 		for row in MESSAGE_TYPES:
 			model.append((row,))
-
-def customHandler(glade, function_name, widget_name, *x):
-	def _nice_sw():
-		sw = gtk.ScrolledWindow()
-		sw.set_properties(
-			hscrollbar_policy = gtk.POLICY_AUTOMATIC,
-			vscrollbar_policy = gtk.POLICY_AUTOMATIC)
-		return sw
-
-	if widget_name == "nickColorsList":
-		global nickColorsList
-
-		nickColorsList = ExpandingList(gtk.ColorButton)
-
-		sw = _nice_sw()
-		sw.add_with_viewport(nickColorsList)
-		sw.show_all()
-
-		return sw
-
-	elif widget_name == "highlightList":
-		global highlightList
-
-		highlightList = ExpandingList(gtk.Entry)
-
-		sw = _nice_sw()
-		sw.add_with_viewport(highlightList)
-		sw.show_all()
-
-		return sw
-
-	elif widget_name == "generalOutputFilterList":
-		global generalOutputFilterList
-
-		# negate, type, server, channel
-		generalOutputFilterList = ExpandingList(
-			gtk.ComboBox, gtk.Entry, gtk.Entry,
-			no_firstrow=True)
-
-		generalOutputFilterList.connect("instanced_widget",
-			generalOutputFilterList_instanced_widget_cb)
-
-		generalOutputFilterList._add_row(0)
-
-		sw = _nice_sw()
-		sw.add_with_viewport(generalOutputFilterList)
-		sw.show_all()
-
-		return sw
-
-	return None
 
 def fillTekka():
 	table = widgets.get_object("tekkaTable")
@@ -141,18 +87,18 @@ def fillColors():
 
 		widgets.get_object(key).set_color(color)
 
-		btn = widgets.get_widget("rules_color_yesno")
+		btn = widgets.get_object("rules_color_yesno")
 		btn.set_active(config.get_bool("tekka","text_rules"))
 		btn.toggled()
 
-		btn = widgets.get_widget("auto_rule_color")
+		btn = widgets.get_object("auto_rule_color")
 		btn.set_active(config.get("colors","rules_color") == "auto")
 		btn.toggled()
 
 
-
-
 def fillChatting():
+	highlightList = widgets.get_object("highlightList")
+
 	for key in ("quit_message", "part_message", "time_format"):
 		val = config.get("chatting", key)
 		widgets.get_object(key).set_text(val)
@@ -169,6 +115,7 @@ def fillChatting():
 	widgets.get_object("last_log_lines").set_value(float(val))
 
 def fillNickColors():
+	nickColorsList = widgets.get_object("nickColorsList")
 	widgets.get_object("nick_contrast_colors").set_active(
 		config.get_bool("colors", "nick_contrast_colors"))
 
@@ -194,6 +141,8 @@ def fillNickColors():
 def fillGeneralOutputFilters():
 	# (type, server, channel), (type, server), ...
 	filter = config.get_list("general_output", "filter", [])
+
+	generalOutputFilterList = widgets.get_object("generalOutputFilterList")
 
 	i=0
 	for tuple in filter:
@@ -227,12 +176,15 @@ def fillGeneralOutputFilters():
 
 
 def applyNickColors():
+	nickColorsList = widgets.get_object("nickColorsList")
 	config.set_list("colors","nick_colors", [n[0].get_color().to_string() for n in nickColorsList.get_widget_matrix() if n and len(n) >= 1])
 
 def applyChatting():
+	highlightList = widgets.get_object("highlightList")
 	config.set_list("chatting", "highlight_words", [n[0].get_text() for n in highlightList.get_widget_matrix() if n])
 
 def applyGeneralOutputFilter():
+	generalOutputFilterList = widgets.get_object("generalOutputFilterList")
 	filter_list = []
 	header = ("type", "server", "channel")
 
@@ -330,14 +282,13 @@ def colors_rules_color_written(button):
 def colors_rules_autodetect_toggled(button):
 	if button.get_active():
 		config.set("colors","rules_color","auto")
-	widgets.get_widget("rules_color").set_sensitive(not button.get_active())
+	widgets.get_object("rules_color").set_sensitive(not button.get_active())
 
 def colors_rules_color_yesno_toggled(button):
 	flag = button.get_active()
 	config.set("tekka", "text_rules", str(flag))
-	widgets.get_widget("auto_rule_color").set_sensitive(flag)
-	widgets.get_widget("rules_color").set_sensitive(flag)
-
+	widgets.get_object("auto_rule_color").set_sensitive(flag)
+	widgets.get_object("rules_color").set_sensitive(flag)
 
 """ chatting page signals """
 
@@ -366,7 +317,6 @@ def chatting_log_lines_changed(button):
 def nick_contrast_colors_toggled_cb(button):
 	config.set("colors", "nick_contrast_colors", str(button.get_active()))
 
-
 	ncl = widgets.get_object("nickColorsList")
 
 	if ncl:
@@ -389,7 +339,7 @@ def setup():
 	"""
 	global widgets
 
-	widgets = gui.builder.load_dialog("preferences", custom_handler = customHandler)
+	widgets = gui.builder.load_dialog("preferences", builder=True)
 
 	sigdic = {
 	# tekka page
@@ -420,13 +370,16 @@ def setup():
 		"chatting_part_message_written": chatting_part_message_written,
 		"chatting_time_format_written": chatting_time_format_written,
 		"chatting_log_lines_changed": chatting_log_lines_changed,
+	# general output page
+		"generalOutputFilterList_instanced_widget_cb":
+			generalOutputFilterList_instanced_widget_cb,
 	# nick colors page
 		"nick_contrast_colors_toggled_cb": nick_contrast_colors_toggled_cb,
 	# advanced page
 		"advanced_advancedSettingsClicked": advanced_advancedSettingsClicked
 	}
 
-	widgets.signal_autoconnect(sigdic)
+	widgets.connect_signals(sigdic)
 
 def dialog_response_cb(dialog, response_id):
 	applyNickColors()
