@@ -38,6 +38,7 @@ from ..lib.status_icon import TekkaStatusIcon
 from ..lib.output_window import OutputWindow
 from ..lib.output_shell import OutputShell
 from ..lib.search_toolbar import SearchBar
+from ..lib.expanding_list import ExpandingList
 from ..helper import URLHandler
 
 

@@ -47,29 +47,27 @@ class ExpandingList(gtk.Table):
 		self.init_widgets(widgets)
 	str_widgets = gobject.property(setter=set_str_widgets, type=str)
 
-	def __init__(self, *widgets, **kwargs):
+	def __init__(self, no_first_row=False, *widgets, **kwargs):
 
 		self._rows = 1
 		self._columns = len(widgets) + 2
 		self._matrix = [ [] ]
 		self._widgets = ()
+		self._no_first_row = no_first_row
 
 		gtk.Table.__init__(self, rows=1, columns=self._columns)
 
 		if not widgets:
 			return
 
-		init_widgets(widgets, **kwargs)
+		init_widgets(widgets)
 
-	def init_widgets(self, widgets, **kwargs):
+
+	def init_widgets(self, widgets):
 		self._widgets = widgets
 
-		try:
-			kwargs["no_firstrow"]
-		except KeyError:
+		if not self._no_first_row:
 			self._add_row(row=0)
-		else:
-			pass
 
 	def get_widget_matrix(self):
 		return self._matrix
