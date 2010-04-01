@@ -62,8 +62,7 @@ def fillTekka():
 		if type(child) != gtk.CheckButton:
 			continue
 
-		#name = gtk.Buildable.get_name(child) # XXX for gtk builder
-		name = child.get_property("name")
+		name = gtk.Buildable.get_name(child)
 		bval = config.get_bool("tekka", name)
 
 		child.set_active(bval)
