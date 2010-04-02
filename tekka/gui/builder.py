@@ -53,6 +53,20 @@ def get_new_output_window():
 	return w
 
 
+def information_dialog(title="", message=""):
+	""" create a dialog with an info icon, a title and a message.
+		This dialog has one button (OK) and does not handle it's response.
+	"""
+	d = gtk.MessageDialog(
+		   		  type = gtk.MESSAGE_INFO,
+			   buttons = gtk.BUTTONS_OK,
+		message_format = message)
+
+	d.set_title(title)
+
+	return d
+
+
 def question_dialog(title = "", message = ""):
 	""" create a dialog with a question mark, a title and a message.
 		This dialog has two buttons (yes, no) and does not handle
