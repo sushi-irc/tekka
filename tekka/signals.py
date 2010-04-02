@@ -46,7 +46,7 @@ maki was reset.
 """
 
 @types (signal=basestring)
-def connect_signal (signal, handler):
+def connect_signal (signal, handler, *userdata):
 	""" connect handler to signal """
 	global signals
 
@@ -57,7 +57,11 @@ def connect_signal (signal, handler):
 		# no doubles
 		return
 
-	signals[signal][handler] = sushi.connect_to_signal (signal, handler)
+	def handler_wrapper(*args, **kwargs):
+		handler(*(args+userdata), **kwargs)
+
+	signals[signal][handler] = sushi.connect_to_signal (signal,
+														handler_wrapper)
 
 
 @types (signal=basestring)
