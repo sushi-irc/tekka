@@ -158,3 +158,17 @@ def load_dialog(name):
 	builder.add_from_file(path)
 
 	return builder
+
+
+class Builder(gtk.Builder):
+
+	def load_dialog(self, name):
+		path = os.path.join(config.get("uifiles", "dialogs"),
+							name + ".ui")
+		self.add_from_file(path)
+
+	def load_menu(self, name):
+		path = os.path.join(config.get("uifiles", "menus"),
+							name + ".ui")
+		self.add_from_file(path)
+
