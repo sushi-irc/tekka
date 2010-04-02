@@ -136,8 +136,11 @@ def openEditDialog():
 	servername = None
 
 	if not path:
-		# TODO:  dialog to inform the user that there's no
-		# TODO:: server selected?
+		d = gui.builder.information_dialog(
+								_("No server selected."),
+								_("You must select a server to edit it."))
+		d.connect("response", lambda w,i: w.destroy())
+		d.show_all()
 		return
 
 	else:
@@ -160,7 +163,11 @@ def openDeleteDialog():
 	servername = None
 
 	if not path:
-		# TODO: see openEditDialog-todo
+		d = gui.builder.information_dialog(
+								_("No server selected."),
+								_("You must select a server to delete it."))
+		d.connect("response", lambda w,i: w.destroy())
+		d.show_all()
 		return
 
 	else:

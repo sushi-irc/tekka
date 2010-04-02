@@ -28,8 +28,6 @@ SUCH DAMAGE.
 
 import gtk
 import os
-import gobject
-from gobject import TYPE_BOOLEAN
 import logging
 
 from gettext import gettext as _
@@ -80,7 +78,11 @@ def loadPlugin_clicked_cb(button):
 
 	path = view.get_cursor()[0]
 	if not path:
-		# TODO: what about informing the user that there is no row active
+		d = builder.information_dialog(
+								_("No plugin selected."),
+								_("You must select a plugin to load it."))
+		d.connect("response", lambda w,i: w.destroy())
+		d.show_all()
 		return
 
 	logging.info("loading plugin '%s'..." % (store[path][COL_NAME]))
@@ -104,7 +106,11 @@ def unloadPlugin_clicked_cb(button):
 	path = view.get_cursor()[0]
 
 	if not path:
-		# TODO: see todo in loadPlugin_clicked_cb
+		d = builder.information_dialog(
+								_("No plugin selected."),
+								_("You must select a plugin to unload it."))
+		d.connect("response", lambda w,i: w.destroy())
+		d.show_all()
 		return
 
 	logging.info("unloading plugin '%s'..." % (store[path][COL_NAME]))
