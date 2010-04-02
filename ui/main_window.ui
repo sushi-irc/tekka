@@ -24,10 +24,10 @@
     <accel-groups>
       <group name="main_accel_group"/>
     </accel-groups>
-    <signal name="delete_event" handler="main_window_delete_event"/>
+    <signal name="scroll_event" handler="main_window_scroll_event"/>
     <signal name="focus_in_event" handler="main_window_focus_in_event"/>
     <signal name="size_allocate" handler="main_window_size_allocate"/>
-    <signal name="scroll_event" handler="main_window_scroll_event"/>
+    <signal name="delete_event" handler="main_window_delete_event"/>
     <signal name="window_state_event" handler="main_window_window_state_event"/>
     <child>
       <object class="GtkVBox" id="main_vbox">
@@ -289,6 +289,7 @@
                     <property name="use_markup">True</property>
                     <property name="selectable">True</property>
                     <property name="ellipsize">end</property>
+                    <property name="can_focus">False</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -419,7 +420,7 @@
                     <child>
                       <object class="GtkTreeView" id="tabs_view">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
+						<property name="can_focus">False</property>
                         <property name="has_tooltip">True</property>
                         <property name="model">tab_store</property>
                         <property name="headers_visible">False</property>
@@ -474,7 +475,7 @@
                         <child>
                           <object class="GtkTreeView" id="nicks_view">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can_focus">False</property>
                             <property name="headers_visible">False</property>
                             <property name="headers_clickable">False</property>
                             <property name="rules_hint">True</property>
