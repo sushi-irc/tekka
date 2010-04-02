@@ -31,169 +31,171 @@ from re import compile
 from gettext import gettext as _
 
 import gtk
+import gobject
 
 import logging
 
 from .. import com
 from .. import signals
-from .. import config
 
 from ..gui import builder
-from ..gui.mgmt import show_inline_dialog
 from ..helper.markup import markup_escape
 from ..lib.inline_dialog import InlineMessageDialog
 
-widgets = None
-currentServer = None
-filterExpression = None
+PULSE_DELAY=100
+
+running = False # dialog is running
 cache = []  # /list cache
 
-# TODO: get rid of those globals
+class ChannelListBuilder(builder.Builder):
 
-def clearProgressBar():
-	widgets.get_object("progressBar").set_fraction(0)
+	def __init__(self, server_name):
+		super(ChannelListBuilder, self).__init__()
+
+		self.load_dialog("channelList")
+
+		self.server_name = server_name
+		self.pulse_timer = None
+
+		self.connect_signals(self)
+
+		self.reset_progress_bar()
+
+	def reset_progress_bar(self):
+		self.get_object("progressBar").set_fraction(0)
+
+	def start_pulsing(self):
+		def pulse_it():
+			self.get_object("progressBar").pulse()
+			return True
+
+		self.pulse_timer = gobject.timeout_add(PULSE_DELAY, pulse_it)
+
+	def stop_pulsing(self):
+		if not self.pulse_timer:
+			return
+		gobject.source_remove(self.pulse_timer)
+		self.reset_progress_bar()
+
+	def start_list(self):
+		pattern = None
+
+		try:
+			pattern = compile(
+				self.get_object("regexpEntry").get_text())
+
+		except Exception as e:
+			d = InlineMessageDialog(
+				_("Channel list search error."),
+				_("You've got a syntax error in your search string. "
+					"The error is: %s\n"
+					"<b>Tip:</b> You should not use special characters "
+					"like '*' or '.' in your search string if you don't "
+					"know about regular expressions." % (e)))
+			d.connect("response", lambda w,i: w.destroy())
+			gui.mgmt.show_inline_dialog(d)
+
+
+		self.get_object("listStore").clear()
+
+		self.get_object("listButton").set_sensitive(False)
+		self.get_object("stopListButton").set_sensitive(True)
+
+		self.start_pulsing()
+
+		if cache:
+			# use cached values
+			for (server, channel, user, topic) in cache:
+				self.list_handler(0, server, channel, user, topic, pattern)
+
+		else:
+			signals.connect_signal("list", self.list_handler, pattern)
+
+			try:
+				com.sushi.list(self.server_name, "")
+
+			except Exception as e:
+				logging.error("Error in getting list: %s" % (e))
+				self.stop_list()
+
+	def stop_list(self):
+		signals.disconnect_signal("list", self.list_handler)
+
+		self.get_object("listButton").set_sensitive(True)
+		self.get_object("stopListButton").set_sensitive(False)
+
+		self.stop_pulsing()
+
+	def list_handler(self, time, server, channel, user, topic, pattern):
+		""" receives the data from maki.
+			add server/user/topic to listStore
+		"""
+
+		if time > 0:
+			# no manual call
+			cache.append((server,channel,user,topic))
+
+		if user < 0:
+			# EOL, this is not reached if we use
+			# manual call.
+			self.stop_list()
+			return
+
+		store = self.get_object("listStore")
+
+		if (not pattern
+		or (pattern and (pattern.search(channel)
+					or pattern.search(topic)))):
+
+			store.append(row=(markup_escape(channel), int(user),
+							  markup_escape(topic)))
+
+
+	def dialog_response(self, dialog, id):
+		global running
+
+		self.stop_list()
+		running = False
+		dialog.destroy()
+
+	def find_button_clicked(self, button):
+		self.start_list()
+
+	def stop_button_clicked(self, button):
+		# prevent incompleteness of cache
+		global cache
+		cache = []
+
+		self.stop_list()
+
+	def regexp_entry_activate(self, entry):
+		self.start_list()
+
+	def listView_row_activated(self, view, path, column):
+		channel = self.get_object("listStore")[path][0]
+
+		com.sushi.join(self.server_name, channel,
+				com.sushi.server_get(self.server_name, channel, "key"))
+
+
 
 
 def run(server):
 	""" Show the dialog until close was hit. """
 
-	global currentServer, cache
+	global cache
+	global running
 
-	if not widgets:
+	if running:
 		return
+
+	running = True
 
 	# clear the cache at the beginning
 	cache = []
 
-	currentServer = server
-
-	clearProgressBar()
-	dialog = widgets.get_object("channelList")
-
-	dialog.show_all()
+	builder = ChannelListBuilder(server)
+	builder.get_object("channelList").show()
 
 
-def resetSignal(*x):
-	""" reset the list signal to the original state """
-	signals.disconnect_signal ("list", sushiList)
-
-
-def stopListButton_clicked_cb(button):
-	global cache
-	signals.disconnect_signal ("list", sushiList)
-	cache = [] # we don't want an incomplete cache?
-	clearProgressBar()
-
-
-def listButton_clicked_cb(button):
-	"""
-	Button for regexp list was hit, compile expression
-	from regexpEntry (if any) and start retrieving
-	the server listing.
-	"""
-	if not currentServer:
-		logging.error("channelList: no current server")
-		return
-
-	global filterExpression, cache
-
-	try:
-		filterExpression = compile(
-			widgets.get_object("regexpEntry").get_text())
-	except BaseException as e:
-		d = InlineMessageDialog(
-			_("Channel list search error."),
-			_("You've got a syntax error in your search string. "
-				"The error is: %s\n"
-				"<b>Tip:</b> You should not use special characters "
-				"like '*' or '.' in your search string if you don't "
-				"know about regular expressions." % (e)))
-		d.connect("response", lambda w,i: w.destroy())
-		show_inline_dialog(d)
-
-	widgets.get_object("listStore").clear()
-
-	if cache:
-		# use cached values
-		for (server, channel, user, topic) in cache:
-			sushiList(0, server, channel, user, topic)
-		clearProgressBar()
-
-	else:
-		signals.connect_signal("list", sushiList)
-
-		try:
-			com.sushi.list(currentServer, "")
-
-		except BaseException as e:
-			logging.error("Error in getting list: %s" % (e))
-			resetSignal()
-
-
-def listView_row_activated_cb(treeView, path, column):
-	"""
-	clicked on a channel.
-	"""
-	if not currentServer:
-		return
-
-	try:
-		channel = treeView.get_model()[path][0]
-	except:
-		return
-
-	com.sushi.join(currentServer, channel,
-		com.sushi.server_get(currentServer, channel, "key"))
-
-
-def sushiList(time, server, channel, user, topic):
-	"""
-	receives the data from maki.
-	add server/user/topic to listStore
-	"""
-
-	if time > 0:
-		# no manual call
-		cache.append((server,channel,user,topic))
-
-	if user < 0:
-		# EOL, this is not reached if we use
-		# manual call.
-		resetSignal ()
-		clearProgressBar()
-		return
-
-	widgets.get_object("progressBar").pulse()
-
-	store = widgets.get_object("listStore")
-	if (not filterExpression
-		or (filterExpression
-			and (filterExpression.search(channel)
-				or filterExpression.search(topic)))):
-		store.append(row=(markup_escape(channel), int(user),
-			markup_escape(topic)))
-
-
-def dialog_response_cb(dialog, id):
-	if id in (gtk.RESPONSE_NONE, gtk.RESPONSE_DELETE_EVENT,
-	gtk.RESPONSE_CLOSE):
-		resetSignal()
-		dialog.destroy()
-
-
-def setup():
-	global widgets
-
-	widgets = builder.load_dialog("channelList")
-
-	sigdic = {
-		"listButton_clicked_cb" : listButton_clicked_cb,
-		"stopListButton_clicked_cb": stopListButton_clicked_cb,
-		"regexpEntry_activate_cb" : listButton_clicked_cb,
-		"listView_row_activated_cb" : listView_row_activated_cb
-	}
-
-	widgets.connect_signals(sigdic)
-
-	diag = widgets.get_object("channelList")
-	diag.connect("response", dialog_response_cb)
+def setup(): pass
