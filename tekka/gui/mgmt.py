@@ -199,6 +199,7 @@ def set_topic(string):
 	"""
 	tb = widgets.get_object("topic_label")
 	tb.set_markup(string)
+	tb.set_tooltip_markup(string)
 
 
 def clear_all_outputs():
