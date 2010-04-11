@@ -75,7 +75,7 @@ def apply_new_font():
 
 	set_font(widgets.get_object("output"), font)
 	set_font(widgets.get_object("input_entry"), font)
-	set_font(widgets.get_object("general_output_window"), font)
+	set_font(widgets.get_object("general_output"), font)
 
 
 @types(switch=bool)
