@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-03-28 18:22+0200\n"
+"POT-Creation-Date: 2010-04-27 21:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -181,11 +181,11 @@ msgid ""
 msgstr ""
 
 #: ../tekka/com.py:126 ../tekka/com.py:136 ../tekka/com.py:239
-#: ../tekka/gui/mgmt.py:276
+#: ../tekka/gui/mgmt.py:277
 msgid "tekka could not connect to maki."
 msgstr ""
 
-#: ../tekka/com.py:127 ../tekka/gui/mgmt.py:277
+#: ../tekka/com.py:127 ../tekka/gui/mgmt.py:278
 msgid "Please check whether maki is running."
 msgstr ""
 
@@ -222,19 +222,19 @@ msgstr ""
 msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
 msgstr ""
 
-#: ../tekka/dialogs/addServer.py:48
+#: ../tekka/dialogs/addServer.py:47
 msgid "No server name given."
 msgstr ""
 
-#: ../tekka/dialogs/addServer.py:49
+#: ../tekka/dialogs/addServer.py:48
 msgid "You must enter a server name."
 msgstr ""
 
-#: ../tekka/dialogs/channelList.py:106
+#: ../tekka/dialogs/channelList.py:89
 msgid "Channel list search error."
 msgstr ""
 
-#: ../tekka/dialogs/channelList.py:107
+#: ../tekka/dialogs/channelList.py:90
 #, python-format
 msgid ""
 "You've got a syntax error in your search string. The error is: %s\n"
@@ -278,11 +278,35 @@ msgstr ""
 msgid "History for %(target)s"
 msgstr ""
 
-#: ../tekka/dialogs/server.py:171
+#: ../tekka/dialogs/plugins.py:82 ../tekka/dialogs/plugins.py:110
+msgid "No plugin selected."
+msgstr ""
+
+#: ../tekka/dialogs/plugins.py:83
+msgid "You must select a plugin to load it."
+msgstr ""
+
+#: ../tekka/dialogs/plugins.py:111
+msgid "You must select a plugin to unload it."
+msgstr ""
+
+#: ../tekka/dialogs/server.py:140 ../tekka/dialogs/server.py:167
+msgid "No server selected."
+msgstr ""
+
+#: ../tekka/dialogs/server.py:141
+msgid "You must select a server to edit it."
+msgstr ""
+
+#: ../tekka/dialogs/server.py:168
+msgid "You must select a server to delete it."
+msgstr ""
+
+#: ../tekka/dialogs/server.py:178
 msgid "Error while retrieving server name."
 msgstr ""
 
-#: ../tekka/dialogs/server.py:172
+#: ../tekka/dialogs/server.py:179
 msgid ""
 "There was an error while retrieving the server name.\n"
 "Are you connected to maki?"
