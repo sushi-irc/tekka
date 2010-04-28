@@ -285,7 +285,7 @@
                 <child>
                   <object class="GtkLabel" id="topic_label">
                     <property name="xpad">4</property>
-                    <property name="label" translatable="yes">#topic</property>
+                    <property name="label"></property>
                     <property name="use_markup">True</property>
                     <property name="selectable">True</property>
                     <property name="ellipsize">end</property>
@@ -456,7 +456,7 @@
                         <child>
                           <object class="GtkLabel" id="nick_stats_label">
                             <property name="visible">True</property>
-                            <property name="label" translatable="yes">x Users - y Operators</property>
+                            <property name="label"></property>
                           </object>
                         </child>
                       </object>

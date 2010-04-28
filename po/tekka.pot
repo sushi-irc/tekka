@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-27 21:43+0200\n"
+"POT-Creation-Date: 2010-04-28 22:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -818,7 +818,7 @@ msgstr ""
 msgid "Use contrast sensitive colors"
 msgstr ""
 
-#: ../ui/dialogs/preferences.ui.h:41 ../ui/main_window.ui.h:11
+#: ../ui/dialogs/preferences.ui.h:41 ../ui/main_window.ui.h:10
 msgid "_General Output"
 msgstr ""
 
@@ -834,7 +834,7 @@ msgstr ""
 msgid "_Show status icon"
 msgstr ""
 
-#: ../ui/dialogs/preferences.ui.h:45 ../ui/main_window.ui.h:18
+#: ../ui/dialogs/preferences.ui.h:45 ../ui/main_window.ui.h:17
 msgid "_tekka"
 msgstr ""
 
@@ -907,71 +907,63 @@ msgid "NickServ Ghost:"
 msgstr ""
 
 #: ../ui/main_window.ui.h:1
-msgid "#topic"
-msgstr ""
-
-#: ../ui/main_window.ui.h:2
 msgid "IRC _Colors"
 msgstr ""
 
-#: ../ui/main_window.ui.h:3
+#: ../ui/main_window.ui.h:2
 msgid "P_lugins"
 msgstr ""
 
-#: ../ui/main_window.ui.h:4
+#: ../ui/main_window.ui.h:3
 msgid "S_ide Pane"
 msgstr ""
 
-#: ../ui/main_window.ui.h:5
+#: ../ui/main_window.ui.h:4
 msgid "Status _Bar"
 msgstr ""
 
-#: ../ui/main_window.ui.h:6
+#: ../ui/main_window.ui.h:5
 msgid "Status _Icon"
 msgstr ""
 
-#: ../ui/main_window.ui.h:7
+#: ../ui/main_window.ui.h:6
 msgid "T_ools"
 msgstr ""
 
-#: ../ui/main_window.ui.h:8
+#: ../ui/main_window.ui.h:7
 msgid "_Channel List"
 msgstr ""
 
-#: ../ui/main_window.ui.h:9
+#: ../ui/main_window.ui.h:8
 msgid "_Debug"
 msgstr ""
 
-#: ../ui/main_window.ui.h:10
+#: ../ui/main_window.ui.h:9
 msgid "_File Transfers"
 msgstr ""
 
-#: ../ui/main_window.ui.h:12
+#: ../ui/main_window.ui.h:11
 msgid "_Help"
 msgstr ""
 
-#: ../ui/main_window.ui.h:13
+#: ../ui/main_window.ui.h:12
 msgid "_Server List"
 msgstr ""
 
-#: ../ui/main_window.ui.h:14
+#: ../ui/main_window.ui.h:13
 msgid "_Shutdown"
 msgstr ""
 
-#: ../ui/main_window.ui.h:15
+#: ../ui/main_window.ui.h:14
 msgid "_Topic Bar"
 msgstr ""
 
-#: ../ui/main_window.ui.h:16
+#: ../ui/main_window.ui.h:15
 msgid "_View"
 msgstr ""
 
-#: ../ui/main_window.ui.h:17
+#: ../ui/main_window.ui.h:16
 msgid "_maki"
-msgstr ""
-
-#: ../ui/main_window.ui.h:19
-msgid "x Users - y Operators"
 msgstr ""
 
 #: ../ui/menus/nickListMenu.ui.h:1
