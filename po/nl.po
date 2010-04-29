@@ -1,4 +1,4 @@
-# Swedish translation for tekka
+# Dutch translation for tekka
 # Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
 # This file is distributed under the same license as the tekka package.
 #
@@ -8,8 +8,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-28 22:16+0200\n"
 "PO-Revision-Date: 2010-01-23 11:50+0000\n"
-"Last-Translator: In Lulz We Trust <Unknown>\n"
-"Language-Team: Swedish\n"
+"Last-Translator: \n"
+"Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -183,7 +183,7 @@ msgstr ""
 #: ../tekka/com.py:126 ../tekka/com.py:136 ../tekka/com.py:239
 #: ../tekka/gui/mgmt.py:277
 msgid "tekka could not connect to maki."
-msgstr "tekka kunde inte ansluta till maki."
+msgstr ""
 
 #: ../tekka/com.py:127 ../tekka/gui/mgmt.py:278
 msgid "Please check whether maki is running."
@@ -195,12 +195,10 @@ msgid ""
 "Please check whether maki is running.\n"
 "The following error occurred: %(error)s"
 msgstr ""
-"Var god kontrollera ifall maki körs.\n"
-"Följande fel inträffade: %(error)s"
 
 #: ../tekka/com.py:173
 msgid "Communication error with maki."
-msgstr "Kommunikationsfel med maki."
+msgstr ""
 
 #: ../tekka/com.py:174
 #, python-format
@@ -212,7 +210,7 @@ msgstr ""
 
 #: ../tekka/com.py:286
 msgid "tekka requires a newer maki version."
-msgstr "tekka kräver en nyare maki-version."
+msgstr ""
 
 #: ../tekka/com.py:287
 #, python-format
@@ -326,18 +324,18 @@ msgstr ""
 
 #: ../tekka/dialogs/whois.py:111
 msgid "No data received so far. Are you still connected?"
-msgstr "Ingen data mottagen såhär långt. Är du fortfarande ansluten?"
+msgstr ""
 
 #: ../tekka/dialogs/whois.py:127
 msgid "Loading..."
-msgstr "Laddar..."
+msgstr ""
 
 #: ../tekka/gui/mgmt.py:173
 #, python-format
 msgid "%d User"
 msgid_plural "%d Users"
-msgstr[0] "%d användare"
-msgstr[1] "%d användare"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../tekka/gui/mgmt.py:175
 #, python-format
@@ -363,7 +361,7 @@ msgstr ""
 
 #: ../tekka/lib/dcc_dialog.py:110
 msgid "Incoming file transfer"
-msgstr "Inkommande filöverföring"
+msgstr ""
 
 #: ../tekka/lib/dcc_dialog.py:111
 #, python-format
@@ -391,13 +389,13 @@ msgstr ""
 #: ../tekka/lib/plugin_config_dialog.py:15
 #, python-format
 msgid "Configure %(name)s"
-msgstr "Konfigurera %(name)s"
+msgstr ""
 
 #: ../tekka/lib/plugin_control.py:110 ../tekka/lib/plugin_control.py:118
 #: ../tekka/lib/plugin_control.py:141 ../tekka/lib/plugin_control.py:199
 #: ../tekka/lib/plugin_control.py:354
 msgid "Plugin could not be loaded."
-msgstr "Tillägget kunde inte laddas."
+msgstr ""
 
 #: ../tekka/lib/plugin_control.py:111 ../tekka/lib/plugin_control.py:142
 #: ../tekka/lib/plugin_control.py:200
@@ -406,73 +404,67 @@ msgid ""
 "Plugin %(plugin)s could not be loaded.\n"
 "The following error occurred: %(error)s"
 msgstr ""
-"Tillägget %(plugin)s kunde inte laddas.\n"
-"Följande fel inträffade: %(error)s"
 
 #: ../tekka/lib/plugin_control.py:119
 #, python-format
 msgid "Plugin %(plugin)s could not be loaded."
-msgstr "Tillägget %(plugin)s kunde inte laddas."
+msgstr ""
 
 #: ../tekka/lib/plugin_control.py:178
 msgid "Plugin is already loaded."
-msgstr "Tillägget är redan laddat."
+msgstr ""
 
 #: ../tekka/lib/plugin_control.py:179
 #, python-format
 msgid "Plugin %(plugin)s is already loaded."
-msgstr "Tillägget %(plugin)s är redan laddat."
+msgstr ""
 
 #: ../tekka/lib/plugin_control.py:223
 msgid "Plugin could not be unloaded."
-msgstr "Tillägget kunde inte avaktiveras."
+msgstr ""
 
 #: ../tekka/lib/plugin_control.py:223
 #, python-format
 msgid "Plugin %(plugin)s could not be unloaded, because it is not loaded."
 msgstr ""
-"TIllägget %(plugin)s kunde inte avaktiveras, för att det inte är laddat."
 
 #: ../tekka/lib/plugin_control.py:355
 #, python-format
 msgid "Plugin %(plugin)s could not be loaded automatically."
-msgstr "TIllägget %(plugin)s kunde inte laddas automatiskt."
+msgstr ""
 
 #: ../tekka/lib/status_icon.py:67
 msgid "Hide main window"
-msgstr "Dölj huvudfönstret"
+msgstr ""
 
 #: ../tekka/lib/status_icon.py:69
 msgid "Show main window"
-msgstr "Visa huvudfönstret"
+msgstr ""
 
 #: ../tekka/lib/topic_dialog.py:62
 #, python-format
 msgid "Topic for channel %(channel)s on %(server)s"
-msgstr "Ämne för kanalen %(channel)s på %(server)s"
+msgstr ""
 
 #: ../tekka/lib/topic_dialog.py:115
 msgid "Topic changed before."
-msgstr "Ämnet ändrades förut."
+msgstr ""
 
 #: ../tekka/lib/topic_dialog.py:116
 msgid ""
 "The topic was changed before your update. Do you want to commit the changes "
 "anyway?"
 msgstr ""
-"Ämnet ändrades före din uppdatering. Vill du genomföra ändringarna iallafall?"
 
 #: ../tekka/lib/welcome_window.py:64
 msgid "<big><b>Welcome to tekka!</b></big>"
-msgstr "<big><b>Välkommen till tekka!</b></big>"
+msgstr ""
 
 #: ../tekka/lib/welcome_window.py:122
 msgid ""
 "You are connected to maki. The next step is to connect to a server via the "
 "server dialog in the tekka menu."
 msgstr ""
-"Du är ansluten till maki. Nästa steg är att ansluta till en server via "
-"serverdialogen i tekkas meny."
 
 #: ../tekka/lib/welcome_window.py:128
 msgid ""
@@ -506,23 +498,23 @@ msgstr ""
 #. TODO: away status
 #: ../tekka/main.py:759
 msgid "Nickname: "
-msgstr "Alias: "
+msgstr ""
 
 #: ../tekka/main.py:762
 msgid "User: "
-msgstr "Användare: "
+msgstr ""
 
 #: ../tekka/main.py:763
 msgid "Topic: "
-msgstr "Ämne: "
+msgstr ""
 
 #: ../tekka/main.py:765 ../tekka/main.py:769
 msgid "Last sentence: "
-msgstr "Sista meningen: "
+msgstr ""
 
 #: ../tekka/main.py:1266
 msgid "Error occured"
-msgstr "Ett fel inträffade"
+msgstr ""
 
 #: ../tekka/main.py:1276
 msgid ""
@@ -535,7 +527,7 @@ msgstr ""
 #: ../tekka/menus/mainmenu_context.py:112
 #: ../tekka/menus/mainmenu_context.py:213 ../tekka/menus/nicklist_menu.py:136
 msgid "No connection to maki."
-msgstr "Ingen anslutning till maki."
+msgstr ""
 
 #: ../tekka/menus/mainmenu_context.py:113
 msgid "You can't shutdown maki. You're not connected."
@@ -543,7 +535,7 @@ msgstr ""
 
 #: ../tekka/menus/mainmenu_context.py:225
 msgid "tekka could not determine server."
-msgstr "tekka kunde inte avgöra servern."
+msgstr ""
 
 #: ../tekka/menus/mainmenu_context.py:226
 msgid ""
@@ -585,12 +577,10 @@ msgstr ""
 #: ../ui/dialogs/about.ui.in.h:1
 msgid "translator-credits"
 msgstr ""
-"Launchpad Contributions:\n"
-"  In Lulz We Trust https://launchpad.net/~inlulzwetrust"
 
 #: ../ui/dialogs/advancedPreferences.ui.h:1
 msgid "Advanced Preferences"
-msgstr "Avancerade inställningar"
+msgstr ""
 
 #: ../ui/dialogs/channelList.ui.h:1
 msgid "Channel List"
@@ -850,7 +840,7 @@ msgstr ""
 
 #: ../ui/dialogs/server.ui.h:1
 msgid "Server List"
-msgstr "Serverlista"
+msgstr ""
 
 #: ../ui/dialogs/serverAdd.ui.h:1
 msgid "<b>Add Server</b>"
@@ -954,7 +944,7 @@ msgstr ""
 
 #: ../ui/main_window.ui.h:11
 msgid "_Help"
-msgstr "_Hjälp"
+msgstr ""
 
 #: ../ui/main_window.ui.h:12
 msgid "_Server List"
@@ -970,7 +960,7 @@ msgstr ""
 
 #: ../ui/main_window.ui.h:15
 msgid "_View"
-msgstr "_Visa"
+msgstr ""
 
 #: ../ui/main_window.ui.h:16
 msgid "_maki"
@@ -978,7 +968,7 @@ msgstr ""
 
 #: ../ui/menus/nickListMenu.ui.h:1
 msgid "Ban"
-msgstr "Bannlys"
+msgstr ""
 
 #: ../ui/menus/nickListMenu.ui.h:2
 msgid "Give Half-Op"
@@ -1018,7 +1008,7 @@ msgstr ""
 
 #: ../ui/menus/nickListMenu.ui.h:11
 msgid "Whois"
-msgstr "Whois"
+msgstr ""
 
 #: ../ui/menus/serverTreeMenu.ui.h:1
 msgid "Connect automatically"
@@ -1063,44 +1053,3 @@ msgstr ""
 #: ../ui/menus/serverTreeMenu.ui.h:12
 msgid "_Part"
 msgstr ""
-
-#~ msgid "Warning:"
-#~ msgstr "Varning:"
-
-#, python-format
-#~ msgid "You are not connected to server %(server)s."
-#~ msgstr "Du är inte ansluten till servern %(server)s"
-
-#~ msgid "Server"
-#~ msgstr "Server"
-
-#~ msgid "ID"
-#~ msgstr "ID"
-
-#~ msgid "User"
-#~ msgstr "Användare"
-
-#~ msgid "Topic"
-#~ msgstr "Ämne"
-
-#~ msgid "Channel"
-#~ msgstr "Kanal"
-
-#~ msgid "Filename"
-#~ msgstr "Filnamn"
-
-#~ msgid "Partner"
-#~ msgstr "Partner"
-
-#~ msgid "Progress"
-#~ msgstr "Förlopp"
-
-#~ msgid "Size"
-#~ msgstr "Storlek"
-
-#~ msgid "Speed"
-#~ msgstr "Hastighet"
-
-#, python-format
-#~ msgid "Can't open dialog '%s'. There's no connection to maki."
-#~ msgstr "Kan inte öppna dialogen '%s'. Där är ingen anslutning till maki."

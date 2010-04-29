@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tekka 1.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-01-30 23:37+0100\n"
+"POT-Creation-Date: 2010-04-28 22:16+0200\n"
 "PO-Revision-Date: 2010-01-23 12:54+0000\n"
 "Last-Translator: Michael Kuhn <Unknown>\n"
 "Language-Team: Chinese (Simplified)\n"
@@ -14,173 +14,163 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2010-02-14 21:52+0000\n"
+"X-Launchpad-Export-Date: 2010-04-29 18:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#: ../signal_handler.py:325
+#: ../signal_handler.py:355
 #, python-format
 msgid "• Topic for %(channel)s: %(topic)s"
 msgstr ""
 
-#: ../signal_handler.py:361
+#: ../signal_handler.py:391
 #, python-format
 msgid "• You changed the topic to %(topic)s."
 msgstr ""
 
-#: ../signal_handler.py:363
+#: ../signal_handler.py:393
 #, python-format
 msgid "• %(nick)s changed the topic to %(topic)s."
 msgstr ""
 
-#: ../signal_handler.py:442
+#: ../signal_handler.py:452
 #, python-format
 msgid "• %(nick)s is away (%(message)s)."
 msgstr "•%(nick)s 离开 (%(message)s)."
 
-#: ../signal_handler.py:566
+#: ../signal_handler.py:576
 #, python-format
 msgid "• Modes for %(target)s: %(mode)s"
 msgstr ""
 
 #. normal ctcp
-#: ../signal_handler.py:659
+#: ../signal_handler.py:669
 #, python-format
 msgid "CTCP from %(nick)s to Channel:"
 msgstr ""
 
-#: ../signal_handler.py:690
+#: ../signal_handler.py:700
 #, python-format
 msgid "CTCP request from you to %(target)s: %(message)s"
 msgstr ""
 
-#: ../signal_handler.py:892
+#: ../signal_handler.py:902
 #, python-format
 msgid "• You are now known as %(newnick)s."
 msgstr "•你已经改名为 %(newnick)s."
 
-#: ../signal_handler.py:898
+#: ../signal_handler.py:908
 #, python-format
 msgid "• %(nick)s is now known as %(newnick)s."
 msgstr "•%(nick)s 改名为 %(newnick)s."
 
-#: ../signal_handler.py:964
+#: ../signal_handler.py:1001
 #, python-format
 msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr "« 你已经被 %(nick)s 从 %(channel)s 频道中踢出, (%(reason)s)."
 
-#: ../signal_handler.py:985
+#: ../signal_handler.py:1022
 #, python-format
 msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr "« %(who)s 被 %(nick)s 踢出了 %(channel)s 频道(%(reason)s)。"
 
-#: ../signal_handler.py:1023
+#: ../signal_handler.py:1060
 #, python-format
 msgid "« You have quit (%(reason)s)."
 msgstr "« 你已经退出,(%(reason)s)."
 
-#: ../signal_handler.py:1025
+#: ../signal_handler.py:1062
 msgid "« You have quit."
 msgstr "« 你已经退出."
 
-#: ../signal_handler.py:1048
+#: ../signal_handler.py:1085
 #, python-format
 msgid "« %(nick)s has quit (%(reason)s)."
 msgstr "« %(nick)s 已经退出, (%(reason)s)."
 
-#: ../signal_handler.py:1050
+#: ../signal_handler.py:1087
 #, python-format
 msgid "« %(nick)s has quit."
 msgstr "« %(nick)s 已经退出."
 
-#: ../signal_handler.py:1151
+#: ../signal_handler.py:1188
 #, python-format
 msgid "» You have joined %(channel)s."
 msgstr "» 你已经加入 %(channel)s."
 
-#: ../signal_handler.py:1162
+#: ../signal_handler.py:1199
 #, python-format
 msgid "» %(nick)s has joined %(channel)s."
 msgstr "» %(nick)s 已经进入 %(channel)s."
 
-#: ../signal_handler.py:1260
+#: ../signal_handler.py:1287
 #, python-format
 msgid "« You have left %(channel)s (%(reason)s)."
 msgstr "« 你已经离开 %(channel)s (%(reason)s)."
 
-#: ../signal_handler.py:1262
+#: ../signal_handler.py:1289
 #, python-format
 msgid "« You have left %(channel)s."
 msgstr "« 你已经离开 %(channel)s."
 
-#: ../signal_handler.py:1292
+#: ../signal_handler.py:1319
 #, python-format
 msgid "« %(nick)s has left %(channel)s (%(reason)s)."
 msgstr "« %(nick)s 已经离开 %(channel)s (%(reason)s)."
 
-#: ../signal_handler.py:1295
+#: ../signal_handler.py:1322
 #, python-format
 msgid "« %(nick)s has left %(channel)s."
 msgstr "« %(nick)s 已经离开 %(channel)s."
 
-#: ../signal_handler.py:1316
+#: ../signal_handler.py:1343
 msgid "• You are not a channel operator."
 msgstr ""
 
-#: ../signal_handler.py:1326
+#: ../signal_handler.py:1353
 #, python-format
 msgid "• %(target)s: No such nick/channel."
 msgstr ""
 
-#: ../signal_handler.py:1329
+#: ../signal_handler.py:1356
 #, python-format
 msgid "• %(target)s: No such server."
 msgstr "• %(target)s：该服务器不存在。"
 
-#: ../signal_handler.py:1332
+#: ../signal_handler.py:1359
 #, python-format
 msgid "• %(target)s: No such channel."
 msgstr "• %(target)s：该频道不存在。"
 
-#: ../signal_handler.py:1344
+#: ../signal_handler.py:1371
 msgid "Unknown reason"
 msgstr "未知原因"
 
-#: ../signal_handler.py:1347
+#: ../signal_handler.py:1374
 msgid "The channel is full."
 msgstr "些频道已经满员"
 
-#: ../signal_handler.py:1349
+#: ../signal_handler.py:1376
 msgid "The channel is invite-only."
 msgstr ""
 
-#: ../signal_handler.py:1351
+#: ../signal_handler.py:1378
 msgid "You are banned."
 msgstr "您被禁止了。"
 
-#: ../signal_handler.py:1367
+#: ../signal_handler.py:1394
 msgid "You need the correct channel key."
 msgstr "您需要正确的频道密钥。"
 
-#: ../signal_handler.py:1372
+#: ../signal_handler.py:1399
 #, python-format
 msgid "You can not join %(channel)s: %(reason)s"
 msgstr "你不进加入 %(channel)s: %(reason)s"
 
-#: ../signal_handler.py:1385
-#, python-format
-msgid "[%(nick)s] %(message)s"
-msgstr "[%(nick)s] %(message)s"
-
-#: ../signal_handler.py:1390
-#, python-format
-msgid "[%(nick)s] End of whois."
-msgstr ""
-
-#: ../signal_handler.py:1460
+#: ../signal_handler.py:1471
 msgid "Auto accepted file transfer"
 msgstr ""
 
-#: ../signal_handler.py:1461
+#: ../signal_handler.py:1472
 #, python-format
 msgid ""
 "maki auto accepted the following file transfer:\n"
@@ -190,27 +180,27 @@ msgid ""
 "Server: %(server)s"
 msgstr ""
 
-#: ../tekka/com.py:108 ../tekka/com.py:114 ../tekka/com.py:206
-#: ../tekka/gui/mgmt.py:248
+#: ../tekka/com.py:126 ../tekka/com.py:136 ../tekka/com.py:239
+#: ../tekka/gui/mgmt.py:277
 msgid "tekka could not connect to maki."
 msgstr ""
 
-#: ../tekka/com.py:109 ../tekka/gui/mgmt.py:249
+#: ../tekka/com.py:127 ../tekka/gui/mgmt.py:278
 msgid "Please check whether maki is running."
 msgstr ""
 
-#: ../tekka/com.py:115 ../tekka/com.py:207
+#: ../tekka/com.py:137 ../tekka/com.py:240
 #, python-format
 msgid ""
 "Please check whether maki is running.\n"
 "The following error occurred: %(error)s"
 msgstr ""
 
-#: ../tekka/com.py:150
+#: ../tekka/com.py:173
 msgid "Communication error with maki."
 msgstr ""
 
-#: ../tekka/com.py:151
+#: ../tekka/com.py:174
 #, python-format
 msgid ""
 "There was an error while executing <b>'%s</b>' with DBus: \n"
@@ -218,64 +208,33 @@ msgid ""
 "You should keep safe that maki is running "
 msgstr ""
 
-#: ../tekka/com.py:252
+#: ../tekka/com.py:286
 msgid "tekka requires a newer maki version."
 msgstr ""
 
-#: ../tekka/com.py:253
+#: ../tekka/com.py:287
 #, python-format
 msgid "Please update maki to at least version %(version)s."
 msgstr ""
 
-#: ../tekka/commands.py:53 ../tekka/commands.py:62
-msgid "Warning:"
-msgstr "警告："
-
-#: ../tekka/commands.py:54
-#, python-format
-msgid "You are not connected to server %(server)s."
-msgstr ""
-
-#: ../tekka/commands.py:63
-#, python-format
-msgid ""
-"The channel %(channel)s is not joined. Everything you write will not be send."
-msgstr ""
-
-#: ../tekka/commands.py:330
-msgid "• Begin of names"
-msgstr ""
-
-#: ../tekka/commands.py:335
-msgid "• End of names"
-msgstr ""
-
-#: ../tekka/commands.py:462 ../tekka/dialogs/channelList.py:210
-msgid "User"
-msgstr "用户"
-
-#: ../tekka/commands.py:463 ../tekka/dialogs/channelList.py:210
-msgid "Topic"
-msgstr "主题"
-
-#: ../tekka/commands.py:691
+#: ../tekka/commands.py:115
 #, python-format
 msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
 msgstr "• 未知命令 “%(command)s”，将发送原始命令 “%(raw)s”。"
 
-#: ../tekka/dialogs/addServer.py:76
+#: ../tekka/dialogs/addServer.py:47
 msgid "No server name given."
 msgstr ""
 
-#: ../tekka/dialogs/addServer.py:77
+#: ../tekka/dialogs/addServer.py:48
 msgid "You must enter a server name."
 msgstr ""
 
-#: ../tekka/dialogs/channelList.py:109
+#: ../tekka/dialogs/channelList.py:89
 msgid "Channel list search error."
 msgstr ""
 
-#: ../tekka/dialogs/channelList.py:110
+#: ../tekka/dialogs/channelList.py:90
 #, python-format
 msgid ""
 "You've got a syntax error in your search string. The error is: %s\n"
@@ -283,70 +242,71 @@ msgid ""
 "search string if you don't know about regular expressions."
 msgstr ""
 
-#: ../tekka/dialogs/channelList.py:210
-msgid "Channel"
-msgstr "频道"
-
-#: ../tekka/dialogs/dcc.py:167
+#: ../tekka/dialogs/dcc.py:161
 msgid "No transfer selected!"
 msgstr ""
 
-#: ../tekka/dialogs/dcc.py:168
+#: ../tekka/dialogs/dcc.py:162
 msgid "You must select a transfer to remove it."
 msgstr ""
 
-#: ../tekka/dialogs/dcc.py:172
+#: ../tekka/dialogs/dcc.py:166
 msgid "Remove file transfer?"
 msgstr ""
 
-#: ../tekka/dialogs/dcc.py:173
+#: ../tekka/dialogs/dcc.py:167
 #, python-format
 msgid "Are you sure you want to remove the file transfer %(id)d?"
 msgstr ""
-
-#: ../tekka/dialogs/dcc.py:232
-msgid "ID"
-msgstr "用户名"
-
-#: ../tekka/dialogs/dcc.py:232
-msgid "Server"
-msgstr "服务器"
-
-#: ../tekka/dialogs/dcc.py:232
-msgid "Partner"
-msgstr ""
-
-#: ../tekka/dialogs/dcc.py:232
-msgid "Filename"
-msgstr "文件名"
-
-#: ../tekka/dialogs/dcc.py:232
-msgid "Size"
-msgstr "大小"
-
-#: ../tekka/dialogs/dcc.py:244
-msgid "Progress"
-msgstr ""
-
-#. speed column
-#: ../tekka/dialogs/dcc.py:250
-msgid "Speed"
-msgstr "速度"
 
 #: ../tekka/dialogs/debug.py:63
 msgid "C_ompile and run"
 msgstr "编译并运行(_O)"
 
-#: ../tekka/dialogs/plugins.py:120
-#, python-format
-msgid "Configure %(name)s"
+#: ../tekka/dialogs/history.py:77
+msgid "Read history anyways?"
 msgstr ""
 
-#: ../tekka/dialogs/server.py:211
+#: ../tekka/dialogs/history.py:78
+msgid ""
+"maki is connected remotely. It's possible that the history is not "
+"accessible. Do you want to try anyways?"
+msgstr ""
+
+#: ../tekka/dialogs/history.py:116
+#, python-format
+msgid "History for %(target)s"
+msgstr ""
+
+#: ../tekka/dialogs/plugins.py:82 ../tekka/dialogs/plugins.py:110
+msgid "No plugin selected."
+msgstr ""
+
+#: ../tekka/dialogs/plugins.py:83
+msgid "You must select a plugin to load it."
+msgstr ""
+
+#: ../tekka/dialogs/plugins.py:111
+msgid "You must select a plugin to unload it."
+msgstr ""
+
+#: ../tekka/dialogs/server.py:140 ../tekka/dialogs/server.py:167
+msgid "No server selected."
+msgstr ""
+
+#: ../tekka/dialogs/server.py:141
+msgid "You must select a server to edit it."
+msgstr ""
+
+#: ../tekka/dialogs/server.py:168
+msgid "You must select a server to delete it."
+msgstr ""
+
+#: ../tekka/dialogs/server.py:178
 msgid "Error while retrieving server name."
 msgstr ""
 
-#: ../tekka/dialogs/server.py:212
+#: ../tekka/dialogs/server.py:179
 msgid ""
 "There was an error while retrieving the server name.\n"
 "Are you connected to maki?"
@@ -370,13 +330,13 @@ msgstr ""
 msgid "Loading..."
 msgstr "载入中..."
 
-#: ../tekka/gui/mgmt.py:145
+#: ../tekka/gui/mgmt.py:173
 #, python-format
 msgid "%d User"
 msgid_plural "%d Users"
 msgstr[0] "%d 个用户"
 
-#: ../tekka/gui/mgmt.py:147
+#: ../tekka/gui/mgmt.py:175
 #, python-format
 msgid "%d Operator"
 msgid_plural "%d Operators"
@@ -410,11 +370,6 @@ msgid ""
 "Destination: %(destination)s%(resumable)s"
 msgstr ""
 
-#: ../tekka/lib/dialog_control.py:62
-#, python-format
-msgid "Can't open dialog '%s'. There's no connection to maki."
-msgstr ""
-
 #: ../tekka/lib/general_output_buffer.py:63
 #, python-format
 msgid "Hide '%s' messages"
@@ -429,44 +384,49 @@ msgstr "输入 %(channel)s 频道的密钥。"
 msgid "Save key for channel"
 msgstr "保存频道的密钥"
 
-#: ../tekka/lib/plugin_control.py:108 ../tekka/lib/plugin_control.py:116
-#: ../tekka/lib/plugin_control.py:139 ../tekka/lib/plugin_control.py:197
-#: ../tekka/lib/plugin_control.py:353
+#: ../tekka/lib/plugin_config_dialog.py:15
+#, python-format
+msgid "Configure %(name)s"
+msgstr ""
+
+#: ../tekka/lib/plugin_control.py:110 ../tekka/lib/plugin_control.py:118
+#: ../tekka/lib/plugin_control.py:141 ../tekka/lib/plugin_control.py:199
+#: ../tekka/lib/plugin_control.py:354
 msgid "Plugin could not be loaded."
 msgstr "插件没有被装载"
 
-#: ../tekka/lib/plugin_control.py:109 ../tekka/lib/plugin_control.py:140
-#: ../tekka/lib/plugin_control.py:198
+#: ../tekka/lib/plugin_control.py:111 ../tekka/lib/plugin_control.py:142
+#: ../tekka/lib/plugin_control.py:200
 #, python-format
 msgid ""
 "Plugin %(plugin)s could not be loaded.\n"
 "The following error occurred: %(error)s"
 msgstr ""
 
-#: ../tekka/lib/plugin_control.py:117
+#: ../tekka/lib/plugin_control.py:119
 #, python-format
 msgid "Plugin %(plugin)s could not be loaded."
 msgstr ""
 
-#: ../tekka/lib/plugin_control.py:176
+#: ../tekka/lib/plugin_control.py:178
 msgid "Plugin is already loaded."
 msgstr "插件已经被装载"
 
-#: ../tekka/lib/plugin_control.py:177
+#: ../tekka/lib/plugin_control.py:179
 #, python-format
 msgid "Plugin %(plugin)s is already loaded."
 msgstr ""
 
-#: ../tekka/lib/plugin_control.py:221
+#: ../tekka/lib/plugin_control.py:223
 msgid "Plugin could not be unloaded."
 msgstr ""
 
-#: ../tekka/lib/plugin_control.py:221
+#: ../tekka/lib/plugin_control.py:223
 #, python-format
 msgid "Plugin %(plugin)s could not be unloaded, because it is not loaded."
 msgstr ""
 
-#: ../tekka/lib/plugin_control.py:354
+#: ../tekka/lib/plugin_control.py:355
 #, python-format
 msgid "Plugin %(plugin)s could not be loaded automatically."
 msgstr ""
@@ -479,32 +439,32 @@ msgstr "隐藏主窗口"
 msgid "Show main window"
 msgstr "显示主窗口"
 
-#: ../tekka/lib/topic_dialog.py:67
+#: ../tekka/lib/topic_dialog.py:62
 #, python-format
 msgid "Topic for channel %(channel)s on %(server)s"
 msgstr ""
 
-#: ../tekka/lib/topic_dialog.py:123
+#: ../tekka/lib/topic_dialog.py:115
 msgid "Topic changed before."
 msgstr ""
 
-#: ../tekka/lib/topic_dialog.py:124
+#: ../tekka/lib/topic_dialog.py:116
 msgid ""
 "The topic was changed before your update. Do you want to commit the changes "
 "anyway?"
 msgstr ""
 
-#: ../tekka/lib/welcome_window.py:37
+#: ../tekka/lib/welcome_window.py:64
 msgid "<big><b>Welcome to tekka!</b></big>"
 msgstr ""
 
-#: ../tekka/lib/welcome_window.py:95
+#: ../tekka/lib/welcome_window.py:122
 msgid ""
 "You are connected to maki. The next step is to connect to a server via the "
 "server dialog in the tekka menu."
 msgstr ""
 
-#: ../tekka/lib/welcome_window.py:101
+#: ../tekka/lib/welcome_window.py:128
 msgid ""
 "You are not connected to maki. Without maki you can not connect to servers "
 "or write messages.\n"
@@ -514,47 +474,47 @@ msgid ""
 "ask for support."
 msgstr ""
 
-#: ../tekka/main.py:468
+#: ../tekka/main.py:490
 msgid "Reset markup"
 msgstr ""
 
-#: ../tekka/main.py:618
+#: ../tekka/main.py:642
 #, python-format
 msgid "Do you really want to close channel “%(name)s”?"
 msgstr "你是否确定退出“%(name)s”?"
 
-#: ../tekka/main.py:620
+#: ../tekka/main.py:644
 #, python-format
 msgid "Do you really want to close query “%(name)s”?"
 msgstr ""
 
-#: ../tekka/main.py:622
+#: ../tekka/main.py:646
 #, python-format
 msgid "Do you really want to close server “%(name)s”?"
 msgstr "你是否确定断开服务器“%(name)s”?"
 
 #. TODO: away status
-#: ../tekka/main.py:718
+#: ../tekka/main.py:759
 msgid "Nickname: "
 msgstr ""
 
-#: ../tekka/main.py:721
+#: ../tekka/main.py:762
 msgid "User: "
 msgstr ""
 
-#: ../tekka/main.py:722
+#: ../tekka/main.py:763
 msgid "Topic: "
 msgstr "话题： "
 
-#: ../tekka/main.py:724 ../tekka/main.py:728
+#: ../tekka/main.py:765 ../tekka/main.py:769
 msgid "Last sentence: "
 msgstr ""
 
-#: ../tekka/main.py:1188
+#: ../tekka/main.py:1266
 msgid "Error occured"
 msgstr ""
 
-#: ../tekka/main.py:1197
+#: ../tekka/main.py:1276
 msgid ""
 "<span size='larger' weight='bold'>Error</span>\n"
 "\n"
@@ -562,45 +522,45 @@ msgid ""
 "at https://bugs.launchpad.net/sushi."
 msgstr ""
 
-#: ../tekka/menus/mainmenu_context.py:104
-#: ../tekka/menus/mainmenu_context.py:225 ../tekka/menus/nicklist_menu.py:137
+#: ../tekka/menus/mainmenu_context.py:112
+#: ../tekka/menus/mainmenu_context.py:213 ../tekka/menus/nicklist_menu.py:136
 msgid "No connection to maki."
 msgstr ""
 
-#: ../tekka/menus/mainmenu_context.py:105
+#: ../tekka/menus/mainmenu_context.py:113
 msgid "You can't shutdown maki. You're not connected."
 msgstr ""
 
-#: ../tekka/menus/mainmenu_context.py:236
+#: ../tekka/menus/mainmenu_context.py:225
 msgid "tekka could not determine server."
 msgstr ""
 
-#: ../tekka/menus/mainmenu_context.py:237
+#: ../tekka/menus/mainmenu_context.py:226
 msgid ""
 "There is no active server. Click on a server tab or a child of a server tab "
 "to activate the server."
 msgstr ""
 
-#: ../tekka/menus/nicklist_menu.py:53 ../tekka/menus/servertree_menu.py:52
+#: ../tekka/menus/nicklist_menu.py:52 ../tekka/menus/servertree_menu.py:52
 msgid "Widget creation failed."
 msgstr ""
 
-#: ../tekka/menus/nicklist_menu.py:54
+#: ../tekka/menus/nicklist_menu.py:53
 msgid ""
 "tekka failed to create the nicklist menu.\n"
 "It's possible that there are files missing. Check if you have appropriate "
 "permissions to access all files needed by tekka and restart tekka."
 msgstr ""
 
-#: ../tekka/menus/nicklist_menu.py:153
+#: ../tekka/menus/nicklist_menu.py:152
 msgid "No file selected"
 msgstr ""
 
-#: ../tekka/menus/nicklist_menu.py:154
+#: ../tekka/menus/nicklist_menu.py:153
 msgid "You didn't select a file to send. Aborting."
 msgstr ""
 
-#: ../tekka/menus/nicklist_menu.py:160
+#: ../tekka/menus/nicklist_menu.py:159
 #, python-format
 msgid "Choose a file to send to %(nick)s"
 msgstr ""
@@ -612,94 +572,119 @@ msgid ""
 "permissions to access all files needed by tekka and restart tekka."
 msgstr ""
 
-#: ../glade/dialogs/about.glade.in.h:1
+#: ../ui/dialogs/about.ui.in.h:1
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
 "  Marian Tietz https://launchpad.net/~nemo-ikkoku\n"
 "  chattan https://launchpad.net/~chattan"
 
-#: ../glade/dialogs/advancedPreferences.glade.h:1
+#: ../ui/dialogs/advancedPreferences.ui.h:1
 msgid "Advanced Preferences"
 msgstr "高级首选项"
 
-#: ../glade/dialogs/channelList.glade.h:1
+#: ../ui/dialogs/channelList.ui.h:1
 msgid "Channel List"
 msgstr "频道列表"
 
-#: ../glade/dialogs/dcc.glade.h:1
+#: ../ui/dialogs/colorTable.ui.h:2
+#, no-c-format
+msgid ""
+"<b>IRC to real colors</b>\n"
+"\n"
+"Example use:\n"
+"Type %C02,01 for blue foreground and black background."
+msgstr ""
+
+#: ../ui/dialogs/colorTable.ui.h:6
+msgid "IRC Colors"
+msgstr ""
+
+#: ../ui/dialogs/dcc.ui.h:1
 msgid "File Transfers"
 msgstr ""
 
-#: ../glade/dialogs/hide.glade.h:1
+#: ../ui/dialogs/hide.ui.h:1
 msgid "<b>Message types to hide</b>"
 msgstr ""
 
-#: ../glade/dialogs/hide.glade.h:2
+#: ../ui/dialogs/hide.ui.h:2
 msgid "<b>Other</b>"
 msgstr ""
 
-#: ../glade/dialogs/hide.glade.h:3
+#: ../ui/dialogs/hide.ui.h:3
 msgid "<b>Own</b>"
 msgstr ""
 
-#: ../glade/dialogs/hide.glade.h:4
+#: ../ui/dialogs/hide.ui.h:4
 msgid "Hide message types"
 msgstr ""
 
-#: ../glade/dialogs/hide.glade.h:5
+#: ../ui/dialogs/hide.ui.h:5
 msgid "Join:"
 msgstr ""
 
-#: ../glade/dialogs/hide.glade.h:6
+#: ../ui/dialogs/hide.ui.h:6
 msgid "Kick:"
 msgstr ""
 
-#: ../glade/dialogs/hide.glade.h:7
+#: ../ui/dialogs/hide.ui.h:7
 msgid "Mode:"
 msgstr ""
 
-#: ../glade/dialogs/hide.glade.h:8
+#: ../ui/dialogs/hide.ui.h:8
 msgid "Nick:"
 msgstr ""
 
-#: ../glade/dialogs/hide.glade.h:9
+#: ../ui/dialogs/hide.ui.h:9
 msgid "Part:"
 msgstr ""
 
-#: ../glade/dialogs/hide.glade.h:10
+#: ../ui/dialogs/hide.ui.h:10
 msgid "Quit:"
 msgstr ""
 
-#: ../glade/dialogs/history.glade.h:1
-msgid "History"
-msgstr "历史"
-
-#: ../glade/dialogs/history.glade.h:2
-msgid "Local search only"
+#: ../ui/dialogs/join.ui.h:1
+msgid "#"
 msgstr ""
 
-#: ../glade/dialogs/plugins.glade.h:1
+#: ../ui/dialogs/join.ui.h:2
+msgid "<b>Join a channel</b>"
+msgstr ""
+
+#: ../ui/dialogs/join.ui.h:3
+msgid "Join _automatically"
+msgstr ""
+
+#: ../ui/dialogs/join.ui.h:4
+msgid "Name:"
+msgstr ""
+
+#: ../ui/dialogs/join.ui.h:5 ../ui/menus/serverTreeMenu.ui.h:10
+msgid "_Join"
+msgstr ""
+
+#: ../ui/dialogs/plugins.ui.h:1
 msgid "C_onfigure"
 msgstr ""
 
-#: ../glade/dialogs/plugins.glade.h:2
+#: ../ui/dialogs/plugins.ui.h:2
 msgid "Plugins"
 msgstr "插件"
 
-#: ../glade/dialogs/plugins.glade.h:3
+#: ../ui/dialogs/plugins.ui.h:3
 msgid "_Load"
 msgstr "载入(_L)"
 
-#: ../glade/dialogs/plugins.glade.h:4
+#: ../ui/dialogs/plugins.ui.h:4
 msgid "_Unload"
 msgstr "卸载(_U)"
 
-#: ../glade/dialogs/preferences.glade.h:1
+#: ../ui/dialogs/preferences.ui.h:1
 msgid "<b>Filter messages</b>"
 msgstr ""
 
-#: ../glade/dialogs/preferences.glade.h:2
+#: ../ui/dialogs/preferences.ui.h:2
 msgid ""
 "<b>Help:</b>\n"
 "The <b>first</b> field is the <u>message</u> type.\n"
@@ -710,53 +695,61 @@ msgid ""
 "The last field is optional."
 msgstr ""
 
-#: ../glade/dialogs/preferences.glade.h:8
+#: ../ui/dialogs/preferences.ui.h:8
 msgid ""
 "<b>Warning:</b>\n"
 "Changes will be applied after closing this dialog."
 msgstr "<b>警告:</b>"
 
-#: ../glade/dialogs/preferences.glade.h:10
+#: ../ui/dialogs/preferences.ui.h:10
 msgid "A_uto expand server tree"
 msgstr "自动展开服务器树(_U)"
 
-#: ../glade/dialogs/preferences.glade.h:11
+#: ../ui/dialogs/preferences.ui.h:11
 msgid "Actions:"
 msgstr "动作："
 
-#: ../glade/dialogs/preferences.glade.h:12
+#: ../ui/dialogs/preferences.ui.h:12
 msgid "Ad_vanced Settings"
 msgstr "高级设置(_V)"
 
-#: ../glade/dialogs/preferences.glade.h:13
+#: ../ui/dialogs/preferences.ui.h:13
+msgid "Autodetect rules color"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:14
 msgid "C_hatting"
 msgstr ""
 
-#: ../glade/dialogs/preferences.glade.h:14
+#: ../ui/dialogs/preferences.ui.h:15
 msgid "C_olors"
 msgstr "颜色(_O)"
 
-#: ../glade/dialogs/preferences.glade.h:15
+#: ../ui/dialogs/preferences.ui.h:16
 msgid "Default nick:"
 msgstr "默认昵称"
 
-#: ../glade/dialogs/preferences.glade.h:16
+#: ../ui/dialogs/preferences.ui.h:17
+msgid "Enable rules color"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:18
 msgid "Font:"
 msgstr "字体："
 
-#: ../glade/dialogs/preferences.glade.h:17
+#: ../ui/dialogs/preferences.ui.h:19
 msgid "Highlighted actions:"
 msgstr "高亮的动作："
 
-#: ../glade/dialogs/preferences.glade.h:18
+#: ../ui/dialogs/preferences.ui.h:20
 msgid "Highlighted messages:"
 msgstr "高亮的消息："
 
-#: ../glade/dialogs/preferences.glade.h:19
+#: ../ui/dialogs/preferences.ui.h:21
 msgid "Highlightwords:"
 msgstr ""
 
-#: ../glade/dialogs/preferences.glade.h:20
+#: ../ui/dialogs/preferences.ui.h:22
 msgid ""
 "If you want to have control about <u>all</u> settings you can use the "
 "advanced settings dialog.\n"
@@ -766,127 +759,131 @@ msgid ""
 "effect."
 msgstr ""
 
-#: ../glade/dialogs/preferences.glade.h:24
+#: ../ui/dialogs/preferences.ui.h:26
 msgid "Last log lines:"
 msgstr ""
 
-#: ../glade/dialogs/preferences.glade.h:25
+#: ../ui/dialogs/preferences.ui.h:27
 msgid "Last log:"
 msgstr ""
 
-#: ../glade/dialogs/preferences.glade.h:26
+#: ../ui/dialogs/preferences.ui.h:28
 msgid "Messages:"
 msgstr "消息："
 
-#: ../glade/dialogs/preferences.glade.h:27
+#: ../ui/dialogs/preferences.ui.h:29
 msgid "Notification:"
 msgstr "通知:"
 
-#: ../glade/dialogs/preferences.glade.h:28
+#: ../ui/dialogs/preferences.ui.h:30
 msgid "Own nick:"
 msgstr "自己的昵称："
 
-#: ../glade/dialogs/preferences.glade.h:29
+#: ../ui/dialogs/preferences.ui.h:31
 msgid "Own text:"
 msgstr ""
 
-#: ../glade/dialogs/preferences.glade.h:30
+#: ../ui/dialogs/preferences.ui.h:32
 msgid "Part message:"
 msgstr "离开时的消息："
 
-#: ../glade/dialogs/preferences.glade.h:31
+#: ../ui/dialogs/preferences.ui.h:33
 msgid "Preferences"
 msgstr "首选项"
 
-#: ../glade/dialogs/preferences.glade.h:32
+#: ../ui/dialogs/preferences.ui.h:34
 msgid "Quit message:"
 msgstr "退出时的消息："
 
-#: ../glade/dialogs/preferences.glade.h:33
+#: ../ui/dialogs/preferences.ui.h:35
+msgid "Rules color:"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:36
 msgid "Shutdown _maki on close"
 msgstr "在关闭时结束 _maki"
 
-#: ../glade/dialogs/preferences.glade.h:34
+#: ../ui/dialogs/preferences.ui.h:37
 msgid "Time format:"
 msgstr ""
 
-#: ../glade/dialogs/preferences.glade.h:35
+#: ../ui/dialogs/preferences.ui.h:38
 msgid "Use _RGBA"
 msgstr "使用 _RGBA"
 
-#: ../glade/dialogs/preferences.glade.h:36
+#: ../ui/dialogs/preferences.ui.h:39
 msgid "Use _default font"
 msgstr "使用默认字体(_D)"
 
-#: ../glade/dialogs/preferences.glade.h:37
+#: ../ui/dialogs/preferences.ui.h:40
 msgid "Use contrast sensitive colors"
 msgstr ""
 
-#: ../glade/dialogs/preferences.glade.h:38 ../glade/mainwindow.glade.h:13
+#: ../ui/dialogs/preferences.ui.h:41 ../ui/main_window.ui.h:10
 msgid "_General Output"
 msgstr "常规输出(_G)"
 
-#: ../glade/dialogs/preferences.glade.h:39
+#: ../ui/dialogs/preferences.ui.h:42
 msgid "_Hide on close"
 msgstr "关闭时隐藏(_H)"
 
-#: ../glade/dialogs/preferences.glade.h:40
+#: ../ui/dialogs/preferences.ui.h:43
 msgid "_Nick Colors"
 msgstr "昵称颜色(_N)"
 
-#: ../glade/dialogs/preferences.glade.h:41
+#: ../ui/dialogs/preferences.ui.h:44
 msgid "_Show status icon"
 msgstr "显示状态图标(_S)"
 
-#: ../glade/dialogs/preferences.glade.h:42 ../glade/mainwindow.glade.h:19
+#: ../ui/dialogs/preferences.ui.h:45 ../ui/main_window.ui.h:17
 msgid "_tekka"
 msgstr "_tekka"
 
-#: ../glade/dialogs/server.glade.h:1 ../glade/mainwindow.glade.h:5
+#: ../ui/dialogs/server.ui.h:1
 msgid "Server List"
 msgstr "服务器列表"
 
-#: ../glade/dialogs/serverAdd.glade.h:1
+#: ../ui/dialogs/serverAdd.ui.h:1
 msgid "<b>Add Server</b>"
 msgstr "<b>添加服务器</b>"
 
-#: ../glade/dialogs/serverAdd.glade.h:2 ../glade/dialogs/serverEdit.glade.h:1
+#: ../ui/dialogs/serverAdd.ui.h:2 ../ui/dialogs/serverEdit.ui.h:1
 msgid "<b>Command List</b>"
 msgstr "<b>命令列表</b>"
 
-#: ../glade/dialogs/serverAdd.glade.h:3
+#: ../ui/dialogs/serverAdd.ui.h:3
 msgid "Add Server"
 msgstr "添加服务器"
 
-#: ../glade/dialogs/serverAdd.glade.h:4 ../glade/dialogs/serverEdit.glade.h:3
+#: ../ui/dialogs/serverAdd.ui.h:4 ../ui/dialogs/serverEdit.ui.h:3
 msgid "Address:"
 msgstr "地址："
 
-#: ../glade/dialogs/serverAdd.glade.h:5 ../glade/dialogs/serverEdit.glade.h:4
+#: ../ui/dialogs/serverAdd.ui.h:5 ../ui/dialogs/serverEdit.ui.h:4
 msgid "Auto-connect:"
 msgstr "自动连接"
 
-#: ../glade/dialogs/serverAdd.glade.h:6 ../glade/dialogs/serverEdit.glade.h:6
+#: ../ui/dialogs/serverAdd.ui.h:6 ../ui/dialogs/serverEdit.ui.h:6
 msgid "Nick name:"
 msgstr "昵称："
 
-#: ../glade/dialogs/serverAdd.glade.h:7 ../glade/dialogs/serverEdit.glade.h:8
+#: ../ui/dialogs/serverAdd.ui.h:7 ../ui/dialogs/serverEdit.ui.h:8
 msgid "NickServ password:"
 msgstr ""
 
-#: ../glade/dialogs/serverAdd.glade.h:8 ../glade/dialogs/serverEdit.glade.h:9
+#: ../ui/dialogs/serverAdd.ui.h:8 ../ui/dialogs/serverEdit.ui.h:9
 msgid "Port:"
 msgstr "端口："
 
-#: ../glade/dialogs/serverAdd.glade.h:9 ../glade/dialogs/serverEdit.glade.h:10
+#: ../ui/dialogs/serverAdd.ui.h:9 ../ui/dialogs/serverEdit.ui.h:10
 msgid "Real name:"
 msgstr "真实姓名："
 
-#: ../glade/dialogs/serverAdd.glade.h:10
+#: ../ui/dialogs/serverAdd.ui.h:10
 msgid "Server name:"
 msgstr "服务器名称："
 
-#: ../glade/dialogs/serverDelete.glade.h:2
+#: ../ui/dialogs/serverDelete.ui.h:2
 #, no-c-format
 msgid ""
 "<span weight=\"bold\" size=\"larger\">Delete Server</span>\n"
@@ -897,82 +894,215 @@ msgstr ""
 "\n"
 "您真的要删除 '%(server)s' 这个服务器吗？"
 
-#: ../glade/dialogs/serverDelete.glade.h:5
+#: ../ui/dialogs/serverDelete.ui.h:5
 msgid "Delete Server"
 msgstr "删除服务器"
 
-#: ../glade/dialogs/serverEdit.glade.h:2
+#: ../ui/dialogs/serverEdit.ui.h:2
 msgid "<b>Edit Server</b>"
 msgstr "<b>编辑服务器</b>"
 
-#: ../glade/dialogs/serverEdit.glade.h:5
+#: ../ui/dialogs/serverEdit.ui.h:5
 msgid "Edit Server"
 msgstr "编辑服务器"
 
-#: ../glade/dialogs/serverEdit.glade.h:7
+#: ../ui/dialogs/serverEdit.ui.h:7
 msgid "NickServ Ghost:"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:1
-msgid "Connect"
-msgstr "连接"
-
-#: ../glade/mainwindow.glade.h:2
-msgid "Disconnect"
-msgstr "断开连接"
-
-#: ../glade/mainwindow.glade.h:3
-msgid "IRC Colors"
+#: ../ui/main_window.ui.h:1
+msgid "IRC _Colors"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:4
+#: ../ui/main_window.ui.h:2
+msgid "P_lugins"
+msgstr ""
+
+#: ../ui/main_window.ui.h:3
 msgid "S_ide Pane"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:6
-msgid "Shutdown"
-msgstr "关机"
-
-#: ../glade/mainwindow.glade.h:7
+#: ../ui/main_window.ui.h:4
 msgid "Status _Bar"
 msgstr "状态栏"
 
-#: ../glade/mainwindow.glade.h:8
+#: ../ui/main_window.ui.h:5
 msgid "Status _Icon"
 msgstr "状态图标(_I)"
 
-#: ../glade/mainwindow.glade.h:9
+#: ../ui/main_window.ui.h:6
+msgid "T_ools"
+msgstr ""
+
+#: ../ui/main_window.ui.h:7
 msgid "_Channel List"
 msgstr "频道列表"
 
-#: ../glade/mainwindow.glade.h:10
+#: ../ui/main_window.ui.h:8
 msgid "_Debug"
 msgstr "调试"
 
-#: ../glade/mainwindow.glade.h:11
-msgid "_Dialogs"
-msgstr "对话框(_D)"
-
-#: ../glade/mainwindow.glade.h:12
+#: ../ui/main_window.ui.h:9
 msgid "_File Transfers"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:14
+#: ../ui/main_window.ui.h:11
 msgid "_Help"
 msgstr "帮助(_H)"
 
-#: ../glade/mainwindow.glade.h:15
-msgid "_Plugins"
-msgstr "插件(_P)"
+#: ../ui/main_window.ui.h:12
+msgid "_Server List"
+msgstr ""
 
-#: ../glade/mainwindow.glade.h:16
+#: ../ui/main_window.ui.h:13
+msgid "_Shutdown"
+msgstr ""
+
+#: ../ui/main_window.ui.h:14
 msgid "_Topic Bar"
 msgstr ""
 
-#: ../glade/mainwindow.glade.h:17
+#: ../ui/main_window.ui.h:15
 msgid "_View"
 msgstr "查看(_V)"
 
-#: ../glade/mainwindow.glade.h:18
+#: ../ui/main_window.ui.h:16
 msgid "_maki"
 msgstr "_maki"
+
+#: ../ui/menus/nickListMenu.ui.h:1
+msgid "Ban"
+msgstr "禁止"
+
+#: ../ui/menus/nickListMenu.ui.h:2
+msgid "Give Half-Op"
+msgstr ""
+
+#: ../ui/menus/nickListMenu.ui.h:3
+msgid "Give Op"
+msgstr "给予操作权限"
+
+#: ../ui/menus/nickListMenu.ui.h:4
+msgid "Give Voice"
+msgstr "给予发言权限"
+
+#: ../ui/menus/nickListMenu.ui.h:5
+msgid "Kick"
+msgstr "踢"
+
+#: ../ui/menus/nickListMenu.ui.h:6
+msgid "Modes"
+msgstr "模式"
+
+#: ../ui/menus/nickListMenu.ui.h:7
+msgid "Send File"
+msgstr ""
+
+#: ../ui/menus/nickListMenu.ui.h:8
+msgid "Take Half-Op"
+msgstr ""
+
+#: ../ui/menus/nickListMenu.ui.h:9
+msgid "Take Op"
+msgstr ""
+
+#: ../ui/menus/nickListMenu.ui.h:10
+msgid "Take Voice"
+msgstr "撤除发言权限"
+
+#: ../ui/menus/nickListMenu.ui.h:11
+msgid "Whois"
+msgstr "他是谁"
+
+#: ../ui/menus/serverTreeMenu.ui.h:1
+msgid "Connect automatically"
+msgstr ""
+
+#: ../ui/menus/serverTreeMenu.ui.h:2
+msgid "H_ide Messages"
+msgstr ""
+
+#: ../ui/menus/serverTreeMenu.ui.h:3
+msgid "Join automatically"
+msgstr ""
+
+#: ../ui/menus/serverTreeMenu.ui.h:4
+msgid "Set _Key"
+msgstr ""
+
+#: ../ui/menus/serverTreeMenu.ui.h:5
+msgid "Set _Topic"
+msgstr ""
+
+#: ../ui/menus/serverTreeMenu.ui.h:6
+msgid "_Close"
+msgstr ""
+
+#: ../ui/menus/serverTreeMenu.ui.h:7
+msgid "_Connect"
+msgstr ""
+
+#: ../ui/menus/serverTreeMenu.ui.h:8
+msgid "_Disconnect"
+msgstr ""
+
+#: ../ui/menus/serverTreeMenu.ui.h:9
+msgid "_History"
+msgstr ""
+
+#: ../ui/menus/serverTreeMenu.ui.h:11
+msgid "_Join a Channel"
+msgstr ""
+
+#: ../ui/menus/serverTreeMenu.ui.h:12
+msgid "_Part"
+msgstr ""
+
+#, python-format
+#~ msgid "[%(nick)s] %(message)s"
+#~ msgstr "[%(nick)s] %(message)s"
+
+#~ msgid "User"
+#~ msgstr "用户"
+
+#~ msgid "Channel"
+#~ msgstr "频道"
+
+#~ msgid "Connect"
+#~ msgstr "连接"
+
+#~ msgid "Disconnect"
+#~ msgstr "断开连接"
+
+#~ msgid "History"
+#~ msgstr "历史"
+
+#~ msgid "Shutdown"
+#~ msgstr "关机"
+
+#~ msgid "_Dialogs"
+#~ msgstr "对话框(_D)"
+
+#~ msgid "_Plugins"
+#~ msgstr "插件(_P)"
+
+#~ msgid "Warning:"
+#~ msgstr "警告："
+
+#~ msgid "Server"
+#~ msgstr "服务器"
+
+#~ msgid "ID"
+#~ msgstr "用户名"
+
+#~ msgid "Filename"
+#~ msgstr "文件名"
+
+#~ msgid "Size"
+#~ msgstr "大小"
+
+#~ msgid "Topic"
+#~ msgstr "主题"
+
+#~ msgid "Speed"
+#~ msgstr "速度"
