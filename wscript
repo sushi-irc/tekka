@@ -4,7 +4,7 @@ import Options
 import Utils
 
 APPNAME = 'tekka'
-VERSION = '1.2.1'
+VERSION = '1.3.0'
 
 srcdir = '.'
 blddir = 'build'
