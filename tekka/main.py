@@ -577,6 +577,39 @@ def nickList_button_press_event_cb(nickList, event):
 	return False
 
 
+def nicks_view_query_tooltip_cb(view, x, y, kbdmode, tooltip):
+	""" generate a tooltip with the awaymessage of the
+		nick at the given x/y coordinates.
+	"""
+
+	# TODO: would be nice to have ident string of the nick here
+
+	cursor = view.get_path_at_pos(x, y)
+
+	if not cursor:
+		return
+
+	user_row = view.get_model()[cursor[0]]
+	tip = ""
+
+	# away message appendix
+	if user_row[nick_list_store.COLUMN_AWAY]:
+		# the user is away
+
+		(server,_) = gui.tabs.get_current_tabs()
+
+
+		if server:
+
+			"""
+			msg = com.sushi.awaymessage(server.name,
+								user_row[nick_list_store.COLUMN_NICK])
+			"""
+			# TODO: retrieve awaymessage
+			pass
+
+
+
 """ Shortcut callbacks """
 
 def inputBar_shortcut_ctrl_u(inputBar, shortcut):
@@ -1145,6 +1178,8 @@ def setupGTK():
 			nickList_row_activated_cb,
 		"nicks_view_button_press_event":
 			nickList_button_press_event_cb,
+		"nicks_view_query_tooltip":
+			nicks_view_query_tooltip_cb,
 
 		# watch for position change of paneds
 		"list_vpaned_notify":
