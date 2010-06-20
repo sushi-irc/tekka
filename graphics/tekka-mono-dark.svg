@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.47pre4 r22446"
-   sodipodi:docname="sushi-mono-1-dark.svg">
+   sodipodi:docname="tekka-mono-dark.svg">
   <defs
      id="defs4">
     <inkscape:perspective
@@ -73,17 +73,24 @@
        inkscape:vp_y="0 : 1000 : 0"
        inkscape:vp_x="0 : 12 : 1"
        sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective2846"
+       inkscape:persp3d-origin="12 : 8 : 1"
+       inkscape:vp_z="24 : 12 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 12 : 1"
+       sodipodi:type="inkscape:persp3d" />
   </defs>
   <sodipodi:namedview
      id="base"
-     pagecolor="#49444f"
+     pagecolor="#49b04f"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.98491552"
-     inkscape:cx="257.04578"
-     inkscape:cy="194.44999"
+     inkscape:zoom="1.3928809"
+     inkscape:cx="279.67937"
+     inkscape:cy="249.28621"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -102,7 +109,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -130,7 +137,7 @@
        sodipodi:nodetypes="ccccc"
        id="path4868"
        d="m 295.60619,764.03485 c 0.90192,1.43829 -0.47167,-0.72972 2.11513,3.00693 1.95207,-0.93397 33.49265,-19.52594 36.00106,-20.96366 -0.1291,-3.51089 -0.16935,-4.22465 -1.36123,-7.50837 l -36.75496,25.4651 z"
-       style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#6b6a61;fill-opacity:0.81176472;fill-rule:nonzero;stroke:none;stroke-width:4.90000009999999975;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:'10.15 Saturday Night BRK';-inkscape-font-specification:'10.15 Saturday Night BRK'" />
+       style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#dfd8c8;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:4.90000009999999975;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:'10.15 Saturday Night BRK';-inkscape-font-specification:'10.15 Saturday Night BRK'" />
     <path
        style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;opacity:0.52399998000000003;color:#000000;fill:#dfd8c8;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:4.90000009999999975;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:'10.15 Saturday Night BRK';-inkscape-font-specification:'10.15 Saturday Night BRK'"
        d="m 246.02734,718.26508 c -24.66388,-0.97864 -39.20486,3.66916 -63.18984,8.10972 -11.60587,49.10815 -9.14257,97.97438 0.42892,146.91975 0.66499,2.64655 1.15651,8.08529 3.66847,9.06577 49.04086,19.27749 90.35111,15.05357 139.07212,2.17062 3.11041,-0.83108 3.70598,-7.70488 4.26058,-10.92007 4.37723,-32.06242 6.43678,-58.11785 6.16938,-89.47859 -6.49765,3.45031 -14.95297,7.5045 -21.78379,10.85875 -5.50527,2.70334 -9.67231,4.85769 -13.08685,6.60083 0.0422,3.6986 0.34645,2.97813 0.0747,6.7877 -0.85813,12.02842 -2.98573,24.48495 -4.51623,36.58016 -27.55606,5.19936 -55.96014,6.12964 -82.64244,-0.24128 -4.74348,-28.60562 -4.43772,-58.24282 -0.33967,-87.07273 16.27575,-2.27613 32.8574,-3.08533 49.45638,-2.61976 0.0793,8.8e-4 0.15852,8.8e-4 0.23777,0 1.85671,8e-5 2.11079,0.0991 4.19204,0.24721 2.50754,-2.10792 2.75011,-1.86753 4.36148,-3.12297 6.79313,-5.26457 16.45183,-12.52364 25.20318,-19.17882 0.15149,-5.26314 0.31951,-9.40227 -0.0477,-11.66175 l -24.46986,-2.76751 -27.04863,-0.27703 -4e-5,0 z"
@@ -142,12 +149,12 @@
        id="path4840"
        sodipodi:nodetypes="cccccccccccscccccccccccccc" />
     <path
-       style="fill:#43433e;fill-opacity:0.60000001999999997;stroke:#5c5a53;stroke-width:1.67113781000000006;stroke-miterlimit:4;stroke-opacity:0"
+       style="fill:#dfd8c8;fill-opacity:1;stroke:#5c5a53;stroke-width:1.67113781000000006;stroke-miterlimit:4;stroke-opacity:0"
        d="M 497.20252,614.33 255.02572,783.88475 246.91308,772.11008 483.26318,594.24547 497.20252,614.33 z"
        id="rect3615-6-4"
        sodipodi:nodetypes="ccccc" />
     <path
-       style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#43433e;fill-opacity:0.60000002;fill-rule:nonzero;stroke:none;stroke-width:4.90000009999999975;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:'10.15 Saturday Night BRK';-inkscape-font-specification:'10.15 Saturday Night BRK'"
+       style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#dfd8c8;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:4.90000009999999975;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:'10.15 Saturday Night BRK';-inkscape-font-specification:'10.15 Saturday Night BRK'"
        d="m 246.54752,718.07351 c -21.54425,0.31934 -43.09206,2.51351 -63.92646,8.16953 -10.48959,48.36084 -11.44865,99.42298 0.44158,147.43073 46.69375,18.35487 98.90693,14.56772 146.5689,1.96482 4.67378,-26.96587 6.86005,-54.32175 7.16586,-81.7102 0.20121,-3.75916 -0.0589,-6.93611 -0.16609,-9.91326 -9.37769,4.66377 -17.91896,9.18284 -27.38015,13.6361 0.26405,3.41317 0.0963,6.12897 -0.0324,10.09687 -0.5487,14.90995 -2.54686,29.76315 -4.41744,44.51943 -32.07105,6.77707 -65.9822,8.33334 -97.75789,-0.48259 -6.32585,-33.46924 -5.89398,-68.3037 -0.47554,-101.75719 17.37581,-2.87504 35.06582,-3.9507 52.71777,-3.68337 3.09959,0.0281 2.95511,0.0311 6.03624,0.37967 10.23112,-7.92895 22.06901,-17.33033 32.27078,-25.30298 -3.96034,-0.78307 -4.23568,-0.82975 -8.24226,-1.32323 -14.18506,-1.70381 -28.5042,-2.19391 -42.80302,-2.02433 l 6e-5,0 5e-5,0 z"
        id="path4844"
        sodipodi:nodetypes="cccccccccccccccccc" />
@@ -157,7 +164,7 @@
        d="m 396.59298,654.62054 c -111.71456,83.8377 -45.15013,33.29386 -156.93809,117.11606 6.88867,4.25652 7.20863,17.1259 16.6655,16.91244 107.2621,-74.01915 41.20538,-29.34562 148.31575,-103.71496 l -3.45183,-29.04846 -4.59133,-1.26508 z"
        id="rect3615-6-4-89" />
     <path
-       style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#43433e;fill-opacity:0.60000002;fill-rule:nonzero;stroke:none;stroke-width:10;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:'10.15 Saturday Night BRK';-inkscape-font-specification:'10.15 Saturday Night BRK'"
+       style="font-size:medium;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:normal;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;color:#000000;fill:#dfd8c8;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:'10.15 Saturday Night BRK';-inkscape-font-specification:'10.15 Saturday Night BRK'"
        d="m 232.7701,625.06304 c -45.41238,0.69332 -90.96682,4.82652 -135.087952,15.89093 -21.147757,101.71183 -23.57991,208.60946 0.37364,309.95958 10.759172,7.97046 20.393282,8.74186 30.413992,13.37729 89.74638,24.78489 188.23414,15.06152 277.94496,-6.11231 3.00231,-8.36877 3.0089,-15.10903 4.98937,-23.12145 8.13044,-57.95842 12.3075,-115.74074 11.4544,-174.0658 -0.43786,-8.17769 -0.32843,-8.32317 -0.53889,-16.49642 -11.38282,5.04868 -22.44072,11.32148 -33.6627,16.77222 0.33876,5.73568 -0.20547,4.04064 -0.10098,9.78453 0.90222,53.39253 -3.57374,105.78597 -10.71159,158.93828 -81.9804,18.21991 -169.23813,23.15501 -250.30502,-1.89588 -16.93251,-84.88187 -16.02462,-173.06883 -0.91707,-258.15027 69.16907,-12.82064 140.29454,-13.45168 210.00728,-4.30874 6.27482,0.93244 6.02119,0.73284 12.21256,2.14596 11.06543,-8.88453 23.24688,-20.22333 34.32757,-28.15563 -5.31732,-1.82811 -4.52983,-1.67528 -10.01701,-2.89163 -31.30979,-6.83815 -63.56604,-9.43365 -95.51093,-11.05981 -14.94901,-0.60211 -29.91235,-0.73728 -44.87167,-0.61085 l 3e-5,0 1e-5,0 z m 150.46252,84.73844 c 0.35187,1.76144 0.91442,4.57939 1.21774,5.91563 11.20452,-6.70369 24.65514,-15.7522 35.71334,-22.73551 -0.58637,-4.43321 0.0323,-2.14723 -0.81196,-7.2292 -11.01072,7.78829 -25.41564,16.5852 -36.11912,24.04908 z"
        id="path2816"
        sodipodi:nodetypes="cccccccccccccccccccccccccc" />
@@ -167,7 +174,7 @@
        d="m 257.72148,792.0914 c 6.08399,5.16851 5.03399,17.35363 13.97396,18.89554 27.31649,-13.12683 52.81994,-27.88527 79.92246,-41.79497 96.42238,-50.78184 -38.70825,19.95541 57.71767,-30.81953 -0.2527,-10.86009 0.28459,-19.19372 -2.00475,-32.76437 -121.11446,70.6719 -27.88044,16.87227 -149.60934,86.48333 z"
        id="rect3615-6-4-8-6" />
     <path
-       style="fill:#43433e;fill-opacity:0.60000001999999997;stroke:#43433e;stroke-width:1.67113781000000006;stroke-miterlimit:4;stroke-opacity:0"
+       style="fill:#dfd8c8;fill-opacity:1;stroke:#43433e;stroke-width:1.67113781000000006;stroke-miterlimit:4;stroke-opacity:0"
        d="M 501.92284,684.02496 271.04135,805.83299 264.4099,793.13913 c 26.88572,-15.53244 54.23866,-31.06487 81.36172,-46.59731 l 155.72294,-89.5813 0.42828,27.06444 z"
        id="rect3615-6-4-8"
        sodipodi:nodetypes="cccccc" />
