@@ -916,7 +916,7 @@ def setup_main_window():
 
 	try:
 		img = gtk.Image()
-		img.set_from_name("tekka")
+		img.set_from_icon_name("tekka",64)
 		win.set_icon(img)
 		""" 20.06.10
 			Don't know if this is still needed.
