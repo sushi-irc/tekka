@@ -57,9 +57,9 @@ def build (bld):
 		# well, that's kinda silly but state of the art, i guess
 		for dir in ('22','24'):
 			bld.install_as('${DATAROOTDIR}/icons/ubuntu-mono-dark/apps/%s/tekka.svg' % (dir),
-							  bld.glob('graphics/tekka-mono-dark.svg'))
+							  'graphics/tekka-mono-dark.svg')
 			bld.install_as('${DATAROOTDIR}/icons/ubuntu-mono-light/apps/%s/tekka.svg' % (dir),
-							  bld.glob('graphics/tekka-mono-light.svg'))
+							  'graphics/tekka-mono-light.svg')
 
 
 	bld.symlink_as('${BINDIR}/tekka', Utils.subst_vars('${DATAROOTDIR}/sushi/tekka/tekka.py', bld.env))
