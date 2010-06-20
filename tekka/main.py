@@ -878,22 +878,25 @@ def setup_main_window():
 		if colormap:
 			gtk.widget_set_default_colormap(colormap)
 
-	iconPath = config.get("tekka","app_icon")
 
-	if iconPath:
-		try:
-			# Explicitly add a 128x128 icon to work around
-			# a Compiz bug (LP: #312317)
-			gtk.window_set_default_icon_list(
-				gtk.gdk.pixbuf_new_from_file(iconPath),
-				gtk.gdk.pixbuf_new_from_file_at_size(
-					iconPath,
-					128,
-					128))
-
-		except gobject.GError:
-			# file not found
-			pass
+	try:
+		img = gtk.Image()
+		img.set_from_name("tekka")
+		win.set_icon(img)
+		""" 20.06.10
+			Don't know if this is still needed.
+		# Explicitly add a 128x128 icon to work around
+		# a Compiz bug (LP: #312317)
+		gtk.window_set_default_icon_list(
+			gtk.gdk.pixbuf_new_from_file(iconPath),
+			gtk.gdk.pixbuf_new_from_file_at_size(
+				iconPath,
+				128,
+				128))
+		"""
+	except gobject.GError:
+		# file not found
+		pass
 
 	# Restore sizes from last start
 	width = config.get("sizes","window_width")

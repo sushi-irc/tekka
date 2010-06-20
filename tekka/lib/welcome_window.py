@@ -48,8 +48,7 @@ class WelcomeWindow(OutputWindow):
 		self.table.set_homogeneous(False)
 		self.table.set_property("border-width", 12)
 
-		self.image = gtk.image_new_from_file(
-			config.get("tekka","app_icon"))
+		self.image = gtk.image_new_from_name("tekka")
 
 		# scale image down to 128x128
 		self.image.set_property("pixbuf",

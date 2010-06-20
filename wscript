@@ -46,8 +46,6 @@ def build (bld):
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/ui/dialogs', bld.glob('ui/dialogs/*.ui'))
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/ui/menus', bld.glob('ui/menus/*.ui'))
 
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/graphics', bld.glob('graphics/tekka.svg'))
-
 	bld.install_files('${DATAROOTDIR}/sushi/tekka', 'tekka.py', chmod = 0755)
 
 	# global icons
