@@ -878,7 +878,8 @@ def setup_main_window():
 		if colormap:
 			gtk.widget_set_default_colormap(colormap)
 
-	iconPath = config.get("tekka","status_icon")
+	iconPath = config.get("tekka","app_icon")
+
 	if iconPath:
 		try:
 			# Explicitly add a 128x128 icon to work around
