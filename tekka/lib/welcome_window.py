@@ -48,7 +48,10 @@ class WelcomeWindow(OutputWindow):
 		self.table.set_homogeneous(False)
 		self.table.set_property("border-width", 12)
 
-		self.pixbuf = gtk.IconTheme().load_icon("tekka",128,0)
+		try:
+			self.pixbuf = gtk.icon_theme_get_default().load_icon("tekka",128,0)
+		except:
+			self.pixbuf = None
 
 		self.image = gtk.image_new_from_pixbuf(self.pixbuf)
 
