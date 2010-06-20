@@ -56,7 +56,7 @@ class notify (sushi.Plugin):
 
 		try:
 			self.pixbuf = gtk.gdk.pixbuf_new_from_file_at_scale(
-				config.get("tekka", "status_icon"), 64, 64, True)
+				config.get("tekka", "app_icon"), 64, 64, True)
 		except:
 			self.pixbuf = None
 
