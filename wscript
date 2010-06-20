@@ -56,9 +56,9 @@ def build (bld):
 
 		# well, that's kinda silly but state of the art, i guess
 		for dir in ('22','24'):
-			bld.install_files('${DATAROOTDIR}/icons/ubuntu-mono-dark/apps/%s' % (dir),
+			bld.install_as('${DATAROOTDIR}/icons/ubuntu-mono-dark/apps/%s/tekka.svg' % (dir),
 							  bld.glob('graphics/tekka-mono-dark.svg'))
-			bld.install_files('${DATAROOTDIR}/icons/ubuntu-mono-light/apps/%s' % (dir),
+			bld.install_as('${DATAROOTDIR}/icons/ubuntu-mono-light/apps/%s/tekka.svg' % (dir),
 							  bld.glob('graphics/tekka-mono-light.svg'))
 
 
