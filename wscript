@@ -8,6 +8,9 @@ VERSION = '1.2.1'
 srcdir = '.'
 blddir = 'build'
 
+def set_options(ctx):
+	ctx.add_option('--ubuntu-icons', action='store_true', default=False, help='Install ubuntu mono icons')
+
 def configure (conf):
 	conf.check_tool('gnu_dirs')
 	conf.check_tool('misc')
@@ -18,7 +21,12 @@ def configure (conf):
 
 	conf.sub_config('po')
 
+	import Options
+	conf.env.UBUNTU_ICONS = Options.options.ubuntu_icons
+
 def build (bld):
+	import Options
+
 	bld.add_subdirs('po')
 
 	files = bld.glob('*.py')
@@ -38,9 +46,23 @@ def build (bld):
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/ui/dialogs', bld.glob('ui/dialogs/*.ui'))
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/ui/menus', bld.glob('ui/menus/*.ui'))
 
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/graphics', bld.glob('graphics/*.svg'))
+	bld.install_files('${DATAROOTDIR}/sushi/tekka/graphics', bld.glob('graphics/tekka.svg'))
 
 	bld.install_files('${DATAROOTDIR}/sushi/tekka', 'tekka.py', chmod = 0755)
+
+	# global icons
+	bld.install_files('${DATAROOTDIR}/icons/hicolor/scalable/apps', bld.glob('graphics/tekka.svg'))
+
+	# ubuntu specific icons
+	if bld.env.UBUNTU_ICONS:
+
+		# well, that's kinda silly but state of the art, i guess
+		for dir in ('22','24'):
+			bld.install_files('${DATAROOTDIR}/icons/ubuntu-mono-dark/apps/%s' % (dir),
+							  bld.glob('graphics/tekka-mono-dark.svg'))
+			bld.install_files('${DATAROOTDIR}/icons/ubuntu-mono-light/apps/%s' % (dir),
+							  bld.glob('graphics/tekka-mono-light.svg'))
+
 
 	bld.symlink_as('${BINDIR}/tekka', Utils.subst_vars('${DATAROOTDIR}/sushi/tekka/tekka.py', bld.env))
 
