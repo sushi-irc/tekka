@@ -71,7 +71,6 @@ def set_defaults():
 	defaults["tekka"]["logfile"] = os.path.join(xdg_cache_home, "sushi",
 		"tekka.txt")
 	defaults["tekka"]["locale_dir"] = get_path("..", "..", "locale")
-	defaults["tekka"]["app_icon"] = get_path("graphics", "tekka.svg")
 	defaults["tekka"]["plugin_dirs"] = escape_join(",", (
 			os.path.join(xdg_data_home, "sushi", "tekka", "plugins"),
 			os.path.join(xdg_data_home, "sushi", "plugins"),
