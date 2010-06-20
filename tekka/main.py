@@ -913,10 +913,9 @@ def setup_main_window():
 		if colormap:
 			gtk.widget_set_default_colormap(colormap)
 
-
 	try:
-		img = gtk.Image()
-		img.set_from_icon_name("tekka",64)
+		img = gtk.IconTheme().load_icon("tekka",64,0)
+
 		win.set_icon(img)
 		""" 20.06.10
 			Don't know if this is still needed.
