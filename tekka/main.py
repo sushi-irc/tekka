@@ -906,6 +906,8 @@ def setup_main_window():
 	"""
 	win = gui.widgets.get_object("main_window")
 
+	win.set_title("tekka IRC client")
+
 	if config.get_bool("tekka", "rgba"):
 		colormap = win.get_screen().get_rgba_colormap()
 		if colormap:
