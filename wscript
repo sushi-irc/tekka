@@ -51,6 +51,8 @@ def build (bld):
 	# global icons
 	bld.install_files('${DATAROOTDIR}/icons/hicolor/scalable/apps', bld.glob('graphics/tekka.svg'))
 
+	icon_dirs = ["hicolor"]
+
 	# ubuntu specific icons
 	if bld.env.UBUNTU_ICONS:
 
@@ -60,6 +62,11 @@ def build (bld):
 							  'graphics/tekka-mono-dark.svg')
 			bld.install_as('${DATAROOTDIR}/icons/ubuntu-mono-light/apps/%s/tekka.svg' % (dir),
 							  'graphics/tekka-mono-light.svg')
+
+		icon_dirs.append("ubuntu-mono-dark")
+		icon_dirs.append("ubuntu-mono-light")
+
+	# TODO: update-icon-caches ${DATAROOTDIR}/icons/%s with %s from icon_dirs
 
 
 	bld.symlink_as('${BINDIR}/tekka', Utils.subst_vars('${DATAROOTDIR}/sushi/tekka/tekka.py', bld.env))
