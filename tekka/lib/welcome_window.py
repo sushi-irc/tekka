@@ -48,12 +48,9 @@ class WelcomeWindow(OutputWindow):
 		self.table.set_homogeneous(False)
 		self.table.set_property("border-width", 12)
 
-		self.image = gtk.image_new_from_name("tekka")
+		self.pixbuf = gtk.IconTheme().load_icon("tekka",128,0)
 
-		# scale image down to 128x128
-		self.image.set_property("pixbuf",
-			self.image.get_property("pixbuf").scale_simple(
-			128,128, gtk.gdk.INTERP_HYPER))
+		self.image = gtk.image_new_from_pixbuf(self.pixbuf)
 
 		# Create Header label
 		self.label = gtk.Label()

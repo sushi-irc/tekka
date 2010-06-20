@@ -54,10 +54,7 @@ class notify (sushi.Plugin):
 
 		self.caps = pynotify.get_server_caps()
 
-		img = gtk.Image()
-		img.set_from_icon_name("tekka",64)
-
-		self.pixbuf = img.get_pixbuf()
+		self.pixbuf = gtk.IconTheme().load_icon("tekka",64,0)
 
 		# FIXME
 		self.connect_signal("message", self.message_cb)
