@@ -11,7 +11,7 @@ tekka \- Graphical IRC client
 \fBtekka\fP provides a graphical IRC client that uses \fBmaki\fP.
 
 .SH SEE ALSO
-\fBmaki\fP(1), \fBnigiri\fP(1), \fBsushi-remote\fP(1)
+\fBmaki\fP(1), \fBnigiri\fP(1), \fBsushi\-remote\fP(1)
 
 .SH AUTHORS
 Marian Tietz
