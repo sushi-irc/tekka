@@ -106,15 +106,6 @@ def _write_to_general_output(msgtype, timestring, tab, message):
 	widgets.get_object("general_output").scroll_to_bottom()
 
 
-def colorize_message(msgtype, message):
-	if not config.get_bool("tekka", "color_text"):
-		return message
-
-	else:
-		return "<font foreground='%s'>%s</font>" % (
-					config.get("colors", "text_%s" % msgtype, "#000000"),
-					message)
-
 
 class TekkaTab(gobject.GObject):
 	"""
@@ -554,7 +545,7 @@ class TekkaQuery(TekkaTab):
 					config.get("chatting", "time_format", "%H:%M"),
 					time.localtime(timestamp))
 
-		cString = colorize_message(msgtype, message)
+		cString = color.colorize_message(msgtype, message)
 
 		outputString = "[%s] %s" % (timestring, cString)
 
@@ -664,7 +655,7 @@ class TekkaChannel(TekkaTab):
 					config.get("chatting", "time_format", "%H:%M"),
 					time.localtime(timestamp))
 
-		cString = colorize_message(msgtype, message)
+		cString = color.colorize_message(msgtype, message)
 
 		outputString = "[%s] %s" % (timestring, cString)
 

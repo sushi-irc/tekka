@@ -61,6 +61,7 @@ COLOR_TABLE =  {
 			15: contrast.CONTRAST_COLOR_LIGHT_GREY
 		}
 
+
 @types (msg = basestring)
 def parse_color_codes_to_tags(msg):
 	""" Parse the mIRC color format ^Cn[,m] and convert it
@@ -138,6 +139,7 @@ def parse_color_codes_to_tags(msg):
 
 	return msg
 
+
 @types (s = basestring)
 def parse_color_codes_to_markups(s):
 	""" convert color codes to color markups (%C) and escape
@@ -146,6 +148,7 @@ def parse_color_codes_to_markups(s):
 	s = s.replace("%", "%%")
 	return s.replace(chr(3), "%C")
 
+
 @types (s = basestring)
 def parse_color_markups_to_codes(s):
 	""" split s for %C markups and parse the numbers following.
@@ -153,6 +156,7 @@ def parse_color_markups_to_codes(s):
 	"""
 	s_split = escape.unescape_split("%C", s, escape_char="%")
 	return chr(3).join(s_split)
+
 
 @types (nick = basestring)
 def get_nick_color(nick):
@@ -184,6 +188,7 @@ def get_nick_color(nick):
 
 		return r
 
+
 @types (nick = basestring)
 def get_text_color(nick):
 	"""
@@ -204,6 +209,7 @@ def get_text_color(nick):
 
 	r = contrast.contrast_render_foreground_color(bg_color, color)
 	return r
+
 
 @types (text = basestring)
 def strip_color_codes(text):
@@ -243,3 +249,14 @@ def strip_color_codes(text):
 
 		l.append(w[new_start:])
 	return "".join(l)
+
+
+def colorize_message(msgtype, message):
+	if not config.get_bool("tekka", "color_text"):
+		return message
+
+	else:
+		return "<font foreground='%s'>%s</font>" % (
+					config.get("colors", "text_%s" % msgtype, "#000000"),
+					message)
+
