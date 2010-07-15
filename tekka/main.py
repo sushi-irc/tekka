@@ -27,36 +27,13 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+
+""" Purpose:
+setup and usage of submodules,
+main window signal handling,
+tekka internal signal handling,
+glue of all submodules
 """
-Coding style
-
-Classes: MyClass
-Methods: my_method
-Variables: my_var OR myVar (that does not matter to me)
-
-Line length: 80 characters
-Indentation: Lines split up but with same context should
-			 stick together:
-
-			 if (myLongCondition != otherLongThing
-			 and thatIsAll):
-				 pass
-
-			 or
-
-			 my_string_function(
-				 firstParam,
-				 "This should be filled with %(vars)s." % {
-					 "vars": testVar},
-				 anotherParam)
-"""
-
-# TODO:  would be nice to be notified (in a visual way?) if there's
-# TODO:: a new markup in the server tree for a hidden tab (not in the
-# TODO:: current view scope due to scrolling). It would be cool if the
-# TODO:: top or bottom (in order which direction the tab with the new
-# TODO:: markup is) of the server tree smoothly flashes or something
-# TODO:: like that.
 
 import pygtk
 pygtk.require("2.0")
