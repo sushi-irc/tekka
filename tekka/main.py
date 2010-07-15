@@ -29,10 +29,10 @@ SUCH DAMAGE.
 
 
 """ Purpose:
-setup and usage of submodules,
-main window signal handling,
-tekka internal signal handling,
-glue of all submodules
+	setup and usage of submodules,
+	main window signal handling,
+	tekka internal signal handling,
+	glue of all submodules
 """
 
 import pygtk
@@ -55,6 +55,7 @@ import logging
 import gettext
 from gettext import gettext as _
 
+# TODO: point out why this has to be an direct adressed import...
 import tekka.gui as gui
 import tekka.gui.tabs
 
@@ -63,10 +64,9 @@ from . import config
 from . import com
 from . import signals
 from . import commands
+from . import plugins
 
 from .typecheck import types
-
-from .lib import plugin_control as plugin_control
 
 from .lib import nick_list_store
 from .lib.inline_dialog import InlineMessageDialog
@@ -1404,7 +1404,7 @@ def main():
 	# connect to maki daemon
 	com.connect()
 
-	plugin_control.load_autoloads()
+	plugins.load_autoloads()
 
 	# start main loop
 	gtk.main()
