@@ -86,9 +86,6 @@ class MainMenuContext(MenuContextType):
 				gui.mgmt.show_inline_dialog(d)
 
 		def quit_activate_cb(self, item):
-			# main.mainWindow_delete_event is probably blocking the destroy event,
-			# destroy the window anyways (we want to quit).
-			gui.widgets.get_object("main_window").destroy()
 			main_quit()
 
 
