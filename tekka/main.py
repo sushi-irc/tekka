@@ -1294,9 +1294,9 @@ def tekka_excepthook(extype, exobj, extb):
 											xalign=0.0)
 			self.error_label.set_markup(_(
 				"<span size='larger' weight='bold'>Error</span>\n\n"
-				"An error occured — we apologize for that. "
+				"An error occured – we apologize for that. "
 				"Feel free to submit a bug report at "
-				"https://bugs.launchpad.net/sushi."))
+				"<a href=\"https://bugs.launchpad.net/sushi\">https://bugs.launchpad.net/sushi</a>."))
 
 			self.tv = gtk.TextView()
 			self.tv.get_buffer().set_text(message)
