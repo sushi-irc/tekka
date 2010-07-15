@@ -32,6 +32,8 @@ IRC color specifications
 import re
 import gtk
 
+from gettext import gettext as _
+
 from .. import config
 from ..typecheck import types
 
@@ -59,6 +61,24 @@ COLOR_TABLE =  {
 			13: contrast.CONTRAST_COLOR_MAGENTA,
 			14: contrast.CONTRAST_COLOR_GREY,
 			15: contrast.CONTRAST_COLOR_LIGHT_GREY
+		}
+COLOR_NAMES = {
+			 0: _("white"),
+			 1: _("black"),
+			 2: _("blue"),
+			 3: _("dark green"),
+			 4: _("dark red"),
+			 5: _("light brown"),
+			 6: _("purple"),
+			 7: _("orange"),
+			 8: _("yellow"),
+			 9: _("light green"),
+			10: _("cyan"),
+			11: _("aqua"),
+			12: _("light blue"),
+			13: _("magenta"),
+			14: _("grey"),
+			15: _("light grey")
 		}
 
 
