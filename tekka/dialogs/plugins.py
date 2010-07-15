@@ -33,7 +33,7 @@ import logging
 from gettext import gettext as _
 
 from ..gui import builder
-from ..lib import plugin_control as pinterface
+from .. import plugins as pinterface
 from .. import config
 from ..lib import plugin_config_dialog
 

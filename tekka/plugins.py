@@ -25,6 +25,8 @@ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
+
+
 """
 plugin interface
 
@@ -37,7 +39,6 @@ unload(filename)
 -> del plugins[filename]
 """
 
-# FIXME: this file should be top level, too...
 
 import os
 import imp
@@ -45,9 +46,9 @@ import sys
 from gettext import gettext as _
 import logging
 
-from .. import config
-from .. import gui
-from .inline_dialog import InlineMessageDialog
+from . import config
+from . import gui
+from .lib.inline_dialog import InlineMessageDialog
 
 _module_prefix = "tekkaplugin_"
 _plugins = {}

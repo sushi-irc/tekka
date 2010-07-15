@@ -1,10 +1,45 @@
+"""
+Copyright (c) 2010 Marian Tietz
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHORS AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHORS OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+"""
+
+""" Purpose:
+	Raw config dialog for a plugin which can save the settings
+	for a given plugin and displays the options the plugin offers.
+
+	This is used by the plugin management dialog.
+"""
+
+
 import gtk
 import gobject
 from gettext import gettext as _
 import logging
 
 from .. import config
-from . import plugin_control
+from .. import plugins
 from . import psushi
 
 
@@ -17,7 +52,7 @@ class PluginConfigDialog(gtk.Dialog):
 		)
 
 		self.plugin_name = plugin_name
-		self.plugin_options = plugin_control.get_options(plugin_name)
+		self.plugin_options = plugins.get_options(plugin_name)
 
 		self._data_map = {}
 
@@ -47,7 +82,7 @@ class PluginConfigDialog(gtk.Dialog):
 			according to the plugin options.
 		"""
 
-		cSection = plugin_control.get_plugin_config_section(
+		cSection = plugins.get_plugin_config_section(
 				self.plugin_name)
 
 		dataMap = {} # config_key : value
@@ -165,7 +200,7 @@ class PluginConfigDialog(gtk.Dialog):
 	def save(self):
 		""" save the changes made in the plugin's config section """
 
-		cSection = plugin_control.get_plugin_config_section(
+		cSection = plugins.get_plugin_config_section(
 				self.plugin_name)
 		config.create_section(cSection)
 
