@@ -502,7 +502,10 @@ def serverTree_row_activated_cb(serverTree, path, column):
 	model = serverTree.get_model()
 	tab = model[path][0]
 
-	gui.dialogs.show_dialog("history", tab)
+	# don't show the history dialog for server tabs, they don't
+	# have a history.
+	if type(tab) != gui.tabs.TekkaServer:
+		gui.dialogs.show_dialog("history", tab)
 
 
 def nickList_row_activated_cb(nickList, path, column):

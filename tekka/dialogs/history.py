@@ -57,6 +57,7 @@ class HistoryDialog(object):
 		self.fill_target_tree()
 
 		self.switch_to_target(history_tab.server.name, history_tab.name)
+
 		self.load_current_day()
 
 		bar = self.builder.get_object("searchbar")
