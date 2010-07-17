@@ -52,6 +52,7 @@ def generalOutputFilterList_instanced_widget_cb(elist, row, column, obj):
 
 		for row in MESSAGE_TYPES:
 			model.append((row,))
+		print "cbox %s initialized" % (obj)
 
 def fillTekka():
 	table = widgets.get_object("tekkaTable")
@@ -154,6 +155,8 @@ def fillGeneralOutputFilters():
 		widget_row = generalOutputFilterList.get_widget_matrix()[i]
 		combobox = widget_row[0]
 
+		print "filling combobox: %s, etuple[0] is %s" % (combobox, e_tuple[0])
+
 		try:
 			type_index = MESSAGE_TYPES.index(e_tuple[0])
 		except ValueError:
@@ -175,7 +178,9 @@ def fillGeneralOutputFilters():
 
 def applyNickColors():
 	nickColorsList = widgets.get_object("nickColorsList")
-	config.set_list("colors","nick_colors", [n[0].get_color().to_string() for n in nickColorsList.get_widget_matrix() if n and len(n) >= 1])
+	config.set_list("colors","nick_colors", 
+		[n[0].get_color().to_string() 
+		for n in nickColorsList.get_widget_matrix() if n and len(n) >= 1])
 
 def applyChatting():
 	highlightList = widgets.get_object("highlightList")
@@ -188,12 +193,12 @@ def applyGeneralOutputFilter():
 
 	for widget_row in generalOutputFilterList.get_widget_matrix():
 		cbox = widget_row[0]
-
-		mtype = cbox.get_active_text()
-
-		if not mtype:
+		
+		if not cbox.get_model() or cbox.get_active() == -1:
 			logging.error("No message type selected.")
 			continue
+		
+		mtype = cbox.get_model()[cbox.get_active()][0]
 
 		server = widget_row[1].get_text()
 		channel = widget_row[2].get_text()
@@ -379,6 +384,7 @@ def setup():
 
 	widgets.connect_signals(sigdic)
 
+
 def dialog_response_cb(dialog, response_id):
 	applyNickColors()
 	applyGeneralOutputFilter()
@@ -388,7 +394,11 @@ def dialog_response_cb(dialog, response_id):
 
 def run():
 	dialog = widgets.get_object("preferencesDialog")
-
+	
+	# the widget is not initialized with a first row 
+	# (no_first_row in ui file set), do it here.
+	widgets.get_object("generalOutputFilterList")._add_row(0)
+	
 	fillTekka()
 	fillColors()
 	fillChatting()
