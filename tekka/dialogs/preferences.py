@@ -52,7 +52,6 @@ def generalOutputFilterList_instanced_widget_cb(elist, row, column, obj):
 
 		for row in MESSAGE_TYPES:
 			model.append((row,))
-		print "cbox %s initialized" % (obj)
 
 def fillTekka():
 	table = widgets.get_object("tekkaTable")
@@ -154,8 +153,6 @@ def fillGeneralOutputFilters():
 
 		widget_row = generalOutputFilterList.get_widget_matrix()[i]
 		combobox = widget_row[0]
-
-		print "filling combobox: %s, etuple[0] is %s" % (combobox, e_tuple[0])
 
 		try:
 			type_index = MESSAGE_TYPES.index(e_tuple[0])
