@@ -692,6 +692,7 @@ The last field is optional.</property>
                             <child>
                               <object class="ExpandingList" id="generalOutputFilterList">
                                 <property name="visible">True</property>
+                                <property name="no_first_row">True</property>
                                 <property name="str_widgets">(gtk.ComboBox, gtk.Entry, gtk.Entry,)</property>
                                 <signal name="instanced_widget" handler="generalOutputFilterList_instanced_widget_cb"/>
                                 <child>
