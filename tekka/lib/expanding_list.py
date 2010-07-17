@@ -46,6 +46,10 @@ class ExpandingList(gtk.Table):
 			return
 		self.init_widgets(widgets)
 	str_widgets = gobject.property(setter=set_str_widgets, type=str)
+	
+	def set_no_first_row(self, no_first_row):
+		self._no_first_row = no_first_row
+	no_first_row = gobject.property(setter=set_no_first_row, default=False, type=bool)
 
 	def __init__(self, no_first_row=False, *widgets, **kwargs):
 
