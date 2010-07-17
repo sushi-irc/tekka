@@ -46,6 +46,9 @@
 						  default="(gtk.Entry,)"
 						  save="True" visible="True"
 						  name="Widgets"/>
+				<property id="no_first_row" query="True"
+						  default="False"
+						  save="True" visible="True"/>
 			</properties>
 		</glade-widget-class>
     </glade-widget-classes>
