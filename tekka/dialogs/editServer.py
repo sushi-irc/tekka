@@ -126,6 +126,7 @@ def run(server):
 	widgets.connect_signals(bsignals)
 
 	# fill the command list with the existing commands
+	commandList = widgets.get_object("commandList")
 	i = 0
 	for command in sushi.server_get_list(server, "server", "commands"):
 		commandList.get_widget_matrix()[i][0].set_text(command)
