@@ -47,11 +47,10 @@ Marian Tietz</property>
 Marian Tietz</property>
     <property name="translator_credits" translatable="yes">translator-credits</property>
     <property name="artists">Marian Tietz</property>
-    <property name="logo">../../graphics/tekka.svg</property>
+    <property name="logo_icon_name">tekka</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox8">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
           <placeholder/>
