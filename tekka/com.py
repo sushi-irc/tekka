@@ -255,10 +255,7 @@ def connect():
 					mainloop=dbus_loop)
 		except dbus.DBusException as e:
 			bus_remote_error(e)
-			bus = connect_session_bus()
-
-			if bus == None:
-				return False
+			return False
 
 	else:
 		bus = connect_session_bus()
