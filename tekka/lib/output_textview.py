@@ -90,9 +90,8 @@ class OutputTextView(gtk.TextView):
 
 		vadj.set_value(onethird)
 
-		if max_val - onethird < 0.01:
-			self.smooth_id = None
-			self.smooth_scroll_timer.cancel()
+		if max_val - onethird < 0.1:
+			self._do_smooth_scroll_timeout()
 			return False
 
 		return True
