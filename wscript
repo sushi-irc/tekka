@@ -48,12 +48,13 @@ def build (bld):
 
 	bld.install_files('${DATAROOTDIR}/sushi/tekka', 'tekka.py', chmod = 0755)
 
-	# global icons
-	bld.install_files('${DATAROOTDIR}/icons/hicolor/scalable/apps', bld.glob('graphics/tekka.svg'))
+	# global icon
+	bld.install_as('${DATAROOTDIR}/icons/hicolor/scalable/apps/tekka.svg',
+			'graphics/tekka-mono-light.svg')
 
 	icon_dirs = ["hicolor"]
 
-	# ubuntu specific icons
+	# ubuntu specific icons (dark/light theme)
 	if bld.env.UBUNTU_ICONS:
 
 		# well, that's kinda silly but state of the art, i guess
