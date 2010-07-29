@@ -45,8 +45,8 @@ class InlineDialog(gtk.HBox):
 
 	     (?) Do you want?   [Yes] [No]
 		"""
-		def style_set_cb (widget, style, dialog):
-			if dialog.setting_style:
+		def style_set_cb (widget, style):
+			if widget.setting_style:
 				return
 
 			tt = gtk.Window()
@@ -56,13 +56,13 @@ class InlineDialog(gtk.HBox):
 			# set_style() may cause style-set to be triggered again.
 			# It should not happen in our case, but better be safe
 			# than sorry.
-			dialog.setting_style = True
-			dialog.hbox.set_style(tt.get_style().copy())
-			dialog.setting_style = False
+			widget.setting_style = True
+			widget.hbox.set_style(tt.get_style().copy())
+			widget.setting_style = False
 
 			tt.destroy()
 
-			dialog.hbox.queue_draw()
+			widget.hbox.queue_draw()
 
 		def expose_event_cb (widget, event):
 			a = widget.get_allocation()
@@ -115,7 +115,7 @@ class InlineDialog(gtk.HBox):
 		else:
 			self.add_buttons(*buttons)
 
-		self.connect("style-set", style_set_cb, self)
+		self.connect("style-set", style_set_cb)
 		self.hbox.connect("expose-event", expose_event_cb)
 		self.hbox.connect("size-allocate", size_allocate_cb)
 
@@ -191,4 +191,18 @@ class InlineMessageDialog(InlineDialog):
 			self.secondary_label.set_property("xalign", 0.0)
 			self.secondary_label.set_property("yalign", 0.0)
 			self.vbox.add(self.secondary_label)
+		else:
+			self.secondary_label = None
+
+		self.connect_after("style-set", self.__style_set_cb)
+
+	def __style_set_cb(self, widget, style):
+		self.primary_label.set_style(self.hbox.get_style().copy())
+
+		if self.secondary_label:
+			self.secondary_label.set_style(self.hbox.get_style().copy())
+
+
+
+
 
