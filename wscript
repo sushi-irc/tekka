@@ -48,6 +48,8 @@ def build (bld):
 
 	bld.install_files('${DATAROOTDIR}/sushi/tekka', 'tekka.py', chmod = 0755)
 
+	# TODO:  Check if DATAROOTDIR is ~user to install the icons into
+	# TODO:: ~user/.icons instead of the global icons dir
 	# global icon
 	bld.install_as('${DATAROOTDIR}/icons/hicolor/scalable/apps/tekka.svg',
 			'graphics/tekka-mono-light.svg')
