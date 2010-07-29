@@ -1,9 +1,13 @@
                                   INSTALLATION
 
-Just type "./waf configure --prefix=${HOME}", followed by "./waf install". This
-will install all the necessary files in your home directory. Other directories
-can be specified with the prefix option, for example, "./waf configure
---prefix=/usr".
+Just type "./waf configure --prefix=${HOME}", followed by "./waf install".
+This will install all the necessary files in your home directory.
+Other directories can be specified with the prefix option, for example,
+"./waf configure --prefix=/usr".
+
+If you are using Ubuntu or you want to install mono-style icons for the
+ubuntu-mono themes, run waf configure with the ubuntu-icons flag like this:
+"./waf configure --ubuntu-icons".
 
                                   REQUIREMENTS
 
