@@ -77,8 +77,8 @@ COLOR_NAMES = {
 			11: _("aqua"),
 			12: _("light blue"),
 			13: _("magenta"),
-			14: _("grey"),
-			15: _("light grey")
+			14: _("gray"),
+			15: _("light gray")
 		}
 
 
