@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import Options
 import Utils
 
 APPNAME = 'tekka'
@@ -8,8 +9,8 @@ VERSION = '1.2.1'
 srcdir = '.'
 blddir = 'build'
 
-def set_options(ctx):
-	ctx.add_option('--ubuntu-icons', action='store_true', default=False, help='Install ubuntu mono icons')
+def set_options (ctx):
+	ctx.add_option('--ubuntu-icons', action='store_true', default=False, help='Install Ubuntu Mono Icons')
 
 def configure (conf):
 	conf.check_tool('gnu_dirs')
@@ -17,16 +18,12 @@ def configure (conf):
 
 	conf.find_program('gzip', var = 'GZIP')
 
+	conf.env.UBUNTU_ICONS = Options.options.ubuntu_icons
 	conf.env.VERSION = VERSION
 
 	conf.sub_config('po')
 
-	import Options
-	conf.env.UBUNTU_ICONS = Options.options.ubuntu_icons
-
 def build (bld):
-	import Options
-
 	bld.add_subdirs('po')
 
 	files = bld.glob('*.py')
@@ -50,27 +47,18 @@ def build (bld):
 
 	# TODO:  Check if DATAROOTDIR is ~user to install the icons into
 	# TODO:: ~user/.icons instead of the global icons dir
-	# global icon
+	# Global icon
 	bld.install_as('${DATAROOTDIR}/icons/hicolor/scalable/apps/tekka.svg',
-			'graphics/tekka-mono-light.svg')
+	               'graphics/tekka-mono-light.svg')
 
-	icon_dirs = ["hicolor"]
-
-	# ubuntu specific icons (dark/light theme)
+	# Ubuntu-specific icons (dark/light theme)
 	if bld.env.UBUNTU_ICONS:
-
-		# well, that's kinda silly but state of the art, i guess
-		for dir in ('22','24'):
+		# Well, that's kinda silly, but state of the art, I guess
+		for dir in ('22', '24'):
 			bld.install_as('${DATAROOTDIR}/icons/ubuntu-mono-dark/apps/%s/tekka.svg' % (dir),
-							  'graphics/tekka-mono-dark.svg')
+			               'graphics/tekka-mono-dark.svg')
 			bld.install_as('${DATAROOTDIR}/icons/ubuntu-mono-light/apps/%s/tekka.svg' % (dir),
-							  'graphics/tekka-mono-light.svg')
-
-		icon_dirs.append("ubuntu-mono-dark")
-		icon_dirs.append("ubuntu-mono-light")
-
-	# TODO: update-icon-caches ${DATAROOTDIR}/icons/%s with %s from icon_dirs
-
+			               'graphics/tekka-mono-light.svg')
 
 	bld.symlink_as('${BINDIR}/tekka', Utils.subst_vars('${DATAROOTDIR}/sushi/tekka/tekka.py', bld.env))
 
