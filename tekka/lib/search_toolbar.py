@@ -35,54 +35,72 @@ class SearchBar(gtk.Table):
 
 	__gtype_name__ = "SearchBar"
 
-	def set_textview(self, textview):
+
+	@property
+	def textview_callback(self): return self._textview_callback
+	@textview_callback.setter
+	def textview_callback(self, callback):
+		self._textview_callback = callback
+
+
+	@property
+	def textview(self):
+		if self.textview_callback:
+			return self.textview_callback()
+		return self._textview
+	@textview.setter
+	def textview(self, textview):
 		if self.textview_callback:
 			self._textview = self.textview_callback()
 		else:
 			self._textview = textview
+	
+	
+	@property
+	def search_term(self): return self.search_entry.get_text()
+	@search_term.setter
+	def search_term(self, text): self.search_entry.set_text(text)
 
-	def get_textview(self):
-		if self.textview_callback:
-			return self.textview_callback()
-		return self._textview
+	
+	@property
+	def autohide(self): return self._autohide
+	@autohide.setter
+	def autohide(self, value):
+		self._autohide = value
+		
+		# connect/disconnect the focus-out-event for auto-hiding
+		if value:
+			id = self.search_entry.connect(
+					"focus-out-event",
+					self.search_entry_focus_out_cb)
+			self._autohide_sig_id = id
+		else:
+			if hasattr(self, "_autohide_sig_id"):
+				self.search_entry.disconnect(self._autohide_sig_id)
+	
 
-	textview = property(get_textview, set_textview)
+	def __init__(self, textview=None, textview_callback = None, autohide=True):
+		"""
+			textview = TextView to operate on
+			textview_callback = callback wich returns a TextView to operate on
+			autohide = hide on focus loss if enabled (True)
+		"""
+		
+		super(SearchBar,self).__init__(rows=1, columns=2)
 
-	search_term = property(lambda s: s.search_entry.get_text(),
-		lambda s,x: s.search_entry.set_text(x))
-
-	last_iter = None
-	last_result = ""
-
-	def __init__(self, textview=None,
-		textview_callback = None,
-		autohide=True,
-		std_behav=True):
-
-		self._textview = None
-		self.textview_callback = None
-
-
-		gtk.Table.__init__(self, rows=1, columns=2)
+		
+		# arange widgets
 
 		self.set_property("row-spacing", 1)
-
-		self.textview_callback = textview_callback
-		self.textview = textview
-
+		
 		self.search_entry = SpellEntry()
 
 		self.attach(self.search_entry, 0, 1, 1, 2)
 		self.child_set_property(self.search_entry, "y-options", gtk.SHRINK)
 
-		if autohide:
-			self.search_entry.connect(
-									"focus-out-event",
-									self.search_entry_focus_out_cb)
-		self.set_autohide(autohide)
-
 		self.search_button = gtk.ToolButton(stock_id = gtk.STOCK_FIND)
 		self.attach(self.search_button, 1, 2, 1, 2)
+		
 		self.child_set_property(self.search_button,
 								"y-options",
 								gtk.SHRINK)
@@ -90,36 +108,33 @@ class SearchBar(gtk.Table):
 								"x-options",
 								gtk.SHRINK)
 
-		if std_behav:
-			self.search_button.connect("clicked",
-					self.search_button_clicked_cb)
-			self.search_entry.connect("activate",
-					self.search_button_clicked_cb)
-		self.set_standard_behaviour(std_behav)
+		# setup own properties
+		
+		self.last_iter = None
+		self.last_result = ""
+		
+		self.textview_callback = textview_callback
+		self.textview = textview
+		self.autohide = autohide
 
-	def set_autohide(self, switch):
-		self._autohide = switch
+		# connect widget signals
 
-	def unset_standard_behaviour(self):
-		try:
-			self.disconnect(self._btn_handler)
-			self.disconnect(self._entry_handler)
-		except AttributeError:
-			pass
+		self.search_button.connect("clicked",
+				self.search_button_clicked_cb)
+				
+		self.search_entry.connect("activate",
+				self.search_button_clicked_cb)
 
-	def set_standard_behaviour(self, switch):
-		self._std_behav = switch
 
 	def search_entry_focus_out_cb(self, entry, event):
-		if self._autohide:
-			self.hide()
+		self.hide()
+
 
 	def search_further(self):
 		self.search_button_clicked_cb(None)
+		
 
 	def search_button_clicked_cb(self, button):
-		if not self._std_behav:
-			return
 
 		if not self.search_term or not self.textview:
 			return
@@ -140,11 +155,14 @@ class SearchBar(gtk.Table):
 
 		# scroll the textview
 		self.textview.scroll_to_iter(result[0], 0.0)
+		
 
 	def grab_focus(self):
 		self.search_entry.grab_focus()
+		
+		
 
-if __name__ == "__main__":
+def test():
 	win = gtk.Window()
 	win.resize(400,400)
 
@@ -156,7 +174,7 @@ Das ist ein Test!
 Wer hier suchen will der findet das.
 Auch doppelte und doppelte Woerter.
 """)
-	bar = SearchBar(textview=tv)
+	bar = SearchBar(textview_callback=lambda: tv, autohide=False)
 
 	vbox.add(tv)
 	vbox.add(bar)
@@ -171,4 +189,8 @@ Auch doppelte und doppelte Woerter.
 	win.show_all()
 
 	gtk.main()
+
+
+if __name__ == "__main__":
+	test()
 
