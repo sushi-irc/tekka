@@ -260,6 +260,18 @@ def cmd_topic(serverTab, channelTab, args):
 	sushi.topic(serverTab.name, channelTab.name, topic)
 
 
+def cmd_cleartopic(serverTab, channelTab, args):
+	"""
+		Clears the topic.
+		
+		Usage: /cleartopic
+	"""
+	if not channelTab or not channelTab.is_channel():
+		return gui.mgmt.myPrint("No channel is active")
+		
+	sushi.topic(serverTab.name, channelTab.name, "")
+
+
 def cmd_away(serverTab, channelTab, args):
 	"""
 		Sets you away with an optional reason.
@@ -684,6 +696,7 @@ def setup():
 		"kick" : cmd_kick,
 		"mode" : cmd_mode,
 		"topic": cmd_topic,
+		"cleartopic" : cmd_cleartopic,
 		"quit" : cmd_quit,
 		"away" : cmd_away,
 		"back" : cmd_back,
