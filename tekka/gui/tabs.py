@@ -744,20 +744,14 @@ def connect_tab_callbacks(obj, callbacks, *args):
 		cbFunctions = get_callbacks(cb)
 
 		for fun in cbFunctions:
-			try:
-				obj.connect(cb, fun, *args)
-			except TypeError as e:
-				# invalid signal
-				continue
+			obj.connect(cb, fun, *args)
+
 
 
 def call_callback(name, *args):
 	for cb in get_callbacks(name):
-		try:
-			cb(*args)
-		except BaseException as e:
-			logging.error(e, exc_info = True)
-			continue
+		cb(*args)
+
 
 @types(tabtype = TekkaTab)
 def _create_tab(tabtype, name, *args, **kwargs):
