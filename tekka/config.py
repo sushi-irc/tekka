@@ -86,6 +86,7 @@ def set_defaults():
 
 	defaults["tekka"]["show_general_output"] = "True"
 	defaults["tekka"]["show_topic_bar"] = "False"
+	defaults["tekka"]["hide_topic_if_empty"] = "True"
 	defaults["tekka"]["show_side_pane"] = "True"
 	defaults["tekka"]["show_status_bar"] = "True"
 

@@ -795,7 +795,7 @@ def create_channel(server, name):
 
 	tab = _create_tab(TekkaChannel, name, server, nicklist = ns)
 
-	connect_tab_callbacks(tab, ("joined",))
+	connect_tab_callbacks(tab, ("joined","topic"))
 
 	return tab
 
@@ -1192,7 +1192,11 @@ def switch_to_path(path):
 		mgmt.set_topic(markup.markup_escape(tab.topic))
 
 		if config.get_bool("tekka","show_topic_bar"):
-			widgets.get_object("topic_label").show()
+			
+			if (tab.topic or not config.get_bool("tekka","hide_topic_if_empty")):
+				widgets.get_object("topic_label").show()
+			else:
+				widgets.get_object("topic_label").hide()
 
 		widgets.get_object("nicks_vbox").show()
 		widgets.get_object("nicks_view").set_model(tab.nickList)
