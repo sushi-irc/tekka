@@ -251,6 +251,16 @@ def tekka_tab_remove_cb(tab):
 		gui.mgmt.set_useable(False)
 
 
+def tekka_channel_topic_changed_cb(tab, topic):
+	if not tab.is_active(): return
+
+	if config.get_bool("tekka","hide_topic_if_empty"):
+		if topic:
+			gui.widgets.get_object("topic_label").show()
+		else:
+			gui.widgets.get_object("topic_label").hide()
+
+
 def mainWindow_scroll_event_cb(mainWindow, event):
 	""" MOD1 + SCROLL_DOWN -> Next tab
 		MOD1 + SCROLL_UP -> Prev. tab
@@ -1114,7 +1124,9 @@ def setupGTK():
 		"server_connected": tekka_tab_server_connected_cb,
 		"joined": tekka_channel_joined_cb,
 		"new_nick": tekka_server_new_nick_cb,
-		"tab_switched": tekka_tab_switched_cb })
+		"tab_switched": tekka_tab_switched_cb,
+		"topic": tekka_channel_topic_changed_cb,
+		})
 
 	# connect main window signals:
 	sigdic = {
