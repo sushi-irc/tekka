@@ -611,6 +611,7 @@ def output_shortcut_ctrl_f(inputBar, shortcut):
 
 	if sb.get_property("visible"):
 		sb.hide()
+		gui.widgets.get_object("input_entry").grab_focus()
 	else:
 		sb.show_all()
 		sb.grab_focus()
