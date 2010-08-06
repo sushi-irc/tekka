@@ -633,7 +633,8 @@ def cmd_help(currentServer, currentTab, args):
 		Usage: /help <command>
 	"""
 	if not args:
-		return gui.mgmt.myPrint("Usage: /help <command>")
+		commandList = ", ".join(commands._commands.keys())
+		return gui.mgmt.myPrint("Usage: /help <command>\nAvailable commands are: %s" % (commandList))
 	if commands._commands.has_key(args[0]):
 		gui.mgmt.myPrint(commands._commands[args[0]].__doc__.replace("\t",""))
 	else:
