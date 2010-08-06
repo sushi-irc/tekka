@@ -277,14 +277,10 @@ def mainWindow_scroll_event_cb(mainWindow, event):
 
 def mainWindow_delete_event_cb(mainWindow, event):
 	"""
-		The user want's to close the main window.
-		If the status icon is enabled and the
-		"hideOnClose" option is set the window
-		will be hidden, otherwise the main looped
-		will be stopped.
-		On hide there is an read-line inserted
-		in every tab so the user does not have to
-		search were he was reading last time.
+		If hide_on_close and the status icon are enabled,
+		hide the main window. Otherwise stop the main loop.
+		
+		On hide, a read-line will be inserted in every tab.
 	"""
 
 	statusIcon = gui.widgets.get_object("status_icon")
@@ -305,9 +301,7 @@ def mainWindow_delete_event_cb(mainWindow, event):
 
 def mainWindow_focus_in_event_cb(mainWindow, event):
 	"""
-		User re-focused the main window.
-		If we were in urgent status, the user
-		recognized it now so disable the urgent thing.
+		Reset urgent status (if given)
 	"""
 
 	gui.mgmt.set_urgent(False)
@@ -335,8 +329,7 @@ def mainWindow_window_state_event_cb(mainWindow, event):
 
 def inputBar_activate_cb(inputBar):
 	""" Enter hit, pass the inputBar text over to the
-		commands.parseInput method and add the text
-		to the input history (if there's one).
+		commands.parseInput method and add the text to the input history.
 
 		The inputBar is cleared after that.
 	"""
