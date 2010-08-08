@@ -678,6 +678,53 @@ def cmd_invoke_test(currentServer, currentTab, args):
 		return
 
 
+def cmd_ignore(currentServer, currentTab, args):
+	"""
+		Ignores a user pattern.
+		
+		Usage: /ignore <pattern>
+	"""
+	if not args:
+		return gui.myPrint("Usage: /ignore <pattern>")
+	if not currentServer:
+		return gui.myPrint("Could not determine server")
+
+	sushi.ignore(currentServer.name, args[0])
+	gui.mgmt.myPrint(_("Ignoring %(user)s.") % {"user": args[0]})
+
+
+def cmd_unignore(currentServer, currentTab, args):
+	"""
+		Unignores a user pattern.
+		
+		Usage: /unignore <pattern>
+	"""
+	if not args:
+		return gui.myPrint("Usage: /unignore <pattern>")
+	if not currentServer:
+		return gui.myPrint("Could not determine server")
+
+	sushi.unignore(currentServer.name, args[0])
+	gui.mgmt.myPrint(_("Unignoring %(user)s.") % {"user":args[0]} )
+
+
+def cmd_ignores(currentServer, currentTab, args):
+	"""
+		Shows all ignored users.
+		
+		Usage: /ignores
+	"""
+	if not currentServer:
+		return gui.myPrint("Could not determine server")
+	ignores = sushi.ignores(currentServer.name)
+	
+	if not ignores:
+		gui.mgmt.myPrint(_("No users are ignored on this server."))
+	else:
+		gui.mgmt.myPrint(_("The following users are ignored: %(ulist)s.") % {
+			"ulist": ", ".join(ignores)} )
+
+
 def setup():
 	_commands = {
 		"connect" : cmd_connect,
@@ -696,6 +743,9 @@ def setup():
 	"nickserv" : cmd_nickserv,
 		"ctcp" : cmd_ctcp,
 	"invoke_test": cmd_invoke_test,
+	"ignore" : cmd_ignore,
+	"unignore": cmd_unignore,
+	"ignores" : cmd_ignores,
 		"names" :  cmd_names,
 		"notice" : cmd_notice,
 		"msg" : cmd_message,
