@@ -48,14 +48,13 @@ class NickListMenu(object):
 		self.deactivate_handler = []
 
 		if not self.widgets:
-			d = inline_dialog.InlineMessageDialog(
+			gui.mgmt.show_inline_message(
 				_("Widget creation failed."),
 				_("tekka failed to create the nicklist menu.\n"
 				  "It's possible that there are files missing. "
 				  "Check if you have appropriate permissions to "
-				  "access all files needed by tekka and restart tekka."))
-			gui.mgmt.show_inline_dialog(d)
-			d.connect("response", lambda d,i: d.destroy())
+				  "access all files needed by tekka and restart tekka."),
+				dtype="error")
 			return
 
 		sigdic = {
@@ -133,10 +132,10 @@ class NickListMenu(object):
 				gui.dialogs.show_dialog("whois", sTab.name,
 					self.current_nick, need_sushi = True)
 			except NoSushiError as e:
-				d = InlineMessageDialog(_("No connection to maki."),
-					e.args[0])
-				d.connect("response", lambda w,i: w.destroy())
-				gui.mgmt.show_inline_dialog(d)
+				gui.mgmt.show_inline_message(
+					_("No connection to maki."),
+					e.args[0],
+					dtype="error")
 
 		else:
 			sushi.sushi.whois(sTab.name, self.current_nick)

@@ -31,7 +31,6 @@ import traceback
 
 from gettext import gettext as _
 
-from tekka.lib.inline_dialog import InlineMessageDialog
 from tekka.helper import code
 from tekka.helper import color
 from tekka.helper import markup
@@ -50,23 +49,17 @@ def warnNoConnection(tab):
 	elif tab.is_channel() or tab.is_query():
 		name = tab.server.name
 
-	dialog = InlineMessageDialog(_("Warning:"),
-		_("You are not connected to server %(server)s.") % {
-			"server": name } )
-	dialog.connect("response", lambda w,i: w.destroy() )
-
-	gui.mgmt.show_inline_dialog(dialog)
-
+	gui.mgmt.show_inline_message(
+		_("Warning:"),
+		_("You are not connected to server %(server)s.") % {"server": name },
+		dtype="warning")
 
 def warnNotJoined(cTab):
-	dialog = InlineMessageDialog(_("Warning:"),
+	gui.mgmt.show_inline_message(
+		_("Warning:"),
 		_("The channel %(channel)s is not joined. Everything you "
-		"write will not be send.") % { "channel": cTab.name })
-	dialog.connect("response", lambda w,i: w.destroy())
-
-	gui.mgmt.show_inline_dialog(dialog)
-
-
+		  "write will not be send.") % { "channel": cTab.name },
+		dtype="warning")
 
 
 

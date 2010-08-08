@@ -32,8 +32,6 @@ from .. import com
 from .. import config
 from .. import gui
 
-from ..lib.inline_dialog import InlineMessageDialog
-
 
 class MenuContextType(object):
 
@@ -81,9 +79,8 @@ class MainMenuContext(MenuContextType):
 				gui.dialogs.show_dialog(
 					"server", server_dialog_callback, need_sushi = True)
 			except com.NoSushiError as e:
-				d = InlineMessageDialog("NoSushiError", e.args[0])
-				d.connect("response", lambda w,i: w.destroy())
-				gui.mgmt.show_inline_dialog(d)
+				gui.mgmt.show_inline_message(
+					"NoSushiError", e.args[0], dtype="error")
 
 		def quit_activate_cb(self, item):
 			main_quit()
@@ -210,10 +207,10 @@ class MainMenuContext(MenuContextType):
 			MenuContextType.__init__(self, *args, **kwargs)
 
 		def show_no_sushi_error(self, exp):
-			d = InlineMessageDialog(_("No connection to maki."),
-									exp.args[0])
-			d.connect("response", lambda w,i: w.destroy())
-			gui.mgmt.show_inline_dialog(d)
+			gui.mgmt.show_inline_message(
+				_("No connection to maki."),
+				exp.args[0],
+				dtype="error")
 
 		def channelList_activate_cb(self, item):
 			""" Show the channel list dialog or display an error message
@@ -221,13 +218,12 @@ class MainMenuContext(MenuContextType):
 			sTab,cTab = gui.tabs.get_current_tabs()
 
 			if not sTab:
-				d = InlineMessageDialog(
+				gui.mgmt.show_inline_message(
 					_("tekka could not determine server."),
 					_("There is no active server. Click on "
-					"a server tab or a child of a server "
-					"tab to activate the server."))
-				d.connect("response", lambda w,i: w.destroy())
-				gui.mgmt.show_inline_dialog(d)
+					  "a server tab or a child of a server "
+					  "tab to activate the server."),
+					dtype="error")
 
 			else:
 				try:

@@ -39,8 +39,8 @@ from .. import com
 from .. import signals
 
 from ..gui import builder
+from ..gui import mgmt
 from ..helper.markup import markup_escape
-from ..lib.inline_dialog import InlineMessageDialog
 
 PULSE_DELAY=100
 
@@ -85,15 +85,14 @@ class ChannelListBuilder(builder.Builder):
 				self.get_object("regexpEntry").get_text())
 
 		except Exception as e:
-			d = InlineMessageDialog(
+			mgmt.show_inline_message(
 				_("Channel list search error."),
 				_("You've got a syntax error in your search string. "
 					"The error is: %s\n"
 					"<b>Tip:</b> You should not use special characters "
 					"like '*' or '.' in your search string if you don't "
-					"know about regular expressions." % (e)))
-			d.connect("response", lambda w,i: w.destroy())
-			gui.mgmt.show_inline_dialog(d)
+					"know about regular expressions." % (e)),
+				dtype="error")
 
 
 		self.get_object("listStore").clear()
