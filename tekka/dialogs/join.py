@@ -28,7 +28,6 @@ SUCH DAMAGE.
 import gtk
 from gettext import gettext as _
 
-from ..lib.inline_dialog import InlineMessageDialog
 from .. import config
 from .. import com
 from .. import gui
@@ -58,11 +57,10 @@ def dialog_response_cb(dialog, id):
 
 def run(current_server):
 	if not current_server:
-		d = InlineMessageDialog(
+		gui.show_inline_message(
 			_("Could not determine server."),
-			_("tekka could not figure out on which server to join."))
-		d.connect("response", lambda d,i: d.destroy())
-		gui.mgmt.show_inline_dialog(d)
+			_("tekka could not figure out on which server to join."),
+			dtype="error")
 
 	else:
 		global _current_server

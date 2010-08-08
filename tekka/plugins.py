@@ -48,7 +48,6 @@ import logging
 
 from . import config
 from . import gui
-from .lib.inline_dialog import InlineMessageDialog
 
 _module_prefix = "tekkaplugin_"
 _plugins = {}
@@ -61,9 +60,7 @@ _plugins = {}
 ) = range(4)
 
 def generic_error(primary, secondary):
-	d = InlineMessageDialog(primary, secondary)
-	gui.mgmt.show_inline_dialog(d)
-	d.connect("response", lambda d,i: d.destroy())
+	gui.mgmt.show_inline_message(primary, secondary, dtype="error")
 
 def strip_suffix(filename):
 	""" foo.py -> foo """

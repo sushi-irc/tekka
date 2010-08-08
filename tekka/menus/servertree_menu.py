@@ -34,7 +34,6 @@ from .. import gui
 from ..com import sushi
 from ..helper.singleton import SingletonMeta
 
-from ..lib import inline_dialog
 from ..lib import key_dialog
 from ..lib import topic_dialog
 
@@ -48,14 +47,13 @@ class ServerTreeMenu(object):
 		self.widgets = gui.builder.load_menu("serverTreeMenu")
 
 		if not self.widgets:
-			d = inline_dialog.InlineMessageDialog(
+			gui.mgmt.show_inline_message(
 				_("Widget creation failed."),
-				_("tekka failed to create the server tree menu.\n"
+				_("tekka failed to create the nicklist menu.\n"
 				  "It's possible that there are files missing. "
 				  "Check if you have appropriate permissions to "
-				  "access all files needed by tekka and restart tekka."))
-			gui.mgmt.show_inline_dialog(d)
-			d.connect("response", lambda d,i: d.destroy())
+				  "access all files needed by tekka and restart tekka."),
+				dtype="error")
 			return
 
 		sigdic = {

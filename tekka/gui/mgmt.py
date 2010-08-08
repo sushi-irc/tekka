@@ -282,6 +282,26 @@ def show_maki_connection_error(title, message):
 	show_inline_dialog(d)
 
 
+def show_inline_message(title, message, dtype="info"):
+	""" title, the title of the dialog
+		message, the message
+		dtype, the type. Values can be "error","info" or "warning"
+	"""
+	if dtype == "error":
+		icon = gtk.STOCK_DIALOG_ERROR
+	elif dtype == "info":
+		icon = gtk.STOCK_DIALOG_INFO
+	elif dtype == "warning":
+		icon = gtk.STOCK_DIALOG_WARNING
+
+	d = InlineMessageDialog(title, message, icon=icon)
+	d.connect("response", lambda d,id: d.destroy())
+
+	show_inline_dialog(d)
+
+	return d
+
+
 def show_inline_dialog(dialog):
 	""" show an InlineDialog in the notification_vbox"""
 

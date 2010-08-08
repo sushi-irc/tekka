@@ -55,9 +55,8 @@ import logging
 import gettext
 from gettext import gettext as _
 
-# TODO: point out why this has to be an direct adressed import...
-import tekka.gui as gui
-import tekka.gui.tabs
+import gui
+import gui.tabs
 
 # local modules
 from . import config

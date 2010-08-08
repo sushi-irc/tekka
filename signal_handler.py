@@ -1467,7 +1467,7 @@ def dcc_send_cb(time, id, server, sender, filename,
 		elif status & s_running and status & s_incoming:
 			if not self.dcc_news.has_key(id) and not self.dcc_notifies.has_key(id):
 				# notify about auto accepted file transfer
-				d = inline_dialog.InlineMessageDialog(
+				gui.mgmt.show_inline_message(
 					_("Auto accepted file transfer"),
 					_("maki auto accepted the following file transfer:\n"
 					  "Filename: %(filename)s\n"
@@ -1478,9 +1478,6 @@ def dcc_send_cb(time, id, server, sender, filename,
 						  "sender":parse_from(sender)[0],
 						  "size":size,
 						  "server":server}),
-					icon=gtk.STOCK_DIALOG_INFO)
-
-				d.connect("response", lambda d,i: d.destroy())
-				gui.mgmt.show_inline_dialog(d)
+					dtype="info")
 
 				self.dcc_notifies[id] = True

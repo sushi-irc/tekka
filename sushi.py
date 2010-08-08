@@ -33,8 +33,6 @@ from tekka import signals
 from tekka import config
 from tekka import gui
 
-from tekka.lib.inline_dialog import InlineMessageDialog
-
 """
 TYPE_STRING: Takes one argument (default string)
 TYPE_PASSWORD: Hidden string. Takes one argument (default string)
@@ -88,13 +86,12 @@ class Plugin (object):
 
 	def display_error(self, message):
 
-		d = InlineMessageDialog("Plugin “%(plugin)s” caused an error." % {
+		gui.mgmt.show_inline_message(
+			_("Plugin “%(plugin)s” caused an error.") % {
 				"plugin": self._plugin_name
 			}, "%(message)s" % {
 				"message": message
-			})
-		gui.show_inline_dialog(d)
-		d.connect("response", lambda d,id: d.destroy())
+			}, dtype="error")
 
 
 	def get_bus(self):
