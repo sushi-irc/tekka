@@ -35,7 +35,7 @@ def execute_todo_action(file, todo, line):
 def get_todos():
 	import commands
 
-	cmd = """git grep -n -E "TODO(:|) "|grep -v ^po"""
+	cmd = """git grep -n -E "(TODO|FIME|XXX)(:|) "|grep -v ^po"""
 
 	todos = {}
 
