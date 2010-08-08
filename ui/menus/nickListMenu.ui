@@ -11,6 +11,14 @@
       </object>
     </child>
     <child>
+      <object class="GtkCheckMenuItem" id="ignoreItem">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">Ignore</property>
+        <property name="use_underline">True</property>
+        <signal name="toggled" handler="ignoreItem_toggled_cb"/>
+      </object>
+    </child>
+    <child>
       <object class="GtkMenuItem" id="kickItem">
         <property name="visible">True</property>
         <property name="label" translatable="yes">Kick</property>
