@@ -32,11 +32,20 @@ from gettext import gettext as _
 from .. import config
 from .. import gui
 
-from ..lib import inline_dialog
-from ..lib import key_dialog
-
 from ..com import sushi, NoSushiError
 from ..helper.singleton import SingletonMeta
+
+
+def get_ident(serverTab, nick):
+	""" retrieve the ident string of a given nick """
+	from_str = sushi.user_from(serverTab.name, nick)
+	try:
+		(names, host) = from_str.split("@")
+		(nick, ident) = names.split("!")
+	except ValueError:
+		return None
+	return ident
+
 
 class NickListMenu(object):
 
@@ -59,6 +68,7 @@ class NickListMenu(object):
 
 		sigdic = {
 			"nickListMenu_deactivate_cb" : self.deactivate_cb,
+			"ignoreItem_toggled_cb" : self.ignoreItem_toggled_cb,
 			"kickItem_activate_cb" : self.kickItem_activate_cb,
 			"banItem_activate_cb" : self.banItem_activate_cb,
 			"whoisItem_activate_cb" : self.whoisItem_activate_cb,
@@ -87,6 +97,12 @@ class NickListMenu(object):
 		headerItem = gtk.MenuItem(label=currentNick, use_underline=False)
 		self.menu.insert(headerItem, 0)
 		headerItem.show()
+		
+		serverTab = gui.tabs.get_current_tabs()[0]
+		ident = get_ident(serverTab, currentNick)
+		
+		if ident and ident in sushi.ignores(serverTab.name):
+			self.widgets.get_object("ignoreItem").set_active(True)
 
 		if sushi.remote:
 			self.widgets.get_object("sendFileItem").set_sensitive(False)
@@ -104,6 +120,26 @@ class NickListMenu(object):
 				handler[0](menu)
 
 		self.deactivate_handler = []
+		
+	def ignoreItem_toggled_cb(self, item):
+		serverTab = gui.tabs.get_current_tabs()[0]
+		ident = get_ident(serverTab, self.current_nick)
+		
+		# FIXME: this is a "bug" in maki, ident can be None
+		if not ident: return
+		
+		if item.get_active():
+			sushi.ignore(serverTab.name, ident)
+			gui.mgmt.show_inline_message(
+				_("Ignoring User %(user)s") % {"user":self.current_nick},
+				"",
+				"info")
+		else:
+			sushi.unignore(serverTab.name, ident)
+			gui.mgmt.show_inline_message(
+				_("User %(user)s is unignored") % {"user":self.current_nick},
+				"",
+				"info")
 
 	def kickItem_activate_cb(self, item):
 		sTab,cTab = gui.tabs.get_current_tabs()
