@@ -107,10 +107,6 @@ def maki_connect_callback(sushi):
 
 def maki_disconnect_callback(sushi):
 	""" connection to maki lost """
-
-	# FIXME:  after disconnecting and reconnecting,
-	# FIXME:: the current tab's textview
-	# FIXME:: is still insensitive - is this good or bad?
 	gui.mgmt.set_useable(False)
 
 
@@ -147,9 +143,6 @@ def tekka_tab_new_message_cb(tab, mtype):
 		tab.set_new_message(None)
 
 		if tab.window.auto_scroll and mtype:
-			# FIXME:  on high load, the whole application
-			# FIXME:: hangs. High load means, you insert a
-			# FIXME:: text with around 2000 characters.
 			if tab.window.textview.is_smooth_scrolling():
 				tab.window.textview.stop_scrolling()
 				tab.window.textview.scroll_to_bottom(no_smooth = True)
