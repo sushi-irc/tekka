@@ -10,7 +10,7 @@ srcdir = '.'
 blddir = 'build'
 
 def set_options (ctx):
-	ctx.add_option('--ubuntu-icons', action='store_true', default=False, help='Install Ubuntu Mono Icons')
+	ctx.add_option('--humanity-icons', action='store_true', default=False, help='Install Humanity Mono Icons')
 
 def configure (conf):
 	conf.check_tool('gnu_dirs')
@@ -18,7 +18,7 @@ def configure (conf):
 
 	conf.find_program('gzip', var = 'GZIP')
 
-	conf.env.UBUNTU_ICONS = Options.options.ubuntu_icons
+	conf.env.HUMANITY_ICONS = Options.options.humanity_icons
 	conf.env.VERSION = VERSION
 
 	conf.sub_config('po')
@@ -51,13 +51,13 @@ def build (bld):
 	bld.install_as('${DATAROOTDIR}/icons/hicolor/scalable/apps/tekka.svg',
 	               'graphics/tekka-mono-light.svg')
 
-	# Ubuntu-specific icons (dark/light theme)
-	if bld.env.UBUNTU_ICONS:
+	# Humanity-specific icons (dark/light theme)
+	if bld.env.HUMANITY_ICONS:
 		# Well, that's kinda silly, but state of the art, I guess
-		for dir in ('22', '24'):
-			bld.install_as('${DATAROOTDIR}/icons/ubuntu-mono-dark/apps/%s/tekka.svg' % (dir),
+		for dir in ('16', '22', '24', '32', '48', '64', '128', '192'):
+			bld.install_as('${DATAROOTDIR}/icons/Humanity-Dark/apps/%s/tekka.svg' % (dir),
 			               'graphics/tekka-mono-dark.svg')
-			bld.install_as('${DATAROOTDIR}/icons/ubuntu-mono-light/apps/%s/tekka.svg' % (dir),
+			bld.install_as('${DATAROOTDIR}/icons/Humanity/apps/%s/tekka.svg' % (dir),
 			               'graphics/tekka-mono-light.svg')
 
 	bld.symlink_as('${BINDIR}/tekka', Utils.subst_vars('${DATAROOTDIR}/sushi/tekka/tekka.py', bld.env))
