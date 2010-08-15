@@ -54,20 +54,20 @@ class SearchBar(gtk.Table):
 			self._textview = self.textview_callback()
 		else:
 			self._textview = textview
-	
-	
+
+
 	@property
 	def search_term(self): return self.search_entry.get_text()
 	@search_term.setter
 	def search_term(self, text): self.search_entry.set_text(text)
 
-	
+
 	@property
 	def autohide(self): return self._autohide
 	@autohide.setter
 	def autohide(self, value):
 		self._autohide = value
-		
+
 		# connect/disconnect the focus-out-event for auto-hiding
 		if value:
 			id = self.search_entry.connect(
@@ -77,22 +77,45 @@ class SearchBar(gtk.Table):
 		else:
 			if hasattr(self, "_autohide_sig_id"):
 				self.search_entry.disconnect(self._autohide_sig_id)
-	
 
-	def __init__(self, textview=None, textview_callback = None, autohide=True):
+
+	@property
+	def default_buttons(self): return self._default_buttons
+	@default_buttons.setter
+	def default_buttons(self, value):
+		""" default button behaviour (buttons will be connected
+			to self.search_button_clicked_cb) if value == True
+			Otherwise the handler will be disconnected.
+		"""
+		if value:
+			h1 = self.search_button.connect("clicked",
+					self.search_button_clicked_cb)
+
+			h2 = self.search_entry.connect("activate",
+					self.search_button_clicked_cb)
+			self._btn_handler_1 = h1
+			self._btn_handler_2 = h2
+
+		else:
+			if hasattr(self, "_btn_handler_1"):
+				self.disconnect(self._btn_handler_1)
+				self.disconnect(self._btn_handler_2)
+
+
+	def __init__(self, textview=None, textview_callback = None, autohide=True, default_buttons=True):
 		"""
 			textview = TextView to operate on
 			textview_callback = callback wich returns a TextView to operate on
 			autohide = hide on focus loss if enabled (True)
 		"""
-		
+
 		super(SearchBar,self).__init__(rows=1, columns=2)
 
-		
+
 		# arange widgets
 
 		self.set_property("row-spacing", 1)
-		
+
 		self.search_entry = SpellEntry()
 
 		self.attach(self.search_entry, 0, 1, 1, 2)
@@ -100,7 +123,7 @@ class SearchBar(gtk.Table):
 
 		self.search_button = gtk.ToolButton(stock_id = gtk.STOCK_FIND)
 		self.attach(self.search_button, 1, 2, 1, 2)
-		
+
 		self.child_set_property(self.search_button,
 								"y-options",
 								gtk.SHRINK)
@@ -109,21 +132,17 @@ class SearchBar(gtk.Table):
 								gtk.SHRINK)
 
 		# setup own properties
-		
+
 		self.last_iter = None
 		self.last_result = ""
-		
+
 		self.textview_callback = textview_callback
 		self.textview = textview
 		self.autohide = autohide
 
 		# connect widget signals
 
-		self.search_button.connect("clicked",
-				self.search_button_clicked_cb)
-				
-		self.search_entry.connect("activate",
-				self.search_button_clicked_cb)
+		self.default_buttons = default_buttons
 
 
 	def search_entry_focus_out_cb(self, entry, event):
@@ -132,7 +151,7 @@ class SearchBar(gtk.Table):
 
 	def search_further(self):
 		self.search_button_clicked_cb(None)
-		
+
 
 	def search_button_clicked_cb(self, button):
 
@@ -155,12 +174,12 @@ class SearchBar(gtk.Table):
 
 		# scroll the textview
 		self.textview.scroll_to_iter(result[0], 0.0)
-		
+
 
 	def grab_focus(self):
 		self.search_entry.grab_focus()
-		
-		
+
+
 
 def test():
 	win = gtk.Window()
