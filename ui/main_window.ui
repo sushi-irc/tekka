@@ -276,28 +276,12 @@
           <object class="GtkHPaned" id="main_hpaned">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="border_width">7</property>
             <signal name="notify" handler="main_hpaned_notify"/>
             <child>
               <object class="GtkVBox" id="output_vbox">
                 <property name="visible">True</property>
-                <property name="border_width">6</property>
-                <property name="orientation">vertical</property>
-                <child>
-                  <object class="GtkLabel" id="topic_label">
-                    <property name="xpad">4</property>
-                    <property name="ypad">4</property>
-                    <property name="label"></property>
-                    <property name="use_markup">True</property>
-                    <property name="selectable">True</property>
-                    <property name="ellipsize">end</property>
-                    <property name="can_focus">False</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="padding">6</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
+                <property name="border_width">3</property>
                 <child>
                   <object class="GtkVPaned" id="output_vpaned">
                     <property name="visible">True</property>
@@ -305,12 +289,18 @@
                     <property name="orientation">vertical</property>
                     <signal name="notify" handler="output_vpaned_notify"/>
                     <child>
-                      <object class="OutputWindow" id="general_output_window">
+                      <object class="GtkAlignment" id="general_output_alignment">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="hscrollbar_policy">automatic</property>
-                        <property name="vscrollbar_policy">automatic</property>
-                        <property name="shadow_type">etched-in</property>
+                        <property name="bottom_padding">3</property>
+                        <child>
+                          <object class="OutputWindow" id="general_output_window">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="hscrollbar_policy">automatic</property>
+                            <property name="vscrollbar_policy">automatic</property>
+                            <property name="shadow_type">etched-in</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="resize">False</property>
@@ -320,18 +310,41 @@
                     <child>
                       <object class="GtkVBox" id="chat_vbox">
                         <property name="visible">True</property>
-                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkAlignment" id="topic_alignment">
+                            <property name="visible">True</property>
+                            <property name="top_padding">3</property>
+                            <child>
+                              <object class="GtkEventBox" id="topic_eventbox">
+                                <property name="visible">True</property>
+                                <child>
+                                  <object class="GtkLabel" id="topic_label">
+                                    <property name="xpad">8</property>
+                                    <property name="ypad">8</property>
+                                    <property name="use_markup">True</property>
+                                    <property name="selectable">True</property>
+                                    <property name="ellipsize">end</property>
+                                    <signal name="expose_event" handler="topic_label_expose_event"/>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
                         <child>
                           <object class="OutputShell" id="output_shell">
                             <property name="visible">True</property>
-                            <property name="orientation">vertical</property>
                             <signal name="widget_changed" handler="output_shell_widget_changed"/>
                             <child>
                               <placeholder/>
                             </child>
                           </object>
                           <packing>
-                            <property name="position">0</property>
+                            <property name="position">1</property>
                           </packing>
                         </child>
                         <child>
@@ -346,44 +359,48 @@
                           </object>
                           <packing>
                             <property name="expand">False</property>
-                            <property name="position">1</property>
+                            <property name="position">2</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkHBox" id="input_hbox">
+                          <object class="GtkAlignment" id="input_alignment">
                             <property name="visible">True</property>
-                            <property name="border_width">3</property>
+                            <property name="top_padding">3</property>
                             <child>
-                              <object class="GtkLabel" id="nick_label">
+                              <object class="GtkHBox" id="input_hbox">
                                 <property name="visible">True</property>
+                                <child>
+                                  <object class="GtkLabel" id="nick_label">
+                                    <property name="visible">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="padding">11</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="SpellEntry" id="input_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="can_default">True</property>
+                                    <property name="has_default">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="invisible_char">&#x2022;</property>
+                                    <signal name="key_press_event" handler="input_entry_key_press_event"/>
+                                    <signal name="activate" handler="input_entry_activate"/>
+                                  </object>
+                                  <packing>
+                                    <property name="pack_type">end</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
                               </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="padding">11</property>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="SpellEntry" id="input_entry">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="has_focus">True</property>
-                                <property name="is_focus">True</property>
-                                <property name="can_default">True</property>
-                                <property name="has_default">True</property>
-                                <property name="receives_default">True</property>
-                                <property name="invisible_char">&#x2022;</property>
-                                <signal name="key_press_event" handler="input_entry_key_press_event"/>
-                                <signal name="activate" handler="input_entry_activate"/>
-                              </object>
-                              <packing>
-                                <property name="position">1</property>
-                              </packing>
                             </child>
                           </object>
                           <packing>
                             <property name="expand">False</property>
-                            <property name="position">2</property>
+                            <property name="position">3</property>
                           </packing>
                         </child>
                       </object>
@@ -408,33 +425,37 @@
               <object class="GtkVPaned" id="list_vpaned">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="border_width">6</property>
-                <property name="orientation">vertical</property>
+                <property name="border_width">3</property>
                 <signal name="notify" handler="list_vpaned_notify"/>
                 <child>
-                  <object class="GtkScrolledWindow" id="tabs_window">
+                  <object class="GtkAlignment" id="tabs_window_alignment">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="hscrollbar_policy">automatic</property>
-                    <property name="vscrollbar_policy">automatic</property>
-                    <property name="shadow_type">etched-in</property>
+                    <property name="bottom_padding">3</property>
                     <child>
-                      <object class="GtkTreeView" id="tabs_view">
+                      <object class="GtkScrolledWindow" id="tabs_window">
                         <property name="visible">True</property>
-						<property name="can_focus">False</property>
-                        <property name="has_tooltip">True</property>
-                        <property name="model">tab_store</property>
-                        <property name="headers_visible">False</property>
-                        <property name="headers_clickable">False</property>
-                        <property name="search_column">0</property>
-                        <signal name="button_press_event" handler="tabs_view_button_press_event"/>
-                        <signal name="query_tooltip" handler="tabs_view_query_tooltip"/>
-                        <signal name="row_activated" handler="tabs_view_row_activated"/>
+                        <property name="can_focus">True</property>
+                        <property name="hscrollbar_policy">automatic</property>
+                        <property name="vscrollbar_policy">automatic</property>
+                        <property name="shadow_type">etched-in</property>
                         <child>
-                          <object class="GtkTreeViewColumn" id="tabs_view_name_column">
-                            <property name="title">Name</property>
+                          <object class="GtkTreeView" id="tabs_view">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="model">tab_store</property>
+                            <property name="headers_visible">False</property>
+                            <property name="headers_clickable">False</property>
+                            <property name="search_column">0</property>
+                            <signal name="button_press_event" handler="tabs_view_button_press_event"/>
+                            <signal name="query_tooltip" handler="tabs_view_query_tooltip"/>
+                            <signal name="row_activated" handler="tabs_view_row_activated"/>
                             <child>
-                              <object class="GtkCellRendererText" id="tabs_view_name_renderer"/>
+                              <object class="GtkTreeViewColumn" id="tabs_view_name_column">
+                                <property name="title">Name</property>
+                                <child>
+                                  <object class="GtkCellRendererText" id="tabs_view_name_renderer"/>
+                                </child>
+                              </object>
                             </child>
                           </object>
                         </child>
@@ -449,7 +470,6 @@
                 <child>
                   <object class="GtkVBox" id="nicks_vbox">
                     <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkAlignment" id="nick_stats_alignment">
                         <property name="visible">True</property>
@@ -457,7 +477,6 @@
                         <child>
                           <object class="GtkLabel" id="nick_stats_label">
                             <property name="visible">True</property>
-                            <property name="label"></property>
                           </object>
                         </child>
                       </object>

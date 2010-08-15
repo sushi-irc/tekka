@@ -271,7 +271,7 @@ def mainWindow_delete_event_cb(mainWindow, event):
 	"""
 		If hide_on_close and the status icon are enabled,
 		hide the main window. Otherwise stop the main loop.
-		
+
 		On hide, a read-line will be inserted in every tab.
 	"""
 
@@ -1034,6 +1034,29 @@ def setup_fonts():
 		pass
 
 
+def setup_topic_label():
+	""" tooltip style box arround topic label """
+
+	def expose_event_cb(box, event):
+		a = box.get_allocation()
+
+		box.style.paint_flat_box(
+			box.window,
+			gtk.STATE_NORMAL,
+			gtk.SHADOW_ETCHED_IN,
+			None,
+			box,
+			"tooltip",
+			a.x,
+			a.y,
+			a.width,
+			a.height - 1
+		)
+		return False
+	gui.widgets.get_object("topic_label").connect(
+		"expose-event", expose_event_cb)
+
+
 def show_welcome_screen():
 	""" hide the general_output_window and the list_vpaned
 		and display the welcome window in the output shell.
@@ -1168,7 +1191,6 @@ def setupGTK():
 		"output_vpaned_notify":
 			paned_notify_cb,
 
-
 	# tekka menu context
 		"tekka_server_list_item_activate":
 			mmc.tekka.connect_activate_cb,
@@ -1232,6 +1254,7 @@ def setupGTK():
 	setup_tabs_view()
 	setup_nicks_view()
 	setup_general_ouptut()
+	setup_topic_label()
 
 	setup_fonts()
 
