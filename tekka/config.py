@@ -197,6 +197,36 @@ def write_config_file():
 	config_parser.write(f)
 	f.close()
 
+@types(section=basestring, user_data=tuple)
+def add_watcher(section, value, callback, user_data=()):
+	""" add watcher to listen for changes on a variable """
+	if _watcher.has_key(section):
+		if _watcher.has_key(value):
+			_watcher[section][value][callback] = user_data
+		else:
+			_watcher[section][value] = {callback:user_data}
+	else:
+		_watcher[section] = {value:{callback:user_data}}
+
+def remove_watcher(section, value, callback):
+	""" remove a watcher (callback) for this section/value """
+	try:
+		l = _watcher[section][value]
+		i = l.index(callback)
+		del l[i]
+		return True
+	except ValueError, KeyError:
+		return False
+
+def _call_watcher(section, value):
+	""" call registered watcher for section and value """
+	try:
+		w = _watcher[section][value]
+	except KeyError:
+		return
+	for (callback,args) in w:
+		watcher(section, value, *args)
+
 @types (section = basestring)
 def has_section(section):
 	return config_parser.has_section(section)
@@ -231,6 +261,9 @@ def set(section, option, value):
 	"""
 	if not config_parser:
 		return False
+
+	# TODO: enable, test, stuff
+	#_call_watcher(section, option)
 
 	try:
 		config_parser.set(section, option, str(value))
