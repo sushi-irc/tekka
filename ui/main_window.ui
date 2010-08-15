@@ -441,7 +441,7 @@
                         <child>
                           <object class="GtkTreeView" id="tabs_view">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can_focus">False</property>
                             <property name="model">tab_store</property>
                             <property name="headers_visible">False</property>
                             <property name="headers_clickable">False</property>
