@@ -105,6 +105,7 @@ def set_defaults():
 	defaults["tekka"]["names_columns"] = "5"        # nicks in one row in /names output
 	defaults["tekka"]["browser"] = None
 	defaults["tekka"]["text_rules"] = "True"
+	defaults["tekka"]["rules_limit"] = "3"
 
 	defaults["dcc"] = {}
 	defaults["dcc"]["show_ident_in_dialog"] = "False"

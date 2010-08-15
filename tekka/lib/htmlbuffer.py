@@ -292,7 +292,13 @@ class HTMLBuffer(gtk.TextBuffer):
 
 		text = URLToTag(text)
 
-		if config.get_bool("tekka","text_rules") and self.odd_line:
+		# TODO: cache odd line stuff
+
+		self.odd_line_limit = int(config.get("tekka","rules_limit"))
+		max_lines = self.odd_line_limit * 2
+
+		if (config.get_bool("tekka","text_rules")
+		and (self.odd_line % max_lines) < self.odd_line_limit):
 			color = config.get("colors","rules_color")
 
 			if color == "auto":
@@ -304,7 +310,8 @@ class HTMLBuffer(gtk.TextBuffer):
 		else:
 			text = "<msg>%s</msg>" % text
 
-		self.odd_line = not self.odd_line
+		self.odd_line += 1
+		self.odd_line = self.odd_line % max_lines
 
 		def applyToParser(text):
 			try:
