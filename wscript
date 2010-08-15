@@ -49,7 +49,7 @@ def build (bld):
 	# TODO:: ~user/.icons instead of the global icons dir
 	# Global icon
 	bld.install_as('${DATAROOTDIR}/icons/hicolor/scalable/apps/tekka.svg',
-	               'graphics/tekka-mono-light.svg')
+	               'graphics/tekka-generic.svg')
 
 	# Humanity-specific icons (dark/light theme)
 	if bld.env.HUMANITY_ICONS:
