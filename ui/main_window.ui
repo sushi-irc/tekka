@@ -324,7 +324,6 @@
                                     <property name="use_markup">True</property>
                                     <property name="selectable">True</property>
                                     <property name="ellipsize">end</property>
-                                    <signal name="expose_event" handler="topic_label_expose_event"/>
                                   </object>
                                 </child>
                               </object>
