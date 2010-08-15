@@ -61,8 +61,8 @@ class HistoryDialog(object):
 		self.load_current_day()
 
 		bar = self.builder.get_object("searchbar")
-		bar.set_autohide(False)
-		bar.set_standard_behaviour(False)
+		bar.autohide = False
+		bar.default_buttons = False
 		bar.search_button.connect("clicked", self.search)
 		bar.search_entry.connect("activate", self.search)
 
