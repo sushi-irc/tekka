@@ -738,7 +738,7 @@ The last field is optional.</property>
                   <object class="GtkLabel" id="label7">
                     <property name="visible">True</property>
                     <property name="xalign">0.11999999731779099</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Warning:&lt;/b&gt;
+                    <property name="label" translatable="yes">&lt;b&gt;Information:&lt;/b&gt;
 Changes will be applied after closing this dialog.</property>
                     <property name="use_markup">True</property>
                     <property name="wrap">True</property>
