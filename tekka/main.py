@@ -1314,7 +1314,7 @@ def tekka_excepthook(extype, exobj, extb):
 											wrap=True,
 											xalign=0.0)
 			self.error_label.set_markup(_(
-				"<span size='larger' weight='bold'>Error</span>\n\n"
+				"<span size='larger' weight='bold'>Don't Panic!</span>\n\n"
 				"An error occured – we apologize for that. "
 				"Feel free to submit a bug report at "
 				"<a href=\"https://bugs.launchpad.net/sushi\">https://bugs.launchpad.net/sushi</a>."))
@@ -1332,8 +1332,20 @@ def tekka_excepthook(extype, exobj, extb):
 			self.vbox_inner = gtk.VBox()
 			self.vbox_inner.set_property("border-width", 6)
 
-			self.vbox_inner.pack_start(self.error_label)
-			self.vbox_inner.pack_end(self.sw)
+			hbox = gtk.HBox()
+			hbox.set_property("border-width", 6)
+			hbox.set_spacing(12)
+			hbox.pack_start(
+				gtk.image_new_from_stock(
+					gtk.STOCK_DIALOG_INFO, gtk.ICON_SIZE_DIALOG),
+				expand=False)
+			hbox.pack_end(self.error_label)
+			align = gtk.Alignment()
+			align.add(hbox)
+			align.set_padding(0,6,0,0)
+
+			self.vbox_inner.pack_start(align, expand=False)
+			self.vbox_inner.pack_start(self.sw)
 
 			self.vbox.pack_start(self.vbox_inner)
 			self.vbox.show_all()
