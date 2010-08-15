@@ -43,6 +43,8 @@ defaults = {}
 config_parser = None
 config_file = ""
 
+_watcher = {}
+
 def get_path(*c):
 	return os.path.abspath(os.path.join(prefix, *c))
 
