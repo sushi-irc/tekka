@@ -97,10 +97,10 @@ class NickListMenu(object):
 		headerItem = gtk.MenuItem(label=currentNick, use_underline=False)
 		self.menu.insert(headerItem, 0)
 		headerItem.show()
-		
+
 		serverTab = gui.tabs.get_current_tabs()[0]
 		ident = get_ident(serverTab, currentNick)
-		
+
 		if ident and ident in sushi.ignores(serverTab.name):
 			self.widgets.get_object("ignoreItem").set_active(True)
 
@@ -120,15 +120,18 @@ class NickListMenu(object):
 				handler[0](menu)
 
 		self.deactivate_handler = []
-		
+
 	def ignoreItem_toggled_cb(self, item):
 		serverTab = gui.tabs.get_current_tabs()[0]
 		ident = get_ident(serverTab, self.current_nick)
-		
+
 		# FIXME: this is a "bug" in maki, ident can be None
 		if not ident: return
-		
+
 		if item.get_active():
+			if ident in sushi.ignores(serverTab.name):
+				# nothing new, abort
+				return
 			sushi.ignore(serverTab.name, ident)
 			gui.mgmt.show_inline_message(
 				_("Ignoring User %(user)s") % {"user":self.current_nick},
