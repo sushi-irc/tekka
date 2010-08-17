@@ -26,6 +26,8 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+from gettext import gettext as _
+
 from tekka import com
 from tekka import config
 from tekka import commands
