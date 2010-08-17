@@ -1062,7 +1062,8 @@ def show_welcome_screen():
 		and display the welcome window in the output shell.
 	"""
 	self = show_welcome_screen
-	self.hides = ("general_output_window", "list_vpaned")
+	self.hides = ("list_vpaned","topic_alignment",
+		"general_output_alignment")
 
 	for w in self.hides:
 		gui.widgets.get_object(w).hide()
