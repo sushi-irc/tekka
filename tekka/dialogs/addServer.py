@@ -64,7 +64,8 @@ def dialog_response_cb(dialog, response_id, callback, widgets):
 			widgets.get_object("commandList").get_widget_matrix()
 			if i[0].get_text()]
 
-		sushi.server_set_list(server, "server", "commands", list)
+		if list:
+			sushi.server_set_list(server, "server", "commands", list)
 		callback()
 
 	dialog.destroy()

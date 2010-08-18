@@ -164,6 +164,7 @@ class SushiWrapper (gobject.GObject):
 					# try proxy methods
 					try:
 						def attr_dummy(*args, **kwargs):
+							""" wrapped call to dbus proxy attr """
 							try:
 								return self._sushi.__getattr__(attr)(
 											*args,
