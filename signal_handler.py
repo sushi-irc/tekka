@@ -206,11 +206,11 @@ def isHighlighted (server_tab, text):
 def _createTab (server, name):
 	""" check if tab exists, create it if not, return the tab """
 	server_tab = gui.tabs.search_tab(server)
-	tab = gui.tabs.search_tab(server, name)
 
 	if not server_tab:
-		raise Exception(
-		"No server tab in _createTab(%s, %s)" % (server,name))
+		raise Exception("No server tab in _createTab(%s, %s)" % (server,name))
+
+	tab = gui.tabs.search_tab(server, name)
 
 	if not tab:
 		if name[0] in server_tab.support_chantypes:
