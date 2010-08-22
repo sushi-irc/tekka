@@ -102,6 +102,9 @@ class NickListStore(gtk.ListStore):
 
 		self.sort_nicks()
 
+	def has_nick(self, nick):
+		return nick in self.get_nicks()
+
 	def get_nicks(self):
 		"""
 		returns all nick names stored
@@ -212,7 +215,8 @@ class NickListStore(gtk.ListStore):
 		row = self.find_nick_row(nick)
 
 		if not row:
-			raise Exception, "get_prefix: Nick '%s' not found." % (nick)
+			# this is possible if outer-channel-talking is allowed
+			return ""
 
 		return row[COLUMN_PREFIX]
 
