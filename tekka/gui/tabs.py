@@ -538,7 +538,7 @@ class TekkaQuery(TekkaTab):
 
 
 	def write(self, timestamp, message, msgtype="message",
-	no_general_output = False):
+	no_general_output = False, **kwargs):
 		""" write [<timestamp>] <message> to this tab's buffer """
 
 		timestring = time.strftime(
@@ -550,7 +550,7 @@ class TekkaQuery(TekkaTab):
 		outputString = "[%s] %s" % (timestring, cString)
 
 		buffer = self.window.textview.get_buffer()
-		buffer.insertHTML(buffer.get_end_iter(), outputString)
+		buffer.insertHTML(buffer.get_end_iter(), outputString, **kwargs)
 
 		if not self.is_active():
 
@@ -648,7 +648,7 @@ class TekkaChannel(TekkaTab):
 
 
 	def write(self, timestamp, message, msgtype="message",
-	no_general_output=False):
+	no_general_output=False, **kwargs):
 		""" write [<timestamp>] <message> to this tab's buffer """
 
 		timestring = time.strftime(
@@ -660,7 +660,7 @@ class TekkaChannel(TekkaTab):
 		outputString = "[%s] %s" % (timestring, cString)
 
 		buffer = self.window.textview.get_buffer()
-		buffer.insertHTML(buffer.get_end_iter(), outputString)
+		buffer.insertHTML(buffer.get_end_iter(), outputString, **kwargs)
 
 		if not self.is_active():
 
@@ -1186,7 +1186,7 @@ def switch_to_path(path):
 		mgmt.set_topic(markup.markup_escape(tab.topic))
 
 		if config.get_bool("tekka","show_topic_bar"):
-			
+
 			if (tab.topic or not config.get_bool("tekka","hide_topic_if_empty")):
 				widgets.get_object("topic_label").show()
 			else:

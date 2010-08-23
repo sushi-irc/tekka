@@ -497,7 +497,7 @@ def userMessage_cb(timestamp, server, from_str, channel, message):
 			color.get_nick_color(nick),
 			markup.escape(nick),
 			messageString,
-		), type)
+		), type, group_string=nick)
 
 
 def ownMessage_cb(timestamp, server, channel, message):
@@ -514,7 +514,7 @@ def ownMessage_cb(timestamp, server, channel, message):
 				config.get("colors","own_nick","#000000"),
 				nick,
 				config.get("colors","own_text","#000000"),
-				markup.escape(message)))
+				markup.escape(message)), group_string=nick)
 
 
 def userQuery_cb(timestamp, server, from_str, message):
@@ -530,7 +530,7 @@ def userQuery_cb(timestamp, server, from_str, message):
 			color.get_nick_color(nick),
 			markup.escape(nick),
 			markup.escape(message)
-		), "message")
+		), "message", group_string=nick)
 
 	# queries are important
 	gui.mgmt.set_urgent(True)
@@ -820,6 +820,7 @@ def userNotice_cb(time, server, from_str, target, message):
 def ownAction_cb(time, server, channel, action):
 
 	tab = _createTab(server, channel)
+	nick = gui.tabs.search_tab(server).nick
 
 	nickColor = config.get("colors","own_nick","#000000")
 	textColor = config.get("colors","own_text","#000000")
@@ -828,9 +829,9 @@ def ownAction_cb(time, server, channel, action):
 		"<font foreground='%s' weight='bold'>%s</font> "
 		"<font foreground='%s'>%s</font>" % (
 			nickColor,
-			gui.tabs.search_tab(server).nick,
+			nick,
 			textColor,
-			markup.escape(action)))
+			markup.escape(action)), group_string=nick)
 
 
 def actionQuery_cb(time, server, from_str, action):
@@ -840,7 +841,7 @@ def actionQuery_cb(time, server, from_str, action):
 
 	tab = _createTab(server, nick)
 
-	tab.write(time, "%s %s" % (nick, markup.escape(action)))
+	tab.write(time, "%s %s" % (nick, markup.escape(action)), group_string=nick)
 
 	gui.mgmt.set_urgent(True)
 
@@ -877,7 +878,7 @@ def userAction_cb(time, server, from_str, channel, action):
 				color.get_nick_color(nick),
 				nick,
 				actionString),
-			type)
+			type, group_string=nick)
 
 
 def userNick_cb(time, server, from_str, newNick):

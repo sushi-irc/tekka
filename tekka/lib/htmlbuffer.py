@@ -206,7 +206,8 @@ class HTMLBuffer(gtk.TextBuffer):
 	def __init__(self, handler=None, tagtable=None):
 		self.lines = 0
 
-		self.odd_line = False
+		self.group_string = None
+		self.group_color = False
 
 		if tagtable:
 			self.tagtable = tagtable
@@ -279,7 +280,7 @@ class HTMLBuffer(gtk.TextBuffer):
 	def insert_html(self, *args, **kwargs):
 		return self.insertHTML(*args, **kwargs)
 
-	def insertHTML(self, iter, text):
+	def insertHTML(self, iter, text, group_string=None):
 		""" parse text for HTML markups before adding
 			it to the buffer at the given iter.
 
@@ -292,13 +293,13 @@ class HTMLBuffer(gtk.TextBuffer):
 
 		text = URLToTag(text)
 
-		# TODO: cache odd line stuff
-
-		self.odd_line_limit = int(config.get("tekka","rules_limit"))
-		max_lines = self.odd_line_limit * 2
+		if self.group_string != group_string:
+			self.group_string = group_string
+			self.group_color = not self.group_color
 
 		if (config.get_bool("tekka","text_rules")
-		and (self.odd_line % max_lines) < self.odd_line_limit):
+		and self.group_color
+		and self.group_string):
 			color = config.get("colors","rules_color")
 
 			if color == "auto":
@@ -309,9 +310,6 @@ class HTMLBuffer(gtk.TextBuffer):
 						color, text)
 		else:
 			text = "<msg>%s</msg>" % text
-
-		self.odd_line += 1
-		self.odd_line = self.odd_line % max_lines
 
 		def applyToParser(text):
 			try:
