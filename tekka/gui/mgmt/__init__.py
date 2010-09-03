@@ -33,16 +33,18 @@ import gettext
 from gettext import gettext as _
 from threading import Timer
 
-from .. import config
+from ... import config
 
-from .builder import build_status_icon, error_dialog
-from ._builder import widgets
+from ..builder import build_status_icon, error_dialog
+from .._builder import widgets
 
-from ..helper import color
-from ..helper import code
-from ..typecheck import types
+from ...helper import color
+from ...helper import code
+from ...typecheck import types
 
-from ..lib.inline_dialog import InlineMessageDialog
+from ...lib.inline_dialog import InlineMessageDialog
+
+from . import visibility
 
 def get_font():
 
@@ -102,28 +104,6 @@ def set_useable(switch):
 	if switch: widgets.get_object("input_entry").grab_focus()
 
 	gui_is_useable = switch
-
-
-@types(switch=bool)
-def switch_status_icon(switch):
-	""" enables / disables status icon """
-
-	statusIcon = widgets.get_object("status_icon")
-
-	if switch:
-
-		if not statusIcon:
-			build_status_icon()
-			return
-
-		statusIcon.set_visible(True)
-
-	else:
-
-		if not statusIcon:
-			return
-
-		statusIcon.set_visible(False)
 
 
 def has_focus():
