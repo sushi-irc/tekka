@@ -433,6 +433,12 @@ def get_default(section, option=""):
 				return defaults[section][option]
 	return None
 
+def is_default(section, option, value):
+	""" check if the given value matches the default value for the
+		option in the section.
+	"""
+	return get_default(section,option) == value
+
 @types (path=basestring)
 def check_config_file(path):
 	""" check if config file exists and create it if not """
