@@ -34,15 +34,27 @@ from .. import gui
 
 from ..lib.welcome_window import WelcomeWindow
 
-# TODO: extra parameter to reset value or something which interrupts
-# setting
-def ignore_on_welcome(fun):
-	def deco(*args, **kwargs):
-		if type(gui.widgets.get_object("output_window")) == WelcomeWindow:
-			return
-		return fun(*args, **kwargs)
+def ignore_on_welcome(on_welcome_cb=None, on_not_welcome_cb=None):
+	def decorator(fun):
+		def new_fun(*args, **kwargs):
+			if type(gui.widgets.get_object("output_window")) == WelcomeWindow:
+				if on_welcome_cb: on_welcome_cb()
+				return
+			if on_not_welcome_cb: on_not_welcome_cb()
+			return fun(*args, **kwargs)
+		return new_fun
+	return decorator
 
-	return deco
+
+def _reset_item(item_name):
+	def cb():
+		if hasattr(cb, "locked") and cb.locked:
+			return
+		item = gui.widgets.get_object(item_name)
+		cb.locked = True
+		item.set_property("active", not item.get_active())
+		cb.locked = False
+	return cb
 
 
 class MenuContextType(object):
@@ -157,19 +169,21 @@ class MainMenuContext(MenuContextType):
 							 lambda: gui.builder.build_status_icon())
 			apply_visibility("view_topic_bar_item", "show_topic_bar")
 
-		@ignore_on_welcome
+		@ignore_on_welcome(
+			on_welcome_cb=_reset_item("view_general_output_item"))
 		def showGeneralOutput_toggled_cb(self, item):
 			""" toggle visibility of general output """
 			gui.mgmt.visibility.show_general_output(item.get_active())
 			config.set("tekka","show_general_output",str(item.get_active()))
 
-		@ignore_on_welcome
+		@ignore_on_welcome(on_welcome_cb=_reset_item("view_side_pane_item"))
 		def showSidePane_toggled_cb(self, item):
 			""" toggle visibility of side pane """
 			gui.mgmt.visibility.show_side_pane(item.get_active())
 			config.set("tekka", "show_side_pane", str(item.get_active()))
 
-		@ignore_on_welcome
+		@ignore_on_welcome(
+			on_welcome_cb=_reset_item("view_status_bar_item"))
 		def showStatusBar_toggled_cb(self, item):
 			""" toggle visibility of status bar """
 			gui.mgmt.visibility.show_status_bar(item.get_active())
@@ -180,7 +194,7 @@ class MainMenuContext(MenuContextType):
 			gui.mgmt.visibility.show_status_icon(item.get_active())
 			config.set("tekka", "show_status_icon", str(item.get_active()))
 
-		@ignore_on_welcome
+		@ignore_on_welcome(on_welcome_cb=_reset_item("view_topic_bar_item"))
 		def showTopicBar_toggled_cb(self, item):
 			""" toggle visibililty of topic bar """
 			gui.mgmt.visibility.show_topic_bar(item.get_active())
