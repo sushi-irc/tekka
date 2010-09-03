@@ -439,6 +439,9 @@ def is_default(section, option):
 	"""
 	return get_default(section,option) == get(section,option)
 
+def reset_value(section, option):
+	set(section, option, get_default(section, option))
+
 @types (path=basestring)
 def check_config_file(path):
 	""" check if config file exists and create it if not """
