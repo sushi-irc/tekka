@@ -32,6 +32,18 @@ from .. import com
 from .. import config
 from .. import gui
 
+from ..lib.welcome_window import WelcomeWindow
+
+# TODO: extra parameter to reset value or something which interrupts
+# setting
+def ignore_on_welcome(fun):
+	def deco(*args, **kwargs):
+		if type(gui.widgets.get_object("output_window")) == WelcomeWindow:
+			return
+		return fun(*args, **kwargs)
+
+	return deco
+
 
 class MenuContextType(object):
 
@@ -145,51 +157,33 @@ class MainMenuContext(MenuContextType):
 							 lambda: gui.builder.build_status_icon())
 			apply_visibility("view_topic_bar_item", "show_topic_bar")
 
+		@ignore_on_welcome
 		def showGeneralOutput_toggled_cb(self, item):
 			""" toggle visibility of general output """
-			sw = gui.widgets.get_object("general_output_window")
+			gui.mgmt.visibility.show_general_output(item.get_active())
+			config.set("tekka","show_general_output",str(item.get_active()))
 
-			if item.get_active():
-				sw.show()
-			else:
-				sw.hide()
-
-			config.set("tekka", "show_general_output", str(item.get_active()))
-
+		@ignore_on_welcome
 		def showSidePane_toggled_cb(self, item):
 			""" toggle visibility of side pane """
-			p = gui.widgets.get_object("list_vpaned")
-
-			if item.get_active():
-				p.show()
-			else:
-				p.hide()
-
+			gui.mgmt.visibility.show_side_pane(item.get_active())
 			config.set("tekka", "show_side_pane", str(item.get_active()))
 
+		@ignore_on_welcome
 		def showStatusBar_toggled_cb(self, item):
 			""" toggle visibility of status bar """
-			bar = gui.widgets.get_object("statusbar")
-
-			if item.get_active():
-				bar.show()
-			else:
-				bar.hide()
-
+			gui.mgmt.visibility.show_status_bar(item.get_active())
 			config.set("tekka", "show_status_bar", str(item.get_active()))
 
 		def showStatusIcon_toggled_cb(self, item):
 			""" toggle visibility of status icon """
-			gui.mgmt.switch_status_icon(item.get_active())
+			gui.mgmt.visibility.show_status_icon(item.get_active())
 			config.set("tekka", "show_status_icon", str(item.get_active()))
 
+		@ignore_on_welcome
 		def showTopicBar_toggled_cb(self, item):
 			""" toggle visibililty of topic bar """
-			if item.get_active():
-				gui.widgets.get_object("topic_label").show()
-			else:
-				gui.widgets.get_object("topic_label").hide()
-
+			gui.mgmt.visibility.show_topic_bar(item.get_active())
 			config.set("tekka", "show_topic_bar", str(item.get_active()))
 
 

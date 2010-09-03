@@ -1062,11 +1062,14 @@ def show_welcome_screen():
 		and display the welcome window in the output shell.
 	"""
 	self = show_welcome_screen
-	self.hides = ("list_vpaned","topic_alignment",
-		"general_output_alignment")
+	self.hides = (
+		gui.mgmt.visibility.show_side_pane,
+		gui.mgmt.visibility.show_topic_bar,
+		gui.mgmt.visibility.show_general_output,
+	)
 
-	for w in self.hides:
-		gui.widgets.get_object(w).hide()
+	for show_cb in self.hides:
+		show_cb(False)
 
 	s = gui.widgets.get_object("output_shell")
 
@@ -1084,8 +1087,8 @@ def hide_welcome_screen():
 
 	hides = show_welcome_screen.hides
 
-	for w in hides:
-		gui.widgets.get_object(w).show()
+	for show_cb in hides:
+		show_cb(True)
 
 
 def setupGTK():

@@ -175,8 +175,8 @@ def fillGeneralOutputFilters():
 
 def applyNickColors():
 	nickColorsList = widgets.get_object("nickColorsList")
-	config.set_list("colors","nick_colors", 
-		[n[0].get_color().to_string() 
+	config.set_list("colors","nick_colors",
+		[n[0].get_color().to_string()
 		for n in nickColorsList.get_widget_matrix() if n and len(n) >= 1])
 
 def applyChatting():
@@ -190,11 +190,11 @@ def applyGeneralOutputFilter():
 
 	for widget_row in generalOutputFilterList.get_widget_matrix():
 		cbox = widget_row[0]
-		
+
 		if not cbox.get_model() or cbox.get_active() == -1:
 			logging.error("No message type selected.")
 			continue
-		
+
 		mtype = cbox.get_model()[cbox.get_active()][0]
 
 		server = widget_row[1].get_text()
@@ -211,7 +211,7 @@ def applyGeneralOutputFilter():
 def tekka_show_status_icon_toggled(button):
 	config.set("tekka", "show_status_icon",
 			str(button.get_active()))
-	gui.mgmt.switch_status_icon(button.get_active())
+	gui.mgmt.visibility.show_status_icon(button.get_active())
 
 def tekka_hide_on_close_toggled(button):
 	config.set("tekka", "hide_on_close",
@@ -391,11 +391,11 @@ def dialog_response_cb(dialog, response_id):
 
 def run():
 	dialog = widgets.get_object("preferencesDialog")
-	
-	# the widget is not initialized with a first row 
+
+	# the widget is not initialized with a first row
 	# (no_first_row in ui file set), do it here.
 	widgets.get_object("generalOutputFilterList")._add_row(0)
-	
+
 	fillTekka()
 	fillColors()
 	fillChatting()
