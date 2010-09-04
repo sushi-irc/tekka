@@ -165,8 +165,7 @@ class MainMenuContext(MenuContextType):
 							 "show_general_output")
 			apply_visibility("view_side_pane_item", "show_side_pane")
 			apply_visibility("view_status_bar_item", "show_status_bar")
-			apply_visibility("view_status_icon_item", "show_status_icon",
-							 lambda: gui.builder.build_status_icon())
+			apply_visibility("view_status_icon_item", "show_status_icon")
 			apply_visibility("view_topic_bar_item", "show_topic_bar")
 
 		@ignore_on_welcome(
@@ -196,7 +195,7 @@ class MainMenuContext(MenuContextType):
 
 		@ignore_on_welcome(on_welcome_cb=_reset_item("view_topic_bar_item"))
 		def showTopicBar_toggled_cb(self, item):
-			""" toggle visibililty of topic bar """
+			""" toggle visibility of topic bar """
 			gui.mgmt.visibility.show_topic_bar(item.get_active())
 			config.set("tekka", "show_topic_bar", str(item.get_active()))
 
