@@ -511,9 +511,9 @@ def ownMessage_cb(timestamp, server, channel, message):
 			"&lt;%s<font foreground='%s' weight='bold'>%s</font>&gt;"
 			" <font foreground='%s'>%s</font>" % (
 				_getPrefix(server, channel, nick),
-				config.get("colors","own_nick","#000000"),
+				color.get_color_by_key("own_nick"),
 				nick,
-				config.get("colors","own_text","#000000"),
+				color.get_color_by_key("own_text"),
 				markup.escape(message)), group_string=nick)
 
 
@@ -684,8 +684,8 @@ def ownCTCP_cb(time, server, target, message):
 	if tab:
 		# valid query/channel found, print it there
 
-		nickColor = config.get("colors","own_nick","#000000")
-		textColor = config.get("colors","own_text","#000000")
+		nickColor = color.get_color_by_key("own_nick")
+		textColor = color.get_color_by_key("own_text")
 
 		tab.write(time,
 			"&lt;CTCP:<font foreground='%s' weight='bold'>%s</font>&gt; "
@@ -735,7 +735,7 @@ def ownNotice_cb(time, server, target, message):
 		`server`
 	"""
 	server_tab, tab = gui.tabs.search_tabs(server, target)
-	ownNickColor = config.get("colors","own_nick","#000000")
+	ownNickColor = color.get_color_by_key("own_nick")
 	ownNick = server_tab.nick
 
 	if tab:
@@ -822,8 +822,8 @@ def ownAction_cb(time, server, channel, action):
 	tab = _createTab(server, channel)
 	nick = gui.tabs.search_tab(server).nick
 
-	nickColor = config.get("colors","own_nick","#000000")
-	textColor = config.get("colors","own_text","#000000")
+	nickColor = color.get_color_by_key("own_nick")
+	textColor = color.get_color_by_key("own_text")
 
 	tab.write(time,
 		"<font foreground='%s' weight='bold'>%s</font> "
