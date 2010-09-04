@@ -34,6 +34,7 @@ from gobject import idle_add
 
 from .. import gui
 from .. import config
+from .. import helper
 from ..lib.expanding_list import ExpandingList
 
 widgets = None
@@ -71,27 +72,25 @@ def fillTekka():
 	font = config.get("tekka", "font")
 	widgets.get_object("fontSelectButton").set_font_name(font)
 
+
 def fillColors():
 	for key in ("own_nick", "own_text", "notification",
 				"text_message", "text_action", "nick",
 				"text_highlightmessage", "text_highlightaction",
-				"last_log","rules_color"):
-		val = config.get("colors", key)
+				"last_log", "rules_color"):
 
-		try:
-			color = gtk.gdk.Color(val)
-		except:
-			color = gtk.gdk.Color()
+		color = helper.color.get_color_by_key(key)
 
 		widgets.get_object(key).set_color(color)
 
-		btn = widgets.get_object("rules_color_yesno")
-		btn.set_active(config.get_bool("tekka","text_rules"))
-		btn.toggled()
+	btn = widgets.get_object("rules_color_yesno")
+	btn.set_active(config.get_bool("tekka","text_rules"))
+	btn.toggled()
 
-		btn = widgets.get_object("auto_rule_color")
-		btn.set_active(config.get("colors","rules_color") == "auto")
-		btn.toggled()
+	btn = widgets.get_object("auto_rule_color")
+	btn.set_active(config.get("colors","rules_color") == "auto")
+	btn.toggled()
+
 
 
 def fillChatting():
@@ -283,12 +282,23 @@ def colors_rules_autodetect_toggled(button):
 	if button.get_active():
 		config.set("colors","rules_color","auto")
 	widgets.get_object("rules_color").set_sensitive(not button.get_active())
+	widgets.get_object("reset_rules_color").set_sensitive(
+		not button.get_active())
 
 def colors_rules_color_yesno_toggled(button):
 	flag = button.get_active()
 	config.set("tekka", "text_rules", str(flag))
 	widgets.get_object("auto_rule_color").set_sensitive(flag)
 	widgets.get_object("rules_color").set_sensitive(flag)
+	widgets.get_object("reset_rules_color").set_sensitive(flag)
+
+def reset_color(color_key):
+	""" reset the color to it's default value (contrast color index) """
+	if config.is_default("colors",color_key):
+		return
+	config.reset_value("colors",color_key)
+	widgets.get_object(color_key).set_color(
+		helper.color.get_color_by_key(color_key))
 
 """ chatting page signals """
 
@@ -365,6 +375,7 @@ def setup():
 		"colors_rules_color_written": colors_rules_color_written,
 		"colors_rules_autodetect_toggled": colors_rules_autodetect_toggled,
 		"colors_rules_color_yesno_toggled": colors_rules_color_yesno_toggled,
+
 	# chatting page
 		"chatting_quit_message_written": chatting_quit_message_written,
 		"chatting_part_message_written": chatting_part_message_written,
@@ -378,6 +389,19 @@ def setup():
 	# advanced page
 		"advanced_advancedSettingsClicked": advanced_advancedSettingsClicked
 	}
+
+	def cb_factory(key):
+		def cb(w):
+			return reset_color(key)
+		return cb
+
+	# add color reset handler
+	for key in ("own_nick", "own_text", "notification",
+				"text_message", "text_action", "nick",
+				"text_highlightmessage", "text_highlightaction",
+				"last_log", "rules_color"):
+
+		sigdic["reset_"+key+"_clicked"] = cb_factory(key)
 
 	widgets.connect_signals(sigdic)
 
