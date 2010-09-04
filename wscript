@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import os
+
 import Options
 import Utils
 
@@ -17,6 +19,15 @@ def configure (conf):
 	conf.check_tool('misc')
 
 	conf.find_program('gzip', var = 'GZIP')
+
+	home = os.path.expanduser('~')
+
+	if conf.env.PREFIX == home:
+		conf.env.TEKKA_APPLICATIONSDIR = '%s/.local/share/applications' % (home)
+		conf.env.TEKKA_ICONSDIR = '%s/.icons' % (home)
+	else:
+		conf.env.TEKKA_APPLICATIONSDIR = Utils.subst_vars('${DATAROOTDIR}/applications', conf.env)
+		conf.env.TEKKA_ICONSDIR = Utils.subst_vars('${DATAROOTDIR}/icons', conf.env)
 
 	conf.env.HUMANITY_ICONS = Options.options.humanity_icons
 	conf.env.VERSION = VERSION
@@ -46,19 +57,19 @@ def build (bld):
 
 	bld.install_files('${DATAROOTDIR}/sushi/tekka', 'tekka.py', chmod = 0755)
 
-	# TODO:  Check if DATAROOTDIR is ~user to install the icons into
-	# TODO:: ~user/.icons instead of the global icons dir
-	# Global icon
-	bld.install_as('${DATAROOTDIR}/icons/hicolor/scalable/apps/tekka.svg',
-	               'graphics/tekka-generic.svg')
+	# Well, that's kinda silly, but state of the art, I guess
+	for dir in ('16x16', '22x22', '24x24', '32x32', '36x36', '48x48', '64x64', '72x72', '96x96', '128x128', '192x192', '256x256', 'scalable'):
+		# Global icon
+		bld.install_as('${TEKKA_ICONSDIR}/hicolor/%s/apps/tekka.svg' % (dir),
+			       'graphics/tekka-generic.svg')
 
 	# Humanity-specific icons (dark/light theme)
 	if bld.env.HUMANITY_ICONS:
 		# Well, that's kinda silly, but state of the art, I guess
 		for dir in ('16', '22', '24', '32', '48', '64', '128', '192'):
-			bld.install_as('${DATAROOTDIR}/icons/Humanity-Dark/apps/%s/tekka.svg' % (dir),
+			bld.install_as('${TEKKA_ICONSDIR}/Humanity-Dark/apps/%s/tekka.svg' % (dir),
 			               'graphics/tekka-mono-dark.svg')
-			bld.install_as('${DATAROOTDIR}/icons/Humanity/apps/%s/tekka.svg' % (dir),
+			bld.install_as('${TEKKA_ICONSDIR}/Humanity/apps/%s/tekka.svg' % (dir),
 			               'graphics/tekka-mono-light.svg')
 
 	bld.symlink_as('${BINDIR}/tekka', Utils.subst_vars('${DATAROOTDIR}/sushi/tekka/tekka.py', bld.env))
@@ -76,7 +87,7 @@ def build (bld):
 		features = 'subst',
 		source = 'tekka.desktop.in',
 		target = 'tekka.desktop',
-		install_path = '${DATAROOTDIR}/applications'
+		install_path = '${TEKKA_APPLICATIONSDIR}'
 	)
 
 	for man in ('tekka.1',):

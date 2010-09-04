@@ -893,17 +893,6 @@ def setup_main_window():
 		img = gtk.icon_theme_get_default().load_icon("tekka",64,0)
 
 		win.set_icon(img)
-		""" 20.06.10
-			Don't know if this is still needed.
-		# Explicitly add a 128x128 icon to work around
-		# a Compiz bug (LP: #312317)
-		gtk.window_set_default_icon_list(
-			gtk.gdk.pixbuf_new_from_file(iconPath),
-			gtk.gdk.pixbuf_new_from_file_at_size(
-				iconPath,
-				128,
-				128))
-		"""
 	except gobject.GError:
 		# file not found
 		pass
