@@ -208,8 +208,8 @@ def myPrint(string, html=False):
 	"""
 		prints the string `string` in the current output
 		buffer. If html is true the string would be inserted via
-		the insertHTML-method falling back to normal insert
-		if it's not possible to insert via insertHTML.
+		the insert_html-method falling back to normal insert
+		if it's not possible to insert via insert_html.
 	"""
 	textview = widgets.get_object("output")
 	output = textview.get_buffer()
@@ -230,7 +230,7 @@ def myPrint(string, html=False):
 
 		try:
 
-			output.insertHTML(output.get_end_iter(), string)
+			output.insert_html(output.get_end_iter(), string)
 
 		except AttributeError:
 

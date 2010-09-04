@@ -256,7 +256,7 @@ class TekkaTab(gobject.GObject):
 
 			line = color.strip_color_codes(line)
 
-			buffer.insertHTML(buffer.get_end_iter(),
+			buffer.insert_html(buffer.get_end_iter(),
 				"<font foreground='%s'>%s</font>" % (
 					color.get_color_by_key("last_log"),
 					markup.escape(line)))
@@ -399,7 +399,7 @@ class TekkaServer(TekkaTab):
 						config.get("chatting", "time_format", "%H:%M"),
 						time.localtime(timestamp))
 
-		buffer.insertHTML(
+		buffer.insert_html(
 			buffer.get_end_iter(),
 			"[%s] %s" % (timestr, message))
 
@@ -549,7 +549,7 @@ class TekkaQuery(TekkaTab):
 		outputString = "[%s] %s" % (timestring, cString)
 
 		buffer = self.window.textview.get_buffer()
-		buffer.insertHTML(buffer.get_end_iter(), outputString, **kwargs)
+		buffer.insert_html(buffer.get_end_iter(), outputString, **kwargs)
 
 		if not self.is_active():
 
@@ -659,7 +659,7 @@ class TekkaChannel(TekkaTab):
 		outputString = "[%s] %s" % (timestring, cString)
 
 		buffer = self.window.textview.get_buffer()
-		buffer.insertHTML(buffer.get_end_iter(), outputString, **kwargs)
+		buffer.insert_html(buffer.get_end_iter(), outputString, **kwargs)
 
 		if not self.is_active():
 
