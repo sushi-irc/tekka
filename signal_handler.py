@@ -617,7 +617,7 @@ def userMode_cb(time, server, from_str, target, mode, param):
 			own = (target == server_tab.nick)
 
 			if (param == server_tab.nick) or own:
-				type = "hightlightaction"
+				type = "highlightaction"
 			elif own:
 				victim = "you"
 
