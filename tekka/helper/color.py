@@ -235,13 +235,19 @@ def get_color_by_key(key):
 
 		Note that str(gtk.gdk.Color("#000")) == "#000".
 	"""
-	if config.is_default("colors",key):
-		if key == "rules_color":
-			return gui.widgets.get_object("output").get_style().base[
+	cvalue = config.get("colors",key)
+
+	if cvalue == None:
+		raise KeyError, "Unknown color key: '%s'" % (key)
+
+	if cvalue[0] == "#":
+		return gtk.gdk.Color(cvalue)
+	elif key == "rules_color" and config.is_default("colors",key):
+		return gui.widgets.get_object("output").get_style().base[
 					gtk.STATE_INSENSITIVE]
+	else:
 		return contrast.contrast_render_foreground_color(
-			_get_output_bg_color(), int(config.get_default("colors",key)))
-	return gtk.gdk.Color(config.get("colors",key))
+			_get_output_bg_color(), int(cvalue))
 
 
 def get_nick_color(nick):
