@@ -33,6 +33,7 @@ def build (bld):
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/tekka', bld.glob('tekka/*.py'))
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/tekka/dialogs', bld.glob('tekka/dialogs/*.py'))
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/tekka/gui', bld.glob('tekka/gui/*.py'))
+	bld.install_files('${DATAROOTDIR}/sushi/tekka/tekka/gui/mgmt', bld.glob('tekka/gui/mgmt/*.py'))
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/tekka/helper', bld.glob('tekka/helper/*.py'))
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/tekka/lib', bld.glob('tekka/lib/*.py'))
 	bld.install_files('${DATAROOTDIR}/sushi/tekka/tekka/menus', bld.glob('tekka/menus/*.py'))
