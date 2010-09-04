@@ -37,6 +37,7 @@ from StringIO import StringIO
 from .. import gui
 
 from ..helper.url import URLToTag
+from .. import helper
 from .. import config
 
 def rindex(l, i):
