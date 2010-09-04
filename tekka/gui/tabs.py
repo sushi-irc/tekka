@@ -243,8 +243,7 @@ class TekkaTab(gobject.GObject):
 
 		lines = UInt64(lines or config.get(
 			"chatting",
-			"last_log_lines",
-			"0"))
+			"last_log_lines"))
 
 		if type(self) == TekkaServer:
 			server = self.name
@@ -259,7 +258,7 @@ class TekkaTab(gobject.GObject):
 
 			buffer.insertHTML(buffer.get_end_iter(),
 				"<font foreground='%s'>%s</font>" % (
-					config.get("colors","last_log","#DDDDDD"),
+					color.get_color_by_key("last_log"),
 					markup.escape(line)))
 
 
