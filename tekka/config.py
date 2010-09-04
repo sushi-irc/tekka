@@ -139,7 +139,7 @@ def set_defaults():
 	defaults["colors"]["text_highlightmessage"] = contrast.CONTRAST_COLOR_RED
 	defaults["colors"]["text_highlightaction"] = contrast.CONTRAST_COLOR_RED
 	defaults["colors"]["nick"] = contrast.CONTRAST_COLOR_GREEN # default foreign nick color
-	defaults["colors"]["last_log"] = contrast.CONTRAST_COLOR_GREY
+	defaults["colors"]["last_log"] = contrast.CONTRAST_COLOR_LIGHT_GREY
 
 	defaults["colors"]["nick_contrast_colors"] = "True"
 	defaults["colors"]["nick_colors"] = "#AA0000,#2222AA,#44AA44,#123456,#987654"
