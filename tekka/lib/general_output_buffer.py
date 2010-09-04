@@ -86,9 +86,7 @@ def go_handler(tag, widget, event, iter, attrs):
 	self = go_handler
 
 	# check for previous tag and unhighlight it
-	try: self.tag
-	except AttributeError: pass
-	else:
+	if hasattr(self, "tag"):
 		if self.tag != tag:
 			switch_highlight(tag, False)
 
@@ -100,9 +98,7 @@ def go_handler(tag, widget, event, iter, attrs):
 	self.path_string = attrs["path"]
 
 	# __init__
-	try:
-		self.c_init
-	except AttributeError:
+	if not hasattr(self, "c_init"):
 		self.c_init = True
 
 		def outer_cb(*x):
@@ -188,5 +184,5 @@ class GOHTMLBuffer(htmlbuffer.HTMLBuffer):
 		self.go_handler = go_handler
 
 	def go_insert(self, iter, text, tab, type):
-		self.insertHTML(iter, "<goref type='%s' path='%s'>%s</goref>" % (
+		self.insert_html(iter, "<goref type='%s' path='%s'>%s</goref>" % (
 			type, tab.path, text))
