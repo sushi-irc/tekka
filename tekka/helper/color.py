@@ -86,6 +86,9 @@ def _get_output_bg_color():
 	return gui.widgets.get_object("output").get_style().base[
 		gtk.STATE_NORMAL]
 
+def _get_output_fg_color():
+	return gui.widgets.get_object("output").get_style().fg[NORMAL]
+
 
 @types (msg = basestring)
 def parse_color_codes_to_tags(msg):
@@ -181,59 +184,6 @@ def parse_color_markups_to_codes(s):
 	return chr(3).join(s_split)
 
 
-@types (nick = basestring)
-def get_nick_color(nick):
-	"""
-		Returns a static color for the nick given.
-		The returned color depends on the color mapping
-		set in config module.
-	"""
-	def pick_nick_color(colors, nick):
-		return colors[sum([ord(n) for n in nick]) % len(colors)]
-
-	if not config.get_bool("tekka","color_text"):
-		return
-
-	if not config.get_bool("colors", "nick_contrast_colors"):
-		# pick a color out of the user defined list
-
-		colors = config.get_list("colors", "nick_colors", [])
-		color = pick_nick_color(colors, nick)
-
-		return color
-	else:
-		# pick a contrast color
-
-		bg_color = gui.widgets.get_object("output")\
-			.get_style().base[gtk.STATE_NORMAL]
-		color = pick_nick_color(contrast.colors[:-1], nick)
-		r = contrast.contrast_render_foreground_color(bg_color, color)
-
-		return r
-
-
-@types (nick = basestring)
-def get_text_color(nick):
-	"""
-		Same as color.get_nick_color but for text and defaults
-		to another value (text_message)
-	"""
-	if not config.get_bool("tekka","color_text"):
-		return
-
-	colors = contrast.colors[:-1]
-	if not colors or not config.get_bool("tekka","color_nick_text"):
-		return config.get("colors","text_message","#000000")
-
-	bg_color = gui.widgets.get_object("output").get_style().\
-		base[gtk.STATE_NORMAL]
-
-	color = colors[sum([ord(n) for n in nick]) % len(colors)]
-
-	r = contrast.contrast_render_foreground_color(bg_color, color)
-	return r
-
-
 @types (text = basestring)
 def strip_color_codes(text):
 	""" strip all color codes (chr(3)) and the following numbers """
@@ -274,17 +224,17 @@ def strip_color_codes(text):
 	return "".join(l)
 
 
-def colorize_message(msgtype, message):
-	if not config.get_bool("tekka", "color_text"):
-		return message
-
-	else:
-		return "<font foreground='%s'>%s</font>" % (
-					config.get("colors", "text_%s" % msgtype, "#000000"),
-					message)
+# Text coloring
 
 
 def get_color_by_key(key):
+	""" get the configured color for the given key as GdkColor.
+		The key is defined in config section "colors".
+
+		Example: get_color_by_key("last_log") -> gtk.gdk.Color("#dddddd")
+
+		Note that str(gtk.gdk.Color("#000")) == "#000".
+	"""
 	if config.is_default("colors",key):
 		if key == "rules_color":
 			return gui.widgets.get_object("output").get_style().base[
@@ -292,4 +242,64 @@ def get_color_by_key(key):
 		return contrast.contrast_render_foreground_color(
 			_get_output_bg_color(), int(config.get_default("colors",key)))
 	return gtk.gdk.Color(config.get("colors",key))
+
+
+def get_nick_color(nick):
+	"""
+		Returns a static color for the nick given.
+		The returned color depends on the color mapping
+		set in config module.
+	"""
+	def pick_nick_color(colors, nick):
+		return colors[sum([ord(n) for n in nick]) % len(colors)]
+
+	if not config.get_bool("tekka","color_text"):
+		return _get_output_fg_color()
+
+	if not config.get_bool("colors", "nick_contrast_colors"):
+		# pick a color out of the user defined list
+
+		colors = config.get_list("colors", "nick_colors", [])
+		color = pick_nick_color(colors, nick)
+
+		return color
+	else:
+		# pick a contrast color
+
+		bg_color = _get_output_bg_color()
+		color = pick_nick_color(contrast.colors[:-1], nick)
+		r = contrast.contrast_render_foreground_color(bg_color, color)
+
+		return r
+
+
+def get_text_color(nick):
+	"""
+		Same as color.get_nick_color but for text and defaults
+		to another value (text_message)
+	"""
+	if not config.get_bool("tekka","color_text"):
+		return _get_output_fg_color()
+
+	colors = contrast.colors[:-1]
+	if not colors or not config.get_bool("tekka","color_nick_text"):
+		return get_color_by_key("text_message")
+
+	bg_color = _get_output_bg_color()
+	color = colors[sum([ord(n) for n in nick]) % len(colors)]
+
+	r = contrast.contrast_render_foreground_color(bg_color, color)
+	return r
+
+
+def colorize_message(msgtype, message):
+	if not config.get_bool("tekka", "color_text"):
+		return message
+
+	else:
+		return "<font foreground='%s'>%s</font>" % (
+					get_color_by_key("text_%s" % msgtype),
+					message)
+
+
 
