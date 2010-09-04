@@ -34,6 +34,8 @@ from xdg.BaseDirectory import xdg_config_home, xdg_data_home, \
 	xdg_cache_home
 import ConfigParser
 
+from .lib import contrast
+
 from .typecheck import types
 from .helper.escape import unescape_split, escape_join
 
@@ -129,15 +131,15 @@ def set_defaults():
 	"""
 
 	defaults["colors"]={}
-	defaults["colors"]["own_nick"] = "#444444"
-	defaults["colors"]["own_text"] = "#444444"
-	defaults["colors"]["notification"] = "#AAAAAA"
-	defaults["colors"]["text_message"] = "#000000"
-	defaults["colors"]["text_action"] = "#444444"
-	defaults["colors"]["text_highlightmessage"] = "#FF0000"
-	defaults["colors"]["text_highlightaction"] = "#0000FF"
-	defaults["colors"]["nick"] = "#2222AA" # default foreign nick color
-	defaults["colors"]["last_log"] = "#DDDDDD"
+	defaults["colors"]["own_nick"] = contrast.CONTRAST_COLOR_GREY
+	defaults["colors"]["own_text"] = contrast.CONTRAST_COLOR_GREY
+	defaults["colors"]["notification"] = contrast.CONTRAST_COLOR_LIGHT_GREY
+	defaults["colors"]["text_message"] = contrast.CONTRAST_COLOR_BLACK
+	defaults["colors"]["text_action"] = contrast.CONTRAST_COLOR_BLACK
+	defaults["colors"]["text_highlightmessage"] = contrast.CONTRAST_COLOR_RED
+	defaults["colors"]["text_highlightaction"] = contrast.CONTRAST_COLOR_RED
+	defaults["colors"]["nick"] = contrast.CONTRAST_COLOR_GREEN # default foreign nick color
+	defaults["colors"]["last_log"] = contrast.CONTRAST_COLOR_GREY
 
 	defaults["colors"]["nick_contrast_colors"] = "True"
 	defaults["colors"]["nick_colors"] = "#AA0000,#2222AA,#44AA44,#123456,#987654"
