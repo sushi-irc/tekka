@@ -44,8 +44,9 @@ class OutputWindow(gtk.ScrolledWindow):
 
 	__gtype_name__ = "OutputWindow"
 
-	def show(self):
-		super(OutputWindow,self).show()
+	# overload show
+	def do_show(self):
+		gtk.ScrolledWindow.do_show(self)
 		self.textview.show()
 
 	def __init__(self):
