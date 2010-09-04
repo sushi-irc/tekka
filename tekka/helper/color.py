@@ -82,6 +82,11 @@ COLOR_NAMES = {
 		}
 
 
+def _get_output_bg_color():
+	return gui.widgets.get_object("output").get_style().base[
+		gtk.STATE_NORMAL]
+
+
 @types (msg = basestring)
 def parse_color_codes_to_tags(msg):
 	""" Parse the mIRC color format ^Cn[,m] and convert it
@@ -90,10 +95,8 @@ def parse_color_codes_to_tags(msg):
 		and use them as foreground/background.
 	"""
 	def get_gdk_color(ccolor):
-		bg_color = gui.widgets.get_object("output").\
-			get_style().base[gtk.STATE_NORMAL]
 		return contrast.contrast_render_foreground_color(
-			bg_color, ccolor)
+			_get_output_bg_color(), ccolor)
 
 	last_i = -1
 	count = 0 # openend <font>
@@ -279,4 +282,14 @@ def colorize_message(msgtype, message):
 		return "<font foreground='%s'>%s</font>" % (
 					config.get("colors", "text_%s" % msgtype, "#000000"),
 					message)
+
+
+def get_color_by_key(key):
+	if config.is_default("colors",key):
+		if key == "rules_color":
+			return gui.widgets.get_object("output").get_style().base[
+					gtk.STATE_INSENSITIVE]
+		return contrast.contrast_render_foreground_color(
+			_get_output_bg_color(), int(config.get_default("colors",key)))
+	return gtk.gdk.Color(config.get("colors",key))
 
