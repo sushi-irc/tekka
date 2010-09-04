@@ -300,11 +300,7 @@ class HTMLBuffer(gtk.TextBuffer):
 		if (config.get_bool("tekka","text_rules")
 		and self.group_color
 		and self.group_string):
-			color = config.get("colors","rules_color")
-
-			if color == "auto":
-				color = gui.widgets.get_object("output").get_style().base[
-								gtk.STATE_INSENSITIVE].to_string()
+			color = helper.color.get_color_by_key("rules_color").to_string()
 
 			text = "<msg paragraph-background='%s'>%s</msg>" % (
 						color, text)
