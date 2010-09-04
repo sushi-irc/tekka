@@ -430,7 +430,7 @@ def get_default(section, option=""):
 	else:
 		if defaults.has_key(section):
 			if defaults[section].has_key(option):
-				return defaults[section][option]
+				return str(defaults[section][option])
 	return None
 
 def is_default(section, option):
