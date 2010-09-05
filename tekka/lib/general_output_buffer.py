@@ -104,10 +104,8 @@ def go_handler(tag, widget, event, iter, attrs):
 		def outer_cb(*x):
 			switch_highlight(self.tag, False)
 
-		# FIXME: this does not cover all exists
-		widget.connect("motion-notify-event", outer_cb)
-		widget.parent.connect("motion-notify-event", outer_cb)
-		widget.parent.parent.connect("motion-notify-event", outer_cb)
+		gui.widgets.get_object("main_window").connect("motion-notify-event",
+			outer_cb)
 
 	# abort event handling on <a> tags
 	for itag in iter.get_tags():
