@@ -32,12 +32,11 @@ from .. import com
 from .. import config
 from .. import gui
 
-from ..lib.welcome_window import WelcomeWindow
 
 def ignore_on_welcome(on_welcome_cb=None, on_not_welcome_cb=None):
 	def decorator(fun):
 		def new_fun(*args, **kwargs):
-			if type(gui.widgets.get_object("output_window")) == WelcomeWindow:
+			if gui.mgmt.is_welcome_screen():
 				if on_welcome_cb: on_welcome_cb()
 				return
 			if on_not_welcome_cb: on_not_welcome_cb()

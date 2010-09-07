@@ -206,9 +206,9 @@ def tekka_tab_switched_cb(old, new):
 def tekka_tab_add_cb(tab):
 	""" a tab is added """
 
-	if type(gui.widgets.get_object("output_window")) == WelcomeWindow:
+	if gui.mgmt.is_welcome_screen():
 		# FIXME: this is called often if the tab is not changed
-		hide_welcome_screen()
+		gui.mgmt.hide_welcome_screen()
 
 
 def tekka_tab_remove_cb(tab):
@@ -402,7 +402,7 @@ def outputShell_widget_changed_cb(shell, old_widget, new_widget):
 	"""
 	if (type(old_widget) == WelcomeWindow
 	and type(new_widget) != WelcomeWindow):
-		hide_welcome_screen()
+		gui.mgmt.hide_welcome_screen()
 
 	gui.widgets.remove_object("output_window")
 	gui.widgets.add_object(new_widget, "output_window")
@@ -1046,39 +1046,6 @@ def setup_topic_label():
 		"expose-event", expose_event_cb)
 
 
-def show_welcome_screen():
-	""" hide the general_output_window and the list_vpaned
-		and display the welcome window in the output shell.
-	"""
-	self = show_welcome_screen
-	self.hides = (
-		gui.mgmt.visibility.show_side_pane,
-		gui.mgmt.visibility.show_topic_bar,
-		gui.mgmt.visibility.show_general_output,
-	)
-
-	for show_cb in self.hides:
-		show_cb(False)
-
-	s = gui.widgets.get_object("output_shell")
-
-	w = WelcomeWindow()
-
-	s.set(w)
-	s.show_all()
-
-	com.sushi.g_connect("maki-disconnected",
-		lambda sushi: s.set_sensitive(True))
-
-
-def hide_welcome_screen():
-	""" undo the hiding from show_welcome_screen """
-
-	hides = show_welcome_screen.hides
-
-	for show_cb in hides:
-		show_cb(True)
-
 
 def setupGTK():
 	""" Set locale, load UI file, connect signals, setup widgets. """
@@ -1277,7 +1244,7 @@ def setupGTK():
 	# disable the GUI and wait for commands :-)
 	gui.mgmt.set_useable(False)
 
-	show_welcome_screen()
+	gui.mgmt.show_welcome_screen()
 
 	gobject.idle_add(setup_paneds)
 

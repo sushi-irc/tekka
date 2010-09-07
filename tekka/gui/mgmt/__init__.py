@@ -43,6 +43,7 @@ from ...helper import code
 from ...typecheck import types
 
 from ...lib.inline_dialog import InlineMessageDialog
+from ...lib.welcome_window import WelcomeWindow
 
 from . import visibility
 
@@ -93,10 +94,13 @@ def set_useable(switch):
 		widgets.get_object("input_entry"),
 		widgets.get_object("tabs_view"),
 		widgets.get_object("nicks_view"),
-		widgets.get_object("output_shell"),
-		widgets.get_object("output"),
 		widgets.get_object("general_output_window")
 	]
+
+	if switch or (not switch and not is_welcome_screen()):
+		# don't disable welcome screen, it knows better
+		widgetList.append(widgets.get_object("output"))
+		widgetList.append(widgets.get_object("output_shell"))
 
 	for widget in widgetList:
 		widget.set_sensitive(switch)
@@ -104,6 +108,42 @@ def set_useable(switch):
 	if switch: widgets.get_object("input_entry").grab_focus()
 
 	gui_is_useable = switch
+
+
+def show_welcome_screen():
+	""" show a welcome screen while hiding general output,
+		topic bar and side pane.
+	"""
+	self = show_welcome_screen
+	self.hides = (
+		visibility.show_side_pane,
+		visibility.show_topic_bar,
+		visibility.show_general_output,
+	)
+
+	for show_cb in self.hides:
+		show_cb(False)
+
+	s = widgets.get_object("output_shell")
+
+	w = WelcomeWindow()
+
+	s.set(w)
+	s.show_all()
+
+
+def hide_welcome_screen():
+	""" undo the hiding from show_welcome_screen """
+
+	hides = show_welcome_screen.hides
+
+	for show_cb in hides:
+		show_cb(True)
+
+
+def is_welcome_screen():
+	""" returns True if the welcome screen is displayed """
+	return type(widgets.get_object("output_window")) == WelcomeWindow
 
 
 def has_focus():
