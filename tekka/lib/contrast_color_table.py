@@ -1,4 +1,6 @@
 import gtk
+import gobject
+
 from gettext import gettext as _
 
 from . import contrast
@@ -13,7 +15,6 @@ class ContrastColorTable(gtk.Table):
 	"""
 
 	__gtype_name__ = "ContrastColorTable"
-
 
 
 	def __init__(self, columns=6):
@@ -50,7 +51,12 @@ class ContrastColorTable(gtk.Table):
 		self.foreach(lambda w: self.remove(w))
 
 		x,y = (0,0)
-		bg = color._get_output_bg_color()
+
+		try:
+			bg = color._get_output_bg_color()
+		except:
+			# in case of glade or test
+			bg = gtk.gdk.Color("#fff")
 
 		for code in self.get_color_palette():
 			ccolor = contrast.contrast_render_foreground_color(bg, code)
@@ -69,25 +75,9 @@ class ContrastColorTable(gtk.Table):
 				x = 0
 				y += 1
 
-		self._attach_textview(y+1, columns)
-
-
-	def _attach_textview(self, row, columns):
-		self.textview = gtk.TextView()
-
-		self.color_tag = self.textview.get_buffer().create_tag()
-
-		self.textview.get_buffer().insert_with_tags(
-			self.textview.get_buffer().get_end_iter(),
-			_("The quick brown fox jumps over the lazy developer."),
-			self.color_tag)
-		self.attach(self.textview, 0, columns, row, row+1)
-
 
 	def change_color(self, color_code):
-		self.color_tag.set_property("foreground",
-			contrast.contrast_render_foreground_color(
-				color._get_output_bg_color(), color_code))
+		self.emit("color-changed", color_code)
 
 
 	def button_press_event(self, button, event, color_code):
@@ -105,12 +95,35 @@ class ContrastColorTable(gtk.Table):
 		return False
 
 
+	def set_columns(self, columns):
+		self.fill(columns)
+
+
 	def set_contrast_color(self, color_code):
 		self._contrast_color = color_code
 		self.change_color(color_code)
 
 
+	columns = property(
+		lambda s: s._columns,
+		set_columns,
+		doc="Number of columns per row. Default is 6.")
+
+	gcolumns = gobject.property(
+		getter=lambda s: s.columns,
+		setter=set_columns,
+		default=6,
+		type=int)
+
 	contrast_color = property(
 		lambda s: s._contrast_color,
 		set_contrast_color,
 		doc="The selected color. Default is black.")
+
+
+gobject.signal_new(
+	"color-changed",
+	ContrastColorTable,
+	gobject.SIGNAL_ACTION,
+	gobject.TYPE_NONE,
+	(gobject.TYPE_INT,))

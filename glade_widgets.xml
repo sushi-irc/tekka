@@ -51,6 +51,18 @@
 						  save="True" visible="True"/>
 			</properties>
 		</glade-widget-class>
+		<glade-widget-class title="Contrast Color Table"
+							generic-name="contrastcolortable"
+							name="ContrastColorTable">
+			<properties>
+				<property id="n-rows" query="False" default="1"
+						  save="False" visible="False"/>
+				<property id="n-columns" query="False" default="1"
+						  save="False" visible="False"/>
+				<property id="gcolumns" query="True" default="6"
+						  save="True" visible="True" name="Columns"/>
+			</properties>
+		</glade-widget-class>
     </glade-widget-classes>
 
 	<glade-widget-group name="TekkaWidgets" title="Tekka Widgets">
@@ -61,6 +73,7 @@
 		<glade-widget-class-ref name="HTMLBuffer"/>
 		<glade-widget-class-ref name="GOHTMLBuffer"/>
 		<glade-widget-class-ref name="ExpandingList"/>
+		<glade-widget-class-ref name="ContrastColorTable"/>
 	</glade-widget-group>
 
 </glade-catalog>

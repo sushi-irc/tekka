@@ -6,5 +6,6 @@ from tekka.lib.output_window import OutputWindow
 from tekka.lib.htmlbuffer import HTMLBuffer
 from tekka.lib.general_output_buffer import GOHTMLBuffer
 from tekka.lib.expanding_list import ExpandingList
+from tekka.lib.contrast_color_table import ContrastColorTable
 
-print SpellEntry
+print "TEKKA WIDGETS LOADED."
