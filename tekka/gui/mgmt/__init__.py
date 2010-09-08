@@ -327,8 +327,8 @@ def show_inline_dialog(dialog):
 
 	# Purpose: auto removing messages (depends on config)
 	self = code.init_function_attrs(
-										show_inline_dialog,
-										timeouts = [])
+				show_inline_dialog,
+				timeouts = [])
 
 	area = widgets.get_object("notification_vbox")
 

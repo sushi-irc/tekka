@@ -9,7 +9,7 @@ class ErrorDialog(gtk.Dialog):
 
 	def __init__(self, message):
 
-		gtk.Dialog.__init__(self,
+		super(ErrorDialog,self).__init__(
 			parent = gui.widgets.get_object("main_window"),
 			title = _("Error occured"),
 			buttons = (gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE))
@@ -35,6 +35,7 @@ class ErrorDialog(gtk.Dialog):
 			shadow_type=gtk.SHADOW_ETCHED_IN,
 			hscrollbar_policy=gtk.POLICY_AUTOMATIC,
 			vscrollbar_policy=gtk.POLICY_AUTOMATIC)
+		self.sw.add(self.tv)
 
 		self.vbox_inner = gtk.VBox()
 		self.vbox_inner.set_property("border-width", 6)
@@ -56,7 +57,6 @@ class ErrorDialog(gtk.Dialog):
 		self.vbox_inner.pack_start(self.sw)
 
 		self.vbox.pack_start(self.vbox_inner)
-
 
 	def set_message(self, msg):
 		self.tv.get_buffer().set_text(msg)
