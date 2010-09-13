@@ -1,22 +1,22 @@
 <?xml version="1.0"?>
 <interface>
-  <requires lib="gtk+" version="2.16"/>
   <!-- interface-requires glade_widgets 0.0 -->
+  <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkDialog" id="dialog1">
+  <object class="GtkDialog" id="contrast_dialog">
     <property name="border_width">5</property>
     <property name="window_position">center-on-parent</property>
     <property name="type_hint">normal</property>
-    <property name="has_separator">False</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
         <property name="spacing">2</property>
         <child>
-          <object class="GtkVBox" id="outer_vbox">
+          <object class="GtkColorSelection" id="colorselection">
             <property name="visible">True</property>
-            <property name="border_width">6</property>
             <property name="spacing">6</property>
+            <property name="current_color">#000000000000</property>
+            <signal name="color_changed" handler="colorselection_color_changed"/>
             <child>
               <object class="GtkFrame" id="table_frame">
                 <property name="visible">True</property>
@@ -25,24 +25,21 @@
                 <child>
                   <object class="ContrastColorTable" id="contrast_color_table">
                     <property name="visible">True</property>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
+                    <property name="column_spacing">1</property>
+                    <property name="row_spacing">1</property>
                   </object>
                 </child>
                 <child type="label">
                   <object class="GtkLabel" id="table_label">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Select a color:&lt;/b&gt;</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Contrast colors&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </object>
                 </child>
               </object>
               <packing>
-                <property name="position">0</property>
+                <property name="expand">False</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
@@ -70,13 +67,13 @@
                 <child type="label">
                   <object class="GtkLabel" id="example_label">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Example:&lt;/b&gt;</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Example&lt;/b&gt;</property>
                     <property name="use_markup">True</property>
                   </object>
                 </child>
               </object>
               <packing>
-                <property name="position">1</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>
@@ -127,7 +124,7 @@
     </child>
     <action-widgets>
       <action-widget response="0">select_button</action-widget>
-      <action-widget response="0">cancel_button</action-widget>
+      <action-widget response="-6">cancel_button</action-widget>
     </action-widgets>
   </object>
   <object class="GtkTextBuffer" id="example_text_buffer">

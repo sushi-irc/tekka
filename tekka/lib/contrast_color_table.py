@@ -20,7 +20,7 @@ class ContrastColorTable(gtk.Table):
 	def __init__(self, columns=6):
 		super(ContrastColorTable, self).__init__()
 
-		self.fill(columns)
+		self.set_columns(columns)
 
 		self.contrast_color = contrast.CONTRAST_COLOR_BLACK
 
@@ -67,7 +67,9 @@ class ContrastColorTable(gtk.Table):
 			button.connect("key-press-event",
 				self.button_key_press_event, code)
 
-			self.attach(button, x, x+1, y, y+1)
+			xoptions = yoptions = gtk.FILL
+
+			self.attach(button, x, x+1, y, y+1, xoptions, yoptions)
 
 			x += 1
 
@@ -97,6 +99,7 @@ class ContrastColorTable(gtk.Table):
 
 	def set_columns(self, columns):
 		self.fill(columns)
+		self._columns = columns
 
 
 	def set_contrast_color(self, color_code):
