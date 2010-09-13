@@ -5,6 +5,7 @@ import gobject
 from .. import gui
 from ..lib import contrast
 from ..helper import color as hcolor
+from ..typecheck import types
 
 class ColorDialog(object):
 
@@ -27,6 +28,8 @@ class ColorDialog(object):
 		if attr in ("builder", "color_tag", "_colors"
 					"_setup_text_tag", "set_example_color",
 					"get_current_color", "show_all",
+					"set_current_rgb_color",
+					"set_current_contrast_color",
 					"contrast_color_table_color_changed",
 					"colorselection_color_changed"):
 			# public attributes of this object
@@ -55,15 +58,33 @@ class ColorDialog(object):
 		self.color_tag.set_property("foreground", color)
 
 
+	def set_current_rgb_color(self, color):
+		self.builder.get_object("colorselection").set_current_color(color)
+
+
+	@types(color_code=int)
+	def set_current_contrast_color(self, color_code):
+		""" take a contrast color number and behave as if the specific
+			color is selected.
+		"""
+		table = self.builder.get_object("contrast_color_table")
+
+		button = table.get_button_by_code(color_code)
+		button.clicked()
+
+
 	def get_current_color(self):
-		""" return a tuple with two values
-			(<gtk.gdk.Color()>,<contrast color code>).
+		""" return a tuple with two values like this:
+				(<gtk.gdk.Color()>,<contrast color code>).
 
-			If a color is set by the colorselection:
-			(<gtk.gdk.Color(...)>, None).
+			If a color is set by the colorselection, no contrast color
+			is set:
+				(<gtk.gdk.Color(...)>, None).
 
-			If a contrast color is used, the first value is None:
-			(None, <contrast color code>).
+			If a contrast color is used, the first value is the RGB
+			representation of the contrast color and the second value
+			is the contrast color code:
+				(<gtk.gdk.Color(...), <contrast color code>).
 
 			Default is (None, None).
 		"""
@@ -77,7 +98,7 @@ class ColorDialog(object):
 		# set the colorselection to the contrast color
 		self.builder.get_object("colorselection").set_current_color(color)
 
-		self._colors = (None, color_code)
+		self._colors = (color, color_code)
 
 		self.set_example_color(color)
 
@@ -93,7 +114,11 @@ class ColorDialog(object):
 
 def setup():pass
 
-def run(*_):
+def run(parent=None):
 	d = ColorDialog()
+
+	if parent:
+		d.set_transient_for(parent)
+
 	d.show_all()
 	return d
