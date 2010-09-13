@@ -21,6 +21,8 @@ class ContrastColorTable(gtk.Table):
 	def __init__(self, columns=6):
 		super(ContrastColorTable, self).__init__()
 
+		self._buttons = []
+
 		self.set_columns(columns)
 
 		self.contrast_color = contrast.CONTRAST_COLOR_BLACK
@@ -32,24 +34,45 @@ class ContrastColorTable(gtk.Table):
 			contrast.CONTRAST_COLOR_WHITE,
 			contrast.CONTRAST_COLOR_LIGHT_GREY,
 			contrast.CONTRAST_COLOR_GREY,
+			contrast.CONTRAST_COLOR_DARK_GREY,
 			contrast.CONTRAST_COLOR_LIGHT_GREEN,
-			contrast.CONTRAST_COLOR_AQUA,
+			contrast.CONTRAST_COLOR_GREEN,
 			contrast.CONTRAST_COLOR_DARK_GREEN,
+			contrast.CONTRAST_COLOR_AQUA,
 			contrast.CONTRAST_COLOR_CYAN,
 			contrast.CONTRAST_COLOR_LIGHT_BLUE,
 			contrast.CONTRAST_COLOR_BLUE,
+			contrast.CONTRAST_COLOR_DARK_BLUE,
 			contrast.CONTRAST_COLOR_PURPLE,
+			contrast.CONTRAST_COLOR_VIOLET,
 			contrast.CONTRAST_COLOR_MAGENTA,
+			contrast.CONTRAST_COLOR_BROWN,
 			contrast.CONTRAST_COLOR_LIGHT_BROWN,
+			contrast.CONTRAST_COLOR_LIGHT_RED,
+			contrast.CONTRAST_COLOR_RED,
 			contrast.CONTRAST_COLOR_DARK_RED,
 			contrast.CONTRAST_COLOR_ORANGE,
 			contrast.CONTRAST_COLOR_YELLOW,
 		]
 
 
+	def get_buttons(self):
+		return self._buttons
+
+
+	def get_button_by_code(self, contrast_color):
+		""" return the button responsible for the given color code """
+		palette = self.get_color_palette()
+		for i in range(len(palette)):
+			if contrast_color == palette[i]:
+				return self.get_buttons()[i]
+		return None
+
+
 	def fill(self, columns):
 		""" fill the table """
 		self.foreach(lambda w: self.remove(w))
+		self._buttons = []
 
 		x,y = (0,0)
 
@@ -62,12 +85,14 @@ class ContrastColorTable(gtk.Table):
 		for code in self.get_color_palette():
 			ccolor = contrast.contrast_render_foreground_color(bg, code)
 
-			button = CustomColorButton(ccolor)
+			button = custom_color_button.CustomColorButton(ccolor)
 			button.connect("clicked", self.button_clicked, code)
 
 			xoptions = yoptions = gtk.FILL
 
 			self.attach(button, x, x+1, y, y+1, xoptions, yoptions)
+
+			self._buttons.append(button)
 
 			x += 1
 
