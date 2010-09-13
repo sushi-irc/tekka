@@ -227,6 +227,11 @@ def strip_color_codes(text):
 # Text coloring
 
 
+def is_contrast_color(value):
+	""" checks if the given value is a contrast color or a RGB color """
+	return isinstance(value, basestring) and value[0] != "#"
+
+
 def get_color_by_key(key):
 	""" get the configured color for the given key as GdkColor.
 		The key is defined in config section "colors".
