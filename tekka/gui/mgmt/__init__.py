@@ -224,7 +224,7 @@ def set_topic(string):
 
 def clear_all_outputs():
 
-	from . import tabs
+	from .. import tabs
 
 	def clear(buf):
 		if buf: buf.set_text("")
