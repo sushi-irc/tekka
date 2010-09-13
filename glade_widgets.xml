@@ -63,6 +63,9 @@
 						  save="True" visible="True" name="Columns"/>
 			</properties>
 		</glade-widget-class>
+		<glade-widget-class title="Custom Color Button"
+							generic-name="customcolorbutton"
+							name="CustomColorButton"/>
     </glade-widget-classes>
 
 	<glade-widget-group name="TekkaWidgets" title="Tekka Widgets">
@@ -74,6 +77,7 @@
 		<glade-widget-class-ref name="GOHTMLBuffer"/>
 		<glade-widget-class-ref name="ExpandingList"/>
 		<glade-widget-class-ref name="ContrastColorTable"/>
+		<glade-widget-class-ref name="CustomColorButton"/>
 	</glade-widget-group>
 
 </glade-catalog>

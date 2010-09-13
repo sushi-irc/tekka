@@ -4,16 +4,9 @@ import gobject
 from gettext import gettext as _
 
 from . import contrast
+from . import custom_color_button
 
 from ..helper import color
-
-class CustomColorButton(gtk.ColorButton):
-
-	__gtype_name__ = "CustomColorButton"
-
-	def do_clicked(self):
-		pass
-
 
 class ContrastColorTable(gtk.Table):
 
