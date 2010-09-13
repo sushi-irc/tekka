@@ -243,37 +243,42 @@ def tekka_close_maki_on_close_toggled(button):
 
 """ colors page signals """
 
-def colors_set_color_from_button(button, key):
-	color = button.get_color()
+def colors_color_button_clicked(button):
+	color_name = gtk.Buildable.get_name(button)
 
-	config.set("colors", key, color.to_string())
+	def open_contrast_dialog(color_name):
 
-def colors_own_text_written(button):
-	colors_set_color_from_button(button, "own_text")
+		def response_cb(dialog, id, dialog_wrap):
+			if id == gtk.RESPONSE_OK:
+				(rcolor, ccolor) = dialog_wrap.get_current_color()
 
-def colors_own_nick_written(button):
-	colors_set_color_from_button(button, "own_nick")
+				if rcolor and not ccolor:
+					value = str(rcolor)
+					button.set_color(rcolor)
+				elif ccolor:
+					value = str(ccolor)
+					button.set_color(rcolor)
+				else:
+					value = None
 
-def colors_notification_written(button):
-	colors_set_color_from_button(button, "notification")
+				if value:
+					config.set("colors", color_name, value)
+			dialog.destroy()
 
-def colors_messages_written(button):
-	colors_set_color_from_button(button, "text_message")
 
-def colors_actions_written(button):
-	colors_set_color_from_button(button, "text_action")
+		dialog = gui.dialogs.show_dialog("contrast")
 
-def colors_highlighted_messages_written(button):
-	colors_set_color_from_button(button, "text_highlightmessage")
+		conf_color = config.get("colors", color_name)
 
-def colors_highlighted_actions_written(button):
-	colors_set_color_from_button(button, "text_highlightaction")
+		if helper.color.is_contrast_color(conf_color):
+			dialog.set_current_contrast_color(int(conf_color))
+		else:
+			dialog.set_current_rgb_color(button.get_color())
 
-def colors_default_nick_written(button):
-	colors_set_color_from_button(button, "nick")
+		dialog.connect("response", response_cb, dialog)
 
-def colors_last_log_written(button):
-	colors_set_color_from_button(button, "last_log")
+	open_contrast_dialog(color_name)
+
 
 def colors_rules_color_written(button):
 	colors_set_color_from_button(button, "rules_color")
@@ -361,18 +366,7 @@ def setup():
 		"tekka_rgba_toggled": tekka_rgba_toggled,
 		"tekka_close_maki_on_close_toggled": tekka_close_maki_on_close_toggled,
 	# colors page
-		"colors_own_text_written": colors_own_text_written,
-		"colors_own_nick_written": colors_own_nick_written,
-		"colors_notification_written": colors_notification_written,
-		"colors_messages_written": colors_messages_written,
-		"colors_actions_written": colors_actions_written,
-		"colors_highlighted_messages_written":
-				colors_highlighted_messages_written,
-		"colors_highlighted_actions_written":
-				colors_highlighted_actions_written,
-		"colors_default_nick_written": colors_default_nick_written,
-		"colors_last_log_written": colors_last_log_written,
-		"colors_rules_color_written": colors_rules_color_written,
+		"colors_color_button_clicked": colors_color_button_clicked,
 		"colors_rules_autodetect_toggled": colors_rules_autodetect_toggled,
 		"colors_rules_color_yesno_toggled": colors_rules_color_yesno_toggled,
 
