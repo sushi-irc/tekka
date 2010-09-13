@@ -40,6 +40,7 @@ from ..lib.output_shell import OutputShell
 from ..lib.search_toolbar import SearchBar
 from ..lib.expanding_list import ExpandingList
 from ..lib.contrast_color_table import ContrastColorTable
+from ..lib.custom_color_button import CustomColorButton
 
 from ..helper import URLHandler
 
