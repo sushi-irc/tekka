@@ -997,7 +997,7 @@ def get_tab_by_path(path):
 
 	try:
 		return store[path][0]
-	except:
+	except (KeyError, IndexError):
 		return None
 
 
