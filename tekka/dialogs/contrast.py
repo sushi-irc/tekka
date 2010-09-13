@@ -4,6 +4,7 @@ import gobject
 
 from .. import gui
 from ..lib import contrast
+from ..helper import color as hcolor
 
 class ColorDialog(object):
 
@@ -71,7 +72,7 @@ class ColorDialog(object):
 
 	def contrast_color_table_color_changed(self, table, color_code):
 		color = contrast.contrast_render_foreground_color(
-					color._get_output_bg_color(), color_code)
+					hcolor._get_output_bg_color(), color_code)
 
 		# set the colorselection to the contrast color
 		self.builder.get_object("colorselection").set_current_color(color)

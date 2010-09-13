@@ -7,6 +7,14 @@ from . import contrast
 
 from ..helper import color
 
+class CustomColorButton(gtk.ColorButton):
+
+	__gtype_name__ = "CustomColorButton"
+
+	def do_clicked(self):
+		pass
+
+
 class ContrastColorTable(gtk.Table):
 
 	""" Display all available contrast colors as color buttons
@@ -61,11 +69,8 @@ class ContrastColorTable(gtk.Table):
 		for code in self.get_color_palette():
 			ccolor = contrast.contrast_render_foreground_color(bg, code)
 
-			button = gtk.ColorButton(ccolor)
-			button.connect("button-press-event",
-				self.button_press_event, code)
-			button.connect("key-press-event",
-				self.button_key_press_event, code)
+			button = CustomColorButton(ccolor)
+			button.connect("clicked", self.button_clicked, code)
 
 			xoptions = yoptions = gtk.FILL
 
@@ -78,23 +83,12 @@ class ContrastColorTable(gtk.Table):
 				y += 1
 
 
+	def button_clicked(self, button, color_code):
+		self.set_contrast_color(color_code)
+
+
 	def change_color(self, color_code):
 		self.emit("color-changed", color_code)
-
-
-	def button_press_event(self, button, event, color_code):
-		if event.type == gtk.gdk.BUTTON_PRESS:
-			self.contrast_color = color_code
-			return True
-		return False
-
-
-	def button_key_press_event(self, button, event, color_code):
-		if (event.type == gtk.gdk.KEY_PRESS and
-		gtk.gdk.keyval_name(event.keyval) in ("Return","space")):
-			self.contrast_color = color_code
-			return True
-		return False
 
 
 	def set_columns(self, columns):

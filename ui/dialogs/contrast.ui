@@ -5,6 +5,7 @@
   <!-- interface-naming-policy project-wide -->
   <object class="GtkDialog" id="contrast_dialog">
     <property name="border_width">5</property>
+    <property name="title" translatable="yes">Select a color</property>
     <property name="window_position">center-on-parent</property>
     <property name="type_hint">normal</property>
     <child internal-child="vbox">
@@ -27,6 +28,7 @@
                     <property name="visible">True</property>
                     <property name="column_spacing">1</property>
                     <property name="row_spacing">1</property>
+                    <signal name="color_changed" handler="contrast_color_table_color_changed"/>
                   </object>
                 </child>
                 <child type="label">
