@@ -43,6 +43,8 @@ def show_welcome_screen(show):
 	""" show a welcome screen while hiding general output,
 		topic bar and side pane.
 	"""
+
+	# widgets to hide on welcome
 	hides = (
 		"show_side_pane",
 		"show_topic_bar",
@@ -51,7 +53,8 @@ def show_welcome_screen(show):
 
 	for to_hide in hides:
 		if config.get_bool("tekka",to_hide):
-			# it should be showed
+			# it should be showed, hide it if welcome
+			# screen should be showed, otherwise show it
 			eval(to_hide)(not show)
 
 	if show:
@@ -65,6 +68,9 @@ def show_welcome_screen(show):
 
 
 def apply_visibility_from_config():
+	""" read the config values of the widgets which can be
+		hidden and apply the configured value to the widgets
+	"""
 
 	c_w = {
 		"show_general_output": show_general_output,

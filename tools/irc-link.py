@@ -30,6 +30,10 @@ SUCH DAMAGE.
 import sys
 import re
 
+"""
+irc://<server>[:<port>]/[<((#|&|+)channel>|nick)>[,(isnick|needkey)]
+"""
+
 pattern = re.compile(r"irc://([\w.:]*)/(.*)")
 
 def prompt_for_key():
