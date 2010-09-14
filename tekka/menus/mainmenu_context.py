@@ -153,15 +153,15 @@ class MainMenuContext(MenuContextType):
 		def __init__(self, *args, **kwargs):
 			MenuContextType.__init__(self, *args, **kwargs)
 
-		def apply_visibilty_settings(self):
+		def apply_visibility_settings(self):
 			""" read config, apply visibilites on widgets """
 
-			def apply_visibility(wname, cvalue, user=None):
+			def apply_visibility(wname, cvalue):
 				button = self.widgets.get_object(wname)
 				if config.get_bool("tekka", cvalue):
-					if user: user()
 					button.set_active(True)
-				button.toggled()
+				else:
+					button.set_active(False)
 
 			apply_visibility("view_general_output_item",
 							 "show_general_output")
