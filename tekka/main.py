@@ -208,7 +208,7 @@ def tekka_tab_add_cb(tab):
 
 	if gui.mgmt.is_welcome_screen():
 		# FIXME: this is called often if the tab is not changed
-		gui.mgmt.hide_welcome_screen()
+		gui.mgmt.visibility.show_welcome_screen(False)
 
 
 def tekka_tab_remove_cb(tab):
@@ -248,9 +248,9 @@ def tekka_channel_topic_changed_cb(tab, topic):
 
 	if config.get_bool("tekka","hide_topic_if_empty"):
 		if topic:
-			gui.widgets.get_object("topic_label").show()
+			gui.mgmt.visibility.show_topic_bar(True)
 		else:
-			gui.widgets.get_object("topic_label").hide()
+			gui.mgmt.visibility.show_topic_bar(False)
 
 
 def mainWindow_scroll_event_cb(mainWindow, event):
@@ -402,7 +402,7 @@ def outputShell_widget_changed_cb(shell, old_widget, new_widget):
 	"""
 	if (type(old_widget) == WelcomeWindow
 	and type(new_widget) != WelcomeWindow):
-		gui.mgmt.hide_welcome_screen()
+		gui.mgmt.visibility.show_welcome_screen(False)
 
 	gui.widgets.remove_object("output_window")
 	gui.widgets.add_object(new_widget, "output_window")
@@ -1207,14 +1207,15 @@ def setupGTK():
 	# initialize output_shell again (signals are connected now)
 	gui.widgets.get_object("output_shell").reset()
 
-	# apply visibility to widgets from config
-	mmc.view.apply_visibilty_settings()
-
 	# setup more complex widgets
 	setup_tabs_view()
 	setup_nicks_view()
 	setup_general_ouptut()
 	setup_topic_label()
+
+	# apply visibility to widgets from config
+	mmc.view.apply_visibility_settings()
+	gui.mgmt.visibility.apply_visibility_from_config()
 
 	setup_fonts()
 
@@ -1244,7 +1245,7 @@ def setupGTK():
 	# disable the GUI and wait for commands :-)
 	gui.mgmt.set_useable(False)
 
-	gui.mgmt.show_welcome_screen()
+	gui.mgmt.visibility.show_welcome_screen(True)
 
 	gobject.idle_add(setup_paneds)
 
