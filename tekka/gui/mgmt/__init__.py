@@ -110,37 +110,6 @@ def set_useable(switch):
 	gui_is_useable = switch
 
 
-def show_welcome_screen():
-	""" show a welcome screen while hiding general output,
-		topic bar and side pane.
-	"""
-	self = show_welcome_screen
-	self.hides = (
-		visibility.show_side_pane,
-		visibility.show_topic_bar,
-		visibility.show_general_output,
-	)
-
-	for show_cb in self.hides:
-		show_cb(False)
-
-	s = widgets.get_object("output_shell")
-
-	w = WelcomeWindow()
-
-	s.set(w)
-	s.show_all()
-
-
-def hide_welcome_screen():
-	""" undo the hiding from show_welcome_screen """
-
-	hides = show_welcome_screen.hides
-
-	for show_cb in hides:
-		show_cb(True)
-
-
 def is_welcome_screen():
 	""" returns True if the welcome screen is displayed """
 	return type(widgets.get_object("output_window")) == WelcomeWindow
