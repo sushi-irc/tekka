@@ -1186,12 +1186,13 @@ def switch_to_path(path):
 
 		if config.get_bool("tekka","show_topic_bar"):
 
-			if (tab.topic or not config.get_bool("tekka","hide_topic_if_empty")):
-				widgets.get_object("topic_label").show()
+			if (tab.topic
+			or not config.get_bool("tekka","hide_topic_if_empty")):
+				mgmt.visibility.show_topic_bar(True)
 			else:
-				widgets.get_object("topic_label").hide()
+				mgmt.visibility.show_topic_bar(False)
 
-		widgets.get_object("nicks_vbox").show()
+		mgmt.visibility.show_nicks(True)
 		widgets.get_object("nicks_view").set_model(tab.nickList)
 
 	elif tab.is_query() or tab.is_server():
@@ -1200,9 +1201,11 @@ def switch_to_path(path):
 			tab.set_useable(tab.connected)
 
 		if config.get_bool("tekka","show_topic_bar"):
-			widgets.get_object("topic_label").hide()
+			# hide topic bar in queries if enabled
+			mgmt.visibility.show_topic_bar(False)
 
-		widgets.get_object("nicks_vbox").hide()
+		# hide nick list in queries
+		mgmt.visibility.show_nicks(False)
 
 	# reset message notification
 	tab.set_new_message(None)
