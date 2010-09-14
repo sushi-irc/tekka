@@ -67,14 +67,17 @@ class MenuContextType(object):
 		self.menu = widgets.get_object(name)
 
 
-	def __getattr__(self, attr):
+	def __getattribute__(self, attr):
+		"""
 		if (attr[0] != "_"
-		or not attr in self.signals):
-			try:
+		and not attr in ("widgets","signals","menu")
+		and not attr in self.signals):
 				return getattr(self.menu, attr)
-			except AttributeError:
-				pass
-		return object.__getattr__(self, attr)
+		"""
+		try:
+			return super(MenuContextType,self).__getattribute__(attr)
+		except AttributeError:
+			return getattr(self.menu, attr)
 
 
 class MainMenuContext(MenuContextType):
