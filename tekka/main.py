@@ -1242,10 +1242,10 @@ def setupGTK():
 		})
 	gui.shortcuts.setup_shortcuts()
 
+	gui.mgmt.visibility.show_welcome_screen(True)
+
 	# disable the GUI and wait for commands :-)
 	gui.mgmt.set_useable(False)
-
-	gui.mgmt.visibility.show_welcome_screen(True)
 
 	gobject.idle_add(setup_paneds)
 

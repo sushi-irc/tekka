@@ -97,7 +97,7 @@ def set_useable(switch):
 		widgets.get_object("general_output_window")
 	]
 
-	if switch or (not switch and not is_welcome_screen()):
+	if switch or not is_welcome_screen():
 		# don't disable welcome screen, it knows better
 		widgetList.append(widgets.get_object("output"))
 		widgetList.append(widgets.get_object("output_shell"))
