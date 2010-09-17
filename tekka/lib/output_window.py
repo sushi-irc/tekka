@@ -53,7 +53,7 @@ class OutputWindow(gtk.ScrolledWindow):
 		gtk.ScrolledWindow.__init__(self)
 
 		self.set_properties(
-			hscrollbar_policy = gtk.POLICY_NEVER,
+			hscrollbar_policy = gtk.POLICY_AUTOMATIC,
 			vscrollbar_policy = gtk.POLICY_AUTOMATIC,
 				  shadow_type = gtk.SHADOW_ETCHED_IN )
 
