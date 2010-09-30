@@ -86,4 +86,4 @@ def setup():
 
 	# enter on entry -> join channel
 	builder.get_object("nameEntry").connect("activate",
-		lambda w: dialog_response_cb(dialog, gtk.RESPONE_OK))
+		lambda w: dialog_response_cb(dialog, gtk.RESPONSE_OK))
