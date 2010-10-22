@@ -465,6 +465,9 @@ def userMessage_cb(timestamp, server, from_str, channel, message):
 	nick = parse_from(from_str)[0]
 	(server_tab, channel_tab) = gui.tabs.search_tabs(server, channel)
 
+	if server_tab == None:
+		return # happens if the target server does not exist
+
 	if nick.lower() == server_tab.nick.lower():
 		ownMessage_cb(timestamp, server, channel, message)
 		return
