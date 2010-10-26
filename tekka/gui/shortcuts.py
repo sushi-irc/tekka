@@ -39,6 +39,7 @@ _handlers = {
 		"input_search": [],
 		"input_search_further": [],
 		"input_copy": [],
+		"change_topic": [],
 		"servertree_previous": [],
 		"servertree_next": [],
 		"servertree_close": [],
@@ -92,6 +93,8 @@ def setup_shortcuts():
 	associate_handler("input_search", "<ctrl>f", "input_entry")
 	associate_handler("input_search_further", "<ctrl>g", "input_entry")
 	associate_handler("input_copy", "<ctrl>c", "input_entry")
+
+	associate_handler("change_topic", "<ctrl>t", "input_entry")
 
 	associate_handler("servertree_previous", "<ctrl>Page_Up", "tabs_view")
 	associate_handler("servertree_next", "<ctrl>Page_Down", "tabs_view")

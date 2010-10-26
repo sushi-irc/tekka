@@ -730,6 +730,18 @@ def inputBar_shortcut_ctrl_c(inputBar, shortcut):
 		cb.set_text(text)
 
 
+def changeTopic_shortcut(inputBar, shortcut):
+	""" The user wants to change the topic for the current tab.
+	"""
+	channel = gui.tabs.get_current_tab()
+	if not channel or not channel.is_channel():
+		return
+
+	menu = servertree_menu.ServerTreeMenu()
+	menu.get_menu(channel)
+	menu.widgets.get_object("setTopicItem").activate()
+
+
 def serverTree_query_tooltip_cb(widget, x, y, kbdmode, tooltip):
 	""" show tooltips for treeview rows.
 
@@ -1235,6 +1247,7 @@ def setupGTK():
 			"input_search": output_shortcut_ctrl_f,
 			"input_search_further": output_shortcut_ctrl_g,
 			"input_copy": inputBar_shortcut_ctrl_c,
+			"change_topic": changeTopic_shortcut,
 			"servertree_previous": serverTree_shortcut_ctrl_Page_Up,
 			"servertree_next": serverTree_shortcut_ctrl_Page_Down,
 			"servertree_close": serverTree_shortcut_ctrl_w,
