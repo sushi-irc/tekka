@@ -2,88 +2,78 @@
 
 import os
 
-import Options
-import Utils
+from waflib import Options
+from waflib import Utils
 
 APPNAME = 'tekka'
 VERSION = '1.4.0'
 
-srcdir = '.'
-blddir = 'build'
+top = '.'
+out = 'build'
 
-def set_options (ctx):
-	ctx.add_option('--humanity-icons', action='store_true', default=False, help='Install Humanity Mono Icons')
+def options (ctx):
+	ctx.add_option('--humanity-icons', action='store_true', default=False, help='Install Humanity icons')
 
-def configure (conf):
-	conf.check_tool('gnu_dirs')
-	conf.check_tool('misc')
+def configure (ctx):
+	ctx.load('gnu_dirs')
 
-	conf.find_program('gzip', var = 'GZIP')
+	ctx.find_program('gzip', var = 'GZIP')
 
 	home = os.path.expanduser('~')
 
-	if conf.env.PREFIX == home:
-		conf.env.TEKKA_APPLICATIONSDIR = '%s/.local/share/applications' % (home)
-		conf.env.TEKKA_ICONSDIR = '%s/.icons' % (home)
+	if ctx.env.PREFIX == home:
+		ctx.env.TEKKA_APPLICATIONSDIR = '%s/.local/share/applications' % (home)
+		ctx.env.TEKKA_ICONSDIR = '%s/.icons' % (home)
 	else:
-		conf.env.TEKKA_APPLICATIONSDIR = Utils.subst_vars('${DATAROOTDIR}/applications', conf.env)
-		conf.env.TEKKA_ICONSDIR = Utils.subst_vars('${DATAROOTDIR}/icons', conf.env)
+		ctx.env.TEKKA_APPLICATIONSDIR = Utils.subst_vars('${DATAROOTDIR}/applications', ctx.env)
+		ctx.env.TEKKA_ICONSDIR = Utils.subst_vars('${DATAROOTDIR}/icons', ctx.env)
 
-	conf.env.HUMANITY_ICONS = Options.options.humanity_icons
-	conf.env.VERSION = VERSION
+	ctx.env.HUMANITY_ICONS = Options.options.humanity_icons
+	ctx.env.VERSION = VERSION
 
-	conf.sub_config('po')
+	ctx.recurse('po')
 
-def build (bld):
-	bld.add_subdirs('po')
+def build (ctx):
+	ctx.install_files('${DATAROOTDIR}/sushi/tekka', ctx.path.ant_glob('*.py'))
+	ctx.install_files('${DATAROOTDIR}/sushi/tekka/plugins', ctx.path.ant_glob('plugins/*.py'))
 
-	files = bld.glob('*.py')
-	files.remove('tekka.py')
+	ctx.install_files('${DATAROOTDIR}/sushi/tekka', ctx.path.ant_glob('tekka/**/*.py'),
+		relative_trick = True
+	)
 
-	bld.install_files('${DATAROOTDIR}/sushi/tekka', files)
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/tekka', bld.glob('tekka/*.py'))
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/tekka/dialogs', bld.glob('tekka/dialogs/*.py'))
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/tekka/gui', bld.glob('tekka/gui/*.py'))
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/tekka/gui/mgmt', bld.glob('tekka/gui/mgmt/*.py'))
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/tekka/helper', bld.glob('tekka/helper/*.py'))
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/tekka/lib', bld.glob('tekka/lib/*.py'))
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/tekka/menus', bld.glob('tekka/menus/*.py'))
+	ctx.install_files('${DATAROOTDIR}/sushi/tekka', ctx.path.ant_glob('ui/**/*.ui'),
+		relative_trick = True
+	)
 
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/plugins', bld.glob('plugins/*.py'))
-
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/ui', bld.glob('ui/*.ui'))
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/ui/dialogs', bld.glob('ui/dialogs/*.ui'))
-	bld.install_files('${DATAROOTDIR}/sushi/tekka/ui/menus', bld.glob('ui/menus/*.ui'))
-
-	bld.install_files('${DATAROOTDIR}/sushi/tekka', 'tekka.py', chmod = 0755)
+	ctx.install_files('${DATAROOTDIR}/sushi/tekka', 'tekka.py', chmod = 0755)
 
 	# Well, that's kinda silly, but state of the art, I guess
-	for dir in ('16x16', '22x22', '24x24', '32x32', '36x36', '48x48', '64x64', '72x72', '96x96', '128x128', '192x192', '256x256', 'scalable'):
+	for directory in ('16x16', '22x22', '24x24', '32x32', '36x36', '48x48', '64x64', '72x72', '96x96', '128x128', '192x192', '256x256', 'scalable'):
 		# Global icon
-		bld.install_as('${TEKKA_ICONSDIR}/hicolor/%s/apps/tekka.svg' % (dir),
+		ctx.install_as('${TEKKA_ICONSDIR}/hicolor/%s/apps/tekka.svg' % (directory),
 			       'graphics/tekka-generic.svg')
 
 	# Humanity-specific icons (dark/light theme)
-	if bld.env.HUMANITY_ICONS:
+	if ctx.env.HUMANITY_ICONS:
 		# Well, that's kinda silly, but state of the art, I guess
-		for dir in ('16', '22', '24', '32', '48', '64', '128', '192'):
-			bld.install_as('${TEKKA_ICONSDIR}/Humanity-Dark/apps/%s/tekka.svg' % (dir),
+		for directory in ('16', '22', '24', '32', '48', '64', '128', '192'):
+			ctx.install_as('${TEKKA_ICONSDIR}/Humanity-Dark/apps/%s/tekka.svg' % (directory),
 			               'graphics/tekka-mono-dark.svg')
-			bld.install_as('${TEKKA_ICONSDIR}/Humanity/apps/%s/tekka.svg' % (dir),
+			ctx.install_as('${TEKKA_ICONSDIR}/Humanity/apps/%s/tekka.svg' % (directory),
 			               'graphics/tekka-mono-light.svg')
 
-	bld.symlink_as('${BINDIR}/tekka', Utils.subst_vars('${DATAROOTDIR}/sushi/tekka/tekka.py', bld.env))
+	ctx.symlink_as('${BINDIR}/tekka', Utils.subst_vars('${DATAROOTDIR}/sushi/tekka/tekka.py', ctx.env))
 
 	# FIXME
-	bld.new_task_gen(
+	ctx(
 		features = 'subst',
 		source = 'ui/dialogs/about.ui.in',
 		target = 'ui/dialogs/about.ui',
 		install_path = '${DATAROOTDIR}/sushi/tekka/ui/dialogs',
-		dict = {'SUSHI_VERSION': bld.env.VERSION}
+		SUSHI_VERSION = ctx.env.VERSION
 	)
 
-	bld.new_task_gen(
+	ctx(
 		features = 'subst',
 		source = 'tekka.desktop.in',
 		target = 'tekka.desktop',
@@ -91,20 +81,22 @@ def build (bld):
 	)
 
 	for man in ('tekka.1',):
-		bld.new_task_gen(
+		ctx(
 			features = 'subst',
 			source = '%s.in' % (man),
 			target = man,
 			install_path = None,
-			dict = {'SUSHI_VERSION': bld.env.VERSION}
+			SUSHI_VERSION = ctx.env.VERSION
 		)
 
-	bld.add_group()
+	ctx.add_group()
 
 	for man in ('tekka.1',):
-		bld.new_task_gen(
+		ctx(
 			source = man,
 			target = '%s.gz' % (man),
 			rule = '${GZIP} -c ${SRC} > ${TGT}',
 			install_path = '${MANDIR}/man1'
 		)
+
+	ctx.recurse('po')

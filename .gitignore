@@ -1,4 +1,10 @@
+# Vim
 *.swp
+
+# Python
 *.pyc
 
-*.ui.h
+# Waf
+build
+.lock-waf*
+.waf-*
