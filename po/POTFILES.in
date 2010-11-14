@@ -10,8 +10,8 @@ tekka/dialogs/history.py
 tekka/dialogs/plugins.py
 tekka/dialogs/server.py
 tekka/dialogs/whois.py
-tekka/gui/mgmt.py
 tekka/lib/dcc_dialog.py
+tekka/lib/error_dialog.py
 tekka/lib/general_output_buffer.py
 tekka/lib/key_dialog.py
 tekka/lib/plugin_config_dialog.py
@@ -28,6 +28,7 @@ tekka/menus/servertree_menu.py
 [type: gettext/glade] ui/dialogs/advancedPreferences.ui
 [type: gettext/glade] ui/dialogs/channelList.ui
 [type: gettext/glade] ui/dialogs/colorTable.ui
+[type: gettext/glade] ui/dialogs/contrast.ui
 [type: gettext/glade] ui/dialogs/dcc.ui
 [type: gettext/glade] ui/dialogs/hide.ui
 [type: gettext/glade] ui/dialogs/join.ui

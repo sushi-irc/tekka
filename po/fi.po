@@ -4,17 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: tekka 1.2\n"
+"Project-Id-Version: tekka\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-28 22:16+0200\n"
-"PO-Revision-Date: 2010-03-09 19:41+0000\n"
+"POT-Creation-Date: 2010-08-27 17:59+0200\n"
+"PO-Revision-Date: 2010-09-27 13:28+0000\n"
 "Last-Translator: Soft <Unknown>\n"
 "Language-Team: Finnish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-04-29 18:20+0000\n"
+"X-Launchpad-Export-Date: 2010-11-14 01:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../signal_handler.py:355
@@ -53,125 +53,125 @@ msgstr "CTCP %(nick)s kanavalle:"
 msgid "CTCP request from you to %(target)s: %(message)s"
 msgstr "CTCP-pyyntö sinulta kohteelle %(target)s: %(message)s"
 
-#: ../signal_handler.py:902
+#: ../signal_handler.py:903
 #, python-format
 msgid "• You are now known as %(newnick)s."
 msgstr "• Sinut tunnetaan nyt nimellä %(newnick)s."
 
-#: ../signal_handler.py:908
+#: ../signal_handler.py:909
 #, python-format
 msgid "• %(nick)s is now known as %(newnick)s."
 msgstr "• %(nick)s tunnetaan nyt nimellä %(newnick)s."
 
-#: ../signal_handler.py:1001
+#: ../signal_handler.py:1002
 #, python-format
 msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr "« %(nick)s potkaisi sinut kanavalta %(channel)s (%(reason)s)."
 
-#: ../signal_handler.py:1022
+#: ../signal_handler.py:1023
 #, python-format
 msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr ""
 "« %(nick)s potkaisi käyttäjän %(who)s kanavalta %(channel)s (%(reason)s)."
 
-#: ../signal_handler.py:1060
+#: ../signal_handler.py:1061
 #, python-format
 msgid "« You have quit (%(reason)s)."
 msgstr "« Lopetit (%(reason)s)."
 
-#: ../signal_handler.py:1062
+#: ../signal_handler.py:1063
 msgid "« You have quit."
-msgstr "« You have quit."
+msgstr "« Lopetit"
 
-#: ../signal_handler.py:1085
+#: ../signal_handler.py:1086
 #, python-format
 msgid "« %(nick)s has quit (%(reason)s)."
 msgstr "« %(nick)s lopetti (%(reason)s)."
 
-#: ../signal_handler.py:1087
+#: ../signal_handler.py:1088
 #, python-format
 msgid "« %(nick)s has quit."
 msgstr "« %(nick)s lopetti."
 
-#: ../signal_handler.py:1188
+#: ../signal_handler.py:1189
 #, python-format
 msgid "» You have joined %(channel)s."
 msgstr "» Liityit kanavalle %(channel)s."
 
-#: ../signal_handler.py:1199
+#: ../signal_handler.py:1200
 #, python-format
 msgid "» %(nick)s has joined %(channel)s."
 msgstr "» %(nick)s liittyi kanavalle %(channel)s."
 
-#: ../signal_handler.py:1287
+#: ../signal_handler.py:1288
 #, python-format
 msgid "« You have left %(channel)s (%(reason)s)."
 msgstr "« Poistuit kanavalta %(channel)s (%(reason)s)."
 
-#: ../signal_handler.py:1289
+#: ../signal_handler.py:1290
 #, python-format
 msgid "« You have left %(channel)s."
 msgstr "« Poistuit kanvalta %(channel)s."
 
-#: ../signal_handler.py:1319
+#: ../signal_handler.py:1320
 #, python-format
 msgid "« %(nick)s has left %(channel)s (%(reason)s)."
 msgstr "« %(nick)s poistui kanavalta %(channel)s (%(reason)s)."
 
-#: ../signal_handler.py:1322
+#: ../signal_handler.py:1323
 #, python-format
 msgid "« %(nick)s has left %(channel)s."
 msgstr "« %(nick)s poistui kanavalta %(channel)s."
 
-#: ../signal_handler.py:1343
+#: ../signal_handler.py:1344
 msgid "• You are not a channel operator."
 msgstr "• Et ole kanavaoperaattori"
 
-#: ../signal_handler.py:1353
+#: ../signal_handler.py:1354
 #, python-format
 msgid "• %(target)s: No such nick/channel."
 msgstr "• %(target)s: nimimerkkiä/kanavaa ei ole."
 
-#: ../signal_handler.py:1356
+#: ../signal_handler.py:1357
 #, python-format
 msgid "• %(target)s: No such server."
 msgstr "• %(target)s: palvelinta ei löydy."
 
-#: ../signal_handler.py:1359
+#: ../signal_handler.py:1360
 #, python-format
 msgid "• %(target)s: No such channel."
 msgstr "• %(target)s: Kanavaa ei ole."
 
-#: ../signal_handler.py:1371
+#: ../signal_handler.py:1372
 msgid "Unknown reason"
 msgstr "Tuntematon syy"
 
-#: ../signal_handler.py:1374
+#: ../signal_handler.py:1375
 msgid "The channel is full."
 msgstr "Kanava on täynnä."
 
-#: ../signal_handler.py:1376
+#: ../signal_handler.py:1377
 msgid "The channel is invite-only."
 msgstr "Kanava edellyttää kutsua."
 
-#: ../signal_handler.py:1378
+#: ../signal_handler.py:1379
 msgid "You are banned."
 msgstr "Olet bannattu."
 
-#: ../signal_handler.py:1394
+#: ../signal_handler.py:1395
 msgid "You need the correct channel key."
 msgstr "Tarvitset oikean kanava-avaimen"
 
-#: ../signal_handler.py:1399
+#: ../signal_handler.py:1400
 #, python-format
 msgid "You can not join %(channel)s: %(reason)s"
 msgstr "Et voi liittyä kanavalle %(channel)s: %(reason)s"
 
-#: ../signal_handler.py:1471
+#: ../signal_handler.py:1472
 msgid "Auto accepted file transfer"
 msgstr "Tiedostojen siirto hyväksyttiin automaattisesti"
 
-#: ../signal_handler.py:1472
+#: ../signal_handler.py:1473
 #, python-format
 msgid ""
 "maki auto accepted the following file transfer:\n"
@@ -186,7 +186,12 @@ msgstr ""
 "Koko: %(size)s\n"
 "Palvelin: %(server)s"
 
-#: ../tekka/com.py:126 ../tekka/com.py:136 ../tekka/com.py:239
+#: ../sushi.py:92
+#, python-format
+msgid "Plugin “%(plugin)s” caused an error."
+msgstr "Liitännäinen \"%(plugin)s\" aiheutti virheen."
+
+#: ../tekka/com.py:126 ../tekka/com.py:136 ../tekka/com.py:240
 #: ../tekka/gui/mgmt.py:277
 msgid "tekka could not connect to maki."
 msgstr "tekka ei voinut yhdistää makiin."
@@ -195,7 +200,7 @@ msgstr "tekka ei voinut yhdistää makiin."
 msgid "Please check whether maki is running."
 msgstr "Tarkista onko maki käynnissä."
 
-#: ../tekka/com.py:137 ../tekka/com.py:240
+#: ../tekka/com.py:137 ../tekka/com.py:241
 #, python-format
 msgid ""
 "Please check whether maki is running.\n"
@@ -204,23 +209,26 @@ msgstr ""
 "Tarkista onko maki käynnissä.\n"
 "Virhe tapahtui: %(error)s"
 
-#: ../tekka/com.py:173
+#: ../tekka/com.py:174
 msgid "Communication error with maki."
 msgstr "tiedonvälitysvirhe makin kanssa."
 
-#: ../tekka/com.py:174
+#: ../tekka/com.py:175
 #, python-format
 msgid ""
 "There was an error while executing <b>'%s</b>' with DBus: \n"
 "<b>%s</b>\n"
 "You should keep safe that maki is running "
 msgstr ""
+"Suoritettaessa kohtaa <b>'%s'</b> DBus kanssa tapahtui virhe: \n"
+"<b>%s</b>\n"
+"Turvaa makin suorittaminen "
 
-#: ../tekka/com.py:286
+#: ../tekka/com.py:284
 msgid "tekka requires a newer maki version."
 msgstr "tekka vaatii uudemman makin version."
 
-#: ../tekka/com.py:287
+#: ../tekka/com.py:285
 #, python-format
 msgid "Please update maki to at least version %(version)s."
 msgstr "Päivitä maki vähintään versioon %(version)s"
@@ -275,44 +283,46 @@ msgstr "Haluatko varmasti poistaa tiedoston siirron %(id)d"
 msgid "C_ompile and run"
 msgstr "Käännä ja aja"
 
-#: ../tekka/dialogs/history.py:77
-msgid "Read history anyways?"
-msgstr ""
-
 #: ../tekka/dialogs/history.py:78
+msgid "Read history anyways?"
+msgstr "Lue historia kuitenkin?"
+
+#: ../tekka/dialogs/history.py:79
 msgid ""
 "maki is connected remotely. It's possible that the history is not "
 "accessible. Do you want to try anyways?"
 msgstr ""
+"maki on yhdistetty etänä. On mahdollista että historia ei ole saatavilla. "
+"Haluatko kuitenkin yrittää?"
 
-#: ../tekka/dialogs/history.py:116
+#: ../tekka/dialogs/history.py:117
 #, python-format
 msgid "History for %(target)s"
-msgstr ""
+msgstr "Kohteen %(target)s historia"
 
 #: ../tekka/dialogs/plugins.py:82 ../tekka/dialogs/plugins.py:110
 msgid "No plugin selected."
-msgstr ""
+msgstr "Yhtään liitännäistä ei ole valittu."
 
 #: ../tekka/dialogs/plugins.py:83
 msgid "You must select a plugin to load it."
-msgstr ""
+msgstr "Valitse liitännäinen ladataksesi sen."
 
 #: ../tekka/dialogs/plugins.py:111
 msgid "You must select a plugin to unload it."
-msgstr ""
+msgstr "Valitse liitännäinen sulkeaksesi sen"
 
 #: ../tekka/dialogs/server.py:140 ../tekka/dialogs/server.py:167
 msgid "No server selected."
-msgstr ""
+msgstr "Palvelinta ei valittu."
 
 #: ../tekka/dialogs/server.py:141
 msgid "You must select a server to edit it."
-msgstr ""
+msgstr "Valitse palvelin muokataksesi sitä."
 
 #: ../tekka/dialogs/server.py:168
 msgid "You must select a server to delete it."
-msgstr ""
+msgstr "Valitse palvelin poistaaksesi sen."
 
 #: ../tekka/dialogs/server.py:178
 msgid "Error while retrieving server name."
@@ -406,61 +416,28 @@ msgstr "Syötä avain kanavalle %(channel)s"
 msgid "Save key for channel"
 msgstr "Tallenna avain kanavalle"
 
-#: ../tekka/lib/plugin_config_dialog.py:15
+#: ../tekka/lib/plugin_config_dialog.py:50
 #, python-format
 msgid "Configure %(name)s"
 msgstr "Muuta asetuksia %(name)s"
 
-#: ../tekka/lib/plugin_control.py:110 ../tekka/lib/plugin_control.py:118
-#: ../tekka/lib/plugin_control.py:141 ../tekka/lib/plugin_control.py:199
-#: ../tekka/lib/plugin_control.py:354
-msgid "Plugin could not be loaded."
-msgstr "Lisäosaa ei voitu ladata."
+#: ../tekka/lib/spell_entry.py:152
+msgid "Foreground Color"
+msgstr "Edustaväri"
 
-#: ../tekka/lib/plugin_control.py:111 ../tekka/lib/plugin_control.py:142
-#: ../tekka/lib/plugin_control.py:200
-#, python-format
-msgid ""
-"Plugin %(plugin)s could not be loaded.\n"
-"The following error occurred: %(error)s"
-msgstr ""
-"Lisäosaa %(plugin)s ei voitu ladata.\n"
-"Virhe tapahtui: %(error)s"
+#: ../tekka/lib/spell_entry.py:164
+msgid "Background Color"
+msgstr "Taustaväri"
 
-#: ../tekka/lib/plugin_control.py:119
-#, python-format
-msgid "Plugin %(plugin)s could not be loaded."
-msgstr "Lisäosaa %(plugin)s ei voitu ladata."
+#: ../tekka/lib/spell_entry.py:176
+msgid "Reset Color"
+msgstr "Resetoi väri"
 
-#: ../tekka/lib/plugin_control.py:178
-msgid "Plugin is already loaded."
-msgstr "Lisäosa on jo käynnissä."
-
-#: ../tekka/lib/plugin_control.py:179
-#, python-format
-msgid "Plugin %(plugin)s is already loaded."
-msgstr "Lisäosa %(plugin)s on jo käynnissä."
-
-#: ../tekka/lib/plugin_control.py:223
-msgid "Plugin could not be unloaded."
-msgstr "Lisäosaa ei voitu poistaa käytöstä."
-
-#: ../tekka/lib/plugin_control.py:223
-#, python-format
-msgid "Plugin %(plugin)s could not be unloaded, because it is not loaded."
-msgstr ""
-"Lisäosaa %(plugin)s ei voitu poistaa käytöstä, koska se ei ole käytössä."
-
-#: ../tekka/lib/plugin_control.py:355
-#, python-format
-msgid "Plugin %(plugin)s could not be loaded automatically."
-msgstr "Lisäosaa %(plugin)s ei voitu käynnistää automaattisesti."
-
-#: ../tekka/lib/status_icon.py:67
+#: ../tekka/lib/status_icon.py:61
 msgid "Hide main window"
 msgstr "Piilota pääikkuna"
 
-#: ../tekka/lib/status_icon.py:69
+#: ../tekka/lib/status_icon.py:63
 msgid "Show main window"
 msgstr "Näytä pääikkuna"
 
@@ -480,11 +457,11 @@ msgid ""
 msgstr ""
 "Aihe muutettiin ennen päivitystäsi. Haluatko silti suorittaa muutokset?"
 
-#: ../tekka/lib/welcome_window.py:64
+#: ../tekka/lib/welcome_window.py:63
 msgid "<big><b>Welcome to tekka!</b></big>"
 msgstr "<big><b>Tervetuloa tekkaan!</b></big>"
 
-#: ../tekka/lib/welcome_window.py:122
+#: ../tekka/lib/welcome_window.py:121
 msgid ""
 "You are connected to maki. The next step is to connect to a server via the "
 "server dialog in the tekka menu."
@@ -492,7 +469,7 @@ msgstr ""
 "Olet yhteydessä makiin. Seuraava askel on yhdistää palvelimeen käyttäen "
 "palvelin-ikkunaa tekka-valikossa."
 
-#: ../tekka/lib/welcome_window.py:128
+#: ../tekka/lib/welcome_window.py:127
 msgid ""
 "You are not connected to maki. Without maki you can not connect to servers "
 "or write messages.\n"
@@ -507,72 +484,76 @@ msgstr ""
 "Jos sinulla on ongelmia makin käyttämisessä vieraile osoitteessa "
 "http://sushi.ikkoku.de/ ja etsi ratkaisua ongelmiisi. Voit myös kysyä neuvoa."
 
-#: ../tekka/main.py:490
+#: ../tekka/main.py:462
 msgid "Reset markup"
-msgstr ""
+msgstr "Palauta oletusmerkintä."
 
-#: ../tekka/main.py:642
+#: ../tekka/main.py:651
 #, python-format
 msgid "Do you really want to close channel “%(name)s”?"
 msgstr "Haluatko varmasti sulkea kanavan \"%(name)s\"?"
 
-#: ../tekka/main.py:644
+#: ../tekka/main.py:653
 #, python-format
 msgid "Do you really want to close query “%(name)s”?"
 msgstr "Haluatko varmasti sulkea yksityiskeskustelun \"%(name)s\"?"
 
-#: ../tekka/main.py:646
+#: ../tekka/main.py:655
 #, python-format
 msgid "Do you really want to close server “%(name)s”?"
 msgstr "Haluatko varmasti sulkea palvelimen \"%(name)s\"?"
 
 #. TODO: away status
-#: ../tekka/main.py:759
+#: ../tekka/main.py:768
 msgid "Nickname: "
 msgstr "Nimimerkki: "
 
-#: ../tekka/main.py:762
+#: ../tekka/main.py:771
 msgid "User: "
 msgstr "Käyttäjä: "
 
-#: ../tekka/main.py:763
+#: ../tekka/main.py:772
 msgid "Topic: "
 msgstr "Aihe: "
 
-#: ../tekka/main.py:765 ../tekka/main.py:769
+#: ../tekka/main.py:774 ../tekka/main.py:778
 msgid "Last sentence: "
 msgstr "Viimeinen lause: "
 
-#: ../tekka/main.py:1266
+#: ../tekka/main.py:1308
 msgid "Error occured"
 msgstr "Tapahtui virhe"
 
-#: ../tekka/main.py:1276
+#: ../tekka/main.py:1318
 msgid ""
-"<span size='larger' weight='bold'>Error</span>\n"
+"<span size='larger' weight='bold'>Don't Panic!</span>\n"
 "\n"
-"An error occured — we apologize for that. Feel free to submit a bug report "
-"at https://bugs.launchpad.net/sushi."
+"An error occured – we apologize for that. Feel free to submit a bug report "
+"at <a "
+"href=\"https://bugs.launchpad.net/sushi\">https://bugs.launchpad.net/sushi</a"
+">."
 msgstr ""
-"<span size='larger' weight='bold'>Virhe</span>\n"
+"<span size='larger' weight='bold'>Älä pelkää!</span>\n"
 "\n"
-"Tapahtui virhe, pahoittelumme. Voit lähettää virheraportin osoitteessa "
-"https://bugs.launchpad.net/sushi."
+"Tapahtui virhe - olemme pahoillamme. Voit lähettää virheraportin osoitteessa "
+"<a "
+"href=\"https://bugs.launchpad.net/sushi\">https://bugs.launchpad.net/sushi</a"
+">."
 
-#: ../tekka/menus/mainmenu_context.py:112
-#: ../tekka/menus/mainmenu_context.py:213 ../tekka/menus/nicklist_menu.py:136
+#: ../tekka/menus/mainmenu_context.py:109
+#: ../tekka/menus/mainmenu_context.py:211 ../tekka/menus/nicklist_menu.py:175
 msgid "No connection to maki."
 msgstr "Ei yhteyttä makiin."
 
-#: ../tekka/menus/mainmenu_context.py:113
+#: ../tekka/menus/mainmenu_context.py:110
 msgid "You can't shutdown maki. You're not connected."
 msgstr "Et voi sammuttaa makia, koska et ole yhteydessä siihen."
 
-#: ../tekka/menus/mainmenu_context.py:225
+#: ../tekka/menus/mainmenu_context.py:222
 msgid "tekka could not determine server."
 msgstr "tekka ei voinut määrittää palvelinta."
 
-#: ../tekka/menus/mainmenu_context.py:226
+#: ../tekka/menus/mainmenu_context.py:223
 msgid ""
 "There is no active server. Click on a server tab or a child of a server tab "
 "to activate the server."
@@ -580,11 +561,11 @@ msgstr ""
 "Ei aktiivisia palvelimia. Napsauta palvelinvälilehteä tai sen alaista "
 "aktivoidaksesi palvelimen."
 
-#: ../tekka/menus/nicklist_menu.py:52 ../tekka/menus/servertree_menu.py:52
+#: ../tekka/menus/nicklist_menu.py:61 ../tekka/menus/servertree_menu.py:51
 msgid "Widget creation failed."
 msgstr "Käyttöliittymäelementin luonti epäonnistui."
 
-#: ../tekka/menus/nicklist_menu.py:53
+#: ../tekka/menus/nicklist_menu.py:62 ../tekka/menus/servertree_menu.py:52
 msgid ""
 "tekka failed to create the nicklist menu.\n"
 "It's possible that there are files missing. Check if you have appropriate "
@@ -594,34 +575,36 @@ msgstr ""
 "Tiedostoja saattaa puuttua. Tarkista että tekkan tarvitsemilla tiedostoilla "
 "on asianmukaiset oikeudet ja käynnistä tekka uudelleen."
 
-#: ../tekka/menus/nicklist_menu.py:152
+#: ../tekka/menus/nicklist_menu.py:137
+#, python-format
+msgid "Ignoring User %(user)s"
+msgstr "Sivuuta käyttäjä %(user)s"
+
+#: ../tekka/menus/nicklist_menu.py:143
+#, python-format
+msgid "User %(user)s is unignored"
+msgstr "Käyttäjää %(user)s ei sivuuteta"
+
+#: ../tekka/menus/nicklist_menu.py:190
 msgid "No file selected"
 msgstr "Ei valittua tiedostoa"
 
-#: ../tekka/menus/nicklist_menu.py:153
+#: ../tekka/menus/nicklist_menu.py:191
 msgid "You didn't select a file to send. Aborting."
 msgstr "Et valinnut lähetettävää tiedostoa. Lopetetaan."
 
-#: ../tekka/menus/nicklist_menu.py:159
+#: ../tekka/menus/nicklist_menu.py:197
 #, python-format
 msgid "Choose a file to send to %(nick)s"
 msgstr "Valitse tiedosto lähetettäväksi käyttäjälle %(nick)s"
-
-#: ../tekka/menus/servertree_menu.py:53
-msgid ""
-"tekka failed to create the server tree menu.\n"
-"It's possible that there are files missing. Check if you have appropriate "
-"permissions to access all files needed by tekka and restart tekka."
-msgstr ""
-"Tekka ei voinut luoda palvelinpuuvalikkoa.\n"
-"Tiedostoja saattaa puuttua. Tarkista että tekkan tarvitsemilla tiedostoilla "
-"on asianmukaiset oikeudet ja käynnistä tekka uudelleen."
 
 #: ../ui/dialogs/about.ui.in.h:1
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Soft https://launchpad.net/~softcode"
+"  Heikki Kulhia https://launchpad.net/~hessuk\n"
+"  Soft https://launchpad.net/~softcode\n"
+"  Tuomas Lähteenmäki https://launchpad.net/~lahtis"
 
 #: ../ui/dialogs/advancedPreferences.ui.h:1
 msgid "Advanced Preferences"
@@ -631,18 +614,37 @@ msgstr "Lisäasetukset"
 msgid "Channel List"
 msgstr "Kanavalista"
 
-#: ../ui/dialogs/colorTable.ui.h:2
-#, no-c-format
-msgid ""
-"<b>IRC to real colors</b>\n"
-"\n"
-"Example use:\n"
-"Type %C02,01 for blue foreground and black background."
-msgstr ""
+#: ../ui/dialogs/colorTable.ui.h:1
+msgid "<big>IRC to real colors</big>"
+msgstr "<b>IRC-värien muunto oikeiksi väreiksi</b>"
 
-#: ../ui/dialogs/colorTable.ui.h:6
+#: ../ui/dialogs/colorTable.ui.h:2
 msgid "IRC Colors"
 msgstr "Värit"
+
+#: ../ui/dialogs/colorTable.ui.h:4
+#, no-c-format
+msgid ""
+"This dialog tries to explain how you can use color markups in your text to "
+"highlight phrases in a different color.\n"
+"\n"
+"If you're in a channel or in a query you can simply send %C02,01test%C and "
+"you will get a blue foregrounded \"test\" on a black background.\n"
+"\n"
+"The syntax for the %C markup is easy: %Cforeground,background.\n"
+"\n"
+"You can even let the \",background\" away if you're only interested in "
+"foreground colors.\n"
+"\n"
+"If you give a single %C this means that you want to use the default "
+"setting.\n"
+"\n"
+"Example use:\n"
+"Type %C02,01 for blue foreground and black background.\n"
+"\n"
+"The following listing gives you an overview about the numbers you can use "
+"and which color every number represents."
+msgstr ""
 
 #: ../ui/dialogs/dcc.ui.h:1
 msgid "File Transfers"
@@ -689,22 +691,18 @@ msgid "Quit:"
 msgstr "Lopeta:"
 
 #: ../ui/dialogs/join.ui.h:1
-msgid "#"
-msgstr "#"
-
-#: ../ui/dialogs/join.ui.h:2
 msgid "<b>Join a channel</b>"
 msgstr "<b>Liity kanavalle</b>"
 
-#: ../ui/dialogs/join.ui.h:3
+#: ../ui/dialogs/join.ui.h:2
 msgid "Join _automatically"
 msgstr "Liity _automaattisesti"
 
-#: ../ui/dialogs/join.ui.h:4
+#: ../ui/dialogs/join.ui.h:3
 msgid "Name:"
 msgstr "Nimi:"
 
-#: ../ui/dialogs/join.ui.h:5 ../ui/menus/serverTreeMenu.ui.h:10
+#: ../ui/dialogs/join.ui.h:4 ../ui/menus/serverTreeMenu.ui.h:10
 msgid "_Join"
 msgstr "_Liity"
 
@@ -714,7 +712,7 @@ msgstr "_Asetukset"
 
 #: ../ui/dialogs/plugins.ui.h:2
 msgid "Plugins"
-msgstr "Lisäosat"
+msgstr "Liitännäiset"
 
 #: ../ui/dialogs/plugins.ui.h:3
 msgid "_Load"
@@ -748,11 +746,11 @@ msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:8
 msgid ""
-"<b>Warning:</b>\n"
+"<b>Information:</b>\n"
 "Changes will be applied after closing this dialog."
 msgstr ""
-"<b>Varoitus:</b>\n"
-"Muutokset toteutetaan suljettuasi ikkunan."
+"<b>Tietoa:</b>\n"
+"Muutokset otetaan käyttöön ikkunan sulkemisen jälkeen."
 
 #: ../ui/dialogs/preferences.ui.h:10
 msgid "A_uto expand server tree"
@@ -768,7 +766,7 @@ msgstr "Lisäasetukset"
 
 #: ../ui/dialogs/preferences.ui.h:13
 msgid "Autodetect rules color"
-msgstr ""
+msgstr "Tunnista automaattisesti säännön väri"
 
 #: ../ui/dialogs/preferences.ui.h:14
 msgid "C_hatting"
@@ -784,7 +782,7 @@ msgstr "Oletus nimimerkki:"
 
 #: ../ui/dialogs/preferences.ui.h:17
 msgid "Enable rules color"
-msgstr ""
+msgstr "Salli säännön väri"
 
 #: ../ui/dialogs/preferences.ui.h:18
 msgid "Font:"
@@ -823,7 +821,7 @@ msgstr "Viimeiset lokiviestit:"
 
 #: ../ui/dialogs/preferences.ui.h:27
 msgid "Last log:"
-msgstr ""
+msgstr "Viimeisin loki:"
 
 #: ../ui/dialogs/preferences.ui.h:28
 msgid "Messages:"
@@ -855,7 +853,7 @@ msgstr "Lopetusviesti:"
 
 #: ../ui/dialogs/preferences.ui.h:35
 msgid "Rules color:"
-msgstr ""
+msgstr "Säännön väri:"
 
 #: ../ui/dialogs/preferences.ui.h:36
 msgid "Shutdown _maki on close"
@@ -875,11 +873,11 @@ msgstr "Käytä oletuskirjasinta"
 
 #: ../ui/dialogs/preferences.ui.h:40
 msgid "Use contrast sensitive colors"
-msgstr ""
+msgstr "Käytä kontrastiherkkiä värejä"
 
 #: ../ui/dialogs/preferences.ui.h:41 ../ui/main_window.ui.h:10
 msgid "_General Output"
-msgstr ""
+msgstr "_Yleinen tulostus"
 
 #: ../ui/dialogs/preferences.ui.h:42
 msgid "_Hide on close"
@@ -966,15 +964,15 @@ msgstr "Muokkaa palvelinta"
 
 #: ../ui/dialogs/serverEdit.ui.h:7
 msgid "NickServ Ghost:"
-msgstr ""
+msgstr "NickServ Haamu:"
 
 #: ../ui/main_window.ui.h:1
 msgid "IRC _Colors"
-msgstr ""
+msgstr "IRC _Värit"
 
 #: ../ui/main_window.ui.h:2
 msgid "P_lugins"
-msgstr ""
+msgstr "L_iitännäiset"
 
 #: ../ui/main_window.ui.h:3
 msgid "S_ide Pane"
@@ -990,7 +988,7 @@ msgstr "Tilakuvake"
 
 #: ../ui/main_window.ui.h:6
 msgid "T_ools"
-msgstr ""
+msgstr "T_yökalut"
 
 #: ../ui/main_window.ui.h:7
 msgid "_Channel List"
@@ -1010,11 +1008,11 @@ msgstr "O_hje"
 
 #: ../ui/main_window.ui.h:12
 msgid "_Server List"
-msgstr ""
+msgstr "_Palvelinluettelo"
 
 #: ../ui/main_window.ui.h:13
 msgid "_Shutdown"
-msgstr ""
+msgstr "_Sulje"
 
 #: ../ui/main_window.ui.h:14
 msgid "_Topic Bar"
@@ -1045,30 +1043,34 @@ msgid "Give Voice"
 msgstr "Anna puheoikeus"
 
 #: ../ui/menus/nickListMenu.ui.h:5
+msgid "Ignore"
+msgstr "Hylkää"
+
+#: ../ui/menus/nickListMenu.ui.h:6
 msgid "Kick"
 msgstr "Potki"
 
-#: ../ui/menus/nickListMenu.ui.h:6
+#: ../ui/menus/nickListMenu.ui.h:7
 msgid "Modes"
 msgstr "Tilat"
 
-#: ../ui/menus/nickListMenu.ui.h:7
+#: ../ui/menus/nickListMenu.ui.h:8
 msgid "Send File"
 msgstr "Lähetä tiedosto"
 
-#: ../ui/menus/nickListMenu.ui.h:8
+#: ../ui/menus/nickListMenu.ui.h:9
 msgid "Take Half-Op"
 msgstr "Peruuta Half-Op"
 
-#: ../ui/menus/nickListMenu.ui.h:9
+#: ../ui/menus/nickListMenu.ui.h:10
 msgid "Take Op"
 msgstr "Peruuta operaattorioikeus"
 
-#: ../ui/menus/nickListMenu.ui.h:10
+#: ../ui/menus/nickListMenu.ui.h:11
 msgid "Take Voice"
 msgstr "Peruuta äänioikeus"
 
-#: ../ui/menus/nickListMenu.ui.h:11
+#: ../ui/menus/nickListMenu.ui.h:12
 msgid "Whois"
 msgstr "Käyttäjän tiedot (Whois)"
 
@@ -1115,3 +1117,67 @@ msgstr "_Liity kanavalle"
 #: ../ui/menus/serverTreeMenu.ui.h:12
 msgid "_Part"
 msgstr "_Poistu"
+
+#~ msgid "Plugin is already loaded."
+#~ msgstr "Lisäosa on jo käynnissä."
+
+#, python-format
+#~ msgid "Plugin %(plugin)s is already loaded."
+#~ msgstr "Lisäosa %(plugin)s on jo käynnissä."
+
+#, python-format
+#~ msgid ""
+#~ "Plugin %(plugin)s could not be loaded.\n"
+#~ "The following error occurred: %(error)s"
+#~ msgstr ""
+#~ "Lisäosaa %(plugin)s ei voitu ladata.\n"
+#~ "Virhe tapahtui: %(error)s"
+
+#, python-format
+#~ msgid "Plugin %(plugin)s could not be loaded."
+#~ msgstr "Lisäosaa %(plugin)s ei voitu ladata."
+
+#~ msgid "Plugin could not be loaded."
+#~ msgstr "Lisäosaa ei voitu ladata."
+
+#, python-format
+#~ msgid "Plugin %(plugin)s could not be loaded automatically."
+#~ msgstr "Lisäosaa %(plugin)s ei voitu käynnistää automaattisesti."
+
+#~ msgid "Plugin could not be unloaded."
+#~ msgstr "Lisäosaa ei voitu poistaa käytöstä."
+
+#, python-format
+#~ msgid "Plugin %(plugin)s could not be unloaded, because it is not loaded."
+#~ msgstr ""
+#~ "Lisäosaa %(plugin)s ei voitu poistaa käytöstä, koska se ei ole käytössä."
+
+#~ msgid "#"
+#~ msgstr "#"
+
+#~ msgid ""
+#~ "<b>Warning:</b>\n"
+#~ "Changes will be applied after closing this dialog."
+#~ msgstr ""
+#~ "<b>Varoitus:</b>\n"
+#~ "Muutokset toteutetaan suljettuasi ikkunan."
+
+#~ msgid ""
+#~ "<span size='larger' weight='bold'>Error</span>\n"
+#~ "\n"
+#~ "An error occured — we apologize for that. Feel free to submit a bug report "
+#~ "at https://bugs.launchpad.net/sushi."
+#~ msgstr ""
+#~ "<span size='larger' weight='bold'>Virhe</span>\n"
+#~ "\n"
+#~ "Tapahtui virhe, pahoittelumme. Voit lähettää virheraportin osoitteessa "
+#~ "https://bugs.launchpad.net/sushi."
+
+#~ msgid ""
+#~ "tekka failed to create the server tree menu.\n"
+#~ "It's possible that there are files missing. Check if you have appropriate "
+#~ "permissions to access all files needed by tekka and restart tekka."
+#~ msgstr ""
+#~ "Tekka ei voinut luoda palvelinpuuvalikkoa.\n"
+#~ "Tiedostoja saattaa puuttua. Tarkista että tekkan tarvitsemilla tiedostoilla "
+#~ "on asianmukaiset oikeudet ja käynnistä tekka uudelleen."

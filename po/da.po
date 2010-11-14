@@ -4,17 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: tekka 1.2\n"
+"Project-Id-Version: tekka\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-28 22:16+0200\n"
-"PO-Revision-Date: 2010-01-23 12:56+0000\n"
-"Last-Translator: Michael Kuhn <Unknown>\n"
+"POT-Creation-Date: 2010-08-27 17:59+0200\n"
+"PO-Revision-Date: 2010-10-12 18:18+0000\n"
+"Last-Translator: \n"
 "Language-Team: Danish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-04-29 18:20+0000\n"
+"X-Launchpad-Export-Date: 2010-11-14 01:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../signal_handler.py:355
@@ -53,124 +53,124 @@ msgstr "CTCP fra %(nick)s til kanal:"
 msgid "CTCP request from you to %(target)s: %(message)s"
 msgstr "CTCP anmodning fra dig til %(target)s: %(message)s"
 
-#: ../signal_handler.py:902
+#: ../signal_handler.py:903
 #, python-format
 msgid "• You are now known as %(newnick)s."
 msgstr "• Du er nu kendt som %(newnick)s."
 
-#: ../signal_handler.py:908
+#: ../signal_handler.py:909
 #, python-format
 msgid "• %(nick)s is now known as %(newnick)s."
 msgstr "• %(nick)s er nu kendt som %(newnick)s."
 
-#: ../signal_handler.py:1001
+#: ../signal_handler.py:1002
 #, python-format
 msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr "« Du blev sparket fra %(channel)s af %(nick)s (%(reason)s)."
 
-#: ../signal_handler.py:1022
+#: ../signal_handler.py:1023
 #, python-format
 msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr "« %(who)s blev sparket fra %(channel)s af %(nick)s (%(reason)s)."
 
-#: ../signal_handler.py:1060
+#: ../signal_handler.py:1061
 #, python-format
 msgid "« You have quit (%(reason)s)."
 msgstr "« Du afsluttede (%(reason)s)."
 
-#: ../signal_handler.py:1062
+#: ../signal_handler.py:1063
 msgid "« You have quit."
 msgstr "« Du afsluttede."
 
-#: ../signal_handler.py:1085
+#: ../signal_handler.py:1086
 #, python-format
 msgid "« %(nick)s has quit (%(reason)s)."
 msgstr "« %(nick)s afsluttede (%(reason)s)."
 
-#: ../signal_handler.py:1087
+#: ../signal_handler.py:1088
 #, python-format
 msgid "« %(nick)s has quit."
 msgstr "« %(nick)s afsluttede."
 
-#: ../signal_handler.py:1188
+#: ../signal_handler.py:1189
 #, python-format
 msgid "» You have joined %(channel)s."
 msgstr "» Du ankom til %(channel)s."
 
-#: ../signal_handler.py:1199
+#: ../signal_handler.py:1200
 #, python-format
 msgid "» %(nick)s has joined %(channel)s."
 msgstr "» %(nick)s er ankommet til %(channel)s."
 
-#: ../signal_handler.py:1287
+#: ../signal_handler.py:1288
 #, python-format
 msgid "« You have left %(channel)s (%(reason)s)."
 msgstr "« Du har forladt %(channel)s (%(reason)s)."
 
-#: ../signal_handler.py:1289
+#: ../signal_handler.py:1290
 #, python-format
 msgid "« You have left %(channel)s."
 msgstr "« Du har forladt %(channel)s."
 
-#: ../signal_handler.py:1319
+#: ../signal_handler.py:1320
 #, python-format
 msgid "« %(nick)s has left %(channel)s (%(reason)s)."
 msgstr "« %(nick)s har forladt %(channel)s (%(reason)s)."
 
-#: ../signal_handler.py:1322
+#: ../signal_handler.py:1323
 #, python-format
 msgid "« %(nick)s has left %(channel)s."
 msgstr "« %(nick)s har forladt %(channel)s."
 
-#: ../signal_handler.py:1343
+#: ../signal_handler.py:1344
 msgid "• You are not a channel operator."
 msgstr ""
 
-#: ../signal_handler.py:1353
+#: ../signal_handler.py:1354
 #, python-format
 msgid "• %(target)s: No such nick/channel."
 msgstr "• %(target)s: Ingen sådan øgenavn/kanal."
 
-#: ../signal_handler.py:1356
+#: ../signal_handler.py:1357
 #, python-format
 msgid "• %(target)s: No such server."
 msgstr "• %(target)s: Ingen sådan server."
 
-#: ../signal_handler.py:1359
+#: ../signal_handler.py:1360
 #, python-format
 msgid "• %(target)s: No such channel."
 msgstr "• %(target)s: Ingen sådan kanal."
 
-#: ../signal_handler.py:1371
+#: ../signal_handler.py:1372
 msgid "Unknown reason"
 msgstr "Ukendt grund"
 
-#: ../signal_handler.py:1374
+#: ../signal_handler.py:1375
 msgid "The channel is full."
 msgstr "Kanalen er fuld"
 
-#: ../signal_handler.py:1376
+#: ../signal_handler.py:1377
 msgid "The channel is invite-only."
 msgstr "Kanalen er kun ved invitation."
 
-#: ../signal_handler.py:1378
+#: ../signal_handler.py:1379
 msgid "You are banned."
 msgstr "Du er nu bandlyst."
 
-#: ../signal_handler.py:1394
+#: ../signal_handler.py:1395
 msgid "You need the correct channel key."
 msgstr "Du har brug for den korrekte kanal nøgle."
 
-#: ../signal_handler.py:1399
+#: ../signal_handler.py:1400
 #, python-format
 msgid "You can not join %(channel)s: %(reason)s"
 msgstr "Du kan ikke tilslutte %(channel)s: %(reason)s"
 
-#: ../signal_handler.py:1471
+#: ../signal_handler.py:1472
 msgid "Auto accepted file transfer"
 msgstr ""
 
-#: ../signal_handler.py:1472
+#: ../signal_handler.py:1473
 #, python-format
 msgid ""
 "maki auto accepted the following file transfer:\n"
@@ -180,7 +180,12 @@ msgid ""
 "Server: %(server)s"
 msgstr ""
 
-#: ../tekka/com.py:126 ../tekka/com.py:136 ../tekka/com.py:239
+#: ../sushi.py:92
+#, python-format
+msgid "Plugin “%(plugin)s” caused an error."
+msgstr ""
+
+#: ../tekka/com.py:126 ../tekka/com.py:136 ../tekka/com.py:240
 #: ../tekka/gui/mgmt.py:277
 msgid "tekka could not connect to maki."
 msgstr "tekka kunne ikke forbinde til maki."
@@ -189,7 +194,7 @@ msgstr "tekka kunne ikke forbinde til maki."
 msgid "Please check whether maki is running."
 msgstr "Tjek venligst om maki kører."
 
-#: ../tekka/com.py:137 ../tekka/com.py:240
+#: ../tekka/com.py:137 ../tekka/com.py:241
 #, python-format
 msgid ""
 "Please check whether maki is running.\n"
@@ -198,11 +203,11 @@ msgstr ""
 "Tjek venligst om maki kører.\n"
 "Følgende fejl opstod: %(error)s"
 
-#: ../tekka/com.py:173
+#: ../tekka/com.py:174
 msgid "Communication error with maki."
 msgstr "Kommunikationsfejl med maki."
 
-#: ../tekka/com.py:174
+#: ../tekka/com.py:175
 #, python-format
 msgid ""
 "There was an error while executing <b>'%s</b>' with DBus: \n"
@@ -210,11 +215,11 @@ msgid ""
 "You should keep safe that maki is running "
 msgstr ""
 
-#: ../tekka/com.py:286
+#: ../tekka/com.py:284
 msgid "tekka requires a newer maki version."
 msgstr "tekka kræver en nyere maki version."
 
-#: ../tekka/com.py:287
+#: ../tekka/com.py:285
 #, python-format
 msgid "Please update maki to at least version %(version)s."
 msgstr "Opdatér venligst maki til mindst version %(version)s."
@@ -265,17 +270,17 @@ msgstr ""
 msgid "C_ompile and run"
 msgstr "C_ompile og kør"
 
-#: ../tekka/dialogs/history.py:77
+#: ../tekka/dialogs/history.py:78
 msgid "Read history anyways?"
 msgstr ""
 
-#: ../tekka/dialogs/history.py:78
+#: ../tekka/dialogs/history.py:79
 msgid ""
 "maki is connected remotely. It's possible that the history is not "
 "accessible. Do you want to try anyways?"
 msgstr ""
 
-#: ../tekka/dialogs/history.py:116
+#: ../tekka/dialogs/history.py:117
 #, python-format
 msgid "History for %(target)s"
 msgstr ""
@@ -388,58 +393,28 @@ msgstr "Indtast nøglen for denne kanal %(channel)s."
 msgid "Save key for channel"
 msgstr "Gem nøglen for kanal"
 
-#: ../tekka/lib/plugin_config_dialog.py:15
+#: ../tekka/lib/plugin_config_dialog.py:50
 #, python-format
 msgid "Configure %(name)s"
 msgstr "konfigurér %(name)s"
 
-#: ../tekka/lib/plugin_control.py:110 ../tekka/lib/plugin_control.py:118
-#: ../tekka/lib/plugin_control.py:141 ../tekka/lib/plugin_control.py:199
-#: ../tekka/lib/plugin_control.py:354
-msgid "Plugin could not be loaded."
+#: ../tekka/lib/spell_entry.py:152
+msgid "Foreground Color"
 msgstr ""
 
-#: ../tekka/lib/plugin_control.py:111 ../tekka/lib/plugin_control.py:142
-#: ../tekka/lib/plugin_control.py:200
-#, python-format
-msgid ""
-"Plugin %(plugin)s could not be loaded.\n"
-"The following error occurred: %(error)s"
+#: ../tekka/lib/spell_entry.py:164
+msgid "Background Color"
 msgstr ""
 
-#: ../tekka/lib/plugin_control.py:119
-#, python-format
-msgid "Plugin %(plugin)s could not be loaded."
-msgstr "Udvidelsesmodul %(plugin)s kunne ikke indlæses."
-
-#: ../tekka/lib/plugin_control.py:178
-msgid "Plugin is already loaded."
-msgstr "Udvidelsesmodul er allerede indlæst."
-
-#: ../tekka/lib/plugin_control.py:179
-#, python-format
-msgid "Plugin %(plugin)s is already loaded."
-msgstr "Udvidelsesmodul %(plugin)s er allerede indlæst."
-
-#: ../tekka/lib/plugin_control.py:223
-msgid "Plugin could not be unloaded."
+#: ../tekka/lib/spell_entry.py:176
+msgid "Reset Color"
 msgstr ""
 
-#: ../tekka/lib/plugin_control.py:223
-#, python-format
-msgid "Plugin %(plugin)s could not be unloaded, because it is not loaded."
-msgstr ""
-
-#: ../tekka/lib/plugin_control.py:355
-#, python-format
-msgid "Plugin %(plugin)s could not be loaded automatically."
-msgstr "Udvidelsesmodul  %(plugin)s kunne ikke indlæses automatisk."
-
-#: ../tekka/lib/status_icon.py:67
+#: ../tekka/lib/status_icon.py:61
 msgid "Hide main window"
 msgstr "Skjul hovedvindue"
 
-#: ../tekka/lib/status_icon.py:69
+#: ../tekka/lib/status_icon.py:63
 msgid "Show main window"
 msgstr "Vis hovedvindue"
 
@@ -459,17 +434,17 @@ msgid ""
 msgstr ""
 "Emnet blev ændret før din opdatering. Vil du stadig bidrage med ændringer?"
 
-#: ../tekka/lib/welcome_window.py:64
+#: ../tekka/lib/welcome_window.py:63
 msgid "<big><b>Welcome to tekka!</b></big>"
 msgstr "<big><b>Velkommen til tekka!</b></big>"
 
-#: ../tekka/lib/welcome_window.py:122
+#: ../tekka/lib/welcome_window.py:121
 msgid ""
 "You are connected to maki. The next step is to connect to a server via the "
 "server dialog in the tekka menu."
 msgstr ""
 
-#: ../tekka/lib/welcome_window.py:128
+#: ../tekka/lib/welcome_window.py:127
 msgid ""
 "You are not connected to maki. Without maki you can not connect to servers "
 "or write messages.\n"
@@ -479,102 +454,107 @@ msgid ""
 "ask for support."
 msgstr ""
 
-#: ../tekka/main.py:490
+#: ../tekka/main.py:462
 msgid "Reset markup"
 msgstr "Nulstil markering"
 
-#: ../tekka/main.py:642
+#: ../tekka/main.py:651
 #, python-format
 msgid "Do you really want to close channel “%(name)s”?"
 msgstr "Ønsker du virkelig at lukke kanal \"%(name)s\"?"
 
-#: ../tekka/main.py:644
+#: ../tekka/main.py:653
 #, python-format
 msgid "Do you really want to close query “%(name)s”?"
 msgstr "Ønsker du virkelig at lukke forespørgelse \"%(name)s\"?"
 
-#: ../tekka/main.py:646
+#: ../tekka/main.py:655
 #, python-format
 msgid "Do you really want to close server “%(name)s”?"
 msgstr "Ønsker du virkelig at lukke server \"%(name)s\"?"
 
 #. TODO: away status
-#: ../tekka/main.py:759
+#: ../tekka/main.py:768
 msgid "Nickname: "
 msgstr ""
 
-#: ../tekka/main.py:762
+#: ../tekka/main.py:771
 msgid "User: "
 msgstr "Bruger: "
 
-#: ../tekka/main.py:763
+#: ../tekka/main.py:772
 msgid "Topic: "
 msgstr "Emne: "
 
-#: ../tekka/main.py:765 ../tekka/main.py:769
+#: ../tekka/main.py:774 ../tekka/main.py:778
 msgid "Last sentence: "
 msgstr ""
 
-#: ../tekka/main.py:1266
+#: ../tekka/main.py:1308
 msgid "Error occured"
 msgstr "Fejl opstod"
 
-#: ../tekka/main.py:1276
+#: ../tekka/main.py:1318
 msgid ""
-"<span size='larger' weight='bold'>Error</span>\n"
+"<span size='larger' weight='bold'>Don't Panic!</span>\n"
 "\n"
-"An error occured — we apologize for that. Feel free to submit a bug report "
-"at https://bugs.launchpad.net/sushi."
+"An error occured – we apologize for that. Feel free to submit a bug report "
+"at <a "
+"href=\"https://bugs.launchpad.net/sushi\">https://bugs.launchpad.net/sushi</a"
+">."
 msgstr ""
 
-#: ../tekka/menus/mainmenu_context.py:112
-#: ../tekka/menus/mainmenu_context.py:213 ../tekka/menus/nicklist_menu.py:136
+#: ../tekka/menus/mainmenu_context.py:109
+#: ../tekka/menus/mainmenu_context.py:211 ../tekka/menus/nicklist_menu.py:175
 msgid "No connection to maki."
 msgstr "Ingen forbindelse til maki."
 
-#: ../tekka/menus/mainmenu_context.py:113
+#: ../tekka/menus/mainmenu_context.py:110
 msgid "You can't shutdown maki. You're not connected."
 msgstr ""
 
-#: ../tekka/menus/mainmenu_context.py:225
+#: ../tekka/menus/mainmenu_context.py:222
 msgid "tekka could not determine server."
 msgstr "tekka kunne ikke bestemme server."
 
-#: ../tekka/menus/mainmenu_context.py:226
+#: ../tekka/menus/mainmenu_context.py:223
 msgid ""
 "There is no active server. Click on a server tab or a child of a server tab "
 "to activate the server."
 msgstr ""
 
-#: ../tekka/menus/nicklist_menu.py:52 ../tekka/menus/servertree_menu.py:52
+#: ../tekka/menus/nicklist_menu.py:61 ../tekka/menus/servertree_menu.py:51
 msgid "Widget creation failed."
 msgstr "Widget skabelse fejlede."
 
-#: ../tekka/menus/nicklist_menu.py:53
+#: ../tekka/menus/nicklist_menu.py:62 ../tekka/menus/servertree_menu.py:52
 msgid ""
 "tekka failed to create the nicklist menu.\n"
 "It's possible that there are files missing. Check if you have appropriate "
 "permissions to access all files needed by tekka and restart tekka."
 msgstr ""
 
-#: ../tekka/menus/nicklist_menu.py:152
+#: ../tekka/menus/nicklist_menu.py:137
+#, python-format
+msgid "Ignoring User %(user)s"
+msgstr ""
+
+#: ../tekka/menus/nicklist_menu.py:143
+#, python-format
+msgid "User %(user)s is unignored"
+msgstr ""
+
+#: ../tekka/menus/nicklist_menu.py:190
 msgid "No file selected"
 msgstr ""
 
-#: ../tekka/menus/nicklist_menu.py:153
+#: ../tekka/menus/nicklist_menu.py:191
 msgid "You didn't select a file to send. Aborting."
 msgstr ""
 
-#: ../tekka/menus/nicklist_menu.py:159
+#: ../tekka/menus/nicklist_menu.py:197
 #, python-format
 msgid "Choose a file to send to %(nick)s"
-msgstr ""
-
-#: ../tekka/menus/servertree_menu.py:53
-msgid ""
-"tekka failed to create the server tree menu.\n"
-"It's possible that there are files missing. Check if you have appropriate "
-"permissions to access all files needed by tekka and restart tekka."
 msgstr ""
 
 #: ../ui/dialogs/about.ui.in.h:1
@@ -593,18 +573,37 @@ msgstr "Advancerede Indstillinger"
 msgid "Channel List"
 msgstr "Kanal liste"
 
-#: ../ui/dialogs/colorTable.ui.h:2
-#, no-c-format
-msgid ""
-"<b>IRC to real colors</b>\n"
-"\n"
-"Example use:\n"
-"Type %C02,01 for blue foreground and black background."
+#: ../ui/dialogs/colorTable.ui.h:1
+msgid "<big>IRC to real colors</big>"
 msgstr ""
 
-#: ../ui/dialogs/colorTable.ui.h:6
+#: ../ui/dialogs/colorTable.ui.h:2
 msgid "IRC Colors"
 msgstr "IRC-farver"
+
+#: ../ui/dialogs/colorTable.ui.h:4
+#, no-c-format
+msgid ""
+"This dialog tries to explain how you can use color markups in your text to "
+"highlight phrases in a different color.\n"
+"\n"
+"If you're in a channel or in a query you can simply send %C02,01test%C and "
+"you will get a blue foregrounded \"test\" on a black background.\n"
+"\n"
+"The syntax for the %C markup is easy: %Cforeground,background.\n"
+"\n"
+"You can even let the \",background\" away if you're only interested in "
+"foreground colors.\n"
+"\n"
+"If you give a single %C this means that you want to use the default "
+"setting.\n"
+"\n"
+"Example use:\n"
+"Type %C02,01 for blue foreground and black background.\n"
+"\n"
+"The following listing gives you an overview about the numbers you can use "
+"and which color every number represents."
+msgstr ""
 
 #: ../ui/dialogs/dcc.ui.h:1
 msgid "File Transfers"
@@ -651,22 +650,18 @@ msgid "Quit:"
 msgstr "Forlad:"
 
 #: ../ui/dialogs/join.ui.h:1
-msgid "#"
-msgstr ""
-
-#: ../ui/dialogs/join.ui.h:2
 msgid "<b>Join a channel</b>"
 msgstr ""
 
-#: ../ui/dialogs/join.ui.h:3
+#: ../ui/dialogs/join.ui.h:2
 msgid "Join _automatically"
 msgstr ""
 
-#: ../ui/dialogs/join.ui.h:4
+#: ../ui/dialogs/join.ui.h:3
 msgid "Name:"
 msgstr ""
 
-#: ../ui/dialogs/join.ui.h:5 ../ui/menus/serverTreeMenu.ui.h:10
+#: ../ui/dialogs/join.ui.h:4 ../ui/menus/serverTreeMenu.ui.h:10
 msgid "_Join"
 msgstr "_Deltag"
 
@@ -703,11 +698,9 @@ msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:8
 msgid ""
-"<b>Warning:</b>\n"
+"<b>Information:</b>\n"
 "Changes will be applied after closing this dialog."
 msgstr ""
-"<b>Advarsel:</b>\n"
-"Ændringer vil blive udført efter afslutning at denne dialog."
 
 #: ../ui/dialogs/preferences.ui.h:10
 msgid "A_uto expand server tree"
@@ -894,7 +887,7 @@ msgstr "Reele Navn:"
 
 #: ../ui/dialogs/serverAdd.ui.h:10
 msgid "Server name:"
-msgstr "Server Navn:"
+msgstr "Servernavn:"
 
 #: ../ui/dialogs/serverDelete.ui.h:2
 #, no-c-format
@@ -1000,30 +993,34 @@ msgid "Give Voice"
 msgstr "Giv stemme"
 
 #: ../ui/menus/nickListMenu.ui.h:5
+msgid "Ignore"
+msgstr ""
+
+#: ../ui/menus/nickListMenu.ui.h:6
 msgid "Kick"
 msgstr "Spark"
 
-#: ../ui/menus/nickListMenu.ui.h:6
+#: ../ui/menus/nickListMenu.ui.h:7
 msgid "Modes"
 msgstr "Tilstande"
 
-#: ../ui/menus/nickListMenu.ui.h:7
+#: ../ui/menus/nickListMenu.ui.h:8
 msgid "Send File"
 msgstr ""
 
-#: ../ui/menus/nickListMenu.ui.h:8
+#: ../ui/menus/nickListMenu.ui.h:9
 msgid "Take Half-Op"
 msgstr "Tag Half-Op"
 
-#: ../ui/menus/nickListMenu.ui.h:9
+#: ../ui/menus/nickListMenu.ui.h:10
 msgid "Take Op"
 msgstr "Tag Op"
 
-#: ../ui/menus/nickListMenu.ui.h:10
+#: ../ui/menus/nickListMenu.ui.h:11
 msgid "Take Voice"
 msgstr "Tag Voice"
 
-#: ../ui/menus/nickListMenu.ui.h:11
+#: ../ui/menus/nickListMenu.ui.h:12
 msgid "Whois"
 msgstr "Hvem-er"
 
@@ -1071,95 +1068,24 @@ msgstr ""
 msgid "_Part"
 msgstr "_Forlad"
 
-#, python-format
-#~ msgid "[%(nick)s] End of whois."
-#~ msgstr "[%(nick)s] Slut på hvem-er."
+#~ msgid ""
+#~ "<b>Warning:</b>\n"
+#~ "Changes will be applied after closing this dialog."
+#~ msgstr ""
+#~ "<b>Advarsel:</b>\n"
+#~ "Ændringer vil blive udført efter afslutning at denne dialog."
+
+#~ msgid "Plugin is already loaded."
+#~ msgstr "Udvidelsesmodul er allerede indlæst."
 
 #, python-format
-#~ msgid "[%(nick)s] %(message)s"
-#~ msgstr "[%(nick)s] %(message)s"
-
-#~ msgid "Channel"
-#~ msgstr "Kanal"
-
-#~ msgid "Topic"
-#~ msgstr "Emne"
-
-#~ msgid "User"
-#~ msgstr "Bruger"
-
-#~ msgid "Disconnect"
-#~ msgstr "Afbryd"
-
-#~ msgid "History"
-#~ msgstr "Historie"
-
-#~ msgid "Connect"
-#~ msgstr "Forbind"
-
-#~ msgid "Shutdown"
-#~ msgstr "Nedlukning"
-
-#~ msgid "_Dialogs"
-#~ msgstr "_Dialoger"
-
-#~ msgid "_Plugins"
-#~ msgstr "_Udvidelse"
-
-#~ msgid "Warning:"
-#~ msgstr "Advarsel:"
-
-#~ msgid "Progress"
-#~ msgstr "Fremskridt"
-
-#~ msgid "Server"
-#~ msgstr "Server"
-
-#~ msgid "ID"
-#~ msgstr "ID"
-
-#~ msgid "Filename"
-#~ msgstr "Filnavn"
-
-#~ msgid "Partner"
-#~ msgstr "Partner"
-
-#~ msgid "Size"
-#~ msgstr "Størrelse"
-
-#~ msgid "Speed"
-#~ msgstr "Hastighed"
-
-#~ msgid "gtk-find"
-#~ msgstr "gtk-find"
-
-#~ msgid "gtk-stop"
-#~ msgstr "gtk-stop"
-
-#~ msgid "gtk-close"
-#~ msgstr "gtk-luk"
-
-#~ msgid "Local search only"
-#~ msgstr "Kun lokal søgning"
-
-#~ msgid "gtk-yes"
-#~ msgstr "gtk-ja"
-
-#~ msgid "gtk-add"
-#~ msgstr "gtk-tilføj"
-
-#~ msgid "gtk-cancel"
-#~ msgstr "gtk-annullér"
-
-#~ msgid "gtk-no"
-#~ msgstr "gtk-nej"
-
-#~ msgid "• End of names"
-#~ msgstr "Slutning af navne"
-
-#~ msgid "• Begin of names"
-#~ msgstr "Begyndelse af navne"
+#~ msgid "Plugin %(plugin)s is already loaded."
+#~ msgstr "Udvidelsesmodul %(plugin)s er allerede indlæst."
 
 #, python-format
-#~ msgid "You are not connected to server %(server)s."
-#~ msgstr "Du er ikke forbundet til server %(server)s."
+#~ msgid "Plugin %(plugin)s could not be loaded automatically."
+#~ msgstr "Udvidelsesmodul  %(plugin)s kunne ikke indlæses automatisk."
+
+#, python-format
+#~ msgid "Plugin %(plugin)s could not be loaded."
+#~ msgstr "Udvidelsesmodul %(plugin)s kunne ikke indlæses."

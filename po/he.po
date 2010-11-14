@@ -4,17 +4,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: tekka 1.2\n"
+"Project-Id-Version: tekka\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-04-28 22:16+0200\n"
-"PO-Revision-Date: 2010-01-23 12:55+0000\n"
+"POT-Creation-Date: 2010-08-27 17:59+0200\n"
+"PO-Revision-Date: 2010-10-12 18:19+0000\n"
 "Last-Translator: Yaron <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2010-04-29 18:20+0000\n"
+"X-Launchpad-Export-Date: 2010-11-14 01:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #: ../signal_handler.py:355
@@ -53,125 +53,125 @@ msgstr "CTCP מ־%(nick)s אל הערוץ:"
 msgid "CTCP request from you to %(target)s: %(message)s"
 msgstr "בקשת CTCP ממך אל %(target)s:‏ %(message)s"
 
-#: ../signal_handler.py:902
+#: ../signal_handler.py:903
 #, python-format
 msgid "• You are now known as %(newnick)s."
 msgstr "• כינויך החדש הינו %(newnick)s."
 
-#: ../signal_handler.py:908
+#: ../signal_handler.py:909
 #, python-format
 msgid "• %(nick)s is now known as %(newnick)s."
 msgstr "• %(nick)s כעת ידוע תחת השם %(newnick)s."
 
-#: ../signal_handler.py:1001
+#: ../signal_handler.py:1002
 #, python-format
 msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr "« נבעטת אל מחוץ לערוץ %(channel)s על ידי %(nick)s ‏(%(reason)s)."
 
-#: ../signal_handler.py:1022
+#: ../signal_handler.py:1023
 #, python-format
 msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr ""
 "« %(who)s נבעט אל מחוץ לערוץ %(channel)s על ידי %(nick)s ‏(%(reason)s)."
 
-#: ../signal_handler.py:1060
+#: ../signal_handler.py:1061
 #, python-format
 msgid "« You have quit (%(reason)s)."
 msgstr "« יצאת מהערוץ (%(reason)s)."
 
-#: ../signal_handler.py:1062
+#: ../signal_handler.py:1063
 msgid "« You have quit."
 msgstr "« יצאת."
 
-#: ../signal_handler.py:1085
+#: ../signal_handler.py:1086
 #, python-format
 msgid "« %(nick)s has quit (%(reason)s)."
 msgstr "« %(nick)s יצא מהערוץ (%(reason)s)."
 
-#: ../signal_handler.py:1087
+#: ../signal_handler.py:1088
 #, python-format
 msgid "« %(nick)s has quit."
 msgstr "« %(nick)s יצא."
 
-#: ../signal_handler.py:1188
+#: ../signal_handler.py:1189
 #, python-format
 msgid "» You have joined %(channel)s."
 msgstr "» הצטרפת לערוץ %(channel)s."
 
-#: ../signal_handler.py:1199
+#: ../signal_handler.py:1200
 #, python-format
 msgid "» %(nick)s has joined %(channel)s."
 msgstr "» %(nick)s הצטרף לערוץ %(channel)s."
 
-#: ../signal_handler.py:1287
+#: ../signal_handler.py:1288
 #, python-format
 msgid "« You have left %(channel)s (%(reason)s)."
 msgstr "« עזבת את הערוץ %(channel)s‏ (%(reason)s)."
 
-#: ../signal_handler.py:1289
+#: ../signal_handler.py:1290
 #, python-format
 msgid "« You have left %(channel)s."
 msgstr "« עזבת את הערוץ %(channel)s."
 
-#: ../signal_handler.py:1319
+#: ../signal_handler.py:1320
 #, python-format
 msgid "« %(nick)s has left %(channel)s (%(reason)s)."
 msgstr "« %(nick)s עזב את הערוץ %(channel)s ‏(%(reason)s)."
 
-#: ../signal_handler.py:1322
+#: ../signal_handler.py:1323
 #, python-format
 msgid "« %(nick)s has left %(channel)s."
 msgstr "« %(nick)s עזב את הערוץ %(channel)s."
 
-#: ../signal_handler.py:1343
+#: ../signal_handler.py:1344
 msgid "• You are not a channel operator."
-msgstr ""
+msgstr "• אינך מנהל ערוץ."
 
-#: ../signal_handler.py:1353
+#: ../signal_handler.py:1354
 #, python-format
 msgid "• %(target)s: No such nick/channel."
 msgstr "• %(target)s: אין כינוי/ערוץ כזה."
 
-#: ../signal_handler.py:1356
+#: ../signal_handler.py:1357
 #, python-format
 msgid "• %(target)s: No such server."
 msgstr "• %(target)s: אין שרת כזה."
 
-#: ../signal_handler.py:1359
+#: ../signal_handler.py:1360
 #, python-format
 msgid "• %(target)s: No such channel."
 msgstr "• %(target)s: אין ערוץ כזה."
 
-#: ../signal_handler.py:1371
+#: ../signal_handler.py:1372
 msgid "Unknown reason"
 msgstr "סיבה לא ידועה"
 
-#: ../signal_handler.py:1374
+#: ../signal_handler.py:1375
 msgid "The channel is full."
 msgstr "הערוץ מלא."
 
-#: ../signal_handler.py:1376
+#: ../signal_handler.py:1377
 msgid "The channel is invite-only."
 msgstr "הערוץ הינו למוזמנים בלבד."
 
-#: ../signal_handler.py:1378
+#: ../signal_handler.py:1379
 msgid "You are banned."
 msgstr "נחסמת."
 
-#: ../signal_handler.py:1394
+#: ../signal_handler.py:1395
 msgid "You need the correct channel key."
 msgstr "תזדקק למפתח הערוץ הנכון."
 
-#: ../signal_handler.py:1399
+#: ../signal_handler.py:1400
 #, python-format
 msgid "You can not join %(channel)s: %(reason)s"
 msgstr "לא תוכל להצטרף לערוץ %(channel)s: %(reason)s"
 
-#: ../signal_handler.py:1471
-msgid "Auto accepted file transfer"
-msgstr ""
-
 #: ../signal_handler.py:1472
+msgid "Auto accepted file transfer"
+msgstr "קבל אוטומטית העברת קובץ"
+
+#: ../signal_handler.py:1473
 #, python-format
 msgid ""
 "maki auto accepted the following file transfer:\n"
@@ -180,8 +180,18 @@ msgid ""
 "Size: %(size)s\n"
 "Server: %(server)s"
 msgstr ""
+"מאקי מקבל אוטומטית את העברת הקובץ הבא:\n"
+"שם הקוץ: %(filename)s\n"
+"שולח: %(sender)s\n"
+"גודל: %(size)s\n"
+"שרת: %(server)s"
 
-#: ../tekka/com.py:126 ../tekka/com.py:136 ../tekka/com.py:239
+#: ../sushi.py:92
+#, python-format
+msgid "Plugin “%(plugin)s” caused an error."
+msgstr "התוסף “%(plugin)s” גרם לשגיאה."
+
+#: ../tekka/com.py:126 ../tekka/com.py:136 ../tekka/com.py:240
 #: ../tekka/gui/mgmt.py:277
 msgid "tekka could not connect to maki."
 msgstr "tekka נתקל בבעיה בהתחברות ל־maki."
@@ -190,7 +200,7 @@ msgstr "tekka נתקל בבעיה בהתחברות ל־maki."
 msgid "Please check whether maki is running."
 msgstr "נא לבדוק האם maki פעיל."
 
-#: ../tekka/com.py:137 ../tekka/com.py:240
+#: ../tekka/com.py:137 ../tekka/com.py:241
 #, python-format
 msgid ""
 "Please check whether maki is running.\n"
@@ -199,23 +209,26 @@ msgstr ""
 "יש לבדוק האם maki פעיל.\n"
 "השגיאה הבאה ארעה: %(error)s"
 
-#: ../tekka/com.py:173
-msgid "Communication error with maki."
-msgstr ""
-
 #: ../tekka/com.py:174
+msgid "Communication error with maki."
+msgstr "שגיאת התקשרות עם מאקי."
+
+#: ../tekka/com.py:175
 #, python-format
 msgid ""
 "There was an error while executing <b>'%s</b>' with DBus: \n"
 "<b>%s</b>\n"
 "You should keep safe that maki is running "
 msgstr ""
+"התרחשה שגיאה בזמן ביצוע <b>'%s</b>' עם DBus: \n"
+"<b>%s</b>\n"
+"עליך לוודא שמאקי מופעל "
 
-#: ../tekka/com.py:286
+#: ../tekka/com.py:284
 msgid "tekka requires a newer maki version."
 msgstr "tekka דורשת גרסה חדשה יותר של maki."
 
-#: ../tekka/com.py:287
+#: ../tekka/com.py:285
 #, python-format
 msgid "Please update maki to at least version %(version)s."
 msgstr "יש לעדכן את maki לפחות לגרסה %(version)s."
@@ -227,15 +240,15 @@ msgstr "• הפקודה “%(command)s”אינה ידועה, שולח את ה�
 
 #: ../tekka/dialogs/addServer.py:47
 msgid "No server name given."
-msgstr ""
+msgstr "לא ניתן שם לשרת."
 
 #: ../tekka/dialogs/addServer.py:48
 msgid "You must enter a server name."
-msgstr ""
+msgstr "הינך חייב להכניס שם לשרת."
 
 #: ../tekka/dialogs/channelList.py:89
 msgid "Channel list search error."
-msgstr ""
+msgstr "שגיאת חיפוש ברשימת הערוצים."
 
 #: ../tekka/dialogs/channelList.py:90
 #, python-format
@@ -247,67 +260,68 @@ msgstr ""
 
 #: ../tekka/dialogs/dcc.py:161
 msgid "No transfer selected!"
-msgstr ""
+msgstr "לא נבחרה העברה!"
 
 #: ../tekka/dialogs/dcc.py:162
 msgid "You must select a transfer to remove it."
-msgstr ""
+msgstr "הינך חייב לבחור העברה כדי להסיר אותה."
 
 #: ../tekka/dialogs/dcc.py:166
 msgid "Remove file transfer?"
-msgstr ""
+msgstr "להסיר את העברת הקובץ?"
 
 #: ../tekka/dialogs/dcc.py:167
 #, python-format
 msgid "Are you sure you want to remove the file transfer %(id)d?"
-msgstr ""
+msgstr "האם הינך בטוח שברצונך להסיר את העברת הקובץ %(id)d?"
 
 #: ../tekka/dialogs/debug.py:63
 msgid "C_ompile and run"
 msgstr "הי_דור והרצה"
 
-#: ../tekka/dialogs/history.py:77
-msgid "Read history anyways?"
-msgstr ""
-
 #: ../tekka/dialogs/history.py:78
+msgid "Read history anyways?"
+msgstr "לקרוא את ההיסטוריה בכל מקרה?"
+
+#: ../tekka/dialogs/history.py:79
 msgid ""
 "maki is connected remotely. It's possible that the history is not "
 "accessible. Do you want to try anyways?"
 msgstr ""
+"מאקי מחובר מרחוק. יכול להיות שההיסטוריה אינה זמינה. האם להריץ בכל מקרה?"
 
-#: ../tekka/dialogs/history.py:116
+#: ../tekka/dialogs/history.py:117
 #, python-format
 msgid "History for %(target)s"
-msgstr ""
+msgstr "היסטוריה עבור %(target)s"
 
 #: ../tekka/dialogs/plugins.py:82 ../tekka/dialogs/plugins.py:110
 msgid "No plugin selected."
-msgstr ""
+msgstr "לא נבחר תוסף."
 
 #: ../tekka/dialogs/plugins.py:83
 msgid "You must select a plugin to load it."
-msgstr ""
+msgstr "הינך חייב לבחור תוסף כדי לטעון אותו."
 
 #: ../tekka/dialogs/plugins.py:111
 msgid "You must select a plugin to unload it."
-msgstr ""
+msgstr "הינך חייב לבחור תוסף כדי להסיר אותו."
 
 #: ../tekka/dialogs/server.py:140 ../tekka/dialogs/server.py:167
 msgid "No server selected."
-msgstr ""
+msgstr "לא נבחר שרת."
 
 #: ../tekka/dialogs/server.py:141
 msgid "You must select a server to edit it."
-msgstr ""
+msgstr "הינך חייב לבחור שרת כדי לערוך אותו."
 
 #: ../tekka/dialogs/server.py:168
 msgid "You must select a server to delete it."
-msgstr ""
+msgstr "הינך חייב לבחור שרת כדי למחוק אותו."
 
 #: ../tekka/dialogs/server.py:178
 msgid "Error while retrieving server name."
-msgstr ""
+msgstr "התרחשה שגיאה בזמן איחזור שם השרת."
 
 #: ../tekka/dialogs/server.py:179
 msgid ""
@@ -349,11 +363,11 @@ msgstr[1] "%d מפעילים"
 
 #: ../tekka/lib/dcc_dialog.py:67
 msgid "Select destination"
-msgstr ""
+msgstr "בחר יעד"
 
 #: ../tekka/lib/dcc_dialog.py:86
 msgid "Select a destination to save the file"
-msgstr ""
+msgstr "בחר ידע לשמירת הקובץ"
 
 #: ../tekka/lib/dcc_dialog.py:104
 msgid ""
@@ -361,6 +375,8 @@ msgid ""
 "<b>Info:</b> If you don't choose another destination, this file will be "
 "resumed."
 msgstr ""
+"\n"
+"<b>מידע:</b> אם לא יבחר ידע אחר, העברת הקובץ הזה תמשך."
 
 #: ../tekka/lib/dcc_dialog.py:110
 msgid "Incoming file transfer"
@@ -374,11 +390,15 @@ msgid ""
 "File size: %(bytes)d bytes\n"
 "Destination: %(destination)s%(resumable)s"
 msgstr ""
+"שולח: ”%(nick)s”\n"
+"שם הקובץ: “%(filename)s“\n"
+"גודל הקובץ: %(bytes)d bytes\n"
+"יעד: %(destination)s%(resumable)s"
 
 #: ../tekka/lib/general_output_buffer.py:63
 #, python-format
 msgid "Hide '%s' messages"
-msgstr ""
+msgstr "הסתרת הודעות '%s'"
 
 #: ../tekka/lib/key_dialog.py:50
 #, python-format
@@ -389,60 +409,28 @@ msgstr "יש להזין את המפתח עבור הערוץ %(channel)s."
 msgid "Save key for channel"
 msgstr "שמירת המפתח עבור הערוץ"
 
-#: ../tekka/lib/plugin_config_dialog.py:15
+#: ../tekka/lib/plugin_config_dialog.py:50
 #, python-format
 msgid "Configure %(name)s"
 msgstr "הגדרת %(name)s"
 
-#: ../tekka/lib/plugin_control.py:110 ../tekka/lib/plugin_control.py:118
-#: ../tekka/lib/plugin_control.py:141 ../tekka/lib/plugin_control.py:199
-#: ../tekka/lib/plugin_control.py:354
-msgid "Plugin could not be loaded."
-msgstr "לא ניתן לטעון את התוסף."
+#: ../tekka/lib/spell_entry.py:152
+msgid "Foreground Color"
+msgstr "צבע החזית"
 
-#: ../tekka/lib/plugin_control.py:111 ../tekka/lib/plugin_control.py:142
-#: ../tekka/lib/plugin_control.py:200
-#, python-format
-msgid ""
-"Plugin %(plugin)s could not be loaded.\n"
-"The following error occurred: %(error)s"
-msgstr ""
-"לא ניתן לטעון את התוסף %(plugin)s.\n"
-"השגיאה הבאה ארעה: %(error)s"
+#: ../tekka/lib/spell_entry.py:164
+msgid "Background Color"
+msgstr "צבע הרקע"
 
-#: ../tekka/lib/plugin_control.py:119
-#, python-format
-msgid "Plugin %(plugin)s could not be loaded."
-msgstr "לא ניתן לטעון את התוסף %(plugin)s."
+#: ../tekka/lib/spell_entry.py:176
+msgid "Reset Color"
+msgstr "אפס צבע"
 
-#: ../tekka/lib/plugin_control.py:178
-msgid "Plugin is already loaded."
-msgstr "התוסף כבר נטען."
-
-#: ../tekka/lib/plugin_control.py:179
-#, python-format
-msgid "Plugin %(plugin)s is already loaded."
-msgstr "התוסף %(plugin)s כבר נטען."
-
-#: ../tekka/lib/plugin_control.py:223
-msgid "Plugin could not be unloaded."
-msgstr "לא ניתן לבטל את טעינת התוסף."
-
-#: ../tekka/lib/plugin_control.py:223
-#, python-format
-msgid "Plugin %(plugin)s could not be unloaded, because it is not loaded."
-msgstr ""
-
-#: ../tekka/lib/plugin_control.py:355
-#, python-format
-msgid "Plugin %(plugin)s could not be loaded automatically."
-msgstr "לא ניתן לטעון את התוסף %(plugin)s אוטומטית."
-
-#: ../tekka/lib/status_icon.py:67
+#: ../tekka/lib/status_icon.py:61
 msgid "Hide main window"
 msgstr "הסתרת החלון הראשי"
 
-#: ../tekka/lib/status_icon.py:69
+#: ../tekka/lib/status_icon.py:63
 msgid "Show main window"
 msgstr "הצגת החלון הראשי"
 
@@ -461,17 +449,18 @@ msgid ""
 "anyway?"
 msgstr "הנושא שונה בטרם עדכונך. האם ברצונך להחיל את השינויים בכל מקרה?"
 
-#: ../tekka/lib/welcome_window.py:64
+#: ../tekka/lib/welcome_window.py:63
 msgid "<big><b>Welcome to tekka!</b></big>"
-msgstr ""
+msgstr "<big><b>ברוך הבא לטאקה!</b></big>"
 
-#: ../tekka/lib/welcome_window.py:122
+#: ../tekka/lib/welcome_window.py:121
 msgid ""
 "You are connected to maki. The next step is to connect to a server via the "
 "server dialog in the tekka menu."
 msgstr ""
+"הינך מחובר למאקי. הצעד הבא הוא להתחבר לשרת באמצעות שרת השיח בתפריט טאקה."
 
-#: ../tekka/lib/welcome_window.py:128
+#: ../tekka/lib/welcome_window.py:127
 msgid ""
 "You are not connected to maki. Without maki you can not connect to servers "
 "or write messages.\n"
@@ -481,68 +470,70 @@ msgid ""
 "ask for support."
 msgstr ""
 
-#: ../tekka/main.py:490
+#: ../tekka/main.py:462
 msgid "Reset markup"
 msgstr "איפוס הסימון"
 
-#: ../tekka/main.py:642
+#: ../tekka/main.py:651
 #, python-format
 msgid "Do you really want to close channel “%(name)s”?"
 msgstr "האם אתה בטוח שברצונך לסגור את הערוץ “%(name)s”?"
 
-#: ../tekka/main.py:644
+#: ../tekka/main.py:653
 #, python-format
 msgid "Do you really want to close query “%(name)s”?"
 msgstr "האם ברצונך לסגור את השאילתה  “%(name)s”?"
 
-#: ../tekka/main.py:646
+#: ../tekka/main.py:655
 #, python-format
 msgid "Do you really want to close server “%(name)s”?"
 msgstr "האם ברצונך לסגור את השרת  “%(name)s”?"
 
 #. TODO: away status
-#: ../tekka/main.py:759
+#: ../tekka/main.py:768
 msgid "Nickname: "
 msgstr "כינוי: "
 
-#: ../tekka/main.py:762
+#: ../tekka/main.py:771
 msgid "User: "
 msgstr "משתמש: "
 
-#: ../tekka/main.py:763
+#: ../tekka/main.py:772
 msgid "Topic: "
 msgstr "נושא: "
 
-#: ../tekka/main.py:765 ../tekka/main.py:769
+#: ../tekka/main.py:774 ../tekka/main.py:778
 msgid "Last sentence: "
 msgstr "המשפט האחרון: "
 
-#: ../tekka/main.py:1266
+#: ../tekka/main.py:1308
 msgid "Error occured"
 msgstr "ארעה שגיאה"
 
-#: ../tekka/main.py:1276
+#: ../tekka/main.py:1318
 msgid ""
-"<span size='larger' weight='bold'>Error</span>\n"
+"<span size='larger' weight='bold'>Don't Panic!</span>\n"
 "\n"
-"An error occured — we apologize for that. Feel free to submit a bug report "
-"at https://bugs.launchpad.net/sushi."
+"An error occured – we apologize for that. Feel free to submit a bug report "
+"at <a "
+"href=\"https://bugs.launchpad.net/sushi\">https://bugs.launchpad.net/sushi</a"
+">."
 msgstr ""
 
-#: ../tekka/menus/mainmenu_context.py:112
-#: ../tekka/menus/mainmenu_context.py:213 ../tekka/menus/nicklist_menu.py:136
+#: ../tekka/menus/mainmenu_context.py:109
+#: ../tekka/menus/mainmenu_context.py:211 ../tekka/menus/nicklist_menu.py:175
 msgid "No connection to maki."
-msgstr ""
+msgstr "אין חיבור למאקי."
 
-#: ../tekka/menus/mainmenu_context.py:113
+#: ../tekka/menus/mainmenu_context.py:110
 msgid "You can't shutdown maki. You're not connected."
-msgstr ""
+msgstr "אינך יכול לכבות את מאקי. אינך מחובר."
 
-#: ../tekka/menus/mainmenu_context.py:225
+#: ../tekka/menus/mainmenu_context.py:222
 msgid "tekka could not determine server."
 msgstr "ל־tekka לא היתה אפשרות לקבוע איזה שרת."
 
-#: ../tekka/menus/mainmenu_context.py:226
+#: ../tekka/menus/mainmenu_context.py:223
 msgid ""
 "There is no active server. Click on a server tab or a child of a server tab "
 "to activate the server."
@@ -550,42 +541,45 @@ msgstr ""
 "אין שרת פעיל. יש ללחוץ על הלשונית שרת או על צאצא של לשונית שרת כדי להפעיל את "
 "השרת."
 
-#: ../tekka/menus/nicklist_menu.py:52 ../tekka/menus/servertree_menu.py:52
+#: ../tekka/menus/nicklist_menu.py:61 ../tekka/menus/servertree_menu.py:51
 msgid "Widget creation failed."
 msgstr "יצירת הווידג'ט נכשלה."
 
-#: ../tekka/menus/nicklist_menu.py:53
+#: ../tekka/menus/nicklist_menu.py:62 ../tekka/menus/servertree_menu.py:52
 msgid ""
 "tekka failed to create the nicklist menu.\n"
 "It's possible that there are files missing. Check if you have appropriate "
 "permissions to access all files needed by tekka and restart tekka."
 msgstr ""
 
-#: ../tekka/menus/nicklist_menu.py:152
+#: ../tekka/menus/nicklist_menu.py:137
+#, python-format
+msgid "Ignoring User %(user)s"
+msgstr "מתעלם ממשתמש %(user)s"
+
+#: ../tekka/menus/nicklist_menu.py:143
+#, python-format
+msgid "User %(user)s is unignored"
+msgstr "הוסרה ההתעלמות ממשתמש %(user)s"
+
+#: ../tekka/menus/nicklist_menu.py:190
 msgid "No file selected"
-msgstr ""
+msgstr "לא נבחר קובץ"
 
-#: ../tekka/menus/nicklist_menu.py:153
+#: ../tekka/menus/nicklist_menu.py:191
 msgid "You didn't select a file to send. Aborting."
-msgstr ""
+msgstr "לא בחרת קובץ לשליחה. מבטל."
 
-#: ../tekka/menus/nicklist_menu.py:159
+#: ../tekka/menus/nicklist_menu.py:197
 #, python-format
 msgid "Choose a file to send to %(nick)s"
-msgstr ""
-
-#: ../tekka/menus/servertree_menu.py:53
-msgid ""
-"tekka failed to create the server tree menu.\n"
-"It's possible that there are files missing. Check if you have appropriate "
-"permissions to access all files needed by tekka and restart tekka."
-msgstr ""
+msgstr "בחר קובץ לשליחה ל-%(nick)s"
 
 #: ../ui/dialogs/about.ui.in.h:1
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Yaron https://launchpad.net/~sh-yaron"
+"  Omri Strumza https://launchpad.net/~blueomega"
 
 #: ../ui/dialogs/advancedPreferences.ui.h:1
 msgid "Advanced Preferences"
@@ -595,18 +589,37 @@ msgstr "העדפות מתקדמות"
 msgid "Channel List"
 msgstr "רשימת הערוצים"
 
-#: ../ui/dialogs/colorTable.ui.h:2
-#, no-c-format
-msgid ""
-"<b>IRC to real colors</b>\n"
-"\n"
-"Example use:\n"
-"Type %C02,01 for blue foreground and black background."
-msgstr ""
+#: ../ui/dialogs/colorTable.ui.h:1
+msgid "<big>IRC to real colors</big>"
+msgstr "<big>IRC לצבעים אמיתיים</big>"
 
-#: ../ui/dialogs/colorTable.ui.h:6
+#: ../ui/dialogs/colorTable.ui.h:2
 msgid "IRC Colors"
 msgstr "צבעי IRC"
+
+#: ../ui/dialogs/colorTable.ui.h:4
+#, no-c-format
+msgid ""
+"This dialog tries to explain how you can use color markups in your text to "
+"highlight phrases in a different color.\n"
+"\n"
+"If you're in a channel or in a query you can simply send %C02,01test%C and "
+"you will get a blue foregrounded \"test\" on a black background.\n"
+"\n"
+"The syntax for the %C markup is easy: %Cforeground,background.\n"
+"\n"
+"You can even let the \",background\" away if you're only interested in "
+"foreground colors.\n"
+"\n"
+"If you give a single %C this means that you want to use the default "
+"setting.\n"
+"\n"
+"Example use:\n"
+"Type %C02,01 for blue foreground and black background.\n"
+"\n"
+"The following listing gives you an overview about the numbers you can use "
+"and which color every number represents."
+msgstr ""
 
 #: ../ui/dialogs/dcc.ui.h:1
 msgid "File Transfers"
@@ -614,63 +627,59 @@ msgstr "העברות קבצים"
 
 #: ../ui/dialogs/hide.ui.h:1
 msgid "<b>Message types to hide</b>"
-msgstr ""
+msgstr "<b>סוגי הודעה להסתרה</b>"
 
 #: ../ui/dialogs/hide.ui.h:2
 msgid "<b>Other</b>"
-msgstr ""
+msgstr "<b>אחר</b>"
 
 #: ../ui/dialogs/hide.ui.h:3
 msgid "<b>Own</b>"
-msgstr ""
+msgstr "<b>עצמי</b>"
 
 #: ../ui/dialogs/hide.ui.h:4
 msgid "Hide message types"
-msgstr ""
+msgstr "הסרת סוגי הודעות"
 
 #: ../ui/dialogs/hide.ui.h:5
 msgid "Join:"
-msgstr ""
+msgstr "הצטרף:"
 
 #: ../ui/dialogs/hide.ui.h:6
 msgid "Kick:"
-msgstr ""
+msgstr "בעט:"
 
 #: ../ui/dialogs/hide.ui.h:7
 msgid "Mode:"
-msgstr ""
+msgstr "מצב:"
 
 #: ../ui/dialogs/hide.ui.h:8
 msgid "Nick:"
-msgstr ""
+msgstr "כינוי:"
 
 #: ../ui/dialogs/hide.ui.h:9
 msgid "Part:"
-msgstr ""
+msgstr "יציאה:"
 
 #: ../ui/dialogs/hide.ui.h:10
 msgid "Quit:"
-msgstr ""
+msgstr "התנתק:"
 
 #: ../ui/dialogs/join.ui.h:1
-msgid "#"
-msgstr ""
+msgid "<b>Join a channel</b>"
+msgstr "<b>הצטרף לערוץ</b>"
 
 #: ../ui/dialogs/join.ui.h:2
-msgid "<b>Join a channel</b>"
-msgstr ""
+msgid "Join _automatically"
+msgstr "הצטרף _אוטומטית"
 
 #: ../ui/dialogs/join.ui.h:3
-msgid "Join _automatically"
-msgstr ""
-
-#: ../ui/dialogs/join.ui.h:4
 msgid "Name:"
-msgstr ""
+msgstr "שם:"
 
-#: ../ui/dialogs/join.ui.h:5 ../ui/menus/serverTreeMenu.ui.h:10
+#: ../ui/dialogs/join.ui.h:4 ../ui/menus/serverTreeMenu.ui.h:10
 msgid "_Join"
-msgstr ""
+msgstr "_הצטרף"
 
 #: ../ui/dialogs/plugins.ui.h:1
 msgid "C_onfigure"
@@ -690,7 +699,7 @@ msgstr "_פריקה"
 
 #: ../ui/dialogs/preferences.ui.h:1
 msgid "<b>Filter messages</b>"
-msgstr ""
+msgstr "<b>סנן הודעות</b>"
 
 #: ../ui/dialogs/preferences.ui.h:2
 msgid ""
@@ -705,11 +714,9 @@ msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:8
 msgid ""
-"<b>Warning:</b>\n"
+"<b>Information:</b>\n"
 "Changes will be applied after closing this dialog."
 msgstr ""
-"<b>אזהרה:</b>\n"
-"השינויים יחולו לאחר סגירת תיבת הדו־שיח."
 
 #: ../ui/dialogs/preferences.ui.h:10
 msgid "A_uto expand server tree"
@@ -725,7 +732,7 @@ msgstr "הגדרות _מתקדמות"
 
 #: ../ui/dialogs/preferences.ui.h:13
 msgid "Autodetect rules color"
-msgstr ""
+msgstr "גלה אוטומטית את חוקי הצבא"
 
 #: ../ui/dialogs/preferences.ui.h:14
 msgid "C_hatting"
@@ -741,7 +748,7 @@ msgstr "כינוי ברירת המחדל:"
 
 #: ../ui/dialogs/preferences.ui.h:17
 msgid "Enable rules color"
-msgstr ""
+msgstr "הפעל חוקי צבע"
 
 #: ../ui/dialogs/preferences.ui.h:18
 msgid "Font:"
@@ -811,7 +818,7 @@ msgstr "הודעת יציאה:"
 
 #: ../ui/dialogs/preferences.ui.h:35
 msgid "Rules color:"
-msgstr ""
+msgstr "חוקי צבע:"
 
 #: ../ui/dialogs/preferences.ui.h:36
 msgid "Shutdown _maki on close"
@@ -819,7 +826,7 @@ msgstr "_כיבוי maki בעת הסגירה"
 
 #: ../ui/dialogs/preferences.ui.h:37
 msgid "Time format:"
-msgstr ""
+msgstr "תבנית זמן:"
 
 #: ../ui/dialogs/preferences.ui.h:38
 msgid "Use _RGBA"
@@ -922,19 +929,19 @@ msgstr "ערוך שרת"
 
 #: ../ui/dialogs/serverEdit.ui.h:7
 msgid "NickServ Ghost:"
-msgstr ""
+msgstr "NickServ Ghost:"
 
 #: ../ui/main_window.ui.h:1
 msgid "IRC _Colors"
-msgstr ""
+msgstr "_צבעי IRC"
 
 #: ../ui/main_window.ui.h:2
 msgid "P_lugins"
-msgstr ""
+msgstr "תו_ספים"
 
 #: ../ui/main_window.ui.h:3
 msgid "S_ide Pane"
-msgstr ""
+msgstr "חלונית צ_ד"
 
 #: ../ui/main_window.ui.h:4
 msgid "Status _Bar"
@@ -946,7 +953,7 @@ msgstr "סמל ה_מצב"
 
 #: ../ui/main_window.ui.h:6
 msgid "T_ools"
-msgstr ""
+msgstr "כ_לים"
 
 #: ../ui/main_window.ui.h:7
 msgid "_Channel List"
@@ -966,11 +973,11 @@ msgstr "ע_זרה"
 
 #: ../ui/main_window.ui.h:12
 msgid "_Server List"
-msgstr ""
+msgstr "רשימת _שרתים"
 
 #: ../ui/main_window.ui.h:13
 msgid "_Shutdown"
-msgstr ""
+msgstr "_כבה"
 
 #: ../ui/main_window.ui.h:14
 msgid "_Topic Bar"
@@ -1001,60 +1008,64 @@ msgid "Give Voice"
 msgstr "הענק קול"
 
 #: ../ui/menus/nickListMenu.ui.h:5
+msgid "Ignore"
+msgstr "התעלם"
+
+#: ../ui/menus/nickListMenu.ui.h:6
 msgid "Kick"
 msgstr "בעיטה"
 
-#: ../ui/menus/nickListMenu.ui.h:6
+#: ../ui/menus/nickListMenu.ui.h:7
 msgid "Modes"
 msgstr "מצבים"
 
-#: ../ui/menus/nickListMenu.ui.h:7
-msgid "Send File"
-msgstr ""
-
 #: ../ui/menus/nickListMenu.ui.h:8
+msgid "Send File"
+msgstr "שלח קובץ"
+
+#: ../ui/menus/nickListMenu.ui.h:9
 msgid "Take Half-Op"
 msgstr "שלילת חצי־מפעיל"
 
-#: ../ui/menus/nickListMenu.ui.h:9
+#: ../ui/menus/nickListMenu.ui.h:10
 msgid "Take Op"
 msgstr "שלילת מפעיל"
 
-#: ../ui/menus/nickListMenu.ui.h:10
+#: ../ui/menus/nickListMenu.ui.h:11
 msgid "Take Voice"
 msgstr "שלילת קול"
 
-#: ../ui/menus/nickListMenu.ui.h:11
+#: ../ui/menus/nickListMenu.ui.h:12
 msgid "Whois"
 msgstr "Whois"
 
 #: ../ui/menus/serverTreeMenu.ui.h:1
 msgid "Connect automatically"
-msgstr ""
+msgstr "התחבר אוטומטית"
 
 #: ../ui/menus/serverTreeMenu.ui.h:2
 msgid "H_ide Messages"
-msgstr ""
+msgstr "ה_סתר הודעות"
 
 #: ../ui/menus/serverTreeMenu.ui.h:3
 msgid "Join automatically"
-msgstr ""
+msgstr "הצטרף אוטומטית"
 
 #: ../ui/menus/serverTreeMenu.ui.h:4
 msgid "Set _Key"
-msgstr ""
+msgstr "הגדר _מקש"
 
 #: ../ui/menus/serverTreeMenu.ui.h:5
 msgid "Set _Topic"
-msgstr ""
+msgstr "הגדר _נושא"
 
 #: ../ui/menus/serverTreeMenu.ui.h:6
 msgid "_Close"
-msgstr ""
+msgstr "_סגור"
 
 #: ../ui/menus/serverTreeMenu.ui.h:7
 msgid "_Connect"
-msgstr ""
+msgstr "_התחבר"
 
 #: ../ui/menus/serverTreeMenu.ui.h:8
 msgid "_Disconnect"
@@ -1072,73 +1083,38 @@ msgstr ""
 msgid "_Part"
 msgstr ""
 
-#, python-format
-#~ msgid "[%(nick)s] End of whois."
-#~ msgstr "[%(nick)s] סיום נתוני ה־whois."
-
-#~ msgid "Topic"
-#~ msgstr "כותרת"
-
-#~ msgid "User"
-#~ msgstr "משתמש"
-
-#~ msgid "Channel"
-#~ msgstr "ערוץ"
-
-#~ msgid "History"
-#~ msgstr "היסטוריה"
-
-#~ msgid "_Plugins"
-#~ msgstr "_תוספים"
-
-#~ msgid "Warning:"
-#~ msgstr "אזהרה:"
+#~ msgid "Plugin is already loaded."
+#~ msgstr "התוסף כבר נטען."
 
 #, python-format
 #~ msgid ""
-#~ "The channel %(channel)s is not joined. Everything you write will not be send."
-#~ msgstr "לא הצטרפת לערוץ %(channel)s. כל מה שיכתב לא ישלח."
+#~ "Plugin %(plugin)s could not be loaded.\n"
+#~ "The following error occurred: %(error)s"
+#~ msgstr ""
+#~ "לא ניתן לטעון את התוסף %(plugin)s.\n"
+#~ "השגיאה הבאה ארעה: %(error)s"
 
 #, python-format
-#~ msgid "You are not connected to server %(server)s."
-#~ msgstr "קיים חיבור לשרת %(server)s."
+#~ msgid "Plugin %(plugin)s could not be loaded."
+#~ msgstr "לא ניתן לטעון את התוסף %(plugin)s."
 
-#~ msgid "Server"
-#~ msgstr "שרת"
-
-#~ msgid "ID"
-#~ msgstr "מזהה"
-
-#~ msgid "Filename"
-#~ msgstr "שם הקובץ"
-
-#~ msgid "Partner"
-#~ msgstr "שותף"
-
-#~ msgid "Size"
-#~ msgstr "גודל"
+#~ msgid "Plugin could not be loaded."
+#~ msgstr "לא ניתן לטעון את התוסף."
 
 #, python-format
-#~ msgid "[%(nick)s] %(message)s"
-#~ msgstr "[%(nick)s]‏ %(message)s"
+#~ msgid "Plugin %(plugin)s could not be loaded automatically."
+#~ msgstr "לא ניתן לטעון את התוסף %(plugin)s אוטומטית."
 
-#~ msgid "Progress"
-#~ msgstr "תהליך"
+#, python-format
+#~ msgid "Plugin %(plugin)s is already loaded."
+#~ msgstr "התוסף %(plugin)s כבר נטען."
 
-#~ msgid "Speed"
-#~ msgstr "מהירות"
+#~ msgid "Plugin could not be unloaded."
+#~ msgstr "לא ניתן לבטל את טעינת התוסף."
 
-#~ msgid "Connect"
-#~ msgstr "התחברות"
-
-#~ msgid "Disconnect"
-#~ msgstr "ניתוק"
-
-#~ msgid "Shutdown"
-#~ msgstr "כיבוי"
-
-#~ msgid "_Dialogs"
-#~ msgstr "תיבות _דו־שיח"
-
-#~ msgid "Local search only"
-#~ msgstr "חיפוש מקומי בלבד"
+#~ msgid ""
+#~ "<b>Warning:</b>\n"
+#~ "Changes will be applied after closing this dialog."
+#~ msgstr ""
+#~ "<b>אזהרה:</b>\n"
+#~ "השינויים יחולו לאחר סגירת תיבת הדו־שיח."
