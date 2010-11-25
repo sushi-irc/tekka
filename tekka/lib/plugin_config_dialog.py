@@ -42,7 +42,6 @@ from .. import config
 from .. import plugins
 from . import psushi
 
-
 class PluginConfigDialog(gtk.Dialog):
 
 	def __init__(self, plugin_name):
@@ -52,7 +51,17 @@ class PluginConfigDialog(gtk.Dialog):
 		)
 
 		self.plugin_name = plugin_name
-		self.plugin_options = plugins.get_options(plugin_name)
+		self.plugin_options, err = plugins.get_options(plugin_name)
+
+		if err != None:
+			logging.error(err)
+			gui.mgmt.show_inline_message(
+				"Config dialog %s" % (plugin_name),
+				"Can't load the config dialog for plugin '%s': %s" % (
+					plugin_name, err),
+				dtype="error")
+			return
+
 
 		self._data_map = {}
 

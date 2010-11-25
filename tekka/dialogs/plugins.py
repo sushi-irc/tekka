@@ -33,6 +33,7 @@ import logging
 from gettext import gettext as _
 
 from ..gui import builder
+from ..gui import mgmt
 from .. import plugins as pinterface
 from .. import config
 from ..lib import plugin_config_dialog
@@ -185,7 +186,17 @@ def pluginView_button_press_event_cb(pluginView, event):
 
 		update_button_sensitivity(loaded)
 
-		options = pinterface.get_options(pluginName)
+		options,err = pinterface.get_options(pluginName)
+
+		if err != None:
+			logging.error(err)
+			mgmt.show_inline_message(
+				"Error in %s" % (pluginName),
+				"The config of plugin %s is faulty: %s." % (
+					pluginName, err),
+				dtype="error")
+
+		logging.debug(options)
 
 		if options:
 			widgets.get_object("configureButton").set_sensitive(True)

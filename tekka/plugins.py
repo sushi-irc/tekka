@@ -49,6 +49,8 @@ import logging
 from . import config
 from . import gui
 
+from .lib.error import TekkaError
+
 _module_prefix = "tekkaplugin_"
 _plugins = {}
 
@@ -289,18 +291,22 @@ def get_info(filename):
 
 def _check_options_tuple(options):
 	if type(options) != tuple:
-		return False
+		return TekkaError("Need type tuple")
 
 	for x in options:
 		# name, label and type are required
 		if type(x) != tuple or len(x) < 3:
-			return False
-
-	return True
+			return TekkaError(
+				"Invalid type or incorrect number of parameters in option "
+				"tuple: %s" % (x))
+	return None
 
 def get_options(filename):
 	""" Return the configurable options and the input
-		types associated with every option.
+		types associated with every option as well as
+		an error object in case an error happened.
+		Otherwise the error object is None.
+
 		If no options are found, None is returned.
 
 		e.g. ( 	("pass", "some label", sushi.TYPE_PASSWORD, ""),
@@ -312,12 +318,13 @@ def get_options(filename):
 		try:
 			options = plugin.plugin_options
 		except AttributeError:
-			return None
+			return None,None # there are no options
 
-		if not _check_options_tuple(options):
-			return None
+		err = _check_options_tuple(options)
+		if err:
+			return None,err
 
-		return options
+		return options,None
 
 	if _plugins.has_key(filename):
 		return retrieve_options(_plugins[filename][PLUGIN_MODULE])
@@ -326,20 +333,23 @@ def get_options(filename):
 		mod_info = _find_module(filename)
 
 		if not mod_info:
-			return None
+			return None,TekkaError("Module not found.")
 
 		modname, plugin = _load_module(filename, mod_info)
 
 		if not plugin:
-			return None
+			return None,TekkaError("Can't load plugin.")
 
-		options = retrieve_options(plugin)
+		options,err = retrieve_options(plugin)
+
+		if err != None:
+			return None,err
 
 		_unload_module(modname)
 
-		return options
+		return options,None
 
-	return None
+	return None,TekkaError("Unknown error.")
 
 def load_autoloads():
 	autoloads = config.get("autoload_plugins").items()
