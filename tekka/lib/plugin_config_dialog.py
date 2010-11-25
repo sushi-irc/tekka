@@ -85,6 +85,11 @@ class PluginConfigDialog(gtk.Dialog):
 		vbox.pack_start(table)
 		self.vbox.pack_start(vbox)
 
+	def compositListWidget(*x):
+		return None
+
+	def compositMapWidget(*x):
+		return None
 
 	def _fill(self):
 		""" fill the dialog's content box/table with widgets
@@ -97,7 +102,7 @@ class PluginConfigDialog(gtk.Dialog):
 		dataMap = {} # config_key : value
 		rowCount = 0
 
-		for (opt, label, vtype, value) in self.plugin_options:
+		for (opt, label, vtype, value, args) in self.plugin_options:
 
 			def text_changed_cb(widget, option):
 				value = widget.get_text()
@@ -192,6 +197,11 @@ class PluginConfigDialog(gtk.Dialog):
 				else:
 					widget.set_active(0)
 
+			elif vtype == psushi.TYPE_LIST:
+				widget = compositListWidget(opt, label, value)
+
+			elif vtype == psushi.TYPE_MAP:
+				widget = compositMapWidget(opt, label, value)
 
 			else:
 				logging.error(

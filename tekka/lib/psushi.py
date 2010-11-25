@@ -36,7 +36,9 @@ TYPE_CHOICE: Takes n key/value tuple and a default index.
  TYPE_PASSWORD,
  TYPE_NUMBER,
  TYPE_BOOL,
- TYPE_CHOICE
-) = range(5)
+ TYPE_CHOICE,
+ TYPE_LIST,
+ TYPE_MAP
+) = range(7)
 
 
