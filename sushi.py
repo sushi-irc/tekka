@@ -169,3 +169,7 @@ class Plugin (object):
 		section = "plugin_%s" % (self._plugin_name)
 
 		return config.get(section, name, default)
+
+
+	def parse_from(self, host):
+		return com.parse_from(host)
