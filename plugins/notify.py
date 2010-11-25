@@ -41,9 +41,15 @@ import string
 
 plugin_info = (
 	"Notifies on highlight.",
-	"1.0",
+	"1.1",
 	"Michael Kuhn"
 )
+
+plugin_options = (
+	("targets", "Targets to notify about (e.g. Freenode:#sushi-irc)",
+	 sushi.TYPE_STRING, ""),
+)
+
 
 class notify (sushi.Plugin):
 
@@ -94,7 +100,7 @@ class notify (sushi.Plugin):
 
 		return message
 
-	def _has_highlight(self, text, needle):
+	def has_highlight(self, text, needle):
 		punctuation = string.punctuation + " \n\t"
 		needle = needle.lower()
 		ln = len(needle)
@@ -106,6 +112,16 @@ class notify (sushi.Plugin):
 				and line[ln+i:ln+i+1] in punctuation):
 					return True
 		return False
+
+	def build_tab_name(self, server, target):
+		return "%s:%s" % (server, target)
+
+	def notify_target(self, server, target):
+		""" return True if the user wants to be notified about text in
+			server/target.
+		"""
+		return self.build_tab_name(server,target) in self.get_config(
+			"targets").split(",")
 
 	def message_cb (self, timestamp, server, from_str, target, message):
 		nick = from_str.split("!")[0]
@@ -124,14 +140,16 @@ class notify (sushi.Plugin):
 				nick,
 				self.escape(message)))
 
-
 		if own_nick == target.lower():
 			self.notify(nick, self.escape(message))
-		elif self._has_highlight(message, own_nick):
+		elif self.has_highlight(message, own_nick):
 			in_notify()
+		elif self.notify_target(server, target):
+			self.notify("%s:%s:%s" % (server, target, nick),
+						self.escape(message))
 		else:
 			for word in config.get_list("chatting","highlight_words",[]):
-				if self._has_highlight(message, word):
+				if self.has_highlight(message, word):
 					in_notify()
 					break
 
@@ -150,13 +168,15 @@ class notify (sushi.Plugin):
 		def in_notify():
 			self.notify(target, "%s %s" % (nick, self.escape(action)))
 
-
 		if own_nick == target.lower():
 			self.notify(nick, self.escape(action))
-		elif self._has_highlight(action, own_nick):
+		elif self.has_highlight(action, own_nick):
 			in_notify()
+		elif self.notify_target(server, target):
+			self.notify("%s:%s:%s" % (server, target, nick),
+						self.escape(message))
 		else:
 			for word in config.get_list("chatting","highlight_words",[]):
-				if self._has_highlight(action, word):
+				if self.has_highlight(action, word):
 					in_notify()
 					break
