@@ -123,12 +123,6 @@ class notify (sushi.Plugin):
 		return self.build_tab_name(server,target) in self.get_config(
 			"targets").split(",")
 
-	def is_current_tab(self, server, target):
-		""" return True if the server / target is activated in the UI """
-		cs,ct = gui.tabs.get_current_tabs()
-		return (cs != None and cs.name == server and ct != None
-				and ct.name == target)
-
 	def message_cb (self, timestamp, server, from_str, target, message):
 		nick = from_str.split("!")[0]
 		own_nick = self.get_nick(server)
@@ -150,8 +144,7 @@ class notify (sushi.Plugin):
 			self.notify(nick, self.escape(message))
 		elif self.has_highlight(message, own_nick):
 			in_notify()
-		elif (self.notify_target(server, target)
-		and not self.is_current_tab(server, target)):
+		elif self.notify_target(server, target):
 			self.notify("%s:%s:%s" % (server, target, nick),
 						self.escape(message))
 		else:
@@ -179,10 +172,9 @@ class notify (sushi.Plugin):
 			self.notify(nick, self.escape(action))
 		elif self.has_highlight(action, own_nick):
 			in_notify()
-		elif (self.notify_target(server, target)
-		and not self.is_current_tab(server, target)):
+		elif self.notify_target(server, target):
 			self.notify("%s:%s:%s" % (server, target, nick),
-						self.escape(message))
+						self.escape(action))
 		else:
 			for word in config.get_list("chatting","highlight_words",[]):
 				if self.has_highlight(action, word):
