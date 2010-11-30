@@ -46,7 +46,7 @@ plugin_info = (
 	"Michael Kuhn"
 )
 
-plugin_options = ( # todo test default values
+plugin_options = (
 	("targets", "Targets (e.g. Freenode:#sushi-irc)", sushi.TYPE_LIST, ""),
 )
 
