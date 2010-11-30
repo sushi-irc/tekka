@@ -37,10 +37,14 @@ import gtk
 import gobject
 from gettext import gettext as _
 import logging
+import json
 
 from .. import config
 from .. import plugins
 from . import psushi
+from .error import TekkaError
+
+PLUGIN_OPTIONS_LENGTH = 4
 
 class PluginConfigDialog(gtk.Dialog):
 
@@ -85,10 +89,89 @@ class PluginConfigDialog(gtk.Dialog):
 		vbox.pack_start(table)
 		self.vbox.pack_start(vbox)
 
-	def compositListWidget(*x):
-		return None
+	def composit_list_widget(self, opt, label, value, dataMap):
+		""" Return a widget which holds and manages a list widget """
+			
+		def row_content_to_entry(tv, path, column, entry):
+			model = tv.get_model()
+			entry.set_text(model[path][0])
+			entry.grab_focus()
+			model.remove(model.get_iter(path))
+	
+		def add_data_to_list(btn, listview, entry):
+			model = listview.get_model()
+			model.append(row=(entry.get_text(),))
+			entry.set_text("")
+	
+		def delete_data_from_list(btn, listview):
+			(model, iter) = listview.get_selection().get_selected()
+			if iter == None:
+				return
+			model.remove(iter)
+	
+		def update_data_map(model, path, *_):
+			dataMap[opt] = json.dumps([n[0] for n in model])
+	
+		addButton = gtk.Button(stock=gtk.STOCK_ADD)
+		deleteButton = gtk.Button(stock=gtk.STOCK_REMOVE)
+	
+		listStore = gtk.ListStore(str)
+		listRenderer = gtk.CellRendererText()
+		listView = gtk.TreeView(listStore)
+		listWindow = gtk.ScrolledWindow()
+	
+		textEntry = gtk.Entry()
+	
+		# list setup
+		listView.insert_column_with_attributes(0, "", listRenderer, text=0)
+		listView.set_property("headers-visible", False)
+		
+		default_list = []
+		if value:
+			try:
+				default_list = json.loads(value)
+			except Exception as e:
+				default_list = []
+		
+		if default_list and not isinstance(default_list, list):
+			logging.error("Invalid default value (not a list)")
+		else:
+			for item in default_list:
+				listStore.append(row=(item,))
+	
+		# window setup
+		listWindow.set_properties(hscrollbar_policy=gtk.POLICY_AUTOMATIC,
+			vscrollbar_policy=gtk.POLICY_AUTOMATIC, border_width=3)
+		listWindow.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+		listWindow.add(listView)
+	
+		container = gtk.VBox()
+		buttonBox = gtk.HBox()
+	
+		buttonBox.pack_start(addButton)
+		buttonBox.pack_start(deleteButton)
+	
+		container.pack_start(listWindow, expand=True)
+		container.pack_start(textEntry, expand=False)
+		container.pack_start(buttonBox, expand=False)
+	
+		frame = gtk.Frame(label=label)
+		frame.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+		frame.set_property("border-width", 6)
+		frame.add(container)
+	
+		# signals
+		listView.connect("row-activated", row_content_to_entry, textEntry)
+	
+		listStore.connect("row-changed", update_data_map)
+		listStore.connect("row-deleted", update_data_map)
+	
+		addButton.connect("clicked", add_data_to_list, listView, textEntry)
+		deleteButton.connect("clicked", delete_data_from_list, listView)
+	
+		return frame,None
 
-	def compositMapWidget(*x):
+	def composit_map_widget(*x):
 		return None
 
 	def _fill(self):
@@ -102,7 +185,14 @@ class PluginConfigDialog(gtk.Dialog):
 		dataMap = {} # config_key : value
 		rowCount = 0
 
-		for (opt, label, vtype, value, args) in self.plugin_options:
+		for option in self.plugin_options:
+			
+			if len(option) != PLUGIN_OPTIONS_LENGTH:
+				logging.error("Faulty plugin %s: Invalid plugin options count: %d" % (
+					self.plugin_name, len(option)))
+				return
+			
+			(opt, label, vtype, value) = option
 
 			def text_changed_cb(widget, option):
 				value = widget.get_text()
@@ -115,7 +205,7 @@ class PluginConfigDialog(gtk.Dialog):
 			widget = None
 
 			cValue = config.get(cSection, opt) or value
-			dataMap[opt] = cValue or value
+			dataMap[opt] = cValue
 
 
 			if vtype == psushi.TYPE_STRING:
@@ -198,10 +288,17 @@ class PluginConfigDialog(gtk.Dialog):
 					widget.set_active(0)
 
 			elif vtype == psushi.TYPE_LIST:
-				widget = compositListWidget(opt, label, value)
+				
+				widget,error = self.composit_list_widget(opt, label, cValue, dataMap)
+				
+				if error != None:
+					logging.error(error)
+					continue
+					
+				wLabel = gtk.Label("") # no need for extra label
 
 			elif vtype == psushi.TYPE_MAP:
-				widget = compositMapWidget(opt, label, value)
+				widget = self.composit_map_widget(opt, label, value, dataMap)
 
 			else:
 				logging.error(

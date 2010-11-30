@@ -36,6 +36,7 @@ import gobject
 import gtk
 import pynotify
 import string
+import json
 
 # FIXME configurable highlight words
 
@@ -45,9 +46,8 @@ plugin_info = (
 	"Michael Kuhn"
 )
 
-plugin_options = (
-	("targets", "Targets to notify about (e.g. Freenode:#sushi-irc)",
-	 sushi.TYPE_STRING, ""),
+plugin_options = ( # todo test default values
+	("targets", "Targets (e.g. Freenode:#sushi-irc)", sushi.TYPE_LIST, ""),
 )
 
 
@@ -120,8 +120,8 @@ class notify (sushi.Plugin):
 		""" return True if the user wants to be notified about text in
 			server/target.
 		"""
-		return self.build_tab_name(server,target) in self.get_config(
-			"targets").split(",")
+		return self.build_tab_name(server,target) in json.loads(
+			self.get_config("targets"))
 
 	def message_cb (self, timestamp, server, from_str, target, message):
 		nick = from_str.split("!")[0]
