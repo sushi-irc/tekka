@@ -254,7 +254,8 @@ class TekkaTab(gobject.GObject):
 
 		for line in com.sushi.log(server, channel, lines):
 
-			line = color.strip_color_codes(line)
+			# FIXME strip_color_codes is broken
+			#line = color.strip_color_codes(line)
 
 			buffer.insert_html(buffer.get_end_iter(),
 				"<font foreground='%s'>%s</font>" % (
