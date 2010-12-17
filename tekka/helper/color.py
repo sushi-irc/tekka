@@ -187,42 +187,19 @@ def parse_color_markups_to_codes(s):
 @types (text = basestring)
 def strip_color_codes(text):
 	""" strip all color codes (chr(3)) and the following numbers """
-	l = []
 
-	for w in text.split(chr(3)):
-		new_start = 0
+	pattern = re.compile("\003([0-9]{1,2}(,[0-9]{1,2})?)?")
 
-		# check if there's a pair of numbers or a single one
-		try:
-			int(w[0:2])
-		except ValueError:
-			try:
-				int(w[0:1])
-			except ValueError:
-				pass
-			else:
-				new_start += 1
-		else:
-			new_start += 2
+	start = 0
 
-		# look for , if there was a number found before
-		if new_start != 0 and w[new_start:new_start+1] == ",":
-			# if a number is given, remove it including the ,
-			try:
-				int(w[new_start+1:new_start+3])
-			except ValueError:
-				try:
-					int(w[new_start+1:new_start+2])
-				except ValueError:
-					pass
-				else:
-					new_start += 2
-			else:
-				new_start += 3
+	while True:
+		result = pattern.search(text, start)
+		if not result:
+			break
+		text = text[:result.start()] + text[result.end():]
+		start = result.end()
 
-		l.append(w[new_start:])
-	return "".join(l)
-
+	return text
 
 # Text coloring
 
