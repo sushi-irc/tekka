@@ -202,6 +202,14 @@ def isHighlighted (server_tab, text):
 			return True
 	return False
 
+def action_nick_color(nick):
+	""" return the nick color if color_action_nicks is activated,
+		otherwise return the default text color
+	"""
+	if config.get_bool("colors", "color_action_nicks"):
+		return color.get_nick_color(nick)
+	return color.get_color_by_key("text_action")
+
 @types (server = basestring, name = basestring)
 def _createTab (server, name):
 	""" check if tab exists, create it if not, return the tab """
@@ -598,9 +606,9 @@ def userMode_cb(time, server, from_str, target, mode, param):
 			if not _hide_output(server_tab, "mode"):
 
 				actor = "<font foreground='%s'>%s</font>" % (
-					color.get_nick_color(actor), actor)
+					action_nick_color(actor), actor)
 				target = "<font foreground='%s'>%s</font>" % (
-					color.get_nick_color(target), target)
+					action_nick_color(target), target)
 
 				server_tab.current_write(
 					time,
@@ -932,11 +940,11 @@ def userNick_cb(time, server, from_str, newNick):
 			continue
 
 		nickString = "<font foreground='%s' weight='bold'>%s</font>" % (
-			color.get_nick_color(nick),
+			action_nick_color(nick),
 			markup.escape(nick))
 
 		newNickString = "<font foreground='%s' weight='bold'>%s</font>" % (
-			color.get_nick_color(newNick),
+			action_nick_color(newNick),
 			markup.escape(newNick))
 
 		if doPrint:
@@ -988,14 +996,12 @@ def userKick_cb(time, server, from_str, channel, who, reason):
 		logging.debug("userKick: channel '%s' does not exist." % (channel))
 		return
 
-	channelString = "<font foreground='%s'>%s</font>" % (
-		color.get_text_color(channel), markup.escape(channel))
+	channelString = markup.escape(channel)
 
 	nickString = "<font foreground='%s' weight='bold'>%s</font>" % (
-		color.get_nick_color(nick), markup.escape(nick))
+		action_nick_color(nick), markup.escape(nick))
 
-	reasonString = "<font foreground='%s'>%s</font>" % (
-		color.get_text_color(nick), markup.escape(reason))
+	reasonString = markup.escape(reason)
 
 	if who == server_tab.nick:
 		tab.joined = False
@@ -1092,12 +1098,10 @@ def userQuit_cb(time, server, from_str, reason):
 
 		nickString = "<font foreground='%s' weight='bold'>"\
 			"%s</font>" % (
-				color.get_nick_color(nick),
+				action_nick_color(nick),
 				markup.escape(nick))
 
-		reasonString = "<font foreground='%s'>%s</font>" % (
-			color.get_text_color(nick),
-			markup.escape(reason))
+		reasonString = markup.escape(reason)
 
 		message = message % {
 			"nick": nickString,
@@ -1186,9 +1190,6 @@ def userJoin_cb(timestamp, server, from_str, channel):
 		if doPrint:
 
 			nickString = "You"
-			channelString = "<font foreground='%s'>%s</font>" % (
-				color.get_text_color(channel), markup.escape(channel))
-
 			message = _(u"» You have joined %(channel)s.")
 
 	else: # another one joined the channel
@@ -1201,16 +1202,10 @@ def userJoin_cb(timestamp, server, from_str, channel):
 
 		if doPrint:
 			message = _(u"» %(nick)s has joined %(channel)s.")
-
 			nickString = "<font foreground='%s' weight='bold'>"\
 				"%s</font>" % (
-					color.get_nick_color(nick),
+					action_nick_color(nick),
 					markup.escape(nick))
-
-			channelString = "<font foreground='%s'>%s</font>" % (
-				color.get_text_color(channel),
-				markup.escape(channel))
-
 
 		tab.nickList.append_nick(nick)
 
@@ -1221,7 +1216,7 @@ def userJoin_cb(timestamp, server, from_str, channel):
 	if doPrint:
 		message = message % {
 			"nick": nickString,
-			"channel": channelString }
+			"channel": markup.escape(channel) }
 
 		tab.write(timestamp, message, "action")
 
@@ -1274,18 +1269,15 @@ def userPart_cb(timestamp, server, from_str, channel, reason):
 		# tab was closed
 		return
 
+	channelString = markup.escape(channel)
+	reasonString = markup.escape(reason)
+
 	if nick == stab.nick:
 		# we parted
 
 		tab.joined = False
 
 		if _show_output_exclusive(stab, tab, "part", own = True):
-
-			channelString = "<font foreground='%s'>%s</font>" % (
-				color.get_text_color(channel), markup.escape(channel))
-
-			reasonString = "<font foreground='%s'>%s</font>" % (
-				color.get_text_color(nick), markup.escape(reason))
 
 			if reason:
 				message = _(u"« You have left %(channel)s (%(reason)s).")
@@ -1312,12 +1304,6 @@ def userPart_cb(timestamp, server, from_str, channel, reason):
 			nickString = "<font foreground='%s' weight='bold'>"\
 				"%s</font>" % (
 				color.get_nick_color(nick), markup.escape(nick))
-
-			channelString = "<font foreground='%s'>%s</font>" % (
-				color.get_text_color(channel), markup.escape(channel))
-
-			reasonString = "<font foreground='%s'>%s</font>" % (
-				color.get_text_color(nick), markup.escape(reason))
 
 			if reason:
 				message = _(u"« %(nick)s has left %(channel)s "\
