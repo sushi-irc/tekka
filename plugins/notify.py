@@ -120,8 +120,10 @@ class notify (sushi.Plugin):
 		""" return True if the user wants to be notified about text in
 			server/target.
 		"""
-		return self.build_tab_name(server,target) in json.loads(
-			self.get_config("targets"))
+		targets = self.get_config("targets")
+		if not targets:
+			return []
+		return self.build_tab_name(server,target) in json.loads(targets)
 
 	def message_cb (self, timestamp, server, from_str, target, message):
 		nick = from_str.split("!")[0]
