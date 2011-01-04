@@ -256,12 +256,12 @@ def cmd_topic(serverTab, channelTab, args):
 def cmd_cleartopic(serverTab, channelTab, args):
 	"""
 		Clears the topic.
-		
+
 		Usage: /cleartopic
 	"""
 	if not channelTab or not channelTab.is_channel():
 		return gui.mgmt.myPrint("No channel is active")
-		
+
 	sushi.topic(serverTab.name, channelTab.name, "")
 
 
@@ -617,9 +617,9 @@ def cmd_query(currentServer, currentTab, args):
 
 		# fetch and write history to query (if any)
 		tab.print_last_log()
-	else:
-		# jump to query
-		tab.switch_to()
+
+	# jump to query
+	tab.switch_to()
 
 
 def cmd_clear(currentServer, currentTab, args):
@@ -681,7 +681,7 @@ def cmd_invoke_test(currentServer, currentTab, args):
 def cmd_ignore(currentServer, currentTab, args):
 	"""
 		Ignores a user pattern.
-		
+
 		Usage: /ignore <pattern>
 	"""
 	if not args:
@@ -696,7 +696,7 @@ def cmd_ignore(currentServer, currentTab, args):
 def cmd_unignore(currentServer, currentTab, args):
 	"""
 		Unignores a user pattern.
-		
+
 		Usage: /unignore <pattern>
 	"""
 	if not args:
@@ -711,13 +711,13 @@ def cmd_unignore(currentServer, currentTab, args):
 def cmd_ignores(currentServer, currentTab, args):
 	"""
 		Shows all ignored users.
-		
+
 		Usage: /ignores
 	"""
 	if not currentServer:
 		return gui.myPrint("Could not determine server")
 	ignores = sushi.ignores(currentServer.name)
-	
+
 	if not ignores:
 		gui.mgmt.myPrint(_("No users are ignored on this server."))
 	else:
