@@ -246,7 +246,8 @@ def tekka_tab_remove_cb(tab):
 def tekka_channel_topic_changed_cb(tab, topic):
 	if not tab.is_active(): return
 
-	if config.get_bool("tekka","hide_topic_if_empty"):
+	if (config.get_bool("tekka","hide_topic_if_empty")
+	and config.get_bool("tekka", "show_topic_bar")):
 		if topic:
 			gui.mgmt.visibility.show_topic_bar(True)
 		else:
