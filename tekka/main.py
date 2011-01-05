@@ -41,7 +41,13 @@ pygtk.require("2.0")
 import sys
 import traceback
 
+import memdebug
+
+memdebug.c("before gtk import")
+
 import gtk # TODO: catch gtk.Warning after init with warnings module
+
+memdebug.c("after gtk import")
 
 import os
 import gobject
@@ -52,11 +58,15 @@ import locale
 import types as ptypes
 import logging
 
+memdebug.c("after main mod load")
+
 import gettext
 from gettext import gettext as _
 
 import gui
 import gui.tabs
+
+memdebug.c("after gui mod load")
 
 # local modules
 from . import config
@@ -64,6 +74,8 @@ from . import com
 from . import signals
 from . import commands
 from . import plugins
+
+memdebug.c("after local mod load")
 
 from .typecheck import types
 
@@ -1063,7 +1075,11 @@ def setup_topic_label():
 def setupGTK():
 	""" Set locale, load UI file, connect signals, setup widgets. """
 
+	import memdebug
+
 	uifiles = config.get("uifiles", default={})
+
+	memdebug.c("top of setupGTK")
 
 	# setup locale stuff
 	try:
@@ -1072,6 +1088,8 @@ def setupGTK():
 		locale.textdomain("tekka")
 	except:
 		pass
+
+	memdebug.c("after locale init")
 
 	# Fix about dialog URLs
 	def about_dialog_url_hook (dialog, link, data):
@@ -1083,11 +1101,16 @@ def setupGTK():
 	gettext.bindtextdomain("tekka", config.get("tekka","locale_dir"))
 	gettext.textdomain("tekka")
 
+	memdebug.c("after gettext domain")
+
 	# parse ui file for main window
 	gui.builder.load_main_window(uifiles["mainwindow"])
 
+	memdebug.c("after builder.load_main_window")
+
 	setup_main_window()
 
+	memdebug.c("after setup_main_window")
 
 	mmc = gui.widgets.get_object("main_menu_context")
 
@@ -1207,6 +1230,8 @@ def setupGTK():
 
 	gui.widgets.connect_signals(sigdic)
 
+	memdebug.c("after widgets.connect_signals")
+
 	# push status messages directly in the status bar
 	gui.status.connect("set-visible-status",
 		lambda w,s,m: gui.widgets.get_object("statusbar")\
@@ -1220,11 +1245,15 @@ def setupGTK():
 	# initialize output_shell again (signals are connected now)
 	gui.widgets.get_object("output_shell").reset()
 
+	memdebug.c("after custom signals")
+
 	# setup more complex widgets
 	setup_tabs_view()
 	setup_nicks_view()
 	setup_general_ouptut()
 	setup_topic_label()
+
+	memdebug.c("after widget setup")
 
 	# apply visibility to widgets from config
 	mmc.view.apply_visibility_settings()
@@ -1262,6 +1291,8 @@ def setupGTK():
 	gui.mgmt.set_useable(False)
 
 	gobject.idle_add(setup_paneds)
+
+	memdebug.c("at end of setupGTK")
 
 
 def tekka_excepthook(extype, exobj, extb):
@@ -1331,11 +1362,19 @@ def setup_logging():
 def setup():
 	""" Setup the UI """
 
+	import memdebug
+
+	memdebug.c("in setup")
+
 	# load config file, apply defaults
 	config.setup()
 
+	memdebug.c("after config.setup")
+
 	# create logfile, setup logging module
 	setup_logging()
+
+	memdebug.c("after setup_logging")
 
 	# setup callbacks
 	com.sushi.g_connect("sushi-error", sushi_error_cb)
@@ -1343,12 +1382,17 @@ def setup():
 	com.sushi.g_connect("maki-disconnected", maki_disconnect_callback)
 	signals.setup()
 
+	memdebug.c("after signals.setup")
+
 	# build graphical interface
 	setupGTK()
+
+	memdebug.c("after setupGTK")
 
 	# setup exception handler
 	sys.excepthook = tekka_excepthook
 
+	memdebug.c("after excepthook")
 
 def main():
 	""" Fire up the UI """

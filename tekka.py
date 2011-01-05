@@ -26,15 +26,43 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+import tekka.memdebug as memdebug
+
+print "initial"
+memdebug.current_mem()
+
 import tekka.main
+
+print "after tekka.main"
+memdebug.current_mem()
+
 import signal_handler
+print "after signal_handler"
+memdebug.current_mem()
+
 import command_handler
+print "after command_handler"
+memdebug.current_mem()
 
 import sushi
 
+print "after sushi"
+memdebug.current_mem()
+
 tekka.main.setup()
 
+print "after main setup"
+memdebug.current_mem()
+
 signal_handler.setup()
+
+print "after sighandler setup"
+memdebug.current_mem()
+
 command_handler.setup()
 
-tekka.main.main()
+print "after cmdhandler setup"
+memdebug.current_mem()
+
+import cProfile
+cProfile.run('tekka.main.main()',"tekkaprof")

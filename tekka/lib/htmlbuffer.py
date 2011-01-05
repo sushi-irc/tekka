@@ -40,6 +40,8 @@ from ..helper.url import URLToTag
 from .. import helper
 from .. import config
 
+from .. import memdebug
+
 def rindex(l, i):
 	tl = list(l)
 	tl.reverse()
@@ -281,6 +283,9 @@ class HTMLBuffer(gtk.TextBuffer):
 	def insert_html(self, *args, **kwargs):
 		return self.insertHTML(*args, **kwargs)
 
+
+
+	@memdebug.memdec
 	def insertHTML(self, iter, text, group_string=None):
 		""" parse text for HTML markups before adding
 			it to the buffer at the given iter.
@@ -298,6 +303,8 @@ class HTMLBuffer(gtk.TextBuffer):
 			self.group_string = group_string
 			self.group_color = not self.group_color
 
+		memdebug.c("after group string")
+
 		if (config.get_bool("tekka","text_rules")
 		and self.group_color
 		and self.group_string):
@@ -308,12 +315,16 @@ class HTMLBuffer(gtk.TextBuffer):
 		else:
 			text = "<msg>%s</msg>" % text
 
+		memdebug.c("after text rules")
+
 		def applyToParser(text):
 			try:
 				self.parser.parse(StringIO(text))
 			except xml.sax.SAXParseException,e:
 				raise Exception,\
 					"%s.applyToParser: '%s' raised with '%s'." % (e, text)
+
+		memdebug.c("after applyToParser")
 
 		while True:
 			try:

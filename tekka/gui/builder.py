@@ -28,7 +28,13 @@ SUCH DAMAGE.
 import gtk
 import os
 
+from .. import memdebug
+
+memdebug.c("before loading builder")
+
 from ._builder import widgets
+
+memdebug.c("after loading builder.widgets")
 
 from .. import config
 from ..typecheck import types
@@ -36,11 +42,15 @@ from ..typecheck import types
 from ..lib.htmlbuffer import HTMLBuffer
 from ..lib.status_icon import TekkaStatusIcon
 from ..lib.output_window import OutputWindow
-from ..lib.output_shell import OutputShell
+memdebug.c("before middle of loading builder mods")
+from ..lib.output_shell import OutputShell # FIXME produces up to 5MB RSS
+memdebug.c("in middle of loading builder mods")
 from ..lib.search_toolbar import SearchBar
 from ..lib.expanding_list import ExpandingList
 from ..lib.contrast_color_table import ContrastColorTable
 from ..lib.custom_color_button import CustomColorButton
+
+memdebug.c("after loading modules")
 
 from ..helper import URLHandler
 

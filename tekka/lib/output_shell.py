@@ -25,11 +25,19 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+from .. import memdebug
+
+memdebug.c("at start of output_shell")
+
 import gtk
 import gobject
 
+memdebug.c("after loading gtk")
+
 from .output_window import OutputWindow
 from ..typecheck import types
+
+memdebug.c("after loading window and typecheck")
 
 class OutputShell(gtk.VBox):
 
@@ -38,6 +46,8 @@ class OutputShell(gtk.VBox):
 	"""
 
 	__gtype_name__ = "OutputShell"
+
+	memdebug.c("after interpretation")
 
 	@types (widget = OutputWindow)
 	def __init__(self, window=OutputWindow()):
@@ -50,6 +60,8 @@ class OutputShell(gtk.VBox):
 		self.output_window = None
 
 		self.reset()
+
+	memdebug.c("after __init__ interpret.")
 
 	@types (new_window = OutputWindow)
 	def set(self, new_window):
@@ -77,8 +89,11 @@ class OutputShell(gtk.VBox):
 		""" Return the current OutputWindow """
 		return self.output_window
 
+memdebug.c("before signal new")
+
 gobject.signal_new(
 	"widget-changed", OutputShell,
 	gobject.SIGNAL_ACTION, gobject.TYPE_NONE,
 	(gobject.TYPE_PYOBJECT,gobject.TYPE_PYOBJECT))
 
+memdebug.c("after signal new")

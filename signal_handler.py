@@ -473,8 +473,9 @@ def userMessage_cb(timestamp, server, from_str, channel, message):
 	nick = parse_from(from_str)[0]
 	(server_tab, channel_tab) = gui.tabs.search_tabs(server, channel)
 
-	if server_tab == None:
+	if None in (server_tab,channel_tab):
 		return # happens if the target server does not exist
+			# or the tab was closed
 
 	if nick.lower() == server_tab.nick.lower():
 		ownMessage_cb(timestamp, server, channel, message)
@@ -518,6 +519,10 @@ def ownMessage_cb(timestamp, server, channel, message):
 	tab = _createTab(server, channel)
 	nick = gui.tabs.search_tab(server).nick
 
+	import tekka.memdebug as memdebug
+
+	memdebug.c("before write")
+
 	tab.write(timestamp,
 			"&lt;%s<font foreground='%s' weight='bold'>%s</font>&gt;"
 			" <font foreground='%s'>%s</font>" % (
@@ -526,6 +531,8 @@ def ownMessage_cb(timestamp, server, channel, message):
 				nick,
 				color.get_color_by_key("own_text"),
 				markup.escape(message)), group_string=nick)
+
+	memdebug.c("after write")
 
 
 def userQuery_cb(timestamp, server, from_str, message):

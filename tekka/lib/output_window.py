@@ -28,7 +28,13 @@ SUCH DAMAGE.
 import gtk
 import gobject
 
+from .. import memdebug
+
+memdebug.c("in output_window")
+
 from .output_textview import OutputTextView
+
+memdebug.c("after loading output_textview")
 
 from math import ceil
 
@@ -50,19 +56,29 @@ class OutputWindow(gtk.ScrolledWindow):
 		self.textview.show()
 
 	def __init__(self):
+		memdebug.c("before gtk.SW init")
 		gtk.ScrolledWindow.__init__(self)
+		memdebug.c("after gtk.SW init")
 
 		self.set_properties(
 			hscrollbar_policy = gtk.POLICY_AUTOMATIC,
 			vscrollbar_policy = gtk.POLICY_AUTOMATIC,
 				  shadow_type = gtk.SHADOW_ETCHED_IN )
 
+		memdebug.c("before OTV")
+
 		self.textview = OutputTextView()
 		self.auto_scroll = True
 
+		memdebug.c("after OTV")
+
 		self.add(self.textview)
 
+		memdebug.c("after add")
+
 		self.old_allocation = self.get_allocation()
+
+		memdebug.c("after setup in init")
 
 		# XXX: redundant code, see main.py::setup_mainWindow
 		def kill_mod1_scroll_cb(w,e):
@@ -77,6 +93,7 @@ class OutputWindow(gtk.ScrolledWindow):
 				determine if we wanted to be at the bottom
 				(auto_scroll = True) and scroll down.
 			"""
+			memdebug.c("start size_allocate_cb")
 			if alloc.height != self.old_allocation.height:
 
 				if self.auto_scroll:
@@ -88,6 +105,7 @@ class OutputWindow(gtk.ScrolledWindow):
 					gobject.idle_add(doit)
 
 			self.old_allocation = alloc
+			memdebug.c("end size_allocate_cb")
 
 		self.connect("size-allocate", size_allocate_cb)
 
@@ -127,6 +145,8 @@ class OutputWindow(gtk.ScrolledWindow):
 			# XXX:  maybe one can get rid of this if using connect_after
 			# XXX:: instead of connect
 			gobject.idle_add(idle_handler_cb)
+
+		memdebug.c("after cb setup")
 
 		def doit():
 			self.get_vscrollbar().connect("value-changed", value_changed_cb)

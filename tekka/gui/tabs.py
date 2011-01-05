@@ -41,6 +41,7 @@ status = _status_manager.status
 
 from .. import com
 from .. import config
+from .. import memdebug
 
 from ..lib.input_history import InputHistory
 from ..lib.nick_list_store import NickListStore
@@ -674,8 +675,12 @@ class TekkaChannel(TekkaTab):
 					message)
 
 		def notify():
+			memdebug.c("in notify")
 			self.set_new_message(msgtype)
+			memdebug.c("after notify")
 			return False
+
+		memdebug.c("before idle add")
 
 		gobject.idle_add(notify)
 
