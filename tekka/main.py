@@ -140,8 +140,10 @@ def tekka_tab_new_markup_cb(tab):
 	if not tab.path:
 		return
 
+	memdebug.c("before new markup")
 	store = gui.widgets.get_object("tab_store")
 	store[tab.path][0] = tab
+	memdebug.c("after new markup")
 
 
 def tekka_tab_new_message_cb(tab, mtype):

@@ -328,7 +328,9 @@ class HTMLBuffer(gtk.TextBuffer):
 
 		while True:
 			try:
+				memdebug.c("before parse")
 				self.scanner.parse(StringIO(text))
+				memdebug.c("after parse")
 
 			except xml.sax.SAXParseException, e:
 				# Exception while parsing, get (if caused by char)
