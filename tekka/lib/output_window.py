@@ -99,7 +99,9 @@ class OutputWindow(gtk.ScrolledWindow):
 				if self.auto_scroll:
 
 					def doit():
+						memdebug.c("before stb")
 						self.textview.scroll_to_bottom(no_smooth = True)
+						memdebug.c("after stb")
 						return False
 
 					gobject.idle_add(doit)

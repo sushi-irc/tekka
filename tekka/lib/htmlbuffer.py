@@ -312,18 +312,26 @@ class HTMLBuffer(gtk.TextBuffer):
 
 			This method is deprecated. Use insert_html.
 		"""
+
+		# no big leak here...
+		# that means, one allocation after ~50 messages
+
 		startoffset = iter.get_offset()
 
 		if gtk.TextBuffer.get_char_count(self) > 0:
 			text = "<br/>" + text
 
+		# also no big leak here...
+
 		text = URLToTag(text)
+
+		# no big deal here as well
 
 		if self.group_string != group_string:
 			self.group_string = group_string
 			self.group_color = not self.group_color
 
-		memdebug.c("after group string")
+		# no big deal.
 
 		if (config.get_bool("tekka","text_rules")
 		and self.group_color
@@ -335,7 +343,7 @@ class HTMLBuffer(gtk.TextBuffer):
 		else:
 			text = "<msg>%s</msg>" % text
 
-		memdebug.c("after text rules")
+		# no big deal
 
 		if not isinstance(text,unicode):
 			text = unicode(text,"utf")
