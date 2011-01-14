@@ -29,8 +29,8 @@ SUCH DAMAGE.
 import gtk
 import pango
 import logging
-import xml.sax
-import xml.sax.handler
+
+import xml.parsers.expat
 
 from StringIO import StringIO
 
@@ -50,14 +50,15 @@ def rindex(l, i):
 	except ValueError as e:
 		return (-1)
 
-class HTMLHandler(xml.sax.handler.ContentHandler):
+#class HTMLHandler(xml.sax.handler.ContentHandler):
+class HTMLHandler(object):
 	"""
 	Parses HTML like strings and applies
 	the tags as format rules for the given text buffer.
 	"""
 
 	def __init__(self, textbuffer, handler):
-		xml.sax.handler.ContentHandler.__init__(self)
+		super(HTMLHandler,self).__init__()
 
 		self.textbuffer = textbuffer
 		self.ignoreableEndTags = ["msg","br","su","sb"]
@@ -177,10 +178,10 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 	""" PARSING HELPER """
 
 	def _parseFont(self, tag, attrs):
-		if not attrs or attrs.getLength() == 0:
+		if not attrs:# or attrs.getLength() == 0:
 			return
 
-		for name in attrs.getNames():
+		for name in attrs:
 			if name == "weight":
 				if attrs[name] == "bold":
 					tag.set_property("weight", pango.WEIGHT_BOLD)
@@ -197,10 +198,12 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 				except Exception as ex:
 					logging.error("_parseFont: %s" % (ex))
 
+"""
 class ScanHandler(xml.sax.ContentHandler):
 
 	def __init__(self):
 		xml.sax.ContentHandler.__init__(self)
+"""
 
 class HTMLBuffer(gtk.TextBuffer):
 
@@ -221,13 +224,20 @@ class HTMLBuffer(gtk.TextBuffer):
 
 		gtk.TextBuffer.__init__(self, self.tagtable)
 
-		self.scanner = xml.sax.make_parser()
-		self.parser = xml.sax.make_parser()
+		#self.scanner = xml.sax.make_parser()
+		#self.parser = xml.sax.make_parser()
 
-		self.scanner.setContentHandler(ScanHandler())
+		self.parser = xml.parsers.expat.ParserCreate("UTF-8")
+		self.parser.Parse('<?xml version="1.0"?><root>')
 
-		contentHandler = HTMLHandler(self, self.URLHandler)
-		self.parser.setContentHandler(contentHandler)
+		#self.scanner.setContentHandler(ScanHandler())
+
+		self.contentHandler = HTMLHandler(self, self.URLHandler)
+		contentHandler = self.contentHandler
+		#self.parser.setContentHandler(contentHandler)
+		self.parser.StartElementHandler = contentHandler.startElement
+		self.parser.EndElementHandler = contentHandler.endElement
+		self.parser.CharacterDataHandler = contentHandler.characters
 
 	def setURLHandler(self, handler):
 		self.URLHandler = handler
@@ -283,7 +293,17 @@ class HTMLBuffer(gtk.TextBuffer):
 	def insert_html(self, *args, **kwargs):
 		return self.insertHTML(*args, **kwargs)
 
-
+	"""
+	def _apply_to_parser(self, text):
+		stream = StringIO(text)
+		try:
+			self.parser.parse(stream)
+		except xml.sax.SAXParseException,e:
+			raise Exception,\
+				"applyToParser: '%s' raised with '%s'." % (e, text)
+		finally:
+			stream.close()
+	"""
 
 	@memdebug.memdec
 	def insertHTML(self, iter, text, group_string=None):
@@ -317,19 +337,21 @@ class HTMLBuffer(gtk.TextBuffer):
 
 		memdebug.c("after text rules")
 
-		def applyToParser(text):
-			try:
-				self.parser.parse(StringIO(text))
-			except xml.sax.SAXParseException,e:
-				raise Exception,\
-					"%s.applyToParser: '%s' raised with '%s'." % (e, text)
+		if not isinstance(text,unicode):
+			text = unicode(text,"utf")
 
-		memdebug.c("after applyToParser")
+		try:
+			self.parser.Parse(text, False)
+			self.contentHandler.endDocument()
+		except xml.parsers.expat.ExpatError as e:
+			print e,repr(e.message),repr(text),self.parser.ErrorCode,xml.parsers.expat.ErrorString(self.parser.ErrorCode),self.parser.ErrorByteIndex
 
+		"""
 		while True:
+			stream = StringIO(text)
 			try:
 				memdebug.c("before parse")
-				self.scanner.parse(StringIO(text))
+				self.scanner.parse(stream)
 				memdebug.c("after parse")
 
 			except xml.sax.SAXParseException, e:
@@ -361,8 +383,15 @@ class HTMLBuffer(gtk.TextBuffer):
 				continue
 
 			else:
+				break # XXX
+
 				# everything went fine, no need
 				# for looping further.
-				applyToParser(text)
+				self._apply_to_parser(text)
 
 				break
+			finally:
+				print "FINALLY"
+				stream.close()
+		"""
+
