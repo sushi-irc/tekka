@@ -59,6 +59,7 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 
 		self.textbuffer = textbuffer
 		self.ignoreableEndTags = ["msg","br","su","sb"]
+		self.no_cache = ["a","sb","su"]
 		self.URLHandler = handler
 
 		self._reset_values()
@@ -70,11 +71,9 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 		self.sbcount = 0
 
 	def characters(self, text):
+		""" Raw characters? Apply them (with tags, if given)
+			to the text buffer
 		"""
-		Raw characters? Apply them (with tags, if given)
-		to the text buffer
-		"""
-
 		if len(self.tags):
 			# there are tags, apply them to the text
 			self.textbuffer.insert_with_tags(
@@ -87,8 +86,47 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 				self.textbuffer.get_end_iter(),
 				text)
 
+	def startDocument(self):
+		pass
+
 	def startElement(self, name, attrs):
-		tag = self.textbuffer.create_tag(None)
+
+		def apply_tag(name, tag):
+			self.elms.append(name)
+			self.tags.append(tag)
+
+		def attrs_to_dict(attrs):
+			return "{"+ ",".join(
+				[n+":"+attrs.getValue(n) for n in attrs.getNames()]) +"}"
+
+		def get_cache_name(name, attrs):
+			if name in ("font","span"):
+				return name + attrs_to_dict(attrs)
+			return name
+
+		if not name in self.no_cache:
+
+			cname = get_cache_name(name,attrs)
+
+			tag = self.textbuffer.get_tag_table().lookup(cname)
+
+			if tag: # found a already known tag, use it
+				apply_tag(name, tag)
+				return
+
+		# handle no tag creating elements
+
+		if name == "br":
+			self.textbuffer.insert(self.textbuffer.get_end_iter(),"\n")
+			return
+
+		# create a new tag
+
+		if name in self.no_cache:
+			tag = self.textbuffer.create_tag(None)
+		else:
+			tag = self.textbuffer.create_tag(get_cache_name(name, attrs))
+
 		tag.s_attribute = {} # special attribute for identifying
 
 		tag.s_attribute[name] = True
@@ -98,10 +136,6 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 
 		elif name == "i":
 			tag.set_property("style", pango.STYLE_ITALIC)
-
-		elif name == "br":
-			self.textbuffer.insert(self.textbuffer.get_end_iter(),"\n")
-			return
 
 		elif name == "u":
 			tag.set_property("underline", pango.UNDERLINE_SINGLE)
@@ -133,14 +167,15 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 		elif name == "msg":
 			# start tag to avoid errors due to
 			# missing overall-tag
+			#
 			self._parseFont(tag, attrs)
 
 		else:
+			# FIXME here should be an exception
 			logging.error("HTMLBuffer: Unknown tag %s" % (name))
 			return
 
-		self.elms.append(name)
-		self.tags.append(tag)
+		apply_tag(name, tag)
 
 	def endElement(self, name):
 		if name in self.ignoreableEndTags:
@@ -152,25 +187,23 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 			del self.tags[i]
 
 	def endDocument(self):
-		"""
-			Close all bold/underline tags
-			if there was no end tag.
-		"""
-		tag = self.textbuffer.create_tag(None)
+		""" Close all special bold/underline tags. """
 
-		if self.sbcount % 2 != 0:
-			tag.set_property("weight", pango.WEIGHT_NORMAL)
+		if self.sbcount % 2 != 0 or self.sucount % 2 != 0:
+			tag = self.textbuffer.create_tag(None)
 
-		if self.sucount % 2 != 0:
-			tag.set_property("underline", pango.UNDERLINE_NONE)
+			if self.sbcount % 2 != 0:
+				tag.set_property("weight", pango.WEIGHT_NORMAL)
 
-		self.textbuffer.insert_with_tags(
-			self.textbuffer.get_end_iter(),
-			"",
-			tag)
+			if self.sucount % 2 != 0:
+				tag.set_property("underline", pango.UNDERLINE_NONE)
+
+			self.textbuffer.insert_with_tags(
+				self.textbuffer.get_end_iter(),
+				"",
+				tag)
 
 		self._reset_values()
-
 
 	""" PARSING HELPER """
 
@@ -204,6 +237,8 @@ class HTMLBuffer(gtk.TextBuffer):
 
 	__gtype_name__ = "HTMLBuffer"
 
+	global_tagtable = gtk.TextTagTable()
+
 	def __init__(self, handler=None, tagtable=None):
 		self.lines = 0
 
@@ -213,7 +248,7 @@ class HTMLBuffer(gtk.TextBuffer):
 		if tagtable:
 			self.tagtable = tagtable
 		else:
-			self.tagtable = gtk.TextTagTable()
+			self.tagtable = self.global_tagtable
 
 		self.URLHandler = handler
 
@@ -235,9 +270,8 @@ class HTMLBuffer(gtk.TextBuffer):
 		return self.URLHandler
 
 	def clear(self):
-		"""
-		Clears the output and resets the tag
-		table to zero to save memory.
+		""" Clears the output and resets the tag
+			table to zero to save memory.
 		"""
 		self.set_text("")
 
@@ -247,6 +281,7 @@ class HTMLBuffer(gtk.TextBuffer):
 			tt.foreach(lambda tag,data: data.remove(tag), tt)
 
 	def insert(self, iter, text, *x):
+		" make the buffer a ring buffer with a limit of max_output_lines "
 		siter = self.get_selection_bounds()
 
 		if siter:
@@ -277,11 +312,9 @@ class HTMLBuffer(gtk.TextBuffer):
 				self.get_iter_at_offset(soff),
 				self.get_iter_at_offset(ioff)
 			)
+		# FIXME new selection range is off by some bytes
 
-	def insert_html(self, *args, **kwargs):
-		return self.insertHTML(*args, **kwargs)
-
-	def insertHTML(self, iter, text, group_string=None):
+	def insert_html(self, iter, text, group_string=None):
 		""" parse text for HTML markups before adding
 			it to the buffer at the given iter.
 
@@ -294,10 +327,12 @@ class HTMLBuffer(gtk.TextBuffer):
 
 		text = URLToTag(text)
 
+
 		if self.group_string != group_string:
 			self.group_string = group_string
 			self.group_color = not self.group_color
 
+		# color the lines, group coloring by some string
 		if (config.get_bool("tekka","text_rules")
 		and self.group_color
 		and self.group_string):
@@ -308,12 +343,14 @@ class HTMLBuffer(gtk.TextBuffer):
 		else:
 			text = "<msg>%s</msg>" % text
 
+
 		def applyToParser(text):
 			try:
 				self.parser.parse(StringIO(text))
 			except xml.sax.SAXParseException,e:
 				raise Exception,\
 					"%s.applyToParser: '%s' raised with '%s'." % (e, text)
+
 
 		while True:
 			try:
@@ -348,6 +385,7 @@ class HTMLBuffer(gtk.TextBuffer):
 				continue
 
 			else:
+
 				# everything went fine, no need
 				# for looping further.
 				applyToParser(text)

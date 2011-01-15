@@ -47,7 +47,7 @@ from ..helper import URLHandler
 
 def get_new_buffer():
 	""" Returns a HTMLBuffer with assigned URL handler. """
-	buffer = HTMLBuffer(handler = URLHandler.URLHandler)
+	buffer = HTMLBuffer(handler=URLHandler.URLHandler)
 	return buffer
 
 

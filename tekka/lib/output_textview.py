@@ -39,7 +39,7 @@ class OutputTextView(gtk.TextView):
 
 	def __init__(self):
 		gtk.TextView.__init__(self,
-			HTMLBuffer(handler = URLHandler.URLHandler))
+			HTMLBuffer(handler=URLHandler.URLHandler))
 
 		self.set_property("editable", False)
 		self.set_property("can-focus", False)
