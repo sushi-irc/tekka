@@ -40,13 +40,8 @@ from ..helper.url import URLToTag
 from .. import helper
 from .. import config
 
-def rindex(l, i):
-	tl = list(l)
-	tl.reverse()
-	try:
-		return (len(tl)-1)-tl.index(i)
-	except ValueError as e:
-		return (-1)
+from .. import memdebug
+
 
 class HTMLHandler(xml.sax.handler.ContentHandler):
 	"""
@@ -92,8 +87,8 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 	def startElement(self, name, attrs):
 
 		def apply_tag(name, tag):
-			self.elms.append(name)
-			self.tags.append(tag)
+			self.elms.insert(0, name)
+			self.tags.insert(0, tag)
 
 		def attrs_to_dict(attrs):
 			return "{"+ ",".join(
@@ -181,8 +176,11 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 		if name in self.ignoreableEndTags:
 			return
 
-		i = rindex(self.elms, name)
-		if i >= 0:
+		try:
+			i = self.elms.index(name)
+		except ValueError:
+			pass
+		else:
 			del self.elms[i]
 			del self.tags[i]
 
