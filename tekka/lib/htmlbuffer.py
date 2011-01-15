@@ -50,6 +50,10 @@ def rindex(l, i):
 	except ValueError as e:
 		return (-1)
 
+class DummyTag(object):
+	def set_property(*a,**kw): pass
+	def get_property(*a,**kw): return None
+
 #class HTMLHandler(xml.sax.handler.ContentHandler):
 class HTMLHandler(object):
 	"""
@@ -77,6 +81,8 @@ class HTMLHandler(object):
 		Raw characters? Apply them (with tags, if given)
 		to the text buffer
 		"""
+		print "would insert %s" % (text)
+		return
 
 		if len(self.tags):
 			# there are tags, apply them to the text
@@ -91,7 +97,8 @@ class HTMLHandler(object):
 				text)
 
 	def startElement(self, name, attrs):
-		tag = self.textbuffer.create_tag(None)
+		#tag = self.textbuffer.create_tag(None)
+		tag = DummyTag()
 		tag.s_attribute = {} # special attribute for identifying
 
 		tag.s_attribute[name] = True
@@ -159,7 +166,8 @@ class HTMLHandler(object):
 			Close all bold/underline tags
 			if there was no end tag.
 		"""
-		tag = self.textbuffer.create_tag(None)
+		#tag = self.textbuffer.create_tag(None)
+		tag = DummyTag()
 
 		if self.sbcount % 2 != 0:
 			tag.set_property("weight", pango.WEIGHT_NORMAL)
@@ -167,11 +175,13 @@ class HTMLHandler(object):
 		if self.sucount % 2 != 0:
 			tag.set_property("underline", pango.UNDERLINE_NONE)
 
+		print "would insert end tag"
+		"""
 		self.textbuffer.insert_with_tags(
 			self.textbuffer.get_end_iter(),
 			"",
 			tag)
-
+		"""
 		self._reset_values()
 
 
@@ -220,7 +230,6 @@ class HTMLBuffer(gtk.TextBuffer):
 		else:
 			self.tagtable = gtk.TextTagTable()
 
-		self.URLHandler = handler
 
 		gtk.TextBuffer.__init__(self, self.tagtable)
 
@@ -232,19 +241,19 @@ class HTMLBuffer(gtk.TextBuffer):
 
 		#self.scanner.setContentHandler(ScanHandler())
 
-		self.contentHandler = HTMLHandler(self, self.URLHandler)
+		self.contentHandler = HTMLHandler(self, handler)
+
 		contentHandler = self.contentHandler
 		#self.parser.setContentHandler(contentHandler)
-		self.parser.StartElementHandler = contentHandler.startElement
-		self.parser.EndElementHandler = contentHandler.endElement
-		self.parser.CharacterDataHandler = contentHandler.characters
+		#self.parser.StartElementHandler = contentHandler.startElement
+		#self.parser.EndElementHandler = contentHandler.endElement
+		#self.parser.CharacterDataHandler = contentHandler.characters
 
 	def setURLHandler(self, handler):
-		self.URLHandler = handler
-		self.parser.getContentHandler().URLHandler = handler
+		self.contentHandler.URLHandler = handler
 
 	def getURLHandler(self):
-		return self.URLHandler
+		return self.contentHandler.URLHandler
 
 	def clear(self):
 		"""
@@ -352,7 +361,14 @@ class HTMLBuffer(gtk.TextBuffer):
 			self.parser.Parse(text, False)
 			self.contentHandler.endDocument()
 		except xml.parsers.expat.ExpatError as e:
-			print e,repr(e.message),repr(text),self.parser.ErrorCode,xml.parsers.expat.ErrorString(self.parser.ErrorCode),self.parser.ErrorByteIndex
+			logging.error(
+				"expat: %s, msg: %s, code: %s, str: %s, idx: %d" % (
+					e,
+					repr(text),
+					self.parser.ErrorCode,
+					xml.parsers.expat.ErrorString(self.parser.ErrorCode),
+					self.parser.ErrorByteIndex))
+			raise
 
 		"""
 		while True:

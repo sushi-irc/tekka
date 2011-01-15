@@ -176,7 +176,7 @@ class GOHTMLBuffer(htmlbuffer.HTMLBuffer):
 	tagtable=None):
 		htmlbuffer.HTMLBuffer.__init__(self, handler, tagtable)
 
-		contentHandler = GOHTMLHandler(self, go_handler, self.URLHandler)
+		contentHandler = GOHTMLHandler(self, go_handler, handler)
 		#self.parser.setContentHandler(contentHandler)
 		self.parser.StartElementHandler = contentHandler.startElement
 		self.parser.EndElementHandler = contentHandler.endElement
