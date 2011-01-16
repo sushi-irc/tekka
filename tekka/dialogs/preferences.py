@@ -213,7 +213,7 @@ def applyNickColors():
 
 def applyChatting():
 	highlightList = widgets.get_object("highlightList")
-	config.set_list("chatting", "highlight_words", [n[0].get_text() for n in highlightList.get_widget_matrix() if n])
+	config.set_list("chatting", "highlight_words", [n[0].get_text() for n in highlightList.get_widget_matrix() if n and n[0].get_text()])
 
 def applyGeneralOutputFilter():
 	generalOutputFilterList = widgets.get_object("generalOutputFilterList")
