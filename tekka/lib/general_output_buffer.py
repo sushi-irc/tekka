@@ -83,6 +83,7 @@ def go_handler(tag, widget, event, iter, attrs):
 		else:
 			self.tag.set_property("weight", pango.WEIGHT_NORMAL)
 
+
 	self = go_handler
 
 	# check for previous tag and unhighlight it
@@ -104,7 +105,8 @@ def go_handler(tag, widget, event, iter, attrs):
 		def outer_cb(*x):
 			switch_highlight(self.tag, False)
 
-		gui.widgets.get_object("main_window").connect("motion-notify-event",
+		gui.widgets.get_object("main_window").connect(
+			"motion-notify-event",
 			outer_cb)
 
 	# abort event handling on <a> tags
@@ -139,42 +141,43 @@ def go_handler(tag, widget, event, iter, attrs):
 			path = eval(self.path_string)
 			gui.tabs.switch_to_path(path)
 
+
 class GOHTMLHandler(htmlbuffer.HTMLHandler):
 
 	def __init__(self, textbuffer, GOHandler, URLhandler):
 		htmlbuffer.HTMLHandler.__init__(self, textbuffer, URLhandler)
 		self.go_handler = GOHandler
 
-	def characters(self, text):
-		htmlbuffer.HTMLHandler.characters(self, text)
-
 	def startElement(self, name, attrs):
-
 		if name == "goref":
 			if self.go_handler:
+				# TODO caching of goref
 				tag = self.textbuffer.create_tag(None)
+
 				tag.s_attribute = {"goref":True}
+
+				# workaround the priority in the taglist of HTMLHandler
+				# Given <msg><goref><font></font></goref></msg>
+				# Results in [font, goref, msg], so goref has a higher
+				# priority than font. As a result, every change made in
+				# goref overrides properties of font. We don't want this,
+				# so we set the goref tag to a low priority.
+				tag.set_priority(0)
 
 				tag.connect("event", self.go_handler, attrs)
 
-				self.elms.append(name)
-				self.tags.append(tag)
+				self._apply_tag(name, tag)
 
-		htmlbuffer.HTMLHandler.startElement(self, name, attrs)
+		else:
+			htmlbuffer.HTMLHandler.startElement(self, name, attrs)
 
-	def endElement(self, name):
-		htmlbuffer.HTMLHandler.endElement(self, name)
-
-	def endDocument(self):
-		htmlbuffer.HTMLHandler.endDocument(self)
 
 class GOHTMLBuffer(htmlbuffer.HTMLBuffer):
 
 	__gtype_name__ = "GOHTMLBuffer"
 
-	def __init__(self, go_handler=go_handler, handler=None,
-	tagtable=None):
-		htmlbuffer.HTMLBuffer.__init__(self, handler, tagtable)
+	def __init__(self, go_handler=go_handler, handler=None):
+		htmlbuffer.HTMLBuffer.__init__(self, handler)
 
 		contentHandler = GOHTMLHandler(self, go_handler, self.URLHandler)
 		self.parser.setContentHandler(contentHandler)
