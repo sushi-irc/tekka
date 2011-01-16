@@ -30,6 +30,9 @@ import os
 import sys
 import logging
 
+# lists are parsed via json
+import json
+
 from xdg.BaseDirectory import xdg_config_home, xdg_data_home, \
 	xdg_cache_home
 import ConfigParser
@@ -44,6 +47,9 @@ defaults = {}
 
 config_parser = None
 config_file = ""
+
+encoder = json.JSONEncoder()
+decoder = json.JSONDecoder()
 
 _watcher = {}
 
@@ -111,10 +117,12 @@ def set_defaults():
 	defaults["tekka"]["text_rules"] = "True"
 	defaults["tekka"]["rules_limit"] = "3"
 
+
 	defaults["dcc"] = {}
 	defaults["dcc"]["show_ident_in_dialog"] = "False"
 
 	defaults["general_output"] = {}
+	defaults["general_output"]["valid_types"] = '["message","action","highlightmessage","highlightaction"]'
 	defaults["general_output"]["filter"] = ""
 	"""
 	filter take place here.
@@ -142,7 +150,7 @@ def set_defaults():
 	defaults["colors"]["last_log"] = str(contrast.CONTRAST_COLOR_LIGHT_GREY)
 
 	defaults["colors"]["nick_contrast_colors"] = "True"
-	defaults["colors"]["nick_colors"] = "#AA0000,#2222AA,#44AA44,#123456,#987654"
+	defaults["colors"]["nick_colors"] = '["#AA0000","#2222AA","#44AA44","#123456","#987654"]'
 	defaults["colors"]["rules_color"] = "auto" # color for htmlbuffer ruling
 
 	defaults["chatting"]={}
@@ -151,6 +159,7 @@ def set_defaults():
 	defaults["chatting"]["part_message"] = "Partitioning."
 	defaults["chatting"]["nick_separator"] = ": "
 	defaults["chatting"]["time_format"] = "%H:%M"
+	defaults["chatting"]["highlight_words"] = "[]"
 
 	defaults["autoload_plugins"] = {}
 
@@ -278,31 +287,23 @@ def set(section, option, value):
 
 @types (section=basestring, option=basestring, l=list)
 def set_list(section, option, l):
+	""" Set the content of l as value of option.
+		Lists are saved in a JSON parseable format.
 	"""
-	join the list l to a string separated
-	by , and set it as value to option.
-	Return False on error, else True.
-	"""
-	s = escape_join(",", l)
-
-	if None == s:
-		return False
+	s = encoder.encode(l)
 
 	return set(section, option, s)
 
 @types (section=basestring, option=basestring, value=basestring)
 def append_list(section, option, value):
-	"""
-	add value to the list identified by option
-	"""
+	""" Add value to the list identified by option """
 	v = get_list(section, option, [])
 	v.append(value)
 	return set_list(section, option, v)
 
 @types (section=basestring, option=basestring)
 def unset(section, option):
-	"""
-		Removes the option in the section.
+	""" Removes the option in the section.
 		Returns True on success otherwise False.
 	"""
 	if not config_parser:
@@ -392,14 +393,14 @@ def get_list(section, option, default):
 	"""
 	res = get(section, option, default)
 
-	if res == default:
+	if res == default or not res:
 		return default
 
-	l = unescape_split(",", res)
+	l = decoder.decode(res)
 
-	if not l or (len(l) == 1 and l[0] == ""):
+	if l == default or not l:
 		return default
-	return list(l)
+	return l
 
 @types (section=basestring, option=basestring)
 def get_bool(section, option, default=False):
