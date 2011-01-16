@@ -50,6 +50,14 @@ from ..helper import markup
 
 from ..typecheck import types
 
+(MESSAGE,
+ ACTION,
+ HIGHMESSAGE,
+ HIGHACTION) = MSGTYPES = (
+ 	"message",
+	"action",
+	"highlightmessage",
+	"highlightaction")
 
 def _write_to_general_output(msgtype, timestring, tab, message):
 	""" channel can be empty """
@@ -185,9 +193,8 @@ class TekkaTab(gobject.GObject):
 			the status of the tab. The message stack
 			can be reset by using None as status.
 
-			The following message states are implemented:
-			- "action" and "highlightaction"
-			- "message" and "highlightmessage"
+			See MSGTYPES at the beginning of the file
+			for a listing of available message types.
 		"""
 		new = False
 
@@ -215,7 +222,7 @@ class TekkaTab(gobject.GObject):
 		raise NotImplementedError
 
 
-	def write_raw(self, msg, type="message"):
+	def write_raw(self, msg, type=MESSAGE):
 		""" unformatted, without timestamp """
 		buf = self.window.textview.get_buffer()
 		end = buf.get_end_iter()
@@ -389,7 +396,7 @@ class TekkaServer(TekkaTab):
 		return base
 
 
-	def write(self, timestamp, message, msgtype="message",
+	def write(self, timestamp, message, msgtype=MESSAGE,
 		no_general_output=False):
 		""" write [<timestamp>] <message> to this tab's buffer """
 
@@ -421,7 +428,7 @@ class TekkaServer(TekkaTab):
 		gobject.idle_add(notify)
 
 
-	def current_write(self, timestamp, message, msgtype="message",
+	def current_write(self, timestamp, message, msgtype=MESSAGE,
 	no_general_output=False):
 		""" write a string to the current active tab of
 			this server or, if no tab is active, to the
@@ -507,18 +514,18 @@ class TekkaQuery(TekkaTab):
 		if not self.connected:
 			base = "<span strikethrough='true'>"+base+"</span>"
 
-		if "action" in self.newMessage:
+		if ACTION in self.newMessage:
 			italic = True
 
-		if "message" in self.newMessage:
+		if MESSAGE in self.newMessage:
 			bold = True
 
-		if ("highlightmessage" in self.newMessage
-			and "highlightaction" in self.newMessage):
+		if (HIGHMESSAGE in self.newMessage
+			and HIGHACTION in self.newMessage):
 			foreground = "#DDDD00"
-		elif "highlightmessage" in self.newMessage:
+		elif HIGHMESSAGE in self.newMessage:
 			foreground = "#DD0000"
-		elif "highlightaction" in self.newMessage:
+		elif HIGHACTION in self.newMessage:
 			foreground = "#00DD00"
 
 		markup = "<span "
@@ -536,7 +543,7 @@ class TekkaQuery(TekkaTab):
 		return markup
 
 
-	def write(self, timestamp, message, msgtype="message",
+	def write(self, timestamp, message, msgtype=MESSAGE,
 	no_general_output = False, **kwargs):
 		""" write [<timestamp>] <message> to this tab's buffer """
 
@@ -617,18 +624,18 @@ class TekkaChannel(TekkaTab):
 		if not self.joined:
 			base = "<span strikethrough='true'>"+base+"</span>"
 
-		if "action" in self.newMessage:
+		if ACTION in self.newMessage:
 			italic = True
 
-		if "message" in self.newMessage:
+		if MESSAGE in self.newMessage:
 			bold = True
 
-		if ("highlightmessage" in self.newMessage
-		and "highlightaction" in self.newMessage):
+		if (HIGHMESSAGE in self.newMessage
+		and HIGHACTION in self.newMessage):
 			foreground = "#DDDD00"
-		elif "highlightmessage" in self.newMessage:
+		elif HIGHMESSAGE in self.newMessage:
 			foreground = "#DD0000"
-		elif "highlightaction" in self.newMessage:
+		elif HIGHACTION in self.newMessage:
 			foreground = "#00DD00"
 
 		markup = "<span "
@@ -646,7 +653,7 @@ class TekkaChannel(TekkaTab):
 		return markup
 
 
-	def write(self, timestamp, message, msgtype="message",
+	def write(self, timestamp, message, msgtype=MESSAGE,
 	no_general_output=False, **kwargs):
 		""" write [<timestamp>] <message> to this tab's buffer """
 
