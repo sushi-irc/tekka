@@ -39,8 +39,26 @@ from ..lib.expanding_list import ExpandingList
 
 widgets = None
 
-MESSAGE_TYPES=('message','action',
-		'highlightmessage','highlightaction')
+MESSAGE_TYPES=gui.tabs.MSGTYPES
+
+def go_valid_types_toggled(typename, checkbtn):
+	""" add the typename to the list of valid message types if
+		the checkbox is checked, otherwise delete it
+	"""
+	section = "general_output"
+	option = "valid_types"
+
+	l = config.get_list(section, option, [])
+
+	if typename not in l:
+		if checkbtn.get_active():
+			config.append_list(section, option, typename)
+
+	else:
+		if not checkbtn.get_active():
+			del l[l.index(typename)]
+			config.set_list(section, option, l)
+
 
 def generalOutputFilterList_instanced_widget_cb(elist, row, column, obj):
 	if column == 0:
@@ -136,6 +154,21 @@ def fillNickColors():
 	nickColorsList.remove_row(i)
 
 def fillGeneralOutputFilters():
+	types = config.get_list("general_output", "valid_types", [])
+
+	table = {}
+	table[gui.tabs.MESSAGE] = "type_message"
+	table[gui.tabs.ACTION] = "type_action"
+	table[gui.tabs.HIGHMESSAGE] = "type_highlightmessage"
+	table[gui.tabs.HIGHACTION] = "type_highlightaction"
+
+	for type in types:
+		if not table.has_key(type):
+			logging.error("Invalid key: %s" % (type,))
+			continue
+		w = widgets.get_object(table[type])
+		w.set_active(True)
+
 	# (type, server, channel), (type, server), ...
 	filter = config.get_list("general_output", "filter", [])
 
@@ -376,6 +409,14 @@ def setup():
 		"chatting_time_format_written": chatting_time_format_written,
 		"chatting_log_lines_changed": chatting_log_lines_changed,
 	# general output page
+		"go_type_message_toggled":
+			lambda *x: go_valid_types_toggled(gui.tabs.MESSAGE,*x),
+		"go_type_action_toggled":
+			lambda *x: go_valid_types_toggled(gui.tabs.ACTION,*x),
+		"go_type_highlightmessage_toggled":
+			lambda *x: go_valid_types_toggled(gui.tabs.HIGHMESSAGE,*x),
+		"go_type_highlightaction_toggled":
+			lambda *x: go_valid_types_toggled(gui.tabs.HIGHACTION,*x),
 		"generalOutputFilterList_instanced_widget_cb":
 			generalOutputFilterList_instanced_widget_cb,
 	# nick colors page

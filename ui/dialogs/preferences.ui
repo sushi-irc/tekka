@@ -814,7 +814,7 @@
               <object class="GtkTable" id="generalOutputFilterTable">
                 <property name="visible">True</property>
                 <property name="border_width">8</property>
-                <property name="n_rows">2</property>
+                <property name="n_rows">3</property>
                 <child>
                   <object class="GtkLabel" id="label8">
                     <property name="visible">True</property>
@@ -830,8 +830,8 @@ The last field is optional.</property>
                     <property name="ellipsize">start</property>
                   </object>
                   <packing>
-                    <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
                     <property name="y_options">GTK_SHRINK</property>
                     <property name="y_padding">6</property>
                   </packing>
@@ -855,12 +855,9 @@ The last field is optional.</property>
                             <child>
                               <object class="ExpandingList" id="generalOutputFilterList">
                                 <property name="visible">True</property>
-                                <property name="str_widgets">(gtk.ComboBox, gtk.Entry, gtk.Entry,)</property>
                                 <property name="no_first_row">True</property>
+                                <property name="str_widgets">(gtk.ComboBox, gtk.Entry, gtk.Entry,)</property>
                                 <signal name="instanced_widget" handler="generalOutputFilterList_instanced_widget_cb"/>
-                                <child>
-                                  <placeholder/>
-                                </child>
                               </object>
                             </child>
                           </object>
@@ -875,6 +872,91 @@ The last field is optional.</property>
                       </object>
                     </child>
                   </object>
+                  <packing>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                    <property name="y_padding">6</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkFrame" id="frame3">
+                    <property name="visible">True</property>
+                    <property name="label_xalign">0</property>
+                    <property name="shadow_type">none</property>
+                    <child>
+                      <object class="GtkAlignment" id="alignment1">
+                        <property name="visible">True</property>
+                        <property name="left_padding">12</property>
+                        <child>
+                          <object class="GtkVBox" id="vbox1">
+                            <property name="visible">True</property>
+                            <child>
+                              <object class="GtkCheckButton" id="type_message">
+                                <property name="label" translatable="yes">Message</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="draw_indicator">True</property>
+                                <signal name="toggled" handler="go_type_message_toggled"/>
+                              </object>
+                              <packing>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="type_action">
+                                <property name="label" translatable="yes">Action</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="draw_indicator">True</property>
+                                <signal name="toggled" handler="go_type_action_toggled"/>
+                              </object>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="type_highlightmessage">
+                                <property name="label" translatable="yes">Highlighted message</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="draw_indicator">True</property>
+                                <signal name="toggled" handler="go_type_highlightmessage_toggled"/>
+                              </object>
+                              <packing>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkCheckButton" id="type_highlightaction">
+                                <property name="label" translatable="yes">Highlighted action</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">False</property>
+                                <property name="draw_indicator">True</property>
+                                <signal name="toggled" handler="go_type_highlightaction_toggled"/>
+                              </object>
+                              <packing>
+                                <property name="position">3</property>
+                              </packing>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel" id="label17">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">&lt;b&gt;Displayed message types&lt;/b&gt;</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="y_padding">6</property>
+                  </packing>
                 </child>
               </object>
               <packing>

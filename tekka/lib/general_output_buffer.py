@@ -185,5 +185,13 @@ class GOHTMLBuffer(htmlbuffer.HTMLBuffer):
 		self.go_handler = go_handler
 
 	def go_insert(self, iter, text, tab, type):
-		self.insert_html(iter, "<goref type='%s' path='%s'>%s</goref>" % (
-			type, tab.path, text))
+		""" type is the same msgtype as in insert_html.
+			Those types are processed in the TekkaTab classes.
+		"""
+		allowed_types = config.get_list("general_output",
+			"valid_types",[])
+
+		if type in allowed_types:
+			self.insert_html(iter,
+				"<goref type='%s' path='%s'>%s</goref>" % (
+					type, tab.path, text))
