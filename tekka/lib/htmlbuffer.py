@@ -65,6 +65,29 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 		self.sucount = 0
 		self.sbcount = 0
 
+	def _get_cache_name(self, name, attrs):
+		" return the caching name of a element for tag caching "
+
+		def attrs_to_dict(attrs):
+			return "{"+ ",".join(
+				[n+":"+attrs.getValue(n) for n in attrs.getNames()]) +"}"
+
+		if name in ("font","span"):
+			return name + attrs_to_dict(attrs)
+
+		return name
+
+	def _get_cached(self, cachename):
+		" return the cached tag for the given element or None "
+		return self.textbuffer.get_tag_table().lookup(cachename)
+
+	def _apply_tag(self, name, tag):
+		""" mark the element and the tag to be added later.
+			This is usually called in startElement.
+		"""
+		self.elms.insert(0, name)
+		self.tags.insert(0, tag)
+
 	def characters(self, text):
 		""" Raw characters? Apply them (with tags, if given)
 			to the text buffer
@@ -86,27 +109,15 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 
 	def startElement(self, name, attrs):
 
-		def apply_tag(name, tag):
-			self.elms.insert(0, name)
-			self.tags.insert(0, tag)
-
-		def attrs_to_dict(attrs):
-			return "{"+ ",".join(
-				[n+":"+attrs.getValue(n) for n in attrs.getNames()]) +"}"
-
-		def get_cache_name(name, attrs):
-			if name in ("font","span"):
-				return name + attrs_to_dict(attrs)
-			return name
 
 		if not name in self.no_cache:
 
-			cname = get_cache_name(name,attrs)
+			cname = self._get_cache_name(name,attrs)
 
 			tag = self.textbuffer.get_tag_table().lookup(cname)
 
 			if tag: # found a already known tag, use it
-				apply_tag(name, tag)
+				self._apply_tag(name, tag)
 				return
 
 		# handle no tag creating elements
@@ -120,7 +131,8 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 		if name in self.no_cache:
 			tag = self.textbuffer.create_tag(None)
 		else:
-			tag = self.textbuffer.create_tag(get_cache_name(name, attrs))
+			tag = self.textbuffer.create_tag(
+				self._get_cache_name(name, attrs))
 
 		tag.s_attribute = {} # special attribute for identifying
 
@@ -165,12 +177,8 @@ class HTMLHandler(xml.sax.handler.ContentHandler):
 			#
 			self._parseFont(tag, attrs)
 
-		else:
-			# FIXME here should be an exception
-			logging.error("HTMLBuffer: Unknown tag %s" % (name))
-			return
 
-		apply_tag(name, tag)
+		self._apply_tag(name, tag)
 
 	def endElement(self, name):
 		if name in self.ignoreableEndTags:
