@@ -34,6 +34,8 @@ from . import htmlbuffer
 from .. import config
 from .. import gui
 
+from ..gui.tabs import TekkaServer
+
 def build_handler_menu(tag, widget, event, iter, attrs):
 
 	def hide_message_cb(item, tab, msgtype):
@@ -184,16 +186,14 @@ class GOHTMLBuffer(htmlbuffer.HTMLBuffer):
 
 		self.go_handler = go_handler
 
-	def go_insert(self, iter, text, tab, type):
-		""" type is the same msgtype as in insert_html.
-			Those types are processed in the TekkaTab classes.
-		"""
+	def go_insert(self, iter, text, tab, msgtype):
+		""" Filter messages and insert other into the buffer """
 
 		# check the type generally
 		allowed_types = config.get_list("general_output",
 			"valid_types",[])
 
-		if type not in allowed_types:
+		if msgtype not in allowed_types:
 			return
 
 		# check for special filters
@@ -222,4 +222,4 @@ class GOHTMLBuffer(htmlbuffer.HTMLBuffer):
 		# not filtered, insert
 		self.insert_html(iter,
 			"<goref type='%s' path='%s'>%s</goref>" % (
-				type, tab.path, text))
+				msgtype, tab.path, text))

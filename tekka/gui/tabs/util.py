@@ -1,3 +1,5 @@
+from .._builder import widgets
+
 """
 Provides utility functions used by (nearly) all tabs.
 """
