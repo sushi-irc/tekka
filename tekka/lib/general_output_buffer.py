@@ -188,10 +188,38 @@ class GOHTMLBuffer(htmlbuffer.HTMLBuffer):
 		""" type is the same msgtype as in insert_html.
 			Those types are processed in the TekkaTab classes.
 		"""
+
+		# check the type generally
 		allowed_types = config.get_list("general_output",
 			"valid_types",[])
 
-		if type in allowed_types:
-			self.insert_html(iter,
-				"<goref type='%s' path='%s'>%s</goref>" % (
-					type, tab.path, text))
+		if type not in allowed_types:
+			return
+
+		# check for special filters
+		filter = config.get_list("general_output", "filter", [])
+
+		if type(tab) == TekkaServer:
+			server = tab.name
+			channel = ""
+		else:
+			server = tab.server.name
+			channel = tab.name
+
+		for tuple_str in filter:
+			try:
+				r_tuple = eval(tuple_str)
+
+			except BaseException as e:
+				logging.error("Error in filter tuple '%s': %s" % (
+								tuple_str, e))
+				continue
+
+			# if the rule matches, abort execution
+			if r_tuple[0] == msgtype and r_tuple[-1] in (server, channel):
+				return
+
+		# not filtered, insert
+		self.insert_html(iter,
+			"<goref type='%s' path='%s'>%s</goref>" % (
+				type, tab.path, text))

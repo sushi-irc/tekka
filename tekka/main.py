@@ -844,14 +844,19 @@ def nickList_render_nicks_cb(column, renderer, model, iter):
 
 def treemodel_rows_reordered_cb(treemodel, path, iter, new_order):
 	""" new_order is not accessible, so hack arround it... """
+
+	# explicit import because what we do is bad.
+	# there should be no one writing on current_path
+	from gui.tabs.current import _set_current_path
+
 	updated = False
 	for row in treemodel:
 		if not row[0]:
 			continue
 
-		if gui.tabs._currentPath == row[0].path and not updated:
+		if gui.tabs.get_current_path() == row[0].path and not updated:
 			# update the currentPath cache
-			gui.tabs._currentPath = row.path
+			_set_current_path(row.path)
 			updated = True
 
 		# update the tab's path cache
@@ -861,8 +866,9 @@ def treemodel_rows_reordered_cb(treemodel, path, iter, new_order):
 			if not child[0]:
 				continue
 
-			if gui.tabs._currentPath == child[0].path and not updated:
-				gui.tabs._currentPath = child.path
+			if (gui.tabs.get_current_path() == child[0].path
+			and not updated):
+				_set_current_path(child.path)
 				updated = True
 
 			# update path's tab cache

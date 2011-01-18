@@ -31,6 +31,18 @@ from . import widgets
 from .. import config
 from ..helper import shortcuts
 
+"""
+Holds the information which shortcutname has which handler associated
+and how it is triggered (the shortcut itself).
+
+At this time everything about shortcuts happens in here but for
+future extension possibilities (remapping shortcuts etc.) this
+API is provided.
+
+Also it is possible for tekka specific plugin developers to add
+shortcuts easily.
+"""
+
 _handlers = {
 		"clear_outputs": [],
 		"output_page_up": [],

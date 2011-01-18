@@ -44,6 +44,15 @@ from ..lib.custom_color_button import CustomColorButton
 
 from ..helper import URLHandler
 
+"""
+Creating/Bootstrapping module. This is the core of the UI creation.
+
+All gtk.Builder files are handled here.
+
+Therefore, gtk.Builder needs to find all dependend UI modules
+so they are imported here.
+"""
+
 
 def get_new_buffer():
 	""" Returns a HTMLBuffer with assigned URL handler. """

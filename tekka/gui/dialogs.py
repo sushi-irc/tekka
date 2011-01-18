@@ -32,6 +32,9 @@ from gettext import gettext as _
 
 from ..com import sushi, NoSushiError
 
+"""
+Provides access to dialogs for loading and showing them.
+"""
 
 def loadDialog(name):
 	importName = "tekka.dialogs."+name

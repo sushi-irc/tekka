@@ -1,6 +1,22 @@
 import gtk
 
+"""
+
+Holds the TekkaBuilder class object, initially needed for
+the builder module.
+
+Also provides a static reference to the initial instance of
+the TekkaBuilder class (widgets) which is used all over
+the application to access widgets.
+
+"""
+
 class TekkaBuilder(gtk.Builder):
+	""" extended version of the gtk.Builder which supports
+		adding GObject widgets to the list of storable
+		objects in the builder.
+	"""
+
 	def __init__(self):
 		super(TekkaBuilder,self).__init__()
 		self._widgets = {}

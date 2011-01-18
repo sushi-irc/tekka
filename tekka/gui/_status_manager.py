@@ -27,6 +27,12 @@ SUCH DAMAGE.
 
 import gobject
 
+"""
+Holds the StatusManager, an object which holds a status application-wide.
+
+This is used for the status bar and error handling.
+"""
+
 class StatusManager(gobject.GObject):
 
 	""" Hold the different states the application is in.
