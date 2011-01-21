@@ -353,12 +353,26 @@ def cmd_names(serverTab, channelTab, args):
 				print_message(_("• End of names"))
 
 			else:
+				max_nicklen = max([len(n)+len(p)
+					for (p,n) in self.tab.nickList.get_nicks_mode()])
+
 				message = ""
 				for i in xrange(len(nicks)):
-					message += "[%s<font foreground='%s'>%s</font>]" % (
-						prefixes[i],
-						color.get_nick_color(nicks[i]),
-						nicks[i])
+					nick_color = color.get_nick_color(nicks[i])
+
+					c_start = "<font foreground='%s'>" % (nick_color)
+					c_end = "</font>"
+
+					tmp = "[{prefix}{cstart}{nick}{cend}]".format(
+						prefix=prefixes[i],
+						nick=nicks[i],
+						cstart=c_start,
+						cend=c_end)
+
+					overhead = len(tmp) - len(nicks[i]) - len(prefixes[i])
+
+					message += "{0:{align}<{fill}}".format(tmp,
+									align=" ", fill=max_nicklen + overhead)
 
 					if (i+1) % self.max_col == 0:
 						print_message(message)
