@@ -185,7 +185,7 @@
               <object class="GtkTable" id="colorsTable">
                 <property name="visible">True</property>
                 <property name="border_width">8</property>
-                <property name="n_rows">12</property>
+                <property name="n_rows">13</property>
                 <property name="n_columns">3</property>
                 <property name="column_spacing">6</property>
                 <child>
@@ -306,6 +306,7 @@
                   <packing>
                     <property name="top_attach">10</property>
                     <property name="bottom_attach">11</property>
+                    <property name="y_padding">2</property>
                   </packing>
                 </child>
                 <child>
@@ -320,6 +321,7 @@
                   <packing>
                     <property name="top_attach">11</property>
                     <property name="bottom_attach">12</property>
+                    <property name="y_padding">2</property>
                   </packing>
                 </child>
                 <child>
@@ -629,6 +631,27 @@
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkCheckButton" id="irc_colors">
+                    <property name="label" translatable="yes">Display IRC colors</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="toggled" handler="irc_colors_toggled"/>
+                  </object>
+                  <packing>
+                    <property name="top_attach">12</property>
+                    <property name="bottom_attach">13</property>
+                    <property name="y_padding">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
                   <placeholder/>
                 </child>
                 <child>
@@ -855,9 +878,12 @@ The last field is optional.</property>
                             <child>
                               <object class="ExpandingList" id="generalOutputFilterList">
                                 <property name="visible">True</property>
-                                <property name="no_first_row">True</property>
                                 <property name="str_widgets">(gtk.ComboBox, gtk.Entry, gtk.Entry,)</property>
+                                <property name="no_first_row">True</property>
                                 <signal name="instanced_widget" handler="generalOutputFilterList_instanced_widget_cb"/>
+                                <child>
+                                  <placeholder/>
+                                </child>
                               </object>
                             </child>
                           </object>

@@ -25,10 +25,16 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+"""
+Escape strings so they pass the markup parser of GTK.
+"""
+
 import gobject
 
 from . import escape as escape_helper
 from . import color
+
+from .. import config
 
 def _escape_ml(msg):
 	""" escape every invalid character via gobject.markup_escape_text
@@ -65,7 +71,10 @@ def markup_escape(msg):
 	msg = msg.replace(chr(2), "")
 	msg = msg.replace(chr(31), "")
 
-	msg = color.parse_color_codes_to_tags(msg)
+	if config.get_bool("color","irc_colors"):
+		msg = color.parse_color_codes_to_tags(msg)
+	else:
+		msg = color.strip_color_codes(msg)
 
 	return msg
 
@@ -80,7 +89,11 @@ def escape(msg):
 	msg = msg.replace(chr(2), "<sb/>") # bold-char
 	msg = msg.replace(chr(31), "<su/>") # underline-char
 
-	msg = color.parse_color_codes_to_tags(msg)
+
+	if config.get_bool("color","irc_colors"):
+		msg = color.parse_color_codes_to_tags(msg)
+	else:
+		msg = color.strip_color_codes(msg)
 
 	return msg
 

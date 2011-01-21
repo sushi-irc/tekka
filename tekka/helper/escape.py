@@ -26,6 +26,10 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
 """
 
+"""
+Module for splitting after strings but ignoring the escaped ones.
+"""
+
 test_string = "abc,de\\,,f\\,g,\\\\,h,i"
 # result: ["abc","de,","f,g","\\\\","h","i"]
 

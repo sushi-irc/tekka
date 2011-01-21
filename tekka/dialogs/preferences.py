@@ -109,6 +109,10 @@ def fillColors():
 	btn.set_active(config.get("colors","rules_color") == "auto")
 	btn.toggled()
 
+	btn = widgets.get_object("irc_colors")
+	btn.set_active(config.get_bool("colors","irc_colors"))
+	btn.toggled()
+
 
 
 def fillChatting():
@@ -330,6 +334,9 @@ def colors_rules_color_yesno_toggled(button):
 	widgets.get_object("rules_color").set_sensitive(flag)
 	widgets.get_object("reset_rules_color").set_sensitive(flag)
 
+def colors_irc_colors_toggled(button):
+	config.set("colors","irc_colors", str(button.get_active()))
+
 def reset_color(color_key):
 	""" reset the color to it's default value (contrast color index) """
 	if config.is_default("colors",color_key):
@@ -402,6 +409,7 @@ def setup():
 		"colors_color_button_clicked": colors_color_button_clicked,
 		"colors_rules_autodetect_toggled": colors_rules_autodetect_toggled,
 		"colors_rules_color_yesno_toggled": colors_rules_color_yesno_toggled,
+		"colors_irc_colors_toggled": colors_irc_colors_toggled,
 
 	# chatting page
 		"chatting_quit_message_written": chatting_quit_message_written,
