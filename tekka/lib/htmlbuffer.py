@@ -40,7 +40,6 @@ from ..helper.url import URLToTag
 from .. import helper
 from .. import config
 
-from .. import memdebug
 
 
 class HTMLHandler(xml.sax.handler.ContentHandler):
