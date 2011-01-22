@@ -81,12 +81,12 @@ def set_defaults():
 	defaults["tekka"]["logfile"] = os.path.join(xdg_cache_home, "sushi",
 		"tekka.txt")
 	defaults["tekka"]["locale_dir"] = get_path("..", "..", "locale")
-	defaults["tekka"]["plugin_dirs"] = escape_join(",", (
+	defaults["tekka"]["plugin_dirs"] = '["' + '","'.join((
 			os.path.join(xdg_data_home, "sushi", "tekka", "plugins"),
 			os.path.join(xdg_data_home, "sushi", "plugins"),
 			get_path("plugins"),
 			get_path("..", "plugins")
-		))
+		)) + '"]'
 	defaults["tekka"]["use_default_font"] = "True"
 	defaults["tekka"]["font"] = "Monospace 10"
 	defaults["tekka"]["auto_expand"] = "True"
