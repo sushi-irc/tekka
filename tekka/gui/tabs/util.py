@@ -1,5 +1,7 @@
 from .._builder import widgets
 
+from ...helper import color
+
 """
 Provides utility functions used by (nearly) all tabs.
 """
@@ -35,4 +37,6 @@ def _write_to_general_output(msgtype, timestring, tab, message):
 	widgets.get_object("general_output").scroll_to_bottom()
 
 
-
+def _markup_color(key):
+	return color.get_color_by_key(key,
+		color.get_widget_base_color(widgets.get_object("tabs_view")))

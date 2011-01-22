@@ -153,6 +153,12 @@ def set_defaults():
 	defaults["colors"]["nick_colors"] = '["#AA0000","#2222AA","#44AA44","#123456","#987654"]'
 	defaults["colors"]["rules_color"] = "auto" # color for htmlbuffer ruling
 	defaults["colors"]["irc_colors"] = "True" # display IRC colors (\003X,Y)
+	# markup colors
+	defaults["colors"]["new_message"] = str(contrast.CONTRAST_COLOR_LIGHT_BROWN)
+	defaults["colors"]["new_action"] = str(contrast.CONTRAST_COLOR_LIGHT_BROWN)
+	defaults["colors"]["new_highlightmessage"] = str(contrast.CONTRAST_COLOR_DARK_RED)
+	defaults["colors"]["new_highlightaction"] = str(contrast.CONTRAST_COLOR_DARK_GREEN)
+	defaults["colors"]["color_new_messages"] = "False"
 
 	defaults["chatting"]={}
 	defaults["chatting"]["last_log_lines"] = "10"

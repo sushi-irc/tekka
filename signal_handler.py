@@ -536,12 +536,17 @@ def userQuery_cb(timestamp, server, from_str, message):
 
 	tab = _createTab(server, nick)
 
+	if isHighlighted(tab.server, message):
+		mtype = gui.tabs.HIGHMESSAGE
+	else:
+		mtype = gui.tabs.MESSAGE
+
 	tab.write(timestamp,
 		"&lt;<font foreground='%s' weight='bold'>%s</font>&gt; %s" % (
 			color.get_nick_color(nick),
 			markup.escape(nick),
 			markup.escape(message)
-		), gui.tabs.MESSAGE, group_string=nick)
+		), mtype, group_string=nick)
 
 	# queries are important
 	gui.mgmt.set_urgent(True)

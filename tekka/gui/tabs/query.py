@@ -42,11 +42,12 @@ class TekkaQuery(tab.TekkaTab):
 
 		if (HIGHMESSAGE in self.newMessage
 			and HIGHACTION in self.newMessage):
-			foreground = "#DDDD00"
+			foreground = util._markup_color("new_highlightmessage")
 		elif HIGHMESSAGE in self.newMessage:
-			foreground = "#DD0000"
+			foreground = util._markup_color("new_highlightmessage")
+			bold = True
 		elif HIGHACTION in self.newMessage:
-			foreground = "#00DD00"
+			foreground = util._markup_color("new_highlightaction")
 
 		markup = "<span "
 		if italic:

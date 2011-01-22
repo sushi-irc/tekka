@@ -89,6 +89,9 @@ def _get_output_bg_color():
 def _get_output_fg_color():
 	return gui.widgets.get_object("output").get_style().fg[NORMAL]
 
+def get_widget_base_color(widget):
+	return widget.get_style().base[gtk.STATE_NORMAL]
+
 
 @types (msg = basestring)
 def parse_color_codes_to_tags(msg):
@@ -209,15 +212,21 @@ def is_contrast_color(value):
 	return isinstance(value, basestring) and value[0] != "#"
 
 
-def get_color_by_key(key):
+def get_color_by_key(key, bgcolor=None):
 	""" get the configured color for the given key as GdkColor.
 		The key is defined in config section "colors".
 
 		Example: get_color_by_key("last_log") -> gtk.gdk.Color("#dddddd")
 
 		Note that str(gtk.gdk.Color("#000")) == "#000".
+
+		If bgcolor is None, the bgcolor is retrieved
+		by _get_output_bg_color.
 	"""
 	cvalue = config.get("colors",key)
+
+	if not bgcolor:
+		bgcolor = _get_output_bg_color()
 
 	if cvalue == None:
 		raise KeyError, "Unknown color key: '%s'" % (key)
@@ -229,7 +238,7 @@ def get_color_by_key(key):
 					gtk.STATE_INSENSITIVE]
 	else:
 		return contrast.contrast_render_foreground_color(
-			_get_output_bg_color(), int(cvalue))
+			bgcolor, int(cvalue))
 
 
 def get_nick_color(nick):
