@@ -42,6 +42,8 @@ from .lib import contrast
 from .typecheck import types
 from .helper.escape import unescape_split, escape_join
 
+from . import update_handler
+
 prefix = ""
 defaults = {}
 
@@ -52,6 +54,8 @@ encoder = json.JSONEncoder()
 decoder = json.JSONDecoder()
 
 _watcher = {}
+
+update_handler = [update_handler.json_get_list_update]
 
 def get_path(*c):
 	return os.path.abspath(os.path.join(prefix, *c))
@@ -169,6 +173,9 @@ def set_defaults():
 	defaults["chatting"]["highlight_words"] = "[]"
 
 	defaults["autoload_plugins"] = {}
+
+	# section for update handler specific options
+	defaults["updates"]={}
 
 	# Add default sections to config parser
 	# so setting is easier
@@ -291,6 +298,10 @@ def set(section, option, value):
 		return False
 	else:
 		return True
+
+@types(section=basestring, option=basestring, value=bool)
+def set_bool(section, option, value):
+	return set(section, option, str(value))
 
 @types (section=basestring, option=basestring, l=list)
 def set_list(section, option, l):
@@ -486,6 +497,7 @@ def setup():
 	global config_parser, config_file
 	global prefix
 
+
 	if os.path.islink(sys.argv[0]):
 		link = os.readlink(sys.argv[0])
 
@@ -506,4 +518,8 @@ def setup():
 		return
 
 	read_config_file()
+
+	for handler in update_handler:
+		handler()
+
 
