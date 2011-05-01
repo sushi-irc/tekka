@@ -20,6 +20,7 @@ def json_get_list_update():
 	" get_list internals were replaced by json parsing, updates config "
 
 	from . import config
+	from .helper import escape
 
 	if config.get_bool("updates", "json_config"):
 		return
