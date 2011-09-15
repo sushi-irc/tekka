@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-14 10:08+0100\n"
+"POT-Creation-Date: 2011-09-15 20:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,160 +17,160 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../signal_handler.py:355
+#: ../signal_handler.py:363
 #, python-format
 msgid "• Topic for %(channel)s: %(topic)s"
 msgstr ""
 
-#: ../signal_handler.py:391
+#: ../signal_handler.py:399
 #, python-format
 msgid "• You changed the topic to %(topic)s."
 msgstr ""
 
-#: ../signal_handler.py:393
+#: ../signal_handler.py:401
 #, python-format
 msgid "• %(nick)s changed the topic to %(topic)s."
 msgstr ""
 
-#: ../signal_handler.py:452
+#: ../signal_handler.py:460
 #, python-format
 msgid "• %(nick)s is away (%(message)s)."
 msgstr ""
 
-#: ../signal_handler.py:579
+#: ../signal_handler.py:592
 #, python-format
 msgid "• Modes for %(target)s: %(mode)s"
 msgstr ""
 
 #. normal ctcp
-#: ../signal_handler.py:672
+#: ../signal_handler.py:685
 #, python-format
 msgid "CTCP from %(nick)s to Channel:"
 msgstr ""
 
-#: ../signal_handler.py:703
+#: ../signal_handler.py:716
 #, python-format
 msgid "CTCP request from you to %(target)s: %(message)s"
 msgstr ""
 
-#: ../signal_handler.py:906
+#: ../signal_handler.py:919
 #, python-format
 msgid "• You are now known as %(newnick)s."
 msgstr ""
 
-#: ../signal_handler.py:912
+#: ../signal_handler.py:925
 #, python-format
 msgid "• %(nick)s is now known as %(newnick)s."
 msgstr ""
 
-#: ../signal_handler.py:1005
+#: ../signal_handler.py:1016
 #, python-format
 msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr ""
 
-#: ../signal_handler.py:1026
+#: ../signal_handler.py:1037
 #, python-format
 msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr ""
 
-#: ../signal_handler.py:1064
+#: ../signal_handler.py:1075
 #, python-format
 msgid "« You have quit (%(reason)s)."
 msgstr ""
 
-#: ../signal_handler.py:1066
+#: ../signal_handler.py:1077
 msgid "« You have quit."
 msgstr ""
 
-#: ../signal_handler.py:1089
+#: ../signal_handler.py:1100
 #, python-format
 msgid "« %(nick)s has quit (%(reason)s)."
 msgstr ""
 
-#: ../signal_handler.py:1091
+#: ../signal_handler.py:1102
 #, python-format
 msgid "« %(nick)s has quit."
 msgstr ""
 
-#: ../signal_handler.py:1192
+#: ../signal_handler.py:1198
 #, python-format
 msgid "» You have joined %(channel)s."
 msgstr ""
 
-#: ../signal_handler.py:1203
+#: ../signal_handler.py:1209
 #, python-format
 msgid "» %(nick)s has joined %(channel)s."
 msgstr ""
 
-#: ../signal_handler.py:1291
+#: ../signal_handler.py:1288
 #, python-format
 msgid "« You have left %(channel)s (%(reason)s)."
 msgstr ""
 
-#: ../signal_handler.py:1293
+#: ../signal_handler.py:1290
 #, python-format
 msgid "« You have left %(channel)s."
 msgstr ""
 
-#: ../signal_handler.py:1323
+#: ../signal_handler.py:1314
 #, python-format
 msgid "« %(nick)s has left %(channel)s (%(reason)s)."
 msgstr ""
 
-#: ../signal_handler.py:1326
+#: ../signal_handler.py:1317
 #, python-format
 msgid "« %(nick)s has left %(channel)s."
 msgstr ""
 
-#: ../signal_handler.py:1347
+#: ../signal_handler.py:1338
 msgid "• You are not a channel operator."
 msgstr ""
 
-#: ../signal_handler.py:1357
+#: ../signal_handler.py:1348
 #, python-format
 msgid "• %(target)s: No such nick/channel."
 msgstr ""
 
-#: ../signal_handler.py:1360
+#: ../signal_handler.py:1351
 #, python-format
 msgid "• %(target)s: No such server."
 msgstr ""
 
-#: ../signal_handler.py:1363
+#: ../signal_handler.py:1354
 #, python-format
 msgid "• %(target)s: No such channel."
 msgstr ""
 
-#: ../signal_handler.py:1375
+#: ../signal_handler.py:1366
 msgid "Unknown reason"
 msgstr ""
 
-#: ../signal_handler.py:1378
+#: ../signal_handler.py:1369
 msgid "The channel is full."
 msgstr ""
 
-#: ../signal_handler.py:1380
+#: ../signal_handler.py:1371
 msgid "The channel is invite-only."
 msgstr ""
 
-#: ../signal_handler.py:1382
+#: ../signal_handler.py:1373
 msgid "You are banned."
 msgstr ""
 
-#: ../signal_handler.py:1398
+#: ../signal_handler.py:1389
 msgid "You need the correct channel key."
 msgstr ""
 
-#: ../signal_handler.py:1403
+#: ../signal_handler.py:1394
 #, python-format
 msgid "You can not join %(channel)s: %(reason)s"
 msgstr ""
 
-#: ../signal_handler.py:1475
+#: ../signal_handler.py:1466
 msgid "Auto accepted file transfer"
 msgstr ""
 
-#: ../signal_handler.py:1476
+#: ../signal_handler.py:1467
 #, python-format
 msgid ""
 "maki auto accepted the following file transfer:\n"
@@ -180,7 +180,7 @@ msgid ""
 "Server: %(server)s"
 msgstr ""
 
-#: ../sushi.py:92
+#: ../sushi.py:96
 #, python-format
 msgid "Plugin “%(plugin)s” caused an error."
 msgstr ""
@@ -282,15 +282,15 @@ msgstr ""
 msgid "History for %(target)s"
 msgstr ""
 
-#: ../tekka/dialogs/plugins.py:82 ../tekka/dialogs/plugins.py:110
+#: ../tekka/dialogs/plugins.py:83 ../tekka/dialogs/plugins.py:111
 msgid "No plugin selected."
 msgstr ""
 
-#: ../tekka/dialogs/plugins.py:83
+#: ../tekka/dialogs/plugins.py:84
 msgid "You must select a plugin to load it."
 msgstr ""
 
-#: ../tekka/dialogs/plugins.py:111
+#: ../tekka/dialogs/plugins.py:112
 msgid "You must select a plugin to unload it."
 msgstr ""
 
@@ -375,7 +375,7 @@ msgid ""
 "sushi</a>."
 msgstr ""
 
-#: ../tekka/lib/general_output_buffer.py:63
+#: ../tekka/lib/general_output_buffer.py:65
 #, python-format
 msgid "Hide '%s' messages"
 msgstr ""
@@ -389,7 +389,7 @@ msgstr ""
 msgid "Save key for channel"
 msgstr ""
 
-#: ../tekka/lib/plugin_config_dialog.py:50
+#: ../tekka/lib/plugin_config_dialog.py:53
 #, python-format
 msgid "Configure %(name)s"
 msgstr ""
@@ -449,39 +449,39 @@ msgid ""
 "ask for support."
 msgstr ""
 
-#: ../tekka/main.py:462
+#: ../tekka/main.py:463
 msgid "Reset markup"
 msgstr ""
 
-#: ../tekka/main.py:651
+#: ../tekka/main.py:652
 #, python-format
 msgid "Do you really want to close channel “%(name)s”?"
 msgstr ""
 
-#: ../tekka/main.py:653
+#: ../tekka/main.py:654
 #, python-format
 msgid "Do you really want to close query “%(name)s”?"
 msgstr ""
 
-#: ../tekka/main.py:655
+#: ../tekka/main.py:656
 #, python-format
 msgid "Do you really want to close server “%(name)s”?"
 msgstr ""
 
 #. TODO: away status
-#: ../tekka/main.py:768
+#: ../tekka/main.py:781
 msgid "Nickname: "
 msgstr ""
 
-#: ../tekka/main.py:771
+#: ../tekka/main.py:784
 msgid "User: "
 msgstr ""
 
-#: ../tekka/main.py:772
+#: ../tekka/main.py:785
 msgid "Topic: "
 msgstr ""
 
-#: ../tekka/main.py:774 ../tekka/main.py:778
+#: ../tekka/main.py:787 ../tekka/main.py:791
 msgid "Last sentence: "
 msgstr ""
 
@@ -675,10 +675,14 @@ msgid "_Unload"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:1
-msgid "<b>Filter messages</b>"
+msgid "<b>Displayed message types</b>"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:2
+msgid "<b>Filter messages</b>"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:3
 msgid ""
 "<b>Help:</b>\n"
 "The <b>first</b> field is the <u>message</u> type.\n"
@@ -689,61 +693,77 @@ msgid ""
 "The last field is optional."
 msgstr ""
 
-#: ../ui/dialogs/preferences.ui.h:8
+#: ../ui/dialogs/preferences.ui.h:9
 msgid ""
 "<b>Information:</b>\n"
 "Changes will be applied after closing this dialog."
 msgstr ""
 
-#: ../ui/dialogs/preferences.ui.h:10
+#: ../ui/dialogs/preferences.ui.h:11
 msgid "A_uto expand server tree"
 msgstr ""
 
-#: ../ui/dialogs/preferences.ui.h:11
-msgid "Actions:"
-msgstr ""
-
 #: ../ui/dialogs/preferences.ui.h:12
-msgid "Ad_vanced Settings"
+msgid "Action"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:13
-msgid "Autodetect rules color"
+msgid "Actions:"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:14
-msgid "C_hatting"
+msgid "Ad_vanced Settings"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:15
-msgid "C_olors"
+msgid "Autodetect rules color"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:16
-msgid "Default nick:"
+msgid "C_hatting"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:17
-msgid "Enable rules color"
+msgid "C_olors"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:18
-msgid "Font:"
+msgid "Default nick:"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:19
-msgid "Highlighted actions:"
+msgid "Display IRC colors"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:20
-msgid "Highlighted messages:"
+msgid "Enable rules color"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:21
-msgid "Highlightwords:"
+msgid "Font:"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:22
+msgid "Highlighted action"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:23
+msgid "Highlighted actions:"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:24
+msgid "Highlighted message"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:25
+msgid "Highlighted messages:"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:26
+msgid "Highlightwords:"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:27
 msgid ""
 "If you want to have control about <u>all</u> settings you can use the "
 "advanced settings dialog.\n"
@@ -753,87 +773,91 @@ msgid ""
 "effect."
 msgstr ""
 
-#: ../ui/dialogs/preferences.ui.h:26
+#: ../ui/dialogs/preferences.ui.h:31
 msgid "Last log lines:"
 msgstr ""
 
-#: ../ui/dialogs/preferences.ui.h:27
+#: ../ui/dialogs/preferences.ui.h:32
 msgid "Last log:"
 msgstr ""
 
-#: ../ui/dialogs/preferences.ui.h:28
-msgid "Messages:"
-msgstr ""
-
-#: ../ui/dialogs/preferences.ui.h:29
-msgid "Notification:"
-msgstr ""
-
-#: ../ui/dialogs/preferences.ui.h:30
-msgid "Own nick:"
-msgstr ""
-
-#: ../ui/dialogs/preferences.ui.h:31
-msgid "Own text:"
-msgstr ""
-
-#: ../ui/dialogs/preferences.ui.h:32
-msgid "Part message:"
-msgstr ""
-
 #: ../ui/dialogs/preferences.ui.h:33
-msgid "Preferences"
+msgid "Message"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:34
-msgid "Quit message:"
+msgid "Messages:"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:35
-msgid "Reset"
+msgid "Notification:"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:36
-msgid "Rules color:"
+msgid "Own nick:"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:37
-msgid "Shutdown _maki on close"
+msgid "Own text:"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:38
-msgid "Time format:"
+msgid "Part message:"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:39
-msgid "Use _RGBA"
+msgid "Preferences"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:40
-msgid "Use _default font"
+msgid "Quit message:"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:41
-msgid "Use contrast sensitive colors"
+msgid "Reset"
 msgstr ""
 
-#: ../ui/dialogs/preferences.ui.h:42 ../ui/main_window.ui.h:10
-msgid "_General Output"
+#: ../ui/dialogs/preferences.ui.h:42
+msgid "Rules color:"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:43
-msgid "_Hide on close"
+msgid "Shutdown _maki on close"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:44
-msgid "_Nick Colors"
+msgid "Time format:"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:45
+msgid "Use _RGBA"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:46
+msgid "Use _default font"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:47
+msgid "Use contrast sensitive colors"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:48 ../ui/main_window.ui.h:10
+msgid "_General Output"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:49
+msgid "_Hide on close"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:50
+msgid "_Nick Colors"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:51
 msgid "_Show status icon"
 msgstr ""
 
-#: ../ui/dialogs/preferences.ui.h:46 ../ui/main_window.ui.h:17
+#: ../ui/dialogs/preferences.ui.h:52 ../ui/main_window.ui.h:17
 msgid "_tekka"
 msgstr ""
 

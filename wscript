@@ -2,7 +2,6 @@
 
 import os
 
-from waflib import Options
 from waflib import Utils
 
 APPNAME = 'tekka'
@@ -28,7 +27,7 @@ def configure (ctx):
 		ctx.env.TEKKA_APPLICATIONSDIR = Utils.subst_vars('${DATAROOTDIR}/applications', ctx.env)
 		ctx.env.TEKKA_ICONSDIR = Utils.subst_vars('${DATAROOTDIR}/icons', ctx.env)
 
-	ctx.env.HUMANITY_ICONS = Options.options.humanity_icons
+	ctx.env.HUMANITY_ICONS = ctx.options.humanity_icons
 	ctx.env.VERSION = VERSION
 
 	ctx.recurse('po')
