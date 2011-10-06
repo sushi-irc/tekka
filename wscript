@@ -33,18 +33,18 @@ def configure (ctx):
 	ctx.recurse('po')
 
 def build (ctx):
-	ctx.install_files('${DATAROOTDIR}/sushi/tekka', ctx.path.ant_glob('*.py', excl='tekka.py'))
-	ctx.install_files('${DATAROOTDIR}/sushi/tekka/plugins', ctx.path.ant_glob('plugins/*.py'))
+	ctx.install_files('${DATAROOTDIR}/tekka', ctx.path.ant_glob('*.py', excl='tekka.py'))
+	ctx.install_files('${DATAROOTDIR}/tekka/plugins', ctx.path.ant_glob('plugins/*.py'))
 
-	ctx.install_files('${DATAROOTDIR}/sushi/tekka', ctx.path.ant_glob('tekka/**/*.py'),
+	ctx.install_files('${DATAROOTDIR}/tekka', ctx.path.ant_glob('tekka/**/*.py'),
 		relative_trick = True
 	)
 
-	ctx.install_files('${DATAROOTDIR}/sushi/tekka', ctx.path.ant_glob('ui/**/*.ui'),
+	ctx.install_files('${DATAROOTDIR}/tekka', ctx.path.ant_glob('ui/**/*.ui'),
 		relative_trick = True
 	)
 
-	ctx.install_files('${DATAROOTDIR}/sushi/tekka', 'tekka.py', chmod = Utils.O755)
+	ctx.install_files('${DATAROOTDIR}/tekka', 'tekka.py', chmod = Utils.O755)
 
 	# Well, that's kinda silly, but state of the art, I guess
 	for directory in ('16x16', '22x22', '24x24', '32x32', '36x36', '48x48', '64x64', '72x72', '96x96', '128x128', '192x192', '256x256', 'scalable'):
@@ -61,14 +61,14 @@ def build (ctx):
 			ctx.install_as('${TEKKA_ICONSDIR}/Humanity/apps/%s/tekka.svg' % (directory),
 			               'graphics/tekka-mono-light.svg')
 
-	ctx.symlink_as('${BINDIR}/tekka', Utils.subst_vars('${DATAROOTDIR}/sushi/tekka/tekka.py', ctx.env))
+	ctx.symlink_as('${BINDIR}/tekka', Utils.subst_vars('${DATAROOTDIR}/tekka/tekka.py', ctx.env))
 
 	# FIXME
 	ctx(
 		features = 'subst',
 		source = 'ui/dialogs/about.ui.in',
 		target = 'ui/dialogs/about.ui',
-		install_path = '${DATAROOTDIR}/sushi/tekka/ui/dialogs',
+		install_path = '${DATAROOTDIR}/tekka/ui/dialogs',
 		SUSHI_VERSION = ctx.env.VERSION
 	)
 

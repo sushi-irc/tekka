@@ -86,7 +86,7 @@ def set_defaults():
 		"tekka.txt")
 	defaults["tekka"]["locale_dir"] = get_path("..", "..", "locale")
 	defaults["tekka"]["plugin_dirs"] = '["' + '","'.join((
-			os.path.join(xdg_data_home, "sushi", "tekka", "plugins"),
+			os.path.join(xdg_data_home, "tekka", "plugins"),
 			os.path.join(xdg_data_home, "sushi", "plugins"),
 			get_path("plugins"),
 			get_path("..", "plugins")
