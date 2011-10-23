@@ -87,9 +87,9 @@ def set_defaults():
 	defaults["tekka"]["locale_dir"] = get_path("..", "..", "locale")
 	defaults["tekka"]["plugin_dirs"] = '["' + '","'.join((
 			os.path.join(xdg_data_home, "tekka", "plugins"),
-			os.path.join(xdg_data_home, "sushi", "plugins"),
+			os.path.join(xdg_data_home, "chirashi"),
 			get_path("plugins"),
-			get_path("..", "plugins")
+			get_path("..", "chirashi")
 		)) + '"]'
 	defaults["tekka"]["use_default_font"] = "True"
 	defaults["tekka"]["font"] = "Monospace 10"
