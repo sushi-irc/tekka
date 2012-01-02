@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-15 20:13+0200\n"
+"POT-Creation-Date: 2012-01-02 22:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,95 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: ../command_handler.py:53 ../command_handler.py:59
+msgid "Warning:"
+msgstr ""
+
+#: ../command_handler.py:54
+#, python-format
+msgid "You are not connected to server %(server)s."
+msgstr ""
+
+#: ../command_handler.py:60
+#, python-format
+msgid ""
+"The channel %(channel)s is not joined. Everything you write will not be send."
+msgstr ""
+
+#: ../command_handler.py:278
+msgid "You are now away."
+msgstr ""
+
+#: ../command_handler.py:291
+msgid "You are now back."
+msgstr ""
+
+#: ../command_handler.py:348
+msgid "• Begin of names"
+msgstr ""
+
+#: ../command_handler.py:353
+msgid "• End of names"
+msgstr ""
+
+#: ../command_handler.py:504
+msgid "User"
+msgstr ""
+
+#: ../command_handler.py:505
+msgid "Topic"
+msgstr ""
+
+#: ../command_handler.py:582
+#, python-format
+msgid "[%(nick)s] %(message)s"
+msgstr ""
+
+#: ../command_handler.py:587
+#, python-format
+msgid "[%(nick)s] End of whois."
+msgstr ""
+
+#: ../command_handler.py:707
+#, python-format
+msgid "Ignoring %(user)s."
+msgstr ""
+
+#: ../command_handler.py:722
+#, python-format
+msgid "Unignoring %(user)s."
+msgstr ""
+
+#: ../command_handler.py:736
+msgid "No users are ignored on this server."
+msgstr ""
+
+#: ../command_handler.py:738
+#, python-format
+msgid "The following users are ignored: %(ulist)s."
+msgstr ""
+
+#: ../plugins/sound.py:37
+msgid "Play sound on message"
+msgstr ""
+
+#: ../plugins/sound.py:121
+msgid "File to play"
+msgstr ""
+
+#: ../plugins/sound.py:122
+msgid "Make a beep with the speaker"
+msgstr ""
+
+#: ../plugins/sound.py:124
+msgid "Use a command to beep."
+msgstr ""
+
+#: ../plugins/sound.py:125
+msgid "The position in the menu"
+msgstr ""
 
 #: ../signal_handler.py:363
 #, python-format
@@ -186,10 +275,11 @@ msgid "Plugin “%(plugin)s” caused an error."
 msgstr ""
 
 #: ../tekka/com.py:126 ../tekka/com.py:136 ../tekka/com.py:240
+#: ../tekka/gui/mgmt/__init__.py:266
 msgid "tekka could not connect to maki."
 msgstr ""
 
-#: ../tekka/com.py:127
+#: ../tekka/com.py:127 ../tekka/gui/mgmt/__init__.py:267
 msgid "Please check whether maki is running."
 msgstr ""
 
@@ -219,11 +309,6 @@ msgstr ""
 #: ../tekka/com.py:285
 #, python-format
 msgid "Please update maki to at least version %(version)s."
-msgstr ""
-
-#: ../tekka/commands.py:115
-#, python-format
-msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
 msgstr ""
 
 #: ../tekka/dialogs/addServer.py:47
@@ -282,6 +367,19 @@ msgstr ""
 msgid "History for %(target)s"
 msgstr ""
 
+#: ../tekka/dialogs/join.py:61
+msgid "Could not determine server."
+msgstr ""
+
+#: ../tekka/dialogs/join.py:62
+msgid "tekka could not figure out on which server to join."
+msgstr ""
+
+#: ../tekka/dialogs/join.py:71
+#, python-format
+msgid "Join a channel on %(server)s"
+msgstr ""
+
 #: ../tekka/dialogs/plugins.py:83 ../tekka/dialogs/plugins.py:111
 msgid "No plugin selected."
 msgstr ""
@@ -332,6 +430,89 @@ msgstr ""
 
 #: ../tekka/dialogs/whois.py:127
 msgid "Loading..."
+msgstr ""
+
+#: ../tekka/gui/dialogs.py:65
+#, python-format
+msgid "Can't open dialog '%s'. There's no connection to maki."
+msgstr ""
+
+#: ../tekka/gui/mgmt/__init__.py:162
+#, python-format
+msgid "%d User"
+msgid_plural "%d Users"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../tekka/gui/mgmt/__init__.py:164
+#, python-format
+msgid "%d Operator"
+msgid_plural "%d Operators"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../tekka/helper/color.py:66
+msgid "white"
+msgstr ""
+
+#: ../tekka/helper/color.py:67
+msgid "black"
+msgstr ""
+
+#: ../tekka/helper/color.py:68
+msgid "blue"
+msgstr ""
+
+#: ../tekka/helper/color.py:69
+msgid "dark green"
+msgstr ""
+
+#: ../tekka/helper/color.py:70
+msgid "dark red"
+msgstr ""
+
+#: ../tekka/helper/color.py:71
+msgid "light brown"
+msgstr ""
+
+#: ../tekka/helper/color.py:72
+msgid "purple"
+msgstr ""
+
+#: ../tekka/helper/color.py:73
+msgid "orange"
+msgstr ""
+
+#: ../tekka/helper/color.py:74
+msgid "yellow"
+msgstr ""
+
+#: ../tekka/helper/color.py:75
+msgid "light green"
+msgstr ""
+
+#: ../tekka/helper/color.py:76
+msgid "cyan"
+msgstr ""
+
+#: ../tekka/helper/color.py:77
+msgid "aqua"
+msgstr ""
+
+#: ../tekka/helper/color.py:78
+msgid "light blue"
+msgstr ""
+
+#: ../tekka/helper/color.py:79
+msgid "magenta"
+msgstr ""
+
+#: ../tekka/helper/color.py:80
+msgid "gray"
+msgstr ""
+
+#: ../tekka/helper/color.py:81
+msgid "light gray"
 msgstr ""
 
 #: ../tekka/lib/dcc_dialog.py:67
@@ -536,6 +717,46 @@ msgstr ""
 #: ../tekka/menus/nicklist_menu.py:197
 #, python-format
 msgid "Choose a file to send to %(nick)s"
+msgstr ""
+
+#: ../tekka/plugins.py:110 ../tekka/plugins.py:118 ../tekka/plugins.py:141
+#: ../tekka/plugins.py:199 ../tekka/plugins.py:362
+msgid "Plugin could not be loaded."
+msgstr ""
+
+#: ../tekka/plugins.py:111 ../tekka/plugins.py:142 ../tekka/plugins.py:200
+#, python-format
+msgid ""
+"Plugin %(plugin)s could not be loaded.\n"
+"The following error occurred: %(error)s"
+msgstr ""
+
+#: ../tekka/plugins.py:119
+#, python-format
+msgid "Plugin %(plugin)s could not be loaded."
+msgstr ""
+
+#: ../tekka/plugins.py:178
+msgid "Plugin is already loaded."
+msgstr ""
+
+#: ../tekka/plugins.py:179
+#, python-format
+msgid "Plugin %(plugin)s is already loaded."
+msgstr ""
+
+#: ../tekka/plugins.py:223
+msgid "Plugin could not be unloaded."
+msgstr ""
+
+#: ../tekka/plugins.py:223
+#, python-format
+msgid "Plugin %(plugin)s could not be unloaded, because it is not loaded."
+msgstr ""
+
+#: ../tekka/plugins.py:363
+#, python-format
+msgid "Plugin %(plugin)s could not be loaded automatically."
 msgstr ""
 
 #: ../ui/dialogs/about.ui.in.h:1

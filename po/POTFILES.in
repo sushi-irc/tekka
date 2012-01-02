@@ -1,15 +1,20 @@
+command_handler.py
+plugins/sound.py
 signal_handler.py
 sushi.py
 tekka/com.py
-tekka/commands.py
 tekka/dialogs/addServer.py
 tekka/dialogs/channelList.py
 tekka/dialogs/dcc.py
 tekka/dialogs/debug.py
 tekka/dialogs/history.py
+tekka/dialogs/join.py
 tekka/dialogs/plugins.py
 tekka/dialogs/server.py
 tekka/dialogs/whois.py
+tekka/gui/dialogs.py
+tekka/gui/mgmt/__init__.py
+tekka/helper/color.py
 tekka/lib/dcc_dialog.py
 tekka/lib/error_dialog.py
 tekka/lib/general_output_buffer.py
@@ -23,6 +28,7 @@ tekka/main.py
 tekka/menus/mainmenu_context.py
 tekka/menus/nicklist_menu.py
 tekka/menus/servertree_menu.py
+tekka/plugins.py
 
 [type: gettext/glade] ui/dialogs/about.ui.in
 [type: gettext/glade] ui/dialogs/advancedPreferences.ui
