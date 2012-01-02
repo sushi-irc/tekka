@@ -1,5 +1,5 @@
-# Occitan (post 1500) translation for tekka
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Ukrainian translation for tekka
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the tekka package.
 #
 msgid ""
@@ -7,168 +7,171 @@ msgstr ""
 "Project-Id-Version: tekka\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-09-15 20:13+0200\n"
-"PO-Revision-Date: 2011-11-24 19:13+0000\n"
-"Last-Translator: Cédric VALMARY (Tot en òc) <cvalmary@yahoo.fr>\n"
-"Language-Team: Occitan (post 1500)\n"
+"PO-Revision-Date: 2011-01-19 14:20+0000\n"
+"Last-Translator: Tarnawsky Vitaly <Unknown>\n"
+"Language-Team: Ukrainian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2012-01-02 20:41+0000\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2012-01-02 20:40+0000\n"
 "X-Generator: Launchpad (build 14560)\n"
 
 #: ../signal_handler.py:363
 #, python-format
 msgid "• Topic for %(channel)s: %(topic)s"
-msgstr "• Subjècte del %(channel)s: %(topic)s"
+msgstr "• Тема для %(channel)s: %(topic)s"
 
 #: ../signal_handler.py:399
 #, python-format
 msgid "• You changed the topic to %(topic)s."
-msgstr "• Avètz cambiat lo subjècte del canal en %(topic)s."
+msgstr "• Ви змінили тему на %(topic)s."
 
 #: ../signal_handler.py:401
 #, python-format
 msgid "• %(nick)s changed the topic to %(topic)s."
-msgstr "• %(nick)s a cambiat lo subjècte del canal en %(topic)s."
+msgstr "• %(nick)s змінив тему на %(topic)s."
 
 #: ../signal_handler.py:460
 #, python-format
 msgid "• %(nick)s is away (%(message)s)."
-msgstr "• %(nick)s es absent (%(message)s)."
+msgstr "• %(nick)s відсутній (%(message)s)."
 
 #: ../signal_handler.py:592
 #, python-format
 msgid "• Modes for %(target)s: %(mode)s"
-msgstr "• Mòdes per %(target)s: %(mode)s"
+msgstr "• Режими %(target)s: %(mode)s"
 
 #. normal ctcp
 #: ../signal_handler.py:685
 #, python-format
 msgid "CTCP from %(nick)s to Channel:"
-msgstr "CTCP de %(nick)s pel canal :"
+msgstr "CTCP від %(nick)s у Канал:"
 
 #: ../signal_handler.py:716
 #, python-format
 msgid "CTCP request from you to %(target)s: %(message)s"
-msgstr "Demanda CTCP per vos de %(target)s: %(message)s"
+msgstr "Ваше CTCP запрошення %(target)s: %(message)s"
 
 #: ../signal_handler.py:919
 #, python-format
 msgid "• You are now known as %(newnick)s."
-msgstr "• Ara, vos disètz %(newnick)s."
+msgstr "• Ваш нік %(newnick)s."
 
 #: ../signal_handler.py:925
 #, python-format
 msgid "• %(nick)s is now known as %(newnick)s."
-msgstr "• %(nick)s s'apèla ara %(newnick)s."
+msgstr "• %(nick)s змінив ім’я на %(newnick)s."
 
 #: ../signal_handler.py:1016
 #, python-format
 msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
-msgstr "« Sètz estat ejectat de %(channel)s per %(nick)s (%(reason)s)."
+msgstr ""
+"« %(nick)s  викинули Вас з каналу %(channel)s по причині: (%(reason)s)."
 
 #: ../signal_handler.py:1037
 #, python-format
 msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
-msgstr "« %(who)s es estat ejectat de %(channel)s per %(nick)s (%(reason)s)."
+msgstr ""
+"« %(nick)s викинув %(who)s з каналу %(channel)s з причини: (%(reason)s)."
 
 #: ../signal_handler.py:1075
 #, python-format
 msgid "« You have quit (%(reason)s)."
-msgstr "« Avètz quitat lo canal (%(reason)s)."
+msgstr "« Ви вийшли (%(reason)s)."
 
 #: ../signal_handler.py:1077
 msgid "« You have quit."
-msgstr "« Avètz quitat lo canal."
+msgstr "« Ви вийшли."
 
 #: ../signal_handler.py:1100
 #, python-format
 msgid "« %(nick)s has quit (%(reason)s)."
-msgstr "« %(nick)s a quitat lo canal (%(reason)s)."
+msgstr "« %(nick)s вийшов(%(reason)s)."
 
 #: ../signal_handler.py:1102
 #, python-format
 msgid "« %(nick)s has quit."
-msgstr "« %(nick)s a quitat lo canal."
+msgstr "« %(nick)s вийшов."
 
 #: ../signal_handler.py:1198
 #, python-format
 msgid "» You have joined %(channel)s."
-msgstr "» Avètz rejonch %(channel)s."
+msgstr "» Ви приєднались до %(channel)s."
 
 #: ../signal_handler.py:1209
 #, python-format
 msgid "» %(nick)s has joined %(channel)s."
-msgstr "» %(nick)s a rejonch %(channel)s."
+msgstr "» %(nick)s приєднався до %(channel)s."
 
 #: ../signal_handler.py:1288
 #, python-format
 msgid "« You have left %(channel)s (%(reason)s)."
-msgstr "« Avètz quitat %(channel)s (%(reason)s)."
+msgstr "« Ви покинули %(channel)s (%(reason)s)."
 
 #: ../signal_handler.py:1290
 #, python-format
 msgid "« You have left %(channel)s."
-msgstr "« Avètz quitat %(channel)s."
+msgstr "« Ви покинули %(channel)s."
 
 #: ../signal_handler.py:1314
 #, python-format
 msgid "« %(nick)s has left %(channel)s (%(reason)s)."
-msgstr "« %(nick)s a quitat %(channel)s (%(reason)s)."
+msgstr "« %(nick)s покинув %(channel)s (%(reason)s)."
 
 #: ../signal_handler.py:1317
 #, python-format
 msgid "« %(nick)s has left %(channel)s."
-msgstr "« %(nick)s a quitat %(channel)s."
+msgstr "« %(nick)s покинув %(channel)s."
 
 #: ../signal_handler.py:1338
 msgid "• You are not a channel operator."
-msgstr "• Sètz pas un operador del canal."
+msgstr "• Ви не оператор каналу."
 
 #: ../signal_handler.py:1348
 #, python-format
 msgid "• %(target)s: No such nick/channel."
-msgstr "• %(target)s: Pas cap d'escais/canal d'aqueste nom."
+msgstr "• %(target)s: Такого ніку/каналу не існує."
 
 #: ../signal_handler.py:1351
 #, python-format
 msgid "• %(target)s: No such server."
-msgstr "• %(target)s: Pas cap de servidor."
+msgstr "• %(target)s: Такого сервера не існує."
 
 #: ../signal_handler.py:1354
 #, python-format
 msgid "• %(target)s: No such channel."
-msgstr "• %(target)s: Pas cap de canal"
+msgstr "• %(target)s: Канал не існує."
 
 #: ../signal_handler.py:1366
 msgid "Unknown reason"
-msgstr "Rason desconeguda"
+msgstr "Невідома причина"
 
 #: ../signal_handler.py:1369
 msgid "The channel is full."
-msgstr "Lo canal es plen."
+msgstr "Канал наразі переповнений."
 
 #: ../signal_handler.py:1371
 msgid "The channel is invite-only."
-msgstr ""
+msgstr "Канал тільки по запрошеннях."
 
 #: ../signal_handler.py:1373
 msgid "You are banned."
-msgstr "Sètz bandit."
+msgstr "Вас заблокували."
 
 #: ../signal_handler.py:1389
 msgid "You need the correct channel key."
-msgstr ""
+msgstr "Вам потрібний правильний пароль.."
 
 #: ../signal_handler.py:1394
 #, python-format
 msgid "You can not join %(channel)s: %(reason)s"
-msgstr ""
+msgstr "Ви не можете приєднатись до %(channel)s: %(reason)s"
 
 #: ../signal_handler.py:1466
 msgid "Auto accepted file transfer"
-msgstr ""
+msgstr "Автоматично-одобрена передача файлів"
 
 #: ../signal_handler.py:1467
 #, python-format
@@ -179,19 +182,24 @@ msgid ""
 "Size: %(size)s\n"
 "Server: %(server)s"
 msgstr ""
+"maki автоматично одобрила передачу файлів:\n"
+"Назва файлу: %(filename)s\n"
+"Відправник: %(sender)s\n"
+"Розмір: %(size)s\n"
+"Сервер: %(server)s"
 
 #: ../sushi.py:96
 #, python-format
 msgid "Plugin “%(plugin)s” caused an error."
-msgstr ""
+msgstr "Плагін “%(plugin)s” викликав помилку."
 
 #: ../tekka/com.py:126 ../tekka/com.py:136 ../tekka/com.py:240
 msgid "tekka could not connect to maki."
-msgstr ""
+msgstr "tekka не може зєднатись з maki."
 
 #: ../tekka/com.py:127
 msgid "Please check whether maki is running."
-msgstr ""
+msgstr "Перевірте чи maki увімкнений."
 
 #: ../tekka/com.py:137 ../tekka/com.py:241
 #, python-format
@@ -199,10 +207,12 @@ msgid ""
 "Please check whether maki is running.\n"
 "The following error occurred: %(error)s"
 msgstr ""
+"Перевірте чи maki увімкнений.\n"
+"Виникла наступна помилка: %(error)s"
 
 #: ../tekka/com.py:174
 msgid "Communication error with maki."
-msgstr ""
+msgstr "Проблема зєднання з  maki."
 
 #: ../tekka/com.py:175
 #, python-format
@@ -211,32 +221,35 @@ msgid ""
 "<b>%s</b>\n"
 "You should keep safe that maki is running "
 msgstr ""
+"Виникла помилка під час викнонання <b>'%s</b>' з DBus: \n"
+"<b>%s</b>\n"
+"Ви повинні переконатись що maki запущений. "
 
 #: ../tekka/com.py:284
 msgid "tekka requires a newer maki version."
-msgstr ""
+msgstr "tekka просить вас оновити вашу версію maki."
 
 #: ../tekka/com.py:285
 #, python-format
 msgid "Please update maki to at least version %(version)s."
-msgstr ""
+msgstr "Будьласка оновіть maki до версії %(version)s."
 
 #: ../tekka/commands.py:115
 #, python-format
 msgid "• Unknown command “%(command)s”, sending raw command “%(raw)s”."
-msgstr ""
+msgstr "• Невідома команда “%(command)s”, відправляю raw команду “%(raw)s”."
 
 #: ../tekka/dialogs/addServer.py:47
 msgid "No server name given."
-msgstr ""
+msgstr "Не задана назва серверу."
 
 #: ../tekka/dialogs/addServer.py:48
 msgid "You must enter a server name."
-msgstr ""
+msgstr "Ви повинні ввести назву серверу"
 
 #: ../tekka/dialogs/channelList.py:89
 msgid "Channel list search error."
-msgstr ""
+msgstr "Помилка пошуку по списку каналів"
 
 #: ../tekka/dialogs/channelList.py:90
 #, python-format
@@ -245,102 +258,108 @@ msgid ""
 "<b>Tip:</b> You should not use special characters like '*' or '.' in your "
 "search string if you don't know about regular expressions."
 msgstr ""
+"Виникла помилка в пошуці. The error is: %s\n"
+"<b>Tip:</b> You should not use special characters like '*' or '.' in your "
+"search string if you don't know about regular expressions."
 
 #: ../tekka/dialogs/dcc.py:161
 msgid "No transfer selected!"
-msgstr ""
+msgstr "Не вибрана передача данних."
 
 #: ../tekka/dialogs/dcc.py:162
 msgid "You must select a transfer to remove it."
-msgstr ""
+msgstr "Ви повинні вибрати передачу, щоб її видалити."
 
 #: ../tekka/dialogs/dcc.py:166
 msgid "Remove file transfer?"
-msgstr ""
+msgstr "Видалити передачу?"
 
 #: ../tekka/dialogs/dcc.py:167
 #, python-format
 msgid "Are you sure you want to remove the file transfer %(id)d?"
-msgstr ""
+msgstr "Ви впевнені що хочете видалити передачу %(id)d?"
 
 #: ../tekka/dialogs/debug.py:63
 msgid "C_ompile and run"
-msgstr "C_ompilar e aviar"
+msgstr "ЗІбрати та запустити"
 
 #: ../tekka/dialogs/history.py:78
 msgid "Read history anyways?"
-msgstr ""
+msgstr "Прочитати історію?"
 
 #: ../tekka/dialogs/history.py:79
 msgid ""
 "maki is connected remotely. It's possible that the history is not "
 "accessible. Do you want to try anyways?"
 msgstr ""
+"Зєднання відбувається віддалено. Історія переписок буде не доступною."
 
 #: ../tekka/dialogs/history.py:117
 #, python-format
 msgid "History for %(target)s"
-msgstr ""
+msgstr "Історя для %(target)s"
 
 #: ../tekka/dialogs/plugins.py:83 ../tekka/dialogs/plugins.py:111
 msgid "No plugin selected."
-msgstr ""
+msgstr "Ви не вибрали плагін."
 
 #: ../tekka/dialogs/plugins.py:84
 msgid "You must select a plugin to load it."
-msgstr ""
+msgstr "Щоб завантажити плагін ви повинні спочатку його вибрати."
 
 #: ../tekka/dialogs/plugins.py:112
 msgid "You must select a plugin to unload it."
-msgstr ""
+msgstr "Ви повинні вибрати плагін щоб вивантажити його."
 
 #: ../tekka/dialogs/server.py:140 ../tekka/dialogs/server.py:167
 msgid "No server selected."
-msgstr ""
+msgstr "Сервер не вибрано"
 
 #: ../tekka/dialogs/server.py:141
 msgid "You must select a server to edit it."
-msgstr ""
+msgstr "Ви повинні вибрати сервер щоб редагувати його."
 
 #: ../tekka/dialogs/server.py:168
 msgid "You must select a server to delete it."
-msgstr ""
+msgstr "Виберіть сервер щоб його видалити."
 
 #: ../tekka/dialogs/server.py:178
 msgid "Error while retrieving server name."
-msgstr ""
+msgstr "Помилка отримання назви серверу"
 
 #: ../tekka/dialogs/server.py:179
 msgid ""
 "There was an error while retrieving the server name.\n"
 "Are you connected to maki?"
 msgstr ""
+"Виникла помилка при отриманні назви серверу.\n"
+"Ви приєднанні до maki?"
 
 #: ../tekka/dialogs/whois.py:74
 #, python-format
 msgid "Whois on %(server)s"
-msgstr ""
+msgstr "Whois на %(server)s"
 
 #: ../tekka/dialogs/whois.py:79
 #, python-format
 msgid "Whois data of %(nick)s"
-msgstr ""
+msgstr "Данні Whois  на %(nick)s"
 
 #: ../tekka/dialogs/whois.py:111
 msgid "No data received so far. Are you still connected?"
-msgstr ""
+msgstr "Данні не були передані. Ви точно з’єднанні?"
 
 #: ../tekka/dialogs/whois.py:127
 msgid "Loading..."
-msgstr "Cargament en cors..."
+msgstr "Завантаження..."
 
 #: ../tekka/lib/dcc_dialog.py:67
 msgid "Select destination"
-msgstr ""
+msgstr "Виберіть призначення"
 
 #: ../tekka/lib/dcc_dialog.py:86
 msgid "Select a destination to save the file"
-msgstr ""
+msgstr "Виберіть куди зберегти файл."
 
 #: ../tekka/lib/dcc_dialog.py:104
 msgid ""
@@ -348,10 +367,13 @@ msgid ""
 "<b>Info:</b> If you don't choose another destination, this file will be "
 "resumed."
 msgstr ""
+"\n"
+"<b>Інформація:</b> Якщо ви не виберете іншу папку, цей файл буде "
+"перезаписано."
 
 #: ../tekka/lib/dcc_dialog.py:110
 msgid "Incoming file transfer"
-msgstr ""
+msgstr "Вхідна передача файлів."
 
 #: ../tekka/lib/dcc_dialog.py:111
 #, python-format
@@ -361,10 +383,14 @@ msgid ""
 "File size: %(bytes)d bytes\n"
 "Destination: %(destination)s%(resumable)s"
 msgstr ""
+"Відправник: ”%(nick)s”\n"
+"Назва файлу: “%(filename)s“\n"
+"Розмір файлу: %(bytes)d bytes\n"
+"Призначення: %(destination)s%(resumable)s"
 
 #: ../tekka/lib/error_dialog.py:14
 msgid "Error occured"
-msgstr ""
+msgstr "Виникла помилка"
 
 #: ../tekka/lib/error_dialog.py:24
 msgid ""
@@ -375,70 +401,77 @@ msgid ""
 "href=\"https://bugs.launchpad.net/sushi\">https://bugs.launchpad.net/sushi</a"
 ">."
 msgstr ""
+"<span size='larger' weight='bold'>Без Паніки</span>\n"
+"\n"
+"Виникла помилка - ми вибачаємся за це. Ви можете відправити багрепорт на <a "
+"href=\"https://bugs.launchpad.net/sushi\">https://bugs.launchpad.net/sushi</a"
+">."
 
 #: ../tekka/lib/general_output_buffer.py:65
 #, python-format
 msgid "Hide '%s' messages"
-msgstr ""
+msgstr "Сховати '%s' повідомлення"
 
 #: ../tekka/lib/key_dialog.py:50
 #, python-format
 msgid "Enter the key for the channel %(channel)s."
-msgstr ""
+msgstr "Введіть пароль для каналу %(channel)s."
 
 #: ../tekka/lib/key_dialog.py:61
 msgid "Save key for channel"
-msgstr ""
+msgstr "Зберегти пароль для каналу"
 
 #: ../tekka/lib/plugin_config_dialog.py:53
 #, python-format
 msgid "Configure %(name)s"
-msgstr "Configurar %(name)s"
+msgstr "Налаштування %(name)s"
 
 #: ../tekka/lib/spell_entry.py:152
 msgid "Foreground Color"
-msgstr ""
+msgstr "Основний колір"
 
 #: ../tekka/lib/spell_entry.py:164
 msgid "Background Color"
-msgstr ""
+msgstr "Колір фону"
 
 #: ../tekka/lib/spell_entry.py:176
 msgid "Reset Color"
-msgstr ""
+msgstr "Скинути колір"
 
 #: ../tekka/lib/status_icon.py:61
 msgid "Hide main window"
-msgstr ""
+msgstr "Сховати головне вікно"
 
 #: ../tekka/lib/status_icon.py:63
 msgid "Show main window"
-msgstr ""
+msgstr "Показати головне вікно"
 
 #: ../tekka/lib/topic_dialog.py:62
 #, python-format
 msgid "Topic for channel %(channel)s on %(server)s"
-msgstr ""
+msgstr "Тема для каналу %(channel)s на %(server)s"
 
 #: ../tekka/lib/topic_dialog.py:115
 msgid "Topic changed before."
-msgstr ""
+msgstr "Раніше змінена тема"
 
 #: ../tekka/lib/topic_dialog.py:116
 msgid ""
 "The topic was changed before your update. Do you want to commit the changes "
 "anyway?"
-msgstr ""
+msgstr "Тема була змінена перед вашим оновленням. Ви хочете змінити тему?"
 
 #: ../tekka/lib/welcome_window.py:63
 msgid "<big><b>Welcome to tekka!</b></big>"
-msgstr "<big><b>Benvenguda dins tekka!</b></big>"
+msgstr "<big><b>tekka вітає вас!</b></big>"
 
 #: ../tekka/lib/welcome_window.py:121
 msgid ""
 "You are connected to maki. The next step is to connect to a server via the "
 "server dialog in the tekka menu."
 msgstr ""
+"Ви приєднані до maki. Наступний крок це зєднатись з сервером через меню "
+"tekka."
 
 #: ../tekka/lib/welcome_window.py:127
 msgid ""
@@ -449,65 +482,71 @@ msgid ""
 "look whether there is a solution for your problem. Otherwise, feel free to "
 "ask for support."
 msgstr ""
+"Ви не приєднані до maki. Без maki ви не зможете підєднатись до серверів та "
+"листуватись.\n"
+"\n"
+"Якщо у вас виникли проблеми з maki відвідайте http://sushi.ikkoku.de/ та "
+"пошукайте рішення проблеми."
 
 #: ../tekka/main.py:463
 msgid "Reset markup"
-msgstr ""
+msgstr "Скинути маркування"
 
 #: ../tekka/main.py:652
 #, python-format
 msgid "Do you really want to close channel “%(name)s”?"
-msgstr ""
+msgstr "Ви дійсно хочете закрити “%(name)s” ?"
 
 #: ../tekka/main.py:654
 #, python-format
 msgid "Do you really want to close query “%(name)s”?"
-msgstr ""
+msgstr "Ви точно хочете закрити запит “%(name)s”?"
 
 #: ../tekka/main.py:656
 #, python-format
 msgid "Do you really want to close server “%(name)s”?"
-msgstr ""
+msgstr "Ви дійсно хочете закрити сервер “%(name)s”?"
 
 #. TODO: away status
 #: ../tekka/main.py:781
 msgid "Nickname: "
-msgstr "Escais : "
+msgstr "Псевдонім: "
 
 #: ../tekka/main.py:784
 msgid "User: "
-msgstr "Utilizaire : "
+msgstr "Користувач: "
 
 #: ../tekka/main.py:785
 msgid "Topic: "
-msgstr "Subjècte : "
+msgstr "Тема: "
 
 #: ../tekka/main.py:787 ../tekka/main.py:791
 msgid "Last sentence: "
-msgstr ""
+msgstr "Останнє речення: "
 
 #: ../tekka/menus/mainmenu_context.py:135
 #: ../tekka/menus/mainmenu_context.py:220 ../tekka/menus/nicklist_menu.py:175
 msgid "No connection to maki."
-msgstr ""
+msgstr "Немає зєднання з maki"
 
 #: ../tekka/menus/mainmenu_context.py:136
 msgid "You can't shutdown maki. You're not connected."
-msgstr ""
+msgstr "Ви не можете вимкнути maki. Ви не зєднанні"
 
 #: ../tekka/menus/mainmenu_context.py:231
 msgid "tekka could not determine server."
-msgstr ""
+msgstr "tekka не може знайти сервер."
 
 #: ../tekka/menus/mainmenu_context.py:232
 msgid ""
 "There is no active server. Click on a server tab or a child of a server tab "
 "to activate the server."
 msgstr ""
+"Немає активних серверів. Клацніть по вкладці серверів щоб їх активувати.."
 
 #: ../tekka/menus/nicklist_menu.py:61 ../tekka/menus/servertree_menu.py:51
 msgid "Widget creation failed."
-msgstr ""
+msgstr "Помилка при створенню віджету"
 
 #: ../tekka/menus/nicklist_menu.py:62 ../tekka/menus/servertree_menu.py:52
 msgid ""
@@ -515,51 +554,54 @@ msgid ""
 "It's possible that there are files missing. Check if you have appropriate "
 "permissions to access all files needed by tekka and restart tekka."
 msgstr ""
+"Неможливо створити список псевдонімів..\n"
+"Можливо відсутні конфігураційні файли.Перевірте чи має tekka  доступ до "
+"файлів та перезапустіть. tekka."
 
 #: ../tekka/menus/nicklist_menu.py:137
 #, python-format
 msgid "Ignoring User %(user)s"
-msgstr ""
+msgstr "Ігнорування %(user)s"
 
 #: ../tekka/menus/nicklist_menu.py:143
 #, python-format
 msgid "User %(user)s is unignored"
-msgstr ""
+msgstr "Ви більше не ігноруєте %(user)s"
 
 #: ../tekka/menus/nicklist_menu.py:190
 msgid "No file selected"
-msgstr "Pas de fichièr seleccionat"
+msgstr "Не обрано файла"
 
 #: ../tekka/menus/nicklist_menu.py:191
 msgid "You didn't select a file to send. Aborting."
-msgstr ""
+msgstr "Ви не вибрали файл для відправки."
 
 #: ../tekka/menus/nicklist_menu.py:197
 #, python-format
 msgid "Choose a file to send to %(nick)s"
-msgstr ""
+msgstr "Виберіть файл для відправки %(nick)s"
 
 #: ../ui/dialogs/about.ui.in.h:1
 msgid "translator-credits"
 msgstr ""
 "Launchpad Contributions:\n"
-"  Cédric VALMARY (Tot en òc) https://launchpad.net/~cvalmary"
+"  Tarnawsky Vitaly https://launchpad.net/~lordnightcon"
 
 #: ../ui/dialogs/advancedPreferences.ui.h:1
 msgid "Advanced Preferences"
-msgstr "Preferéncias avançadas"
+msgstr "Розширені налаштування"
 
 #: ../ui/dialogs/channelList.ui.h:1
 msgid "Channel List"
-msgstr "Lista dels canals"
+msgstr "Список каналів"
 
 #: ../ui/dialogs/colorTable.ui.h:1
 msgid "<big>IRC to real colors</big>"
-msgstr ""
+msgstr "Реальні кольори IRC"
 
 #: ../ui/dialogs/colorTable.ui.h:2
 msgid "IRC Colors"
-msgstr ""
+msgstr "Кольори IRC"
 
 #: ../ui/dialogs/colorTable.ui.h:4
 #, no-c-format
@@ -584,98 +626,114 @@ msgid ""
 "The following listing gives you an overview about the numbers you can use "
 "and which color every number represents."
 msgstr ""
+"Це повідомлення допоможе вам зрозуміти як відбувається розфарбовування "
+"речень та фраз різними кольорами.\n"
+"\n"
+"Якщо ви на каналі ви можете просто відправити %C02,01test%C і ви отримаєте  "
+"слово  \"тест\" синього кольору на чорному фоні.\n"
+"\n"
+"Синтаксис для %C трактується дуже легко: %Cпереднійлпан,заднійплан.\n"
+"\n"
+"Також ви можете не користуватись фоном.\n"
+"\n"
+"Якщо ви напишете просто %C і це будуть стандартні налаштування.\n"
+"\n"
+"Приклад:\n"
+"Напишіть %C02,01 для синього тексту на чорному фоні.\n"
+"\n"
+"Цей список дасть вам знання  про порядкові номера кольорів."
 
 #: ../ui/dialogs/contrast.ui.h:1
 msgid "<b>Contrast colors</b>"
-msgstr ""
+msgstr "<b>Контрастні кольори</b>"
 
 #: ../ui/dialogs/contrast.ui.h:2
 msgid "<b>Example</b>"
-msgstr ""
+msgstr "<b>Приклад</b>"
 
 #: ../ui/dialogs/contrast.ui.h:3
 msgid "Select a color"
-msgstr ""
+msgstr "Виберіть колір"
 
 #: ../ui/dialogs/contrast.ui.h:4
 msgid "The quick brown fox jumps over the lazy developer."
-msgstr ""
+msgstr "Швидка лисиці стрибає через адміна."
 
 #: ../ui/dialogs/dcc.ui.h:1
 msgid "File Transfers"
-msgstr "Transferiment de fichièrs"
+msgstr "Передача файлів"
 
 #: ../ui/dialogs/hide.ui.h:1
 msgid "<b>Message types to hide</b>"
-msgstr ""
+msgstr "<b>Приховати повідомлення</b>"
 
 #: ../ui/dialogs/hide.ui.h:2
 msgid "<b>Other</b>"
-msgstr "<b>Autres</b>"
+msgstr "<b>Інше</b>"
 
 #: ../ui/dialogs/hide.ui.h:3
 msgid "<b>Own</b>"
-msgstr ""
+msgstr "<b>Свій</b>"
 
 #: ../ui/dialogs/hide.ui.h:4
 msgid "Hide message types"
-msgstr ""
+msgstr "Приховати типи повідомлень"
 
 #: ../ui/dialogs/hide.ui.h:5
 msgid "Join:"
-msgstr ""
+msgstr "З’єднання:"
 
 #: ../ui/dialogs/hide.ui.h:6
 msgid "Kick:"
-msgstr "Ejectar :"
+msgstr "Викидання:"
 
 #: ../ui/dialogs/hide.ui.h:7
 msgid "Mode:"
-msgstr "Mòde :"
+msgstr "Режим:"
 
 #: ../ui/dialogs/hide.ui.h:8
 msgid "Nick:"
-msgstr "Escais :"
+msgstr "Псевдонім:"
 
 #: ../ui/dialogs/hide.ui.h:9
 msgid "Part:"
-msgstr "Sortir :"
+msgstr "Покидання:"
 
 #: ../ui/dialogs/hide.ui.h:10
 msgid "Quit:"
-msgstr "Quitar :"
+msgstr "Вихід:"
 
 #: ../ui/dialogs/join.ui.h:1
 msgid "<b>Join a channel</b>"
-msgstr ""
+msgstr "<b>Підєднатись до каналу</b>"
 
 #: ../ui/dialogs/join.ui.h:2
 msgid "Join _automatically"
-msgstr ""
+msgstr "З’єднатись автоматично"
 
 #: ../ui/dialogs/join.ui.h:3
 msgid "Name:"
-msgstr "Nom :"
+msgstr "Ім'я:"
 
 #: ../ui/dialogs/join.ui.h:4 ../ui/menus/serverTreeMenu.ui.h:10
 msgid "_Join"
-msgstr "_Jónher"
+msgstr "Приєднатися"
 
 #: ../ui/dialogs/plugins.ui.h:1
 msgid "C_onfigure"
-msgstr "C_onfigurar"
+msgstr "На_лаштувати"
 
 #: ../ui/dialogs/plugins.ui.h:2
 msgid "Plugins"
-msgstr "Moduls extèrnes"
+msgstr "Додатки"
 
 #: ../ui/dialogs/plugins.ui.h:3
 msgid "_Load"
-msgstr "_Cargar"
+msgstr "_Завантажити"
 
 #: ../ui/dialogs/plugins.ui.h:4
 msgid "_Unload"
-msgstr ""
+msgstr "_Вивантажити"
 
 #: ../ui/dialogs/preferences.ui.h:1
 msgid "<b>Displayed message types</b>"
@@ -683,7 +741,7 @@ msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:2
 msgid "<b>Filter messages</b>"
-msgstr "<b>Filtrar los messatges</b>"
+msgstr "<b>Фільтр повідомлень</b>"
 
 #: ../ui/dialogs/preferences.ui.h:3
 msgid ""
@@ -694,17 +752,25 @@ msgid ""
 "The <b>last</b> field is the <u>channel/query</u> which sent the message.\n"
 "\n"
 "The last field is optional."
-msgstr "<b>Ajuda :</b>"
+msgstr ""
+"<b>Допомога:</b>\n"
+"<b>Перше</b> поле це тип <u>повідомлення</u> .\n"
+"<b>Друге</b> поле це <u>сервер</u> з якого прийшло повідомлення.\n"
+"<b>Останнє</b> поле це <u>канал</u> який послав його..\n"
+"\n"
+"Останнє поле опціональне."
 
 #: ../ui/dialogs/preferences.ui.h:9
 msgid ""
 "<b>Information:</b>\n"
 "Changes will be applied after closing this dialog."
 msgstr ""
+"<b>Інформація:</b>\n"
+"Зміни будуть збереженні після закриття вікна.."
 
 #: ../ui/dialogs/preferences.ui.h:11
 msgid "A_uto expand server tree"
-msgstr ""
+msgstr "Автоматично збільшувати вікно серверів."
 
 #: ../ui/dialogs/preferences.ui.h:12
 msgid "Action"
@@ -712,27 +778,27 @@ msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:13
 msgid "Actions:"
-msgstr "Accions :"
+msgstr "Дії:"
 
 #: ../ui/dialogs/preferences.ui.h:14
 msgid "Ad_vanced Settings"
-msgstr "Reglatges A_vançats"
+msgstr "Додаткові налаштування"
 
 #: ../ui/dialogs/preferences.ui.h:15
 msgid "Autodetect rules color"
-msgstr ""
+msgstr "Автовизначення кольору"
 
 #: ../ui/dialogs/preferences.ui.h:16
 msgid "C_hatting"
-msgstr "Discussion"
+msgstr "Р_озмова"
 
 #: ../ui/dialogs/preferences.ui.h:17
 msgid "C_olors"
-msgstr "C_olors"
+msgstr "К_ольори"
 
 #: ../ui/dialogs/preferences.ui.h:18
 msgid "Default nick:"
-msgstr "Escais per defaut :"
+msgstr "Псевдонім по замовчуванню"
 
 #: ../ui/dialogs/preferences.ui.h:19
 msgid "Display IRC colors"
@@ -740,11 +806,11 @@ msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:20
 msgid "Enable rules color"
-msgstr ""
+msgstr "Увімкнути кольори"
 
 #: ../ui/dialogs/preferences.ui.h:21
 msgid "Font:"
-msgstr "Poliça :"
+msgstr "Шрифт:"
 
 #: ../ui/dialogs/preferences.ui.h:22
 msgid "Highlighted action"
@@ -752,7 +818,7 @@ msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:23
 msgid "Highlighted actions:"
-msgstr ""
+msgstr "Підсвічувати дії."
 
 #: ../ui/dialogs/preferences.ui.h:24
 msgid "Highlighted message"
@@ -760,11 +826,11 @@ msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:25
 msgid "Highlighted messages:"
-msgstr ""
+msgstr "Підсвічувати повідомлення."
 
 #: ../ui/dialogs/preferences.ui.h:26
 msgid "Highlightwords:"
-msgstr ""
+msgstr "Підсвічування слів."
 
 #: ../ui/dialogs/preferences.ui.h:27
 msgid ""
@@ -775,14 +841,19 @@ msgid ""
 "For some options it is neccessary to restart tekka for the changes to take "
 "effect."
 msgstr ""
+"Якщо ви хочете більше  <u>контролю</u> над налаштуваннями Скористайтесь "
+"Розширеними налаштуваннями.\n"
+"\n"
+"<b>Увага:</b>\n"
+"Для деяких опцій потрібно перезапускати tekka"
 
 #: ../ui/dialogs/preferences.ui.h:31
 msgid "Last log lines:"
-msgstr ""
+msgstr "Останні логи"
 
 #: ../ui/dialogs/preferences.ui.h:32
 msgid "Last log:"
-msgstr ""
+msgstr "Останній Лог"
 
 #: ../ui/dialogs/preferences.ui.h:33
 msgid "Message"
@@ -790,75 +861,75 @@ msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:34
 msgid "Messages:"
-msgstr "Messatges :"
+msgstr "Повідомлення:"
 
 #: ../ui/dialogs/preferences.ui.h:35
 msgid "Notification:"
-msgstr "Notificacion :"
+msgstr "Notification"
 
 #: ../ui/dialogs/preferences.ui.h:36
 msgid "Own nick:"
-msgstr ""
+msgstr "Власний нік"
 
 #: ../ui/dialogs/preferences.ui.h:37
 msgid "Own text:"
-msgstr ""
+msgstr "Власний текст"
 
 #: ../ui/dialogs/preferences.ui.h:38
 msgid "Part message:"
-msgstr ""
+msgstr "Повідомлення покидання каналу."
 
 #: ../ui/dialogs/preferences.ui.h:39
 msgid "Preferences"
-msgstr "Preferéncias"
+msgstr "Налаштування"
 
 #: ../ui/dialogs/preferences.ui.h:40
 msgid "Quit message:"
-msgstr "Messatge de sortida :"
+msgstr "Повідомлення при виході:"
 
 #: ../ui/dialogs/preferences.ui.h:41
 msgid "Reset"
-msgstr ""
+msgstr "Скинути"
 
 #: ../ui/dialogs/preferences.ui.h:42
 msgid "Rules color:"
-msgstr ""
+msgstr "Кольори правил"
 
 #: ../ui/dialogs/preferences.ui.h:43
 msgid "Shutdown _maki on close"
-msgstr ""
+msgstr "Вимкнути _maki при виході"
 
 #: ../ui/dialogs/preferences.ui.h:44
 msgid "Time format:"
-msgstr "Format d'ora :"
+msgstr "Формат часу:"
 
 #: ../ui/dialogs/preferences.ui.h:45
 msgid "Use _RGBA"
-msgstr "Utilizar _RGBA"
+msgstr "Використати _RGBA"
 
 #: ../ui/dialogs/preferences.ui.h:46
 msgid "Use _default font"
-msgstr ""
+msgstr "Використати _шрифт по замовчуванню"
 
 #: ../ui/dialogs/preferences.ui.h:47
 msgid "Use contrast sensitive colors"
-msgstr ""
+msgstr "Використати контрастні кольори"
 
 #: ../ui/dialogs/preferences.ui.h:48 ../ui/main_window.ui.h:10
 msgid "_General Output"
-msgstr ""
+msgstr "_Головний вихід"
 
 #: ../ui/dialogs/preferences.ui.h:49
 msgid "_Hide on close"
-msgstr ""
+msgstr "_Сховати при закритті"
 
 #: ../ui/dialogs/preferences.ui.h:50
 msgid "_Nick Colors"
-msgstr ""
+msgstr "Колір псевдонімів"
 
 #: ../ui/dialogs/preferences.ui.h:51
 msgid "_Show status icon"
-msgstr "Far _veire una icòna d'estatut"
+msgstr "Показати іконку _стану"
 
 #: ../ui/dialogs/preferences.ui.h:52 ../ui/main_window.ui.h:17
 msgid "_tekka"
@@ -866,47 +937,47 @@ msgstr "_tekka"
 
 #: ../ui/dialogs/server.ui.h:1
 msgid "Server List"
-msgstr ""
+msgstr "Список серверів"
 
 #: ../ui/dialogs/serverAdd.ui.h:1
 msgid "<b>Add Server</b>"
-msgstr ""
+msgstr "<b>Додати Сервер</b>"
 
 #: ../ui/dialogs/serverAdd.ui.h:2 ../ui/dialogs/serverEdit.ui.h:1
 msgid "<b>Command List</b>"
-msgstr ""
+msgstr "<b>Список команд</b>"
 
 #: ../ui/dialogs/serverAdd.ui.h:3
 msgid "Add Server"
-msgstr "Apondre un servidor"
+msgstr "Додати сервер"
 
 #: ../ui/dialogs/serverAdd.ui.h:4 ../ui/dialogs/serverEdit.ui.h:3
 msgid "Address:"
-msgstr "Adreça :"
+msgstr "Адреса:"
 
 #: ../ui/dialogs/serverAdd.ui.h:5 ../ui/dialogs/serverEdit.ui.h:4
 msgid "Auto-connect:"
-msgstr "Connexion automatica :"
+msgstr "Автоматичне з’єднання"
 
 #: ../ui/dialogs/serverAdd.ui.h:6 ../ui/dialogs/serverEdit.ui.h:6
 msgid "Nick name:"
-msgstr "Escais :"
+msgstr "Псевдонім"
 
 #: ../ui/dialogs/serverAdd.ui.h:7 ../ui/dialogs/serverEdit.ui.h:8
 msgid "NickServ password:"
-msgstr "Senhal NickServ :"
+msgstr "Пароль доступу до NickServ:"
 
 #: ../ui/dialogs/serverAdd.ui.h:8 ../ui/dialogs/serverEdit.ui.h:9
 msgid "Port:"
-msgstr "Pòrt :"
+msgstr "Порт:"
 
 #: ../ui/dialogs/serverAdd.ui.h:9 ../ui/dialogs/serverEdit.ui.h:10
 msgid "Real name:"
-msgstr "Nom vertadièr :"
+msgstr "Справжнє ім'я:"
 
 #: ../ui/dialogs/serverAdd.ui.h:10
 msgid "Server name:"
-msgstr "Nom del servidor :"
+msgstr "Назва серверу:"
 
 #: ../ui/dialogs/serverDelete.ui.h:2
 #, no-c-format
@@ -915,78 +986,80 @@ msgid ""
 "\n"
 "Are you sure you want to delete the server '%(server)s'?"
 msgstr ""
+"<span weight=\"bold\" size=\"larger\">Видалити сервер</span>\n"
+"Ви впевнені що хочете видаолити сервер '%(server)s'?"
 
 #: ../ui/dialogs/serverDelete.ui.h:5
 msgid "Delete Server"
-msgstr ""
+msgstr "Видалити сервер"
 
 #: ../ui/dialogs/serverEdit.ui.h:2
 msgid "<b>Edit Server</b>"
-msgstr ""
+msgstr "<b>Редагувати сервер</b>"
 
 #: ../ui/dialogs/serverEdit.ui.h:5
 msgid "Edit Server"
-msgstr ""
+msgstr "Редагувати сервер"
 
 #: ../ui/dialogs/serverEdit.ui.h:7
 msgid "NickServ Ghost:"
-msgstr ""
+msgstr "NickServ Ghost:"
 
 #: ../ui/main_window.ui.h:1
 msgid "IRC _Colors"
-msgstr ""
+msgstr "IRC _кольори"
 
 #: ../ui/main_window.ui.h:2
 msgid "P_lugins"
-msgstr "E_mpeutons"
+msgstr "М_одулі"
 
 #: ../ui/main_window.ui.h:3
 msgid "S_ide Pane"
-msgstr ""
+msgstr "Б_окова панель"
 
 #: ../ui/main_window.ui.h:4
 msgid "Status _Bar"
-msgstr "_Barra d'estat"
+msgstr "Панель _стану"
 
 #: ../ui/main_window.ui.h:5
 msgid "Status _Icon"
-msgstr ""
+msgstr "Іконка _стану"
 
 #: ../ui/main_window.ui.h:6
 msgid "T_ools"
-msgstr "_Aisinas"
+msgstr "С_ервіс"
 
 #: ../ui/main_window.ui.h:7
 msgid "_Channel List"
-msgstr "Listas dels _canals"
+msgstr "_Список каналів"
 
 #: ../ui/main_window.ui.h:8
 msgid "_Debug"
-msgstr "_Desbugatge"
+msgstr "_Налагодження"
 
 #: ../ui/main_window.ui.h:9
 msgid "_File Transfers"
-msgstr "Transferiments de _fichièrs"
+msgstr "_Передача файлів"
 
 #: ../ui/main_window.ui.h:11
 msgid "_Help"
-msgstr "_Ajuda"
+msgstr "_Допомога"
 
 #: ../ui/main_window.ui.h:12
 msgid "_Server List"
-msgstr "_Lista dels servidors"
+msgstr "_Список Серверів"
 
 #: ../ui/main_window.ui.h:13
 msgid "_Shutdown"
-msgstr "_Atudar"
+msgstr "_Зупинити"
 
 #: ../ui/main_window.ui.h:14
 msgid "_Topic Bar"
-msgstr ""
+msgstr "_Панель Теми"
 
 #: ../ui/main_window.ui.h:15
 msgid "_View"
-msgstr "_Afichatge"
+msgstr "_Вигляд"
 
 #: ../ui/main_window.ui.h:16
 msgid "_maki"
@@ -994,47 +1067,47 @@ msgstr "_maki"
 
 #: ../ui/menus/nickListMenu.ui.h:1
 msgid "Ban"
-msgstr "Bandir"
+msgstr "Заблокувати"
 
 #: ../ui/menus/nickListMenu.ui.h:2
 msgid "Give Half-Op"
-msgstr ""
+msgstr "Дати статус Пів-оператора"
 
 #: ../ui/menus/nickListMenu.ui.h:3
 msgid "Give Op"
-msgstr ""
+msgstr "Дати Статус Оператора"
 
 #: ../ui/menus/nickListMenu.ui.h:4
 msgid "Give Voice"
-msgstr ""
+msgstr "Надати Право Голосу"
 
 #: ../ui/menus/nickListMenu.ui.h:5
 msgid "Ignore"
-msgstr "Ignorar"
+msgstr "Ігнорування"
 
 #: ../ui/menus/nickListMenu.ui.h:6
 msgid "Kick"
-msgstr "Exclòure"
+msgstr "Викинути"
 
 #: ../ui/menus/nickListMenu.ui.h:7
 msgid "Modes"
-msgstr "Mòdes"
+msgstr "Режими"
 
 #: ../ui/menus/nickListMenu.ui.h:8
 msgid "Send File"
-msgstr "Mandar lo fichièr"
+msgstr "Надіслати файл"
 
 #: ../ui/menus/nickListMenu.ui.h:9
 msgid "Take Half-Op"
-msgstr ""
+msgstr "Забрати статус пів-оператора"
 
 #: ../ui/menus/nickListMenu.ui.h:10
 msgid "Take Op"
-msgstr ""
+msgstr "Забрати Статус Оператора"
 
 #: ../ui/menus/nickListMenu.ui.h:11
 msgid "Take Voice"
-msgstr ""
+msgstr "Забрати право голосу"
 
 #: ../ui/menus/nickListMenu.ui.h:12
 msgid "Whois"
@@ -1042,71 +1115,44 @@ msgstr "Whois"
 
 #: ../ui/menus/serverTreeMenu.ui.h:1
 msgid "Connect automatically"
-msgstr "Se connectar automaticament"
+msgstr "З’єднуватися автоматично"
 
 #: ../ui/menus/serverTreeMenu.ui.h:2
 msgid "H_ide Messages"
-msgstr ""
+msgstr "С_ховати повідомлення"
 
 #: ../ui/menus/serverTreeMenu.ui.h:3
 msgid "Join automatically"
-msgstr ""
+msgstr "Приєднатись автоматично"
 
 #: ../ui/menus/serverTreeMenu.ui.h:4
 msgid "Set _Key"
-msgstr "Definir la _clau"
+msgstr "Встановити ключ"
 
 #: ../ui/menus/serverTreeMenu.ui.h:5
 msgid "Set _Topic"
-msgstr ""
+msgstr "Встановити_тему"
 
 #: ../ui/menus/serverTreeMenu.ui.h:6
 msgid "_Close"
-msgstr "_Tampar"
+msgstr "_Закрити"
 
 #: ../ui/menus/serverTreeMenu.ui.h:7
 msgid "_Connect"
-msgstr "Se _connectar"
+msgstr "_З'єднатись"
 
 #: ../ui/menus/serverTreeMenu.ui.h:8
 msgid "_Disconnect"
-msgstr "Se _desconnectar"
+msgstr "_Від'єднатися"
 
 #: ../ui/menus/serverTreeMenu.ui.h:9
 msgid "_History"
-msgstr "_Istoric"
+msgstr "_Історія"
 
 #: ../ui/menus/serverTreeMenu.ui.h:11
 msgid "_Join a Channel"
-msgstr "Re_jónher un canal"
+msgstr "_Зайти на канал"
 
 #: ../ui/menus/serverTreeMenu.ui.h:12
 msgid "_Part"
-msgstr "_Sortir"
-
-#, python-format
-#~ msgid "%d User"
-#~ msgid_plural "%d Users"
-#~ msgstr[0] "%d utilizaire"
-#~ msgstr[1] "%d utilizaires"
-
-#, python-format
-#~ msgid "%d Operator"
-#~ msgid_plural "%d Operators"
-#~ msgstr[0] "%d operador"
-#~ msgstr[1] "%d operadors"
-
-#~ msgid ""
-#~ "<span size='larger' weight='bold'>Error</span>\n"
-#~ "\n"
-#~ "An error occured — we apologize for that. Feel free to submit a bug report "
-#~ "at https://bugs.launchpad.net/sushi."
-#~ msgstr "<span size='larger' weight='bold'>Error</span>"
-
-#~ msgid "#"
-#~ msgstr "#"
-
-#~ msgid ""
-#~ "<b>Warning:</b>\n"
-#~ "Changes will be applied after closing this dialog."
-#~ msgstr "<b>Atencion :</b>"
+msgstr "_Покинути"

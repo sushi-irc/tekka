@@ -6,98 +6,98 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tekka\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-27 17:59+0200\n"
-"PO-Revision-Date: 2010-11-05 18:19+0000\n"
-"Last-Translator: Michal Chlup <Unknown>\n"
+"POT-Creation-Date: 2011-09-15 20:13+0200\n"
+"PO-Revision-Date: 2011-01-09 10:16+0000\n"
+"Last-Translator: Konki <pavel.konkol@seznam.cz>\n"
 "Language-Team: Czech\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2010-11-14 01:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2012-01-02 20:41+0000\n"
+"X-Generator: Launchpad (build 14560)\n"
 
-#: ../signal_handler.py:355
+#: ../signal_handler.py:363
 #, python-format
 msgid "• Topic for %(channel)s: %(topic)s"
 msgstr "• Téma pro %(channel)s: %(topic)s"
 
-#: ../signal_handler.py:391
+#: ../signal_handler.py:399
 #, python-format
 msgid "• You changed the topic to %(topic)s."
 msgstr "• Změnili jste téma na %(topic)s."
 
-#: ../signal_handler.py:393
+#: ../signal_handler.py:401
 #, python-format
 msgid "• %(nick)s changed the topic to %(topic)s."
 msgstr "• %(nick)s změnil téma na %(topic)s."
 
-#: ../signal_handler.py:452
+#: ../signal_handler.py:460
 #, python-format
 msgid "• %(nick)s is away (%(message)s)."
 msgstr "• %(nick)s je pryč (%(message)s)."
 
-#: ../signal_handler.py:576
+#: ../signal_handler.py:592
 #, python-format
 msgid "• Modes for %(target)s: %(mode)s"
 msgstr "• Módy pro %(target)s: %(mode)s"
 
 #. normal ctcp
-#: ../signal_handler.py:669
+#: ../signal_handler.py:685
 #, python-format
 msgid "CTCP from %(nick)s to Channel:"
 msgstr ""
 
-#: ../signal_handler.py:700
+#: ../signal_handler.py:716
 #, python-format
 msgid "CTCP request from you to %(target)s: %(message)s"
 msgstr ""
 
-#: ../signal_handler.py:903
+#: ../signal_handler.py:919
 #, python-format
 msgid "• You are now known as %(newnick)s."
 msgstr "• Jste nyní znám/a jako %(newnick)s."
 
-#: ../signal_handler.py:909
+#: ../signal_handler.py:925
 #, python-format
 msgid "• %(nick)s is now known as %(newnick)s."
 msgstr "• %(nick)s je nyní znám/a jako %(newnick)s."
 
-#: ../signal_handler.py:1002
+#: ../signal_handler.py:1016
 #, python-format
 msgid "« You have been kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr ""
 
-#: ../signal_handler.py:1023
+#: ../signal_handler.py:1037
 #, python-format
 msgid "« %(who)s was kicked from %(channel)s by %(nick)s (%(reason)s)."
 msgstr ""
 
-#: ../signal_handler.py:1061
+#: ../signal_handler.py:1075
 #, python-format
 msgid "« You have quit (%(reason)s)."
 msgstr "« Máte skončit (%(reason)s)."
 
-#: ../signal_handler.py:1063
+#: ../signal_handler.py:1077
 msgid "« You have quit."
 msgstr "« Máte skončit."
 
-#: ../signal_handler.py:1086
+#: ../signal_handler.py:1100
 #, python-format
 msgid "« %(nick)s has quit (%(reason)s)."
 msgstr ""
 
-#: ../signal_handler.py:1088
+#: ../signal_handler.py:1102
 #, python-format
 msgid "« %(nick)s has quit."
 msgstr ""
 
-#: ../signal_handler.py:1189
+#: ../signal_handler.py:1198
 #, python-format
 msgid "» You have joined %(channel)s."
 msgstr "» Stali jste se členy %(channel)s."
 
-#: ../signal_handler.py:1200
+#: ../signal_handler.py:1209
 #, python-format
 msgid "» %(nick)s has joined %(channel)s."
 msgstr "» %(nick)s se stal členem %(channel)s."
@@ -112,65 +112,65 @@ msgstr ""
 msgid "« You have left %(channel)s."
 msgstr ""
 
-#: ../signal_handler.py:1320
+#: ../signal_handler.py:1314
 #, python-format
 msgid "« %(nick)s has left %(channel)s (%(reason)s)."
 msgstr ""
 
-#: ../signal_handler.py:1323
+#: ../signal_handler.py:1317
 #, python-format
 msgid "« %(nick)s has left %(channel)s."
 msgstr ""
 
-#: ../signal_handler.py:1344
+#: ../signal_handler.py:1338
 msgid "• You are not a channel operator."
-msgstr ""
+msgstr "Nejste operátorem kanálu."
 
-#: ../signal_handler.py:1354
+#: ../signal_handler.py:1348
 #, python-format
 msgid "• %(target)s: No such nick/channel."
 msgstr ""
 
-#: ../signal_handler.py:1357
+#: ../signal_handler.py:1351
 #, python-format
 msgid "• %(target)s: No such server."
 msgstr ""
 
-#: ../signal_handler.py:1360
+#: ../signal_handler.py:1354
 #, python-format
 msgid "• %(target)s: No such channel."
 msgstr ""
 
-#: ../signal_handler.py:1372
+#: ../signal_handler.py:1366
 msgid "Unknown reason"
 msgstr "Neznámý důvod"
 
-#: ../signal_handler.py:1375
+#: ../signal_handler.py:1369
 msgid "The channel is full."
 msgstr "Kanál je plný."
 
-#: ../signal_handler.py:1377
+#: ../signal_handler.py:1371
 msgid "The channel is invite-only."
 msgstr "Kanál je pouze pro zvané."
 
-#: ../signal_handler.py:1379
+#: ../signal_handler.py:1373
 msgid "You are banned."
 msgstr "Jste banováni."
 
-#: ../signal_handler.py:1395
+#: ../signal_handler.py:1389
 msgid "You need the correct channel key."
 msgstr "Potřebujete správný kanálový klíč"
 
-#: ../signal_handler.py:1400
+#: ../signal_handler.py:1394
 #, python-format
 msgid "You can not join %(channel)s: %(reason)s"
 msgstr ""
 
-#: ../signal_handler.py:1472
+#: ../signal_handler.py:1466
 msgid "Auto accepted file transfer"
-msgstr ""
+msgstr "Byl automaticky přijat přenos souboru"
 
-#: ../signal_handler.py:1473
+#: ../signal_handler.py:1467
 #, python-format
 msgid ""
 "maki auto accepted the following file transfer:\n"
@@ -185,17 +185,16 @@ msgstr ""
 "Velikost: %(size)s\n"
 "Server: %(server)s"
 
-#: ../sushi.py:92
+#: ../sushi.py:96
 #, python-format
 msgid "Plugin “%(plugin)s” caused an error."
 msgstr ""
 
 #: ../tekka/com.py:126 ../tekka/com.py:136 ../tekka/com.py:240
-#: ../tekka/gui/mgmt.py:277
 msgid "tekka could not connect to maki."
 msgstr "tekka se nemůže připojit k maki."
 
-#: ../tekka/com.py:127 ../tekka/gui/mgmt.py:278
+#: ../tekka/com.py:127
 msgid "Please check whether maki is running."
 msgstr ""
 
@@ -220,7 +219,7 @@ msgstr ""
 
 #: ../tekka/com.py:284
 msgid "tekka requires a newer maki version."
-msgstr ""
+msgstr "tekka vyžaduje novější verzi maki"
 
 #: ../tekka/com.py:285
 #, python-format
@@ -234,7 +233,7 @@ msgstr ""
 
 #: ../tekka/dialogs/addServer.py:47
 msgid "No server name given."
-msgstr ""
+msgstr "Nebyl zadán název serveru."
 
 #: ../tekka/dialogs/addServer.py:48
 msgid "You must enter a server name."
@@ -242,7 +241,7 @@ msgstr "Musíte vložit název serveru."
 
 #: ../tekka/dialogs/channelList.py:89
 msgid "Channel list search error."
-msgstr ""
+msgstr "Chyba vyhledávání seznamu kanálů."
 
 #: ../tekka/dialogs/channelList.py:90
 #, python-format
@@ -271,11 +270,11 @@ msgstr ""
 
 #: ../tekka/dialogs/debug.py:63
 msgid "C_ompile and run"
-msgstr ""
+msgstr "_Zkompilovat a spustit"
 
 #: ../tekka/dialogs/history.py:78
 msgid "Read history anyways?"
-msgstr ""
+msgstr "Přesto číst historii?"
 
 #: ../tekka/dialogs/history.py:79
 msgid ""
@@ -288,29 +287,29 @@ msgstr ""
 msgid "History for %(target)s"
 msgstr ""
 
-#: ../tekka/dialogs/plugins.py:82 ../tekka/dialogs/plugins.py:110
+#: ../tekka/dialogs/plugins.py:83 ../tekka/dialogs/plugins.py:111
 msgid "No plugin selected."
-msgstr ""
+msgstr "Nebyl vybrán zásuvný modul."
 
-#: ../tekka/dialogs/plugins.py:83
+#: ../tekka/dialogs/plugins.py:84
 msgid "You must select a plugin to load it."
-msgstr ""
+msgstr "Musíte vybrat zásuvný modul pro jeho nahrání."
 
-#: ../tekka/dialogs/plugins.py:111
+#: ../tekka/dialogs/plugins.py:112
 msgid "You must select a plugin to unload it."
 msgstr ""
 
 #: ../tekka/dialogs/server.py:140 ../tekka/dialogs/server.py:167
 msgid "No server selected."
-msgstr ""
+msgstr "Nebyl vybrán žádný server."
 
 #: ../tekka/dialogs/server.py:141
 msgid "You must select a server to edit it."
-msgstr ""
+msgstr "Musíte vybrat server pro jeho editaci."
 
 #: ../tekka/dialogs/server.py:168
 msgid "You must select a server to delete it."
-msgstr ""
+msgstr "Musíte vybrat server pro jeho smazání."
 
 #: ../tekka/dialogs/server.py:178
 msgid "Error while retrieving server name."
@@ -321,6 +320,8 @@ msgid ""
 "There was an error while retrieving the server name.\n"
 "Are you connected to maki?"
 msgstr ""
+"Vyskytla se chyba při přijímání názvu serveru.\n"
+"Jste připojeni k maki?"
 
 #: ../tekka/dialogs/whois.py:74
 #, python-format
@@ -334,25 +335,11 @@ msgstr ""
 
 #: ../tekka/dialogs/whois.py:111
 msgid "No data received so far. Are you still connected?"
-msgstr ""
+msgstr "Zatim nebyla přijata žádná data. Jste stále připojeni?"
 
 #: ../tekka/dialogs/whois.py:127
 msgid "Loading..."
 msgstr "Načítá se..."
-
-#: ../tekka/gui/mgmt.py:173
-#, python-format
-msgid "%d User"
-msgid_plural "%d Users"
-msgstr[0] ""
-msgstr[1] ""
-
-#: ../tekka/gui/mgmt.py:175
-#, python-format
-msgid "%d Operator"
-msgid_plural "%d Operators"
-msgstr[0] "%d Operátor"
-msgstr[1] "%d Operátoři"
 
 #: ../tekka/lib/dcc_dialog.py:67
 msgid "Select destination"
@@ -382,7 +369,21 @@ msgid ""
 "Destination: %(destination)s%(resumable)s"
 msgstr ""
 
-#: ../tekka/lib/general_output_buffer.py:63
+#: ../tekka/lib/error_dialog.py:14
+msgid "Error occured"
+msgstr "Vyskytla se chyba"
+
+#: ../tekka/lib/error_dialog.py:24
+msgid ""
+"<span size='larger' weight='bold'>Don't Panic!</span>\n"
+"\n"
+"An error occured – we apologize for that. Feel free to submit a bug report "
+"at <a "
+"href=\"https://bugs.launchpad.net/sushi\">https://bugs.launchpad.net/sushi</a"
+">."
+msgstr ""
+
+#: ../tekka/lib/general_output_buffer.py:65
 #, python-format
 msgid "Hide '%s' messages"
 msgstr ""
@@ -394,24 +395,24 @@ msgstr ""
 
 #: ../tekka/lib/key_dialog.py:61
 msgid "Save key for channel"
-msgstr ""
+msgstr "Uložit klíč ke kanálu"
 
-#: ../tekka/lib/plugin_config_dialog.py:50
+#: ../tekka/lib/plugin_config_dialog.py:53
 #, python-format
 msgid "Configure %(name)s"
 msgstr "Konfigurovat %(name)s"
 
 #: ../tekka/lib/spell_entry.py:152
 msgid "Foreground Color"
-msgstr ""
+msgstr "Barva popředí"
 
 #: ../tekka/lib/spell_entry.py:164
 msgid "Background Color"
-msgstr ""
+msgstr "Barva pozadí"
 
 #: ../tekka/lib/spell_entry.py:176
 msgid "Reset Color"
-msgstr ""
+msgstr "Resetovat barvu"
 
 #: ../tekka/lib/status_icon.py:61
 msgid "Hide main window"
@@ -458,70 +459,56 @@ msgid ""
 "ask for support."
 msgstr ""
 
-#: ../tekka/main.py:462
+#: ../tekka/main.py:463
 msgid "Reset markup"
 msgstr ""
 
-#: ../tekka/main.py:651
+#: ../tekka/main.py:652
 #, python-format
 msgid "Do you really want to close channel “%(name)s”?"
 msgstr ""
 
-#: ../tekka/main.py:653
+#: ../tekka/main.py:654
 #, python-format
 msgid "Do you really want to close query “%(name)s”?"
 msgstr ""
 
-#: ../tekka/main.py:655
+#: ../tekka/main.py:656
 #, python-format
 msgid "Do you really want to close server “%(name)s”?"
-msgstr ""
+msgstr "Opravdu chcete zavřít server “%(name)s”?"
 
 #. TODO: away status
-#: ../tekka/main.py:768
+#: ../tekka/main.py:781
 msgid "Nickname: "
 msgstr "Přezdívka: "
 
-#: ../tekka/main.py:771
+#: ../tekka/main.py:784
 msgid "User: "
 msgstr "Uživatel: "
 
-#: ../tekka/main.py:772
+#: ../tekka/main.py:785
 msgid "Topic: "
 msgstr "Téma: "
 
-#: ../tekka/main.py:774 ../tekka/main.py:778
+#: ../tekka/main.py:787 ../tekka/main.py:791
 msgid "Last sentence: "
-msgstr ""
+msgstr "Poslední věta: "
 
-#: ../tekka/main.py:1308
-msgid "Error occured"
-msgstr "Vyskytla se chyba"
-
-#: ../tekka/main.py:1318
-msgid ""
-"<span size='larger' weight='bold'>Don't Panic!</span>\n"
-"\n"
-"An error occured – we apologize for that. Feel free to submit a bug report "
-"at <a "
-"href=\"https://bugs.launchpad.net/sushi\">https://bugs.launchpad.net/sushi</a"
-">."
-msgstr ""
-
-#: ../tekka/menus/mainmenu_context.py:109
-#: ../tekka/menus/mainmenu_context.py:211 ../tekka/menus/nicklist_menu.py:175
+#: ../tekka/menus/mainmenu_context.py:135
+#: ../tekka/menus/mainmenu_context.py:220 ../tekka/menus/nicklist_menu.py:175
 msgid "No connection to maki."
 msgstr "Žádné připojení k maki."
 
-#: ../tekka/menus/mainmenu_context.py:110
+#: ../tekka/menus/mainmenu_context.py:136
 msgid "You can't shutdown maki. You're not connected."
 msgstr "Nemůžete vypnout maki. Nejste připojeni."
 
-#: ../tekka/menus/mainmenu_context.py:222
+#: ../tekka/menus/mainmenu_context.py:231
 msgid "tekka could not determine server."
 msgstr ""
 
-#: ../tekka/menus/mainmenu_context.py:223
+#: ../tekka/menus/mainmenu_context.py:232
 msgid ""
 "There is no active server. Click on a server tab or a child of a server tab "
 "to activate the server."
@@ -529,7 +516,7 @@ msgstr ""
 
 #: ../tekka/menus/nicklist_menu.py:61 ../tekka/menus/servertree_menu.py:51
 msgid "Widget creation failed."
-msgstr ""
+msgstr "Selhalo vytváření widgetu."
 
 #: ../tekka/menus/nicklist_menu.py:62 ../tekka/menus/servertree_menu.py:52
 msgid ""
@@ -550,7 +537,7 @@ msgstr ""
 
 #: ../tekka/menus/nicklist_menu.py:190
 msgid "No file selected"
-msgstr ""
+msgstr "Nebyl vybrán soubor"
 
 #: ../tekka/menus/nicklist_menu.py:191
 msgid "You didn't select a file to send. Aborting."
@@ -570,11 +557,11 @@ msgstr ""
 
 #: ../ui/dialogs/advancedPreferences.ui.h:1
 msgid "Advanced Preferences"
-msgstr ""
+msgstr "Pokročilé nastavení"
 
 #: ../ui/dialogs/channelList.ui.h:1
 msgid "Channel List"
-msgstr ""
+msgstr "Seznam kanálů"
 
 #: ../ui/dialogs/colorTable.ui.h:1
 msgid "<big>IRC to real colors</big>"
@@ -582,7 +569,7 @@ msgstr ""
 
 #: ../ui/dialogs/colorTable.ui.h:2
 msgid "IRC Colors"
-msgstr ""
+msgstr "Barvy IRC"
 
 #: ../ui/dialogs/colorTable.ui.h:4
 #, no-c-format
@@ -608,9 +595,25 @@ msgid ""
 "and which color every number represents."
 msgstr ""
 
+#: ../ui/dialogs/contrast.ui.h:1
+msgid "<b>Contrast colors</b>"
+msgstr ""
+
+#: ../ui/dialogs/contrast.ui.h:2
+msgid "<b>Example</b>"
+msgstr ""
+
+#: ../ui/dialogs/contrast.ui.h:3
+msgid "Select a color"
+msgstr ""
+
+#: ../ui/dialogs/contrast.ui.h:4
+msgid "The quick brown fox jumps over the lazy developer."
+msgstr ""
+
 #: ../ui/dialogs/dcc.ui.h:1
 msgid "File Transfers"
-msgstr ""
+msgstr "Přenosy souborů"
 
 #: ../ui/dialogs/hide.ui.h:1
 msgid "<b>Message types to hide</b>"
@@ -618,11 +621,11 @@ msgstr ""
 
 #: ../ui/dialogs/hide.ui.h:2
 msgid "<b>Other</b>"
-msgstr ""
+msgstr "<b>Jiné</b>"
 
 #: ../ui/dialogs/hide.ui.h:3
 msgid "<b>Own</b>"
-msgstr ""
+msgstr "<b>Vlasntní</b>"
 
 #: ../ui/dialogs/hide.ui.h:4
 msgid "Hide message types"
@@ -630,11 +633,11 @@ msgstr ""
 
 #: ../ui/dialogs/hide.ui.h:5
 msgid "Join:"
-msgstr ""
+msgstr "Připojit:"
 
 #: ../ui/dialogs/hide.ui.h:6
 msgid "Kick:"
-msgstr ""
+msgstr "Vyhodit:"
 
 #: ../ui/dialogs/hide.ui.h:7
 msgid "Mode:"
@@ -650,23 +653,23 @@ msgstr "Část:"
 
 #: ../ui/dialogs/hide.ui.h:10
 msgid "Quit:"
-msgstr ""
+msgstr "Odejít:"
 
 #: ../ui/dialogs/join.ui.h:1
 msgid "<b>Join a channel</b>"
-msgstr ""
+msgstr "<b>Připojit ke kanálu</b>"
 
 #: ../ui/dialogs/join.ui.h:2
 msgid "Join _automatically"
-msgstr ""
+msgstr "Připojit _automaticky"
 
 #: ../ui/dialogs/join.ui.h:3
 msgid "Name:"
-msgstr ""
+msgstr "Název:"
 
 #: ../ui/dialogs/join.ui.h:4 ../ui/menus/serverTreeMenu.ui.h:10
 msgid "_Join"
-msgstr ""
+msgstr "_Připojit"
 
 #: ../ui/dialogs/plugins.ui.h:1
 msgid "C_onfigure"
@@ -674,21 +677,25 @@ msgstr ""
 
 #: ../ui/dialogs/plugins.ui.h:2
 msgid "Plugins"
-msgstr ""
+msgstr "Zásuvné moduly"
 
 #: ../ui/dialogs/plugins.ui.h:3
 msgid "_Load"
-msgstr ""
+msgstr "_Načíst"
 
 #: ../ui/dialogs/plugins.ui.h:4
 msgid "_Unload"
 msgstr "_Uvolnit"
 
 #: ../ui/dialogs/preferences.ui.h:1
-msgid "<b>Filter messages</b>"
+msgid "<b>Displayed message types</b>"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:2
+msgid "<b>Filter messages</b>"
+msgstr "<b>Filtr zpráv</b>"
+
+#: ../ui/dialogs/preferences.ui.h:3
 msgid ""
 "<b>Help:</b>\n"
 "The <b>first</b> field is the <u>message</u> type.\n"
@@ -699,61 +706,79 @@ msgid ""
 "The last field is optional."
 msgstr ""
 
-#: ../ui/dialogs/preferences.ui.h:8
+#: ../ui/dialogs/preferences.ui.h:9
 msgid ""
 "<b>Information:</b>\n"
 "Changes will be applied after closing this dialog."
 msgstr ""
+"<b>Informace:</b>\n"
+"Změny se projeví po zavření tohoto dialogu."
 
-#: ../ui/dialogs/preferences.ui.h:10
+#: ../ui/dialogs/preferences.ui.h:11
 msgid "A_uto expand server tree"
 msgstr ""
 
-#: ../ui/dialogs/preferences.ui.h:11
-msgid "Actions:"
-msgstr ""
-
 #: ../ui/dialogs/preferences.ui.h:12
-msgid "Ad_vanced Settings"
+msgid "Action"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:13
-msgid "Autodetect rules color"
+msgid "Actions:"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:14
-msgid "C_hatting"
+msgid "Ad_vanced Settings"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:15
-msgid "C_olors"
+msgid "Autodetect rules color"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:16
-msgid "Default nick:"
+msgid "C_hatting"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:17
-msgid "Enable rules color"
+msgid "C_olors"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:18
-msgid "Font:"
+msgid "Default nick:"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:19
-msgid "Highlighted actions:"
+msgid "Display IRC colors"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:20
-msgid "Highlighted messages:"
+msgid "Enable rules color"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:21
+msgid "Font:"
+msgstr "Písmo:"
+
+#: ../ui/dialogs/preferences.ui.h:22
+msgid "Highlighted action"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:23
+msgid "Highlighted actions:"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:24
+msgid "Highlighted message"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:25
+msgid "Highlighted messages:"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:26
 msgid "Highlightwords:"
 msgstr ""
 
-#: ../ui/dialogs/preferences.ui.h:22
+#: ../ui/dialogs/preferences.ui.h:27
 msgid ""
 "If you want to have control about <u>all</u> settings you can use the "
 "advanced settings dialog.\n"
@@ -763,85 +788,93 @@ msgid ""
 "effect."
 msgstr ""
 
-#: ../ui/dialogs/preferences.ui.h:26
+#: ../ui/dialogs/preferences.ui.h:31
 msgid "Last log lines:"
 msgstr ""
 
-#: ../ui/dialogs/preferences.ui.h:27
-msgid "Last log:"
-msgstr ""
-
-#: ../ui/dialogs/preferences.ui.h:28
-msgid "Messages:"
-msgstr ""
-
-#: ../ui/dialogs/preferences.ui.h:29
-msgid "Notification:"
-msgstr ""
-
-#: ../ui/dialogs/preferences.ui.h:30
-msgid "Own nick:"
-msgstr ""
-
-#: ../ui/dialogs/preferences.ui.h:31
-msgid "Own text:"
-msgstr ""
-
 #: ../ui/dialogs/preferences.ui.h:32
-msgid "Part message:"
-msgstr ""
+msgid "Last log:"
+msgstr "Poslední záznam:"
 
 #: ../ui/dialogs/preferences.ui.h:33
-msgid "Preferences"
+msgid "Message"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:34
+msgid "Messages:"
+msgstr "Zprávy:"
+
+#: ../ui/dialogs/preferences.ui.h:35
+msgid "Notification:"
+msgstr "Upozornění:"
+
+#: ../ui/dialogs/preferences.ui.h:36
+msgid "Own nick:"
+msgstr "Vlastní přezdívka:"
+
+#: ../ui/dialogs/preferences.ui.h:37
+msgid "Own text:"
+msgstr "Vlastní text:"
+
+#: ../ui/dialogs/preferences.ui.h:38
+msgid "Part message:"
+msgstr "Část zprávy:"
+
+#: ../ui/dialogs/preferences.ui.h:39
+msgid "Preferences"
+msgstr "Nastavení"
+
+#: ../ui/dialogs/preferences.ui.h:40
 msgid "Quit message:"
 msgstr ""
 
-#: ../ui/dialogs/preferences.ui.h:35
-msgid "Rules color:"
-msgstr ""
-
-#: ../ui/dialogs/preferences.ui.h:36
-msgid "Shutdown _maki on close"
-msgstr ""
-
-#: ../ui/dialogs/preferences.ui.h:37
-msgid "Time format:"
-msgstr ""
-
-#: ../ui/dialogs/preferences.ui.h:38
-msgid "Use _RGBA"
-msgstr ""
-
-#: ../ui/dialogs/preferences.ui.h:39
-msgid "Use _default font"
-msgstr "Použít _základní font"
-
-#: ../ui/dialogs/preferences.ui.h:40
-msgid "Use contrast sensitive colors"
-msgstr ""
-
-#: ../ui/dialogs/preferences.ui.h:41 ../ui/main_window.ui.h:10
-msgid "_General Output"
+#: ../ui/dialogs/preferences.ui.h:41
+msgid "Reset"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:42
-msgid "_Hide on close"
+msgid "Rules color:"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:43
-msgid "_Nick Colors"
+msgid "Shutdown _maki on close"
 msgstr ""
 
 #: ../ui/dialogs/preferences.ui.h:44
+msgid "Time format:"
+msgstr "Formát času:"
+
+#: ../ui/dialogs/preferences.ui.h:45
+msgid "Use _RGBA"
+msgstr "Použít _RGBA"
+
+#: ../ui/dialogs/preferences.ui.h:46
+msgid "Use _default font"
+msgstr "Použít _základní font"
+
+#: ../ui/dialogs/preferences.ui.h:47
+msgid "Use contrast sensitive colors"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:48 ../ui/main_window.ui.h:10
+msgid "_General Output"
+msgstr "_Hlavní výstup"
+
+#: ../ui/dialogs/preferences.ui.h:49
+msgid "_Hide on close"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:50
+msgid "_Nick Colors"
+msgstr ""
+
+#: ../ui/dialogs/preferences.ui.h:51
 msgid "_Show status icon"
 msgstr ""
 
-#: ../ui/dialogs/preferences.ui.h:45 ../ui/main_window.ui.h:17
+#: ../ui/dialogs/preferences.ui.h:52 ../ui/main_window.ui.h:17
 msgid "_tekka"
-msgstr ""
+msgstr "_tekka"
 
 #: ../ui/dialogs/server.ui.h:1
 msgid "Server List"
@@ -853,7 +886,7 @@ msgstr "<b>Přidat server</b>"
 
 #: ../ui/dialogs/serverAdd.ui.h:2 ../ui/dialogs/serverEdit.ui.h:1
 msgid "<b>Command List</b>"
-msgstr ""
+msgstr "<b>Seznam příkazů</b>"
 
 #: ../ui/dialogs/serverAdd.ui.h:3
 msgid "Add Server"
@@ -873,7 +906,7 @@ msgstr "Přezdívka:"
 
 #: ../ui/dialogs/serverAdd.ui.h:7 ../ui/dialogs/serverEdit.ui.h:8
 msgid "NickServ password:"
-msgstr ""
+msgstr "NickServ heslo:"
 
 #: ../ui/dialogs/serverAdd.ui.h:8 ../ui/dialogs/serverEdit.ui.h:9
 msgid "Port:"
@@ -881,11 +914,11 @@ msgstr "Port:"
 
 #: ../ui/dialogs/serverAdd.ui.h:9 ../ui/dialogs/serverEdit.ui.h:10
 msgid "Real name:"
-msgstr ""
+msgstr "Skutečné jméno:"
 
 #: ../ui/dialogs/serverAdd.ui.h:10
 msgid "Server name:"
-msgstr ""
+msgstr "Název serveru:"
 
 #: ../ui/dialogs/serverDelete.ui.h:2
 #, no-c-format
@@ -897,15 +930,15 @@ msgstr ""
 
 #: ../ui/dialogs/serverDelete.ui.h:5
 msgid "Delete Server"
-msgstr ""
+msgstr "Smazat server"
 
 #: ../ui/dialogs/serverEdit.ui.h:2
 msgid "<b>Edit Server</b>"
-msgstr ""
+msgstr "<b>Upravit server</b>"
 
 #: ../ui/dialogs/serverEdit.ui.h:5
 msgid "Edit Server"
-msgstr ""
+msgstr "Upravit server"
 
 #: ../ui/dialogs/serverEdit.ui.h:7
 msgid "NickServ Ghost:"
@@ -937,11 +970,11 @@ msgstr ""
 
 #: ../ui/main_window.ui.h:7
 msgid "_Channel List"
-msgstr ""
+msgstr "_Seznam kanálů"
 
 #: ../ui/main_window.ui.h:8
 msgid "_Debug"
-msgstr ""
+msgstr "_Ladit"
 
 #: ../ui/main_window.ui.h:9
 msgid "_File Transfers"
@@ -949,7 +982,7 @@ msgstr ""
 
 #: ../ui/main_window.ui.h:11
 msgid "_Help"
-msgstr ""
+msgstr "_Pomoc"
 
 #: ../ui/main_window.ui.h:12
 msgid "_Server List"
@@ -965,7 +998,7 @@ msgstr "_Nabídka témat"
 
 #: ../ui/main_window.ui.h:15
 msgid "_View"
-msgstr "_Pohled"
+msgstr "_Náhled"
 
 #: ../ui/main_window.ui.h:16
 msgid "_maki"
@@ -973,7 +1006,7 @@ msgstr "_maki"
 
 #: ../ui/menus/nickListMenu.ui.h:1
 msgid "Ban"
-msgstr ""
+msgstr "Zablokovat"
 
 #: ../ui/menus/nickListMenu.ui.h:2
 msgid "Give Half-Op"
@@ -997,7 +1030,7 @@ msgstr ""
 
 #: ../ui/menus/nickListMenu.ui.h:7
 msgid "Modes"
-msgstr ""
+msgstr "Režimy"
 
 #: ../ui/menus/nickListMenu.ui.h:8
 msgid "Send File"
@@ -1062,3 +1095,23 @@ msgstr ""
 #: ../ui/menus/serverTreeMenu.ui.h:12
 msgid "_Part"
 msgstr ""
+
+#~ msgid "Plugin is already loaded."
+#~ msgstr "Zásuvný modul je již načtený."
+
+#~ msgid "Plugin could not be loaded."
+#~ msgstr "Zásuvný modul nelze načíst."
+
+#, python-format
+#~ msgid "%d User"
+#~ msgid_plural "%d Users"
+#~ msgstr[0] "%d Uživatel"
+#~ msgstr[1] "%d Uživatelé"
+#~ msgstr[2] "%d Uživatelů"
+
+#, python-format
+#~ msgid "%d Operator"
+#~ msgid_plural "%d Operators"
+#~ msgstr[0] "%d Operátor"
+#~ msgstr[1] "%d Operátoři"
+#~ msgstr[2] "%d Operátorů"
