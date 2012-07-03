@@ -42,4 +42,5 @@ class TekkaBuilder(gtk.Builder):
 			return True
 		return False
 
+
 widgets = TekkaBuilder()
