@@ -5,15 +5,22 @@ import gobject
 
 from gettext import gettext as _
 
+
+from .. import config
 from .. import gui
 from .. import signals
 from ..lib.inline_dialog import InlineMessageDialog
+from ..typecheck import types
 
+from ..gui.tabs.channel import TekkaChannel
+from ..gui.tabs.server import TekkaServer
+from ..gui.tabs.query import TekkaQuery
+from ..gui.tabs.tab import TekkaTab
 
-class TabTree(object):
+class TabTree(gobject.GObject):
 
 	def __init__(self, tekka):
-		self.current_tab = None
+		self.current_path = ()
 
 		signals.connect_signal("nick", self.sushi_nick_change)
 
@@ -40,6 +47,10 @@ class TabTree(object):
 		setup_tabs_view(tekka)
 
 	def test(self):
+		self._set_current_path((1,2))
+		assert self.get_current_path() == (1,2)
+		self._set_current_path(())
+
 		return True
 
 
@@ -59,8 +70,62 @@ class TabTree(object):
 		}
 
 
-	def find_tab_by_name(self, server, name):
-		pass
+	def _set_current_path(self, path):
+		" called by the parent module on a tab switch "
+		self.current_path = path
+
+
+	def get_current_path(self):
+		return self.current_path
+
+
+	def get_current_tab(self):
+		""" Returns the current tab """
+		store = widgets.get_object("tab_store")
+
+		try:
+			return store[self.current_path][0]
+		except (IndexError,TypeError):
+			return None
+
+
+	def get_current_tabs(self):
+		"""
+			Returns a tuple with the server
+			as parent tab and the active channel tab.
+
+			If only a server is active, the
+			second field of the tuple is None.
+
+			Possible return values:
+			(<serverTab>,<channelTab>)
+			(<serverTab>,None)
+			(None,None)
+		"""
+		current_path = self.current_path
+		store = self.tekka.widgets.get_object("tab_store")
+
+		if not current_path:
+			return None,None
+
+		# iter could be server or channel
+		try:
+			iter = store.get_iter(current_path)
+		except ValueError:
+			# tab is already closed
+			return None, None
+
+		if not iter:
+			return None, None
+
+		pIter = store.iter_parent(iter)
+		if not pIter:
+			# no parent, iter is a server
+			return store.get_value(iter, 0), None
+		else:
+			return store.get_value(pIter, 0), store.get_value(iter, 0)
+
+		return None, None
 
 
 	def sushi_nick_change(self, time, server, fromStr, newNick):
@@ -70,6 +135,414 @@ class TabTree(object):
 
 		if tab and tab.isQuery:
 			tab.name = newNick
+
+
+
+	@types (server = TekkaServer, name = basestring)
+	def create_channel(self, server, name):
+		""" create TekkaChannel object and associated a NickListStore
+			with it.
+
+			Returns the newly created Tab object.
+		"""
+		ns = NickListStore()
+
+		ns.set_modes(server.support_prefix[1])
+
+		tab = gui.tabs._create_tab(TekkaChannel, name, server, nicklist = ns)
+
+		gui.tabs.connect_tab_callbacks(tab, ("joined","topic"))
+
+		return tab
+
+
+	@types(server = TekkaServer, name = basestring)
+	def create_query(self, server, name):
+		tab = gui.tabs._create_tab(TekkaQuery, name, server)
+		return tab
+
+
+	@types (server = basestring)
+	def create_server(self, server):
+		tab = gui.tabs._create_tab(TekkaServer, server)
+
+		tab.update()
+
+		gui.tabs.connect_tab_callbacks(tab, ("new_nick",))
+
+		return tab
+
+
+	@types(server = basestring, child = basestring)
+	def search_tab(self, server, child = ""):
+		store = self.tekka.widgets.get_object("tab_store")
+
+		for row in store:
+			if row[0].name.lower() == server.lower():
+				if child:
+					for crow in row.iterchildren():
+						if crow[0].name.lower() == child.lower():
+							return crow[0]
+				else:
+					return row[0]
+
+		return None
+
+
+	@types (server = basestring, name = basestring)
+	def search_tabs(self, server, name=""):
+		"""	Searches for a pair of tabs.
+			name can be empty, in that case
+			only the server string is used
+			for the search.
+
+			Possible return values:
+			(<serverTab>,<channelTab>)
+			(<serverTab>,None)
+			(None,None)
+		"""
+		store = self.tekka.widgets.get_object("tab_store")
+		for row in store:
+			if row[0].name.lower() == server.lower():
+				if not name:
+					return (row[0], None)
+				else:
+					for channel in row.iterchildren():
+						if channel[0].name.lower() == name.lower():
+							return (row[0], channel[0])
+					return (row[0], None)
+		return (None, None)
+
+
+	@types (server = (type(None), TekkaServer), object = TekkaTab, update_shortcuts = bool)
+	def add_tab(self, server, object, update_shortcuts=True):
+		"""	Adds a tab object into the server tree.
+			server can be a string identifying a
+			server acting as parent for the tab or
+			None.
+
+			On succes the method returns the path
+			to the new tab, otherwise None.
+		"""
+		store = self.tekka.widgets.get_object("tab_store")
+
+		serverIter = None
+
+		if server:
+			for row in store:
+				if row[0] == server:
+					serverIter = row.iter
+
+		iter = store.append(serverIter, row=(object,))
+		object.path = store.get_path(iter)
+
+		callbacks = gui.tabs.get_callbacks("add")
+
+		for cb in callbacks:
+			cb(object)
+
+		if server and config.get("tekka", "auto_expand"):
+			# expand the whole server tab
+			path = store.get_path(serverIter)
+			self.tekka.widgets.get_object("tabs_view").expand_row(
+				store.get_path(store.iter_parent(iter)), True)
+
+		if update_shortcuts:
+			gui.shortcuts.assign_numeric_tab_shortcuts(get_all_tabs())
+
+		return object.path
+
+
+	@types (tab = TekkaTab, update_shortcuts = bool)
+	def remove_tab(self, tab, update_shortcuts=True):
+		"""	Removes the tab from the server tree.
+			There's no need for giving a parent due
+			to to the unique identifying path stored
+			inner the tekkaTab.
+		"""
+		store =self.tekka.widgets.get_object("tab_store")
+
+		try:
+			row = store[tab.path]
+		except IndexError:
+			# no tab in server tree at this path
+			return False
+
+		# part of hack:
+		nextIter = store.iter_next(row.iter)
+
+		if not nextIter:
+			temp = store.iter_parent(row.iter)
+			if temp:
+				nextIter = store.iter_parent(temp)
+			else:
+				nextIter = None
+		path = tab.path
+
+		callbacks = gui.tabs.get_callbacks("remove")
+
+		for cb in callbacks:
+			cb(tab)
+
+		store.remove(row.iter)
+		__updateLowerRows(store, nextIter)
+
+		if update_shortcuts:
+			gui.shortcuts.assign_numeric_tab_shortcuts(get_all_tabs())
+
+		return True
+
+
+	def get_tab_by_path(self, path):
+		if not path:
+			return
+
+		store = self.tekka.widgets.get_object("tab_store")
+
+		try:
+			return store[path][0]
+		except (KeyError, IndexError):
+			return None
+
+
+	@types (servers = list, excludes = list)
+	def get_all_tabs(self, servers=[], excludes=[]):
+		"""
+			Returns all registered tabs.
+			If server is given, only the servers
+			and it's children are returned.
+			If exclude is given, the given servers
+			will be ignored.
+
+			Note:  if there's a newly row inserted, the
+			Note:: tab-column can be None.
+		"""
+		store = self.tekka.widgets.get_object("tab_store")
+
+		tabs = []
+
+		def lower(l):
+			return [n.lower() for n in l if n]
+
+		def iterate_store(model, path, iter):
+			tab = model[path][0]
+			if (None == tab
+			or (tab.is_server() and tab.name.lower() in lower(excludes))
+			or (
+			  not tab.is_server()
+			  and tab.server.name.lower() in lower(excludes))):
+				return
+			tabs.append(tab)
+
+
+		if not servers:
+			store.foreach(iterate_store)
+		else:
+			for row in store:
+				if row[0].name.lower() in lower(servers):
+					tabs.append(row[0])
+					for child in row.iterchildren():
+						tabs.append(child[0])
+					break
+
+		return tabs
+
+
+	def get_next_server(self, current):
+		" Get the server next to the given server or None "
+		store = self.tekka.widgets.get_object("tab_store")
+		useNext = False
+
+		for row in store:
+			if useNext:
+				return row[0]
+
+			if row[0] == current:
+				useNext = True
+
+		if len(store) >= 2:
+			# current was the last item, wrap to the first
+			return store[0][0]
+
+		return None
+
+
+	@types (tab = TekkaTab)
+	def get_next_tab(self, tab):
+		""" get the next left tab near to tab.
+
+			This function doesn't consider the
+			type of the tab.
+		"""
+		if not tab or not tab.path:
+			return None
+
+		tablist = self.get_all_tabs()
+
+		if not tablist or len(tablist) == 1:
+			return None
+
+		try:
+			i = tablist.index(tab)
+		except ValueError:
+			return None
+
+		return tablist[i-1]
+
+
+	@types(path=tuple)
+	def switch_to_path(self, path):
+		""" Switch the server tree cursor
+			to the row pointed to by path.
+
+			This function returns None.
+		"""
+		if not gui.mgmt.gui_is_useable:
+			return
+
+		tabs_view = self.tekka.widgets.get_object("tabs_view")
+		store = self.tekka.widgets.get_object("tab_store")
+
+		try:
+			tab = store[path][0]
+		except IndexError:
+			logging.error("switch_to_path(): tab not found in store, aborting.")
+			return
+
+		old_tab = self.get_current_tab()
+
+		tabs_view.set_cursor(path)
+
+		# explicit import to not make it accesible to the public
+		from gui.tabs.current import _set_current_path
+		current._set_current_path(path)
+
+		self.tekka.widgets.get_object("output_shell").set(tab.window)
+
+		if tab.is_channel():
+			"""
+				show up topicbar and nicklist (in case
+				they were hidden) and fill them with tab
+				specific data.
+			"""
+			tab.set_useable(tab.joined)
+
+			mgmt.set_user_count(
+				len(tab.nickList),
+				tab.nickList.get_operator_count())
+
+			mgmt.set_topic(markup.markup_escape(tab.topic))
+
+			if config.get_bool("tekka","show_topic_bar"):
+
+				if (tab.topic
+				or not config.get_bool("tekka","hide_topic_if_empty")):
+					mgmt.visibility.show_topic_bar(True)
+				else:
+					mgmt.visibility.show_topic_bar(False)
+
+			mgmt.visibility.show_nicks(True)
+			widgets.get_object("nicks_view").set_model(tab.nickList)
+
+		elif tab.is_query() or tab.is_server():
+			# queries and server tabs don't have topics or nicklists
+			if not status.get("connecting"):
+				tab.set_useable(tab.connected)
+
+			if config.get_bool("tekka","show_topic_bar"):
+				# hide topic bar in queries if enabled
+				mgmt.visibility.show_topic_bar(False)
+
+			# hide nick list in queries
+			mgmt.visibility.show_nicks(False)
+
+		# reset message notification
+		tab.set_new_message(None)
+
+		mgmt.set_window_title(tab.name)
+
+		if not tab.is_server():
+			mgmt.set_nick(tab.server.nick)
+		else:
+			mgmt.set_nick(tab.nick)
+
+		call_callback("tab_switched", old_tab, tab)
+
+
+	def switch_to_previous(self):
+		tabs = self.get_all_tabs()
+		tab = self.get_current_tab()
+
+		try:
+			i = tabs.index(tab)
+		except ValueError:
+			return
+
+		try:
+			tabs[i-1].switch_to()
+		except IndexError:
+			return
+
+
+	def switch_to_next(self):
+		tabs = self.get_all_tabs()
+		tab = self.get_current_tab()
+
+		try:
+			i = tabs.index(tab)
+		except ValueError:
+			return
+
+		try:
+			i = i+1
+			if (i) == len(tabs):
+				i = 0
+			tabs[i].switch_to()
+		except IndexError:
+			return
+
+
+
+
+
+def __updateLowerRows(store, iter):
+	"""
+		iter points to the row after the deleted row.
+		path is the path of the deleted row.
+		This hack is UGLY! Would someone please fix
+		the crappy rows-reordered signal? KTHXBYE
+	"""
+
+	if not iter:
+		# no work, phew.
+		return
+
+	newLastPath = None
+	nextIter = iter
+
+	while True:
+		if not nextIter:
+			break
+
+		tab = store.get(nextIter, 0)
+		try:
+			tab=tab[0]
+		except:
+			break
+
+		tab.path = store.get_path(nextIter)
+
+		oIter = nextIter
+		nextIter = store.iter_next(oIter)
+		if not nextIter:
+			if store.iter_has_child(oIter):
+				# oIter is a server
+				nextIter = store.iter_children(oIter)
+			else:
+				# oIter is a channel and the next is (maybe)
+				# a further server
+				temp = store.iter_parent(oIter)
+				nextIter = store.iter_next(temp)
 
 
 

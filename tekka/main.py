@@ -67,8 +67,6 @@ from . import plugins
 from .typecheck import types
 
 
-from .helper import markup
-
 from .menus import *
 
 import gui.builder
@@ -153,7 +151,6 @@ class Tekka (object):
 		pass
 
 
-
 	def sushi_error_cb(self, sushi, title, message):
 		""" Error in sushi interface occured. """
 
@@ -175,12 +172,6 @@ class Tekka (object):
 def notificationWidget_remove_cb(area, widget):
 	""" restore the focus if a inline dialog is closed """
 	gui.widgets.get_object("input_entry").grab_focus()
-
-
-
-
-
-
 
 
 
@@ -208,6 +199,8 @@ def paned_notify_cb(paned, gparam):
 	if gparam.name == "position":
 
 		# only save if there are no inline dialogs displayed
+		# TODO:  don't even change OR restore the change made by the
+		# TODO:: inline dialogs
 		ids = gui.widgets.get_object("notification_vbox").get_children()
 		if len(ids) == 0:
 			config.set("sizes", gtk.Buildable.get_name(paned),
@@ -223,7 +216,6 @@ def load_paned_positions():
 		paned dividers for the list,
 		main and output paneds.
 	"""
-
 	paneds = [
 		"list_vpaned",
 		"main_hpaned",
@@ -294,6 +286,7 @@ def setup_topic_label():
 			a.height - 1
 		)
 		return False
+
 	gui.widgets.get_object("topic_label").connect(
 		"expose-event", expose_event_cb)
 
@@ -510,7 +503,6 @@ def setup():
 
 	# setup callbacks
 	signals.setup()
-
 
 	# parse ui file for main window
 	uifiles = config.get("uifiles", default={})
