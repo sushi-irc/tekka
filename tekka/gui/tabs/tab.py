@@ -35,6 +35,26 @@ class TekkaTab(gobject.GObject):
 	@types(switch=bool)
 	def _set_connected(self, switch):
 		self._connected=switch
+
+		# Mark all children of the server as !joined and !connected
+		if self.is_server() and not switch:
+			channels = self.tekka.parts.tabTree.get_all_tabs(servers = [self.name])[1:]
+
+			for channelTab in channels:
+				channelTab.connected = False
+
+		# We connected, mark all child queries as connected as well
+		elif self.is_server() and switch:
+			queries = self.tekka.parts.tabTree.get_all_tabs(servers = [self.name])[1:]
+			queries = [n for n in queries if n.is_query()]
+
+			for query in queries:
+				query.connected = True
+
+		# Channels can't be joined if we're not connected.
+		elif self.is_channel() and not switch:
+			self.joined = False
+
 		self.emit ("server_connected", switch)
 		self.emit ("new_markup")
 	connected = property(lambda x: x._connected, _set_connected)
@@ -53,9 +73,10 @@ class TekkaTab(gobject.GObject):
 	name = property(lambda x: x._name, _set_name)
 
 
-	def __init__(self, name, window = None):
+	def __init__(self, tekka, name, window = None):
 		gobject.GObject.__init__(self)
 
+		self.tekka = tekka
 		self.window = window   # the associated GUI output widget
 		self.path = ()         # the path in the server tree
 		self.name = name       # identifying name

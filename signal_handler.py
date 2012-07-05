@@ -40,6 +40,8 @@ from tekka import config
 from tekka import signals
 from tekka import gui
 
+from tekka.main import tekka as hekka
+
 from tekka.lib import contrast
 
 from tekka.com import sushi, parse_from
@@ -85,9 +87,6 @@ def maki_connected_cb(sushi):
 		connect_signal("oper", userOper_cb)
 
 		# Server-Signals
-		connect_signal("connect", serverConnect_cb)
-		connect_signal("connected", serverConnected_cb)
-		connect_signal("motd", serverMOTD_cb)
 		connect_signal("dcc_send", dcc_send_cb)
 
 		# Channel-Signals
@@ -99,86 +98,10 @@ def maki_connected_cb(sushi):
 
 		init = True
 
-	_add_servers()
-
-
 def maki_disconnected_cb(sushi):
 	pass
 
 
-@types (server = basestring)
-def _setup_server(server):
-	tab = gui.tabs.create_server(server)
-
-	gui.tabs.add_tab(None, tab,
-		update_shortcuts = config.get_bool("tekka","server_shortcuts"))
-
-	return tab
-
-
-def _add_servers():
-	""" Adds all servers to tekka which are reported by maki. """
-	# in case we're reconnecting, clear all stuff
-	gui.widgets.get_object("tab_store").clear()
-
-	for server in sushi.servers():
-		tab = _setup_server(server)
-		tab.connected = True
-		_add_channels(tab)
-
-	try:
-		toSwitch = gui.tabs.get_all_tabs()[1]
-	except IndexError:
-		return
-	else:
-		gui.tabs.switch_to_path(toSwitch.path)
-
-
-def _add_channels(server_tab):
-	"""
-		Adds all channels to tekka wich are reported by maki.
-	"""
-	channels = sushi.channels(server_tab.name)
-
-	for channel in channels:
-
-		add = False
-		nicks, prefixes = sushi.channel_nicks(server_tab.name, channel)
-
-		tab = gui.tabs.search_tab(server_tab.name, channel)
-
-		if not tab:
-			tab = gui.tabs.create_channel(server_tab, channel)
-			add = True
-
-		tab.nickList.clear()
-		tab.nickList.add_nicks(nicks, prefixes)
-
-		for nick in nicks:
-			# FIXME inefficient → nicks, prefixes, aways = …?
-			tab.nickList.set_away(nick, sushi.user_away(server_tab.name, nick))
-
-		tab.topic = sushi.channel_topic(server_tab.name, channel)
-		tab.topicsetter = ""
-
-		if tab.is_active():
-			gui.set_topic(markup.markup_escape(tab.topic))
-			gui.mgmt.set_user_count(
-				len(tab.nickList),
-				tab.nickList.get_operator_count())
-
-		# TODO: handle topic setter
-		tab.joined = True
-		tab.connected = True
-
-		if add:
-			gui.tabs.add_tab(server_tab, tab, update_shortcuts = False)
-			tab.print_last_log()
-
-		topic = sushi.channel_topic(server_tab.name, channel)
-		_report_topic(mtime.time(), server_tab.name, channel, topic)
-
-	gui.shortcuts.assign_numeric_tab_shortcuts(gui.tabs.get_all_tabs())
 
 def isHighlighted (server_tab, text):
 	def has_highlight(text, needle):
@@ -213,7 +136,7 @@ def action_nick_color(nick):
 @types (server = basestring, name = basestring)
 def _createTab (server, name):
 	""" check if tab exists, create it if not, return the tab """
-	server_tab = gui.tabs.search_tab(server)
+	server_tab = hekka.parts.tabTree.search_tab(server)
 
 	if not server_tab:
 		raise Exception("No server tab in _createTab(%s, %s)" % (server,name))
@@ -222,12 +145,12 @@ def _createTab (server, name):
 
 	if not tab:
 		if name[0] in server_tab.support_chantypes:
-			tab = gui.tabs.create_channel(server_tab, name)
+			tab = hekka.parts.tabTree.create_channel(server_tab, name)
 		else:
-			tab = gui.tabs.create_query(server_tab, name)
+			tab = hekka.parts.tabTree.create_query(server_tab, name)
 
 		tab.connected = True
-		gui.tabs.add_tab(server_tab, tab)
+		hekka.parts.tabTree.add_tab(server_tab, tab)
 		tab.print_last_log()
 
 	if tab.name != name:
@@ -280,82 +203,7 @@ def _show_output_exclusive(servertab, tab, what, own = False):
 	"""
 	return not _hide_output(tab, what, own = own)
 
-""" Server callbacks """
 
-def serverConnect_cb(time, server):
-	"""
-		maki is connecting to a server.
-	"""
-	gui.mgmt.set_useable(True)
-
-	tab = gui.tabs.search_tab(server)
-
-	if not tab:
-		tab = _setup_server(server)
-
-	if tab.connected:
-		tab.connected = False
-
-		channels = gui.tabs.get_all_tabs(servers = [server])[1:]
-
-		if channels:
-			for channelTab in channels:
-				if channelTab.is_channel():
-					channelTab.joined=False
-				channelTab.connected=False
-
-	tab.write(time, "Connecting...", msgtype=gui.tabs.ACTION)
-
-	gui.status.set_visible("connecting", "Connecting to %s" % server)
-
-def serverConnected_cb(time, server):
-	"""
-		maki connected successfuly to a server.
-	"""
-	tab = gui.tabs.search_tab(server)
-
-	if not tab:
-		tab = _setup_server(server)
-
-	tab.connected = True
-
-	# iterate over tabs, set the connected flag to queries
-	for query in [tab for tab in gui.tabs.get_all_tabs(
-	servers = [server])[1:] if tab.is_query()]:
-		query.connected = True
-
-	tab.write(time, "Connected.", msgtype=gui.tabs.ACTION)
-
-def serverMOTD_cb(time, server, message, first_time = {}):
-	""" Server is sending a MOTD.
-		Channes are joined 3s after the end of the
-		MOTD so at the end of the MOTD, make sure
-		that the prefixes and chantypes are read
-		correctly.
-	"""
-	if not first_time.has_key(server):
-		tab = gui.tabs.search_tab(server)
-
-		if not tab:
-			tab = _setup_server(server)
-		else:
-			tab.update()
-
-		gui.status.unset("connecting")
-		tab.connected = True
-		first_time[server] = tab
-
-	if not message:
-		# get the prefixes for the server to make
-		# sure they are correct
-		tab = first_time[server]
-		tab.support_prefix = sushi.support_prefix(server)
-		tab.support_chantypes = sushi.support_chantypes(server)
-		del first_time[server]
-
-	else:
-		first_time[server].write(time, markup.escape(message),
-			no_general_output = True)
 
 """ Callbacks for channel interaction """
 
@@ -721,7 +569,7 @@ def queryCTCP_cb(time, server, from_str, message):
 	"""
 		A user sends us a CTCP request over a query.
 
-		If no query window is open, send it to the server tab.
+		If no query window is open, send it to the server tab.r
 	"""
 	nick = parse_from(from_str)[0]
 	(server_tab, tab) = gui.tabs.search_tabs(server, nick)
@@ -1168,9 +1016,9 @@ def userJoin_cb(timestamp, server, from_str, channel):
 		# channel and print the log
 
 		if not tab:
-			tab = gui.tabs.create_channel(stab, channel)
+			tab = hekka.parts.tabTree.create_channel(stab, channel)
 
-			if not gui.tabs.add_tab(stab, tab):
+			if not hekka.parts.tabTree.add_tab(stab, tab):
 				raise Exception, \
 					"userJoin_cb: adding tab for channel '%s' failed." % (
 					channel)

@@ -16,8 +16,8 @@ from .messages import *
 class TekkaQuery(tab.TekkaTab):
 	""" Class for typical query-tabs """
 
-	def __init__(self, name, server, textview=None):
-		super(TekkaQuery,self).__init__(name, textview)
+	def __init__(self, tekka, name, server, textview=None):
+		super(TekkaQuery,self).__init__(tekka, name, textview)
 
 		self.server = server
 

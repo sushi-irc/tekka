@@ -97,8 +97,11 @@ class Tekka (object):
 	def __init__(self):
 		self._parts = self.PartContainer()
 
-		from gui import _builder
-		self._widgets = _builder.widgets
+		self._widgets = gui._builder.widgets
+
+		self.status = gui.status
+
+		self.shortcuts = gui.shortcuts
 
 
 	def setup(self):
@@ -111,7 +114,7 @@ class Tekka (object):
 		self._parts.outputShell = self.outputshell.setup(self)
 		self._parts.window = self.window.setup(self)
 
-		gui.shortcuts.setup_shortcuts()
+		self.shortcuts.setup_shortcuts()
 
 		com.sushi.g_connect("maki-connected",
 			lambda *x: self.set_useable(True))
@@ -492,6 +495,9 @@ def setup_logging():
 		print >> sys.stderr, "Logging init error: %s" % (e)
 
 
+# TODO: remove this if signal_handler is gone
+tekka = None
+
 def setup():
 	""" Setup the UI """
 
@@ -508,6 +514,7 @@ def setup():
 	uifiles = config.get("uifiles", default={})
 	gui.builder.load_main_window(uifiles["mainwindow"])
 
+	global tekka
 	tekka = Tekka()
 
 	tekka.setup()

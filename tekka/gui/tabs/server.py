@@ -3,8 +3,10 @@ import time
 
 from ... import com # parse_from, sushi
 from ... import config
+from ... import signals
 
 from ...typecheck import types
+from ...helper.static import static
 
 from . import tab
 from . import util
@@ -45,14 +47,56 @@ class TekkaServer(tab.TekkaTab):
 	nick = property(lambda x: x._nick, _set_nick)
 
 
-	def __init__(self, name, textview=None):
-		super(TekkaServer,self).__init__(name, textview)
+	def __init__(self, tekka, name, textview=None):
+		super(TekkaServer,self).__init__(tekka, name, textview)
 
 		self.nick = ""               # IRC nick
 		self.away = ""               # Away message
 		self.support_prefix = ()     # Which prefixed are supported
 		self.support_chantypes = ()  # Which chantypes are supported
 
+		signals.connect_signal("connect", self.sushi_server_connect_cb)
+
+
+	""" sushi signals """
+
+	def sushi_server_connect_cb(self, server, time):
+		" connection attempt to this server "
+		if self.connected:
+			self.connected = False
+
+		self.write(time, "Connecting...", msgtype=ACTION)
+		self.tekka.status.set_visible("connecting", "Connecting to %s" % server)
+
+
+	def sushi_server_connected_cb(self, time, server):
+		" maki connected successfuly to a server. "
+		self.connected = True
+		self.write(time, "Connected.", msgtype=gui.tabs.ACTION)
+
+
+	@static(first_time={})
+	def sushi_server_motd_cb(self, time, server, message):
+		first_time = sushi_server_motd_cb.first_time
+
+		if not first_time.has_key(server):
+			self.update()
+
+			self.tekka.status.unset("connecting")
+			self.connected = True
+			first_time[server] = True
+
+		if not message:
+			# get the prefixes for the server to make sure they are correct
+			self.support_prefix = sushi.support_prefix(server)
+			self.support_chantypes = sushi.support_chantypes(server)
+			del first_time[server]
+
+		else:
+			self.write(time, markup.escape(message), no_general_output=True)
+
+
+	""" normal methods """
 
 	def is_server(self):
 		return True
@@ -132,9 +176,7 @@ class TekkaServer(tab.TekkaTab):
 
 
 	def update(self):
-		""" fetch server info from sushi and apply them
-			to this tab
-		"""
+		" fetch server info from sushi and apply them to this tab "
 		server = self.name
 
 		if com.sushi.user_away(server, com.get_own_nick(server)):

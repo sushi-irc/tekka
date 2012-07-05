@@ -3,23 +3,30 @@
 import gtk
 import gobject
 
+from time import time as current_time
 from gettext import gettext as _
 
-
+from .. import com
 from .. import config
 from .. import gui
 from .. import signals
-from ..lib.inline_dialog import InlineMessageDialog
+
 from ..typecheck import types
+from ..helper.static import static
 
 from ..gui.tabs.channel import TekkaChannel
 from ..gui.tabs.server import TekkaServer
 from ..gui.tabs.query import TekkaQuery
 from ..gui.tabs.tab import TekkaTab
 
+from ..lib.nick_list_store import NickListStore
+from ..lib.inline_dialog import InlineMessageDialog
+from ..lib.input_history import InputHistory
+
 class TabTree(gobject.GObject):
 
 	def __init__(self, tekka):
+		self.tekka = tekka
 		self.current_path = ()
 
 		signals.connect_signal("nick", self.sushi_nick_change)
@@ -44,7 +51,13 @@ class TabTree(gobject.GObject):
 			"topic": tekka_channel_topic_changed_cb,
 			})
 
+		com.sushi.g_connect("maki-connected", self.maki_connected_cb)
+
+		signals.connect_signal("connect", self.sushi_server_connect_cb)
+		signals.connect_signal("connected", self.sushi_server_connected_cb)
+
 		setup_tabs_view(tekka)
+
 
 	def test(self):
 		self._set_current_path((1,2))
@@ -68,6 +81,102 @@ class TabTree(gobject.GObject):
 			"tab_store_rows_reordered":
 				treemodel_rows_reordered_cb,
 		}
+
+
+	""" sushi signal handlers """
+
+	def maki_connected_cb(self, sushi):
+		self._add_existing_servers()
+
+
+	def sushi_server_connect_cb(self, time, server):
+		" connected to a server, add it if it didn't exist yet "
+		self.tekka.set_useable(True)
+
+		if not self.search_tab(server):
+			tab = self._setup_new_server_tab(server)
+			tab.sushi_server_connect_cb(time, server)
+
+
+	def sushi_server_connected_cb(self, time, server):
+		" maki connected successfuly to a server. "
+
+		if not self.search_tab(server):
+			tab = _setup_server(server)
+			tab.sushi_server_connected_cb(time, server)
+
+
+	@static(first_time={})
+	def sushi_server_motd_cb(self, time, server, message):
+		""" Server is sending a MOTD.
+			Setup the server tab if it doesn't exist yet.
+		"""
+		first_time = sushi_server_motd_cb.first_time
+
+		if not first_time.has_key(server):
+			tab = gui.tabs.search_tab(server)
+
+			if not tab:
+				tab = _setup_server(server)
+				tab.sushi_server_motd_cb(time, server, message)
+
+		if not message:
+			del first_time[server]
+
+
+	""" further normal methods """
+
+
+	@types (server = basestring)
+	def _setup_new_server_tab(self, serverName):
+		tab = self.create_server(serverName)
+
+		self.add_tab(None, tab,
+			update_shortcuts = config.get_bool("tekka","server_shortcuts"))
+
+		return tab
+
+	def _add_existing_servers(self):
+		""" Adds all servers to tekka which are reported by maki. """
+		# in case we're reconnecting, clear all stuff
+		self.tekka.widgets.get_object("tab_store").clear()
+
+		for server in com.sushi.servers():
+			tab = self._setup_new_server_tab(server)
+			tab.connected = True
+			self._add_existing_channels(tab)
+
+		try:
+			toSwitch = gui.tabs.get_all_tabs()[1]
+		except IndexError:
+			return
+		else:
+			self.switch_to_path(toSwitch.path)
+
+
+	def _add_existing_channels(self, server_tab):
+		""" Adds all channels to tekka wich are reported by maki. """
+		channels = com.sushi.channels(server_tab.name)
+
+		for channel in channels:
+			add = False
+			tab = self.search_tab(server_tab.name, channel)
+
+			if not tab:
+				tab = self.create_channel(server_tab, channel)
+				add = True
+
+			tab.server = server_tab
+			tab.refresh()
+
+			if add:
+				self.add_tab(server_tab, tab, update_shortcuts=False)
+				tab.print_last_log()
+
+			topic = com.sushi.channel_topic(server_tab.name, channel)
+			tab.report_topic(current_time(), server_tab.name, channel, topic)
+
+		self.tekka.shortcuts.assign_numeric_tab_shortcuts(gui.tabs.get_all_tabs())
 
 
 	def _set_current_path(self, path):
@@ -130,26 +239,46 @@ class TabTree(gobject.GObject):
 
 	def sushi_nick_change(self, time, server, fromStr, newNick):
 		""" rename queries on nick change """
-		nick = sushi.parse_from(from_str)[0]
+		nick = com.sushi.parse_from(from_str)[0]
 		tab = self.find_tab_by_name(server, nick)
 
 		if tab and tab.isQuery:
 			tab.name = newNick
 
 
+	@types(tabtype = TekkaTab)
+	def _create_tab(self, tabtype, name, *args, **kwargs):
+		""" instance class of type tabtype, connect signals,
+			create output window and setup input history.
+
+			Returns a new child of TekkaTab.
+		"""
+		tab = tabtype(self.tekka, name, *args, **kwargs)
+
+		tab.window = gui.builder.get_new_output_window()
+		tab.window.show_all()
+
+		gui.mgmt.set_font(tab.window.textview, gui.mgmt.get_font())
+
+		gui.tabs.connect_tab_callbacks(tab, ("new_message","new_name",
+			"server_connected","new_markup"))
+
+		tab.input_history = InputHistory(
+			text_callback = self.tekka.widgets.get_object("input_entry").get_text)
+
+		return tab
+
 
 	@types (server = TekkaServer, name = basestring)
 	def create_channel(self, server, name):
-		""" create TekkaChannel object and associated a NickListStore
-			with it.
-
+		""" Create TekkaChannel object and associated a NickListStore with it.
 			Returns the newly created Tab object.
 		"""
 		ns = NickListStore()
 
 		ns.set_modes(server.support_prefix[1])
 
-		tab = gui.tabs._create_tab(TekkaChannel, name, server, nicklist = ns)
+		tab = self._create_tab(TekkaChannel, name, server, nicklist = ns)
 
 		gui.tabs.connect_tab_callbacks(tab, ("joined","topic"))
 
@@ -158,13 +287,13 @@ class TabTree(gobject.GObject):
 
 	@types(server = TekkaServer, name = basestring)
 	def create_query(self, server, name):
-		tab = gui.tabs._create_tab(TekkaQuery, name, server)
+		tab = self._create_tab(TekkaQuery, name, server)
 		return tab
 
 
 	@types (server = basestring)
 	def create_server(self, server):
-		tab = gui.tabs._create_tab(TekkaServer, server)
+		tab = self._create_tab(TekkaServer, server)
 
 		tab.update()
 

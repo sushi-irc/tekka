@@ -1,9 +1,16 @@
+# coding:utf-8
+
 import gobject
 import time
 
+from gettext import gettext as _
+
 from ... import config
+from ... import gui
+from ... import com
 
 from ...helper import color
+from ...helper import markup
 from ...typecheck import types
 
 from . import tab
@@ -31,17 +38,17 @@ class TekkaChannel(tab.TekkaTab):
 	topic = property(lambda x: x._topic, _set_topic)
 
 
-	def __init__(self, name, server, textview=None,
+	def __init__(self, tekka, name, server, textview=None,
 		nicklist=None, topic="", topicsetter=""):
 
-		super(TekkaChannel,self).__init__(name, textview)
+		super(TekkaChannel,self).__init__(tekka, name, textview)
 
 		self.nickList = nicklist        # nick list object
 		self.topic = topic              # topic string
 		self.topicSetter = topicsetter  # the nick of the topic setter
 		self.joined = False             # status flag
 
-		self.server = server            # the server name string
+		self.server = server            # server tab object
 
 
 	def is_channel(self):
@@ -124,6 +131,43 @@ class TekkaChannel(tab.TekkaTab):
 			return False
 
 		gobject.idle_add(notify)
+
+
+	def refresh(self):
+		""" reinitialize the channel, we assume the channel was added but a
+			reconnect happened so that we can't trust the current data.
+		"""
+		nicks, prefixes = com.sushi.channel_nicks(self.server.name, self.name)
+
+		self.nickList.clear()
+		self.nickList.add_nicks(nicks, prefixes)
+
+		for nick in nicks:
+			# FIXME inefficient → nicks, prefixes, aways = …?
+			self.nickList.set_away(nick, com.sushi.user_away(self.server.name, nick))
+
+		self.topic = com.sushi.channel_topic(self.server.name, self.name)
+		self.topicsetter = ""
+
+		if self.is_active():
+			# Only refresh visible topic if the tab is currently visible
+			gui.set_topic(markup.markup_escape(self.topic))
+			gui.mgmt.set_user_count(
+				len(self.nickList),
+				self.nickList.get_operator_count())
+
+		# TODO: handle topic setter
+		self.joined = True
+		self.connected = True
+
+
+	def report_topic(self, time, server, channel, topic):
+		message = _(u"• Topic for %(channel)s: %(topic)s") % {
+			"channel": channel,
+			"topic": markup.escape(topic) }
+
+		self.write(time, message, gui.tabs.ACTION, no_general_output=True)
+
 
 """ Joined status changed. status as parameter """
 gobject.signal_new(
