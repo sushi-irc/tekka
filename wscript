@@ -33,7 +33,15 @@ def configure (ctx):
 	ctx.recurse('po')
 
 def build (ctx):
-	ctx.install_files('${DATAROOTDIR}/tekka', ctx.path.ant_glob('*.py', excl='tekka.py'))
+        ctx(
+            features = 'subst',
+            source = 'tekka.py.in',
+            target = 'tekka.py',
+            install_path = None,
+            SUSHI_VERSION = ctx.env.VERSION
+        )
+
+        ctx.install_files('${DATAROOTDIR}/tekka', ctx.path.ant_glob('*.py', excl='tekka.py'))
 	ctx.install_files('${DATAROOTDIR}/tekka/plugins', ctx.path.ant_glob('plugins/*.py'))
 
 	ctx.install_files('${DATAROOTDIR}/tekka', ctx.path.ant_glob('tekka/**/*.py'),

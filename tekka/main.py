@@ -1356,7 +1356,7 @@ def setup():
 	sys.excepthook = tekka_excepthook
 
 
-def main():
+def main(args):
 	""" Fire up the UI """
 
 	# connect to maki daemon
