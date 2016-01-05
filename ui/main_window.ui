@@ -312,8 +312,8 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkAlignment" id="topic_alignment">
+                            <property name="bottom_padding">6</property>
                             <property name="visible">True</property>
-                            <property name="top_padding">3</property>
                             <child>
                               <object class="GtkEventBox" id="topic_eventbox">
                                 <property name="visible">True</property>
