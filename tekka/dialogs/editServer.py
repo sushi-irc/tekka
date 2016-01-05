@@ -75,7 +75,7 @@ def run(server):
 
 	types = {"address":"text", "port":"text", "nick":"text",
 		"name":"text", "nickserv":"text", "autoconnect":"bool",
-		"nickserv_ghost":"bool"}
+                "nickserv_ghost":"bool", "ssl":"bool"}
 
 	signals = {
 		"addressEntry": {
@@ -95,10 +95,16 @@ def run(server):
 			"signals": ("focus-out-event", "activate")},
 		"autoConnectCheckButton": {
 			"key":"autoconnect",
-			"signals":("toggled",)},
+			"signals":("toggled",),
+                },
 		"nickservGhostCheckButton": {
 			"key":"nickserv_ghost",
-			"signals":("toggled",)}
+			"signals":("toggled",)
+		},
+		"sslCheckButton": {
+			"key":"ssl",
+		    	"signals":("toggled",)
+		},
 	}
 
 	for key in signals:
