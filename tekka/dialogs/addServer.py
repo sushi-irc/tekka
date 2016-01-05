@@ -34,6 +34,8 @@ from ..lib.expanding_list import ExpandingList
 
 RESPONSE_ADD = 1
 
+# TODO: unify UI with editServer dialog
+
 def setup():
 	pass
 
@@ -63,6 +65,11 @@ def dialog_response_cb(dialog, response_id, callback, widgets):
 		sushi.server_set(server, "server", "ssl",
 			str (widgets.get_object(
 					"sslCheckButton").get_active()).lower())
+
+                # set nickserv ghost flag
+		sushi.server_set(server, "server", "nickserv_ghost",
+			str (widgets.get_object(
+					"nickservGhostCheckButton").get_active()).lower())
 
 		# set up commands
 		list = [i[0].get_text() for i in
