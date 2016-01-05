@@ -59,6 +59,11 @@ def dialog_response_cb(dialog, response_id, callback, widgets):
 			str (widgets.get_object(
 					"autoConnectCheckButton").get_active()).lower())
 
+                # set SSL flag
+		sushi.server_set(server, "server", "ssl",
+			str (widgets.get_object(
+					"sslCheckButton").get_active()).lower())
+
 		# set up commands
 		list = [i[0].get_text() for i in
 			widgets.get_object("commandList").get_widget_matrix()
