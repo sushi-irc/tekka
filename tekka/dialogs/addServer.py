@@ -61,12 +61,12 @@ def dialog_response_cb(dialog, response_id, callback, widgets):
 			str (widgets.get_object(
 					"autoConnectCheckButton").get_active()).lower())
 
-                # set SSL flag
+		# set SSL flag
 		sushi.server_set(server, "server", "ssl",
 			str (widgets.get_object(
 					"sslCheckButton").get_active()).lower())
 
-                # set nickserv ghost flag
+		# set nickserv ghost flag
 		sushi.server_set(server, "server", "nickserv_ghost",
 			str (widgets.get_object(
 					"nickservGhostCheckButton").get_active()).lower())
