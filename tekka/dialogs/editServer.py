@@ -38,25 +38,30 @@ def setup():
 def get_configurator(ctype, key, server):
 
 	def bool_configurator(key, server):
-
 		def apply_value(*arg):
 			state = str(arg[0].get_active())
 			sushi.server_set(server, "server", key, state.lower())
-
 		return apply_value
 
 	def text_configurator(key, server):
-
 		def apply_value(*arg):
 			s = arg[0].get_text()
 			sushi.server_set(server, "server", key, s)
+		return apply_value
 
+	def file_configurator(key, server):
+		def apply_value(fileChooser, *user):
+			s = fileChooser.get_filename()
+			sushi.server_set(server, "server", key, s)
 		return apply_value
 
 	if ctype == "bool":
 		return bool_configurator(key, server)
 	elif ctype == "text":
 		return text_configurator(key, server)
+	elif ctype == "file":
+		return file_configurator(key, server)
+
 	return None
 
 
@@ -73,37 +78,68 @@ def run(server):
 	widgets =  gui.builder.load_dialog("serverEdit")
 
 
+	def update_ssl_cert_file_chooser(active):
+		widgets.get_object("sslCertFileChooser").set_sensitive(active)
+
+		if not active:
+			sushi.server_set(server, "server", "ssl_cert", "")
+
+	bsignals = {
+		"commandList_row_added_cb":
+					lambda w,*x: update_commandList(w, server),
+		"commandList_row_removed_cb":
+					lambda w,*x: update_commandList(w, server),
+		"useCustomCertificateCheckButton_toggled_cb":
+					lambda w,*x: update_ssl_cert_file_chooser(w.get_active()),
+		"sslCheckButton_toggled_cb":
+					lambda w,*x: widgets.get_object("useCustomCertificateCheckButton").set_sensitive(w.get_active()),
+	}
+
+	# connect signals before activating anything from server config
+	# so that UI elements can be toggled by reading from config.
+	widgets.connect_signals(bsignals)
+
+
 	types = {"address":"text", "port":"text", "nick":"text",
 		"name":"text", "nickserv":"text", "autoconnect":"bool",
-                "nickserv_ghost":"bool", "ssl":"bool"}
+				"nickserv_ghost":"bool", "ssl":"bool", "ssl_cert":"file"}
 
 	signals = {
 		"addressEntry": {
 			"key":"address",
-			"signals":("focus-out-event", "activate")},
+			"signals":("focus-out-event", "activate")
+		},
 		"portEntry": {
 			"key":"port",
-			"signals":("focus-out-event", "activate")},
+			"signals":("focus-out-event", "activate")
+		},
 		"nickEntry": {
 			"key":"nick",
-			"signals":("focus-out-event", "activate")},
+			"signals":("focus-out-event", "activate")
+		},
 		"nameEntry": {
 			"key":"name",
-			"signals":("focus-out-event", "activate")},
+			"signals":("focus-out-event", "activate")
+		},
 		"nickservEntry": {
 			"key":"nickserv",
-			"signals": ("focus-out-event", "activate")},
+			"signals": ("focus-out-event", "activate")
+		},
 		"autoConnectCheckButton": {
 			"key":"autoconnect",
 			"signals":("toggled",),
-                },
+		},
 		"nickservGhostCheckButton": {
 			"key":"nickserv_ghost",
 			"signals":("toggled",)
 		},
 		"sslCheckButton": {
 			"key":"ssl",
-		    	"signals":("toggled",)
+			"signals":("toggled",)
+		},
+		"sslCertFileChooser": {
+			"key":"ssl_cert",
+			"signals":("file-set",)
 		},
 	}
 
@@ -122,22 +158,18 @@ def run(server):
 			widget.set_text(value)
 		elif c_type == "bool":
 			widget.set_active(value == "true")
+		elif c_type == "file":
+			widget.set_filename(value)
 
-
-	bsignals = {"commandList_row_added_cb":
-					lambda w,*x: update_commandList(w, server),
-				"commandList_row_removed_cb":
-					lambda w,*x: update_commandList(w, server)
-			   }
-	widgets.connect_signals(bsignals)
+	if sushi.server_get(server, "server", "ssl_cert") != "":
+		widgets.get_object("useCustomCertificateCheckButton").set_active(True)
 
 	# fill the command list with the existing commands
 	commandList = widgets.get_object("commandList")
-	i = 0
-	for command in sushi.server_get_list(server, "server", "commands"):
+
+	for i, command in enumerate(sushi.server_get_list(server, "server", "commands")):
 		commandList.get_widget_matrix()[i][0].set_text(command)
 		commandList.add_row()
-		i += 1
 
 	dialog = widgets.get_object("serverEdit")
 	dialog.connect("response", dialog_response_cb)
