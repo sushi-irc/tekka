@@ -63,7 +63,12 @@ def run():
 				ccolor))
 
 
-	builder.get_object("colorTable").show_all()
+	dialog = builder.get_object("colorTable")
+
+	main_window = gui.mgmt.widgets.get_object("main_window")
+	dialog.set_transient_for(main_window)
+
+	dialog.show_all()
 
 
 def setup():

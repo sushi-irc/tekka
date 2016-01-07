@@ -57,6 +57,10 @@ def run():
 			dialog.destroy()
 
 	dialog = widgets.get_object("plugins")
+
+	main_window = mgmt.widgets.get_object("main_window")
+	dialog.set_transient_for(main_window)
+
 	dialog.connect("response", dialog_response_cb)
 	dialog.show_all()
 

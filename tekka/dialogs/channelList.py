@@ -194,7 +194,12 @@ def run(server):
 	cache = []
 
 	builder = ChannelListBuilder(server)
-	builder.get_object("channelList").show()
+	d = builder.get_object("channelList")
+
+	main_window = mgmt.widgets.get_object("main_window")
+	d.set_transient_for(main_window)
+
+	d.show()
 
 
 def setup(): pass

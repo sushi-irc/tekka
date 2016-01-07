@@ -101,8 +101,11 @@ def run(callback):
 
 	retrieveServerlist()
 
+	main_window = gui.mgmt.widgets.get_object("main_window")
+	dialog.set_transient_for(main_window)
+
 	dialog.connect("response", dialog_response_cb, callback)
-	dialog.show_all()
+	dialog.show()
 
 
 def createServer(serverName, data):

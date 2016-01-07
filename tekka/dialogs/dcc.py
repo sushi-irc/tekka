@@ -188,6 +188,9 @@ def run():
 
 	watcher = DCCWatcher()
 
+	main_window = gui.mgmt.widgets.get_object("main_window")
+	dialog.set_transient_for(main_window)
+
 	dialog.connect("response", dialog_response_cb, watcher)
 	dialog.show()
 
