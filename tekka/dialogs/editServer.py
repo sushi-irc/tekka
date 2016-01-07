@@ -75,7 +75,7 @@ def run(server):
 				if i[0].get_text()]
 		sushi.server_set_list(server, "server", "commands", list)
 
-	widgets =  gui.builder.load_dialog("serverEdit")
+	widgets =  gui.builder.load_dialog("server")
 
 
 	def update_ssl_cert_file_chooser(active):
@@ -99,6 +99,8 @@ def run(server):
 	# so that UI elements can be toggled by reading from config.
 	widgets.connect_signals(bsignals)
 
+	# This button only exists for the 'Add server' dialog. Get rid of it.
+	widgets.get_object("addButton").destroy()
 
 	types = {"address":"text", "port":"text", "nick":"text",
 		"name":"text", "nickserv":"text", "autoconnect":"bool",
@@ -171,7 +173,7 @@ def run(server):
 		commandList.get_widget_matrix()[i][0].set_text(command)
 		commandList.add_row()
 
-	dialog = widgets.get_object("serverEdit")
+	dialog = widgets.get_object("server")
 	dialog.connect("response", dialog_response_cb)
 	dialog.show_all()
 

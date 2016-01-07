@@ -34,24 +34,18 @@ from ..lib.expanding_list import ExpandingList
 
 RESPONSE_ADD = 1
 
-# TODO: unify UI with editServer dialog
-
 def setup():
 	pass
 
 def dialog_response_cb(dialog, response_id, callback, widgets):
 	if response_id == RESPONSE_ADD:
 
-		server = widgets.get_object("servernameEntry").get_text()
+		server = widgets.get_object('addressEntry').get_text()
 
-		if not server:
-			gui.mgmt.show_error_dialog(
-				title = _("No server name given."),
-				message = _("You must enter a server name."))
-			return
+		sushi.server_set(server, "server", "name", server)
 
 		# set text values
-		for key in ("address","port","nick","name","nickserv"):
+		for key in ("address","port","nick","nickserv"):
 			exec ("value = widgets.get_object('%sEntry').get_text()" % key)
 			if value:
 				sushi.server_set(server, "server", key, value)
@@ -65,6 +59,10 @@ def dialog_response_cb(dialog, response_id, callback, widgets):
 		sushi.server_set(server, "server", "ssl",
 			str (widgets.get_object(
 					"sslCheckButton").get_active()).lower())
+
+		# set custom SSL certificate path ("" if none set)
+		sushi.server_set(server, "server", "ssl_cert",
+			widgets.get_object("sslCertFileChooser").get_filename() or "")
 
 		# set nickserv ghost flag
 		sushi.server_set(server, "server", "nickserv_ghost",
@@ -84,9 +82,18 @@ def dialog_response_cb(dialog, response_id, callback, widgets):
 
 
 def run(callback):
-	widgets = gui.builder.load_dialog("serverAdd")
+	widgets = gui.builder.load_dialog("server")
 
-	dialog = widgets.get_object("serverAdd")
+	dialog = widgets.get_object("server")
+
+	signals = {
+		"useCustomCertificateCheckButton_toggled_cb":
+					lambda w,*x: widgets.get_object("sslCertFileChooser").set_sensitive(w.get_active()),
+		"sslCheckButton_toggled_cb":
+					lambda w,*x: widgets.get_object("useCustomCertificateCheckButton").set_sensitive(w.get_active()),
+	}
+
+	widgets.connect_signals(signals)
 
 	dialog.connect("response", dialog_response_cb, callback, widgets)
 	dialog.show_all()
