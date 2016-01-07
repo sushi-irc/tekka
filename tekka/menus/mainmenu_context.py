@@ -103,7 +103,7 @@ class MainMenuContext(MenuContextType):
 
 			try:
 				gui.dialogs.show_dialog(
-					"server", server_dialog_callback, need_sushi = True)
+					"servers", server_dialog_callback, need_sushi = True)
 			except com.NoSushiError as e:
 				gui.mgmt.show_inline_message(
 					"NoSushiError", e.args[0], dtype="error")
