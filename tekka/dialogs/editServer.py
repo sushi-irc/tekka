@@ -67,16 +67,16 @@ def get_configurator(ctype, key, server):
 
 def run(server):
 
-	def dialog_response_cb(dialog, response_id):
-		dialog.destroy()
-
-	def update_commandList(widget, server):
-		list = [i[0].get_text() for i in widget.get_widget_matrix()
-				if i[0].get_text()]
-		sushi.server_set_list(server, "server", "commands", list)
-
 	widgets =  gui.builder.load_dialog("server")
 
+	def dialog_response_cb(dialog, response_id):
+		update_commandList()
+		dialog.destroy()
+
+	def update_commandList():
+		widget = widgets.get_object("commandList")
+		list = [i[0].get_text() for i in widget.get_widget_matrix() if i[0].get_text()]
+		sushi.server_set_list(server, "server", "commands", list)
 
 	def update_ssl_cert_file_chooser(active):
 		widgets.get_object("sslCertFileChooser").set_sensitive(active)
@@ -86,9 +86,9 @@ def run(server):
 
 	bsignals = {
 		"commandList_row_added_cb":
-					lambda w,*x: update_commandList(w, server),
+					lambda w,*x: update_commandList(),
 		"commandList_row_removed_cb":
-					lambda w,*x: update_commandList(w, server),
+					lambda w,*x: update_commandList(),
 		"useCustomCertificateCheckButton_toggled_cb":
 					lambda w,*x: update_ssl_cert_file_chooser(w.get_active()),
 		"sslCheckButton_toggled_cb":
