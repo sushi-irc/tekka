@@ -86,6 +86,10 @@ def fillTekka():
 
 		child.set_active(bval)
 
+        # line spacing
+        spacing = int(config.get("tekka", "line_spacing"))
+        widgets.get_object("line_spacing").set_value(spacing)
+
 	# set font labels
 	font = config.get("tekka", "font")
 	widgets.get_object("fontSelectButton").set_font_name(font)
@@ -266,6 +270,13 @@ def tekka_use_default_font_toggled(button):
 
 	gui.mgmt.apply_new_font()
 
+def tekka_line_spacing_changed(spinner):
+	value = int(spinner.get_value())
+	config.set("tekka", "line_spacing", str(value))
+
+        for tab in gui.tabs.get_all_tabs():
+            tab.window.textview.set_line_spacing(value)
+
 def tekka_auto_expand_toggled(button):
 	config.set("tekka", "auto_expand",
 			str(button.get_active()))
@@ -402,6 +413,7 @@ def setup():
 		"tekka_hide_on_close_toggled": tekka_hide_on_close_toggled,
 		"tekka_font_clicked": tekka_font_clicked,
 		"tekka_use_default_font_toggled": tekka_use_default_font_toggled,
+                "tekka_line_spacing_changed": tekka_line_spacing_changed,
 		"tekka_auto_expand_toggled": tekka_auto_expand_toggled,
 		"tekka_rgba_toggled": tekka_rgba_toggled,
 		"tekka_close_maki_on_close_toggled": tekka_close_maki_on_close_toggled,

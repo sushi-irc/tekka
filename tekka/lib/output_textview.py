@@ -46,12 +46,20 @@ class OutputTextView(gtk.TextView):
 		self.set_property("wrap-mode", gtk.WRAP_WORD_CHAR)
 		self.set_property("cursor-visible", False)
 
+                spacing = int(config.get("tekka", "line_spacing", default=0))
+                self.set_line_spacing(spacing)
+
 		self.read_line = ()
 
 		##
 		self.smooth_id = None
 		#self.smooth_scroll_timer is set in smooth_scroll_to_end
 		##
+
+        def set_line_spacing(self, spacing):
+            self.set_property("pixels-above-lines", spacing/2)
+            self.set_property("pixels-below-lines", spacing/2)
+
 
 	""" < """
 	# Smooth scrolling inspired by Gajim Code

@@ -93,6 +93,7 @@ def set_defaults():
 		)) + '"]'
 	defaults["tekka"]["use_default_font"] = "True"
 	defaults["tekka"]["font"] = "Monospace 10"
+        defaults["tekka"]["line_spacing"] = 3
 	defaults["tekka"]["auto_expand"] = "True"
 	defaults["tekka"]["smooth_scrolling"] = "False"
 	defaults["tekka"]["idialog_timeout"] = "False"

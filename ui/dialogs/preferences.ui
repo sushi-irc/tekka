@@ -1,20 +1,57 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-requires glade_widgets 0.0 -->
   <!-- interface-naming-policy toplevel-contextual -->
+  <object class="GtkAdjustment" id="adjustment1">
+    <property name="upper">100</property>
+    <property name="value">10</property>
+    <property name="step_increment">1</property>
+  </object>
+  <object class="GtkAdjustment" id="adjustment2">
+    <property name="upper">100</property>
+    <property name="step_increment">1</property>
+  </object>
   <object class="GtkDialog" id="preferencesDialog">
+    <property name="can_focus">False</property>
     <property name="border_width">4</property>
     <property name="title" translatable="yes">Preferences</property>
     <property name="window_position">center-on-parent</property>
     <property name="default_width">400</property>
     <property name="default_height">400</property>
     <property name="type_hint">dialog</property>
-    <property name="has_separator">False</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox9">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <property name="spacing">4</property>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area9">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton" id="button2">
+                <property name="label">gtk-close</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
         <child>
           <object class="GtkNotebook" id="notebook">
             <property name="visible">True</property>
@@ -23,10 +60,17 @@
             <child>
               <object class="GtkTable" id="tekkaTable">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="border_width">8</property>
                 <property name="n_rows">9</property>
                 <property name="n_columns">2</property>
                 <property name="column_spacing">6</property>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
                 <child>
                   <object class="GtkFontButton" id="fontSelectButton">
                     <property name="visible">True</property>
@@ -35,15 +79,15 @@
                     <property name="font_name">Monospace 10</property>
                     <property name="use_font">True</property>
                     <property name="use_size">True</property>
-                    <signal name="font_set" handler="tekka_font_clicked"/>
+                    <signal name="font-set" handler="tekka_font_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="right_attach">2</property>
                     <property name="top_attach">3</property>
                     <property name="bottom_attach">4</property>
-                    <property name="x_options"></property>
-                    <property name="y_options"></property>
+                    <property name="x_options"/>
+                    <property name="y_options"/>
                   </packing>
                 </child>
                 <child>
@@ -54,7 +98,7 @@
                     <property name="receives_default">False</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="tekka_rgba_toggled"/>
+                    <signal name="toggled" handler="tekka_rgba_toggled" swapped="no"/>
                   </object>
                   <packing>
                     <property name="right_attach">2</property>
@@ -67,6 +111,7 @@
                 <child>
                   <object class="GtkLabel" id="label21">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Font:</property>
                     <property name="ellipsize">start</property>
@@ -85,7 +130,7 @@
                     <property name="receives_default">False</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="tekka_hide_on_close_toggled"/>
+                    <signal name="toggled" handler="tekka_hide_on_close_toggled" swapped="no"/>
                   </object>
                   <packing>
                     <property name="right_attach">2</property>
@@ -101,7 +146,7 @@
                     <property name="receives_default">False</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="tekka_show_status_icon_toggled"/>
+                    <signal name="toggled" handler="tekka_show_status_icon_toggled" swapped="no"/>
                   </object>
                   <packing>
                     <property name="right_attach">2</property>
@@ -115,7 +160,7 @@
                     <property name="receives_default">False</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="tekka_auto_expand_toggled"/>
+                    <signal name="toggled" handler="tekka_auto_expand_toggled" swapped="no"/>
                   </object>
                   <packing>
                     <property name="right_attach">2</property>
@@ -133,7 +178,7 @@
                     <property name="receives_default">False</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="tekka_close_maki_on_close_toggled"/>
+                    <signal name="toggled" handler="tekka_close_maki_on_close_toggled" swapped="no"/>
                   </object>
                   <packing>
                     <property name="right_attach">2</property>
@@ -149,7 +194,7 @@
                     <property name="receives_default">False</property>
                     <property name="use_underline">True</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="tekka_use_default_font_toggled"/>
+                    <signal name="toggled" handler="tekka_use_default_font_toggled" swapped="no"/>
                   </object>
                   <packing>
                     <property name="right_attach">2</property>
@@ -158,22 +203,45 @@
                   </packing>
                 </child>
                 <child>
-                  <placeholder/>
+                  <object class="GtkLabel" id="label24">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">Line spacing:</property>
+                    <property name="ellipsize">start</property>
+                  </object>
+                  <packing>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
+                    <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
+                  </packing>
                 </child>
                 <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
+                  <object class="GtkSpinButton" id="line_spacing">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="invisible_char">•</property>
+                    <property name="primary_icon_activatable">False</property>
+                    <property name="secondary_icon_activatable">False</property>
+                    <property name="primary_icon_sensitive">True</property>
+                    <property name="secondary_icon_sensitive">True</property>
+                    <property name="adjustment">adjustment2</property>
+                    <property name="numeric">True</property>
+                    <signal name="value-changed" handler="tekka_line_spacing_changed" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">5</property>
+                    <property name="bottom_attach">6</property>
+                  </packing>
                 </child>
               </object>
             </child>
             <child type="tab">
               <object class="GtkLabel" id="label18">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_tekka</property>
                 <property name="use_underline">True</property>
               </object>
@@ -184,13 +252,33 @@
             <child>
               <object class="GtkTable" id="colorsTable">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="border_width">8</property>
                 <property name="n_rows">13</property>
                 <property name="n_columns">3</property>
                 <property name="column_spacing">6</property>
                 <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
                   <object class="GtkLabel" id="label10">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Last log:</property>
                   </object>
@@ -202,6 +290,7 @@
                 <child>
                   <object class="GtkLabel" id="label26">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Own nick:</property>
                   </object>
@@ -209,6 +298,7 @@
                 <child>
                   <object class="GtkLabel" id="label27">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Own text:</property>
                   </object>
@@ -220,6 +310,7 @@
                 <child>
                   <object class="GtkLabel" id="label28">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Notification:</property>
                   </object>
@@ -231,6 +322,7 @@
                 <child>
                   <object class="GtkLabel" id="label1">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Messages:</property>
                   </object>
@@ -242,6 +334,7 @@
                 <child>
                   <object class="GtkLabel" id="label2">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Actions:</property>
                   </object>
@@ -253,6 +346,7 @@
                 <child>
                   <object class="GtkLabel" id="label3">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Highlighted messages:</property>
                   </object>
@@ -264,6 +358,7 @@
                 <child>
                   <object class="GtkLabel" id="label4">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Highlighted actions:</property>
                   </object>
@@ -275,6 +370,7 @@
                 <child>
                   <object class="GtkLabel" id="label5">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Default nick:</property>
                   </object>
@@ -286,6 +382,7 @@
                 <child>
                   <object class="GtkLabel" id="label16">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Rules color:</property>
                   </object>
@@ -301,7 +398,7 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="colors_rules_autodetect_toggled"/>
+                    <signal name="toggled" handler="colors_rules_autodetect_toggled" swapped="no"/>
                   </object>
                   <packing>
                     <property name="top_attach">10</property>
@@ -316,7 +413,7 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="colors_rules_color_yesno_toggled"/>
+                    <signal name="toggled" handler="colors_rules_color_yesno_toggled" swapped="no"/>
                   </object>
                   <packing>
                     <property name="top_attach">11</property>
@@ -330,12 +427,12 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <signal name="clicked" handler="reset_own_nick_clicked"/>
+                    <signal name="clicked" handler="reset_own_nick_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="right_attach">3</property>
-                    <property name="x_options"></property>
+                    <property name="x_options"/>
                   </packing>
                 </child>
                 <child>
@@ -344,14 +441,14 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <signal name="clicked" handler="reset_own_text_clicked"/>
+                    <signal name="clicked" handler="reset_own_text_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="right_attach">3</property>
                     <property name="top_attach">1</property>
                     <property name="bottom_attach">2</property>
-                    <property name="x_options"></property>
+                    <property name="x_options"/>
                   </packing>
                 </child>
                 <child>
@@ -360,14 +457,14 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <signal name="clicked" handler="reset_notification_clicked"/>
+                    <signal name="clicked" handler="reset_notification_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="right_attach">3</property>
                     <property name="top_attach">2</property>
                     <property name="bottom_attach">3</property>
-                    <property name="x_options"></property>
+                    <property name="x_options"/>
                   </packing>
                 </child>
                 <child>
@@ -376,14 +473,14 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <signal name="clicked" handler="reset_text_message_clicked"/>
+                    <signal name="clicked" handler="reset_text_message_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="right_attach">3</property>
                     <property name="top_attach">3</property>
                     <property name="bottom_attach">4</property>
-                    <property name="x_options"></property>
+                    <property name="x_options"/>
                   </packing>
                 </child>
                 <child>
@@ -392,14 +489,14 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <signal name="clicked" handler="reset_text_action_clicked"/>
+                    <signal name="clicked" handler="reset_text_action_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="right_attach">3</property>
                     <property name="top_attach">4</property>
                     <property name="bottom_attach">5</property>
-                    <property name="x_options"></property>
+                    <property name="x_options"/>
                   </packing>
                 </child>
                 <child>
@@ -408,14 +505,14 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <signal name="clicked" handler="reset_text_highlightmessage_clicked"/>
+                    <signal name="clicked" handler="reset_text_highlightmessage_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="right_attach">3</property>
                     <property name="top_attach">5</property>
                     <property name="bottom_attach">6</property>
-                    <property name="x_options"></property>
+                    <property name="x_options"/>
                   </packing>
                 </child>
                 <child>
@@ -424,14 +521,14 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <signal name="clicked" handler="reset_text_highlightaction_clicked"/>
+                    <signal name="clicked" handler="reset_text_highlightaction_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="right_attach">3</property>
                     <property name="top_attach">6</property>
                     <property name="bottom_attach">7</property>
-                    <property name="x_options"></property>
+                    <property name="x_options"/>
                   </packing>
                 </child>
                 <child>
@@ -440,14 +537,14 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <signal name="clicked" handler="reset_nick_clicked"/>
+                    <signal name="clicked" handler="reset_nick_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="right_attach">3</property>
                     <property name="top_attach">7</property>
                     <property name="bottom_attach">8</property>
-                    <property name="x_options"></property>
+                    <property name="x_options"/>
                   </packing>
                 </child>
                 <child>
@@ -456,14 +553,14 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <signal name="clicked" handler="reset_last_log_clicked"/>
+                    <signal name="clicked" handler="reset_last_log_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="right_attach">3</property>
                     <property name="top_attach">8</property>
                     <property name="bottom_attach">9</property>
-                    <property name="x_options"></property>
+                    <property name="x_options"/>
                   </packing>
                 </child>
                 <child>
@@ -472,14 +569,14 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <signal name="clicked" handler="reset_rules_color_clicked"/>
+                    <signal name="clicked" handler="reset_rules_color_clicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="right_attach">3</property>
                     <property name="top_attach">9</property>
                     <property name="bottom_attach">10</property>
-                    <property name="x_options"></property>
+                    <property name="x_options"/>
                   </packing>
                 </child>
                 <child>
@@ -637,31 +734,13 @@
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="irc_colors_toggled"/>
+                    <signal name="toggled" handler="irc_colors_toggled" swapped="no"/>
                   </object>
                   <packing>
                     <property name="top_attach">12</property>
                     <property name="bottom_attach">13</property>
                     <property name="y_padding">2</property>
                   </packing>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
                 </child>
               </object>
               <packing>
@@ -671,6 +750,7 @@
             <child type="tab">
               <object class="GtkLabel" id="label19">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label" translatable="yes">C_olors</property>
                 <property name="use_underline">True</property>
               </object>
@@ -682,12 +762,14 @@
             <child>
               <object class="GtkTable" id="chattingTable">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="border_width">8</property>
                 <property name="n_rows">6</property>
                 <property name="n_columns">2</property>
                 <child>
                   <object class="GtkLabel" id="label22">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Quit message:</property>
                   </object>
@@ -696,7 +778,11 @@
                   <object class="GtkEntry" id="quit_message">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="chatting_quit_message_written"/>
+                    <property name="primary_icon_activatable">False</property>
+                    <property name="secondary_icon_activatable">False</property>
+                    <property name="primary_icon_sensitive">True</property>
+                    <property name="secondary_icon_sensitive">True</property>
+                    <signal name="focus-out-event" handler="chatting_quit_message_written" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -706,6 +792,7 @@
                 <child>
                   <object class="GtkLabel" id="label23">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Part message:</property>
                   </object>
@@ -718,7 +805,11 @@
                   <object class="GtkEntry" id="part_message">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <signal name="focus_out_event" handler="chatting_part_message_written"/>
+                    <property name="primary_icon_activatable">False</property>
+                    <property name="secondary_icon_activatable">False</property>
+                    <property name="primary_icon_sensitive">True</property>
+                    <property name="secondary_icon_sensitive">True</property>
+                    <signal name="focus-out-event" handler="chatting_part_message_written" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -730,6 +821,7 @@
                 <child>
                   <object class="GtkLabel" id="label25">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Last log lines:</property>
                   </object>
@@ -742,8 +834,12 @@
                   <object class="GtkSpinButton" id="last_log_lines">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="primary_icon_activatable">False</property>
+                    <property name="secondary_icon_activatable">False</property>
+                    <property name="primary_icon_sensitive">True</property>
+                    <property name="secondary_icon_sensitive">True</property>
                     <property name="adjustment">adjustment1</property>
-                    <signal name="value_changed" handler="chatting_log_lines_changed"/>
+                    <signal name="value-changed" handler="chatting_log_lines_changed" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -755,6 +851,7 @@
                 <child>
                   <object class="GtkLabel" id="label11">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="yalign">0.64999997615814209</property>
                     <property name="label" translatable="yes">Highlightwords:</property>
@@ -768,6 +865,7 @@
                 <child>
                   <object class="GtkLabel" id="label13">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Time format:</property>
                   </object>
@@ -780,9 +878,13 @@
                   <object class="GtkEntry" id="time_format">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="invisible_char">&#x25CF;</property>
-                    <signal name="focus_out_event" handler="chatting_time_format_written"/>
-                    <signal name="activate" handler="chatting_time_format_written"/>
+                    <property name="invisible_char">●</property>
+                    <property name="primary_icon_activatable">False</property>
+                    <property name="secondary_icon_activatable">False</property>
+                    <property name="primary_icon_sensitive">True</property>
+                    <property name="secondary_icon_sensitive">True</property>
+                    <signal name="activate" handler="chatting_time_format_written" swapped="no"/>
+                    <signal name="focus-out-event" handler="chatting_time_format_written" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -801,6 +903,7 @@
                     <child>
                       <object class="GtkViewport" id="highlightListPort">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="resize_mode">queue</property>
                         <child>
                           <object class="ExpandingList" id="highlightList">
@@ -825,6 +928,7 @@
             <child type="tab">
               <object class="GtkLabel" id="label20">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label" translatable="yes">C_hatting</property>
                 <property name="use_underline">True</property>
               </object>
@@ -836,11 +940,13 @@
             <child>
               <object class="GtkTable" id="generalOutputFilterTable">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="border_width">8</property>
                 <property name="n_rows">3</property>
                 <child>
                   <object class="GtkLabel" id="label8">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0.059999998658895493</property>
                     <property name="label" translatable="yes">&lt;b&gt;Help:&lt;/b&gt;
 The &lt;b&gt;first&lt;/b&gt; field is the &lt;u&gt;message&lt;/u&gt; type.
@@ -862,6 +968,7 @@ The last field is optional.</property>
                 <child>
                   <object class="GtkFrame" id="frame2">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">none</property>
                     <child>
@@ -874,6 +981,7 @@ The last field is optional.</property>
                         <child>
                           <object class="GtkViewport" id="generalOutputFilterListPort">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="resize_mode">queue</property>
                             <child>
                               <object class="ExpandingList" id="generalOutputFilterList">
@@ -893,6 +1001,7 @@ The last field is optional.</property>
                     <child type="label">
                       <object class="GtkLabel" id="label15">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">&lt;b&gt;Filter messages&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </object>
@@ -907,15 +1016,18 @@ The last field is optional.</property>
                 <child>
                   <object class="GtkFrame" id="frame3">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">none</property>
                     <child>
                       <object class="GtkAlignment" id="alignment1">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="left_padding">12</property>
                         <child>
                           <object class="GtkVBox" id="vbox1">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <child>
                               <object class="GtkCheckButton" id="type_message">
                                 <property name="label" translatable="yes">Message</property>
@@ -923,9 +1035,11 @@ The last field is optional.</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="draw_indicator">True</property>
-                                <signal name="toggled" handler="go_type_message_toggled"/>
+                                <signal name="toggled" handler="go_type_message_toggled" swapped="no"/>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
@@ -936,9 +1050,11 @@ The last field is optional.</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="draw_indicator">True</property>
-                                <signal name="toggled" handler="go_type_action_toggled"/>
+                                <signal name="toggled" handler="go_type_action_toggled" swapped="no"/>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -949,9 +1065,11 @@ The last field is optional.</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="draw_indicator">True</property>
-                                <signal name="toggled" handler="go_type_highlightmessage_toggled"/>
+                                <signal name="toggled" handler="go_type_highlightmessage_toggled" swapped="no"/>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">2</property>
                               </packing>
                             </child>
@@ -962,9 +1080,11 @@ The last field is optional.</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">False</property>
                                 <property name="draw_indicator">True</property>
-                                <signal name="toggled" handler="go_type_highlightaction_toggled"/>
+                                <signal name="toggled" handler="go_type_highlightaction_toggled" swapped="no"/>
                               </object>
                               <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
                                 <property name="position">3</property>
                               </packing>
                             </child>
@@ -975,6 +1095,7 @@ The last field is optional.</property>
                     <child type="label">
                       <object class="GtkLabel" id="label17">
                         <property name="visible">True</property>
+                        <property name="can_focus">False</property>
                         <property name="label" translatable="yes">&lt;b&gt;Displayed message types&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                       </object>
@@ -992,6 +1113,7 @@ The last field is optional.</property>
             <child type="tab">
               <object class="GtkLabel" id="label6">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_General Output</property>
                 <property name="use_underline">True</property>
               </object>
@@ -1003,11 +1125,13 @@ The last field is optional.</property>
             <child>
               <object class="GtkTable" id="nickColorsTable">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="border_width">8</property>
                 <property name="n_rows">3</property>
                 <child>
                   <object class="GtkLabel" id="label7">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="xalign">0.11999999731779099</property>
                     <property name="label" translatable="yes">&lt;b&gt;Information:&lt;/b&gt;
 Changes will be applied after closing this dialog.</property>
@@ -1024,6 +1148,7 @@ Changes will be applied after closing this dialog.</property>
                 <child>
                   <object class="GtkFrame" id="frame1">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="label_xalign">0</property>
                     <property name="shadow_type">none</property>
                     <child>
@@ -1036,6 +1161,7 @@ Changes will be applied after closing this dialog.</property>
                         <child>
                           <object class="GtkViewport" id="nickColorsListPort">
                             <property name="visible">True</property>
+                            <property name="can_focus">False</property>
                             <property name="resize_mode">queue</property>
                             <child>
                               <object class="ExpandingList" id="nickColorsList">
@@ -1054,7 +1180,7 @@ Changes will be applied after closing this dialog.</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
                         <property name="draw_indicator">True</property>
-                        <signal name="toggled" handler="nick_contrast_colors_toggled_cb"/>
+                        <signal name="toggled" handler="nick_contrast_colors_toggled_cb" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -1070,6 +1196,7 @@ Changes will be applied after closing this dialog.</property>
             <child type="tab">
               <object class="GtkLabel" id="label9">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label" translatable="yes">_Nick Colors</property>
                 <property name="use_underline">True</property>
               </object>
@@ -1081,6 +1208,7 @@ Changes will be applied after closing this dialog.</property>
             <child>
               <object class="GtkTable" id="advancedTable">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="border_width">8</property>
                 <property name="n_rows">2</property>
                 <child>
@@ -1090,7 +1218,7 @@ Changes will be applied after closing this dialog.</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_underline">True</property>
-                    <signal name="clicked" handler="advanced_advancedSettingsClicked"/>
+                    <signal name="clicked" handler="advanced_advancedSettingsClicked" swapped="no"/>
                   </object>
                   <packing>
                     <property name="top_attach">1</property>
@@ -1102,6 +1230,7 @@ Changes will be applied after closing this dialog.</property>
                 <child>
                   <object class="GtkLabel" id="label12">
                     <property name="visible">True</property>
+                    <property name="can_focus">False</property>
                     <property name="label" translatable="yes">If you want to have control about &lt;u&gt;all&lt;/u&gt; settings you can use the advanced settings dialog.
 
 &lt;b&gt;Notice:&lt;/b&gt;
@@ -1118,6 +1247,7 @@ For some options it is neccessary to restart tekka for the changes to take effec
             <child type="tab">
               <object class="GtkLabel" id="label14">
                 <property name="visible">True</property>
+                <property name="can_focus">False</property>
                 <property name="label" translatable="yes">Ad_vanced Settings</property>
                 <property name="use_underline">True</property>
               </object>
@@ -1128,32 +1258,9 @@ For some options it is neccessary to restart tekka for the changes to take effec
             </child>
           </object>
           <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
             <property name="position">1</property>
-          </packing>
-        </child>
-        <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area9">
-            <property name="visible">True</property>
-            <property name="layout_style">end</property>
-            <child>
-              <object class="GtkButton" id="button2">
-                <property name="label">gtk-close</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="use_stock">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="pack_type">end</property>
-            <property name="position">0</property>
           </packing>
         </child>
       </object>
@@ -1161,10 +1268,5 @@ For some options it is neccessary to restart tekka for the changes to take effec
     <action-widgets>
       <action-widget response="-6">button2</action-widget>
     </action-widgets>
-  </object>
-  <object class="GtkAdjustment" id="adjustment1">
-    <property name="value">10</property>
-    <property name="upper">100</property>
-    <property name="step_increment">1</property>
   </object>
 </interface>
