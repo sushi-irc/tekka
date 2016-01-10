@@ -29,8 +29,9 @@ import gtk
 import gobject
 
 from .output_textview import OutputTextView
+from .. import config
 
-from math import ceil
+from math import ceil, floor
 
 class OutputWindow(gtk.ScrolledWindow):
 
@@ -108,17 +109,17 @@ class OutputWindow(gtk.ScrolledWindow):
 			def idle_handler_cb():
 				adjust = sbar.get_property("adjustment")
 
-				if (self.auto_scroll
-				and self.textview.is_smooth_scrolling()):
+				line_padding = floor(int(config.get("tekka", "line_spacing")) / 2)
+				end_position = adjust.upper - adjust.page_size - line_padding
+				cur_position = sbar.get_value()
 
+				miss = 1 - min(end_position, cur_position) / max(end_position, cur_position)
+
+				if (self.auto_scroll and self.textview.is_smooth_scrolling()):
 					# XXX: instead of setting, ignore this completely.
 					self.auto_scroll = True
-
-				elif ceil(adjust.upper - adjust.page_size) \
-				 == ceil(sbar.get_value()):
-
+				elif miss < 0.01:
 					self.auto_scroll = True
-
 				else:
 					self.auto_scroll = False
 
