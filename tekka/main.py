@@ -331,13 +331,13 @@ def inputBar_activate_cb(inputBar):
 
 	tab = gui.tabs.get_current_tab()
 
+	inputBar.set_text("")
+
 	commands.parseInput(text)
 
 	if tab:
 		tab.input_history.add_entry(text)
 		tab.input_history.reset()
-
-	inputBar.set_text("")
 
 
 def inputBar_key_press_event_cb(inputBar, event):
