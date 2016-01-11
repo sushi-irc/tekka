@@ -113,7 +113,10 @@ class OutputWindow(gtk.ScrolledWindow):
 				end_position = adjust.upper - adjust.page_size - line_padding
 				cur_position = sbar.get_value()
 
-				miss = 1 - min(end_position, cur_position) / max(end_position, cur_position)
+				if end_position == 0 or cur_position == 0:
+				    miss = 1
+				else:
+				    miss = 1 - min(end_position, cur_position) / max(end_position, cur_position)
 
 				if (self.auto_scroll and self.textview.is_smooth_scrolling()):
 					# XXX: instead of setting, ignore this completely.
