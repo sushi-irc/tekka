@@ -82,7 +82,7 @@ def run(server):
 		widgets.get_object("sslCertFileChooser").set_sensitive(active)
 
 		if not active:
-			sushi.server_set(server, "server", "ssl_cert", "")
+			sushi.server_set(server, "server", "ssl_db", "")
 
 	bsignals = {
 		"commandList_row_added_cb":
@@ -104,7 +104,7 @@ def run(server):
 
 	types = {"address":"text", "port":"text", "nick":"text",
 		"name":"text", "nickserv":"text", "autoconnect":"bool",
-				"nickserv_ghost":"bool", "ssl":"bool", "ssl_cert":"file"}
+				"nickserv_ghost":"bool", "ssl":"bool", "ssl_db":"file"}
 
 	signals = {
 		"addressEntry": {
@@ -140,7 +140,7 @@ def run(server):
 			"signals":("toggled",)
 		},
 		"sslCertFileChooser": {
-			"key":"ssl_cert",
+			"key":"ssl_db",
 			"signals":("file-set",)
 		},
 	}
@@ -163,7 +163,7 @@ def run(server):
 		elif c_type == "file":
 			widget.set_filename(value)
 
-	if sushi.server_get(server, "server", "ssl_cert") != "":
+	if sushi.server_get(server, "server", "ssl_db") != "":
 		widgets.get_object("useCustomCertificateCheckButton").set_active(True)
 
 	# fill the command list with the existing commands

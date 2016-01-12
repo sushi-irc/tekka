@@ -61,7 +61,7 @@ def dialog_response_cb(dialog, response_id, callback, widgets):
 					"sslCheckButton").get_active()).lower())
 
 		# set custom SSL certificate path ("" if none set)
-		sushi.server_set(server, "server", "ssl_cert",
+		sushi.server_set(server, "server", "ssl_db",
 			widgets.get_object("sslCertFileChooser").get_filename() or "")
 
 		# set nickserv ghost flag
